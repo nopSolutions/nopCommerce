@@ -58,10 +58,7 @@
         /// 二维码长宽尺寸
         /// </summary>
         public int QrCodeSize { get; set; }
-        /// <summary>
-        /// 回复消息ID列表，多个ID采用逗号分开
-        /// </summary>
-        public string MessageIds { get; set; }
+
         /// <summary>
         /// 用户被自动打上的标签ID列表
         /// </summary>

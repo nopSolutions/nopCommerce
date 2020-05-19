@@ -25,6 +25,7 @@ namespace Nop.Data.Mapping.Builders.Weixin
                 .WithColumn(nameof(WUser.Country)).AsString(15).Nullable()
                 .WithColumn(nameof(WUser.HeadImgUrl)).AsAnsiString(255).Nullable()
                 .WithColumn(nameof(WUser.Remark)).AsString(30).Nullable()
+                .WithColumn(nameof(WUser.SysRemark)).AsString(512).Nullable()
                 .WithColumn(nameof(WUser.GroupId)).AsAnsiString(15).Nullable()
                 .WithColumn(nameof(WUser.TagIdList)).AsAnsiString(255).Nullable()
                 .WithColumn(nameof(WUser.QrScene)).AsInt32().Nullable()

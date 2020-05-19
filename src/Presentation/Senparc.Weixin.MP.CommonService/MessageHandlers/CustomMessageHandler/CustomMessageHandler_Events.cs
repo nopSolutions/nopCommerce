@@ -22,11 +22,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
-//#if NET45
-//using System.Web;
-//#endif
-
+using Nop.Core.Infrastructure;
+using Nop.Core.Domain.Weixin;
+using Nop.Services.Weixin;
+using Nop.Services.Helpers;
+using Senparc.CO2NET.Helpers;
+using Nop.Core;
+using Org.BouncyCastle.Ocsp;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
 {
@@ -38,12 +41,8 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
         private string GetWelcomeInfo()
         {
             //获取Senparc.Weixin.MP.dll版本信息
-#if NET45
-            var filePath = ServerUtility.ContentRootMapPath("~/bin/Senparc.Weixin.MP.dll");//发布路径
-#else
             //var filePath = ServerUtility.ContentRootMapPath("~/bin/Release/netcoreapp2.2/Senparc.Weixin.MP.dll");//本地测试路径
             var filePath = ServerUtility.ContentRootMapPath("~/Senparc.Weixin.MP.dll");//发布路径
-#endif
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(filePath);
 
             string version = fileVersionInfo == null
@@ -185,13 +184,10 @@ QQ群：289181996
                     {
                         //上传缩略图
 
-#if NET45
-                        var filePath = "~/Images/Logo.thumb.jpg";
-#else   
-                        var filePath = "~/wwwroot/Images/Logo.thumb.jpg";
-#endif
 
-                        var uploadResult = AdvancedAPIs.MediaApi.UploadTemporaryMedia(appId, UploadMediaFileType.thumb,
+                        var filePath = "~/wwwroot/Images/Logo.thumb.jpg";
+
+                        var uploadResult = AdvancedAPIs.MediaApi.UploadTemporaryMedia(_senparcWeixinSetting.WeixinAppId, UploadMediaFileType.thumb,
                                                                     ServerUtility.ContentRootMapPath(filePath));
                         //PS：缩略图官方没有特别提示文件大小限制，实际测试哪怕114K也会返回文件过大的错误，因此尽量控制在小一点（当前图片39K）
 
@@ -208,13 +204,8 @@ QQ群：289181996
                 case "SubClickRoot_Image":
                     {
                         //上传图片
-#if NET45
-                        var filePath = "~/Images/Logo.jpg";
-#else
                         var filePath = "~/wwwroot/Images/Logo.jpg";
-#endif
-
-                        var uploadResult = AdvancedAPIs.MediaApi.UploadTemporaryMedia(appId, UploadMediaFileType.image,
+                        var uploadResult = AdvancedAPIs.MediaApi.UploadTemporaryMedia(_senparcWeixinSetting.WeixinAppId, UploadMediaFileType.image,
                                                                      ServerUtility.ContentRootMapPath(filePath));
                         //设置图片信息
                         var strongResponseMessage = CreateResponseMessage<ResponseMessageImage>();
@@ -234,7 +225,7 @@ QQ群：289181996
                             new SendMenuContent("103","不满意")
                         };
                         //使用异步接口
-                        CustomApi.SendMenuAsync(appId, OpenId, "请对 Senparc.Weixin SDK 给出您的评价", menuContentList, "感谢您的参与！");
+                        CustomApi.SendMenuAsync(_senparcWeixinSetting.WeixinAppId, OpenId, "请给出您的评价", menuContentList, "感谢您的参与！");
 
                         reponseMessage = new ResponseMessageNoResponse();//不返回任何消息
                     }
@@ -243,7 +234,7 @@ QQ群：289181996
                     {
                         //获取返回的XML
                         var dt1 = SystemTime.Now;
-                        reponseMessage = MessageAgent.RequestResponseMessage(this, agentUrl, agentToken, RequestDocument.ToString());
+                        reponseMessage = MessageAgent.RequestResponseMessage(this, _senparcWeixinSetting.AgentUrl, _senparcWeixinSetting.AgentToken, RequestDocument.ToString());
                         //上面的方法也可以使用扩展方法：this.RequestResponseMessage(this,agentUrl, agentToken, RequestDocument.ToString());
 
                         var dt2 = SystemTime.Now;
@@ -259,7 +250,7 @@ QQ群：289181996
                 case "Member"://托管代理会员信息
                     {
                         //原始方法为：MessageAgent.RequestXml(this,agentUrl, agentToken, RequestDocument.ToString());//获取返回的XML
-                        reponseMessage = this.RequestResponseMessage(agentUrl, agentToken, RequestDocument.ToString());
+                        reponseMessage = this.RequestResponseMessage(_senparcWeixinSetting.AgentUrl, _senparcWeixinSetting.AgentToken, RequestDocument.ToString());
                     }
                     break;
                 case "OAuth"://OAuth授权测试
@@ -295,13 +286,6 @@ QQ群：289181996
 
                     }
                     break;
-                case "Description":
-                    {
-                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
-                        strongResponseMessage.Content = GetWelcomeInfo();
-                        reponseMessage = strongResponseMessage;
-                    }
-                    break;
                 case "SubClickRoot_PicPhotoOrAlbum":
                     {
                         var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
@@ -335,7 +319,7 @@ QQ群：289181996
                         var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
                         try
                         {
-                            var result = AdvancedAPIs.MediaApi.UploadForeverMedia(appId, ServerUtility.ContentRootMapPath("~/Images/logo.jpg"));
+                            var result = AdvancedAPIs.MediaApi.UploadForeverMedia(_senparcWeixinSetting.WeixinAppId, ServerUtility.ContentRootMapPath("~/Images/logo.jpg"));
                             strongResponseMessage.Content = result.media_id;
                         }
                         catch (Exception e)
@@ -347,9 +331,7 @@ QQ群：289181996
                     break;
                 default:
                     {
-                        var strongResponseMessage = CreateResponseMessage<ResponseMessageText>();
-                        strongResponseMessage.Content = "您点击了按钮，EventKey：" + requestMessage.EventKey;
-                        reponseMessage = strongResponseMessage;
+                        reponseMessage = new SuccessResponseMessage();
                     }
                     break;
             }
@@ -377,9 +359,33 @@ QQ群：289181996
         public override IResponseMessageBase OnEvent_LocationRequest(RequestMessageEvent_Location requestMessage)
         {
             //这里是微信客户端（通过微信服务器）自动发送过来的位置信息
-            var responseMessage = CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "这里写什么都无所谓，比如：上帝爱你！";
-            return responseMessage;//这里也可以返回null（需要注意写日志时候null的问题）
+            var locationService = EngineContext.Current.Resolve<IWLocationService>();
+            var location = locationService.GetLocationByOpenId(requestMessage.FromUserName);
+            if (location != null &&
+                CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime) - (long)location.CreateTime > 600 //10分钟内不更新
+                )
+            {
+                location.Latitude = Convert.ToDecimal(requestMessage.Latitude);
+                location.Longitude = Convert.ToDecimal(requestMessage.Longitude);
+                location.Precision = Convert.ToDecimal(requestMessage.Precision);
+                location.CreateTime = Convert.ToInt32(CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime));
+                
+                //update
+                locationService.UpdateLocation(location);
+            }
+            else
+            {
+                locationService.InsertLocation(new WLocation
+                {
+                    OpenId = requestMessage.FromUserName,
+                    Latitude = Convert.ToDecimal(requestMessage.Latitude),
+                    Longitude = Convert.ToDecimal(requestMessage.Longitude),
+                    Precision = Convert.ToDecimal(requestMessage.Precision),
+                    CreateTime = Convert.ToInt32(CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime))
+                });
+            }
+
+            return new SuccessResponseMessage();
         }
 
         /// <summary>
@@ -389,29 +395,136 @@ QQ群：289181996
         /// <returns></returns>
         public override IResponseMessageBase OnEvent_ScanRequest(RequestMessageEvent_Scan requestMessage)
         {
-            //通过扫描关注
-            var responseMessage = CreateResponseMessage<ResponseMessageText>();
+            var scanQrcodeLimit = false; //是否通过扫描永久二维码进入
+            int scenicId;    //场景值：永久二维码进入=二维码ID，临时二维码进入=背景图ID
+            var openIdReferee = string.Empty;  //推荐人OpenId
+            var messageIds = new List<int>();   //多个消息ID，以二维码消息优先，覆盖背景图消息。
 
-            //下载文档
+            //分析二维码参数，获取sceneId和推荐人ID
+            #region 分析二维码参数，获取sceneId和推荐人ID
+
             if (!string.IsNullOrEmpty(requestMessage.EventKey))
             {
-                var sceneId = long.Parse(requestMessage.EventKey.Replace("qrscene_", ""));
-                //var configHelper = new ConfigHelper(new HttpContextWrapper(HttpContext.Current));
-                var codeRecord =
-                    ConfigHelper.CodeCollection.Values.FirstOrDefault(z => z.QrCodeTicket != null && z.QrCodeId == sceneId);
+                var sceneStr = requestMessage.EventKey.Replace("qrscene_", "");
 
-
-                if (codeRecord != null)
+                if(sceneStr.Contains("_"))  //非纯数字,临时二维码
                 {
-                    //确认可以下载
-                    codeRecord.AllowDownload = true;
-                    responseMessage.Content = GetDownloadInfo(codeRecord);
+                    scanQrcodeLimit = false; //临时二维码进入
+
+                    var sceneParams = sceneStr.Split('_');  //分解参数
+                    var sceneType = (WSceneType)Enum.Parse(typeof(WSceneType), sceneParams[0], true);
+
+                    switch (sceneType)
+                    {
+                        case WSceneType.Adver:
+                            {
+                                //adver + openidreferrr + image_id + add_time
+                                openIdReferee = sceneParams[1];
+                                int.TryParse(sceneParams[2], out scenicId);
+
+                                if (scenicId > 0)
+                                {
+                                    var qrcodeImageService = EngineContext.Current.Resolve<IWQrCodeImageService>();
+                                    var qrcodeImage = qrcodeImageService.GetWQrCodeImageById(scenicId);
+
+                                    //临时二维码进入，只有背景图绑定了消息
+                                    if (qrcodeImage != null)
+                                    {
+                                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
+                                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
+                                    }
+                                }
+                                break;
+                            }
+                        case WSceneType.Verify:
+                            {
+                                //verify + openid_hash + 验证码
+                                break;
+                            }
+                        case WSceneType.Command:
+                            {
+                                //command + openid_hash + 命令
+                                break;
+                            }
+                        case WSceneType.Vote:
+                            {
+                                //vote + openid_hash + 投票项目ID（场景值）+ 创建时间
+                                //vote+投票发起人，系统官方发起为0 +项目ID（场景值）+创建时间
+
+                                break;
+                            }
+                        case WSceneType.IDCard:
+                            {
+                                break;
+                            }
+                        case WSceneType.None:
+                        default:
+                            break;
+                    }
+                }
+                else  //纯数字，永久二维码
+                {
+                    scanQrcodeLimit = true; //永久二维码进入
+
+                    int.TryParse(sceneStr, out scenicId);
+
+                    if (scenicId > 0)
+                    {
+                        var qrcodeLimitUserService = EngineContext.Current.Resolve<IWQrCodeLimitUserService>();
+                        var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
+                        if (qrcodeLimitUser != null)
+                        {
+                            if (qrcodeLimitUser.ExpireTime > 0 &&
+                                qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
+                                )
+                            {
+                                openIdReferee = qrcodeLimitUser.OpenId; //永久二维码在指定过期时间前，分配给指定用户
+                            }
+                        }
+
+                        //获取绑定消息
+                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
+                        //获取永久二维码绑定消息
+                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeLimit);
+                        if (messageIds.Count == 0)
+                        {
+                            //获取背景图绑定消息
+                            messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
+                        }
+                    }
+
+                }
+
+            }
+
+            #endregion
+
+            //获取推荐人信息
+            if (!string.IsNullOrEmpty(openIdReferee))
+            {
+                var wuserService = EngineContext.Current.Resolve<IWUserService>();
+                var wuser = wuserService.GetWUserByOpenId(openIdReferee);
+
+                if (wuser != null && !wuser.Deleted && wuser.Subscribe && wuser.AllowReferee)
+                {
+                    //do nothing
+                }
+                else
+                {
+                    openIdReferee = string.Empty; 
                 }
             }
 
-            responseMessage.Content = responseMessage.Content ?? string.Format("通过扫描二维码进入，场景值：{0}", requestMessage.EventKey);
+            //回复消息
+            #region 循环消息
 
-            return responseMessage;
+            var responseMessage = GetResponseMessagesByIds(messageIds);
+            if (responseMessage != null)
+                return responseMessage;
+
+            #endregion
+
+            return new SuccessResponseMessage();
         }
 
         /// <summary>
@@ -422,9 +535,19 @@ QQ群：289181996
         public override IResponseMessageBase OnEvent_ViewRequest(RequestMessageEvent_View requestMessage)
         {
             //说明：这条消息只作为接收，下面的responseMessage到达不了客户端，类似OnEvent_UnsubscribeRequest
-            var responseMessage = CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "您点击了view按钮，将打开网页：" + requestMessage.EventKey;
-            return responseMessage;
+            //可以处理一些计数操作或用户状态操作
+            switch (requestMessage.EventKey)
+            {
+                case "00":
+                    break;
+                default:
+                    break;
+            }
+            return new SuccessResponseMessage();
+
+            //var responseMessage = CreateResponseMessage<ResponseMessageText>();
+            //responseMessage.Content = "您点击了view按钮，将打开网页：" + requestMessage.EventKey;
+            //return responseMessage;
         }
 
         /// <summary>
@@ -445,39 +568,261 @@ QQ群：289181996
         /// <returns></returns>
         public override IResponseMessageBase OnEvent_SubscribeRequest(RequestMessageEvent_Subscribe requestMessage)
         {
-            var responseMessage = ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(requestMessage);
-            responseMessage.Content = GetWelcomeInfo();
+            var scanQrcodeLimit = false; //是否通过扫描永久二维码进入
+            var scenicId = 0;    //场景值：永久二维码进入=二维码ID，临时二维码进入=背景图ID
+            var sceneType = WSceneType.None; //进入场景类型
+            var openIdReferee = string.Empty;  //推荐人OpenId
+            var messageIds = new List<int>();   //多个消息ID，以二维码消息优先，覆盖背景图消息。
+
+            var wuserService = EngineContext.Current.Resolve<IWUserService>();
+
+            //分析二维码参数，获取sceneId和推荐人ID
+            #region 分析二维码参数，获取sceneId和推荐人ID
+
             if (!string.IsNullOrEmpty(requestMessage.EventKey))
             {
-                responseMessage.Content += "\r\n============\r\n场景值：" + requestMessage.EventKey;
+                var sceneStr = requestMessage.EventKey.Replace("qrscene_", "");
+
+                if (sceneStr.Contains("_"))  //非纯数字,临时二维码
+                {
+                    scanQrcodeLimit = false; //临时二维码进入
+
+                    var sceneParams = sceneStr.Split('_');  //分解参数
+                    sceneType = (WSceneType)Enum.Parse(typeof(WSceneType), sceneParams[0], true);
+
+                    switch (sceneType)
+                    {
+                        case WSceneType.Adver:
+                            {
+                                //adver + openidreferrr + image_id + add_time
+                                openIdReferee = sceneParams[1];
+                                int.TryParse(sceneParams[2], out scenicId);
+
+                                if (scenicId > 0)
+                                {
+                                    var qrcodeImageService = EngineContext.Current.Resolve<IWQrCodeImageService>();
+                                    var qrcodeImage = qrcodeImageService.GetWQrCodeImageById(scenicId);
+
+                                    //临时二维码进入，只有背景图绑定了消息
+                                    if (qrcodeImage != null)
+                                    {
+                                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
+                                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
+                                    }
+                                }
+                                break;
+                            }
+                        case WSceneType.Verify:
+                            {
+                                //verify + openid_hash + 验证码
+                                break;
+                            }
+                        case WSceneType.Command:
+                            {
+                                //command + openid_hash + 命令
+                                break;
+                            }
+                        case WSceneType.Vote:
+                            {
+                                //vote + openid_hash + 投票项目ID（场景值）+ 创建时间
+                                //vote+投票发起人，系统官方发起为0 +项目ID（场景值）+创建时间
+
+                                break;
+                            }
+                        case WSceneType.IDCard:
+                            {
+                                break;
+                            }
+                        case WSceneType.None:
+                        default:
+                            break;
+                    }
+                }
+                else  //纯数字，永久二维码
+                {
+                    scanQrcodeLimit = true; //永久二维码进入
+                    int.TryParse(sceneStr, out scenicId);
+
+                    if (scenicId > 0)
+                    {
+                        var wqrcodeLimitServise = EngineContext.Current.Resolve<IWQrCodeLimitService>();
+                        var wqrcodeLimit = wqrcodeLimitServise.GetWQrCodeLimitByQrCodeId(scenicId);
+                        if (wqrcodeLimit != null)
+                        {
+                            sceneType = wqrcodeLimit.WSceneType;
+                        }
+
+                        var qrcodeLimitUserService = EngineContext.Current.Resolve<IWQrCodeLimitUserService>();
+                        var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
+                        if (qrcodeLimitUser != null)
+                        {
+                            if (qrcodeLimitUser.ExpireTime > 0 &&
+                                qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
+                                )
+                            {
+                                openIdReferee = qrcodeLimitUser.OpenId; //永久二维码在指定过期时间前，分配给指定用户
+                            }
+                        }
+
+                        //获取绑定消息
+                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
+                        //获取永久二维码绑定消息
+                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeLimit);
+                        if (messageIds.Count == 0)
+                        {
+                            //获取背景图绑定消息
+                            messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
+                        }
+                    }
+
+                }
+
             }
 
-            //推送消息
-            //下载文档
-            if (requestMessage.EventKey.StartsWith("qrscene_"))
-            {
-                var sceneId = long.Parse(requestMessage.EventKey.Replace("qrscene_", ""));
-                //var configHelper = new ConfigHelper(new HttpContextWrapper(HttpContext.Current));
-                var codeRecord =
-                    ConfigHelper.CodeCollection.Values.FirstOrDefault(z => z.QrCodeTicket != null && z.QrCodeId == sceneId);
 
-                if (codeRecord != null)
+            #endregion
+
+            //获取推荐人信息
+            #region 获取推荐人信息
+
+            var refereeUserId = 0;
+            if (!string.IsNullOrEmpty(openIdReferee))
+            {
+                var wuser = wuserService.GetWUserByOpenId(openIdReferee);
+                if (wuser != null && !wuser.Deleted && wuser.Subscribe && wuser.AllowReferee)
                 {
-                    if (codeRecord.AllowDownload)
-                    {
-                        Task.Factory.StartNew(() => AdvancedAPIs.CustomApi.SendTextAsync(null, OpenId, "下载已经开始，如需下载其他版本，请刷新页面后重新扫一扫。"));
-                    }
-                    else
-                    {
-                        //确认可以下载
-                        codeRecord.AllowDownload = true;
-                        Task.Factory.StartNew(() => AdvancedAPIs.CustomApi.SendTextAsync(null, OpenId, GetDownloadInfo(codeRecord)));
-                    }
+                    refereeUserId = wuser.Id;
+                    //do nothing
                 }
             }
 
+            #endregion
 
-            return responseMessage;
+            // 添加/修改新用户信息
+            #region 添加/修改新用户信息
+
+            var newUser = wuserService.GetWUserByOpenId(requestMessage.FromUserName);
+            var userInfo = AdvancedAPIs.UserApi.Info(_senparcWeixinSetting.WeixinAppId, requestMessage.FromUserName);
+            if (newUser != null)
+            {
+                try
+                {
+                    newUser.RefereeId = refereeUserId;
+                    newUser.WConfigId = 0;
+                    newUser.CheckInType = WCheckInType.Subscribe;
+                    newUser.SceneType = sceneType;
+                    newUser.QrScene = scanQrcodeLimit ? scenicId : (1000000 + scenicId);
+                    //newUser.QrSceneStr = string.Empty;
+                    newUser.Subscribe = true;
+                    newUser.SubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime);
+                    
+                    if(userInfo.errcode== ReturnCode.请求成功)
+                    {
+                        newUser.UnionId = userInfo.unionid;
+                        newUser.NickName = userInfo.nickname;
+                        newUser.Province = userInfo.province;
+                        newUser.City = userInfo.city;
+                        newUser.Country = userInfo.country;
+                        newUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
+                        newUser.Remark = userInfo.remark;
+                        newUser.GroupId = userInfo.groupid.ToString();
+                        newUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
+                        newUser.Sex = Convert.ToByte(userInfo.sex);
+                        newUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
+                        newUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
+                        newUser.UpdateTime = (int)userInfo.subscribe_time;
+                        newUser.SubscribeTime = (int)userInfo.subscribe_time;
+                    }
+
+                    //update
+                    wuserService.UpdateWUser(newUser);
+                }
+                catch(Exception ex)
+                {
+
+                }
+                
+            }
+            else
+            {
+                try
+                {
+                    //Insert
+                    var initUser = new WUser
+                    {
+                        OpenId = requestMessage.FromUserName,
+                        RefereeId = refereeUserId,
+                        WConfigId = 0,
+                        OpenIdHash = CommonHelper.StringToLong(requestMessage.FromUserName),
+                        CheckInType = WCheckInType.Subscribe,
+                        LanguageType = WLanguageType.ZH_CN,
+                        Sex = 0,
+                        RoleType = WRoleType.Visitor,
+                        SceneType = WSceneType.Adver,
+                        Status = 0,
+                        QrScene = scanQrcodeLimit ? scenicId : (1000000 + scenicId),
+                        //QrSceneStr = string.Empty,
+                        Subscribe = true,
+                        AllowReferee = true,
+                        AllowResponse = true,
+                        AllowOrder = true,
+                        AllowNotice = false,
+                        AllowOrderNotice = false,
+                        InBlackList = false,
+                        Deleted = false,
+                        SubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime),
+                        UnSubscribeTime = 0,
+                        UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
+                        CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
+                    };
+
+                    if (userInfo.errcode == ReturnCode.请求成功)
+                    {
+                        initUser.UnionId = userInfo.unionid;
+                        initUser.NickName = userInfo.nickname;
+                        initUser.Province = userInfo.province;
+                        initUser.City = userInfo.city;
+                        initUser.Country = userInfo.country;
+                        initUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
+                        initUser.Remark = userInfo.remark;
+                        initUser.GroupId = userInfo.groupid.ToString();
+                        initUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
+                        initUser.Sex = Convert.ToByte(userInfo.sex);
+                        initUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
+                        initUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
+                        initUser.UpdateTime = (int)userInfo.subscribe_time;
+                        initUser.SubscribeTime = (int)userInfo.subscribe_time;
+                    }
+
+                    //insert
+                    wuserService.InsertWUser(initUser);
+
+                }
+                catch
+                {
+
+                }
+            }
+
+            #endregion
+
+            //首次回复循环消息
+            #region 循环消息
+
+            var responseMessage = GetResponseMessagesByIds(messageIds);
+            if (responseMessage != null)
+                return responseMessage;
+
+            #endregion
+
+            //循环消息中没有回复任何消息时，检查关注消息设置
+            #region 循环消息中没有回复任何消息时，检查关注默认消息设置
+
+            //TODO: 自动回复消息设置绑定的消息ID
+
+            #endregion
+
+            return new SuccessResponseMessage();
         }
 
         /// <summary>
@@ -488,9 +833,25 @@ QQ群：289181996
         /// <returns></returns>
         public override IResponseMessageBase OnEvent_UnsubscribeRequest(RequestMessageEvent_Unsubscribe requestMessage)
         {
-            var responseMessage = base.CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "有空再来";
-            return responseMessage;
+            var wuserService = EngineContext.Current.Resolve<IWUserService>();
+            var wuser = wuserService.GetWUserByOpenId(requestMessage.FromUserName);
+            if(wuser!=null)
+            {
+                wuser.Subscribe = false;
+                wuser.UnSubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime);
+
+                //update
+                wuserService.UpdateWUser(wuser);
+
+                //短时间取关，扣除用户奖励或推荐奖励
+                if (wuser.UnSubscribeTime - wuser.SubscribeTime < 86400) //24小时=86,400秒,2天=172,800‬，3天=259,200
+                {
+
+                }
+            }
+
+            //用户无法收到非订阅账号的消息，所以这里可以随便写
+            return new SuccessResponseMessage();
         }
 
         /// <summary>

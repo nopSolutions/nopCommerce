@@ -21,7 +21,6 @@ namespace Nop.Data.Mapping.Builders.Weixin
                 .WithColumn(nameof(WQrCodeImage.Description)).AsString(255).Nullable()
                 .WithColumn(nameof(WQrCodeImage.ImageUrl)).AsAnsiString(1024).Nullable()
                 .WithColumn(nameof(WQrCodeImage.ImageUrlOriginal)).AsAnsiString(1024).Nullable()
-                .WithColumn(nameof(WQrCodeImage.MessageIds)).AsAnsiString(64).Nullable()
                 .WithColumn(nameof(WQrCodeImage.TagIdList)).AsAnsiString(64).Nullable()
                 ;
         }

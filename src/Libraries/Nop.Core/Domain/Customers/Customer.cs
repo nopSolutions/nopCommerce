@@ -13,24 +13,14 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
-        /// Gets or sets the customer GUID
-        /// </summary>
-        public Guid CustomerGuid { get; set; }
-
-        /// <summary>
-        /// 当前用户OpenId
-        /// </summary>
-        public string OpenId { get; set; }
-
-        /// <summary>
-        /// 推荐用户OpenId
-        /// </summary>
-        public string OpenIdReferee { get; set; }
-
-        /// <summary>
         /// Gets or sets the username
         /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer system name
+        /// </summary>
+        public string SystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the email
@@ -43,14 +33,24 @@ namespace Nop.Core.Domain.Customers
         public string EmailToRevalidate { get; set; }
 
         /// <summary>
+        /// 当前用户OpenId
+        /// </summary>
+        public string OpenId { get; set; }
+
+        /// <summary>
+        /// 推荐用户OpenId
+        /// </summary>
+        public string OpenIdReferee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer GUID
+        /// </summary>
+        public Guid CustomerGuid { get; set; }
+
+        /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer is tax exempt
-        /// </summary>
-        public bool IsTaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets the affiliate identifier
@@ -61,6 +61,26 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the vendor identifier with which this customer is associated (maganer)
         /// </summary>
         public int VendorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating number of failed login attempts (wrong password)
+        /// </summary>
+        public int FailedLoginAttempts { get; set; }
+
+        /// <summary>
+        ///  Gets or sets the store identifier in which customer registered
+        /// </summary>
+        public int RegisteredInStoreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the billing address identifier
+        /// </summary>
+        public int? BillingAddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shipping address identifier
+        /// </summary>
+        public int? ShippingAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this customer has some products in the shopping cart
@@ -78,14 +98,9 @@ namespace Nop.Core.Domain.Customers
         public bool RequireReLogin { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating number of failed login attempts (wrong password)
+        /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
-        public int FailedLoginAttempts { get; set; }
-
-        /// <summary>
-        /// Gets or sets the date and time until which a customer cannot login (locked out)
-        /// </summary>
-        public DateTime? CannotLoginUntilDateUtc { get; set; }
+        public bool IsTaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
@@ -103,19 +118,14 @@ namespace Nop.Core.Domain.Customers
         public bool IsSystemAccount { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer system name
-        /// </summary>
-        public string SystemName { get; set; }
-
-        /// <summary>
         /// Gets or sets the last IP address
         /// </summary>
         public string LastIpAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of entity creation
+        /// Gets or sets the date and time until which a customer cannot login (locked out)
         /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime? CannotLoginUntilDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of last login
@@ -128,18 +138,8 @@ namespace Nop.Core.Domain.Customers
         public DateTime LastActivityDateUtc { get; set; }
 
         /// <summary>
-        ///  Gets or sets the store identifier in which customer registered
+        /// Gets or sets the date and time of entity creation
         /// </summary>
-        public int RegisteredInStoreId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the billing address identifier
-        /// </summary>
-        public int? BillingAddressId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping address identifier
-        /// </summary>
-        public int? ShippingAddressId { get; set; }
+        public DateTime CreatedOnUtc { get; set; }   
     }
 }

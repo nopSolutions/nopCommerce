@@ -9,5 +9,9 @@
         /// Admin area
         /// </summary>
         public const string Admin = "Admin";
+        /// <summary>
+        /// User area
+        /// </summary>
+        public const string User = "User";
     }
 }

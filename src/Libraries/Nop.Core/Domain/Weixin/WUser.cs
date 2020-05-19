@@ -59,6 +59,11 @@ namespace Nop.Core.Domain.Weixin
         /// </summary>
         /// <returns></returns>
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 本地系统给用户的备注标签只能后台设置
+        /// </summary>
+        public string SysRemark { get; set; }
         /// <summary>
         /// 用户所在的分组ID（兼容旧的用户分组接口）
         /// </summary>
@@ -165,10 +170,20 @@ namespace Nop.Core.Domain.Weixin
         /// 是否接受被推荐人的订单提示信息或被推荐人进行某操作后给推荐人的消息提醒
         /// </summary>
         public bool AllowNotice { get; set; }
+
+        /// <summary>
+        /// 订单提醒，主要用于分销客户有库存情况下使用，提醒包括表单下单或正常下单。
+        /// </summary>
+        public bool AllowOrderNotice { get; set; }
+
         /// <summary>
         /// 是否在黑名单中
         /// </summary>
         public bool InBlackList { get; set; }
+        /// <summary>
+        /// 删除标志
+        /// </summary>
+        public bool Deleted { get; set; }
         /// <summary>
         /// 关注时间
         /// </summary>

@@ -8,6 +8,11 @@ namespace Nop.Core.Domain.Catalog
     public partial class ProductSpecificationAttribute : BaseEntity, ILocalizedEntity
     {
         /// <summary>
+        /// Gets or sets the custom value
+        /// </summary>
+        public string CustomValue { get; set; }
+
+        /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
         public int ProductId { get; set; }
@@ -23,9 +28,9 @@ namespace Nop.Core.Domain.Catalog
         public int SpecificationAttributeOptionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom value
+        /// Gets or sets the display order
         /// </summary>
-        public string CustomValue { get; set; }
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets whether the attribute can be filtered by
@@ -36,11 +41,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets whether the attribute will be shown on the product page
         /// </summary>
         public bool ShowOnProductPage { get; set; }
-
-        /// <summary>
-        /// Gets or sets the display order
-        /// </summary>
-        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets the attribute control type

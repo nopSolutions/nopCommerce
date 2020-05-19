@@ -25,6 +25,7 @@
         /// 二维码类型
         /// </summary>
         public byte QrCodeActionTypeId { get; set; }
+
         /// <summary>
         /// 二维码类型
         /// </summary>
@@ -33,6 +34,21 @@
             get => (WQrCodeActionType)QrCodeActionTypeId;
             set => QrCodeActionTypeId = (byte)value;
         }
+
+        /// <summary>
+        /// 场景类型
+        /// </summary>
+        public byte WSceneTypeId { get; set; }
+
+        /// <summary>
+        /// 场景类型
+        /// </summary>
+        public WSceneType WSceneType
+        {
+            get => (WSceneType)WSceneTypeId;
+            set => WSceneTypeId = (byte)value;
+        }
+
         /// <summary>
         /// 二维码系统名称
         /// </summary>

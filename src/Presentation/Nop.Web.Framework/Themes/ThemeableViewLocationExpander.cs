@@ -23,6 +23,9 @@ namespace Nop.Web.Framework.Themes
             if (context.AreaName?.Equals(AreaNames.Admin) ?? false)
                 return;
 
+            if (context.AreaName?.Equals(AreaNames.User) ?? false)
+                return;
+
             var themeContext = (IThemeContext)context.ActionContext.HttpContext.RequestServices.GetService(typeof(IThemeContext));
             context.Values[THEME_KEY] = themeContext.WorkingThemeName;
         }

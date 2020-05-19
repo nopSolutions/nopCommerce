@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Localization
 {
@@ -28,6 +28,11 @@ namespace Nop.Core.Domain.Localization
         public string FlagImageFileName { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the default currency for this language; 0 is set when we use the default currency display order
+        /// </summary>
+        public int DefaultCurrencyId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the language supports "Right-to-left"
         /// </summary>
         public bool Rtl { get; set; }
@@ -36,11 +41,6 @@ namespace Nop.Core.Domain.Localization
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-
-        /// <summary>
-        /// Gets or sets the identifier of the default currency for this language; 0 is set when we use the default currency display order
-        /// </summary>
-        public int DefaultCurrencyId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the language is published

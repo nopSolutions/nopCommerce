@@ -220,11 +220,14 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<WUserAssetSchedule>(Create);
             _migrationManager.BuildTable<WUserRefereeMapping>(Create);
             _migrationManager.BuildTable<WUserTag>(Create);
+            _migrationManager.BuildTable<WUserSysTag>(Create);
+            _migrationManager.BuildTable<WUserUserSysTagMapping>(Create);
 
             _migrationManager.BuildTable<WLocation>(Create);
             _migrationManager.BuildTable<WMenu>(Create);
             _migrationManager.BuildTable<WMessage>(Create);
             _migrationManager.BuildTable<WOauth>(Create);
+            _migrationManager.BuildTable<WMessageBindMapping>(Create);
 
             _migrationManager.BuildTable<WPageShareList>(Create);
             _migrationManager.BuildTable<WPageShareCount>(Create);
@@ -236,7 +239,7 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<WQrCodeImage>(Create);
             _migrationManager.BuildTable<WQrCodeImageProductMapping>(Create);
 
-            _migrationManager.BuildTable<WQrCodeLimitMsgMapping>(Create);
+            
             _migrationManager.BuildTable<WQrCodeLimitUserMapping>(Create);
 
             _migrationManager.BuildTable<WQrCodeTemp>(Create);

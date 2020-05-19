@@ -8,7 +8,7 @@ namespace Nop.Data.Mapping.Builders.Weixin
     /// <summary>
     /// Represents a vendor note entity builder
     /// </summary>
-    public partial class WQrCodeLimitMsgMappingBuilder : NopEntityBuilder<WQrCodeLimitMsgMapping>
+    public partial class WUserUserSysTagMappingBuilder : NopEntityBuilder<WUserUserSysTagMapping>
     {
         #region Methods
 
@@ -19,8 +19,10 @@ namespace Nop.Data.Mapping.Builders.Weixin
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(WQrCodeLimitMsgMapping.WQrCodeLimitId)).AsInt32().ForeignKey<WQrCodeLimit>()
-                .WithColumn(nameof(WQrCodeLimitMsgMapping.MessageIds)).AsAnsiString(64).Nullable()
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(WUserUserSysTagMapping), nameof(WUserUserSysTagMapping.WUserId)))
+                    .AsInt32().PrimaryKey().ForeignKey<WUser>()
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(WUserUserSysTagMapping), nameof(WUserUserSysTagMapping.WUserSysTagId)))
+                    .AsInt32().PrimaryKey().ForeignKey<WUserSysTag>()
                 ;
         }
 
