@@ -86,7 +86,7 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
 状态：{0}
 MsgId：{1}
 （这是一条来自MessageHandler的异步客服消息）".FormatWith(requestMessage.Status, requestMessage.MsgID);
-                await CustomApi.SendTextAsync(appId, OpenId, msg);//发送客服消息
+                await CustomApi.SendTextAsync(_senparcWeixinSetting.WeixinAppId, OpenId, msg);//发送客服消息
             }
             catch (Exception e)
             {

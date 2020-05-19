@@ -38,8 +38,8 @@ namespace Nop.Services.Common
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            //configure client
-            client.BaseAddress = new Uri("https://www.yourdomain.com/");//https://www.nopcommerce.com/
+            //configure client https://www.nopcommerce.com/
+            client.BaseAddress = new Uri("https://www.yourdomain.com/");
             client.Timeout = TimeSpan.FromSeconds(5);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
 

@@ -14,6 +14,10 @@
         /// </summary>
         public int ProductId { get; set; }
         /// <summary>
+        /// 排序
+        /// </summary>
+        public int DisplayOrder { get; set; }
+        /// <summary>
         /// 删除
         /// </summary>
         public bool Deleted { get; set; }

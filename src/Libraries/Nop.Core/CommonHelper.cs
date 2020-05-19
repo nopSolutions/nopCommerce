@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -46,8 +47,9 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(str))
                 return 0L;
 
-            var strBytes = Encoding.UTF8.GetBytes(str);
-            return BitConverter.ToInt64(strBytes, 0);
+            var md5Bytes = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(str));
+
+            return Math.Abs(BitConverter.ToInt64(md5Bytes));
         }
 
         /// <summary>

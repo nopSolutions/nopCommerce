@@ -26,5 +26,9 @@
         /// 更新时间
         /// </summary>
         public int UpdateTime { get; set; }
+        /// <summary>
+        /// 删除标志
+        /// </summary>
+        public bool Deleted { get; set; }
     }
 }

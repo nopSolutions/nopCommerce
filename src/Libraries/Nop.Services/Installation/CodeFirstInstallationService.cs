@@ -32,6 +32,7 @@ using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Weixin;
 using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
@@ -6830,6 +6831,13 @@ namespace Nop.Services.Installation
                 ShortTermCacheTime = 5,
                 DefaultCacheTime = NopCachingDefaults.CacheTime,
                 BundledFilesCacheTime = 120
+            });
+
+            settingService.SaveSetting(new WeixinSettings
+            {
+                ForcedAccessWeChatBrowser = true,
+                CheckWebBrowser = false,
+                UseSnsapiBase = true
             });
         }
 

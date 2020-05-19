@@ -23,13 +23,6 @@ namespace Nop.Core.Domain.Catalog
         public int ParentGroupedProductId { get; set; }
 
         /// <summary>
-        /// Gets or sets the values indicating whether this product is visible in catalog or search results.
-        /// It's used when this product is associated to some "grouped" one
-        /// This way associated products could be accessed/added/etc only from a grouped product details page
-        /// </summary>
-        public bool VisibleIndividually { get; set; }
-
-        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
@@ -50,21 +43,6 @@ namespace Nop.Core.Domain.Catalog
         public string AdminComment { get; set; }
 
         /// <summary>
-        /// Gets or sets a value of used product template identifier
-        /// </summary>
-        public int ProductTemplateId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a vendor identifier
-        /// </summary>
-        public int VendorId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to show the product on home page
-        /// </summary>
-        public bool ShowOnHomepage { get; set; }
-
-        /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
         public string MetaKeywords { get; set; }
@@ -80,9 +58,41 @@ namespace Nop.Core.Domain.Catalog
         public string MetaTitle { get; set; }
 
         /// <summary>
+        /// Gets or sets a value of used product template identifier
+        /// </summary>
+        public int ProductTemplateId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a vendor identifier
+        /// </summary>
+        public int VendorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the values indicating whether this product is visible in catalog or search results.
+        /// It's used when this product is associated to some "grouped" one
+        /// This way associated products could be accessed/added/etc only from a grouped product details page
+        /// </summary>
+        public bool VisibleIndividually { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show the product on home page
+        /// </summary>
+        public bool ShowOnHomepage { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the product allows customer reviews
         /// </summary>
         public bool AllowCustomerReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets the rating sum (approved reviews)
@@ -103,16 +113,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the total rating votes (not approved reviews)
         /// </summary>
         public int NotApprovedTotalReviews { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the entity is subject to ACL
-        /// </summary>
-        public bool SubjectToAcl { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
-        /// </summary>
-        public bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets the SKU

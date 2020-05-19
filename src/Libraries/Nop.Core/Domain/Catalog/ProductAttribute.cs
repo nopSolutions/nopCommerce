@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -16,5 +16,9 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// Gets or sets the DisplayOrder
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 }

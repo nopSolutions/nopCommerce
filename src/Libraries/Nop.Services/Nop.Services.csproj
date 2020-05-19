@@ -33,4 +33,8 @@
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Weixin\Caching\" />
+  </ItemGroup>
+
 </Project>
