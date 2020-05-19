@@ -77,9 +77,14 @@ namespace Nop.Core.Domain.Shipping
         public bool FreeShippingOverXIncludingTax { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Estimate shipping' option is enabled
+        /// Gets or sets a value indicating whether 'Estimate shipping' is enabled on the shopping cart page
         /// </summary>
-        public bool EstimateShippingEnabled { get; set; }
+        public bool EstimateShippingCartPageEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Estimate shipping' is enabled on the product details pages
+        /// </summary>
+        public bool EstimateShippingProductPageEnabled { get; set; }
 
         /// <summary>
         /// A value indicating whether customers should see shipment events on their order details pages

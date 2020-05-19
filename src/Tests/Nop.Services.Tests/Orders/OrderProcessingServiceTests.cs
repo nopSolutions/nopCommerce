@@ -166,10 +166,11 @@ namespace Nop.Services.Tests.Orders
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _paymentPluginManager = new PaymentPluginManager();
-            _pickupPluginManager = new PickupPluginManager();
-            _shippingPluginManager = new ShippingPluginManager();
-            _taxPluginManager = new TaxPluginManager();
+            var pluginService = new FakePluginService(_catalogSettings);
+            _paymentPluginManager = new PaymentPluginManager(_customerService.Object, pluginService, null, _paymentSettings);
+            _pickupPluginManager = new PickupPluginManager(_customerService.Object, pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(_customerService.Object, pluginService, _shippingSettings);
+            _taxPluginManager = new TaxPluginManager(_customerService.Object, pluginService, _taxSettings);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             //shipping

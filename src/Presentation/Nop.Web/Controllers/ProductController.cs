@@ -197,10 +197,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult EstimateShipping([FromQuery] ProductEstimateShippingModel model, IFormCollection form)
+        public virtual IActionResult EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
-                model = new ProductEstimateShippingModel();
+                model = new ProductDetailsModel.ProductEstimateShippingModel();
 
             var errors = new List<string>();
             if (string.IsNullOrEmpty(model.ZipPostalCode))
@@ -216,9 +216,9 @@ namespace Nop.Web.Controllers
                 });
             
             var product = _productService.GetProductById(model.ProductId);
-            if (product == null || product.Deleted || !product.Published)
+            if (product == null || product.Deleted)
             {
-                errors.Add(_localizationService.GetResource("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound"));
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShippingPopUp.Product.IsNotFound"));
                 return Json(new
                 {
                     success = false,

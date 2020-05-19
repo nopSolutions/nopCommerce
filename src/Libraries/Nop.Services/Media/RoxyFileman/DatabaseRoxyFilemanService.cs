@@ -19,7 +19,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
 
 namespace Nop.Services.Media.RoxyFileman
@@ -138,12 +137,13 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Encode the image into a byte array in accordance with the specified image format
         /// </summary>
-        /// <typeparam name="T">Pixel data type</typeparam>
+        /// <typeparam name="TPixel">Pixel data type</typeparam>
         /// <param name="image">Image data</param>
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<T>(Image<T> image, IImageFormat imageFormat, int? quality = null) where T : struct, IPixel<T>
+        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using var stream = new MemoryStream();
             var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);

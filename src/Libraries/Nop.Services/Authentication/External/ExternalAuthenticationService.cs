@@ -270,7 +270,7 @@ namespace Nop.Services.Authentication.External
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            if (!_authenticationPluginManager.IsPluginActive(parameters.ProviderSystemName))
+            if (!_authenticationPluginManager.IsPluginActive(parameters.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id))
                 return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user

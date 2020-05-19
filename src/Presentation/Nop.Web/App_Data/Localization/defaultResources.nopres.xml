@@ -3156,6 +3156,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.Hint">
     <Value>Specify period length for rental product. Price is specified for this period.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero">
+    <Value>Rental period length should be greater 0.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPricePeriod">
     <Value>Rental period</Value>
   </LocaleResource>
@@ -8094,11 +8097,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner.Hint">
     <Value>Check if you want a store owner to see shipment events on the shipment details pages of admin area (if supported by your shipping rate computation method).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled">
-    <Value>Estimate shipping enabled</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled">
+    <Value>Estimate shipping enabled (cart page)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
-    <Value>Check to allow customers to estimate shipping on product and shopping cart pages.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
+    <Value>Estimate shipping enabled (product page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the product details pages. Please note that all the shipping provider APIs will be called on the product details page. Also the final shipping rate in the cart may not be exactly equal to the sum of all the individual estimates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled">
     <Value>Free shipping over 'X'</Value>
@@ -14133,11 +14142,38 @@
   <LocaleResource Name="Admin.System.SeNames.Language.Standard">
     <Value>Standard</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SeNames.Name">
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.Hint">
+    <Value>Search by a "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language.Hint">
+    <Value>Search by a "Language" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Name">
     <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SeNames.Name.Hint">
+  <LocaleResource Name="Admin.System.SeNames.List.Name.Hint">
     <Value>A name to find.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Name">
+    <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo">
     <Value>System information</Value>
@@ -17828,6 +17864,9 @@
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
     <Value>From {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Product.IsNotFound">
+    <Value>Product is not found</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.SelectShippingOption.Button">
     <Value>Apply</Value>

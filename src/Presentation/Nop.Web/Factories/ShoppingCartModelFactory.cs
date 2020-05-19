@@ -699,7 +699,8 @@ namespace Nop.Web.Factories
 
             //payment info
             var selectedPaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(selectedPaymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager
+                .LoadPluginBySystemName(selectedPaymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
             model.PaymentMethod = paymentMethod != null
                 ? _localizationService.GetLocalizedFriendlyName(paymentMethod, _workContext.WorkingLanguage.Id)
                 : string.Empty;
@@ -729,7 +730,7 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel
             {
-                Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart) && _shippingSettings.EstimateShippingEnabled
+                Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart)
             };
             if (model.Enabled)
             {
@@ -1342,61 +1343,51 @@ namespace Nop.Web.Factories
 
                 if (rawShippingOptions.Any())
                 {
-                    var orderedShippingOptions = rawShippingOptions
-                        .OrderBy(option => option.Rate)
-                        .ThenBy(option => option.TransitDays)
-                        .Select(option =>
-                        {
-                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(option.Rate, cart, out var _, option.IsPickupInStore);
-                            shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
-                            shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
-                            var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
-
-                            if(option.IsPickupInStore && pickupPointsNumber > 1)
-                                shippingRateString = string.Format(_localizationService.GetResource("Shipping.EstimateShippingPopUp.Pickup.PriceFrom"), shippingRateString);
-
-                            string deliveryDateFormat = null;
-                            if (option.TransitDays.HasValue)
-                            {
-                                var currentCulture = CultureInfo.GetCultureInfo(_workContext.WorkingLanguage.LanguageCulture);
-                                var customerDateTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-                                deliveryDateFormat = customerDateTime.AddDays(option.TransitDays.Value).ToString("d", currentCulture);
-                            }
-
-                            var selected = false;
-                            if (selectedShippingOption != null &&
-                            !string.IsNullOrEmpty(option.ShippingRateComputationMethodSystemName) &&
-                                   option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase) &&
-                                   (!string.IsNullOrEmpty(option.Name) &&
-                                   option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) || 
-                                   (option.IsPickupInStore && option.IsPickupInStore == selectedShippingOption.IsPickupInStore))
-                                   )
-                            {
-                                selected = true;
-                            }
-
-                            return new EstimateShippingResultModel.ShippingOptionModel()
-                            {
-                                Name = option.Name,
-                                ShippingRateComputationMethodSystemName = option.ShippingRateComputationMethodSystemName,
-                                Description = option.Description,
-                                Price = shippingRateString,
-                                Rate = option.Rate,
-                                DeliveryDateFormat = deliveryDateFormat,
-                                Selected = selected
-                            };
-                        }).ToList();
-
-                    //if no option has been selected, let's do it for the first one
-                    if (orderedShippingOptions.FirstOrDefault(so => so.Selected) == null)
+                    foreach (var option in rawShippingOptions)
                     {
-                        var shippingOptionToSelect = orderedShippingOptions.FirstOrDefault();
-                        if (shippingOptionToSelect != null)
-                            shippingOptionToSelect.Selected = true;
+                        var shippingRate = _orderTotalCalculationService.AdjustShippingRate(option.Rate, cart, out var _, option.IsPickupInStore);
+                        shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
+                        shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
+                        var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
+
+                        if (option.IsPickupInStore && pickupPointsNumber > 1)
+                            shippingRateString = string.Format(_localizationService.GetResource("Shipping.EstimateShippingPopUp.Pickup.PriceFrom"), shippingRateString);
+
+                        string deliveryDateFormat = null;
+                        if (option.TransitDays.HasValue)
+                        {
+                            var currentCulture = CultureInfo.GetCultureInfo(_workContext.WorkingLanguage.LanguageCulture);
+                            var customerDateTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+                            deliveryDateFormat = customerDateTime.AddDays(option.TransitDays.Value).ToString("d", currentCulture);
+                        }
+
+                        var selected = false;
+                        if (selectedShippingOption != null &&
+                        !string.IsNullOrEmpty(option.ShippingRateComputationMethodSystemName) &&
+                               option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase) &&
+                               (!string.IsNullOrEmpty(option.Name) &&
+                               option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) ||
+                               (option.IsPickupInStore && option.IsPickupInStore == selectedShippingOption.IsPickupInStore))
+                               )
+                        {
+                            selected = true;
+                        }
+
+                        model.ShippingOptions.Add(new EstimateShippingResultModel.ShippingOptionModel()
+                        {
+                            Name = option.Name,
+                            ShippingRateComputationMethodSystemName = option.ShippingRateComputationMethodSystemName,
+                            Description = option.Description,
+                            Price = shippingRateString,
+                            Rate = option.Rate,
+                            DeliveryDateFormat = deliveryDateFormat,
+                            Selected = selected
+                        });
                     }
 
-                    foreach (var option in orderedShippingOptions)
-                        model.ShippingOptions.Add(option);
+                    //if no option has been selected, let's do it for the first one
+                    if (!model.ShippingOptions.Any(so => so.Selected))
+                        model.ShippingOptions.First().Selected = true;
                 }
             }
 

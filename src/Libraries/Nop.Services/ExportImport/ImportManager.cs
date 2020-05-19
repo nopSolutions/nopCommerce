@@ -23,7 +23,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -348,6 +347,7 @@ namespace Nop.Services.ExportImport
         {
             //performance optimization, load all pictures hashes
             //it will only be used if the images are stored in the SQL Server database (not compact)
+            var trimByteCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = _productService.GetProductsImagesIds(allProductsBySku.Select(p => p.Id).ToArray());
             var allPicturesHashes = _pictureService.GetPicturesHash(productsImagesIds.SelectMany(p => p.Value).ToArray());
 
@@ -367,12 +367,12 @@ namespace Nop.Services.ExportImport
                             var newImageHash = HashHelper.CreateHash(
                                 newPictureBinary,
                                 IMAGE_HASH_ALGORITHM,
-                                _dataProvider.SupportedLengthOfBinaryHash);
-                                    
+                                trimByteCount);
+
                             var newValidatedImageHash = HashHelper.CreateHash(
                                 _pictureService.ValidatePicture(newPictureBinary, mimeType), 
                                 IMAGE_HASH_ALGORITHM,
-                                _dataProvider.SupportedLengthOfBinaryHash);
+                                trimByteCount);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                                 ? productsImagesIds[product.ProductItem.Id]

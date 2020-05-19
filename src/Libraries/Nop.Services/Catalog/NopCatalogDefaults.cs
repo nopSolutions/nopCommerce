@@ -357,7 +357,7 @@ namespace Nop.Services.Catalog
         /// {2} : allow filtering
         /// {3} : show on product page
         /// </remarks>
-        public static CacheKey ProductSpecificationAttributeAllByProductIdCacheKey => new CacheKey("Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}-{3}", ProductSpecificationAttributeAllByProductPrefixCacheKey);
+        public static CacheKey ProductSpecificationAttributeAllByProductIdCacheKey => new CacheKey("Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}-{3}", ProductSpecificationAttributeAllByProductIdPrefixCacheKey, ProductSpecificationAttributeAllByProductIdsPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -365,7 +365,15 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        public static string ProductSpecificationAttributeAllByProductPrefixCacheKey => "Nop.Nop.productspecificationattribute.allbyproductid-{0}";
+        public static string ProductSpecificationAttributeAllByProductIdPrefixCacheKey => "Nop.productspecificationattribute.allbyproductid-{0}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {1} (not 0, see the <ref>ProductSpecificationAttributeAllByProductIdCacheKey</ref>) :specification attribute option ID
+        /// </remarks>
+        public static string ProductSpecificationAttributeAllByProductIdsPrefixCacheKey => "Nop.productspecificationattribute.allbyproductid";
 
         /// <summary>
         /// Key for specification attributes caching (product details page)

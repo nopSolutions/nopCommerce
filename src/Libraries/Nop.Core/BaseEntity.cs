@@ -26,7 +26,7 @@ namespace Nop.Core
         /// <returns>Key for caching the entity</returns>
         public static string GetEntityCacheKey(Type entityType, object id)
         {
-            return string.Format(NopCachingDefaults.NopEntityCacheKey, entityType.Name, id);
+            return string.Format(NopCachingDefaults.NopEntityCacheKey, entityType.Name.ToLower(), id);
         }
     }
 }

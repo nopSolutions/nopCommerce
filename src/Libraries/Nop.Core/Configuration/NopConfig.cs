@@ -73,6 +73,11 @@ namespace Nop.Core.Configuration
         public bool UseRedisForCaching { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we should ignore Redis timeout exception (Enabling this setting increases cache stability but may decrease site performance)
+        /// </summary>
+        public bool IgnoreRedisTimeoutException { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server for store the plugins info (instead of default plugin.json file)
         /// </summary>
         public bool UseRedisToStorePluginsInfo { get; set; }

@@ -977,17 +977,13 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            //were some points redeemed when placing an order?
-            if (order.RedeemedRewardPointsEntryId is null)
-                return;
-
             var customer = _customerService.GetCustomerById(order.CustomerId);
 
-            var redeemedRewardPointsEntry = _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value);
-
-            //return back
-            _rewardPointService.AddRewardPointsHistoryEntry(customer, -redeemedRewardPointsEntry.Points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+            //were some reward points spend on the order
+            foreach (var rewardPoints in _rewardPointService.GetRewardPointsHistory(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid))
+                //return back
+                _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPoints.Points, order.StoreId,
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
         }
 
         /// <summary>
@@ -1400,7 +1396,9 @@ namespace Nop.Services.Orders
             var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
             if (!skipPaymentWorkflow)
             {
-                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+                var paymentMethod = _paymentPluginManager
+                    .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                     ?? throw new NopException("Payment method couldn't be loaded");
 
                 //ensure that payment method is active
@@ -1856,7 +1854,8 @@ namespace Nop.Services.Orders
                 var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
                 if (!skipPaymentWorkflow)
                 {
-                    var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                    var paymentMethod = _paymentPluginManager
+                        .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, initialOrder.StoreId)
                         ?? throw new NopException("Payment method couldn't be loaded");
 
                     if (!_paymentPluginManager.IsPluginActive(paymentMethod))

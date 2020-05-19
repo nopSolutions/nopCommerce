@@ -471,8 +471,8 @@
                                                             updateTable('#sms-grid');
 
                                                             //clear input value
-                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(0);
-                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(0);
+                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(@(Model.AddSms.DefaultSelectedMessageId));
+                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(@(Model.AddSms.DefaultSelectedPhoneTypeId));
                                                             $("#@Html.IdFor(model => model.AddSms.Text)").val('');
 
                                                         } else {

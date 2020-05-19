@@ -912,6 +912,7 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
+                productId,
                 gtin,
                 mpn,
                 sku,

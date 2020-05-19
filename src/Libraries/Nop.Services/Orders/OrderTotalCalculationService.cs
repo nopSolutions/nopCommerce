@@ -464,7 +464,7 @@ namespace Nop.Services.Orders
                         if (updateOrderParameters.PickupPoint == null)
                         {
                             //or try to get the cheapest shipping option for the shipping to the customer address 
-                            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins();
                             if (shippingRateComputationMethods.Any())
                             {
                                 var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);
