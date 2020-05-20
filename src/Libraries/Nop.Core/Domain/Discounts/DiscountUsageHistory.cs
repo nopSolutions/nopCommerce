@@ -1,5 +1,4 @@
-using System;
-using Nop.Core.Domain.Orders;
+﻿using System;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -22,15 +21,5 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the discount
-        /// </summary>
-        public virtual Discount Discount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the order
-        /// </summary>
-        public virtual Order Order { get; set; }
     }
 }

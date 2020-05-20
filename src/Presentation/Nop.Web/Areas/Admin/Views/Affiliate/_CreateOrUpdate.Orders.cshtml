@@ -4,23 +4,25 @@
     <div class="sub-panel panel-search">
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div class="form-group">
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.StartDate" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <nop-editor asp-for="AffiliatedOrderSearchModel.StartDate" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <nop-label asp-for="AffiliatedOrderSearchModel.EndDate" />
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-5">
                             <nop-editor asp-for="AffiliatedOrderSearchModel.EndDate" />
                         </div>
                     </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <div class="col-md-4">
                             <nop-label asp-for="AffiliatedOrderSearchModel.OrderStatusId" />
@@ -45,14 +47,14 @@
                             <nop-select asp-for="AffiliatedOrderSearchModel.ShippingStatusId" asp-items="Model.AffiliatedOrderSearchModel.AvailableShippingStatuses" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-8 col-md-offset-4">
-                            <button type="button" id="search-orders" class="btn btn-primary btn-search">
-                                <i class="fa fa-search"></i>
-                                @T("Admin.Common.Search")
-                            </button>
-                        </div>
-                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-5">
+                    <button type="button" id="search-orders" class="btn btn-primary btn-search">
+                        <i class="fa fa-search"></i>
+                        @T("Admin.Common.Search")
+                    </button>
                 </div>
             </div>
         </div>
@@ -113,19 +115,19 @@
                     }
                 }
             })
-            
+
             <script>
                 var selectedIds = [];
                 var reportAggregates = "";
 
                 function renderOrderStatus(data, type, row, meta) {
 
-                    var color; 
+                    var color;
                     switch (row.OrderStatusId) {
-                    case 10: color = 'yellow'; break;
-                    case 20: color = 'blue'; break;
-                    case 30: color = 'green'; break;
-                    case 40: color = 'red'; break;
+                        case 10: color = 'yellow'; break;
+                        case 20: color = 'blue'; break;
+                        case 30: color = 'green'; break;
+                        case 40: color = 'red'; break;
                     }
 
                     return '<span class="grid-report-item ' + color + '">' + data + '</span >';

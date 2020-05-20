@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Gdpr
 {
@@ -36,6 +36,5 @@ namespace Nop.Core.Domain.Gdpr
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
     }
 }

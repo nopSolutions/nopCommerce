@@ -1,4 +1,4 @@
-using Nop.Core;
+﻿using Nop.Core;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Domain
 {
@@ -36,6 +36,11 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Domain
         /// Gets or sets the shipping method identifier
         /// </summary>
         public int ShippingMethodId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the transit days
+        /// </summary>
+        public int? TransitDays { get; set; }
 
         /// <summary>
         /// Gets or sets the "Weight from" value

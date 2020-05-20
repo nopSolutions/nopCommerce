@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Infrastructure.DependencyManagement
@@ -28,13 +29,13 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
                 scopeBuilder => scopeBuilder.RegisterType<Foo3>().As<IFoo>());
             var arrayB = scopeB.Resolve<IEnumerable<IFoo>>().ToArray();
 
-            Assert.That(arrayA.Count(), Is.EqualTo(2));
-            Assert.That(arrayA, Has.Some.TypeOf<Foo1>());
-            Assert.That(arrayA, Has.Some.TypeOf<Foo2>());
+            arrayA.Count().Should().Be(2);
+            arrayA.Should().Contain(x => x is Foo1);
+            arrayA.Should().Contain(x => x is Foo2);
 
-            Assert.That(arrayB.Count(), Is.EqualTo(2));
-            Assert.That(arrayB, Has.Some.TypeOf<Foo1>());
-            Assert.That(arrayB, Has.Some.TypeOf<Foo3>());
+            arrayB.Count().Should().Be(2);
+            arrayB.Should().Contain(x => x is Foo1);
+            arrayB.Should().Contain(x => x is Foo3);
         }
     }
 }

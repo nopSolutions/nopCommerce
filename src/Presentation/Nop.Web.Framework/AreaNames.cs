@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Web.Framework
+﻿namespace Nop.Web.Framework
 {
     /// <summary>
     /// Represents a list of area names

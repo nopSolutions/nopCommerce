@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Nop.Core.Infrastructure;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace Nop.Core.Tests.Infrastructure
         public void Singleton_IsNullByDefault()
         {
             var instance = Singleton<SingletonTests>.Instance;
-            Assert.That(instance, Is.Null);
+            instance.Should().BeNull();
         }
 
         [Test]
@@ -20,16 +21,16 @@ namespace Nop.Core.Tests.Infrastructure
             Singleton<int>.Instance = 1;
             Singleton<double>.Instance = 2.0;
 
-            Assert.That(Singleton<int>.AllSingletons, Is.SameAs(Singleton<double>.AllSingletons));
-            Assert.That(BaseSingleton.AllSingletons[typeof(int)], Is.EqualTo(1));
-            Assert.That(BaseSingleton.AllSingletons[typeof(double)], Is.EqualTo(2.0));
+            Singleton<int>.AllSingletons.Should().BeSameAs(Singleton<double>.AllSingletons);
+            BaseSingleton.AllSingletons[typeof(int)].Should().Be(1);
+            BaseSingleton.AllSingletons[typeof(double)].Should().Be(2.0M);
         }
 
         [Test]
         public void SingletonDictionary_IsCreatedByDefault()
         {
             var instance = SingletonDictionary<SingletonTests, object>.Instance;
-            Assert.That(instance, Is.Not.Null);
+            instance.Should().NotBeNull();
         }
 
         [Test]
@@ -37,14 +38,14 @@ namespace Nop.Core.Tests.Infrastructure
         {
             var instance = SingletonDictionary<Type, SingletonTests>.Instance;
             instance[typeof(SingletonTests)] = this;
-            Assert.That(instance[typeof(SingletonTests)], Is.SameAs(this));
+            instance[typeof(SingletonTests)].Should().BeSameAs(this);
         }
 
         [Test]
         public void SingletonList_IsCreatedByDefault()
         {
             var instance = SingletonList<SingletonTests>.Instance;
-            Assert.That(instance, Is.Not.Null);
+            instance.Should().NotBeNull();
         }
 
         [Test]
@@ -52,7 +53,7 @@ namespace Nop.Core.Tests.Infrastructure
         {
             var instance = SingletonList<SingletonTests>.Instance;
             instance.Insert(0, this);
-            Assert.That(instance[0], Is.SameAs(this));
+            instance[0].Should().BeSameAs(this);
         }
     }
 }

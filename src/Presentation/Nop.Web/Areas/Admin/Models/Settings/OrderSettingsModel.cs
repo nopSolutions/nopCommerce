@@ -75,6 +75,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DisableOrderCompletedPage { get; set; }
         public bool DisableOrderCompletedPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage")]
+        public bool DisplayPickupInStoreOnShippingMethodPage { get; set; }
+        public bool DisplayPickupInStoreOnShippingMethodPage_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail")]
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
         public bool AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore { get; set; }

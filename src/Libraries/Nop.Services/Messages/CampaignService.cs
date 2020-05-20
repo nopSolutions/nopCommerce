@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -107,7 +108,7 @@ namespace Nop.Services.Messages
             if (campaignId == 0)
                 return null;
 
-            return _campaignRepository.GetById(campaignId);
+            return _campaignRepository.ToCachedGetById(campaignId);
         }
 
         /// <summary>

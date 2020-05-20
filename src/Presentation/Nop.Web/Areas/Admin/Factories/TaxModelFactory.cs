@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Nop.Services.Localization;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -17,7 +14,6 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
 
@@ -25,11 +21,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public TaxModelFactory(ILocalizationService localizationService, 
+        public TaxModelFactory(
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager)
         {
-            _localizationService = localizationService;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
         }

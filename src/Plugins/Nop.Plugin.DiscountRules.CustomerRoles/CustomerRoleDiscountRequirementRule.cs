@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
@@ -16,6 +18,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         #region Fields
 
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
@@ -28,12 +31,14 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
 
         public CustomerRoleDiscountRequirementRule(IActionContextAccessor actionContextAccessor,
             IDiscountService discountService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             ISettingService settingService,
             IUrlHelperFactory urlHelperFactory,
             IWebHelper webHelper)
         {
             _actionContextAccessor = actionContextAccessor;
+            _customerService = customerService;
             _discountService = discountService;
             _localizationService = localizationService;
             _settingService = settingService;
@@ -67,7 +72,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
                 return result;
 
             //result is valid if the customer belongs to the restricted role
-            result.IsValid = request.Customer.CustomerRoles.Any(role => role.Id == restrictedRoleId && role.Active);
+            result.IsValid = _customerService.GetCustomerRoles(request.Customer).Any(role => role.Id == restrictedRoleId);
 
             return result;
         }
@@ -81,8 +86,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         public string GetConfigurationUrl(int discountId, int? discountRequirementId)
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            
-            return urlHelper.Action("Configure", "DiscountRulesCustomerRoles", 
+
+            return urlHelper.Action("Configure", "DiscountRulesCustomerRoles",
                 new { discountId = discountId, discountRequirementId = discountRequirementId }, _webHelper.CurrentRequestProtocol);
         }
 
@@ -92,9 +97,14 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         public override void Install()
         {
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole", "Required customer role");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint", "Discount will be applied if customer is in the selected customer role.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select", "Select customer role");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole"] = "Required customer role",
+                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint"] = "Discount will be applied if customer is in the selected customer role.",
+                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"] = "Select customer role",
+                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required"] = "Customer role is required",
+                ["Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required"] = "Discount is required"
+            });
 
             base.Install();
         }
@@ -109,13 +119,11 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
                 .Where(discountRequirement => discountRequirement.DiscountRequirementRuleSystemName == DiscountRequirementDefaults.SystemName);
             foreach (var discountRequirement in discountRequirements)
             {
-                _discountService.DeleteDiscountRequirement(discountRequirement);
+                _discountService.DeleteDiscountRequirement(discountRequirement, false);
             }
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole");
-            _localizationService.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select");
+            _localizationService.DeletePluginLocaleResources("Plugins.DiscountRules.CustomerRoles");
 
             base.Uninstall();
         }

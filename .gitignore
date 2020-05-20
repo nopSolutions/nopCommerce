@@ -165,6 +165,7 @@ $RECYCLE.BIN/
 glob:*.user
 *.patch
 *.hg
+src/Presentation/Nop.Web/.config/*
 src/Presentation/Nop.Web/App_Data/browscap.crawlersonly.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json
 src/Presentation/Nop.Web/App_Data/plugins.json
@@ -187,4 +188,7 @@ src/Presentation/Nop.Web/wwwroot/images/uploaded/*
 !src/Presentation/Nop.Web/wwwroot/images/uploaded/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 !src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
+src/Presentation/Nop.Web/wwwroot/lib/cldr-data/main*
+!src/Presentation/Nop.Web/wwwroot/lib/cldr-data/main/en/*
+!src/Presentation/Nop.Web/wwwroot/lib/cldr-data/main/main.zip
 src/packages/*

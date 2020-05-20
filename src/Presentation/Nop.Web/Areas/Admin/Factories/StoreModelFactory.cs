@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
@@ -7,7 +6,6 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -70,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get stores
-            var stores = _storeService.GetAllStores(loadCacheableCopy: false).ToPagedList(searchModel);
+            var stores = _storeService.GetAllStores().ToPagedList(searchModel);
 
             //prepare list model
             var model = new StoreListModel().PrepareToGrid(searchModel, stores, () =>
@@ -96,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (store != null)
             {
                 //fill in model values from the entity
-                model = model ?? store.ToModel<StoreModel>();
+                model ??= store.ToModel<StoreModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -106,7 +104,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, defaultItemText: _localizationService.GetResource("Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText"));
+            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, 
+                defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
 
             //prepare localized models
             if (!excludeProperties)

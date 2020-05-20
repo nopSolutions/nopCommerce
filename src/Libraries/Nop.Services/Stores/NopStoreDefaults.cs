@@ -1,10 +1,14 @@
-﻿namespace Nop.Services.Stores
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Stores
 {
     /// <summary>
     /// Represents default values related to stores services
     /// </summary>
     public static partial class NopStoreDefaults
     {
+        #region Caching defaults
+
         #region Store mappings
 
         /// <summary>
@@ -14,12 +18,16 @@
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static string StoreMappingByEntityIdNameCacheKey => "Nop.storemapping.entityid-name-{0}-{1}";
+        public static CacheKey StoreMappingIdsByEntityIdNameCacheKey => new CacheKey("Nop.storemapping.ids.entityid-name-{0}-{1}");
 
         /// <summary>
-        /// Gets a key pattern to clear cache
+        /// Gets a key for caching
         /// </summary>
-        public static string StoreMappingPrefixCacheKey => "Nop.storemapping.";
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : entity name
+        /// </remarks>
+        public static CacheKey StoreMappingsByEntityIdNameCacheKey => new CacheKey("Nop.storemapping.entityid-name-{0}-{1}");
 
         #endregion
 
@@ -28,20 +36,9 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string StoresAllCacheKey => "Nop.stores.all";
+        public static CacheKey StoresAllCacheKey => new CacheKey("Nop.stores.all");
 
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : store ID
-        /// </remarks>
-        public static string StoresByIdCacheKey => "Nop.stores.id-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string StoresPrefixCacheKey => "Nop.stores.";
+        #endregion
 
         #endregion
     }

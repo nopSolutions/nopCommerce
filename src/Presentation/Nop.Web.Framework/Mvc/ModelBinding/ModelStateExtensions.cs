@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding
 {
@@ -16,16 +15,17 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
             for (var i = 0; i < modelState.Errors.Count; i++)
             {
                 var modelError = modelState.Errors[i];
-                var errorText = ValidationHelpers.GetModelErrorMessageOrDefault(modelError);
 
-                if (!string.IsNullOrEmpty(errorText))
+                if (!string.IsNullOrEmpty(modelError.ErrorMessage))
                 {
-                    errors.Add(errorText);
+                    errors.Add(modelError.ErrorMessage);
                 }
             }
 
-            var dictionary = new Dictionary<string, object>();
-            dictionary["errors"] = errors.ToArray();
+            var dictionary = new Dictionary<string, object>
+            {
+                ["errors"] = errors.ToArray()
+            };
             return dictionary;
         }
 

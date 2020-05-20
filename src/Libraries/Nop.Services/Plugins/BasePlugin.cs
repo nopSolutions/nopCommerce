@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Base plugin
@@ -31,6 +29,15 @@ namespace Nop.Services.Plugins
         /// Uninstall plugin
         /// </summary>
         public virtual void Uninstall() 
+        {
+        }
+
+        /// <summary>
+        /// Update plugin
+        /// </summary>
+        /// <param name="currentVersion">Current version of plugin</param>
+        /// <param name="targetVersion">New version of plugin</param>
+        public virtual void Update(string currentVersion, string targetVersion)
         {
         }
 

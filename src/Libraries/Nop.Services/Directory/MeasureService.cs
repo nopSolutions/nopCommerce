@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Directory
@@ -16,7 +17,7 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
@@ -26,13 +27,13 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        public MeasureService(ICacheManager cacheManager,
+        public MeasureService(ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
             MeasureSettings measureSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
@@ -56,8 +57,6 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Delete(measureDimension);
 
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureDimensionsPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(measureDimension);
         }
@@ -72,8 +71,7 @@ namespace Nop.Services.Directory
             if (measureDimensionId == 0)
                 return null;
 
-            var key = string.Format(NopDirectoryDefaults.MeasureDimensionsByIdCacheKey, measureDimensionId);
-            return _cacheManager.Get(key, () => _measureDimensionRepository.GetById(measureDimensionId));
+            return _measureDimensionRepository.ToCachedGetById(measureDimensionId);
         }
 
         /// <summary>
@@ -99,14 +97,12 @@ namespace Nop.Services.Directory
         /// <returns>Measure dimensions</returns>
         public virtual IList<MeasureDimension> GetAllMeasureDimensions()
         {
-            return _cacheManager.Get(NopDirectoryDefaults.MeasureDimensionsAllCacheKey, () =>
-            {
-                var query = from md in _measureDimensionRepository.Table
-                            orderby md.DisplayOrder, md.Id
-                            select md;
-                var measureDimensions = query.ToList();
-                return measureDimensions;
-            });
+            var query = from md in _measureDimensionRepository.Table
+                orderby md.DisplayOrder, md.Id
+                select md;
+            var measureDimensions = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
+
+            return measureDimensions;
         }
 
         /// <summary>
@@ -119,8 +115,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(measure));
 
             _measureDimensionRepository.Insert(measure);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureDimensionsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(measure);
@@ -136,8 +130,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(measure));
 
             _measureDimensionRepository.Update(measure);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureDimensionsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(measure);
@@ -238,8 +230,6 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Delete(measureWeight);
 
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureWeightsPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(measureWeight);
         }
@@ -254,8 +244,7 @@ namespace Nop.Services.Directory
             if (measureWeightId == 0)
                 return null;
 
-            var key = string.Format(NopDirectoryDefaults.MeasureWeightsByIdCacheKey, measureWeightId);
-            return _cacheManager.Get(key, () => _measureWeightRepository.GetById(measureWeightId));
+            return _measureWeightRepository.ToCachedGetById(measureWeightId);
         }
 
         /// <summary>
@@ -281,14 +270,12 @@ namespace Nop.Services.Directory
         /// <returns>Measure weights</returns>
         public virtual IList<MeasureWeight> GetAllMeasureWeights()
         {
-            return _cacheManager.Get(NopDirectoryDefaults.MeasureWeightsAllCacheKey, () =>
-            {
-                var query = from mw in _measureWeightRepository.Table
-                            orderby mw.DisplayOrder, mw.Id
-                            select mw;
-                var measureWeights = query.ToList();
-                return measureWeights;
-            });
+            var query = from mw in _measureWeightRepository.Table
+                orderby mw.DisplayOrder, mw.Id
+                select mw;
+            var measureWeights = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
+
+            return measureWeights;
         }
 
         /// <summary>
@@ -301,8 +288,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(measure));
 
             _measureWeightRepository.Insert(measure);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureWeightsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(measure);
@@ -318,8 +303,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(measure));
 
             _measureWeightRepository.Update(measure);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.MeasureWeightsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(measure);

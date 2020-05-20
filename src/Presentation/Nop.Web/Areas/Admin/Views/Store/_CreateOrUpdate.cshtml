@@ -5,6 +5,14 @@
 
 <div class="content">
     <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @await Component.InvokeAsync("SettingMode", new { modeName = "store-advanced-mode" })
+                </div>
+            </div>
+        </div>
+
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDetailsTop, additionalData = Model })
             <div class="panel panel-default">
@@ -54,7 +62,7 @@
                             <span asp-validation-for="SslEnabled"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="Hosts" />
                         </div>
@@ -63,7 +71,7 @@
                             <span asp-validation-for="Hosts"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="DefaultLanguageId" />
                         </div>
@@ -72,7 +80,7 @@
                             <span asp-validation-for="DefaultLanguageId"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="DisplayOrder" />
                         </div>
@@ -81,7 +89,7 @@
                             <span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="CompanyName" />
                         </div>
@@ -90,7 +98,7 @@
                             <span asp-validation-for="CompanyName"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="CompanyAddress" />
                         </div>
@@ -99,7 +107,7 @@
                             <span asp-validation-for="CompanyAddress"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="CompanyPhoneNumber" />
                         </div>
@@ -108,7 +116,7 @@
                             <span asp-validation-for="CompanyPhoneNumber"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group advanced-setting">
                         <div class="col-md-3">
                             <nop-label asp-for="CompanyVat" />
                         </div>

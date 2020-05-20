@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that check whether form parameter value equals passed value and return result as an action parameter
     /// </summary>
-    public class ParameterBasedOnFormNameAndValueAttribute : TypeFilterAttribute
+    public sealed class ParameterBasedOnFormNameAndValueAttribute : TypeFilterAttribute
     {
         #region Ctor
 

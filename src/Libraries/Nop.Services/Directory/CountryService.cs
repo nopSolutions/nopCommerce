@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 
@@ -20,7 +23,8 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
@@ -32,7 +36,8 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CountryService(CatalogSettings catalogSettings,
-            ICacheManager cacheManager,
+            ICacheKeyService cacheKeyService,
+            IStaticCacheManager staticCacheManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
@@ -40,7 +45,8 @@ namespace Nop.Services.Directory
             IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _staticCacheManager = staticCacheManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _countryRepository = countryRepository;
@@ -63,8 +69,6 @@ namespace Nop.Services.Directory
 
             _countryRepository.Delete(country);
 
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(country);
         }
@@ -77,8 +81,9 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
-            return _cacheManager.Get(key, () =>
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
+
+            return _staticCacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
                 if (!showHidden)
@@ -137,6 +142,16 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
+        /// Gets a country by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        public virtual Country GetCountryByAddress(Address address)
+        {
+            return GetCountryById(address?.CountryId ?? 0);
+        }
+
+        /// <summary>
         /// Gets a country 
         /// </summary>
         /// <param name="countryId">Country identifier</param>
@@ -145,9 +160,8 @@ namespace Nop.Services.Directory
         {
             if (countryId == 0)
                 return null;
-
-            var key = string.Format(NopDirectoryDefaults.CountriesByIdCacheKey, countryId);
-            return _cacheManager.Get(key, () => _countryRepository.GetById(countryId));
+            
+            return _countryRepository.ToCachedGetById(countryId);
         }
 
         /// <summary>
@@ -186,14 +200,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var key = string.Format(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from c in _countryRepository.Table
-                            where c.TwoLetterIsoCode == twoLetterIsoCode
-                            select c;
-                return query.FirstOrDefault();
-            });
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
+
+            var query = from c in _countryRepository.Table
+                where c.TwoLetterIsoCode == twoLetterIsoCode
+                select c;
+
+            return query.ToCachedFirstOrDefault(key);
         }
 
         /// <summary>
@@ -206,14 +219,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var key = string.Format(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from c in _countryRepository.Table
-                            where c.ThreeLetterIsoCode == threeLetterIsoCode
-                            select c;
-                return query.FirstOrDefault();
-            });
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
+
+            var query = from c in _countryRepository.Table
+                where c.ThreeLetterIsoCode == threeLetterIsoCode
+                select c;
+
+            return query.ToCachedFirstOrDefault(key);
         }
 
         /// <summary>
@@ -226,8 +238,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Insert(country);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(country);
@@ -243,8 +253,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Update(country);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(country);

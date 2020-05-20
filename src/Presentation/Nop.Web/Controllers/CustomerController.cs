@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,13 +38,12 @@ using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class CustomerController : BasePublicController
     {
         #region Fields
@@ -79,6 +79,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
@@ -126,6 +127,7 @@ namespace Nop.Web.Controllers
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
+            IProductService productService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
@@ -169,6 +171,7 @@ namespace Nop.Web.Controllers
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
@@ -186,6 +189,19 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
+        protected virtual void ValidateRequiredConsents(List<GdprConsent> consents, IFormCollection form)
+        {
+            foreach (var consent in consents)
+            {
+                var controlId = $"consent{consent.Id}";
+                var cbConsent = form[controlId];
+                if (StringValues.IsNullOrEmpty(cbConsent) || !cbConsent.ToString().Equals("on"))
+                {
+                    ModelState.AddModelError("", consent.RequiredMessage);
+                }
+            }
+        }
+
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
@@ -195,7 +211,7 @@ namespace Nop.Web.Controllers
             var attributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
+                var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -265,7 +281,7 @@ namespace Nop.Web.Controllers
             return attributesXml;
         }
 
-        protected virtual void LogGdpr(Customer customer, CustomerInfoModel oldCustomerInfoModel, 
+        protected virtual void LogGdpr(Customer customer, CustomerInfoModel oldCustomerInfoModel,
             CustomerInfoModel newCustomerInfoModel, IFormCollection form)
         {
             try
@@ -318,7 +334,7 @@ namespace Nop.Web.Controllers
                     _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.LastName")} = {newCustomerInfoModel.LastName}");
 
                 if (oldCustomerInfoModel.ParseDateOfBirth() != newCustomerInfoModel.ParseDateOfBirth())
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.DateOfBirth")} = {newCustomerInfoModel.ParseDateOfBirth().ToString()}");
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.DateOfBirth")} = {newCustomerInfoModel.ParseDateOfBirth()}");
 
                 if (oldCustomerInfoModel.Email != newCustomerInfoModel.Email)
                     _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Email")} = {newCustomerInfoModel.Email}");
@@ -365,7 +381,7 @@ namespace Nop.Web.Controllers
 
         #region Login / logout
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -382,7 +398,6 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        [PublicAntiForgery]
         public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -497,7 +512,7 @@ namespace Nop.Web.Controllers
                 //the only good solution in this case is to store a temporary variable
                 //indicating that the EU cookie popup window should not be displayed on the next page open (after logout redirection to homepage)
                 //but it'll be displayed for further page loads
-                TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true; 
+                TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] = true;
             }
 
             return RedirectToRoute("Homepage");
@@ -507,18 +522,19 @@ namespace Nop.Web.Controllers
 
         #region Password recovery
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
-            var model = _customerModelFactory.PreparePasswordRecoveryModel();
+            var model = new PasswordRecoveryModel();
+            model = _customerModelFactory.PreparePasswordRecoveryModel(model);
+
             return View(model);
         }
 
         [ValidateCaptcha]
         [HttpPost, ActionName("PasswordRecovery")]
-        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -553,26 +569,28 @@ namespace Nop.Web.Controllers
                 {
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
                 }
-
-                return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            model = _customerModelFactory.PreparePasswordRecoveryModel(model);
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoveryConfirm(string token, string email)
+        public virtual IActionResult PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
             if (string.IsNullOrEmpty(_genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
-                return View(new PasswordRecoveryConfirmModel
+                return base.View(new PasswordRecoveryConfirmModel
                 {
                     DisablePasswordChanging = true,
                     Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged")
@@ -599,13 +617,16 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
-        [PublicAntiForgery]
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
+        public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -627,7 +648,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email,
+                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(customer.Email,
                     false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
                 if (response.Success)
                 {
@@ -652,7 +673,7 @@ namespace Nop.Web.Controllers
 
         #region Register
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register()
@@ -670,7 +691,6 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [ValidateCaptcha]
         [ValidateHoneypot]
-        [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
@@ -679,7 +699,7 @@ namespace Nop.Web.Controllers
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
-            if (_workContext.CurrentCustomer.IsRegistered())
+            if (_customerService.IsRegistered(_workContext.CurrentCustomer))
             {
                 //Already registered customer. 
                 _authenticationService.SignOut();
@@ -705,6 +725,15 @@ namespace Nop.Web.Controllers
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
+            }
+
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService
+                    .GetAllConsents().Where(consent => consent.DisplayDuringRegistration && consent.IsRequired).ToList();
+
+                ValidateRequiredConsents(consents, form);
             }
 
             if (ModelState.IsValid)
@@ -735,7 +764,7 @@ namespace Nop.Web.Controllers
                     {
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberAttribute, model.VatNumber);
 
-                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
+                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out _, out var vatAddress);
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberStatusIdAttribute, (int)vatNumberStatus);
                         //send VAT number admin notification
                         if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
@@ -745,8 +774,10 @@ namespace Nop.Web.Controllers
                     //form fields
                     if (_customerSettings.GenderEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                    if (_customerSettings.FirstNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                    if (_customerSettings.LastNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
                     if (_customerSettings.DateOfBirthEnabled)
                     {
                         var dateOfBirth = model.ParseDateOfBirth();
@@ -889,9 +920,14 @@ namespace Nop.Web.Controllers
                             defaultAddress.StateProvinceId = null;
                         //set default address
                         //customer.Addresses.Add(defaultAddress);
-                        customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultAddress });
-                        customer.BillingAddress = defaultAddress;
-                        customer.ShippingAddress = defaultAddress;
+
+                        _addressService.InsertAddress(defaultAddress);
+
+                        _customerService.InsertCustomerAddress(customer, defaultAddress);
+
+                        customer.BillingAddressId = defaultAddress.Id;
+                        customer.ShippingAddressId = defaultAddress.Id;
+
                         _customerService.UpdateCustomer(customer);
                     }
 
@@ -925,6 +961,9 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
+                                //raise event       
+                                _eventPublisher.Publish(new CustomerActivatedEvent(customer));
+
                                 var redirectUrl = Url.RouteUrl("RegisterResult",
                                     new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.CurrentRequestProtocol);
                                 return Redirect(redirectUrl);
@@ -957,6 +996,7 @@ namespace Nop.Web.Controllers
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult RegisterResult(string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
@@ -966,7 +1006,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult CheckUsernameAvailability(string username)
@@ -1000,12 +1039,16 @@ namespace Nop.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult AccountActivation(string token, string email)
+        public virtual IActionResult AccountActivation(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -1027,6 +1070,9 @@ namespace Nop.Web.Controllers
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
+            //raise event       
+            _eventPublisher.Publish(new CustomerActivatedEvent(customer));
+
             var model = new AccountActivationModel
             {
                 Result = _localizationService.GetResource("Account.AccountActivation.Activated")
@@ -1038,10 +1084,10 @@ namespace Nop.Web.Controllers
 
         #region My account / Info
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Info()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = new CustomerInfoModel();
@@ -1051,10 +1097,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var oldCustomerModel = new CustomerInfoModel();
@@ -1073,6 +1118,15 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService
+                    .GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage && consent.IsRequired).ToList();
+
+                ValidateRequiredConsents(consents, form);
+            }
+
             try
             {
                 if (ModelState.IsValid)
@@ -1080,8 +1134,7 @@ namespace Nop.Web.Controllers
                     //username 
                     if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                     {
-                        if (
-                            !customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
                             //change username
                             _customerRegistrationService.SetUsername(customer, model.Username.Trim());
@@ -1123,7 +1176,7 @@ namespace Nop.Web.Controllers
                             model.VatNumber);
                         if (prevVatNumber != model.VatNumber)
                         {
-                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
+                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out _, out var vatAddress);
                             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberStatusIdAttribute, (int)vatNumberStatus);
                             //send VAT number admin notification
                             if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
@@ -1135,8 +1188,10 @@ namespace Nop.Web.Controllers
                     //form fields
                     if (_customerSettings.GenderEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                    if (_customerSettings.FirstNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                    if (_customerSettings.LastNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
                     if (_customerSettings.DateOfBirthEnabled)
                     {
                         var dateOfBirth = model.ParseDateOfBirth();
@@ -1222,14 +1277,13 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult RemoveExternalAssociation(int id)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             //ensure it's our record
-            var ear = _workContext.CurrentCustomer.ExternalAuthenticationRecords.FirstOrDefault(x => x.Id == id);
+            var ear = _externalAuthenticationService.GetExternalAuthenticationRecordById(id);
 
             if (ear == null)
             {
@@ -1247,12 +1301,16 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult EmailRevalidation(string token, string email)
+        public virtual IActionResult EmailRevalidation(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -1305,10 +1363,10 @@ namespace Nop.Web.Controllers
 
         #region My account / Addresses
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Addresses()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = _customerModelFactory.PrepareCustomerAddressListModel();
@@ -1316,17 +1374,16 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult AddressDelete(int addressId)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
             //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            var address = _customerService.GetCustomerAddress(customer.Id, addressId);
             if (address != null)
             {
                 _customerService.RemoveCustomerAddress(customer, address);
@@ -1342,10 +1399,10 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult AddressAdd()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = new CustomerAddressEditModel();
@@ -1359,13 +1416,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
-
-            var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
             var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
@@ -1385,9 +1439,11 @@ namespace Nop.Web.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                //customer.Addresses.Add(address);
-                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
-                _customerService.UpdateCustomer(customer);
+
+
+                _addressService.InsertAddress(address);
+
+                _customerService.InsertCustomerAddress(_workContext.CurrentCustomer, address);
 
                 return RedirectToRoute("CustomerAddresses");
             }
@@ -1403,15 +1459,15 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult AddressEdit(int addressId)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            var address = _customerService.GetCustomerAddress(customer.Id, addressId);
             if (address == null)
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");
@@ -1427,15 +1483,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            var address = _customerService.GetCustomerAddress(customer.Id, addressId);
             if (address == null)
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");
@@ -1471,10 +1526,10 @@ namespace Nop.Web.Controllers
 
         #region My account / Downloadable products
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult DownloadableProducts()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_customerSettings.HideDownloadableProductsTab)
@@ -1490,7 +1545,8 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return RedirectToRoute("Homepage");
 
-            var product = orderItem.Product;
+            var product = _productService.GetProductById(orderItem.ProductId);
+
             if (product == null || !product.HasUserAgreement)
                 return RedirectToRoute("Homepage");
 
@@ -1502,10 +1558,10 @@ namespace Nop.Web.Controllers
 
         #region My account / Change password
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult ChangePassword()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = _customerModelFactory.PrepareChangePasswordModel();
@@ -1518,10 +1574,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult ChangePassword(ChangePasswordModel model)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var customer = _workContext.CurrentCustomer;
@@ -1550,10 +1605,10 @@ namespace Nop.Web.Controllers
 
         #region My account / Avatar
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Avatar()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
@@ -1565,11 +1620,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-        [PublicAntiForgery]
         [FormValueRequired("upload-avatar")]
         public virtual IActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
@@ -1619,11 +1673,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-        [PublicAntiForgery]
         [FormValueRequired("remove-avatar")]
         public virtual IActionResult RemoveAvatar(CustomerAvatarModel model)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
@@ -1643,10 +1696,10 @@ namespace Nop.Web.Controllers
 
         #region GDPR tools
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult GdprTools()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_gdprSettings.GdprEnabled)
@@ -1657,11 +1710,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("GdprTools")]
-        [PublicAntiForgery]
         [FormValueRequired("export-data")]
         public virtual IActionResult GdprToolsExport()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_gdprSettings.GdprEnabled)
@@ -1677,11 +1729,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("GdprTools")]
-        [PublicAntiForgery]
         [FormValueRequired("delete-account")]
         public virtual IActionResult GdprToolsDelete()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_gdprSettings.GdprEnabled)
@@ -1700,7 +1751,7 @@ namespace Nop.Web.Controllers
         #region Check gift card balance
 
         //check gift card balance page
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult CheckGiftCardBalance()

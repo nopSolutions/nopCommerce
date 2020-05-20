@@ -196,6 +196,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductSearchAutoCompleteEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the search box is displayed
+        /// </summary>
+        public bool ProductSearchEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of products to return when using "autocomplete" feature
         /// </summary>
         public int ProductSearchAutoCompleteNumberOfProducts { get; set; }

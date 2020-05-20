@@ -1,6 +1,4 @@
-using Nop.Core.Domain.Customers;
-
-namespace Nop.Core.Domain.Security
+﻿namespace Nop.Core.Domain.Security
 {
     /// <summary>
     /// Represents an ACL record
@@ -21,10 +19,5 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets the customer role identifier
         /// </summary>
         public int CustomerRoleId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer role
-        /// </summary>
-        public virtual CustomerRole CustomerRole { get; set; }
     }
 }

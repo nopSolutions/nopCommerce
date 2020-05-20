@@ -48,26 +48,33 @@ function checkAllOverriddenStoreValue(item) {
 
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
+
+    // first toggle appropriate hidden inputs for checkboxes
+    if ($(selector).is(':checkbox')) {
+        var name = $(selector).attr('name');
+        $('input:hidden[name="' + name + '"]').attr('disabled', $(obj).is(':checked'));
+    }
+
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
-        }); 
+        });
     }
     else {
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
         });
-    };
+    }
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
@@ -237,7 +244,7 @@ $(document).ready(function () {
 });
 
 function WrapAndSaveBlockData() {
-    $(this).parents(".panel").find(">.panel-container").slideToggle();
+    $(this).parents(".panel").find(">.panel-container").slideToggle(null, null, function () { $(this).trigger("panel:toggle"); });
     $("#ajaxBusy span").addClass("no-ajax-loader");
     var icon = $(this).find("i.toggle-icon");
     if ($(this).hasClass("opened")) {
@@ -259,7 +266,7 @@ $(document).ready(function () {
 });
 
 function ToggleSearchBlockAndSavePreferences() {
-    $(this).parents(".panel-search").find(".search-body").slideToggle();
+    $(this).parents(".panel-search").find(".search-body").slideToggle(null, null, function () { $(this).trigger("panel:toggle"); });
     var icon = $(this).find(".icon-collapse i");
     if ($(this).hasClass("opened")) {
       icon.removeClass("fa-angle-up");
@@ -294,6 +301,13 @@ function reloadAllDataTables(itemCount) {
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
+  $('button[data-widget="collapse"]').on('click', function (e) {
+    //hack with waiting animation. 
+    //when page is loaded, a box that should be collapsed have style 'display: none;'.that's why a table is not updated
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, 1);
+  });
   $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     ensureDataTablesRendered();
   });

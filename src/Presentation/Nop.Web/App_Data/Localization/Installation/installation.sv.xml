@@ -45,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Ange egen SQL Server collation</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Ett fel uppstod när databasen skulle skapas: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Databas</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Ett fel uppstod när databasen skulle skapas: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Databasinformation</Value>
@@ -81,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Installerar nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Använd integrerad Windowsautenticering</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Lösenorden matchar inte</Value>
   </LocaleResource>
@@ -96,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Klicka för att starta om installationsprocessen (rensa alla cachade värden)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL Server namn</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>SQL Server namn måste anges.</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Installation misslyckades: {0}</Value>
   </LocaleResource>
@@ -105,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Använd inbyggd datalagring (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server namn</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>SQL Server namn måste anges.</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Lösenord</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Lösenord måste anges</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Användarnamn</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Användarnamn måste anges</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Använd SQL Server (eller SQL Express) databas</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Butiksinformation</Value>
@@ -137,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>För att genomföra den här guiden behöver du känna till en del information om din databasserver ("anslutningssträng"). Vänligen kontakta din internetleverantör vid behov. Om du installerar på en lokal maskin eller server, kanske du behöver kontakta din systemadministratör.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Använd integrerad Windowsautenticering</Value>
   </LocaleResource>
 </Language>

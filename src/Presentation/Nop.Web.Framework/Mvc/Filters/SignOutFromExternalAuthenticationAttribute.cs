@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that sign out from the external authentication scheme
     /// </summary>
-    public class SignOutFromExternalAuthenticationAttribute : TypeFilterAttribute
+    public sealed class SignOutFromExternalAuthenticationAttribute : TypeFilterAttribute
     {
         #region Ctor
 

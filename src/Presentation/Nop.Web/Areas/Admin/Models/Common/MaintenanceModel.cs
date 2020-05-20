@@ -13,6 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
             DeleteAbandonedCarts = new DeleteAbandonedCartsModel();
             DeleteExportedFiles = new DeleteExportedFilesModel();
             BackupFileSearchModel = new BackupFileSearchModel();
+            DeleteAlreadySentQueuedEmails = new DeleteAlreadySentQueuedEmailsModel();
         }
 
         public DeleteGuestsModel DeleteGuests { get; set; }
@@ -22,6 +23,10 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public DeleteExportedFilesModel DeleteExportedFiles { get; set; }
 
         public BackupFileSearchModel BackupFileSearchModel { get; set; }
+
+        public DeleteAlreadySentQueuedEmailsModel DeleteAlreadySentQueuedEmails { get; set; }
+
+        public bool BackupSupported { get; set; }
 
         #region Nested classes
 
@@ -61,6 +66,19 @@ namespace Nop.Web.Areas.Admin.Models.Common
             public DateTime? EndDate { get; set; }
 
             public int? NumberOfDeletedFiles { get; set; }
+        }
+
+        public partial class DeleteAlreadySentQueuedEmailsModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.StartDate")]
+            [UIHint("DateNullable")]
+            public DateTime? StartDate { get; set; }
+
+            [NopResourceDisplayName("Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.EndDate")]
+            [UIHint("DateNullable")]
+            public DateTime? EndDate { get; set; }
+
+            public int? NumberOfDeletedEmails { get; set; }
         }
 
         #endregion

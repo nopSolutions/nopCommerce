@@ -49,9 +49,7 @@
                         @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)
                         {
-                            <div class="captcha-box">
-                                <nop-captcha />
-                            </div>
+                            <nop-captcha />
                         }
                         @if (Model.TermsOfServiceEnabled)
                         {

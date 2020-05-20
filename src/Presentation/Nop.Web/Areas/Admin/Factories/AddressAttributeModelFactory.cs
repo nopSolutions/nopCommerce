@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? addressAttribute.ToModel<AddressAttributeModel>();
+                model ??= addressAttribute.ToModel<AddressAttributeModel>();
 
                 //prepare nested search model
                 PrepareAddressAttributeValueSearchModel(model.AddressAttributeValueSearchModel, addressAttribute);
@@ -198,7 +198,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (addressAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? addressAttributeValue.ToModel<AddressAttributeValueModel>();
+                model ??= addressAttributeValue.ToModel<AddressAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

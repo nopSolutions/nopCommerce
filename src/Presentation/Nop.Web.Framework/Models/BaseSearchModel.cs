@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Models
     {
         #region Ctor
 
-        public BaseSearchModel()
+        protected BaseSearchModel()
         {
             //set the default values
             Length = 10;
@@ -60,7 +60,7 @@ namespace Nop.Web.Framework.Models
         public void SetGridPageSize()
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
-            SetGridPageSize(adminAreaSettings.DefaultGridPageSize, adminAreaSettings.GridPageSizes);
+            SetGridPageSize(adminAreaSettings?.DefaultGridPageSize ?? 0, adminAreaSettings?.GridPageSizes);
         }
 
         /// <summary>

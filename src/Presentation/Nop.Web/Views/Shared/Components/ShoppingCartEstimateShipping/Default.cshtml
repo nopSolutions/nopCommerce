@@ -1,0 +1,87 @@
+﻿@model EstimateShippingModel
+
+<a href="#estimate-shipping-popup" 
+   id="open-estimate-shipping-popup" 
+   data-effect="estimate-shipping-popup-zoom-in" 
+   class="estimate-shipping-button">
+    @T("ShoppingCart.EstimateShipping.Button")
+</a>
+<div id="estimate-shipping-popup" class="estimate-shipping-popup mfp-with-anim mfp-hide">
+    @await Html.PartialAsync("_EstimateShippingPopUp", Model)
+</div>
+
+<script asp-location="Footer">
+
+    $(document).ready(function () {
+        var popUp = {};
+        var settings = {
+            opener: '#open-estimate-shipping-popup',
+            form: '#shopping-cart-form',
+            contentEl: '#estimate-shipping-popup',
+            countryEl: '#@Html.IdFor(model => model.CountryId)',
+            stateProvinceEl: '#@Html.IdFor(model => model.StateProvinceId)',
+            zipPostalCodeEl: '#@Html.IdFor(model => model.ZipPostalCode)',
+            localizedData: {
+                noShippingOptionsMessage: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")',
+                countryErrorMessage: '@T("Shipping.EstimateShipping.Country.Required")',
+                zipPostalCodeErrorMessage: '@T("Shipping.EstimateShipping.ZipPostalCode.Required")',
+            },
+            urlFactory: function (address) {
+                var params = $.param({
+                    CountryId: address.countryId,
+                    StateProvinceId: address.stateProvinceId,
+                    ZipPostalCode: address.zipPostalCode
+                });
+
+                return `@Html.Raw(Url.Action("getestimateshipping", "shoppingcart"))?${params}`;
+            },
+            handlers: {
+                selectedOption: function (option) {
+                    var params;
+                    if (option && option.provider && option.price && popUp.validateAddress(option.address)) {
+                        params = $.param({
+                            Name: option.provider,
+                            CountryId: option.address.countryId,
+                            StateProvinceId: option.address.stateProvinceId,
+                            ZipPostalCode: option.address.zipPostalCode
+                        });
+                    }
+
+                    $.ajax({
+                        cache: false,
+                        url: `@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))${params ? `?${params}` : ''}`,
+                        data: $('#shopping-cart-form').serialize(),
+                        type: 'POST',
+                        beforeSend: function () {
+                            displayAjaxLoading(true);
+                        },
+                        success: function (response) {
+                            popUp.clearErrorMessage();
+                            if (response.success) {
+                                if (response.ordertotalssectionhtml) {
+                                    $('.total-info').replaceWith(response.ordertotalssectionhtml);
+                                }
+                                popUp.closePopup();
+                            } else {
+                                popUp.showErrorMessage(response.errors);
+                            }
+                        },
+                        complete: function () {
+                            displayAjaxLoading(false);
+                        }
+                    });
+                }
+            }
+        };
+
+        popUp = createEstimateShippingPopUp(settings);
+        popUp.init();
+
+        let address = popUp.getShippingAddress();
+        if (popUp.validateAddress(address))
+            popUp.getShippingOptions(address);
+        else
+            popUp.selectShippingOption();
+    });
+
+</script>

@@ -1,0 +1,70 @@
+﻿@model EstimateShippingModel
+@{
+    Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.estimateshipping.popup.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
+    Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
+}
+
+<div class="ship-to-title">
+    <strong>@T("Shipping.EstimateShippingPopUp.ShipToTitle")</strong>
+</div>
+
+<div class="estimate-shipping-row shipping-address">
+    <div class="estimate-shipping-row-item address-item">
+        <div class="estimate-shipping-row">
+            <select asp-for="CountryId"
+                    asp-items="Model.AvailableCountries"
+                    class="estimate-shipping-address-control"
+                    data-trigger="country-select"
+                    data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                    data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                    data-loading="#estimate-shipping-loading-progress"
+                    placeholder="@T("Shipping.EstimateShippingPopUp.Country")"></select>
+            <nop-required />
+        </div>
+    </div>
+    <div class="estimate-shipping-row-item address-item">
+        <select asp-for="StateProvinceId"
+                asp-items="Model.AvailableStates"
+                class="estimate-shipping-address-control"
+                placeholder="@T("Shipping.EstimateShippingPopUp.StateProvince")"></select>
+    </div>
+    <div class="estimate-shipping-row-item address-item">
+        <div class="estimate-shipping-row">
+            <input asp-for="ZipPostalCode"
+                   class="estimate-shipping-address-control"
+                   placeholder="@T("Shipping.EstimateShippingPopUp.ZipPostalCode")" />
+            <nop-required />
+        </div>
+    </div>
+</div>
+
+<div class="choose-shipping-title">
+    <strong>@T("Shipping.EstimateShippingPopUp.ChooseShippingTitle")</strong>
+</div>
+
+<div class="shipping-options">
+    <div class="shipping-options-header">
+        <div class="estimate-shipping-row">
+            <div class="estimate-shipping-row-item-radio">
+            </div>
+            <div class="estimate-shipping-row-item shipping-item shipping-header-item">
+                @T("Shipping.EstimateShippingPopUp.ShippingOption.Name")
+            </div>
+            <div class="estimate-shipping-row-item shipping-item shipping-header-item">
+                @T("Shipping.EstimateShippingPopUp.ShippingOption.EstimatedDelivery")
+            </div>
+            <div class="estimate-shipping-row-item shipping-item shipping-header-item">
+                @T("Shipping.EstimateShippingPopUp.ShippingOption.Price")
+            </div>
+        </div>
+    </div>
+    <div class="shipping-options-body">
+        <div class="no-shipping-options">@T("Shipping.EstimateShippingPopUp.NoShippingOptions")</div>
+    </div>
+</div>
+
+<div class="apply-shipping-button-container">
+    <input type="button" value="@T("Shipping.EstimateShippingPopUp.SelectShippingOption.Button")" class="button-2 apply-shipping-button" />
+    <div class="message-failure"></div>
+</div>

@@ -6,8 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using Nop.Core.Data;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security

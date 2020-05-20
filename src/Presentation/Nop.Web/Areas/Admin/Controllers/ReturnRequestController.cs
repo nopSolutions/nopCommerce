@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -21,7 +20,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
@@ -36,7 +34,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public ReturnRequestController(ICustomerActivityService customerActivityService,
-            ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
@@ -47,7 +44,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService)
         {
             _customerActivityService = customerActivityService;
-            _customerService = customerService;
             _localizationService = localizationService;
             _localizedEntityService = localizedEntityService;
             _notificationService = notificationService;
@@ -148,7 +144,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(returnRequest.Customer);
+                
+                _returnRequestService.UpdateReturnRequest(returnRequest);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditReturnRequest",
@@ -179,13 +176,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            if (orderItem == null)
+            if (orderItem is null)
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
 
-            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+
+            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, order);
             if (queuedEmailIds.Any())
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
 

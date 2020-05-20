@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool UsernameValidationUseRegex { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernameValidationRule")]
-        public string UsernameValidationRule { get; set; }
+        public string UsernameValidationRule { get; set; }       
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
         public int UserRegistrationType { get; set; }
@@ -124,6 +124,18 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
         public bool GenderEnabled { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FirstNameEnabled")]
+        public bool FirstNameEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FirstNameRequired")]
+        public bool FirstNameRequired { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.LastNameEnabled")]
+        public bool LastNameEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.LastNameRequired")]
+        public bool LastNameRequired { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DateOfBirthEnabled")]
         public bool DateOfBirthEnabled { get; set; }
 
@@ -187,6 +199,15 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneRequired")]
         public bool PhoneRequired { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled")]
+        public bool PhoneNumberValidationEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex")]
+        public bool PhoneNumberValidationUseRegex { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule")]
+        public string PhoneNumberValidationRule { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FaxEnabled")]
         public bool FaxEnabled { get; set; }

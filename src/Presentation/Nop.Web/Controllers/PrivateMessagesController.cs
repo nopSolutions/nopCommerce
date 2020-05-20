@@ -11,12 +11,11 @@ using Nop.Services.Logging;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.Yes)]
+    [HttpsRequirement]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields
@@ -64,7 +63,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
@@ -74,7 +73,7 @@ namespace Nop.Web.Controllers
         }
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -84,7 +83,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    if (int.TryParse(id, out int privateMessageId))
+                    if (int.TryParse(id, out var privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -102,7 +101,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -112,7 +111,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    if (int.TryParse(id, out int privateMessageId))
+                    if (int.TryParse(id, out var privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -131,7 +130,7 @@ namespace Nop.Web.Controllers
 
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -141,7 +140,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("si", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("si", "").Trim();
-                    if (int.TryParse(id, out int privateMessageId))
+                    if (int.TryParse(id, out var privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -163,11 +162,11 @@ namespace Nop.Web.Controllers
             if (!_forumSettings.AllowPrivateMessages)
                 return RedirectToRoute("Homepage");
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
                 return Challenge();
 
             var customerTo = _customerService.GetCustomerById(toCustomerId);
-            if (customerTo == null || customerTo.IsGuest())
+            if (customerTo == null || _customerService.IsGuest(customerTo))
                 return RedirectToRoute("PrivateMessages");
 
             PrivateMessage replyToPM = null;
@@ -182,7 +181,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)
@@ -190,7 +189,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
@@ -203,9 +202,9 @@ namespace Nop.Web.Controllers
                 if (replyToPM.ToCustomerId == _workContext.CurrentCustomer.Id || replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id)
                 {
                     //Reply to already sent PM (by current customer) should not be sent to yourself
-                    toCustomer = replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id
-                        ? replyToPM.ToCustomer
-                        : replyToPM.FromCustomer;
+                    toCustomer = _customerService.GetCustomerById(replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id
+                        ? replyToPM.ToCustomerId
+                        : replyToPM.FromCustomerId);
                 }
                 else
                 {
@@ -218,7 +217,7 @@ namespace Nop.Web.Controllers
                 toCustomer = _customerService.GetCustomerById(model.ToCustomerId);
             }
 
-            if (toCustomer == null || toCustomer.IsGuest())
+            if (toCustomer == null || _customerService.IsGuest(toCustomer))
             {
                 return RedirectToRoute("PrivateMessages");
             }
@@ -279,7 +278,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
@@ -314,7 +313,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
