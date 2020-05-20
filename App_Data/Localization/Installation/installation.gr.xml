@@ -1,4 +1,5 @@
-﻿<Language Name="Ελληνικά" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Ελληνικά" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Το e-mail του διαχειριστή</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Specify custom SQL Server collation</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία βάσης δεδομένων: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Βάσης δεδομένων</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία βάσης δεδομένων: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Πληροφορίες βάσης δεδομένων</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Εγκατάσταση nopCommerce ...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Χρησιμοποιήστε το ενσωματωμένο έλεγχο ταυτότητας των Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Οι κωδικοί πρόσβασης δεν ταιριάζουν</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Κάντε κλικ για επανεκκίνηση της διαδικασίας εγκατάστασης (διαγράφονται όλες οι προσωρινά αποθηκευμένες παράμετροι)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Όνομα του SQL διακομιστή</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Το όνομα του SQL διακομιστή απαιτείται</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Το πρόγραμμα εγκατάστασης απέτυχε: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Χρησιμοποιήστε την ενσωματωμένη αποθήκευση δεδομένων (SQL Server Compact Edition)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>Όνομα του SQL διακομιστή</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Το όνομα του SQL διακομιστή απαιτείται</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL κωδικός</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Ο SQL κωδικός απαιτείται</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL όνομα χρήστη</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Το SQL όνομα χρήστη απαιτείται</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Χρήση του SQL Server (ή SQL Express) ως βάση δεδομένων</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Πληροφορίες καταστηματός</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Για την ολοκλήρωση αυτού του οδηγού θα πρέπει να γνωρίζουμε κάποιες πληροφορίες σχετικά με server της βάσης δεδομένων σας ("συμβολοσειρά σύνδεσης"). Παρακαλούμε επικοινωνήστε με τον ISP σας, εάν είναι απαραίτητο. Εάν θέλετε να εγκαταστήσετε σε έναν τοπικό υπολογιστή ή διακομιστή μπορεί να χρειαστείτε πληροφορίες από διαχειριστή του συστήματός σας.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Χρησιμοποιήστε το ενσωματωμένο έλεγχο ταυτότητας των Windows</Value>
   </LocaleResource>
 </Language>

@@ -1,0 +1,127 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-filter {
+    display: inline-block;
+    border-width: 0;
+    box-shadow: none;
+
+    ul {
+        padding: 0;
+
+        li {
+            list-style-type: none;
+        }
+    }
+
+    .k-filter-container,
+    .k-filter-preview {
+        margin-bottom: @filter-bottom-margin;
+    }
+
+    .k-filter-lines,
+    .k-filter-item {
+        padding-left: @filter-padding-x;
+    }
+
+    .k-filter-toolbar {
+        display: inline-flex;
+        position: relative;
+        padding: @filter-padding-y 0;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: @filter-padding-x;
+            height: @filter-line-size;
+            top: 50%;
+            left: -@filter-padding-x;
+        }
+
+        .k-toolbar {
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        .k-filter-operator .k-dropdown {
+            width: @filter-operator-dropdown-width;
+        }
+
+        .k-filter-toolbar-item > .k-textbox {
+            margin: 0 .2em;
+            vertical-align: middle;
+        }
+    }
+
+    .k-filter-item {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: @filter-line-size;
+            height: 100%;
+            top: -@filter-padding-y;
+            left: 0;
+        }
+    }
+
+    .k-filter-lines .k-filter-item:last-child > .k-filter-toolbar::after {
+        content: "";
+        position: absolute;
+        width: @filter-line-size;
+        top: calc(-@filter-padding-y - @filter-line-size);
+        bottom: 50%;
+        left: -@filter-padding-x;
+    }
+
+    .k-filter-group-main::before,
+    .k-filter-group-main > .k-filter-toolbar::before,
+    .k-filter-group-main  > .k-filter-toolbar::after,
+    .k-filter-lines .k-filter-item:last-child::before {
+        display: none;
+    }
+
+    .k-rtl &,
+    &[dir="rtl"],
+    [dir="rtl"] & {
+        .k-filter-lines,
+        .k-filter-item {
+            padding-left: 0;
+            padding-right: @filter-padding-x;
+        }
+
+        .k-filter-toolbar {
+
+            &::before {
+                left: auto;
+                right: -@filter-padding-x;
+            }
+        }
+
+        .k-filter-item {
+
+            &::before {
+                left: auto;
+                right: 0;
+            }
+        }
+
+        .k-filter-lines .k-filter-item:last-child > .k-filter-toolbar::after {
+            left: auto;
+            right: -@filter-padding-x;
+        }
+    }
+}

@@ -38,7 +38,7 @@
                         <div class="basic-search">
                             <div class="inputs">
                                 <label>@T("Forum.Search.SearchKeyword")</label>
-                                <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms"/>
+                                <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms" />
                             </div>
                             <div class="inputs reversed">
                                 <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="adv" name="adv" type="checkbox" value="true">
@@ -118,7 +118,10 @@
                                 <col width="1" />
                                 <col />
                                 <col width="1" />
-                                <col width="1" />
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <col width="1" />
+                                }
                                 <col width="1" />
                             </colgroup>
                             <thead>

@@ -137,10 +137,10 @@
 
                 <div class="post-vote" id="@($"post-vote-{Model.Id}")">
                     <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
-                          title="This post/answer is useful"></span>
+                          title="@T("Forum.Post.IsUseful")"></span>
                     <div class="vote-count-post"> @Model.VoteCount </div>
                     <span class="vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp) { <text>selected</text> }"
-                          title="This post/answer is not useful"></span>
+                          title="@T("Forum.Post.IsNotUseful")"></span>
                 </div>
             }
         </div>

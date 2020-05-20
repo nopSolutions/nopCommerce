@@ -62,7 +62,7 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <div class="title">
                         <strong>@T("Account.Login.ReturningCustomer")</strong>
@@ -98,9 +98,7 @@
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
-                            <div class="captcha-box">
-                                <nop-captcha />
-                            </div>
+                            <nop-captcha />
                         }
                     </div>
                     <div class="buttons">

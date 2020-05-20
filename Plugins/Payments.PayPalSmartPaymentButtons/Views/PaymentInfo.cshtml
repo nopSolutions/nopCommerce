@@ -1,0 +1,52 @@
+﻿@model PaymentInfoModel
+
+<input type="hidden" asp-for="Errors" />
+
+@if (!string.IsNullOrEmpty(Model.OrderId))
+{
+    <div id="paypal-button-container"></div>
+
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $('.payment-info-next-step-button').hide();
+
+            var paymentForm = paypal.Buttons({
+                style: {
+                    layout: '@settings.StyleLayout',
+                    color: '@settings.StyleColor',
+                    shape: '@settings.StyleShape',
+                    label: '@settings.StyleLabel',
+                    tagline: '@settings.StyleTagline'
+                },
+
+                createOrder: function (data, actions) {
+                    return '@Model.OrderId';
+                },
+
+                onApprove: function(data, actions) {
+                    $('input.payment-info-next-step-button').trigger("click");
+                },
+
+                onError: function (err) {
+                    $('#@Html.IdFor(model => model.Errors)').val(err);
+                    paymentForm = null;
+                    $('input.payment-info-next-step-button').trigger("click");
+                }
+            });
+            if (paymentForm) {
+                paymentForm.render('#paypal-button-container');
+            }
+
+            $(document).on('accordion_section_opened', function (data) {
+                if (data.currentSectionId != 'opc-payment_info') {
+                    $('.payment-info-next-step-button').show();
+                }
+            });
+        });
+    </script>
+}
+
+@if (orderSettings.OnePageCheckoutEnabled)
+{
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+}

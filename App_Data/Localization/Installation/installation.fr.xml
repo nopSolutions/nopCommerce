@@ -1,4 +1,5 @@
-﻿<Language Name="Français" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Français" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>E-mail l'utilisateur Admin</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Spécifiez personnalisée classement SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Une erreur s'est produite lors de la création de base de données: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Base de données</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Une erreur s'est produite lors de la création de base de données: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>base de données des informations</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Installation nopCommerce ...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Utilisez l'authentification Windows intégrée</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Les mots de passe ne correspondent pas</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Cliquez ici pour redémarrer le processus d'installation (effacer toutes les valeurs mises en cache)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Nom du serveur SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Nom du serveur SQL est requise</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Échec du programme: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Utilisez la fonction de stockage de données (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>Nom du serveur SQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Nom du serveur SQL est requise</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Mot de passe</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Mot de passe SQL est requise</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>Nom d'utilisateur SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Nom d'utilisateur SQL est requise</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Utilisez SQL Server (ou SQL Express) base de données</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>informations sur le magasin</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Pour compléter cet assistant, vous devez connaître certaines informations concernant votre serveur de base de données ("chaîne de connexion"). S'il vous plaît contactez votre FAI si nécessaire. Si vous installez sur une machine locale ou serveur que vous pourriez avoir besoin d'informations à partir de votre système d'administration</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Utilisez l'authentification Windows intégrée</Value>
   </LocaleResource>
 </Language>

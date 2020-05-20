@@ -1,4 +1,5 @@
-﻿<Language Name="اردو" IsDefault="false" IsRightToLeft="true">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="اردو" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>ایڈمن یوزر کا ای میل</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>اپنی مرضی کی ایس کیو ایل سرور کولیشن بتائیں</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>ڈیٹا بیس بنانے وقت ایک خرابی آگئی: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>ڈیٹا بیس</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>ڈیٹا بیس بنانے وقت ایک خرابی آگئی: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>ڈیٹا بیس کی معلومات</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value> نوپ کامرس انسٹالیشن کر رہا ہے... </Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value> integrated Windows authentication کا استعمال کریں </Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>دونوں پاس ورڈ کی ایک دوسرے سے مطابقت نہیں ہے</Value>
   </LocaleResource>
@@ -95,8 +102,17 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>انسٹالیشن دوبارہ شروع کرنے کے لئے یہاں کلک کریں (تمام عارضی فیلڈز کو خالی کریں) </Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value> ایس کیو ایل سرور کا نام </Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value> ایس کیو ایل سرور کا نام ضروری ہے </Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>سیٹ اپ ناکام رہا: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>ایس کیو ایل سرور اکاؤنٹ کا استعمال کریں </Value>
@@ -104,26 +120,17 @@
   <LocaleResource Name="SqlCompact">
     <Value>اندرونی ڈیٹا اسٹوریج کا استعمال کریں (ایس کیو ایل سرور کومپیکٹ)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value> ایس کیو ایل سرور کا نام </Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value> ایس کیو ایل سرور کا نام ضروری ہے </Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value> ایس کیو ایل پاس ورڈ </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value> ایس کیو ایل پاس ورڈ ضروری ہے </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value> ایس کیو ایل یوزر کا نام </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value> ایس کیو ایل یوزر کا نام ضروری ہے </Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>ایس کیو ایل سرور کے ڈیٹا بیس (یا ایس کیو ایل ایکسپریس) کو استعمال کریں</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>سٹور کی معلومات</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>اس وزرڈ کو مکمل کرنے کے لئے آپ کو کچھ معلومات آپ کے ڈیٹا بیس سرور کے بارے میں پتہ ہونا چاہئے ("کنکشن سٹرنگ"). براہ مہربانی اگر ضروری ہو تو اپنے آئی ایس پی سے رابطہ کریں. اگر آپ ایک مقامی مشین یا سرور پر انسٹال کر رہے ہیں تو آپ کو اپنے سسٹم ایڈمنسٹریٹر سے معلومات کی ضرورت ہو سکتی ہے.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value> integrated Windows authentication کا استعمال کریں </Value>
   </LocaleResource>
 </Language>

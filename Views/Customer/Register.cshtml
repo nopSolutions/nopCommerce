@@ -13,7 +13,7 @@
         <h1>@T("Account.Register")</h1>
     </div>
     <div class="page-body">
-        <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+        <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
                 <div class="title">
@@ -23,8 +23,8 @@
                     @if (Model.GenderEnabled)
                     {
                         <div class="inputs">
-                            <label>@T("Account.Fields.Gender"):</label>
-                            <div class="gender">
+                            <label for="gender">@T("Account.Fields.Gender"):</label>
+                            <div id="gender" class="gender">
                                 <span class="male">
                                     <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" />
                                     <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
@@ -36,18 +36,30 @@
                             </div>
                         </div>
                     }
-                    <div class="inputs">
-                        <label asp-for="FirstName" asp-postfix=":"></label>
-                        <input asp-for="FirstName" />
-                        <nop-required />
-                        <span asp-validation-for="FirstName"></span>
-                    </div>
-                    <div class="inputs">
-                        <label asp-for="LastName" asp-postfix=":"></label>
-                        <input asp-for="LastName" />
-                        <nop-required />
-                        <span asp-validation-for="LastName"></span>
-                    </div>
+                    @if (Model.FirstNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="FirstName" asp-postfix=":"></label>
+                            <input asp-for="FirstName" />
+                            @if (Model.FirstNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                    }
+                    @if (Model.LastNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="LastName" asp-postfix=":"></label>
+                            <input asp-for="LastName" />
+                            @if (Model.LastNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="LastName"></span>
+                        </div>
+                    }
                     @if (Model.DateOfBirthEnabled)
                     {
                         <div class="inputs date-of-birth">
@@ -131,11 +143,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-              Model.StreetAddress2Enabled ||
-              Model.ZipPostalCodeEnabled ||
-              Model.CityEnabled ||
-              Model.CountyEnabled ||
-              Model.CountryEnabled)
+             Model.StreetAddress2Enabled ||
+             Model.ZipPostalCodeEnabled ||
+             Model.CityEnabled ||
+             Model.CountyEnabled ||
+             Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -324,9 +336,7 @@
                     </div>
                     @if (Model.DisplayCaptcha)
                     {
-                        <div class="captcha-box">
-                            <nop-captcha />
-                        </div>
+                        <nop-captcha />
                     }
                     @if (Model.HoneypotEnabled)
                     {

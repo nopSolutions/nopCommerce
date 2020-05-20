@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails").Text;
 }
 <form asp-controller="SpecificationAttribute" asp-action="OptionEditPopup" 
       asp-route-btnId="@Context.Request.Query["btnId"]"

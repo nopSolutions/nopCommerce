@@ -1,8 +1,9 @@
 ﻿@model CustomerReportsSearchModel
+@using Nop.Services.Orders;
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Reports.Customers.BestBy.BestByOrderTotal").Text;
+    ViewBag.PageTitle = T("Admin.Reports.Customers.BestBy.BestByOrderTotal").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customers by order total");
 }
@@ -11,8 +12,6 @@
     const string hideSearchBlockAttributeName = "CustomersBestByOrderTotalPage.HideSearchBlock";
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
-
-<nop-antiforgery-token />
 
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -102,7 +101,7 @@
                         LengthMenu = Model.BestCustomersByOrderTotal.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.OrderBy), 1),
+                            new FilterParameter(nameof(Model.BestCustomersByOrderTotal.OrderBy), (int)OrderByEnum.OrderByQuantity),
                             new FilterParameter(nameof(Model.BestCustomersByOrderTotal.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
                             new FilterParameter(nameof(Model.BestCustomersByOrderTotal.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),
                             new FilterParameter(nameof(Model.BestCustomersByOrderTotal.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByOrderTotal)),

@@ -7,18 +7,18 @@
         }
         <strong>@T("Forum.ActiveDiscussions")</strong>
     </div>
-        @{
-            var pager = Html.Pager(new PagerModel
-            {
-                PageSize = Model.TopicPageSize,
-                TotalRecords = Model.TopicTotalRecords,
-                PageIndex = Model.TopicPageIndex,
-                ShowTotalSummary = false,
-                RouteActionName = "ActiveDiscussionsPaged",
-                UseRouteLinks = true,
-                RouteValues = new ForumActiveDiscussionsRouteValues()
-            });
-        }
+    @{
+        var pager = Html.Pager(new PagerModel
+        {
+            PageSize = Model.TopicPageSize,
+            TotalRecords = Model.TopicTotalRecords,
+            PageIndex = Model.TopicPageIndex,
+            ShowTotalSummary = false,
+            RouteActionName = "ActiveDiscussionsPaged",
+            UseRouteLinks = true,
+            RouteValues = new ForumActiveDiscussionsRouteValues()
+        });
+    }
     @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager upper">
@@ -34,6 +34,10 @@
                         <col />
                         <col width="1" />
                         <col width="1" />
+                        @if (Model.AllowPostVoting)
+                        {
+                            <col width="1" />
+                        }
                         <col width="1" />
                     </colgroup>
                     <thead>

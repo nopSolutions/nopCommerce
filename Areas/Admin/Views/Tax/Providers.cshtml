@@ -2,12 +2,10 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Tax.Providers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Tax providers");
 }
-
-<nop-antiforgery-token />
 
 <form asp-controller="Tax" asp-action="Providers" method="post">
     <div class="content-header clearfix">

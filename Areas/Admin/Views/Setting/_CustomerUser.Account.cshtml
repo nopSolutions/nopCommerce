@@ -72,6 +72,37 @@
             <span asp-validation-for="CustomerSettings.CustomerNameFormat"></span>
         </div>
     </div>
+    <div id="pnlPhoneNumberValidationEnabled">
+        <div class="form-group advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.PhoneNumberValidationEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.PhoneNumberValidationEnabled" />
+                <span asp-validation-for="CustomerSettings.PhoneNumberValidationEnabled"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="CustomerSettings.PhoneNumberValidationEnabled">
+            <div class="form-group advanced-setting" id="pnlPhoneNumberValidationRule">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomerSettings.PhoneNumberValidationRule" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.PhoneNumberValidationRule" />
+                    <span asp-validation-for="CustomerSettings.PhoneNumberValidationRule"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting" id="pnlPhoneNumberValidationUseRegex">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomerSettings.PhoneNumberValidationUseRegex" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.PhoneNumberValidationUseRegex" />
+                    <span asp-validation-for="CustomerSettings.PhoneNumberValidationUseRegex"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </div>
     <div class="form-group">
         <div class="col-md-3">
             <nop-label asp-for="CustomerSettings.AllowCustomersToUploadAvatars" />

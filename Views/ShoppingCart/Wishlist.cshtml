@@ -112,7 +112,7 @@
                                         {
                                             <td class="remove-from-cart">
                                                 <label class="td-title">@T("ShoppingCart.Remove"):</label>
-                                                <input type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                                <input type="checkbox" name="removefromcart" value="@(item.Id)" aria-label="@T("ShoppingCart.Remove")" />
                                             </td>
                                         }
                                         @if (Model.DisplayAddToCart)
@@ -194,7 +194,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" />
+                                                    <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" aria-label="@T("ShoppingCart.Quantity")" />
                                                 }
                                             }
                                             else

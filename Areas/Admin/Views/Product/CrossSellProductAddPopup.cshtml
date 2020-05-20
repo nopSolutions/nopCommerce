@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -123,7 +123,7 @@ else
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddCrossSellProductModel.SelectedProductIds)),
                                         ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50",
+                                        Width = "50"
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
                                     {

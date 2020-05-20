@@ -1,4 +1,5 @@
-﻿<Language Name="Polski" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Polski" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email administratora</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Określ kolację SQL serwera</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Wystąpił błąd podczas tworzenia bazy danych: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Baza danych</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Wystąpił błąd podczas tworzenia bazy danych: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Informacje o bazie danych</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Instalacja nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Użyj zintegrowane uwierzytelniania Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Hasło nie pasuje</Value>
   </LocaleResource>
@@ -95,8 +102,17 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Kliknij, aby ponownie uruchomić proces instalacji</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Nazwa SQL Serwera</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Nazwa SQL Serwer jest wymagana</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Błąd instalacji: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>Użyj konta SQL Server</Value>
@@ -104,26 +120,17 @@
   <LocaleResource Name="SqlCompact">
     <Value>Użyj przechowywania danych (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>Nazwa SQL Serwera</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Nazwa SQL Serwer jest wymagana</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Hasło SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Hasło SQL jest wymagane</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Użytkownik SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Użytkownik SQL jest wymagany</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Użyj SQL Server (lub SQL Express) bazy danych</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informacje o sklepie</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Aby ukończyć kreatora należy znać kilka informacji na temat serwera bazy danych ("Connection string - ciąg połączenia"). Proszę skontaktować się z usługodawcą hostingu w razie potrzeby. Jeżeli instalujesz na komputerze lokalnym lub serwerze mogą być potrzebne informacje od administratora systemu.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Użyj zintegrowane uwierzytelniania Windows</Value>
   </LocaleResource>
 </Language>

@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Languages").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Languages").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Languages");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Languages")

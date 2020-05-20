@@ -115,7 +115,7 @@
                                     //clear input value
                                     $("#@Html.IdFor(model => model.AddTopicTemplate.Name)").val('');
                                     $("#@Html.IdFor(model => model.AddTopicTemplate.ViewPath)").val('');
-                                    $("#@Html.IdFor(model => model.AddTopicTemplate.DisplayOrder)").val('');
+                                    $("#@Html.IdFor(model => model.AddTopicTemplate.DisplayOrder)").data("kendoNumericTextBox").value(0);
 
                                 } else {
                                     //display errors if returned

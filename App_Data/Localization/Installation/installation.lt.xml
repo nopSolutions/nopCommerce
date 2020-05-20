@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Lietuvių" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Administratoriaus el. paštas</Value>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Norodykite modifikuotus SQL Serverio duomenis</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Klaida kuriant duomenu baze: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Duomenų bazė</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Klaida kuriant duomenu baze: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Duomenų bazės informacija</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Diegiama nopCommerce aplikacija...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Naudoti integruotą Windows autentifikavimą</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Slaptažodžiai nesutampa</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Paspauskite norėdami perkrauti diegimo procesą (ištrinti visas patalpintas reikšmes)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL Serverio pavadinimas</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Įveskite SQL serverio pavadinimą</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Diegimo klaida: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Naudoti standartine duomenų talpykla (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Serverio pavadinimas</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Įveskite SQL serverio pavadinimą</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Slaptažodis</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Įveskite SQL slaptažodį</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Vartotojo vardas</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Įveskite SQL vartotojo vardą</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Naudoti SQL Serverio (arba SQL Express) duomenų bazę?</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>E-parduotuvės informacija</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Norėdami įdiegti šią aplikaciją, jūs turite žinoti šiek tiek informacijos apie savo SQL serverį (prisijugimo informaciją). Prašome susisiekti su savo ISP, jei būtina. Jeigu diegiate į vietinį kompiuterį ar serverį, jums gali prireikti informacijos iš jūsų sistemos administratoriaus.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Naudoti integruotą Windows autentifikavimą</Value>
   </LocaleResource>
 </Language>

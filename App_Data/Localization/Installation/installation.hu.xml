@@ -1,4 +1,5 @@
-﻿<Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin felhasználó e-mail</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Határozza meg az egyéni SQL Server egyeztetést</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Hiba történt az adatbázis megteremtésekor: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Adatbázis</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Hiba történt az adatbázis megteremtésekor: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Adatbázis információk</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>nopCommerce telepítése ...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Használja a beépített Windows-hitelesítést</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>A jelszavak nem egyeznek</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Ide kattintva indítsa újra a telepítést (törli az összes tárolt értékeket)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL Server neve</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>SQL Server neve szükséges</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>A telepítés sikertelen: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Használja a beépített adattárolást (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server neve</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>SQL Server neve szükséges</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Jelszó</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Jelszó szükséges</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Felhasználónév</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Felhasználónév szükséges</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Használja az SQL Server (vagy SQL Express) adatbázist</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Áruház információk</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value> A varázsló befejezéséhez, tudnia kell néhány információt az adatbázis szerver ("kapcsolat string"). Kérjük, lépjen kapcsolatba az internetszolgáltatóval, ha szükséges. Ha a telepítés helyi gépen vagy a szerveren, akkor szüksége lehet információkra a Rendszer Admin-tol.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Használja a beépített Windows-hitelesítést</Value>
   </LocaleResource>
 </Language>

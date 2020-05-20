@@ -37,7 +37,9 @@
 <div class="side-2">
     @if (IsSectionDefined("left"))
     {
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnBefore })
         @RenderSection("left")
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.LeftSideColumnAfter })
     }
     else
     {

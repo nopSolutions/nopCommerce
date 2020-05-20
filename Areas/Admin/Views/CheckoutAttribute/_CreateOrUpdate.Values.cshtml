@@ -3,7 +3,6 @@
 @if (Model.Id > 0)
 {
     <div class="panel-body">
-        @*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type'*@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "checkoutattributevalues-grid",

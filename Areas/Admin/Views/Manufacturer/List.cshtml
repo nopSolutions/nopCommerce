@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Manufacturers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Manufacturers");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Manufacturers")
@@ -39,7 +38,7 @@
                     </a>
                 </li>
                 <li>
-                    <a  asp-action="ExportXlsx">
+                    <a asp-action="ExportXlsx">
                         <i class="fa fa-file-excel-o"></i>
                         @T("Admin.Common.ExportToExcel")
                     </a>
@@ -51,6 +50,11 @@
             @T("Admin.Common.Import")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerListButtons })
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -84,63 +88,109 @@
                                         <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchPublishedId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @await Html.PartialAsync("Table", new DataTablesModel
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "manufacturers-grid",
+                    UrlRead = new DataUrl("List", "Manufacturer", null),
+                    SearchButtonId = "search-manufacturers",
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    Filters = new List<FilterParameter>
                     {
-                        Name = "manufacturers-grid",
-                        UrlRead = new DataUrl("List", "Manufacturer", null),
-                        SearchButtonId = "search-manufacturers",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
+                        new FilterParameter(nameof(Model.SearchManufacturerName)),
+                        new FilterParameter(nameof(Model.SearchStoreId)),
+                        new FilterParameter(nameof(Model.SearchPublishedId))
+                    },
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(ManufacturerModel.Id))
                         {
-                            new FilterParameter(nameof(Model.SearchManufacturerName)),
-                            new FilterParameter(nameof(Model.SearchStoreId))
+                            IsMasterCheckBox = true,
+                            Render = new RenderCheckBox("checkbox_manufacturers"),
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Width = "50"
                         },
-                        ColumnCollection = new List<ColumnProperty>
+                        new ColumnProperty(nameof(ManufacturerModel.Name))
                         {
-                            new ColumnProperty(nameof(ManufacturerModel.Name))
-                            {
-                                Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
-                            },
-                            new ColumnProperty(nameof(ManufacturerModel.Published))
-                            {
-                                Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Render = new RenderBoolean()
-                            },
-                            new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
-                            {
-                                Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
-                                Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(ManufacturerModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
-                            }
+                            Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.Published))
+                        {
+                            Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Render = new RenderBoolean()
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
+                            Width = "150",
+                            ClassName = NopColumnClassDefaults.CenterAll
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
                         }
-                    })  
-                </div>
+                    }
+                })
+
+                <script>
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelected", "Manufacturer"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#manufacturers-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+                        });
+
+                </script>
+                <nop-alert asp-alert-id="deleteSelectedFailed" />
             </div>
         </div>
     </div>

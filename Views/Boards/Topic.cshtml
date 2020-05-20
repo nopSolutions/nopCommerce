@@ -102,7 +102,7 @@
     <div class="topic-posts">
         @foreach (var post in @Model.ForumPostModels)
         {
-            Html.RenderPartial("_ForumPost", post);
+            await Html.RenderPartialAsync("_ForumPost", post);
         }
     </div>
 

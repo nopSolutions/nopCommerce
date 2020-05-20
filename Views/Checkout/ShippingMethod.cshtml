@@ -17,47 +17,67 @@
         <div class="section shipping-method">
             <form asp-route="CheckoutShippingMethod" method="post">
                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodTop })
-                @if (Model.Warnings.Count == 0)
+
+                @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
                 {
-                    <ul class="method-list">
-                        @for (var i = 0; i < Model.ShippingMethods.Count; i++)
-                        {
-                            var shippingMethod = Model.ShippingMethods[i];
-                            <li>
-                                <div class="method-name">
-                                    <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" />
-                                    <label for="shippingoption_@(i)">@T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)</label>
-                                </div>
-                                @if (!string.IsNullOrEmpty(shippingMethod.Description))
-                                {
-                                    <div class="method-description">
-                                        @Html.Raw(shippingMethod.Description)
-                                    </div>
-                                }
-                            </li>
-                        }
-                    </ul>
-                    if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
-                    {
-                        <div class="multiple-locations">
-                            @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
-                        </div>
-                    }
-                    <div class="buttons">
-                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 shipping-method-next-step-button" />
-                    </div>
+                    @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+                    <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $(document).on('checkout_toggle_pickup_in_store', function (e) {
+                                if (e.checked)
+                                    $('.method-list').hide();
+                                else
+                                    $('.method-list').show();
+                            });
+                        });
+                    </script>
                 }
-                else
+
+                @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
                 {
-                    <div class="message-error">
-                        <ul>
-                            @foreach (var warning in Model.Warnings)
+                    @if (Model.Warnings.Count == 0)
+                    {
+                        <ul class="method-list">
+                            @for (var i = 0; i < Model.ShippingMethods.Count; i++)
                             {
-                                <li>@warning</li>
+                                var shippingMethod = Model.ShippingMethods[i];
+                                <li>
+                                    <div class="method-name">
+                                        <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" />
+                                        <label for="shippingoption_@(i)">@T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)</label>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(shippingMethod.Description))
+                                    {
+                                        <div class="method-description">
+                                            @Html.Raw(shippingMethod.Description)
+                                        </div>
+                                    }
+                                </li>
                             }
                         </ul>
-                    </div>
+                        if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+                        {
+                            <div class="multiple-locations">
+                                @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                            </div>
+                        }
+                        <div class="buttons">
+                            <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 shipping-method-next-step-button" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message-error">
+                            <ul>
+                                @foreach (var warning in Model.Warnings)
+                                {
+                                    <li>@warning</li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 }
+
                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingMethodBottom })
             </form>
         </div>

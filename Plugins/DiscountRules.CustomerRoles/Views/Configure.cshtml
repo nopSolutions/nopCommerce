@@ -3,7 +3,7 @@
     Layout = "";
 }
 
-<script>
+    <script>
     $(document).ready(function () {
         $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
             var customerRoleId = $("#@Html.IdFor(model => model.CustomerRoleId)").val();
@@ -11,9 +11,9 @@
             var requirementId = @Model.RequirementId;
 
             var postData = {
-                discountId: discountId,
-                discountRequirementId: requirementId,
-                customerRoleId: customerRoleId
+                DiscountId: discountId,
+                RequirementId: requirementId,
+                CustomerRoleId: customerRoleId
             };
             addAntiForgeryToken(postData);
 
@@ -31,12 +31,27 @@
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
+                    var $alertInfoEl = $("#savecustomerrolesrequirementAlert-info");
+                    let response = jqXHR.responseJSON;
+                    if (response instanceof Object && response.hasOwnProperty('Errors')) {
+                        var errorMessages = '';
+                        $.each(response.Errors, function (i, error) {
+                            errorMessages += error;
+                            if (response.Errors.length - 1 != i)
+                                errorMessages += '</br>';
+                        });
+                        $alertInfoEl.html(errorMessages);
+                    } else {
+                        // display default error
+                        $alertInfoEl.html('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")');
+                    }
+
                     $("#savecustomerrolesrequirementAlert").click();
                 }
             });
         });
     });
-</script>
+    </script>
 
 <div class="form-group">
     <div class="col-md-3 requirement-label-col">
@@ -58,4 +73,4 @@
         </div>
     </div>
 </div>
-<nop-alert asp-alert-id="savecustomerrolesrequirementAlert" asp-alert-message="@T("Admin.Promotions.Discounts.Requirements.FailedToSave")" />
+<nop-alert asp-alert-id="savecustomerrolesrequirementAlert" />
