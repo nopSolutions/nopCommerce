@@ -337,8 +337,11 @@ namespace Nop.Core.Caching
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
             {
                 var keys = GetKeys(endPoint).ToArray();
-                
-                _perRequestCache.Clear();
+
+                //we can't use _perRequestCache.Clear(),
+                //because HttpContext stores some server data that we should not delete
+                foreach (var redisKey in keys) 
+                    _perRequestCache.Remove(redisKey.ToString());
 
                 TryPerformAction(() => _db.KeyDelete(keys.ToArray()));
             }
