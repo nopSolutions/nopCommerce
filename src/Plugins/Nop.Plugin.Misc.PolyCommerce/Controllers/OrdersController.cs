@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -39,6 +40,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
 
         public OrdersController(IRepository<Order> orderRepository,
             ICustomerActivityService customerActivityService,
@@ -52,7 +55,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             IEventPublisher eventPublisher,
             ICustomNumberFormatter customNumberFormatter,
             ICountryService countryService,
+            ICurrencyService currencyService,
             IOrderService orderService,
+            CurrencySettings currencySettings,
             IProductService productService)
         {
             _orderRepository = orderRepository;
@@ -69,6 +74,34 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             _customNumberFormatter = customNumberFormatter;
             _eventPublisher = eventPublisher;
             _productService = productService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+        }
+
+        [HttpGet]
+        [Route("api/polycommerce/orders/get_store_currency")]
+        public async Task<IActionResult> GetStoreCurrency()
+        {
+            try
+            {
+                var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
+                var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
+
+                if (store == null)
+                {
+                    return Unauthorized();
+                }
+
+                var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
+                return Ok(new { CurrencyCode = primaryStoreCurrency.CurrencyCode });
+                
+            }
+            catch(Exception ex)
+            {
+                _logger.Error("Error while fetching Store Currency", ex);
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -85,6 +118,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 {
                     return Unauthorized();
                 }
+
+                var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
                 if (model == null)
                 {
@@ -185,7 +220,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     OrderDiscount = decimal.Zero,
                     CheckoutAttributeDescription = string.Empty,
                     CheckoutAttributesXml = string.Empty,
-                    CustomerCurrencyCode = model.CurrencyCode,
+                    CustomerCurrencyCode = primaryStoreCurrency.CurrencyCode,
                     AffiliateId = 0,
                     OrderStatus = (OrderStatus)model.OrderStatusId,
                     AllowStoringCreditCardNumber = false,

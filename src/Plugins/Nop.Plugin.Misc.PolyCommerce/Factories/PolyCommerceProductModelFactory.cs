@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -110,6 +107,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
                 productModel.MinStockQuantity = 1;
                 productModel.LowStockActivityId = (int)LowStockActivity.Unpublish;
                 productModel.DisplayStockQuantity = true;
+                productModel.DisplayStockAvailability = true;
             }
             
             return productModel;

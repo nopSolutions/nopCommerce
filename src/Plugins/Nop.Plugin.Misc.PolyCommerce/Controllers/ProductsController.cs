@@ -56,45 +56,45 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             if (minModifiedDate.HasValue && maxModifiedDate.HasValue)
             {
                 products = await _productRepository.Table
-                .Where(x => x.UpdatedOnUtc >= minModifiedDate.Value && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
+                .Where(x => !x.Deleted && x.UpdatedOnUtc >= minModifiedDate.Value && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
                 .Skip(skipRecords)
                 .Take(pageSize)
                 .ToListAsync();
 
                 count = await _productRepository.Table
-                .CountAsync(x => x.UpdatedOnUtc >= minModifiedDate.Value && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
+                .CountAsync(x => !x.Deleted && x.UpdatedOnUtc >= minModifiedDate.Value && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
             }
             else if (!minModifiedDate.HasValue && !maxModifiedDate.HasValue)
             {
                 products = await _productRepository.Table
-                .Where(x => x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
+                .Where(x => !x.Deleted && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
                 .Skip(skipRecords)
                 .Take(pageSize)
                 .ToListAsync();
 
-                count = await _productRepository.Table.CountAsync(x => x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
+                count = await _productRepository.Table.CountAsync(x => !x.Deleted  && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
             }
             else if (minModifiedDate.HasValue && !maxModifiedDate.HasValue)
             {
                 products = await _productRepository.Table
-                    .Where(x => x.UpdatedOnUtc >= minModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
+                    .Where(x => !x.Deleted && x.UpdatedOnUtc >= minModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
                     .Skip(skipRecords)
                     .Take(pageSize)
                     .ToListAsync();
 
                 count = await _productRepository.Table
-                .CountAsync(x => x.UpdatedOnUtc >= minModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
+                .CountAsync(x => !x.Deleted  && x.UpdatedOnUtc >= minModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
             }
             else if (!minModifiedDate.HasValue && maxModifiedDate.HasValue)
             {
                 products = await _productRepository.Table
-                    .Where(x => x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
+                    .Where(x => !x.Deleted && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0)
                     .Skip(skipRecords)
                     .Take(pageSize)
                     .ToListAsync();
 
                 count = await _productRepository.Table
-                .CountAsync(x => x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
+                .CountAsync(x => !x.Deleted && x.UpdatedOnUtc <= maxModifiedDate.Value && x.ProductTypeId == (int)ProductType.SimpleProduct && x.ParentGroupedProductId == 0);
             }
 
             var mappedProducts = products.ConvertAll(PreparePolyCommerceModel);
