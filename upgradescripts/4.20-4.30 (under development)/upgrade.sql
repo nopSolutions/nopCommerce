@@ -3238,7 +3238,7 @@ GO
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='UsedWithOrder')
 BEGIN
-	ALTER TABLE dbo.RewardPointsHistory ADD UsedWithOrder uniqueidentifier NULL
+	ALTER TABLE [RewardPointsHistory] ADD [UsedWithOrder] uniqueidentifier NULL
 END
 GO
 
