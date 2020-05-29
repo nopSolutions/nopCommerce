@@ -46,5 +46,7 @@ namespace Nop.Web.Models.Install
 
         public List<SelectListItem> AvailableDataProviders { get; set; }
         public IDictionary<string, string> RawDataSettings => new Dictionary<string, string>();
+
+        public string RestartUrl { get; set; }
     }
 }

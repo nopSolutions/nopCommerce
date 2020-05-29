@@ -1,41 +1,74 @@
-﻿nopCommerce | [![Build Status](https://travis-ci.com/nopSolutions/nopCommerce.svg?branch=develop)](https://travis-ci.com/nopSolutions/nopCommerce)
+﻿nopCommerce: free and open-source eCommerce solution[![Build Status](https://travis-ci.com/nopSolutions/nopCommerce.svg?branch=develop)](https://travis-ci.com/nopSolutions/nopCommerce)
 ===========
-nopCommerce is the best open-source e-commerce shopping cart solution. nopCommerce is free and it is the most popular ASP.NET ecommerce platform. It has been downloaded more than 3 million times!
 
-nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2012 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
+[nopCommerce](https://www.nopcommerce.com/) is the best open-source eCommerce shopping cart solution. nopCommerce is free, and it is the most popular ASP.NET eCommerce platform.
 
-![nopCommerce demo](https://www.nopcommerce.com/images/features/responsive_devices_codeplex.jpg)
+![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png#v1)
 
-nopCommerce can be up-and-running in just a few minutes. Simply download the software, and follow the simple installation instructions. nopCommerce is developed to take full advantage of the latest technologies available. With its pluggable architecture, additional functionality and presentation elements can be dynamically added to the application at runtime.
+The product is being developed and supported by the professional team since 2008.
 
-We have put a lot of effort into ensuring that nopCommerce is optimized for search engines. From search friendly URLs to properly structured content and products, you will find that nopCommerce was built to help your customers locate your content with ease.
+nopCommerce has been downloaded more than 3,000,000 times.
 
-nopCommerce offers unprecedented flexibility and control. Since it is open-source, nopCommerce’s source code is available free for download.
+The active developer community has more than 250,000 members.
 
+nopCommerce runs on .NET Core 3.1 with an MS SQL 2012 (or higher) backend database.
 
-## nopCommerce resources: ##
+nopCommerce is cross-platform, and you can run it on Windows, Linux, or Mac.
 
-nopCommerce official site: [https://www.nopcommerce.com](https://www.nopcommerce.com)
+nopCommerce supports Docker and MySQL out of the box, so you can easily run nopCommerce on a Linux machine.
 
-nopCommerce demo store: [https://www.nopcommerce.com/demo](https://www.nopcommerce.com/demo)
+![Logo](https://www.nopcommerce.com/images/github/logos.png#v1)
 
-Feature list: [https://www.nopcommerce.com/features](https://www.nopcommerce.com/features)
+nopCommerce architecture follows well-known software patterns and the best security practices. The source code is fully customizable. Pluggable and clear architecture makes it easy to develop custom functionality and follow any business requirements.
 
-Technology & system Requirements: [https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
+Using the latest Microsoft technologies, nopCommerce provides high performance, stability, and security. nopCommerce is also fully compatible with Azure and web farms.
 
-Documentation: [https://docs.nopcommerce.com/](https://docs.nopcommerce.com/)
-
-Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards/)
+Clear and detailed [documentation for developers](https://docs.nopcommerce.com/developer/index.html) will help you start with nopCommerce easily.
 
 
-## Store demo: ##
+### The advantages of working with nopCommerce ###
 
-Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
+nopCommerce offers powerful [out-of-the-box features](https://www.nopcommerce.com/features?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=features) for creating an online store of any size and type.
 
+nopCommerce is integrated with all the popular third-party services. You can find thousands of integrations on nopCommerce [Marketplace](https://www.nopcommerce.com/marketplace?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=marketplace).
+
+Friendly members of the [nopCommerce community](https://www.nopcommerce.com/boards?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=forum) will always help with advice and share their experiences. nopCommerce core development team provides [professional support](https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=support) within 24 hours.
+
+
+## Store demo ##
+
+Evaluate the functionality and convenience of nopCommerce as a customer and store owner.
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/admin/)
+[![ScreenShot](https://www.nopcommerce.com/images/github/public-demo.png#v1)](https://frontend.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/github/admin-demo.png#v1)](https://admin-demo.nopcommerce.com/admin/)
 
 
+### nopCommerce resources ###
 
+nopCommerce official site: [https://www.nopcommerce.com](https://www.nopcommerce.com)
+
+* [Demo store](https://www.nopcommerce.com/demo)
+* [Download nopCommerce](https://www.nopcommerce.com/download-nopcommerce?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=download)
+* [Feature list](https://www.nopcommerce.com/features?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=features)
+* [nopCommerce documentation](https://docs.nopcommerce.com/)
+* [Community forums](https://www.nopcommerce.com/boards?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=forum)
+* [Premium support services](https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=support)
+* [Certified developer program](https://www.nopcommerce.com/certified-developer-program?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=certified)
+* [nopCommerce partners](https://www.nopcommerce.com/partners?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=partners)
+
+nopCommerce YouTube: [The Architecture behind the nopCommerce eCommerce Platform](https://www.youtube.com/watch?v=6gLbizzSA9o&list=PLnL_aDfmRHwtJmzeA7SxrpH3-XDY2ue0a)
+
+
+### Earn with nopCommerce ###
+
+60,000 stores worldwide are powered by nopCommerce, and 10,000 new stores open every year. nopCommerce [solution partners’ directory](https://www.nopcommerce.com/solution-partners?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=solution_partners) gets 80,000+ page views per year from store owners who are looking for a partner to build a store from scratch, migrate from another platform, or improve and customize an existing store.
+
+Become a solution partner of nopCommerce and get new clients – [learn more](https://www.nopcommerce.com/become-partner?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=become-partner).
+
+Create a new graphical theme or develop a new plugin or integration and sell it on the nopCommerce [Marketplace](https://www.nopcommerce.com/marketplace?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=marketplace).
+
+
+### Contribute ###
+
+As a free and open-source project, we are very grateful to everyone who helps us to develop nopCommerce. Please find more details about the options and bonuses for contributors at [сontribute page](https://www.nopcommerce.com/contribute?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=сontribute).

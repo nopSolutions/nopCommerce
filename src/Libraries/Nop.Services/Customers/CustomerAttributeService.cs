@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Customers
 {
@@ -16,24 +13,21 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly IRepository<CustomerAttributeValue> _customerAttributeValueRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CustomerAttributeService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<CustomerAttribute> customerAttributeRepository,
-            IRepository<CustomerAttributeValue> customerAttributeValueRepository)
+        public CustomerAttributeService(IRepository<CustomerAttribute> customerAttributeRepository,
+            IRepository<CustomerAttributeValue> customerAttributeValueRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _customerAttributeRepository = customerAttributeRepository;
             _customerAttributeValueRepository = customerAttributeValueRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -46,13 +40,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttribute">Customer attribute</param>
         public virtual void DeleteCustomerAttribute(CustomerAttribute customerAttribute)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
             _customerAttributeRepository.Delete(customerAttribute);
-
-            //event notification
-            _eventPublisher.EntityDeleted(customerAttribute);
         }
 
         /// <summary>
@@ -61,11 +49,12 @@ namespace Nop.Services.Customers
         /// <returns>Customer attributes</returns>
         public virtual IList<CustomerAttribute> GetAllCustomerAttributes()
         {
-            var query = from ca in _customerAttributeRepository.Table
-                orderby ca.DisplayOrder, ca.Id
-                select ca;
-
-            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
+            return _customerAttributeRepository.GetAll(query =>
+            {
+                return from ca in query
+                    orderby ca.DisplayOrder, ca.Id
+                    select ca;
+            }, cache => default);
         }
 
         /// <summary>
@@ -75,10 +64,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute</returns>
         public virtual CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
         {
-            if (customerAttributeId == 0)
-                return null;
-
-            return _customerAttributeRepository.ToCachedGetById(customerAttributeId);
+            return _customerAttributeRepository.GetById(customerAttributeId, cache => default);
         }
 
         /// <summary>
@@ -87,13 +73,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttribute">Customer attribute</param>
         public virtual void InsertCustomerAttribute(CustomerAttribute customerAttribute)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
             _customerAttributeRepository.Insert(customerAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(customerAttribute);
         }
 
         /// <summary>
@@ -102,13 +82,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttribute">Customer attribute</param>
         public virtual void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
             _customerAttributeRepository.Update(customerAttribute);
-
-            //event notification
-            _eventPublisher.EntityUpdated(customerAttribute);
         }
 
         /// <summary>
@@ -117,13 +91,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeValue">Customer attribute value</param>
         public virtual void DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
-            if (customerAttributeValue == null)
-                throw new ArgumentNullException(nameof(customerAttributeValue));
-
             _customerAttributeValueRepository.Delete(customerAttributeValue);
-
-            //event notification
-            _eventPublisher.EntityDeleted(customerAttributeValue);
         }
 
         /// <summary>
@@ -133,13 +101,13 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id
                 where cav.CustomerAttributeId == customerAttributeId
                 select cav;
-            var customerAttributeValues = query.ToCachedList(key);
+            var customerAttributeValues = _staticCacheManager.Get(key, query.ToList);
 
             return customerAttributeValues;
         }
@@ -151,10 +119,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute value</returns>
         public virtual CustomerAttributeValue GetCustomerAttributeValueById(int customerAttributeValueId)
         {
-            if (customerAttributeValueId == 0)
-                return null;
-
-            return _customerAttributeValueRepository.ToCachedGetById(customerAttributeValueId);
+            return _customerAttributeValueRepository.GetById(customerAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -163,13 +128,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeValue">Customer attribute value</param>
         public virtual void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
-            if (customerAttributeValue == null)
-                throw new ArgumentNullException(nameof(customerAttributeValue));
-
             _customerAttributeValueRepository.Insert(customerAttributeValue);
-
-            //event notification
-            _eventPublisher.EntityInserted(customerAttributeValue);
         }
 
         /// <summary>
@@ -178,13 +137,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeValue">Customer attribute value</param>
         public virtual void UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
-            if (customerAttributeValue == null)
-                throw new ArgumentNullException(nameof(customerAttributeValue));
-
             _customerAttributeValueRepository.Update(customerAttributeValue);
-
-            //event notification
-            _eventPublisher.EntityUpdated(customerAttributeValue);
         }
 
         #endregion

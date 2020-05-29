@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Services.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Customers;
 using Nop.Web.Framework.Themes;
@@ -19,7 +18,6 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
@@ -31,15 +29,13 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public WidgetModelFactory(ICacheKeyService cacheKeyService,
-            ICustomerService customerService,
+        public WidgetModelFactory(ICustomerService customerService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
         {
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -62,7 +58,7 @@ namespace Nop.Web.Factories
         {
             var roles = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
 
-            var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
                 roles, _storeContext.CurrentStore, widgetZone, _themeContext.WorkingThemeName);
 
             var cachedModels = _staticCacheManager.Get(cacheKey, () =>

@@ -14,7 +14,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -33,14 +32,14 @@ namespace Nop.Services.Tests.Catalog
         private Mock<ICategoryService> _categoryService;
 
         private CustomerService _customerService;
-        private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
-        private Mock<IRepository<CustomerRole>> _customerRoleRepository;
+        private FakeRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
+        private FakeRepository<CustomerRole> _customerRoleRepository;
 
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
-        private Mock<IRepository<DiscountProductMapping>> _discountProductMappingRepository;
-        private Mock<IRepository<Product>> _productRepository;
-        private Mock<IRepository<TierPrice>> _tierPriceRepository;
+        private FakeRepository<DiscountProductMapping> _discountProductMappingRepository;
+        private FakeRepository<Product> _productRepository;
+        private FakeRepository<TierPrice> _tierPriceRepository;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
         private CatalogSettings _catalogSettings;        
@@ -56,6 +55,8 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
+            base.SetUp();
+
             _serviceProvider = new TestServiceProvider();
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
@@ -63,45 +64,33 @@ namespace Nop.Services.Tests.Catalog
 
             _categoryService = new Mock<ICategoryService>();
 
-            _customerRoleRepository = new Mock<IRepository<CustomerRole>>();
-            _customerRoleRepository.Setup(r => r.Table).Returns(GetMockCustomerRoles);
-
-            _customerCustomerRoleMappingRepository = new Mock<IRepository<CustomerCustomerRoleMapping>>();
+            _customerRoleRepository = new FakeRepository<CustomerRole>(GetMockCustomerRoles().ToList());
 
             var customerCustomerRoleMapping = new List<CustomerCustomerRoleMapping>();
-            _customerCustomerRoleMappingRepository.Setup(r => r.Table)
-                .Returns(customerCustomerRoleMapping.AsQueryable());
 
-            _customerCustomerRoleMappingRepository.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>()))
-                .Callback(
-                    (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
+            _customerCustomerRoleMappingRepository = new FakeRepository<CustomerCustomerRoleMapping>(customerCustomerRoleMapping);
 
-            _customerService = new CustomerService(new CachingSettings(), null, new FakeCacheKeyService(),  null, null, null, null,
-                null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null,
+            _customerService = new CustomerService(null, null, null, null,
+                null, _customerCustomerRoleMappingRepository, null, _customerRoleRepository, null, null,
                 new TestCacheManager(), _storeContext.Object, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
-            _productRepository = new Mock<IRepository<Product>>();
-            _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
-            _productRepository.Setup(p => p.GetById(It.IsAny<int>()))
-                .Returns((int id) => GetMockProducts().FirstOrDefault(p => p.Id == id));
+            _productRepository = new FakeRepository<Product>(GetMockProducts().ToList());
+            
+            _tierPriceRepository = new FakeRepository<TierPrice>(GetMockTierPrices().ToList());
 
-            _tierPriceRepository = new Mock<IRepository<TierPrice>>();
-            _tierPriceRepository.Setup(t => t.Table).Returns(GetMockTierPrices);
+            _discountProductMappingRepository = new FakeRepository<DiscountProductMapping>(GetMockDiscountProductMapping().ToList());
 
-            _discountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
-            _discountProductMappingRepository.Setup(r => r.Table).Returns(GetMockDiscountProductMapping);
-            _serviceProvider.DiscountProductMappingRepository.Setup(r => r.Table)
-                .Returns(GetMockDiscountProductMapping);
+            _serviceProvider.DiscountProductMappingRepository.Insert(GetMockDiscountProductMapping().First());
 
-            var shipmentRepository = new Mock<IRepository<Shipment>>();
+            var shipmentRepository = new FakeRepository<Shipment>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(),  _customerService,
-                null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
-                _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
-                null, null, _tierPriceRepository.Object, null,
-                null, null, null, null, new LocalizationSettings());
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, _customerService,
+                null, null, null, null, null, null, null, null, _discountProductMappingRepository,
+                _productRepository, null, null, null, null, null, null, null, null, shipmentRepository,
+                null, null, _tierPriceRepository, null,
+                new TestCacheManager(), null, null, null, new LocalizationSettings());
 
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
@@ -126,7 +115,7 @@ namespace Nop.Services.Tests.Catalog
 
             _priceCalcService = new PriceCalculationService(_catalogSettings,
                 new CurrencySettings { PrimaryStoreCurrencyId = 1 },
-                new FakeCacheKeyService(), _categoryService.Object,
+                _categoryService.Object,
                 _serviceProvider.CurrencyService.Object, _customerService, _discountService,
                 _manufacturerService.Object, _productAttributeParser.Object,
                 _productService, _staticCacheManager, _storeContext.Object, _workContext.Object);
@@ -327,7 +316,7 @@ namespace Nop.Services.Tests.Catalog
             
             customerRole.Should().NotBeNull();
 
-            _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole?.Id ?? 0, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole?.Id ?? 0, CustomerId = customer.Id });
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(10);
@@ -362,7 +351,7 @@ namespace Nop.Services.Tests.Catalog
             // ------------------- ------------------ --------------product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-           
+
             _priceCalcService.GetFinalPrice(product, customer).Should().Be(9.34M);
         }
 

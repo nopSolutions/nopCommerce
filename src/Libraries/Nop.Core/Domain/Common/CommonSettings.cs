@@ -108,5 +108,10 @@ namespace Nop.Core.Domain.Common
         /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
         /// </summary>
         public int? ScheduleTaskRunTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout (in milliseconds) before restarting the application; set null to use default value
+        /// </summary>
+        public int? RestartTimeout { get; set; }
     }
 }

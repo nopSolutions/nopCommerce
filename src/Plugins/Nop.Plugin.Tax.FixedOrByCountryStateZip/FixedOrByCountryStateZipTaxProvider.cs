@@ -28,7 +28,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         #region Fields
 
         private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICountryStateZipService _taxRateService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -47,7 +46,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         #region Ctor
 
         public FixedOrByCountryStateZipTaxProvider(FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
-            ICacheKeyService cacheKeyService,
             ICountryStateZipService taxRateService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
@@ -62,7 +60,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             TaxSettings taxSettings)
         {
             _countryStateZipSettings = countryStateZipSettings;
-            _cacheKeyService = cacheKeyService;
             _taxRateService = taxRateService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
@@ -105,7 +102,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             }
 
             //first, load all tax rate records (cached) - loaded only once
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY);
             var allTaxRates = _staticCacheManager.Get(cacheKey, () => _taxRateService.GetAllTaxRates().Select(taxRate => new TaxRate
             {
                 Id = taxRate.Id,
@@ -260,7 +257,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             _settingService.SaveSetting(new FixedOrByCountryStateZipTaxSettings());
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fixed"] = "Fixed rate",
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip"] = "By Country",
@@ -300,7 +297,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             _settingService.DeleteSettings(fixedRates);
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Tax.FixedOrByCountryStateZip");
+            _localizationService.DeleteLocaleResources("Plugins.Tax.FixedOrByCountryStateZip");
 
             base.Uninstall();
         }

@@ -27,6 +27,11 @@ namespace Nop.Services.Common
         #region Maintenance
 
         /// <summary>
+        /// Gets a default timeout (in milliseconds) before restarting the application
+        /// </summary>
+        public static int RestartTimeout => 3000;
+
+        /// <summary>
         /// Gets a path to the database backup files
         /// </summary>
         public static string DbBackupsPath => "db_backups\\";
@@ -156,15 +161,10 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey AddressAttributesAllCacheKey => new CacheKey("Nop.addressattribute.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        public static CacheKey AddressAttributeValuesAllCacheKey => new CacheKey("Nop.addressattributevalue.all-{0}");
+        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new CacheKey("Nop.addressattributevalue.byattribute.{0}");
 
         #endregion
 

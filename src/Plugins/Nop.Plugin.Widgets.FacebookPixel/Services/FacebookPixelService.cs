@@ -12,8 +12,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -43,7 +41,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
@@ -68,7 +65,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         #region Ctor
 
         public FacebookPixelService(CurrencySettings currencySettings,
-            ICacheKeyService cacheKeyService,
             ICategoryService categoryService,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -89,7 +85,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             IWorkContext workContext)
         {
             _currencySettings = currencySettings;
-            _cacheKeyService = cacheKeyService;
             _categoryService = categoryService;
             _countryService = countryService;
             _currencyService = currencyService;
@@ -445,7 +440,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>List of configurations</returns>
         private IList<FacebookPixelConfiguration> GetConfigurations(int storeId = 0)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationsCacheKey, storeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationsCacheKey, storeId);
 
             var query = _facebookPixelConfigurationRepository.Table;
 
@@ -455,7 +450,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             query = query.OrderBy(configuration => configuration.Id);
 
-            return query.ToCachedList(key);
+            return _staticCacheManager.Get(key, query.ToList);
         }
 
         #endregion
@@ -775,7 +770,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (configurationId == 0)
                 return null;
 
-            return _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), () =>
+            return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), () =>
                 _facebookPixelConfigurationRepository.GetById(configurationId));
         }
 
@@ -788,7 +783,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _facebookPixelConfigurationRepository.Insert(configuration);
+            _facebookPixelConfigurationRepository.Insert(configuration, false);
             _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
         }
 
@@ -801,7 +796,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _facebookPixelConfigurationRepository.Update(configuration);
+            _facebookPixelConfigurationRepository.Update(configuration, false);
             _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
         }
 
@@ -814,7 +809,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _facebookPixelConfigurationRepository.Delete(configuration);
+            _facebookPixelConfigurationRepository.Delete(configuration, false);
             _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
         }
 
@@ -826,7 +821,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>List of custom events</returns>
         public IList<CustomEvent> GetCustomEvents(int configurationId, string widgetZone = null)
         {
-            var cachedCustomEvents = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.CustomEventsCacheKey, configurationId), () =>
+            var cachedCustomEvents = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.CustomEventsCacheKey, configurationId), () =>
             {
                 //load configuration custom events
                 var configuration = GetConfigurationById(configurationId);
@@ -891,7 +886,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>List of widget zones names</returns>
         public IList<string> GetCustomEventsWidgetZones()
         {
-            return _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.WidgetZonesCacheKey), () =>
+            return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.WidgetZonesCacheKey), () =>
             {
                 //load custom events and their widget zones
                 var configurations = GetConfigurations();

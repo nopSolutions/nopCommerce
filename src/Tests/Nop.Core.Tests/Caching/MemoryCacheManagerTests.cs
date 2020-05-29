@@ -2,6 +2,8 @@
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Caching
@@ -14,7 +16,13 @@ namespace Nop.Core.Tests.Caching
         [SetUp]
         public void Setup()
         {
-            _staticCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()));
+            _staticCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()), new NopConfig());
+            Singleton<NopConfig>.Instance = new NopConfig
+            {
+                DefaultCacheTime = 60,
+                ShortTermCacheTime = 3,
+                BundledFilesCacheTime = 120
+            };
         }
 
         [Test]

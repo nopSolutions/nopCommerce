@@ -9,10 +9,10 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -158,10 +158,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 if (archivefile == null || archivefile.Length == 0)
-                {
-                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-                    return RedirectToAction("List");
-                }
+                    throw new NopException(_localizationService.GetResource("Admin.Common.UploadFile"));
 
                 var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
                 var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
@@ -190,8 +187,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
-                //restart application
-                _webHelper.RestartAppDomain();
+                return View("RestartApplication", Url.Action("List", "Plugin"));
             }
             catch (Exception exc)
             {
@@ -316,10 +312,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             _pluginService.UninstallPlugins();
             _pluginService.DeletePlugins();
 
-            //restart application
-            _webHelper.RestartAppDomain();
+            return View("RestartApplication", Url.Action("List", "Plugin"));
+        }
 
-            return RedirectToAction("List");
+        public virtual IActionResult UninstallAndDeleteUnusedPlugins(string[] names)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            foreach (var name in names) 
+                _pluginService.PreparePluginToUninstall(name);
+
+            _pluginService.UninstallPlugins();
+
+            foreach (var name in names)
+                _pluginService.PreparePluginToDelete(name);
+
+            _pluginService.DeletePlugins();
+
+            return View("RestartApplication", Url.Action("Warnings", "Common"));
         }
 
         [HttpPost, ActionName("List")]

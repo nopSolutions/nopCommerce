@@ -14,7 +14,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -46,7 +45,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
@@ -64,8 +62,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
         #region Ctor
 
-        public ShipStationService(ICacheKeyService cacheKeyService,
-            IAddressService addressService,
+        public ShipStationService(IAddressService addressService,
             ICountryService countryService,
             ICustomerService customerService,
             ILogger logger,
@@ -80,7 +77,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             ShipStationSettings shipStationSettings)
         {
             _addressService = addressService;
-            _cacheKeyService = cacheKeyService;
             _countryService = countryService;
             _customerService = customerService;
             _logger = logger;
@@ -270,7 +266,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         
         protected virtual IList<Carrier> GetCarriers()
         {
-            var rez = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForShortTermCache(_carriersCacheKey), () =>
+            var rez = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForShortTermCache(_carriersCacheKey), () =>
             {
                 var data = SendGetRequest($"{API_URL}{LIST_CARRIERS_CMD}");
                 return TryGetError(data) ? new List<Carrier>() : JsonConvert.DeserializeObject<List<Carrier>>(data);
@@ -286,7 +282,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         {
             var services = GetCarriers().SelectMany(carrier =>
             {
-                var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
+                var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
                 var data = _staticCacheManager.Get(cacheKey, () => SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
                 

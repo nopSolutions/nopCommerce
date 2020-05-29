@@ -12,13 +12,10 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -39,14 +36,12 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -73,14 +68,12 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
-            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -103,14 +96,12 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _currencyService = currencyService;
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
-            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
@@ -248,9 +239,6 @@ namespace Nop.Services.Orders
                 _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes,
                     checkoutAttributesXml, storeId);
             }
-
-            //event notification
-            _eventPublisher.EntityDeleted(shoppingCartItem);
 
             if (!_catalogSettings.RemoveRequiredProducts)
                 return;
@@ -434,10 +422,11 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
+        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string attributesXml, decimal customerEnteredPrice,
-            int quantity)
+        public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product, 
+            string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -557,6 +546,50 @@ namespace Nop.Services.Orders
                                 else
                                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                             }
+
+                            if (warnings.Any())
+                                return warnings;
+
+                            //validate product quantity with non combinable product attributes
+                            var productAttributeMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                            if (productAttributeMappings?.Any() == true)
+                            {
+                                var onlyCombinableAttributes = productAttributeMappings.All(mapping => !mapping.IsNonCombinable());
+                                if (!onlyCombinableAttributes)
+                                {
+                                    var cart = GetShoppingCart(customer, shoppingCartType, storeId);
+                                    var totalAddedQuantity = cart
+                                        .Where(item => item.ProductId == product.Id)
+                                        .Sum(product => product.Quantity);
+
+                                    var alreadyExistedItem = cart.FirstOrDefault(item => item.Id == shoppingCartItemId);
+                                    if (alreadyExistedItem == null)
+                                    {
+                                        //it's new item
+                                        totalAddedQuantity += quantity;
+                                    }
+                                    else
+                                    {
+                                        //it's existing item, then add to total the added quantity only
+                                        if (quantity > alreadyExistedItem.Quantity)
+                                            totalAddedQuantity += quantity - alreadyExistedItem.Quantity;
+                                    }
+
+                                    if (maximumQuantityCanBeAdded < totalAddedQuantity)
+                                    {
+                                        if (maximumQuantityCanBeAdded <= 0)
+                                        {
+                                            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                            var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                                : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                                    _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                                            warnings.Add(warning);
+                                        }
+                                        else
+                                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                    }
+                                }
+                            }
                         }
 
                         break;
@@ -663,7 +696,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _cacheKeyService.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
             return _staticCacheManager.Get(key, () => items.ToList());
         }
@@ -1009,7 +1042,7 @@ namespace Nop.Services.Orders
 
             //standard properties
             if (getStandardWarnings)
-                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity));
+                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity, shoppingCartItemId, storeId));
 
             //selected attributes
             if (getAttributesWarnings)
@@ -1499,9 +1532,6 @@ namespace Nop.Services.Orders
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
 
                 _sciRepository.Update(shoppingCartItem);
-                
-                //event notification
-                _eventPublisher.EntityUpdated(shoppingCartItem);
             }
             else
             {
@@ -1559,9 +1589,6 @@ namespace Nop.Services.Orders
                 customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
 
                 _customerService.UpdateCustomer(customer);
-
-                //event notification
-                _eventPublisher.EntityInserted(shoppingCartItem);
             }
 
             return warnings;
@@ -1590,7 +1617,7 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = _sciRepository.ToCachedGetById(shoppingCartItemId);
+            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId, cache => default);
 
             if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;
@@ -1623,9 +1650,6 @@ namespace Nop.Services.Orders
 
                 _sciRepository.Update(shoppingCartItem);
                 _customerService.UpdateCustomer(customer);
-
-                //event notification
-                _eventPublisher.EntityUpdated(shoppingCartItem);
             }
             else
             {

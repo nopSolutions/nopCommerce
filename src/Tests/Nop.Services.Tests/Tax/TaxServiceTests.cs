@@ -3,19 +3,18 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Tax;
 using Nop.Services.Tests.FakeServices.Providers;
@@ -44,8 +43,8 @@ namespace Nop.Services.Tests.Tax
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
         private Mock<IGenericAttributeService> _genericAttributeService;
-        private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepo;
-        private Mock<IRepository<CustomerRole>> _customerRoleRepo;
+        private FakeRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepo;
+        private FakeRepository<CustomerRole> _customerRoleRepo;
 
         [SetUp]
         public new void SetUp()
@@ -69,9 +68,7 @@ namespace Nop.Services.Tests.Tax
             _geoLookupService = new Mock<IGeoLookupService>();
             _countryService = new Mock<ICountryService>();
 
-            _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
-
-            _customerRoleRepo.Setup(r => r.Table).Returns(new List<CustomerRole>
+            _customerRoleRepo = new FakeRepository<CustomerRole>(new List<CustomerRole>
             {
                 new CustomerRole
                 {
@@ -79,14 +76,9 @@ namespace Nop.Services.Tests.Tax
                     TaxExempt = true,
                     Active = true
                 }
-            }.AsQueryable());
+            });
 
-            _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
-            var mappings = new List<CustomerCustomerRoleMapping>();
-
-            _customerCustomerRoleMappingRepo.Setup(r => r.Table).Returns(mappings.AsQueryable());
-            _customerCustomerRoleMappingRepo.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>())).Callback(
-                (CustomerCustomerRoleMapping ccrm) => { mappings.Add(ccrm); });
+            _customerCustomerRoleMappingRepo = new FakeRepository<CustomerCustomerRoleMapping>();
 
             _stateProvinceService = new Mock<IStateProvinceService>();
             _logger = new Mock<ILogger>();
@@ -97,17 +89,14 @@ namespace Nop.Services.Tests.Tax
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _customerService = new CustomerService(new CachingSettings(),
-                new CustomerSettings(),
-                new FakeCacheKeyService(),
-                _eventPublisher.Object,
+            _customerService = new CustomerService(new CustomerSettings(),
                 _genericAttributeService.Object,
                 null,
                 null,
                 null,
-                _customerCustomerRoleMappingRepo.Object,
+                _customerCustomerRoleMappingRepo,
                 null,
-                _customerRoleRepo.Object,
+                _customerRoleRepo,
                 null,
                 null,
                 new TestCacheManager(),
@@ -203,7 +192,7 @@ namespace Nop.Services.Tests.Tax
             };
             _taxService.IsTaxExempt(null, customer).Should().BeFalse();
 
-            var customerRole = _customerRoleRepo.Object.Table.FirstOrDefault(cr => cr.Id == 1);
+            var customerRole = _customerRoleRepo.Table.FirstOrDefault(cr => cr.Id == 1);
 
             customerRole.Should().NotBeNull();
 

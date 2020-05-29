@@ -118,8 +118,8 @@ namespace Nop.Services.Plugins
                         descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
                         //ensure that the plugin current version is supported
-                        if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
-                            throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
+                        if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
+                            throw new Exception($"This plugin doesn't support the current version - {NopVersion.CURRENT_VERSION}");
                     }
 
                     //or whether a theme is upload 
@@ -178,7 +178,7 @@ namespace Nop.Services.Plugins
                         continue;
 
                     //ensure that the current version of nopCommerce is supported
-                    if (!item.SupportedVersions?.Contains(NopVersion.CurrentVersion) ?? true)
+                    if (!item.SupportedVersions?.Contains(NopVersion.CURRENT_VERSION) ?? true)
                         continue;
 
                     //the item path should end with a slash
@@ -215,7 +215,7 @@ namespace Nop.Services.Plugins
                         continue;
 
                     //ensure that the plugin current version is supported
-                    if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion))
+                    if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION))
                         continue;
 
                     //get path to upload

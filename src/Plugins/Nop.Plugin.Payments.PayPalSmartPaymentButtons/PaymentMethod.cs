@@ -363,7 +363,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             }
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize"] = "Authorize",
                 ["Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture"] = "Capture",
@@ -423,8 +423,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             _settingService.DeleteSetting<PayPalSmartPaymentButtonsSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons");
-            _localizationService.DeletePluginLocaleResources("Plugins.Payments.PayPalSmartPaymentButtons");
+            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons");
+            _localizationService.DeleteLocaleResources("Plugins.Payments.PayPalSmartPaymentButtons");
 
             base.Uninstall();
         }

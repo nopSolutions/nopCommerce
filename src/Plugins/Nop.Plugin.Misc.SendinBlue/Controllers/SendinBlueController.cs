@@ -31,7 +31,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -52,8 +51,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
         #region Ctor
 
-        public SendinBlueController(ICacheKeyService cacheKeyService,
-            IEmailAccountService emailAccountService,
+        public SendinBlueController(IEmailAccountService emailAccountService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
@@ -69,7 +67,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             MessageTemplatesSettings messageTemplatesSettings,
             SendinBlueManager sendinBlueEmailManager)
         {
-            _cacheKeyService = cacheKeyService;
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -303,7 +300,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         [Area(AreaNames.Admin)]
         public string GetSynchronizationInfo()
         {
-            var res = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), () => string.Empty);
+            var res = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), () => string.Empty);
             _staticCacheManager.Remove(SendinBlueDefaults.SyncKeyCache);
             return res;
         }
@@ -631,12 +628,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 _logger.Information(logInfo);
 
                 //display info on configuration page in case of the manually synchronization
-                _staticCacheManager.Set(_cacheKeyService.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), logInfo);
+                _staticCacheManager.Set(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), logInfo);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                _staticCacheManager.Set(_cacheKeyService.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), ex.Message);
+                _staticCacheManager.Set(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), ex.Message);
             }
 
             return Ok();

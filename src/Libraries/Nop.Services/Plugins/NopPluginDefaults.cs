@@ -94,11 +94,11 @@ namespace Nop.Services.Plugins
         /// <remarks>
         /// {0} : customer identifier
         /// </remarks>
-        public static CacheKey AdminNavigationPluginsCacheKey => new CacheKey("Nop.plugins.adminnavigation-{0}", AdminNavigationPluginsPrefixCacheKey);
+        public static CacheKey AdminNavigationPluginsCacheKey => new CacheKey("Nop.plugins.adminnavigation.{0}", AdminNavigationPluginsPrefix);
 
         /// <summary>
-        /// Gets a key to clear cache
+        /// Gets a key pattern to clear cache
         /// </summary>
-        public static string AdminNavigationPluginsPrefixCacheKey => "Nop.plugins.adminnavigation";
+        public static string AdminNavigationPluginsPrefix => "Nop.plugins.adminnavigation.";
     }
 }

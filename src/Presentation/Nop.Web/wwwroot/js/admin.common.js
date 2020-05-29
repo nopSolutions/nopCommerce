@@ -52,7 +52,7 @@ function checkOverriddenStoreValue(obj, selector) {
     // first toggle appropriate hidden inputs for checkboxes
     if ($(selector).is(':checkbox')) {
         var name = $(selector).attr('name');
-        $('input:hidden[name="' + name + '"]').attr('disabled', $(obj).is(':checked'));
+        $('input:hidden[name="' + name + '"]').attr('disabled', !$(obj).is(':checked'));
     }
 
     if (!$(obj).is(':checked')) {

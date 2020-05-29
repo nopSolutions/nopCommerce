@@ -41,7 +41,7 @@ namespace Nop.Services.Common
             //configure client
             client.BaseAddress = new Uri("https://www.nopcommerce.com/");
             client.Timeout = TimeSpan.FromSeconds(5);
-            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
+            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
 
             _adminAreaSettings = adminAreaSettings;
             _httpClient = client;
@@ -91,7 +91,7 @@ namespace Nop.Services.Common
             //prepare URL to request
             var language = _languageService.GetTwoLetterIsoLanguageName(_workContext.WorkingLanguage);
             var url = string.Format(NopCommonDefaults.NopNewsRssPath,
-                NopVersion.CurrentVersion,
+                NopVersion.CURRENT_VERSION,
                 _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 _adminAreaSettings.HideAdvertisementsOnAdminArea,
                 _webHelper.GetStoreLocation(),
@@ -112,7 +112,7 @@ namespace Nop.Services.Common
         {
             //prepare URL to request
             var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
-                NopVersion.CurrentVersion,
+                NopVersion.CURRENT_VERSION,
                 _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 WebUtility.UrlEncode(email),
                 _webHelper.GetStoreLocation(),

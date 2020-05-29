@@ -352,18 +352,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            //restart application
-            _webHelper.RestartAppDomain();
-
             //home page
             if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
+                returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
 
-            return Redirect(returnUrl);
+            return View("RestartApplication", returnUrl);
+        }
+
+        public virtual IActionResult RestartApplication()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance) &&
+                !_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            {
+                return AccessDeniedView();
+            }
+
+            //restart application
+            _webHelper.RestartAppDomain();
+
+            return new EmptyResult();
         }
 
         public virtual IActionResult SeNames()

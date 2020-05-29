@@ -5,8 +5,8 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>4.3.0.0</Version>
-    <Description>The Nop.Data project contains a set of classes and functions for reading from and writing to a database or other data store. It helps separate data-access logic from your business objects. nopCommerce uses the Entity Framework (EF) Code-First approach. It allows you to define entities in the source code (all core entities are defined into Nop.Core project), and then get EF to generate the database from that. That's why it's called Code-First. You can then query your objects using LINQ, which gets translated to SQL behind the scenes and executed against the database. nopCommerces use a fluent code API to fully customize the persistence mapping.</Description>
+    <Version>4.4.0.0</Version>
+    <Description>The Nop.Data project contains a set of classes and functions for reading from and writing to a database or other data store. It helps separate data-access logic from your business objects.</Description>
     <PackageLicenseUrl>https://www.nopcommerce.com/license</PackageLicenseUrl>
     <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
@@ -14,10 +14,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.2.6" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.2.6" />
-    <PackageReference Include="linq2db" Version="2.9.8" />
-    <PackageReference Include="MySql.Data" Version="8.0.20" />
+    <PackageReference Include="FluentMigrator" Version="3.2.8" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.8" />
+    <PackageReference Include="linq2db" Version="3.1.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.21" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

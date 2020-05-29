@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Használja az SQL Server fiókot</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Használja a beépített adattárolást (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Jelszó</Value>
   </LocaleResource>

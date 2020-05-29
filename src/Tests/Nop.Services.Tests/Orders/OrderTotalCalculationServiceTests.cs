@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -20,7 +21,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -46,7 +46,6 @@ namespace Nop.Services.Tests.Orders
 
         private readonly Mock<IAddressService> _addressService = new Mock<IAddressService>();
         private readonly Mock<ICurrencyService> _currencyService = new Mock<ICurrencyService>();
-        private readonly Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
         private readonly Mock<IGenericAttributeService> _genericAttributeService = new Mock<IGenericAttributeService>();
         private readonly Mock<IPaymentService> _paymentService = new Mock<IPaymentService>();
         private readonly Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
@@ -114,7 +113,6 @@ namespace Nop.Services.Tests.Orders
 
             _storeContext.Setup(x => x.CurrentStore).Returns(store);
             _currencyService.Setup(x => x.GetCurrencyById(1)).Returns(new Currency { Id = 1, RoundingTypeId = 0 });
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _paymentService.Setup(ps => ps.GetAdditionalHandlingFee(It.IsAny<IList<ShoppingCartItem>>(), "test1")).Returns(20);
 
@@ -183,8 +181,7 @@ namespace Nop.Services.Tests.Orders
                 priceCalculationService: priceCalculationService,
                 shoppingCartSettings: _shoppingCartSettings);
 
-            IShippingService shippingService = new FakeShippingService(eventPublisher: _eventPublisher.Object,
-                customerSerice: _customerService,
+            IShippingService shippingService = new FakeShippingService(customerSerice: _customerService,
                 genericAttributeService: _genericAttributeService.Object,
                 pickupPluginManager: pickupPluginManager,
                 productService: _productService,
@@ -229,6 +226,7 @@ namespace Nop.Services.Tests.Orders
         [SetUp]
         public override void SetUp()
         {
+            base.SetUp();
             _fakeDataStore.ResetStore();
         }
 

@@ -125,7 +125,7 @@ namespace Nop.Plugin.Shipping.ShipStation
             _settingService.SaveSetting(settings);
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume"] = "Pack by volume",
@@ -157,8 +157,8 @@ namespace Nop.Plugin.Shipping.ShipStation
             _settingService.DeleteSetting<ShipStationSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
-            _localizationService.DeletePluginLocaleResources("Plugins.Shipping.ShipStation");
+            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
+            _localizationService.DeleteLocaleResources("Plugins.Shipping.ShipStation");
 
             base.Uninstall();
         }

@@ -1,11 +1,9 @@
 ﻿using System;
 using FluentAssertions;
 using Moq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -36,7 +34,7 @@ namespace Nop.Core.Tests.Domain.Common
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
 
-            var addressService = new AddressService(new AddressSettings(), new CachingSettings(),  new Mock<IAddressAttributeParser>().Object, new Mock<IAddressAttributeService>().Object, new Mock<ICountryService>().Object, new Mock<IEventPublisher>().Object, new FakeRepository<Address>().GetRepository(), new Mock<IStateProvinceService>().Object);
+            var addressService = new AddressService(new AddressSettings(), new Mock<IAddressAttributeParser>().Object, new Mock<IAddressAttributeService>().Object, new Mock<ICountryService>().Object, new FakeRepository<Address>().GetRepository(), new Mock<IStateProvinceService>().Object);
 
             var newAddress = addressService.CloneAddress(address);
             newAddress.Should().NotBeNull();

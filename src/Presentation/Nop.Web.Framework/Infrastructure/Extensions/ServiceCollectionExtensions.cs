@@ -59,6 +59,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //add NopConfig configuration parameters
             var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            Singleton<NopConfig>.Instance = nopConfig;
 
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
@@ -180,7 +181,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
                 {
-                    var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    //For some reason, data protection services are registered earlier. This configuration is called even before the request queue starts. 
+                    //Service provider has not yet been built and we cannot get the required service. 
+                    //So we create a new instance of RedisConnectionWrapper() bypassing the DI.
+                    var redisConnectionWrapper = new RedisConnectionWrapper(nopConfig);
                     return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
                 }, NopDataProtectionDefaults.RedisDataProtectionKey);
             }
@@ -339,24 +343,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopMiniProfiler(this IServiceCollection services)
         {
-            //whether database is already installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
+            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
 
-            services.AddMiniProfiler(miniProfilerOptions =>
+            if (DataSettingsManager.DatabaseIsInstalled && nopConfig.MiniProfilerEnabled)
             {
-                //use memory cache provider for storing each result
-                ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
+                services.AddMiniProfiler(miniProfilerOptions =>
+                {
+                    //use memory cache provider for storing each result
+                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
 
-                //whether MiniProfiler should be displayed
-                miniProfilerOptions.ShouldProfile = request =>
-                    EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-
-                //determine who can access the MiniProfiler results
-                miniProfilerOptions.ResultsAuthorize = request =>
-                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            });
+                    //determine who can access the MiniProfiler results
+                    miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessProfiling);
+                });
+            }
         }
 
         /// <summary>

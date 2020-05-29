@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -22,7 +23,6 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
-    [AutoValidateAntiforgeryToken]
     public class PaymentPayPalStandardController : BasePaymentController
     {
         #region Fields
@@ -281,6 +281,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -476,13 +477,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
         }
 
-        public IActionResult IPNHandler()
+        public async Task<IActionResult> IPNHandler()
         {
             byte[] parameters;
 
             using (var stream = new MemoryStream())
             {
-                Request.Body.CopyTo(stream);
+                await Request.Body.CopyToAsync(stream);
                 parameters = stream.ToArray();
             }
 

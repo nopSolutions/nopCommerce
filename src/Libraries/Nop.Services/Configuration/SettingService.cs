@@ -9,8 +9,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
 {
@@ -21,7 +19,6 @@ namespace Nop.Services.Configuration
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Setting> _settingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
 
@@ -29,11 +26,9 @@ namespace Nop.Services.Configuration
 
         #region Ctor
 
-        public SettingService(IEventPublisher eventPublisher,
-            IRepository<Setting> settingRepository,
+        public SettingService(IRepository<Setting> settingRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
             _settingRepository = settingRepository;
             _staticCacheManager = staticCacheManager;
         }
@@ -48,8 +43,6 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
-            //we can not use ICacheKeyService because it'll cause circular references.
-            //that's why we use the default cache time
             return _staticCacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
             {
                 var settings = GetAllSettings();
@@ -134,17 +127,11 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual void InsertSetting(Setting setting, bool clearCache = true)
         {
-            if (setting == null)
-                throw new ArgumentNullException(nameof(setting));
-
             _settingRepository.Insert(setting);
 
             //cache
             if (clearCache)
                 ClearCache();
-
-            //event notification
-            _eventPublisher.EntityInserted(setting);
         }
 
         /// <summary>
@@ -162,9 +149,6 @@ namespace Nop.Services.Configuration
             //cache
             if (clearCache)
                 ClearCache();
-
-            //event notification
-            _eventPublisher.EntityUpdated(setting);
         }
 
         /// <summary>
@@ -173,16 +157,10 @@ namespace Nop.Services.Configuration
         /// <param name="setting">Setting</param>
         public virtual void DeleteSetting(Setting setting)
         {
-            if (setting == null)
-                throw new ArgumentNullException(nameof(setting));
-
             _settingRepository.Delete(setting);
 
             //cache
             ClearCache();
-
-            //event notification
-            _eventPublisher.EntityDeleted(setting);
         }
 
         /// <summary>
@@ -191,19 +169,10 @@ namespace Nop.Services.Configuration
         /// <param name="settings">Settings</param>
         public virtual void DeleteSettings(IList<Setting> settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException(nameof(settings));
-
             _settingRepository.Delete(settings);
 
             //cache
             ClearCache();
-
-            //event notification
-            foreach (var setting in settings)
-            {
-                _eventPublisher.EntityDeleted(setting);
-            }
         }
 
         /// <summary>
@@ -213,10 +182,7 @@ namespace Nop.Services.Configuration
         /// <returns>Setting</returns>
         public virtual Setting GetSettingById(int settingId)
         {
-            if (settingId == 0)
-                return null;
-
-            return _settingRepository.ToCachedGetById(settingId);
+            return _settingRepository.GetById(settingId, cache => default);
         }
 
         /// <summary>
@@ -295,14 +261,13 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         public virtual IList<Setting> GetAllSettings()
         {
-            var query = from s in _settingRepository.Table
-                        orderby s.Name, s.StoreId
-                        select s;
-
-            //we can not use ICacheKeyService because it'll cause circular references.
-            //that's why we use the default cache time
-            var settings = query.ToCachedList(NopConfigurationDefaults.SettingsAllCacheKey);
-
+            var settings = _settingRepository.GetAll(query =>
+            {
+                return from s in query
+                       orderby s.Name, s.StoreId
+                    select s;
+            }, cache => default);
+            
             return settings;
         }
 
@@ -502,7 +467,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _staticCacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
         }
 
         /// <summary>

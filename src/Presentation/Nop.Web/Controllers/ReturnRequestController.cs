@@ -77,7 +77,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement]
         public virtual IActionResult CustomerReturnRequests()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -87,7 +86,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement]
         public virtual IActionResult ReturnRequest(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);

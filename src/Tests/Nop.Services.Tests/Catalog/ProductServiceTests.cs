@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Moq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Tests;
 using NUnit.Framework;
@@ -19,8 +17,8 @@ namespace Nop.Services.Tests.Catalog
         #region Fields
 
         private IProductService _productService;
-        private Mock<IRepository<Product>> _productRepository;
-        private Mock<IRepository<ProductWarehouseInventory>> _productWarehouseInventoryRepository;
+        private FakeRepository<Product> _productRepository;
+        private FakeRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
 
         private Product _productNotUseMultipleWarehouses = new Product
         {
@@ -61,14 +59,12 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
-            _productRepository = new Mock<IRepository<Product>>();
-            _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
+            _productRepository = new FakeRepository<Product>(GetMockProducts().ToList());
 
-            _productWarehouseInventoryRepository = new Mock<IRepository<ProductWarehouseInventory>>();
-            _productWarehouseInventoryRepository.Setup(x => x.Table).Returns(GetMockProductWarehouseInventoryRecords);
+            _productWarehouseInventoryRepository = new FakeRepository<ProductWarehouseInventory>(GetMockProductWarehouseInventoryRecords().ToList());
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(),  null,
-                null, null, null, null, null, null, null, null, null, null, _productRepository.Object, null, null, null, null, null, null, _productWarehouseInventoryRepository.Object, null, null, null, null, null, null,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, null,
+                null, null, null, null, null, null, null, null, null, _productRepository, null, null, null, null, null, null, _productWarehouseInventoryRepository, null, null, null, null, null, null,
                 null, null, null, null, new LocalizationSettings());
         }
 
@@ -253,6 +249,30 @@ namespace Nop.Services.Tests.Catalog
             };
 
             _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().BeFalse();
+        }
+
+        [Test]
+        public void Should_be_available_when_current_date_is_in_range()
+        {
+            var product = new Product
+            {
+                AvailableStartDateTimeUtc = DateTime.UtcNow.AddDays(-1),
+                AvailableEndDateTimeUtc = DateTime.UtcNow.AddDays(1)
+            };
+
+            _productService.ProductIsAvailable(product).Should().BeTrue();
+        }
+
+        [Test]
+        public void Should_not_be_available_when_current_date_is_not_in_range()
+        {
+            var product = new Product
+            {
+                AvailableStartDateTimeUtc = DateTime.UtcNow.AddDays(-2),
+                AvailableEndDateTimeUtc = DateTime.UtcNow.AddDays(-1)
+            };
+
+            _productService.ProductIsAvailable(product).Should().BeFalse();
         }
 
         [Test]

@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Stores
         [SetUp]
         public new void SetUp()
         {
-            _storeService = new StoreService(null, null);
+            _storeService = new StoreService(null);
         }
 
         [Test]

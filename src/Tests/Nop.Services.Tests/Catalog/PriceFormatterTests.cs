@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Tests;
@@ -25,7 +23,7 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class PriceFormatterTests : ServiceTest
     {
-        private Mock<IRepository<Currency>> _currencyRepo;
+        private FakeRepository<Currency> _currencyRepo;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IMeasureService> _measureService;
@@ -58,7 +56,7 @@ namespace Nop.Services.Tests.Catalog
             };
             var currency2 = new Currency
             {
-                Id = 1,
+                Id = 2,
                 Name = "US Dollar",
                 CurrencyCode = "USD",
                 DisplayLocale = "en-US",
@@ -68,8 +66,7 @@ namespace Nop.Services.Tests.Catalog
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _currencyRepo = new Mock<IRepository<Currency>>();
-            _currencyRepo.Setup(x => x.Table).Returns(new List<Currency> { currency1, currency2 }.AsQueryable());
+            _currencyRepo = new FakeRepository<Currency>(new List<Currency> { currency1, currency2 });
 
             _storeMappingService = new Mock<IStoreMappingService>();
             _measureService = new Mock<IMeasureService>();
@@ -80,10 +77,8 @@ namespace Nop.Services.Tests.Catalog
             var pluginService = new FakePluginService();
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new Mock<ICustomerService>().Object, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
-                new FakeCacheKeyService(),
-                null,
                 _exchangeRatePluginManager,
-                _currencyRepo.Object,
+                _currencyRepo,
                 _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();

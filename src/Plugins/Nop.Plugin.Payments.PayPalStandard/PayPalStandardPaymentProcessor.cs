@@ -531,7 +531,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             });
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Payments.PayPalStandard.Fields.AdditionalFee"] = "Additional fee",
                 ["Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint"] = "Enter additional fee to charge your customers.",
@@ -579,7 +579,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             _settingService.DeleteSetting<PayPalStandardPaymentSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Payments.PayPalStandard");
+            _localizationService.DeleteLocaleResources("Plugins.Payments.PayPalStandard");
 
             base.Uninstall();
         }

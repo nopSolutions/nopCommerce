@@ -38,7 +38,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressService _addressService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICountryService _countryService;
@@ -57,7 +56,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -78,7 +77,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         public AvalaraTaxManager(AvalaraTaxSettings avalaraTaxSettings,
             IActionContextAccessor actionContextAccessor,
             IAddressService addressService,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICountryService countryService,
@@ -97,7 +95,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager,
             IUrlHelperFactory urlHelperFactory,
@@ -111,7 +109,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _avalaraTaxSettings = avalaraTaxSettings;
             _actionContextAccessor = actionContextAccessor;
             _addressService = addressService;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _countryService = countryService;
@@ -130,7 +127,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
             _urlHelperFactory = urlHelperFactory;
@@ -813,7 +810,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
                 //delete tax categories
                 _taxCategoryRepository.Delete(taxCategory => categoriesIds.Contains(taxCategory.Id));
-                _cacheManager.Remove(NopTaxDefaults.TaxCategoriesAllCacheKey);
+                _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<TaxCategory>.Prefix);
 
                 //delete generic attributes
                 _genericAttributeRepository
@@ -978,7 +975,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 : taxRateRequest.Product?.TaxCategoryId
                 ?? 0)?.Name;
             var itemCode = taxRateRequest.Product?.Sku;
-            var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(AvalaraTaxDefaults.TaxRateCacheKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(AvalaraTaxDefaults.TaxRateCacheKey,
                 customer,
                 taxCode,
                 itemCode,
@@ -989,7 +986,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 taxRateRequest.Address.ZipPostalCode);
 
             //get tax rate
-            return _cacheManager.Get(cacheKey, () =>
+            return _staticCacheManager.Get(cacheKey, () =>
             {
                 return HandleFunction(() =>
                 {
