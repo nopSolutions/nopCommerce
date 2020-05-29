@@ -60,11 +60,12 @@ namespace Nop.Web.Controllers
                 ConnectionStringRaw = false,
                 DataProvider = DataProviderType.SqlServer
             };
-            
+
             model.AvailableDataProviders.AddRange(
                 _locService.GetAvailableProviderTypes()
                 .OrderBy(v => v.Value)
-                .Select(pt => new SelectListItem { 
+                .Select(pt => new SelectListItem
+                {
                     Value = pt.Key.ToString(),
                     Text = pt.Value
                 }));
@@ -103,7 +104,8 @@ namespace Nop.Web.Controllers
             model.AvailableDataProviders.AddRange(
                 _locService.GetAvailableProviderTypes()
                     .OrderBy(v => v.Value)
-                    .Select(pt => new SelectListItem { 
+                    .Select(pt => new SelectListItem
+                    {
                         Value = pt.Key.ToString(),
                         Text = pt.Value
                     }));
@@ -219,11 +221,7 @@ namespace Nop.Web.Controllers
                 }
                 catch { }
 
-                //restart application
-                webHelper.RestartAppDomain();
-
-                //Redirect to home page
-                return RedirectToRoute("Homepage");
+                return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
             }
             catch (Exception exception)
@@ -261,12 +259,18 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("Homepage");
 
-            //restart application
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            webHelper.RestartAppDomain();
+            return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
+        }
 
-            //Redirect to home page
-            return RedirectToRoute("Homepage");
+        public virtual IActionResult RestartApplication()
+        {
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
+
+            //restart application
+            EngineContext.Current.Resolve<IWebHelper>().RestartAppDomain();
+
+            return new EmptyResult();
         }
 
         #endregion

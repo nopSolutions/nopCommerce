@@ -949,6 +949,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.Avalara.Fields.AccountId.Required">
+    <Value>Account ID is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.Avalara.Fields.EnableLogging">
+    <Value>Enable logging</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.Avalara.Fields.EnableLogging.Hint">
+    <Value>Determine whether to enable logging of all requests to Avalara services.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.Avalara.Fields.LicenseKey.Required">
+    <Value>Account license key is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.Avalara.Fields.TaxOriginAddressType.DefaultTaxAddress.Warning">
+    <Value><![CDATA[Ensure that you have correctly filled in the ''Default tax address'' under <a href=\"{0}\" target=\"_blank\">Tax settings</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning">
+    <Value><![CDATA[Ensure that you have correctly filled in the ''Shipping origin'' under <a href=\"{0}\" target=\"_blank\">Shipping settings</a>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3238,7 +3256,7 @@ GO
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='UsedWithOrder')
 BEGIN
-	ALTER TABLE dbo.RewardPointsHistory ADD UsedWithOrder uniqueidentifier NULL
+	ALTER TABLE [RewardPointsHistory] ADD [UsedWithOrder] uniqueidentifier NULL
 END
 GO
 
@@ -3272,5 +3290,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.estimat
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'shippingsettings.estimateshippingproductpageenabled', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'avalarataxsettings.enablelogging')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'avalarataxsettings.enablelogging', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.restarttimeout')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.restarttimeout', N'3000', 0)
 END
 GO
