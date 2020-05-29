@@ -144,4 +144,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
   </LocaleResource>
+  <LocaleResource Name="RestartProgress">
+    <Value>Restarting...</Value>
+  </LocaleResource>
 </Language>
