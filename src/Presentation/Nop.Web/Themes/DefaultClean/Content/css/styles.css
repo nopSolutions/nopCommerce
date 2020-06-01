@@ -6166,9 +6166,8 @@ pre {
 }
 .checkout-page .address-item {
 	display: inline-block;
-  *display: inline;
-  vertical-align: top;
-  zoom: 1;
+	vertical-align: top;
+	zoom: 1;
 	width: 48%;
 	margin: 0 1% 40px;
 }
