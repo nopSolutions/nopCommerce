@@ -19,7 +19,7 @@ namespace Nop.Data.Mapping.Builders.Weixin
             table
                 .WithColumn(nameof(WShareLink.LinkId)).AsAnsiString(6).NotNullable()
                 .WithColumn(nameof(WShareLink.OpenId)).AsAnsiString(32).NotNullable()
-                .WithColumn(nameof(WShareLink.Url)).AsAnsiString(1024).NotNullable()
+                .WithColumn(nameof(WShareLink.Url)).AsString(1024).NotNullable()
                 ;
         }
 

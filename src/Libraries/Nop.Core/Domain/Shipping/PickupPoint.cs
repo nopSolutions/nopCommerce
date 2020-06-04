@@ -66,6 +66,11 @@
         public decimal? Longitude { get; set; }
 
         /// <summary>
+        /// 精度
+        /// </summary>
+        public decimal? Precision { get; set; }
+
+        /// <summary>
         /// Gets or sets a fee for the pickup
         /// </summary>
         public decimal PickupFee { get; set; }

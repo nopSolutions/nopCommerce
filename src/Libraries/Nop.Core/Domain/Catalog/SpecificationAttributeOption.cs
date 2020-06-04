@@ -13,6 +13,17 @@ namespace Nop.Core.Domain.Catalog
         public string Name { get; set; }
 
         /// <summary>
+        /// 说明
+        /// </summary>
+        public string Discription { get; set; }
+
+        /// <summary>
+        /// 内容
+        /// </summary>
+        public string Content { get; set; }
+
+
+        /// <summary>
         /// Gets or sets the color RGB value (used when you want to display "Color squares" instead of text)
         /// </summary>
         public string ColorSquaresRgb { get; set; }

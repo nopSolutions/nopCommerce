@@ -1,26 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Senparc.Weixin.Exceptions;
-using Senparc.CO2NET.Extensions;
-using Senparc.Weixin.HttpUtility;
 using Senparc.Weixin.MP.AdvancedAPIs;
 using Senparc.Weixin.MP.AdvancedAPIs.OAuth;
-using Senparc.Weixin.MP.CommonAPIs;
-using System.Text;
 using Senparc.Weixin.Entities;
-using Senparc.Weixin.MP.Entities.Request;
-using Senparc.Weixin.MP;
 using Nop.Core;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Core.Domain.Weixin;
 using Nop.Services.Weixin;
 using Senparc.Weixin.MP.CommonService.Utilities;
+using StackExchange.Profiling.Internal;
 
 namespace Senparc.Weixin.MP.CommonService.Controllers
 {
@@ -75,7 +65,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
             }
 
             //判断是否userinfo授权
-            var useUserinfo = stateSession.StartsWith("userinfo", StringComparison.InvariantCultureIgnoreCase);
+            var useUserinfo = state.StartsWith("userinfo", StringComparison.InvariantCultureIgnoreCase);
 
             //为了安全清除session
             HttpContext.Session.Remove(NopWeixinDefaults.WeixinOauthStateString);
@@ -85,8 +75,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
             //通过，用code换取access_token
             try
             {
-                accessTokenResult = OAuthApi.GetAccessToken(_senparcWeixinSetting.WeixinAppId, _senparcWeixinSetting.Token, code);
-
+                accessTokenResult = OAuthApi.GetAccessToken(_senparcWeixinSetting.WeixinAppId, _senparcWeixinSetting.WeixinAppSecret, code);
                 if (accessTokenResult == null || accessTokenResult.errcode != ReturnCode.请求成功)
                 {
                     return Content("错误：" + accessTokenResult.errmsg);
@@ -177,7 +166,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                                 if (useUserinfo)
                                 {
                                     var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                                    if (userBaseInfo != null)
+                                    if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
                                     {
                                         //Session赋值
                                         oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
@@ -225,7 +214,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                             if (useUserinfo)
                             {
                                 var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                                if (userBaseInfo != null)
+                                if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
                                 {
                                     //Session赋值
                                     oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
@@ -273,7 +262,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                         if (useUserinfo)
                         {
                             var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                            if (userBaseInfo != null)
+                            if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
                             {
                                 //Session赋值
                                 oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
@@ -328,7 +317,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                         Deleted = false,
                         SubscribeTime = 0,
                         UnSubscribeTime = 0,
-                        UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
+                        UpdateTime = 0,
                         CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
                     };
 
@@ -381,7 +370,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                             if (useUserinfo)
                             {
                                 var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                                if (userBaseInfo != null)
+                                if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
                                 {
                                     //Session赋值
                                     oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
@@ -418,7 +407,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                         if (useUserinfo)
                         {
                             var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                            if (userBaseInfo != null)
+                            if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
                             {
                                 //Session赋值
                                 oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;

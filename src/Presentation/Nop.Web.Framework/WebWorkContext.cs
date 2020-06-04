@@ -8,7 +8,9 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Weixin;
 using Nop.Core.Http;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Security;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
@@ -19,6 +21,7 @@ using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Vendors;
+using Nop.Services.Weixin;
 
 namespace Nop.Web.Framework
 {
@@ -232,6 +235,18 @@ namespace Nop.Web.Framework
                             _originalCustomerIfImpersonated = customer;
                             customer = impersonatedCustomer;
                         }
+                    }
+                }
+
+                if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
+                {
+                    //try to get weixin oauth2 session user
+                    var customerSession = _httpContextAccessor.HttpContext.Session.Get<OauthSession>(NopWeixinDefaults.WeixinOauthSession);
+                    if (customerSession != null && !string.IsNullOrEmpty(customerSession.OpenId))
+                    {
+                        var customerBySession = _customerService.GetCustomerByOpenId(customerSession.OpenId);
+                        if (customerBySession != null)
+                            customer = customerBySession;
                     }
                 }
 

@@ -53,6 +53,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Domain
         public decimal? Longitude { get; set; }
 
         /// <summary>
+        /// 精度
+        /// </summary>
+        public decimal? Precision { get; set; }
+        /// <summary>
         /// Gets or sets a transit days
         /// </summary>
         public int? TransitDays { get; set; }

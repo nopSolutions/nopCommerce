@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -8,6 +9,8 @@ using Nop.Core.Domain.Weixin;
 using Nop.Data;
 using Nop.Services.Weixin;
 using Nop.Services.Customers;
+using System.Net.Http;
+using Nop.Core.Http.Extensions;
 
 namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
 {
@@ -36,8 +39,9 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
         {
             #region Constants
 
+            //这两个都是保存推荐人或分享人的信息，当前用户的openid 在Oauth2中获取
             private const string WUSER_OPENID_QUERY_PARAMETER_NAME = "openid";
-            private const string WUSER_OPENID_REFEREE_QUERY_PARAMETER_NAME = "refereeid";
+            private const string WUSER_OPENID_HASH_QUERY_PARAMETER_NAME = "openidhash";
 
             #endregion
 
@@ -45,16 +49,22 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
 
             private readonly ICustomerService _customerService;
             private readonly IWorkContext _workContext;
+            private readonly IWUserService _wUserService;
+            private readonly IHttpContextAccessor _httpContextAccessor;
 
             #endregion
 
             #region Ctor
 
             public CheckOpenIdFilter(ICustomerService customerService,
+                IWUserService wUserService,
+                IHttpContextAccessor httpContextAccessor,
                 IWorkContext workContext)
             {
                 _customerService = customerService;
                 _workContext = workContext;
+                _httpContextAccessor = httpContextAccessor;
+                _wUserService = wUserService;
             }
 
             #endregion
@@ -65,24 +75,28 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
             /// Set the wuser openid of current customer
             /// </summary>
             /// <param name="affiliate">Affiliate</param>
-            protected void SetCustomerOpenId(string openId, string refereeOpenId)
+            protected void SetCustomerOpenId(string openId, long openIdHash)
             {
-                //ignore search engines
-                if (_workContext.CurrentCustomer.IsSearchEngineAccount())
-                    return;
-
                 var update = false;
 
+                //不能自己推荐自己
                 if (!string.IsNullOrEmpty(openId) && openId.Length < 32 && openId != _workContext.CurrentCustomer.OpenId)
                 {
-                    _workContext.CurrentCustomer.OpenId = openId;
-                    update = true;
+                    var refereeUser = _wUserService.GetWUserByOpenId(openId);
+                    if (refereeUser != null)
+                    {
+                        _workContext.CurrentCustomer.OpenIdReferee = refereeUser.OpenId;
+                        update = true;
+                    }
                 }
-                if (!string.IsNullOrEmpty(refereeOpenId) && refereeOpenId.Length < 32 && refereeOpenId != _workContext.CurrentCustomer.OpenIdReferee)
+                else if (openIdHash > 0)
                 {
-                    _workContext.CurrentCustomer.OpenIdReferee = refereeOpenId
-;
-                    update = true;
+                    var refereeUser = _wUserService.GetWUserByOpenIdHash(openIdHash);
+                    if (refereeUser != null && refereeUser.OpenId != _workContext.CurrentCustomer.OpenId)
+                    {
+                        _workContext.CurrentCustomer.OpenIdReferee = refereeUser.OpenId;
+                        update = true;
+                    }
                 }
 
                 //update openId Info
@@ -103,21 +117,33 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
 
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                //ignore search engines and back ground task
+                if (_workContext.CurrentCustomer.IsSearchEngineAccount()|| _workContext.CurrentCustomer.IsBackgroundTaskAccount())
+                    return;
+
+                //Customer与OpenId绑定
+                var oauthSession = _httpContextAccessor.HttpContext.Session.Get<OauthSession>(NopWeixinDefaults.WeixinOauthSession);
+                if (oauthSession != null && !string.IsNullOrEmpty(oauthSession.OpenId) && string.IsNullOrEmpty(_workContext.CurrentCustomer.OpenId))
+                {
+                    _workContext.CurrentCustomer.OpenId = oauthSession.OpenId;
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                }
+
                 //check request query parameters
                 var request = context.HttpContext.Request;
                 if (request?.Query == null || !request.Query.Any())
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
-                    return;
-
                 var openIds = request.Query[WUSER_OPENID_QUERY_PARAMETER_NAME];
-                var refereeOpenIds = request.Query[WUSER_OPENID_REFEREE_QUERY_PARAMETER_NAME];
+                var openIdsHash = request.Query[WUSER_OPENID_HASH_QUERY_PARAMETER_NAME];
 
                 var openId = openIds.Any() ? openIds.FirstOrDefault() : string.Empty;
-                var refereeOpenId = refereeOpenIds.Any() ? refereeOpenIds.FirstOrDefault() : string.Empty;
+                var openIdHash = openIdsHash.Any() ? (long.TryParse(openIdsHash.FirstOrDefault(), out var hashResult) ? hashResult : 0) : 0;
 
-                SetCustomerOpenId(openId, refereeOpenId);
+                SetCustomerOpenId(openId, openIdHash);
             }
 
             /// <summary>

@@ -360,8 +360,9 @@ namespace Senparc.Weixin.MP.CommonService.Infrastructure.Extensions
                 //加入每次触发WeixinExceptionLog后需要执行的代码
 
                 //发送模板消息给管理员
-                var eventService = new Senparc.Weixin.MP.CommonService.EventService();
-                await eventService.ConfigOnWeixinExceptionFunc(ex);
+                //TODO (TERRY)EventService发送模板消息时，管理员openid错误导致循环发送消息，日志记录不断增长的BUG
+                //var eventService = new Senparc.Weixin.MP.CommonService.EventService();
+                //await eventService.ConfigOnWeixinExceptionFunc(ex);
             };
         }
 

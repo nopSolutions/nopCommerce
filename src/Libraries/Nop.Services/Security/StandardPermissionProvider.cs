@@ -56,6 +56,10 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
 
+        //admin area weixin permissions
+        public static readonly PermissionRecord ManageWeixin = new PermissionRecord { Name = "Admin area. Manage Weixin", SystemName = "ManageWeixin", Category = "Weixin" };
+
+
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
         public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
@@ -116,6 +120,7 @@ namespace Nop.Services.Security
                 ManageMaintenance,
                 HtmlEditorManagePictures,
                 ManageScheduleTasks,
+                ManageWeixin,
                 DisplayPrices,
                 EnableShoppingCart,
                 EnableWishlist,
@@ -181,6 +186,7 @@ namespace Nop.Services.Security
                         ManageMaintenance,
                         HtmlEditorManagePictures,
                         ManageScheduleTasks,
+                        ManageWeixin,
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
