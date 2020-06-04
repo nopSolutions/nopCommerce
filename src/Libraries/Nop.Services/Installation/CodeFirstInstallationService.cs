@@ -5049,7 +5049,7 @@ namespace Nop.Services.Installation
             var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
             var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
             var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            
+
             var fourthOrder = new Order
             {
                 StoreId = defaultStore.Id,
@@ -6128,7 +6128,8 @@ namespace Nop.Services.Installation
                 EnableHtmlMinification = true,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
-                EnableCssBundling = false
+                EnableCssBundling = false,
+                RestartTimeout = NopCommonDefaults.RestartTimeout
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6809,8 +6810,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new CookieSettings
             {
-                CompareProductsCookieExpires = 24 *10,
-                RecentlyViewedProductsCookieExpires = 24 *10,
+                CompareProductsCookieExpires = 24 * 10,
+                RecentlyViewedProductsCookieExpires = 24 * 10,
                 CustomerCookieExpires = 24 * 365
             });
 

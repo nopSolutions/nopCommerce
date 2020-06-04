@@ -48,12 +48,14 @@ function checkAllOverriddenStoreValue(item) {
 
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
+
+    // first toggle appropriate hidden inputs for checkboxes
+    if ($(selector).is(':checkbox')) {
+        var name = $(selector).attr('name');
+        $('input:hidden[name="' + name + '"]').attr('disabled', !$(obj).is(':checked'));
+    }
+
     if (!$(obj).is(':checked')) {
-        //first enable appropriate hidden inputs for checkboxes
-        if ($(selector + '[type=checkbox]')) {
-            var name = $(selector).attr('name');
-            $('[name=' + name + ']').removeAttr('disabled');
-        }
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function (key, value) {
@@ -64,11 +66,6 @@ function checkOverriddenStoreValue(obj, selector) {
         });
     }
     else {
-        //first disable appropriate hidden inputs for checkboxes
-        if ($(selector + '[type=checkbox]')) {
-            var name = $(selector).attr('name');
-            $('[name=' + name + ']').attr('disabled', true);
-        }
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function (key, value) {
