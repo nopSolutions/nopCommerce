@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the news. Website www.nopcommerce.com is not available.", ex);
+                _logger.Error("No access to the news. Website www.yourdomain.com is not available.", ex);
             }
 
             return model;

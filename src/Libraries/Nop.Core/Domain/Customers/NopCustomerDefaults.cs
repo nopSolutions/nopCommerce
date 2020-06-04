@@ -32,6 +32,15 @@
         /// </summary>
         public static string VendorsRoleName => "Vendors";
 
+        /// <summary>
+        /// Gets a system name 编辑员
+        /// </summary>
+        public static string EditorsRoleName => "Editors";
+
+        /// <summary>
+        /// Gets a system name 审核员/核销员
+        /// </summary>
+        public static string CheckersRoleName => "Checkers";
         #endregion
 
         #region System customers

@@ -40,6 +40,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
+using Senparc.Weixin.MP.CommonService.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -382,6 +383,8 @@ namespace Nop.Web.Controllers
         #region Login / logout
 
         [HttpsRequirement]
+        //available even when weixin oauth2
+        [CheckWeixinOAuth(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -394,6 +397,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
+        //available even when weixin oauth2
+        [CheckWeixinOAuth(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -466,6 +471,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //available even when weixin oauth2
+        [CheckWeixinOAuth(true)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed

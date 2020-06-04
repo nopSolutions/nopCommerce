@@ -62,7 +62,7 @@ namespace Nop.Services.Plugins.Marketplace
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                _logger.Error("No access to the list of plugins. Website www.yourdomain.com is not available.", ex);
             }
 
             //get list of categories from the XML
@@ -88,7 +88,7 @@ namespace Nop.Services.Plugins.Marketplace
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                _logger.Error("No access to the list of plugins. Website www.yourdomain.com is not available.", ex);
             }
 
             //get list of versions from the XML
@@ -121,7 +121,7 @@ namespace Nop.Services.Plugins.Marketplace
             }
             catch (Exception ex)
             {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
+                _logger.Error("No access to the list of plugins. Website www.yourdomain.com is not available.", ex);
             }
 
             //get list of extensions from the XML

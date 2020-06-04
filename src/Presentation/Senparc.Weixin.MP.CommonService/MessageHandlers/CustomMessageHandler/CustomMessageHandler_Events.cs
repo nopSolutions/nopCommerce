@@ -686,7 +686,8 @@ QQ群：289181996
             #region 获取推荐人信息
 
             var refereeUserId = 0;
-            if (!string.IsNullOrEmpty(openIdReferee))
+            //不能自己推荐自己
+            if (!string.IsNullOrEmpty(openIdReferee) && openIdReferee != requestMessage.FromUserName)
             {
                 var wuser = wuserService.GetWUserByOpenId(openIdReferee);
                 if (wuser != null && !wuser.Deleted && wuser.Subscribe && wuser.AllowReferee)

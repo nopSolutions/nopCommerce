@@ -11,6 +11,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Marketing;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
@@ -19,6 +20,7 @@ using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Suppliers;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
@@ -216,8 +218,6 @@ namespace Nop.Data.Migrations
 
             _migrationManager.BuildTable<WUser>(Create);
             _migrationManager.BuildTable<WUserAddress>(Create);
-            _migrationManager.BuildTable<WUserAsset>(Create);
-            _migrationManager.BuildTable<WUserAssetSchedule>(Create);
             _migrationManager.BuildTable<WUserRefereeMapping>(Create);
             _migrationManager.BuildTable<WUserTag>(Create);
             _migrationManager.BuildTable<WUserSysTag>(Create);
@@ -229,8 +229,9 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<WOauth>(Create);
             _migrationManager.BuildTable<WMessageBindMapping>(Create);
 
-            _migrationManager.BuildTable<WPageShareList>(Create);
-            _migrationManager.BuildTable<WPageShareCount>(Create);
+            _migrationManager.BuildTable<WShareLink>(Create);
+            _migrationManager.BuildTable<WJSDKShare>(Create);
+            _migrationManager.BuildTable<WShareCount>(Create);
             
             _migrationManager.BuildTable<WQrCodeCategory>(Create);
             _migrationManager.BuildTable<WQrCodeChannel>(Create);
@@ -238,12 +239,44 @@ namespace Nop.Data.Migrations
 
             _migrationManager.BuildTable<WQrCodeImage>(Create);
             _migrationManager.BuildTable<WQrCodeImageProductMapping>(Create);
-
             
             _migrationManager.BuildTable<WQrCodeLimitUserMapping>(Create);
 
             _migrationManager.BuildTable<WQrCodeTemp>(Create);
-            _migrationManager.BuildTable<WShareLink>(Create);
+
+            _migrationManager.BuildTable<Supplier>(Create);
+            _migrationManager.BuildTable<SupplierShop>(Create);
+            _migrationManager.BuildTable<SupplierShopTag>(Create);
+            _migrationManager.BuildTable<SupplierSelfGroup>(Create);
+            _migrationManager.BuildTable<SupplierImage>(Create);
+            _migrationManager.BuildTable<SupplierProductMapping>(Create);
+            _migrationManager.BuildTable<SupplierUserAuthorityMapping>(Create);
+            _migrationManager.BuildTable<SupplierShopTagMapping>(Create);
+
+            _migrationManager.BuildTable<DivisionsCodeChina>(Create);
+            _migrationManager.BuildTable<ProductExtendLabel>(Create);
+            _migrationManager.BuildTable<ProductMarketLabel>(Create);
+            _migrationManager.BuildTable<PromotionCommission>(Create);
+            _migrationManager.BuildTable<ActivitiesTheme>(Create);
+            _migrationManager.BuildTable<CustomTeam>(Create);
+            _migrationManager.BuildTable<CustomTeamOrder>(Create);
+            _migrationManager.BuildTable<GiftsSendItem>(Create);
+            _migrationManager.BuildTable<OfficialCustomer>(Create);
+            _migrationManager.BuildTable<PartnerApplicationForm>(Create);
+            _migrationManager.BuildTable<PartnerServiceInfo>(Create);
+            _migrationManager.BuildTable<ProductActivitiesThemeMapping>(Create);
+            _migrationManager.BuildTable<ProductGiftProductMapping>(Create);
+            _migrationManager.BuildTable<ProductProductExtendLabelMapping>(Create);
+            _migrationManager.BuildTable<ProductProductMarketLabelMapping>(Create);
+            _migrationManager.BuildTable<ProductUserFollowMapping>(Create);
+            _migrationManager.BuildTable<ProductVisitorMapping>(Create);
+            
+            _migrationManager.BuildTable<UserAsset>(Create);
+            _migrationManager.BuildTable<UserAssetIncomeHistory>(Create);
+            _migrationManager.BuildTable<UserAssetConsumeHistory>(Create);
+            _migrationManager.BuildTable<UserCreateProductCoupon>(Create);
+
+
         }
     }
 }

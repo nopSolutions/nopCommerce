@@ -48,7 +48,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
         public IActionResult Index(PostModel postModel, string echostr)
         {
             if (!DataSettingsManager.DatabaseIsInstalled)
-                return Content("请先安装系统！");
+                return Content("System not installed.");
 
             if (CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, _senparcWeixinSetting.Token))
             {
@@ -56,7 +56,8 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
             }
             else
             {
-                return Content("failed:" + postModel.Signature + "," + CheckSignature.GetSignature(postModel.Timestamp, postModel.Nonce, _senparcWeixinSetting.Token) + "。");
+                return Content("Failed.");
+                //return Content("failed:" + postModel.Signature + "," + CheckSignature.GetSignature(postModel.Timestamp, postModel.Nonce, _senparcWeixinSetting.Token) + "。");
                     //"如果你在浏览器中看到这句话，说明此地址可以被作为微信公众账号后台的Url，请注意保持Token一致。");
             }
         }
@@ -68,11 +69,11 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
         public virtual async Task<IActionResult> Index(PostModel postModel)
         {
             if (!DataSettingsManager.DatabaseIsInstalled)
-                return Content("请先安装系统！");
+                return Content("System not installed.");
 
             if (!CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, _senparcWeixinSetting.Token))
             {
-                return Content("参数错误！");
+                return Content("Error.");
             }
 
             postModel.Token = _senparcWeixinSetting.Token;
@@ -151,6 +152,9 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
         [HttpPost]
         public IActionResult Post(PostModel postModel)
         {
+            return Content("");
+
+
             /* 异步请求请见 WeixinAsyncController（推荐） */
 
             if (!CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, _senparcWeixinSetting.Token))

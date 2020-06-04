@@ -260,6 +260,31 @@ namespace Nop.Core.Domain.Catalog
         public bool ShipSeparately { get; set; }
 
         /// <summary>
+        /// 是否支持自提
+        /// </summary>
+        public bool PickUpSupport { get; set; }
+
+        /// <summary>
+        /// 是否支持货到付款（cash on delivery）
+        /// </summary>
+        public bool CODSupport { get; set; }
+
+        /// <summary>
+        /// 在线支付免邮
+        /// </summary>
+        public bool OnlinePayFreeShipping { get; set; }
+
+        /// <summary>
+        /// 满金额免邮是否支持店铺内商品价格总合计
+        /// </summary>
+        public bool TotalAmountSupport { get; set; }
+
+        /// <summary>
+        /// 满额免邮金额
+        /// </summary>
+        public decimal FreeShippingAmount { get; set; }
+
+        /// <summary>
         /// Gets or sets the additional shipping charge
         /// </summary>
         public decimal AdditionalShippingCharge { get; set; }

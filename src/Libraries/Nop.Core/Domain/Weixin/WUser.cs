@@ -109,7 +109,7 @@ namespace Nop.Core.Domain.Weixin
         /// <summary>
         /// 返回用户关注的渠道来源
         /// </summary>
-        public WSubscribeSceneType SubscribeSceneType 
+        public WSubscribeSceneType SubscribeSceneType
         {
             get => (WSubscribeSceneType)SubscribeSceneTypeId;
             set => SubscribeSceneTypeId = (byte)value;
@@ -142,6 +142,10 @@ namespace Nop.Core.Domain.Weixin
         /// 用户状态，可用于管理是否屏蔽用户请求信息，预留
         /// </summary>
         public byte Status { get; set; }
+        /// <summary>
+        /// 供应商店铺ID，用于统计公司员工共同推荐下店铺总人数
+        /// </summary>
+        public int SupplierShopId { get; set; }
         /// <summary>
         /// 用户来源场景ID（永久或临时，默认0） 存储永久二维码ID或临时二维码广告图ID。二维码扫码场景（开发者自定义）场景值ID，临时二维码时为32位非0整型，永久二维码时最大值为100000（目前参数只支持1--100000）
         /// </summary>

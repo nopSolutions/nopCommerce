@@ -119,6 +119,13 @@ namespace Nop.Services.Customers
         Customer GetCustomerByGuid(Guid customerGuid);
 
         /// <summary>
+        /// Gets a customer by openId
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        Customer GetCustomerByOpenId(string openId);
+
+        /// <summary>
         /// Get customer by email
         /// </summary>
         /// <param name="email">Email</param>
