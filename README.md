@@ -71,4 +71,4 @@ Create a new graphical theme or develop a new plugin or integration and sell it 
 
 ### Contribute ###
 
-As a free and open-source project, we are very grateful to everyone who helps us to develop nopCommerce. Please find more details about the options and bonuses for contributors at [https://www.nopcommerce.com/contribute](https://www.nopcommerce.com/contribute).
+As a free and open-source project, we are very grateful to everyone who helps us to develop nopCommerce. Please find more details about the options and bonuses for contributors at [сontribute page](https://www.nopcommerce.com/contribute?utm_source=github&utm_medium=content&utm_campaign=github&utm_content=сontribute).
