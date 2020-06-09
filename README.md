@@ -3,7 +3,7 @@
 
 [nopCommerce](https://www.nopcommerce.com/) is the best open-source eCommerce shopping cart solution. nopCommerce is free, and it is the most popular ASP.NET eCommerce platform.
 
-![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png)
+![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png#v1)
 
 The product is being developed and supported by the professional team since 2008.
 
@@ -17,7 +17,7 @@ nopCommerce is cross-platform, and you can run it on Windows, Linux, or Mac.
 
 nopCommerce supports Docker and MySQL out of the box, so you can easily run nopCommerce on a Linux machine.
 
-![Logo](https://www.nopcommerce.com/images/github/logos.png)
+![Logo](https://www.nopcommerce.com/images/github/logos.png#v1)
 
 nopCommerce architecture follows well-known software patterns and the best security practices. The source code is fully customizable. Pluggable and clear architecture makes it easy to develop custom functionality and follow any business requirements.
 
@@ -41,7 +41,7 @@ Evaluate the functionality and convenience of nopCommerce as a customer and stor
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/github/public-demo.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/github/admin-demo.png)](https://admin-demo.nopcommerce.com/admin/)
+[![ScreenShot](https://www.nopcommerce.com/images/github/public-demo.png#v1)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/github/admin-demo.png#v1)](https://admin-demo.nopcommerce.com/admin/)
 
 
 ### nopCommerce resources ###
