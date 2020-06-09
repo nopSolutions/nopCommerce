@@ -3,7 +3,7 @@
 
 [nopCommerce](https://www.nopcommerce.com/) is the best open-source eCommerce shopping cart solution. nopCommerce is free, and it is the most popular ASP.NET eCommerce platform.
 
-![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.jpg)
+![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png)
 
 The product is being developed and supported by the professional team since 2008.
 
