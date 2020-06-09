@@ -3308,3 +3308,38 @@ BEGIN
     VALUES (N'commonsettings.restarttimeout', N'3000', 0)
 END
 GO
+
+-- remove the Nop.Plugin.Widgets.FacebookPixel plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[FacebookPixelConfiguration]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Widgets.FacebookPixel base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Tax.FixedOrByCountryStateZip plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[TaxRate]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Tax.FixedOrByCountryStateZip base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Tax.Avalara plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[TaxTransactionLog]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Tax.Avalara base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Shipping.FixedByWeightByTotal plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ShippingByWeightByTotalRecord]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Shipping.FixedByWeightByTotal base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Pickup.PickupInStore plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[StorePickupPoint]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Pickup.PickupInStore base schema';
+END
+GO
