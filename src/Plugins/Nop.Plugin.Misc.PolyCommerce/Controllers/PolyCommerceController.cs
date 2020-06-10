@@ -27,7 +27,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly ILogger _logger;
-        private const string POLY_COMMERCE_BASE_URL = "https://portal.polycommerce.com";
         private const int NOP_COMMERCE = 2;
 
         public PolyCommerceController(IDbContext dbContext,
@@ -89,7 +88,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     {
                         // return error view
                         _logger.Error($"PolyCommerce | There was a problem inserting into table [dbo].[PolyCommerceStore]. Expected 1 record to be inserted but instead {affectedRecords} records were affected.");
-                        return Redirect($"{POLY_COMMERCE_BASE_URL}/unexpected-error");
+                        return Redirect($"{PolyCommerceHelper.GetBaseUrl()}/unexpected-error");
                     }
                 }
 
@@ -116,7 +115,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 {
                     // get short lived token for user..
                     var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                    var result = await client.PostAsync($"{POLY_COMMERCE_BASE_URL}/api/account/generate_external_token", content);
+                    var result = await client.PostAsync($"{PolyCommerceHelper.GetBaseUrl()}/api/account/generate_external_token", content);
 
                     var resultString = await result.Content.ReadAsStringAsync();
 
@@ -129,16 +128,16 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     {
                         // return error view
                         _logger.Error($"PolyCommerce | Could not generate authentication token. {userToken}");
-                        return Redirect($"{POLY_COMMERCE_BASE_URL}/unexpected-error");
+                        return Redirect($"{PolyCommerceHelper.GetBaseUrl()}/unexpected-error");
                     }
                 }
 
-                return Redirect($"{POLY_COMMERCE_BASE_URL}/account/login?token={userToken}");
+                return Redirect($"{PolyCommerceHelper.GetBaseUrl()}/account/login?token={userToken}");
             }
             catch (Exception ex)
             {
                 _logger.Error("PolyCommerce | Could not generate authentication token.", ex);
-                return Redirect($"{POLY_COMMERCE_BASE_URL}/unexpected-error");
+                return Redirect($"{PolyCommerceHelper.GetBaseUrl()}/unexpected-error");
             }
         }
     }

@@ -22,13 +22,11 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
     public class ProductsController : Controller
     {
         private readonly IRepository<Product> _productRepository;
-        private readonly IWebHelper _webHelper;
         private readonly IPictureService _pictureService;
 
-        public ProductsController(IRepository<Product> productRepository, IWebHelper webHelper, IPictureService pictureService)
+        public ProductsController(IRepository<Product> productRepository, IPictureService pictureService)
         {
             _productRepository = productRepository;
-            _webHelper = webHelper;
             _pictureService = pictureService;
         }
 
@@ -36,6 +34,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 100, string minModifiedDateStr = null, string maxModifiedDateStr = null)
         {
+            
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 
             var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);

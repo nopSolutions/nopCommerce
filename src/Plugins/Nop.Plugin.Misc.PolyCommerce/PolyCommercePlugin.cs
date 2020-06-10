@@ -17,7 +17,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
     {
         private readonly IDbContext _dbContext;
 
-        public PolyCommercePlugin(ISettingService settingService, IDbContext dbContext)
+        public PolyCommercePlugin(IDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -6,6 +6,8 @@ using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Plugin.Misc.PolyCommerce.Factories;
+using Nop.Plugin.Misc.PolyCommerce.Services;
+using Nop.Services.Catalog;
 using Nop.Web.Areas.Admin.Factories;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Infrastructure
