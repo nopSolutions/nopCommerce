@@ -1407,9 +1407,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("OrderGuid", order.OrderGuid, ignore);
                 xmlWriter.WriteString("StoreId", order.StoreId);
                 xmlWriter.WriteString("CustomerId", order.CustomerId, ignore);
-                xmlWriter.WriteString("OrderStatusId", order.OrderStatusId, ignore);
-                xmlWriter.WriteString("PaymentStatusId", order.PaymentStatusId, ignore);
-                xmlWriter.WriteString("ShippingStatusId", order.ShippingStatusId, ignore);
+                xmlWriter.WriteString("OrderStatusId", _localizationService.GetLocalizedEnum(order.OrderStatus), ignore);
+                xmlWriter.WriteString("PaymentStatusId", _localizationService.GetLocalizedEnum(order.PaymentStatus), ignore);
+                xmlWriter.WriteString("ShippingStatusId", _localizationService.GetLocalizedEnum(order.ShippingStatus), ignore);
                 xmlWriter.WriteString("CustomerLanguageId", order.CustomerLanguageId, ignore);
                 xmlWriter.WriteString("CustomerTaxDisplayTypeId", order.CustomerTaxDisplayTypeId, ignore);
                 xmlWriter.WriteString("CustomerIp", order.CustomerIp, ignore);
@@ -1532,9 +1532,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("StoreId", p => p.StoreId),
                 new PropertyByName<Order>("OrderGuid", p => p.OrderGuid, ignore),
                 new PropertyByName<Order>("CustomerId", p => p.CustomerId, ignore),
-                new PropertyByName<Order>("OrderStatusId", p => p.OrderStatusId, ignore),
-                new PropertyByName<Order>("PaymentStatusId", p => p.PaymentStatusId),
-                new PropertyByName<Order>("ShippingStatusId", p => p.ShippingStatusId, ignore),
+                new PropertyByName<Order>("OrderStatusId", p=> _localizationService.GetLocalizedEnum(p.OrderStatus), ignore),
+                new PropertyByName<Order>("PaymentStatusId", p => _localizationService.GetLocalizedEnum(p.PaymentStatus),ignore),
+                new PropertyByName<Order>("ShippingStatusId", p => _localizationService.GetLocalizedEnum(p.ShippingStatus), ignore),
                 new PropertyByName<Order>("OrderSubtotalInclTax", p => p.OrderSubtotalInclTax, ignore),
                 new PropertyByName<Order>("OrderSubtotalExclTax", p => p.OrderSubtotalExclTax, ignore),
                 new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p => p.OrderSubTotalDiscountInclTax, ignore),
@@ -1857,7 +1857,7 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
-            { 
+            {
                 new PropertyByName<OrderItem>("SKU", oi => _productService.GetProductById(oi.ProductId).Sku),
                 new PropertyByName<OrderItem>("Name", oi => _localizationService.GetLocalized(_productService.GetProductById(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage.Id)),
