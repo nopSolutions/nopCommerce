@@ -127,6 +127,10 @@ namespace Nop.Tests
         {
         }
 
+        public void ClearLogWithRetentionPeriod(int retentionPeriod)
+        {
+        }
+
         #endregion
     }
 }

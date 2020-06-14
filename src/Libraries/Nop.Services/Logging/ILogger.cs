@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -34,6 +34,11 @@ namespace Nop.Services.Logging
         /// Clears a log
         /// </summary>
         void ClearLog();
+
+        /// <summary>
+        /// Clears a log with retention period
+        /// </summary>
+        void ClearLogWithRetentionPeriod(int retentionPeriod);
 
         /// <summary>
         /// Gets all log items

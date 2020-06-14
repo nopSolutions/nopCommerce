@@ -907,6 +907,14 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'logsettings.numberofdaystoretainlogs')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'logsettings.numberofdaystoretainlogs', N'1', 0)
+END
+GO
+
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataenabled')

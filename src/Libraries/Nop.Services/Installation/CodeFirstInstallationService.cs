@@ -42,6 +42,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.News;
 using Nop.Services.Seo;
@@ -6830,6 +6831,11 @@ namespace Nop.Services.Installation
                 DefaultCacheTime = NopCachingDefaults.CacheTime,
                 BundledFilesCacheTime = 120
             });
+
+            settingService.SaveSetting(new LogSettings
+            {
+                NumberOfDaysToRetainLogs = 60
+            });
         }
 
         protected virtual void InstallCheckoutAttributes()
@@ -12342,10 +12348,9 @@ namespace Nop.Services.Installation
                 },
                 new ScheduleTask
                 {
-                    Name = "Clear log",
-                    //60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Services.Logging.ClearLogTask, Nop.Services",
+                    Name = ClearLogWithSlidingWindowTask.TaskDisplayName,
+                    Seconds = ClearLogWithSlidingWindowTask.TaskPeriod,
+                    Type = ClearLogWithSlidingWindowTask.TaskName,
                     Enabled = false,
                     StopOnError = false
                 },

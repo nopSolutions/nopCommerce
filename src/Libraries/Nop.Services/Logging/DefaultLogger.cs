@@ -107,6 +107,14 @@ namespace Nop.Services.Logging
         }
 
         /// <summary>
+        /// Clears a log
+        /// </summary>
+        public virtual void ClearLogWithRetentionPeriod(int retentionPeriod)
+        {
+            _logRepository.Delete(e => e.CreatedOnUtc < DateTime.UtcNow.AddDays(-retentionPeriod));
+        }
+
+        /// <summary>
         /// Gets all log items
         /// </summary>
         /// <param name="fromUtc">Log item creation from; null to load all records</param>
