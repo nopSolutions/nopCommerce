@@ -150,7 +150,7 @@
 <script>
     function renderColumnDetailsUrl(data, type, row, meta) {
         if (row.DetailsUrl && row.DetailsUrl.length > 0) {
-            return '<a class="btn btn-default" href="' + row.DetailsUrl + '"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details")</a>';
+            return '<a class="btn btn-default" href="' + row.DetailsUrl + '"><i class="fa fa-pencil"></i>@T("Admin.System.SeNames.Details").Text</a>';
         }
         else {
             return '';

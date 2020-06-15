@@ -150,7 +150,7 @@
                                 var textRenderer = $.fn.dataTable.render.text().display;
                                 var associatedProductBlock = '';
                                 if (row.AssociatedToProductName !== null) {
-                                    associatedProductBlock = '<div><i>@T("Admin.Catalog.Products.Fields.AssociatedToProductName") ' + textRenderer(row.AssociatedToProductName) + '</i></div>';
+                                    associatedProductBlock = '<div><i>@T("Admin.Catalog.Products.Fields.AssociatedToProductName").Text ' + textRenderer(row.AssociatedToProductName) + '</i></div>';
                                 }
                                 return textRenderer(row.Name) + associatedProductBlock;
                             }
