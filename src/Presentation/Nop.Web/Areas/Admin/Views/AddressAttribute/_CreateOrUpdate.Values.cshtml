@@ -54,7 +54,7 @@
             <input type="submit" id="btnRefresh" style="display: none" />
             <script>
                 function renderColumnEdit(data, type, row, meta) {
-                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
                 }
 
                 $(document).ready(function () {

@@ -48,7 +48,7 @@
     
         <script>
             function renderColumnEdit(data, type, row, meta) {
-                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=customerattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CustomerAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=customerattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
             }
         </script>    
     </div>
