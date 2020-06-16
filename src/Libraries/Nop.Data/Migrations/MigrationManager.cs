@@ -88,7 +88,7 @@ namespace Nop.Data.Migrations
 
             if (!_typeMapping.ContainsKey(propType))
                 return;
-                
+            
             if (type == typeof(string) || propType.FindInterfaces((t, o) => t.FullName?.Equals(o.ToString(), StringComparison.InvariantCultureIgnoreCase) ?? false, "System.Collections.IEnumerable").Any())
                 canBeNullable = true;
 
@@ -211,7 +211,7 @@ namespace Nop.Data.Migrations
         public virtual void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot)
         {
             var type = typeof(TEntity);
-
+            
             var builder = expressionRoot.Table(NameCompatibilityManager.GetTableName(type)) as CreateTableExpressionBuilder;
 
             RetrieveTableExpressions(type, builder);
