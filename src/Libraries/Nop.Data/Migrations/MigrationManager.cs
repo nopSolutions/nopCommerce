@@ -88,7 +88,7 @@ namespace Nop.Data.Migrations
 
             if (!_typeMapping.ContainsKey(propType))
                 return;
-            
+                
             if (type == typeof(string) || propType.FindInterfaces((t, o) => t.FullName?.Equals(o.ToString(), StringComparison.InvariantCultureIgnoreCase) ?? false, "System.Collections.IEnumerable").Any())
                 canBeNullable = true;
 
@@ -132,7 +132,8 @@ namespace Nop.Data.Migrations
             }
 
             var propertiesToAutoMap = type
-                .GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.SetProperty)
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty)
+                .Where(p => p.CanWrite && p.CanRead)
                 .Where(p =>
                     !expression.Columns.Any(x => x.Name.Equals(NameCompatibilityManager.GetColumnName(type, p.Name), StringComparison.OrdinalIgnoreCase)));
 
