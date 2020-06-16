@@ -169,7 +169,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //check whether database exists
-                    if (!dataProvider.IsDatabaseExists())
+                    if (!dataProvider.DatabaseExists())
                         throw new Exception(_locService.GetResource("DatabaseNotExists"));
                 }
 
