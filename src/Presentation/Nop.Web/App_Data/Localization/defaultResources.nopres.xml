@@ -5526,9 +5526,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved.Hint">
     <Value>Check if product reviews must be approved by administrator.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
-    <Value>Product reviews page size</Value>
-  </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer">
+        <Value>One review per product from customer</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer.Hint">
+        <Value>Check to restrict customer to add just 1 review per product</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
+        <Value>Product reviews page size</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage.Hint">
     <Value>Set the page size for product reviews e.g. '10' reviews per page.</Value>
   </LocaleResource>
@@ -17721,6 +17727,9 @@
   <LocaleResource Name="Reviews.ProductReviewsFor">
     <Value>Product reviews for</Value>
   </LocaleResource>
+    <LocaleResource Name="Reviews.AlreadyAddedProductReviews">
+        <Value>Product review is already added for this product</Value>
+    </LocaleResource>
   <LocaleResource Name="Reviews.Reply">
     <Value>A manager responded to this review</Value>
   </LocaleResource>

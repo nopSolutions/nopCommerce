@@ -100,7 +100,7 @@ namespace Nop.Services.Catalog
         /// Delete review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        public virtual void DeleteReiewType(ReviewType reviewType)
+        public virtual void DeleteReviewType(ReviewType reviewType)
         {
             if (reviewType == null)
                 throw new ArgumentNullException(nameof(reviewType));

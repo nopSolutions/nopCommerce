@@ -208,7 +208,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _reviewTypeService.DeleteReiewType(reviewType);
+                _reviewTypeService.DeleteReviewType(reviewType);
 
                 //activity log
                 _customerActivityService.InsertActivity("DeleteReviewType",

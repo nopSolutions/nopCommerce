@@ -4,9 +4,15 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>  
-  <LocaleResource Name="">
-    <Value></Value>
-  </LocaleResource>
+ <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer">
+   <Value>One review per product from customer</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer.Hint">
+   <Value>Check to restrict customer to add just 1 review per product</Value>
+ </LocaleResource>
+ <LocaleResource Name="Reviews.AlreadyAddedProductReviews">
+   <Value>Product review is already added for this product</Value>
+ </LocaleResource>
 </Language>
 '
 

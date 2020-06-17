@@ -697,7 +697,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds);
+        IList<ProductReview> GetProductReviewsByIds(int[] productReviewIds);
 
         /// <summary>
         /// Inserts a product review

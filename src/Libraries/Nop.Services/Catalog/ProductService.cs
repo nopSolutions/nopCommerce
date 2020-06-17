@@ -2296,7 +2296,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        public virtual IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds)
+        public virtual IList<ProductReview> GetProductReviewsByIds(int[] productReviewIds)
         {
             if (productReviewIds == null || productReviewIds.Length == 0)
                 return new List<ProductReview>();
