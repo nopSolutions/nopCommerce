@@ -67,6 +67,7 @@ namespace Nop.Services.Vendors
 
             return (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
+                    where p.Id == productId
                     select v).FirstOrDefault();
         }
 
