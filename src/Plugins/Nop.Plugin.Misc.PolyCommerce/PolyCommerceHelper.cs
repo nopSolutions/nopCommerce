@@ -8,6 +8,7 @@ namespace Nop.Plugin.Misc.PolyCommerce
 {
     public static class PolyCommerceHelper
     {
+        //public static string GetBaseUrl() => "https://localhost:44340";
         public static string GetBaseUrl() => "https://portal.polycommerce.com";
 
         public static async Task<PolyCommerceStore> GetPolyCommerceStoreByToken(string token)

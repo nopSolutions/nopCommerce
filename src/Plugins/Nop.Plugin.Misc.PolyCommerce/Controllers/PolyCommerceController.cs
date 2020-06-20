@@ -111,6 +111,11 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
                 string userToken = null;
 
+                var model = new ConfigureViewModel()
+                {
+                    PolyCommerceBaseUrl = PolyCommerceHelper.GetBaseUrl()
+                };
+
                 using (var client = new HttpClient())
                 {
                     // get short lived token for user..
@@ -132,7 +137,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     }
                 }
 
-                return Redirect($"{PolyCommerceHelper.GetBaseUrl()}/account/login?token={userToken}");
+                model.UserToken = userToken;
+
+                return View("~/Plugins/Misc.PolyCommerce/Views/Dashboard.cshtml", model);
             }
             catch (Exception ex)
             {

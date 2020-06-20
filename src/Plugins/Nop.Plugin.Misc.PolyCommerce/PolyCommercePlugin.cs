@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Routing;
-using Nop.Core;
 using Nop.Data;
-using Nop.Services.Configuration;
 using Nop.Services.Plugins;
-using Nop.Services.Stores;
 using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Misc.PolyCommerce
@@ -50,7 +43,6 @@ namespace Nop.Plugin.Misc.PolyCommerce
                 IconClass = "fa-cubes",
                 Url = "/Admin/PolyCommerce/Dashboard",
                 Visible = true,
-                OpenUrlInNewTab = true,
                 RouteValues = new RouteValueDictionary() { { "area", null } },
             };
 
