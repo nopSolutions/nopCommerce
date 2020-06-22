@@ -61,7 +61,6 @@ namespace Nop.Services.Logging
         /// <returns>Activity log item</returns>
         ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment, BaseEntity entity = null);
 
-
         /// <summary>
         /// Deletes an activity log item
         /// </summary>

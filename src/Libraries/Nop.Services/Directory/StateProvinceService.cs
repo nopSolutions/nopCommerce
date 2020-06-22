@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 
@@ -16,7 +19,8 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
@@ -25,12 +29,14 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        public StateProvinceService(ICacheManager cacheManager,
+        public StateProvinceService(ICacheKeyService cacheKeyService,
+            IStaticCacheManager staticCacheManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<StateProvince> stateProvinceRepository)
         {
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _staticCacheManager = staticCacheManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _stateProvinceRepository = stateProvinceRepository;
@@ -50,8 +56,6 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Delete(stateProvince);
 
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(stateProvince);
         }
@@ -66,7 +70,7 @@ namespace Nop.Services.Directory
             if (stateProvinceId == 0)
                 return null;
 
-            return _stateProvinceRepository.GetById(stateProvinceId);
+            return _stateProvinceRepository.ToCachedGetById(stateProvinceId);
         }
 
         /// <summary>
@@ -80,17 +84,26 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var key = string.Format(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey, abbreviation, countryId.HasValue ? countryId.Value : 0);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey
+                , abbreviation, countryId ?? 0);
 
-                //filter by country
-                if (countryId.HasValue)
-                    query = query.Where(state => state.CountryId == countryId);
+            var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
 
-                return query.FirstOrDefault();
-            });
+            //filter by country
+            if (countryId.HasValue)
+                query = query.Where(state => state.CountryId == countryId);
+
+            return query.ToCachedFirstOrDefault(key);
+        }
+
+        /// <summary>
+        /// Gets a state/province by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        public virtual StateProvince GetStateProvinceByAddress(Address address)
+        {
+            return GetStateProvinceById(address?.StateProvinceId ?? 0);
         }
 
         /// <summary>
@@ -102,8 +115,9 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryDefaults.StateProvincesAllCacheKey, countryId, languageId, showHidden);
-            return _cacheManager.Get(key, () =>
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesByCountryCacheKey, countryId, languageId, showHidden);
+
+            return _staticCacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
                             orderby sp.DisplayOrder, sp.Name
@@ -136,7 +150,9 @@ namespace Nop.Services.Directory
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
                         where showHidden || sp.Published
                         select sp;
-            var stateProvinces = query.ToList();
+
+            var stateProvinces = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesAllCacheKey, showHidden));
+
             return stateProvinces;
         }
 
@@ -150,8 +166,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Insert(stateProvince);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(stateProvince);
@@ -167,8 +181,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Update(stateProvince);
-
-            _cacheManager.RemoveByPrefix(NopDirectoryDefaults.StateProvincesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(stateProvince);

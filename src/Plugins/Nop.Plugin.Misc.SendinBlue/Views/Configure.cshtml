@@ -46,8 +46,7 @@
                             <div class="custombody">
                                 <div class="form-group">
                                     <div class="logo">
-                                        <img src="@Url.Content("~/Plugins/Misc.SendinBlue/logo.jpg")" alt="" />
-                                        <i class="sib-logo-icon"></i> <span class="t-logo-text">sendinblue</span>
+                                        <img src="@Url.Content("~/Plugins/Misc.SendinBlue/logo.png")" alt="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -109,7 +108,7 @@
                                             <i>Visit <a href="https://www.nopcommerce.com/boards/" target="_blank">nopCommerce forums</a>. They are free and mostly provided by nopCommerce community (sometimes by nopCommerce team).</i>
                                         </li>
                                         <li>
-                                            <i><a href="https://www.nopcommerce.com/p/541/nopcommerce-premium-support-services.aspx" target="_blank">nopCommerce premium support services</a>. Paid, fast and provided by nopCommerce team.</i>
+                                            <i><a href="https://www.nopcommerce.com/nopcommerce-premium-support-services" target="_blank">nopCommerce premium support services</a>. Paid, fast and provided by nopCommerce team.</i>
                                         </li>
                                         <li>
                                             <i>Post the issue on nopCommerce <a href="https://github.com/nopSolutions/sendinblue-plugin-for-nopcommerce/issues" target="_blank">plugin repository</a>.</i>
@@ -472,8 +471,8 @@
                                                             updateTable('#sms-grid');
 
                                                             //clear input value
-                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val('');
-                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val('');
+                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(@(Model.AddSms.DefaultSelectedMessageId));
+                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(@(Model.AddSms.DefaultSelectedPhoneTypeId));
                                                             $("#@Html.IdFor(model => model.AddSms.Text)").val('');
 
                                                         } else {

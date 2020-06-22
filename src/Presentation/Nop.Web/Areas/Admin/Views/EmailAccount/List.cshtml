@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.EmailAccounts").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.EmailAccounts").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Email accounts");
 }
 
-<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.EmailAccounts")

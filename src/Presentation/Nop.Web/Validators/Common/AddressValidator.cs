@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using FluentValidation;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -12,7 +13,8 @@ namespace Nop.Web.Validators.Common
     {
         public AddressValidator(ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            CustomerSettings customerSettings)
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()
@@ -40,14 +42,14 @@ namespace Nop.Web.Validators.Common
                 RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country has states?
-                    var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
+                    var countryId = x.CountryId ?? 0;
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
 
                     if (hasStates)
                     {
                         //if yes, then ensure that state is selected
                         if (!x.StateProvinceId.HasValue || x.StateProvinceId.Value == 0)
-                           return false;
+                            return false;
                     }
 
                     return true;
@@ -80,6 +82,10 @@ namespace Nop.Web.Validators.Common
             if (addressSettings.PhoneRequired && addressSettings.PhoneEnabled)
             {
                 RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"));
+            }
+            if (addressSettings.PhoneEnabled)
+            {
+                RuleFor(x => x.PhoneNumber).IsPhoneNumber(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Phone.NotValid"));
             }
             if (addressSettings.FaxRequired && addressSettings.FaxEnabled)
             {

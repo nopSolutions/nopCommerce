@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Tests;
@@ -18,10 +20,10 @@ namespace Nop.Web.MVC.Tests.Events
         [OneTimeSetUp]
         public void SetUp()
         {
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
-            hostingEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
-            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
+            var webHostEnvironment = new Mock<IWebHostEnvironment>();
+            webHostEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            webHostEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
 
             var nopEngine = new Mock<NopEngine>();
             var serviceProvider = new TestServiceProvider();
@@ -39,7 +41,7 @@ namespace Nop.Web.MVC.Tests.Events
 
             var newDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
             _eventPublisher.Publish(newDateTime);
-            Assert.AreEqual(DateTimeConsumer.DateTime, newDateTime);
+            newDateTime.Should().Be(DateTimeConsumer.DateTime);
         }
     }
 }

@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Core.Html;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -27,6 +28,7 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
+        private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly ForumSettings _forumSettings;
         private readonly ICountryService _countryService;
@@ -43,7 +45,8 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public ForumModelFactory(CustomerSettings customerSettings,
+        public ForumModelFactory(CaptchaSettings captchaSettings,
+            CustomerSettings customerSettings,
             ForumSettings forumSettings,
             ICountryService countryService,
             ICustomerService customerService,
@@ -55,6 +58,7 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
+            _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
             _forumSettings = forumSettings;
             _countryService = countryService;
@@ -78,25 +82,26 @@ namespace Nop.Web.Factories
         /// <returns>Collection of the select list item</returns>
         protected virtual IEnumerable<SelectListItem> ForumTopicTypesList()
         {
-            var list = new List<SelectListItem>();
-
-            list.Add(new SelectListItem
+            var list = new List<SelectListItem>
             {
-                Text = _localizationService.GetResource("Forum.Normal"),
-                Value = ((int)ForumTopicType.Normal).ToString()
-            });
+                new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Forum.Normal"),
+                    Value = ((int)ForumTopicType.Normal).ToString()
+                },
 
-            list.Add(new SelectListItem
-            {
-                Text = _localizationService.GetResource("Forum.Sticky"),
-                Value = ((int)ForumTopicType.Sticky).ToString()
-            });
+                new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Forum.Sticky"),
+                    Value = ((int)ForumTopicType.Sticky).ToString()
+                },
 
-            list.Add(new SelectListItem
-            {
-                Text = _localizationService.GetResource("Forum.Announcement"),
-                Value = ((int)ForumTopicType.Announcement).ToString()
-            });
+                new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Forum.Announcement"),
+                    Value = ((int)ForumTopicType.Announcement).ToString()
+                }
+            };
 
             return list;
         }
@@ -140,6 +145,8 @@ namespace Nop.Web.Factories
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
 
+            var customer = _customerService.GetCustomerById(topic.CustomerId);
+
             var topicModel = new ForumTopicRowModel
             {
                 Id = topic.Id,
@@ -148,11 +155,11 @@ namespace Nop.Web.Factories
                 LastPostId = topic.LastPostId,
                 NumPosts = topic.NumPosts,
                 Views = topic.Views,
-                NumReplies = topic.NumReplies,
+                NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !topic.Customer.IsGuest(),
-                CustomerName = _customerService.FormatUsername(topic.Customer)
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer),
+                CustomerName = _customerService.FormatUsername(customer)
             };
 
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
@@ -376,6 +383,11 @@ namespace Nop.Web.Factories
             model.PostsTotalRecords = posts.TotalCount;
             foreach (var post in posts)
             {
+                var customer = _customerService.GetCustomerById(post.CustomerId);
+
+                var customerIsGuest = _customerService.IsGuest(customer);
+                var customerIsModerator = customerIsGuest ? false : _customerService.IsForumModerator(customer);
+
                 var forumPostModel = new ForumPostModel
                 {
                     Id = post.Id,
@@ -385,16 +397,16 @@ namespace Nop.Web.Factories
                     IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
                     IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                     CustomerId = post.CustomerId,
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !post.Customer.IsGuest(),
-                    CustomerName = _customerService.FormatUsername(post.Customer),
-                    IsCustomerForumModerator = post.Customer.IsForumModerator(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customerIsGuest,
+                    CustomerName = _customerService.FormatUsername(customer),
+                    IsCustomerForumModerator = customerIsModerator,
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
-                    ForumPostCount = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.ForumPostCountAttribute),
-                    ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !post.Customer.IsGuest(),
-                    CustomerJoinDate = post.Customer.CreatedOnUtc,
-                    AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !post.Customer.IsGuest(),
+                    ForumPostCount = _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.ForumPostCountAttribute),
+                    ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !customerIsGuest,
+                    CustomerJoinDate = customer?.CreatedOnUtc ?? DateTime.Now,
+                    AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !customerIsGuest,
                     SignaturesEnabled = _forumSettings.SignaturesEnabled,
-                    FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<string>(post.Customer, NopCustomerDefaults.SignatureAttribute)),
+                    FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<Customer, string>(post.CustomerId, NopCustomerDefaults.SignatureAttribute)),
                 };
                 //created on string
                 var languageCode = _workContext.WorkingLanguage.LanguageCulture;
@@ -410,16 +422,16 @@ namespace Nop.Web.Factories
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
                     forumPostModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                        _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize,
                         _customerSettings.DefaultAvatarEnabled,
                         defaultPictureType: PictureType.Avatar);
                 }
                 //location
-                forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !post.Customer.IsGuest();
+                forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !customerIsGuest;
                 if (_customerSettings.ShowCustomersLocation)
                 {
-                    var countryId = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.CountryIdAttribute);
+                    var countryId = _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.CountryIdAttribute);
                     var country = _countryService.GetCountryById(countryId);
                     forumPostModel.CustomerLocation = country != null ? _localizationService.GetLocalized(country, x => x.Name) : string.Empty;
                 }
@@ -484,6 +496,7 @@ namespace Nop.Web.Factories
             model.IsCustomerAllowedToSetTopicPriority = _forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer);
             model.TopicPriorities = ForumTopicTypesList();
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum;
         }
 
         /// <summary>
@@ -500,7 +513,7 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
@@ -511,7 +524,7 @@ namespace Nop.Web.Factories
             model.ForumSeName = _forumService.GetForumSeName(forum);
             model.ForumId = forum.Id;
             model.ForumEditor = _forumSettings.ForumEditor;
-
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum;
             model.IsCustomerAllowedToSetTopicPriority = _forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer);
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
 
@@ -542,7 +555,7 @@ namespace Nop.Web.Factories
             if (forumTopic == null)
                 throw new ArgumentNullException(nameof(forumTopic));
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
@@ -554,7 +567,8 @@ namespace Nop.Web.Factories
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
                 ForumTopicSeName = _forumService.GetTopicSeName(forumTopic),
-                IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer)
+                IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum
             };
 
             if (!excludeProperties)
@@ -572,6 +586,8 @@ namespace Nop.Web.Factories
                 if (quote.HasValue)
                 {
                     var quotePost = _forumService.GetPostById(quote.Value);
+                    var customer = _customerService.GetCustomerById(quotePost.CustomerId);
+
                     if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                     {
                         var quotePostText = quotePost.Text;
@@ -579,10 +595,10 @@ namespace Nop.Web.Factories
                         switch (_forumSettings.ForumEditor)
                         {
                             case EditorType.SimpleTextBox:
-                                text = $"{_customerService.FormatUsername(quotePost.Customer)}:\n{quotePostText}\n";
+                                text = $"{_customerService.FormatUsername(customer)}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = $"[quote={_customerService.FormatUsername(quotePost.Customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                                text = $"[quote={_customerService.FormatUsername(customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;
@@ -604,11 +620,11 @@ namespace Nop.Web.Factories
             if (forumPost == null)
                 throw new ArgumentNullException(nameof(forumPost));
 
-            var forumTopic = forumPost.ForumTopic;
+            var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
             if (forumTopic == null)
                 throw new ArgumentException("forum topic cannot be loaded");
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
@@ -621,7 +637,8 @@ namespace Nop.Web.Factories
                 ForumName = forum.Name,
                 ForumTopicSubject = forumTopic.Subject,
                 ForumTopicSeName = _forumService.GetTopicSeName(forumTopic),
-                IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer)
+                IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForum
             };
 
             if (!excludeProperties)
@@ -702,14 +719,16 @@ namespace Nop.Web.Factories
             model.LimitList = limitList;
 
             // Create the values for the "Search in forum" select list
-            var forumsSelectList = new List<SelectListItem>();
-            forumsSelectList.Add(
+            var forumsSelectList = new List<SelectListItem>
+            {
                 new SelectListItem
                 {
                     Text = _localizationService.GetResource("Forum.Search.SearchInForum.All"),
                     Value = "0",
                     Selected = true,
-                });
+                }
+            };
+
             var separator = "--";
             var forumGroups = _forumService.GetAllForumGroups();
             foreach (var fg in forumGroups)
@@ -751,13 +770,13 @@ namespace Nop.Web.Factories
             };
             model.WithinList = withinList;
 
-            int.TryParse(forumId, out int forumIdSelected);
+            int.TryParse(forumId, out var forumIdSelected);
             model.ForumIdSelected = forumIdSelected;
 
-            int.TryParse(within, out int withinSelected);
+            int.TryParse(within, out var withinSelected);
             model.WithinSelected = withinSelected;
 
-            int.TryParse(limitDays, out int limitDaysSelected);
+            int.TryParse(limitDays, out var limitDaysSelected);
             model.LimitDaysSelected = limitDaysSelected;
 
             var searchTermMinimumLength = _forumSettings.ForumSearchTermMinimumLength;
@@ -843,13 +862,20 @@ namespace Nop.Web.Factories
             if (forumPost == null)
                 return model;
 
+            var topic = _forumService.GetTopicById(forumPost.TopicId);
+
+            if (topic is null)
+                return model;
+
+            var customer = _customerService.GetCustomerById(forumPost.CustomerId);
+
             model.Id = forumPost.Id;
-            model.ForumTopicId = forumPost.TopicId;
-            model.ForumTopicSeName = _forumService.GetTopicSeName(forumPost.ForumTopic);
-            model.ForumTopicSubject = _forumService.StripTopicSubject(forumPost.ForumTopic);
+            model.ForumTopicId = topic.Id;
+            model.ForumTopicSeName = _forumService.GetTopicSeName(topic);
+            model.ForumTopicSubject = _forumService.StripTopicSubject(topic);
             model.CustomerId = forumPost.CustomerId;
-            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !forumPost.Customer.IsGuest();
-            model.CustomerName = _customerService.FormatUsername(forumPost.Customer);
+            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer);
+            model.CustomerName = _customerService.FormatUsername(customer);
             //created on string
             var languageCode = _workContext.WorkingLanguage.LanguageCulture;
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
@@ -886,7 +912,7 @@ namespace Nop.Web.Factories
                 }
             }
 
-            var forum = _forumService.GetForumById(forumTopic != null ? forumTopic.ForumId : (forumId.HasValue ? forumId.Value : 0));
+            var forum = _forumService.GetForumById(forumTopic != null ? forumTopic.ForumId : (forumId ?? 0));
             if (forum != null)
             {
                 model.ForumId = forum.Id;
@@ -894,7 +920,7 @@ namespace Nop.Web.Factories
                 model.ForumSeName = _forumService.GetForumSeName(forum);
             }
 
-            var forumGroup = _forumService.GetForumGroupById(forum != null ? forum.ForumGroupId : (forumGroupId.HasValue ? forumGroupId.Value : 0));
+            var forumGroup = _forumService.GetForumGroupById(forum != null ? forum.ForumGroupId : (forumGroupId ?? 0));
             if (forumGroup != null)
             {
                 model.ForumGroupId = forumGroup.Id;

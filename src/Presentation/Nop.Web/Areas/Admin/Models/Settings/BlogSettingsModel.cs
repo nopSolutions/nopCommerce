@@ -31,7 +31,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.NumberOfTags")]
         public int NumberOfTags { get; set; }
         public bool NumberOfTags_OverrideForStore { get; set; }
-
+        
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.MainPageBlogPostsCount")]
+        public int MainPageBlogPostsCount { get; set; }
+        public bool MainPageBlogPostsCount_OverrideForStore { get; set; }
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.ShowHeaderRSSUrl")]
         public bool ShowHeaderRssUrl { get; set; }
         public bool ShowHeaderRssUrl_OverrideForStore { get; set; }

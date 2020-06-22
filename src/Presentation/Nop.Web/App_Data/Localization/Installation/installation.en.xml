@@ -1,4 +1,5 @@
-﻿<Language Name="English" IsDefault="true" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English" IsDefault="true" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin user email</Value>
   </LocaleResource>
@@ -42,13 +43,13 @@
     <Value>Create sample data</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom SQL Server collation</Value>
-  </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>An error occurred while creating the database: {0}</Value>
+    <Value>Specify custom collation</Value>
   </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>An error occurred while creating the database: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Database information</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Installing nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Use integrated Windows authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>The passwords do not match</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Click to restart the installation process (clear all cached values)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Server name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Server name is required</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Setup failed: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Use built-in data storage (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server name</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>SQL Server name is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Password is required</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Username</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Username is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Use SQL Server (or SQL Express) database</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Store information</Value>
@@ -137,7 +144,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Use integrated Windows authentication</Value>
+  <LocaleResource Name="RestartProgress">
+    <Value>Restarting...</Value>
   </LocaleResource>
 </Language>

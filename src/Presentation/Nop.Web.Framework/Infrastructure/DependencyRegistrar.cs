@@ -6,11 +6,10 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Redis;
@@ -19,6 +18,7 @@ using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -83,20 +83,15 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
-            builder.RegisterType<EfDataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
-            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
-            builder.Register(context => new NopObjectContext(context.Resolve<DbContextOptions<NopObjectContext>>()))
-                .As<IDbContext>().InstancePerLifetimeScope();
+            builder.RegisterType<DataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
+            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<INopDataProvider>().InstancePerDependency();
 
             //repositories
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
-
-            //cache manager
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
 
             //redis connection wrapper
             if (config.RedisEnabled)
@@ -187,6 +182,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerLifetimeScope();
             builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
             builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerLifetimeScope();
+            builder.RegisterType<SmtpBuilder>().As<ISmtpBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerLifetimeScope();
@@ -229,6 +225,9 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+            builder.RegisterType<CacheKeyService>().As<ICacheKeyService>().InstancePerLifetimeScope();
+            //slug route transformer
+            builder.RegisterType<SlugRouteTransformer>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<ReviewTypeService>().As<IReviewTypeService>().SingleInstance();
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
@@ -268,12 +267,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             //installation service
             if (!DataSettingsManager.DatabaseIsInstalled)
-            {
-                if (config.UseFastInstallationService)
-                    builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-                else
-                    builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-            }
+                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
@@ -326,14 +320,39 @@ namespace Nop.Web.Framework.Infrastructure
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
                 {
-                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    Store store;
+
+                    try
+                    {
+                        store = c.Resolve<IStoreContext>().CurrentStore;
+                    }
+                    catch
+                    {
+                        if (!DataSettingsManager.DatabaseIsInstalled)
+                            store = null;
+                        else
+                            throw;
+                    }
+
+                    var currentStoreId = store?.Id ?? 0;
+
                     //uncomment the code below if you want load settings per store only when you have two stores installed.
                     //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
                     //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
 
                     //although it's better to connect to your database and execute the following SQL:
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
-                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                    try
+                    {
+                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                    }
+                    catch
+                    {
+                        if (DataSettingsManager.DatabaseIsInstalled)
+                            throw;
+                    }
+
+                    return default;
                 })
                 .InstancePerLifetimeScope()
                 .CreateRegistration();

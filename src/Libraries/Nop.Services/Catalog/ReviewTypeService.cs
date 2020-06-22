@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -15,24 +16,24 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
         private readonly IRepository<ReviewType> _reviewTypeRepository;
-        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        public ReviewTypeService(IEventPublisher eventPublisher,
+        public ReviewTypeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<ProductReviewReviewTypeMapping> productReviewReviewTypeMappingRepository,
-            IRepository<ReviewType> reviewTypeRepository,
-            IStaticCacheManager cacheManager)
+            IRepository<ReviewType> reviewTypeRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
             _reviewTypeRepository = reviewTypeRepository;
-            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -47,12 +48,9 @@ namespace Nop.Services.Catalog
         /// <returns>Review types</returns>
         public virtual IList<ReviewType> GetAllReviewTypes()
         {
-            return _cacheManager.Get(NopCatalogDefaults.ReviewTypeAllKey, () =>
-            {
-                return _reviewTypeRepository.Table
-                    .OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id)
-                    .ToList();
-            });
+            return _reviewTypeRepository.Table
+                .OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id)
+                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ReviewTypeAllCacheKey));
         }
 
         /// <summary>
@@ -64,9 +62,8 @@ namespace Nop.Services.Catalog
         {
             if (reviewTypeId == 0)
                 return null;
-
-            var key = string.Format(NopCatalogDefaults.ReviewTypeByIdKey, reviewTypeId);
-            return _cacheManager.Get(key, () => _reviewTypeRepository.GetById(reviewTypeId));
+            
+            return _reviewTypeRepository.ToCachedGetById(reviewTypeId);
         }
 
         /// <summary>
@@ -79,7 +76,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Insert(reviewType);
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(reviewType);
@@ -95,7 +91,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Update(reviewType);
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(reviewType);
@@ -111,7 +106,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Delete(reviewType);
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(reviewType);
@@ -126,19 +120,33 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewId">The product review identifier</param>
         /// <returns>Product review and review type mapping collection</returns>
-        public IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(int productReviewId)
+        public IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(
+            int productReviewId)
         {
-            var key = string.Format(NopCatalogDefaults.ProductReviewReviewTypeMappingAllKey, productReviewId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey, productReviewId);
 
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pam in _productReviewReviewTypeMappingRepository.Table
-                            orderby pam.Id
-                            where pam.ProductReviewId == productReviewId
-                            select pam;
-                var productReviewReviewTypeMappings = query.ToList();
-                return productReviewReviewTypeMappings;
-            });
+            var query = from pam in _productReviewReviewTypeMappingRepository.Table
+                orderby pam.Id
+                where pam.ProductReviewId == productReviewId
+                select pam;
+            var productReviewReviewTypeMappings = query.ToCachedList(key);
+
+            return productReviewReviewTypeMappings;
+        }
+
+        /// <summary>
+        /// Inserts a product review and review type mapping
+        /// </summary>
+        /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        public virtual void InsertProductReviewReviewTypeMappings(ProductReviewReviewTypeMapping productReviewReviewType)
+        {
+            if (productReviewReviewType == null)
+                throw new ArgumentNullException(nameof(productReviewReviewType));
+
+            _productReviewReviewTypeMappingRepository.Insert(productReviewReviewType);
+
+            //event notification
+            _eventPublisher.EntityInserted(productReviewReviewType);
         }
 
         #endregion

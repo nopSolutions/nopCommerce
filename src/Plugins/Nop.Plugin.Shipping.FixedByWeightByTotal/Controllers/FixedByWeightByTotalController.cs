@@ -23,6 +23,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class FixedByWeightByTotalController : BasePluginController
     {
         #region Fields
@@ -114,7 +115,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -128,6 +128,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public IActionResult SaveMode(bool value)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -157,7 +158,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                     ShippingMethodId = shippingMethod.Id,
                     ShippingMethodName = shippingMethod.Name,
                     Rate = _settingService.GetSettingByKey<decimal>(
-                        string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id))
+                        string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)),
+                    TransitDays = _settingService.GetSettingByKey<int?>(
+                        string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethod.Id))
                 });
             });
 
@@ -165,13 +168,15 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult UpdateFixedShippingRate(FixedRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            _settingService.SetSetting(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, model.ShippingMethodId), model.Rate);
+            _settingService.SetSetting(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, model.ShippingMethodId), model.Rate, 0, false);
+            _settingService.SetSetting(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, model.ShippingMethodId), model.TransitDays, 0, false);
+
+            _settingService.ClearCache();
 
             return new NullJsonResult();
         }
@@ -181,7 +186,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Rate by weight
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -316,7 +320,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
         
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult AddRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -337,7 +340,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 AdditionalFixedCost = model.AdditionalFixedCost,
                 RatePerWeightUnit = model.RatePerWeightUnit,
                 PercentageRateOfSubtotal = model.PercentageRateOfSubtotal,
-                LowerWeightLimit = model.LowerWeightLimit
+                LowerWeightLimit = model.LowerWeightLimit,
+                TransitDays = model.TransitDays
             });
 
             ViewBag.RefreshPage = true;
@@ -373,7 +377,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 RatePerWeightUnit = sbw.RatePerWeightUnit,
                 LowerWeightLimit = sbw.LowerWeightLimit,
                 PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode,
-                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name
+                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name,
+                TransitDays = sbw.TransitDays
             };
 
             var shippingMethods = _shippingService.GetAllShippingMethods();
@@ -411,7 +416,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult EditRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -436,6 +440,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             sbw.RatePerWeightUnit = model.RatePerWeightUnit;
             sbw.PercentageRateOfSubtotal = model.PercentageRateOfSubtotal;
             sbw.LowerWeightLimit = model.LowerWeightLimit;
+            sbw.TransitDays = model.TransitDays;
 
             _shippingByWeightService.UpdateShippingByWeightRecord(sbw);
 
@@ -445,7 +450,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult DeleteRateByWeightByTotal(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

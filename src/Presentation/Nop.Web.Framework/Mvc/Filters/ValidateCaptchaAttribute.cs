@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Security;
+using Nop.Data;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Security.Captcha;
 
@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute enabling CAPTCHA validation
     /// </summary>
-    public class ValidateCaptchaAttribute : TypeFilterAttribute
+    public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -37,7 +37,6 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Constants
 
-            private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
             private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
             private const string G_RESPONSE_FIELD_KEY = "g-recaptcha-response";
 
@@ -92,7 +91,20 @@ namespace Nop.Web.Framework.Mvc.Filters
                     {
                         var value = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue;
                         var response = _captchaHttpClient.ValidateCaptchaAsync(value).Result;
-                        isValid = response.IsValid;
+
+                        switch (_captchaSettings.CaptchaType)
+                        {
+                            case CaptchaType.CheckBoxReCaptchaV2:
+                                isValid = response.IsValid;
+                                break;
+                            case CaptchaType.ReCaptchaV3:
+                                isValid = response.IsValid &&
+                                            response.Action == context.RouteData.Values["action"].ToString() &&
+                                              response.Score > _captchaSettings.ReCaptchaV3ScoreThreshold;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     catch (Exception exception)
                     {

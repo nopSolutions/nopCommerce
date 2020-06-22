@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -8,8 +7,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductAttributeMapping : BaseEntity, ILocalizedEntity
     {
-        private ICollection<ProductAttributeValue> _productAttributeValues;
-
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
@@ -82,25 +79,6 @@ namespace Nop.Core.Domain.Catalog
         {
             get => (AttributeControlType)AttributeControlTypeId;
             set => AttributeControlTypeId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets the product attribute
-        /// </summary>
-        public virtual ProductAttribute ProductAttribute { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets the product attribute values
-        /// </summary>
-        public virtual ICollection<ProductAttributeValue> ProductAttributeValues
-        {
-            get => _productAttributeValues ?? (_productAttributeValues = new List<ProductAttributeValue>());
-            protected set => _productAttributeValues = value;
         }
     }
 }

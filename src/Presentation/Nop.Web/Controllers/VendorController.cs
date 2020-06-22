@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
@@ -20,8 +19,6 @@ using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Controllers
@@ -103,7 +100,7 @@ namespace Nop.Web.Controllers
             var attributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"vendor_attribute_{attribute.Id}";
+                var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -178,13 +175,13 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("Homepage");
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = new ApplyVendorModel();
@@ -193,15 +190,18 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
         public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile, IFormCollection form)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("Homepage");
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
+
+            if (_customerService.IsAdmin(_workContext.CurrentCustomer))
+                ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.IsAdmin"));
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
@@ -279,10 +279,10 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Info()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
@@ -294,11 +294,11 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
         public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile, IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
@@ -365,11 +365,11 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual IActionResult RemovePicture()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)

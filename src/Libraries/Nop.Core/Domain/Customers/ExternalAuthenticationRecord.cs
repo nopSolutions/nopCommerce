@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents an external authentication record
@@ -39,10 +39,5 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the provider
         /// </summary>
         public string ProviderSystemName { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
     }
 }

@@ -1,16 +1,6 @@
 @model ShippingSettingsModel
 
 <div class="panel-body">
-    <div class="form-group">
-        <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="EstimateShippingEnabled_OverrideForStore" asp-input="EstimateShippingEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="EstimateShippingEnabled" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="EstimateShippingEnabled" />
-            <span asp-validation-for="EstimateShippingEnabled"></span>
-        </div>
-    </div>
     <div class="form-group advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="HideShippingTotal_OverrideForStore" asp-input="HideShippingTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

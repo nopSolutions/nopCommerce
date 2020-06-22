@@ -42,5 +42,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>List of blog post year model</returns>
         List<BlogPostYearModel> PrepareBlogPostYearModel();
+        /// <summary>
+        /// Prepare the home page blog items model
+        /// </summary>
+        /// <returns>Home page blog items model</returns>
+        HomepageBlogPostsModel PrepareHomepageBlogPostsModel();
     }
 }

@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Orders;
+﻿using System;
 
 namespace Nop.Core.Domain.Shipping
 {
@@ -9,8 +7,6 @@ namespace Nop.Core.Domain.Shipping
     /// </summary>
     public partial class Shipment : BaseEntity
     {
-        private ICollection<ShipmentItem> _shipmentItems;
-
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
@@ -46,19 +42,5 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets the entity creation date
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets the order
-        /// </summary>
-        public virtual Order Order { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipment items
-        /// </summary>
-        public virtual ICollection<ShipmentItem> ShipmentItems
-        {
-            get => _shipmentItems ?? (_shipmentItems = new List<ShipmentItem>());
-            protected set => _shipmentItems = value;
-        }
     }
 }

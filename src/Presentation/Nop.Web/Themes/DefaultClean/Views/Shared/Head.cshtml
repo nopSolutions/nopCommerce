@@ -11,11 +11,18 @@
     //add main CSS file
     if (supportRtl)
     {
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/arreshaStyles.rtl.css");
+
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/arreshaStyles.css");
         Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css");
+         
     }
     else
     {
+         Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/arreshaStyles.css");
         Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
+        
+
     }
     //add jQuery UI css file
     Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.css");

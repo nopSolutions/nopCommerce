@@ -10,8 +10,15 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets tax rate
         /// </summary>
-        /// <param name="calculateTaxRequest">Tax calculation request</param>
+        /// <param name="taxRateRequest">Tax rate request</param>
         /// <returns>Tax</returns>
-        CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest);
+        TaxRateResult GetTaxRate(TaxRateRequest taxRateRequest);
+
+        /// <summary>
+        /// Gets tax total
+        /// </summary>
+        /// <param name="taxTotalRequest">Tax total request</param>
+        /// <returns>Tax total</returns>
+        TaxTotalResult GetTaxTotal(TaxTotalRequest taxTotalRequest);
     }
 }

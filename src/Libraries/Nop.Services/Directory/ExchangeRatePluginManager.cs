@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Directory
@@ -19,7 +20,8 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public ExchangeRatePluginManager(CurrencySettings currencySettings,
-            IPluginService pluginService) : base(pluginService)
+            ICustomerService customerService,
+            IPluginService pluginService) : base(customerService, pluginService)
         {
             _currencySettings = currencySettings;
         }

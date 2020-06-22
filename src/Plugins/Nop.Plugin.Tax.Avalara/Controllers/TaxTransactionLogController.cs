@@ -57,13 +57,15 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             //prepare filter parameters
             var createdFromValue = searchModel.CreatedFrom.HasValue
-                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedFrom.Value, _dateTimeHelper.CurrentTimeZone) : null;
+                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedFrom.Value, _dateTimeHelper.CurrentTimeZone)
+                : null;
             var createdToValue = searchModel.CreatedTo.HasValue
-                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1) : null;
+                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1)
+                : null;
 
             //get tax transaction log
-            var taxtransactionLog = _taxTransactionLogService.GetTaxTransactionLog(createdFromUtc: createdFromValue,
-                createdToUtc: createdToValue, pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var taxtransactionLog = _taxTransactionLogService.GetTaxTransactionLog(createdFromUtc: createdFromValue, createdToUtc: createdToValue,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
             var model = new TaxTransactionLogListModel().PrepareToGrid(searchModel, taxtransactionLog, () =>
@@ -101,7 +103,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             //try to get log item with the passed identifier
             var logItem = _taxTransactionLogService.GetTaxTransactionLogById(id);
             if (logItem == null)
-                return RedirectToAction("Configure", "AvalaraTax");
+                return RedirectToAction("Configure", "Avalara");
 
             var model = new TaxTransactionLogModel
             {
@@ -132,7 +134,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.Log.Deleted"));
             }
 
-            return RedirectToAction("Configure", "AvalaraTax");
+            return RedirectToAction("Configure", "Avalara");
         }
 
         #endregion

@@ -1,8 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -14,6 +16,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
 
@@ -21,9 +24,11 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public CategoryTemplateService(IEventPublisher eventPublisher,
+        public CategoryTemplateService(ICacheKeyService cacheKeyService,
+        IEventPublisher eventPublisher,
             IRepository<CategoryTemplate> categoryTemplateRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _categoryTemplateRepository = categoryTemplateRepository;
         }
@@ -57,7 +62,8 @@ namespace Nop.Services.Catalog
                         orderby pt.DisplayOrder, pt.Id
                         select pt;
 
-            var templates = query.ToList();
+            var templates = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryTemplatesAllCacheKey));
+
             return templates;
         }
 
@@ -71,7 +77,7 @@ namespace Nop.Services.Catalog
             if (categoryTemplateId == 0)
                 return null;
 
-            return _categoryTemplateRepository.GetById(categoryTemplateId);
+            return _categoryTemplateRepository.ToCachedGetById(categoryTemplateId);
         }
 
         /// <summary>

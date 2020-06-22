@@ -70,13 +70,16 @@ namespace Nop.Web.Factories
                     {
                         inboxPage = page.Value;
                     }
+
                     break;
                 case "sent":
                     if (page.HasValue)
                     {
                         sentItemsPage = page.Value;
                     }
+
                     sentItemsTabSelected = true;
+
                     break;
                 default:
                     break;
@@ -191,7 +194,7 @@ namespace Nop.Web.Factories
             {
                 ToCustomerId = customerTo.Id,
                 CustomerToName = _customerService.FormatUsername(customerTo),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customerTo)
             };
 
             if (replyToPM == null)
@@ -217,15 +220,18 @@ namespace Nop.Web.Factories
             if (pm == null)
                 throw new ArgumentNullException(nameof(pm));
 
+            var fromCustomer = _customerService.GetCustomerById(pm.FromCustomerId);
+            var toCustomer = _customerService.GetCustomerById(pm.ToCustomerId);
+
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,
-                FromCustomerId = pm.FromCustomer.Id,
-                CustomerFromName = _customerService.FormatUsername(pm.FromCustomer),
-                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
-                ToCustomerId = pm.ToCustomer.Id,
-                CustomerToName = _customerService.FormatUsername(pm.ToCustomer),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
+                FromCustomerId = pm.FromCustomerId,
+                CustomerFromName = _customerService.FormatUsername(fromCustomer),
+                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(fromCustomer),
+                ToCustomerId = pm.ToCustomerId,
+                CustomerToName = _customerService.FormatUsername(toCustomer),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(toCustomer),
                 Subject = pm.Subject,
                 Message = _forumService.FormatPrivateMessageText(pm),
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),

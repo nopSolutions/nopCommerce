@@ -14,10 +14,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
     public partial class ModelCacheEventConsumer :
         //settings
         IConsumer<EntityUpdatedEvent<Setting>>,
-        //specification attributes
-        IConsumer<EntityInsertedEvent<SpecificationAttribute>>,
-        IConsumer<EntityUpdatedEvent<SpecificationAttribute>>,
-        IConsumer<EntityDeletedEvent<SpecificationAttribute>>,
         //categories
         IConsumer<EntityInsertedEvent<Category>>,
         IConsumer<EntityUpdatedEvent<Category>>,
@@ -35,15 +31,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
     {
         #region Fields
 
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
+        public ModelCacheEventConsumer(IStaticCacheManager staticCacheManager)
         {
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -53,63 +49,49 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
             //clear models which depend on settings
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.OfficialNewsPrefixCacheKey); //depends on AdminAreaSettings.HideAdvertisementsOnAdminArea
-        }
-
-        //specification attributes
-        public void HandleEvent(EntityInsertedEvent<SpecificationAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecAttributesPrefixCacheKey);
-        }
-        public void HandleEvent(EntityUpdatedEvent<SpecificationAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecAttributesPrefixCacheKey);
-        }
-        public void HandleEvent(EntityDeletedEvent<SpecificationAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecAttributesPrefixCacheKey);
+            _staticCacheManager.Remove(NopModelCacheDefaults.OfficialNewsModelKey); //depends on AdminAreaSettings.HideAdvertisementsOnAdminArea
         }
 
         //categories
         public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
         }
         public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
         }
         public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoriesListPrefixCacheKey);
         }
 
         //manufacturers
         public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
         }
         public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
         }
         public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturersListPrefixCacheKey);
         }
 
         //vendors
         public void HandleEvent(EntityInsertedEvent<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorsListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorsListPrefixCacheKey);
         }
         public void HandleEvent(EntityUpdatedEvent<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorsListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorsListPrefixCacheKey);
         }
         public void HandleEvent(EntityDeletedEvent<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorsListPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorsListPrefixCacheKey);
         }
 
         /// <summary>
@@ -118,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         /// <param name="eventMessage">Event</param>
         public void HandleEvent(PluginUpdatedEvent eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopPluginDefaults.AdminNavigationPluginsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopPluginDefaults.AdminNavigationPluginsPrefixCacheKey);
         }
 
         #endregion

@@ -1,11 +1,11 @@
 ﻿@model IList<VendorAttributeModel>
-@using Nop.Web.Framework.Controllers
 
-@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Vendors
 
 @foreach (var attribute in Model)
 {
-    var controlId = $"{NopAttributePrefixDefaults.Vendor}{attribute.Id}";
+    var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
     var textPrompt = attribute.Name;
 
     <div class="inputs vendor-attributes">
@@ -56,12 +56,12 @@
             break;
             case AttributeControlType.TextBox:
             {
-                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@(attribute.DefaultValue)" />
             }
             break;
             case AttributeControlType.MultilineTextbox:
             {
-            <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+            <textarea id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
                 }
                 break;
             case AttributeControlType.Datepicker:

@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.RecurringPayments").Text;
+    ViewBag.PageTitle = T("Admin.RecurringPayments").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Recurring payments");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.RecurringPayments")

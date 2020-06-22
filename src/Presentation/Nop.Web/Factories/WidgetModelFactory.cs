@@ -3,7 +3,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Services.Caching;
 using Nop.Services.Cms;
+using Nop.Services.Customers;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Cms;
@@ -17,7 +19,9 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly ICustomerService _customerService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly IWidgetPluginManager _widgetPluginManager;
@@ -27,13 +31,17 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public WidgetModelFactory(IStaticCacheManager cacheManager,
+        public WidgetModelFactory(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
         {
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _customerService = customerService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _themeContext = themeContext;
             _widgetPluginManager = widgetPluginManager;
@@ -52,10 +60,12 @@ namespace Nop.Web.Factories
         /// <returns>List of the render widget models</returns>
         public virtual List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.WidgetModelKey,
-                _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
+            var roles = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
 
-            var cachedModels = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
+                roles, _storeContext.CurrentStore, widgetZone, _themeContext.WorkingThemeName);
+
+            var cachedModels = _staticCacheManager.Get(cacheKey, () =>
                 _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, widgetZone)
                 .Select(widget => new RenderWidgetModel
                 {

@@ -1,0 +1,191 @@
+﻿@model CheckoutBillingAddressModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-checkout-page");
+    Html.AppendPageCssClassParts("html-billing-address-page");
+}
+<div class="page checkout-page billing-address-page">
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
+    <div class="page-title">
+        <h1>@T("Checkout.BillingAddress")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        <form asp-route="CheckoutBillingAddress" method="post">
+            <div class="billing-addresses">
+                @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.CheckoutBillingAddressTop})
+                @if (Model.ShipToSameAddressAllowed)
+                {
+                    <div class="section ship-to-same-address">
+                        <div class="selector">
+                            <input asp-for="ShipToSameAddress"/>
+                            <label asp-for="ShipToSameAddress">@T("Checkout.ShipToSameAddress")</label>
+                        </div>
+                    </div>
+                }
+                @if (Model.ExistingAddresses.Count > 0)
+                {
+                    <div class="section select-billing-address">
+                        <div class="title">
+                            <strong>@T("Checkout.SelectBillingAddress")</strong>
+                        </div>
+                         @if (Model.InvalidExistingAddresses.Count > 0)
+                         {
+                             <label class="min-amount-warning">
+                                 @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                             </label>
+                         }
+                        <div class="address-grid">
+                            @foreach (var item in Model.ExistingAddresses)
+                            {
+                                <div class="address-item">
+                                    <ul class="address-box">
+                                        <li class="name">
+                                            @item.FirstName @item.LastName
+                                        </li>
+                                        <li class="email">
+                                            <label>@T("Address.Fields.Email"):</label>
+                                            <span>@item.Email</span>
+                                        </li>
+                                        @if (item.PhoneEnabled)
+                                        {
+                                            <li class="phone">
+                                                <label>@T("Address.Fields.PhoneNumber"):</label>
+                                                <span>@item.PhoneNumber</span>
+                                            </li>
+                                        }
+                                        @if (item.FaxEnabled)
+                                        {
+                                            <li class="fax">
+                                                <label>@T("Address.Fields.FaxNumber"):</label>
+                                                <span>@item.FaxNumber</span>
+                                            </li>
+                                        }
+                                        @if (item.CompanyEnabled && !string.IsNullOrEmpty(item.Company))
+                                        {
+                                            <li class="company">
+                                                @item.Company
+                                            </li>
+                                        }
+                                        @if (item.StreetAddressEnabled)
+                                        {
+                                            <li class="address1">
+                                                @item.Address1
+                                            </li>
+                                        }
+                                        @if (item.StreetAddress2Enabled && !string.IsNullOrEmpty(item.Address2))
+                                        {
+                                            <li class="address2">
+                                                @item.Address2
+                                            </li>
+                                        }
+                                        @if (item.CityEnabled && !string.IsNullOrEmpty(item.City) ||
+                                          item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                          item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                          item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                        {
+                                            <li class="city-state-zip">
+                                                @if (item.CityEnabled && !string.IsNullOrEmpty(item.City))
+                                                {
+                                                    @item.City
+                                                    @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                                      item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                      item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                    {
+                                                        <text>,</text>
+                                                    }
+                                                }
+                                                @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County))
+                                                {
+                                                    @item.County
+                                                    @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                      item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                    {
+                                                        <text>,</text>
+                                                    }
+                                                }
+                                                @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName))
+                                                {
+                                                    @item.StateProvinceName
+                                                    @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                    {
+                                                        <text>,</text>
+                                                    }
+                                                }
+                                                @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                {
+                                                    @item.ZipPostalCode
+                                                }
+                                            </li>
+                                        }
+                                        @if (item.CountryEnabled && !string.IsNullOrEmpty(item.CountryName))
+                                        {
+                                            <li class="country">
+                                                @item.CountryName
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
+                                        {
+                                            <li class="custom-attributes-view">
+                                                @Html.Raw(item.FormattedCustomAddressAttributes)
+                                            </li>
+                                        }
+                                    </ul>
+                                    <div class="select-button">
+                                        <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()" />
+                                        <script asp-location="Footer">
+                                            function selectBillingAddress@(item.Id)() {
+                                                if ($('#@Html.IdFor(model => model.ShipToSameAddress)')
+                                                    .is(':checked')) {
+                                                    setLocation(
+                                                        '@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
+                                                } else {
+                                                    setLocation(
+                                                        '@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id})');
+                                                }
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle})
+                <div class="section new-billing-address">
+                    <div class="title">
+                        @if (Model.ExistingAddresses.Count > 0)
+                        {
+                            <strong>@T("Checkout.OrEnterNewAddress")</strong>
+                        }
+                        else
+                        {
+                            <strong>@T("Checkout.EnterBillingAddress")</strong>
+                        }
+                    </div>
+                    <div class="enter-address">
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                        @{
+                            var dataDictAddress = new ViewDataDictionary(ViewData);
+                            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
+                            @await Html.PartialAsync("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress)
+                        }
+                    </div>
+                </div>
+                @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom})
+            </div>
+            <div class="buttons">
+                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button"/>
+            </div>
+        </form>
+        <div class="section order-summary">
+            <div class="title">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            @await Component.InvokeAsync("OrderSummary")
+        </div>
+    </div>
+</div>

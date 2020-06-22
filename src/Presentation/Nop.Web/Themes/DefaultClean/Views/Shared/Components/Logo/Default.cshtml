@@ -1,0 +1,28 @@
+﻿@model LogoModel
+@using Nop.Core
+@inject IWorkContext workContext
+    <a href="@Url.RouteUrl("Homepage")">
+        @if (workContext.WorkingLanguage.Rtl)
+        {
+            <div class="display-flex align-items-center">
+                <div class="logo-img">
+                    <img title="" alt="@Model.StoreName" src="@Model.LogoPath">
+                </div>
+                <div class="logo-name">
+                    <h1>الريشة</h1>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="display-flex align-items-center">
+                <div class="logo-img">
+                    <img title="" alt="@Model.StoreName" src="@Model.LogoPath">
+                </div>
+                <div class="logo-name">
+                    <h1>Arresha</h1>
+                </div>
+            </div>
+        }
+
+    </a>

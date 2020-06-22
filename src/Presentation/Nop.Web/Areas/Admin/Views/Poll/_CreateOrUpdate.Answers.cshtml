@@ -100,7 +100,7 @@
 
                                 //clear input value
                                 $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.Name)").val('');
-                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").val('');
+                                $("#@Html.IdFor(model => model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder)").data("kendoNumericTextBox").value(0);
 
                             } else {
                                 //display errors if returned

@@ -3,6 +3,26 @@
 <div class="panel-body">
     <div class="form-group">
         <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EstimateShippingCartPageEnabled_OverrideForStore" asp-input="EstimateShippingCartPageEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EstimateShippingCartPageEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EstimateShippingCartPageEnabled" />
+            <span asp-validation-for="EstimateShippingCartPageEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EstimateShippingProductPageEnabled_OverrideForStore" asp-input="EstimateShippingProductPageEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EstimateShippingProductPageEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EstimateShippingProductPageEnabled" />
+            <span asp-validation-for="EstimateShippingProductPageEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowPickupInStore_OverrideForStore" asp-input="AllowPickupInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowPickupInStore" />
         </div>

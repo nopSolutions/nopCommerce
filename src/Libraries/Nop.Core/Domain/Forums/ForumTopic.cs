@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Forums
 {
@@ -70,30 +69,6 @@ namespace Nop.Core.Domain.Forums
         {
             get => (ForumTopicType)TopicTypeId;
             set => TopicTypeId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets the forum
-        /// </summary>
-        public virtual Forum Forum { get; set; }
-
-        /// <summary>
-        /// Gets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets the number of replies
-        /// </summary>
-        public int NumReplies
-        {
-            get
-            {
-                var result = 0;
-                if (NumPosts > 0)
-                    result = NumPosts - 1;
-                return result;
-            }
         }
     }
 }

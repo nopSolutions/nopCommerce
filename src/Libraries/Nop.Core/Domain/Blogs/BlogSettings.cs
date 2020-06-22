@@ -46,5 +46,10 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets a value indicating whether blog comments will be filtered per store
         /// </summary>
         public bool ShowBlogCommentsPerStore { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating Blog count displayed on the main page
+        /// </summary>
+        public int MainPageBlogPostsCount { get; set; }
     }
 }

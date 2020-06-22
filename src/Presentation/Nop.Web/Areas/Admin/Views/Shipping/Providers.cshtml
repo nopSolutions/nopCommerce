@@ -2,12 +2,11 @@
 
 @{    
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Providers.Title").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Providers.Title").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.Providers.Title")
@@ -38,19 +37,12 @@
                             {
                                 new ColumnProperty(nameof(ShippingProviderModel.FriendlyName))
                                 {
-                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.FriendlyName").Text,
-                                    Width = "250"
+                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.FriendlyName").Text
                                 },
                                 new ColumnProperty(nameof(ShippingProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Fields.SystemName").Text,
                                     Width = "250"
-                                },
-                                new ColumnProperty(nameof(ShippingProviderModel.LogoUrl))
-                                {
-                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.Logo").Text,
-                                    Width = "100",
-                                    Render = new RenderPicture()
                                 },
                                 new ColumnProperty(nameof(ShippingProviderModel.DisplayOrder))
                                 {
@@ -72,14 +64,14 @@
                                 new ColumnProperty(nameof(ShippingProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Configure").Text,
-                                    Width = "150",
+                                    Width = "200",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(ShippingProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "200",
+                                    Width = "150",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }

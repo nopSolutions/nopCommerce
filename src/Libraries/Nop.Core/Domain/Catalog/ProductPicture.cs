@@ -1,6 +1,4 @@
-using Nop.Core.Domain.Media;
-
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product picture mapping
@@ -21,15 +19,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
-        /// <summary>
-        /// Gets the picture
-        /// </summary>
-        public virtual Picture Picture { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
     }
 }

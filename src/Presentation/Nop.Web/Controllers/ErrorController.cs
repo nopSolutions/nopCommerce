@@ -10,7 +10,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Error()
         {
             Response.StatusCode = StatusCodes.Status500InternalServerError;
-            return File("errorpage.htm", "text/html");
+            return File("ErrorPage.htm", "text/html");
         }
     }
 }

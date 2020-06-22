@@ -17,14 +17,17 @@ namespace Nop.Core.Configuration
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageConnectionString { get; set; }
+
         /// <summary>
         /// Gets or sets container name for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageContainerName { get; set; }
+
         /// <summary>
         /// Gets or sets end point for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageEndPoint { get; set; }
+
         /// <summary>
         /// Gets or sets whether or the Container Name is appended to the AzureBlobStorageEndPoint
         /// when constructing the url
@@ -32,25 +35,48 @@ namespace Nop.Core.Configuration
         public bool AzureBlobStorageAppendContainerName { get; set; }
 
         /// <summary>
+        /// Gets or sets whether to store Data Protection Keys in Azure Blob Storage (the UseRedisToStoreDataProtectionKeys option should be disabled)
+        /// </summary>
+        public bool UseAzureBlobStorageToStoreDataProtectionKeys { get; set; }
+        /// <summary>
+        /// Gets or sets the Azure container name for storing Data Prtection Keys (this container should be separate from the container used for media and should be Private)
+        /// </summary>
+        public string AzureBlobStorageContainerNameForDataProtectionKeys { get; set; }
+        /// <summary>
+        /// Gets or sets the Azure key vault ID used to encrypt the Data Protection Keys. (this is optional)
+        /// </summary>
+        public string AzureKeyVaultIdForDataProtectionKeys { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server
         /// </summary>
         public bool RedisEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets Redis connection string. Used when Redis is enabled
         /// </summary>
         public string RedisConnectionString { get; set; }
+
         /// <summary>
         /// Gets or sets a specific redis database; If you need to use a specific redis database, just set its number here. set NULL if should use the different database for each data type (used by default)
         /// </summary>
         public int? RedisDatabaseId { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the data protection system should be configured to persist keys in the Redis database
         /// </summary>
         public bool UseRedisToStoreDataProtectionKeys { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
         public bool UseRedisForCaching { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should ignore Redis timeout exception (Enabling this setting increases cache stability but may decrease site performance)
+        /// </summary>
+        public bool IgnoreRedisTimeoutException { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server for store the plugins info (instead of default plugin.json file)
         /// </summary>
@@ -60,6 +86,7 @@ namespace Nop.Core.Configuration
         /// Gets or sets path to database with user agent strings
         /// </summary>
         public string UserAgentStringsPath { get; set; }
+
         /// <summary>
         /// Gets or sets path to database with crawler only user agent strings
         /// </summary>
@@ -69,11 +96,7 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether a store owner can install sample data during installation
         /// </summary>
         public bool DisableSampleDataDuringInstallation { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether to use fast installation. 
-        /// By default this setting should always be set to "False" (only for advanced users)
-        /// </summary>
-        public bool UseFastInstallationService { get; set; }
+       
         /// <summary>
         /// Gets or sets a list of plugins ignored during nopCommerce installation
         /// </summary>
@@ -100,9 +123,9 @@ namespace Nop.Core.Configuration
         public bool UsePluginsShadowCopy { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use backwards compatibility with SQL Server 2008 and SQL Server 2008R2
+        /// Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error
         /// </summary>
-        public bool UseRowNumberForPaging { get; set; }
+        public int? SQLCommandTimeout { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to store TempData in the session state.
@@ -115,5 +138,11 @@ namespace Nop.Core.Configuration
         /// </summary>
         [JsonIgnore]
         public bool AzureBlobStorageEnabled => !string.IsNullOrEmpty(AzureBlobStorageConnectionString);
+
+        /// <summary>
+        /// Whether to use an Azure Key Vault to encrypt the Data Protection Keys
+        /// </summary>
+        [JsonIgnore]
+        public bool EncryptDataProtectionKeysWithAzureKeyVault => !string.IsNullOrEmpty(AzureKeyVaultIdForDataProtectionKeys);
     }
 }

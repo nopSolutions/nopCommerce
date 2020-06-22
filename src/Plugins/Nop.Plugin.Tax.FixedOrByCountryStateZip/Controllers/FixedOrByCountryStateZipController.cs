@@ -19,6 +19,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class FixedOrByCountryStateZipController : BasePluginController
     {
         #region Fields
@@ -95,6 +96,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public IActionResult SaveMode(bool value)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -147,7 +149,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         #region Tax by country/state/zip
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult RatesByCountryStateZipList(ConfigurationModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -177,7 +178,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult AddRateByCountryStateZip(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -197,7 +197,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult UpdateRateByCountryStateZip(CountryStateZipModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -212,7 +211,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult DeleteRateByCountryStateZip(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))

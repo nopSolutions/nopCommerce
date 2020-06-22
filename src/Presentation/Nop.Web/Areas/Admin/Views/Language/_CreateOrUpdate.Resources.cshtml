@@ -75,14 +75,13 @@
                         new ColumnProperty(nameof(LocaleResourceModel.ResourceValue))
                         {
                             Title = T("Admin.Configuration.Languages.Resources.Fields.Value").Text,
-                            Width = "300",
                             Editable = true,
                             EditType = EditType.String
                         },
                         new ColumnProperty(nameof(LocaleResourceModel.Id))
                         {
                             Title = T("Admin.Common.Edit").Text,
-                            Width = "200",
+                            Width = "100",
                             ClassName =  NopColumnClassDefaults.Button,
                             Render = new RenderButtonsInlineEdit()
                         },

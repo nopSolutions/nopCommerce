@@ -1,0 +1,29 @@
+﻿@model HomepageBlogPostsModel
+@if (Model.BlogPosts.Count > 0)
+{
+    <div class="blog-list-homepage">
+        <div class="blog-items display-flex justify-content-res flex-wrap">
+            @foreach (var item in Model.BlogPosts)
+            {
+
+            <div class="blog-item">
+
+                <div class="blog-body post-body overview-img">
+                    <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">  @Html.Raw(item.BodyOverview) </a>
+                </div>
+                <div class="blog-head">
+                    <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })"><h3>@item.Title</h3></a>
+                </div>
+                <div class="blog-body post-body overview-short">
+                    <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">  @Html.Raw(item.BodyOverview) </a>
+                </div>
+
+            </div>
+            }
+        </div>
+        <div class="view-all text-center">
+            <a href="@Url.RouteUrl("Blog")">@T("Blog.ViewAll")</a>
+        </div>
+    </div>
+
+}

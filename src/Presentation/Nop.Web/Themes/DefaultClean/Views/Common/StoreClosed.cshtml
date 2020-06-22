@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "_Root.Closed";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.StoreClosed").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-store-closed-page");
+}
+
+<style>
+    .closed-page-footer{
+        text-align:center;
+        padding:10px;
+    }
+    .closed-page-footer a{
+        color:cornflowerblue;
+    }
+</style>
+<div class="page store-closed-page text-center" style="min-height:0;">
+    <div class="page-title">
+        <h2>@T("StoreClosed")</h2>
+        <div>contact me at:   <a class="email-link" href="mailto:tawfiq@arresha.com">tawfiq@arresha.com</a></div>
+    </div>
+
+</div>
+@await Component.InvokeAsync("SocialLinks")
+<hr class="arresha-hr" />
+<div class="amazon-ads">
+    <div id="amzn-assoc-ad-de938485-43c9-4205-a85d-5e5462faa6fa"></div>
+    <script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=de938485-43c9-4205-a85d-5e5462faa6fa"></script>
+</div>
+<hr class="arresha-hr" />
+
+<div class="closed-page-footer">
+    Powered by <a href="https://www.nopcommerce.com/">nopCommerce</a>
+</div>

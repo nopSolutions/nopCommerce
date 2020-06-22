@@ -102,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Country country, CountryModel model)
         {
             country.LimitedToStores = model.SelectedStoreIds.Any();
+            _countryService.UpdateCountry(country);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(country);
             var allStores = _storeService.GetAllStores();
@@ -514,7 +515,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                     else
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.Other") });
                     }
                 }
                 else
@@ -523,7 +524,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!result.Any())
                     {
                         //country does not have states
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.Other") });
                     }
                     else
                     {

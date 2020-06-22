@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToCategories.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts.AppliedToCategories.AddNew").Text;
 }
 
 
@@ -76,7 +76,7 @@ else
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddCategoryToDiscountModel.SelectedCategoryIds)),
                                         ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50",
+                                        Width = "50"
                                     },
                                     new ColumnProperty(nameof(CategoryModel.Breadcrumb))
                                     {

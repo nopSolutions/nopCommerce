@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -45,10 +45,5 @@ namespace Nop.Core.Domain.Customers
             get => (PasswordFormat)PasswordFormatId;
             set => PasswordFormatId = (int)value;
         }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
     }
 }

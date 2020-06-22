@@ -1,0 +1,36 @@
+﻿<script asp-location="Footer">
+    $(document).ready(function () {
+        $('#eu-cookie-bar-notification').show();
+        $('.master-wrapper-page').css("margin-top", "40px");
+        $('#eu-cookie-ok').on('click', function () {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("EuCookieLawAccept")",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    $('#eu-cookie-bar-notification').hide();
+                    $('.master-wrapper-page').css("margin-top", "0px");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Cannot store value');
+                }
+            });
+        });
+    });
+</script>
+<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification">
+    <div class="content">
+        <div class="display-flex justify-content-center align-items-center eu-message-cont">
+            <div class="text margin-right-m margin-left-m">@T("EUCookieLaw.Description2")</div>
+            <div class="buttons-more margin-right-m ">
+                <button type="button" class="ok-button button-1" id="eu-cookie-ok">@T("Common.OK")</button>
+               
+            </div>
+            <div style="margin-right:14px;">
+                <a class="learn-more" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })">@T("EUCookieLaw.LearnMore")</a>
+            </div>
+        </div>
+
+    </div>
+</div>

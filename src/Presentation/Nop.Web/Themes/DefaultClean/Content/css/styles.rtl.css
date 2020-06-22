@@ -682,26 +682,25 @@ label, label + * {
 }
 
 .eu-cookie-bar-notification {
-    position: fixed;
-    top: 50%;
-	right: 50%;
-	z-index: 1050;
-	width: 320px;
-	height: 180px;
-    margin: -90px -160px 0 0;
-    border: 1px solid #ccc;
-	box-shadow: 0 0 2px rgba(0,0,0,0.15);
-    background-color: #fff;
-    padding: 20px;
-	text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 40px;
+  margin: 0;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 0 2px rgba(0,0,0,0.15);
+  background-color: #fff;
+
+  text-align: center;
 }
 .eu-cookie-bar-notification .text {
-	margin-bottom: 20px;
+
 	line-height: 20px;
 }
 .eu-cookie-bar-notification button {
 	min-width: 60px;
-	margin: 5px 0 10px;
 	border: none;
 	background-color: #4ab2f1;
 	padding: 8px 12px;
@@ -835,19 +834,20 @@ label, label + * {
 }
 
 .header-lower {
-	position: relative;
-	z-index: 0;
-	padding: 35px 0;
+  position: relative;
+  z-index: 0;
+  padding: 35px 0;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .header-logo {
-	margin: 0 0 20px;
 	text-align: center;
 }
 .header-logo a {
 	display: inline-block;
 	max-width: 100%;
-	line-height: 0; /*firefox line-height bug fix*/
 }
 .header-logo a img {
 	max-width: 100%;
@@ -6471,14 +6471,10 @@ pre {
 }
 
 .header-lower {
-	display: table;
-	width: 100%;
+	justify-content:space-between;
 }
 .header-logo {
-	display: table-cell;
-	text-align: right;
-	vertical-align: middle;
-	font-size: 0;
+
 }
 .search-box {
 	display: table-cell;

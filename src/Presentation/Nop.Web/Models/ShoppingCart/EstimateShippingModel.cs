@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.ShoppingCart
@@ -15,11 +14,8 @@ namespace Nop.Web.Models.ShoppingCart
 
         public bool Enabled { get; set; }
 
-        [NopResourceDisplayName("ShoppingCart.EstimateShipping.Country")]
         public int? CountryId { get; set; }
-        [NopResourceDisplayName("ShoppingCart.EstimateShipping.StateProvince")]
         public int? StateProvinceId { get; set; }
-        [NopResourceDisplayName("ShoppingCart.EstimateShipping.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
         
         public IList<SelectListItem> AvailableCountries { get; set; }
@@ -44,9 +40,17 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public string Name { get; set; }
 
+            public string ShippingRateComputationMethodSystemName { get; set; }
+
             public string Description { get; set; }
 
             public string Price { get; set; }
+
+            public decimal Rate { get; set; }
+
+            public string DeliveryDateFormat { get; set; }
+
+            public bool Selected { get; set; }
         }
 
         #endregion

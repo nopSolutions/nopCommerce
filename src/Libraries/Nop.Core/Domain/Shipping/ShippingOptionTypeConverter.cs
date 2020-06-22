@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -51,11 +51,9 @@ namespace Nop.Core.Domain.Shipping
 
             try
             {
-                using (var tr = new StringReader(valueStr))
-                {
-                    var xmlS = new XmlSerializer(typeof(ShippingOption));
-                    shippingOption = (ShippingOption)xmlS.Deserialize(tr);
-                }
+                using var tr = new StringReader(valueStr);
+                var xmlS = new XmlSerializer(typeof(ShippingOption));
+                shippingOption = (ShippingOption)xmlS.Deserialize(tr);
             }
             catch
             {
@@ -82,13 +80,11 @@ namespace Nop.Core.Domain.Shipping
                 return string.Empty;
 
             var sb = new StringBuilder();
-            using (var tw = new StringWriter(sb))
-            {
-                var xmlS = new XmlSerializer(typeof(ShippingOption));
-                xmlS.Serialize(tw, value);
-                var serialized = sb.ToString();
-                return serialized;
-            }
+            using var tw = new StringWriter(sb);
+            var xmlS = new XmlSerializer(typeof(ShippingOption));
+            xmlS.Serialize(tw, value);
+            var serialized = sb.ToString();
+            return serialized;
         }
     }
 }

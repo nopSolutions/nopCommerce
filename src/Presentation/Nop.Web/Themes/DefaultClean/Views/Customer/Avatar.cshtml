@@ -1,0 +1,43 @@
+﻿@model CustomerAvatarModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-avatar-page");
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Avatar })
+}
+<form asp-route="CustomerAvatar" method="post" enctype="multipart/form-data">
+    <div class="page account-page avatar-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
+        </div>
+        <div class="page-body">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="fieldset">
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <div class="image">
+                        <img src="@(Model.AvatarUrl)" alt="avatar" />
+                    </div>
+                }
+                <input name="uploadedFile" type="file" />
+            </div>
+            <div class="buttons">
+                <input type="submit" name="upload-avatar" class="button-1 upload-avatar-button" value="@T("Common.Upload")" />
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <input type="submit" name="remove-avatar" class="button-2 remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
+                }
+            </div>
+            <div class="info">
+                @T("Account.Avatar.UploadRules")
+            </div>
+        </div>
+    </div>
+</form>

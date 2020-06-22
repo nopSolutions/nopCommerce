@@ -68,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
         {
             blogPost.LimitedToStores = model.SelectedStoreIds.Any();
+            _blogService.UpdateBlogPost(blogPost);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(blogPost);
             var allStores = _storeService.GetAllStores();
@@ -130,7 +131,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogPostModel(new BlogPostModel(), null);
-
+            model.BodyOverview = @"<div class=""blog-prev-img"">
+                                        <img src=""/images/uploaded/NoImageThumb.jpg"" />
+                                    </div >
+                                    <div class=""short-description"">
+                                        <p></p>
+                                    </div>";
             return View(model);
         }
 
@@ -161,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-                
+
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -219,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-                
+
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -298,7 +304,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //fill entity from model
             comment = model.ToEntity(comment);
-            _blogService.UpdateBlogPost(comment.BlogPost);
+
+            _blogService.UpdateBlogComment(comment);
 
             //raise event (only if it wasn't approved before and is approved now)
             if (!previousIsApproved && comment.IsApproved)
@@ -366,7 +373,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var blogComment in blogComments)
             {
                 blogComment.IsApproved = true;
-                _blogService.UpdateBlogPost(blogComment.BlogPost);
+
+                _blogService.UpdateBlogComment(blogComment);
 
                 //raise event 
                 _eventPublisher.Publish(new BlogCommentApprovedEvent(blogComment));
@@ -394,7 +402,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var blogComment in blogComments)
             {
                 blogComment.IsApproved = false;
-                _blogService.UpdateBlogPost(blogComment.BlogPost);
+
+                _blogService.UpdateBlogComment(blogComment);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditBlogComment",

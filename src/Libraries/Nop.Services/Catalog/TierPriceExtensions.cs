@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Catalog
 {
@@ -27,28 +25,24 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Filter tier prices for a customer
+        /// Filter tier prices by customer roles
         /// </summary>
         /// <param name="source">Tier prices</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="customerRoleIds">Customer role identifiers</param>
         /// <returns>Filtered tier prices</returns>
-        public static IEnumerable<TierPrice> FilterForCustomer(this IEnumerable<TierPrice> source, Customer customer)
+        public static IEnumerable<TierPrice> FilterByCustomerRole(this IEnumerable<TierPrice> source, int[] customerRoleIds)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
+            if (customerRoleIds == null)
+                throw new ArgumentNullException(nameof(customerRoleIds));
 
-            var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
-            if (catalogSettings.IgnoreAcl)
+            if (!customerRoleIds.Any())
                 return source;
 
-            var customerRoleIds = customer.GetCustomerRoleIds();
             return source.Where(tierPrice =>
-               !tierPrice.CustomerRoleId.HasValue ||
-               tierPrice.CustomerRoleId.Value == 0 ||
-               customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
+                !tierPrice.CustomerRoleId.HasValue || tierPrice.CustomerRoleId == 0 || customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
         }
 
         /// <summary>

@@ -23,8 +23,9 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         public SendinBlueEmailSender(IDownloadService downloadService,
             INopFileProvider fileProvider,
+            ISmtpBuilder smtpBuilder,
             IStoreContext storeContext,
-            SendinBlueSettings sendinBlueSettings) : base(downloadService, fileProvider)
+            SendinBlueSettings sendinBlueSettings) : base(downloadService, fileProvider, smtpBuilder)
         {
             _storeContext = storeContext;
             _sendinBlueSettings = sendinBlueSettings;
@@ -62,7 +63,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             //add store identifier in email headers
             if (emailAccount.Id == _sendinBlueSettings.EmailAccountId)
             {
-                headers = headers ?? new Dictionary<string, string>();
+                headers ??= new Dictionary<string, string>();
                 headers.Add(SendinBlueDefaults.EmailCustomHeader, _storeContext.CurrentStore.Id.ToString());
             }
 

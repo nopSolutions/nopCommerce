@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
+            var languages = _languageService.GetAllLanguages(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (language != null)
             {
                 //fill in model values from the entity
-                model = model ?? language.ToModel<LanguageModel>();
+                model ??= language.ToModel<LanguageModel>();
 
                 //prepare nested search model
                 PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel, language);
@@ -135,8 +135,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available currencies
-            //TODO: add locale resource for "---"
-            _baseAdminModelFactory.PrepareCurrencies(model.AvailableCurrencies, defaultItemText: "---");
+            _baseAdminModelFactory.PrepareCurrencies(model.AvailableCurrencies, 
+                defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, language, excludeProperties);
@@ -163,7 +163,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 .OrderBy(localeResource => localeResource.Key).AsQueryable();
 
             //filter locale resources
-            //TODO: move filter to language service
             if (!string.IsNullOrEmpty(searchModel.SearchResourceName))
                 localeResources = localeResources.Where(l => l.Key.ToLowerInvariant().Contains(searchModel.SearchResourceName.ToLowerInvariant()));
             if (!string.IsNullOrEmpty(searchModel.SearchResourceValue))

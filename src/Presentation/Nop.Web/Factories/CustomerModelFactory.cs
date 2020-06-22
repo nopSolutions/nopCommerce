@@ -14,6 +14,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Authentication.External;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -51,14 +52,16 @@ namespace Nop.Web.Factories
         private readonly ICountryService _countryService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
+        private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
@@ -90,14 +93,16 @@ namespace Nop.Web.Factories
             ICountryService countryService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService,
+            IExternalAuthenticationService externalAuthenticationService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
+            IProductService productService,
             IReturnRequestService returnRequestService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
@@ -117,6 +122,7 @@ namespace Nop.Web.Factories
             _commonSettings = commonSettings;
             _customerSettings = customerSettings;
             _dateTimeSettings = dateTimeSettings;
+            _externalAuthenticationService = externalAuthenticationService;
             _externalAuthenticationSettings = externalAuthenticationSettings;
             _forumSettings = forumSettings;
             _gdprSettings = gdprSettings;
@@ -125,14 +131,15 @@ namespace Nop.Web.Factories
             _countryService = countryService;
             _customerAttributeParser = customerAttributeParser;
             _customerAttributeService = customerAttributeService;
+            _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
+            _productService = productService;
             _returnRequestService = returnRequestService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
@@ -363,7 +370,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -374,6 +381,10 @@ namespace Nop.Web.Factories
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = _localizationService.GetLocalizedEnum((VatNumberStatus)_genericAttributeService
                 .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
+            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            model.LastNameEnabled = _customerSettings.LastNameEnabled;
+            model.FirstNameRequired = _customerSettings.FirstNameRequired;
+            model.LastNameRequired = _customerSettings.LastNameRequired;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
@@ -408,9 +419,10 @@ namespace Nop.Web.Factories
             model.NumberOfExternalAuthenticationProviders = _authenticationPluginManager
                 .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                 .Count;
-            foreach (var record in customer.ExternalAuthenticationRecords)
+            foreach (var record in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
             {
-                var authMethod = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                var authMethod = _authenticationPluginManager
+                    .LoadPluginBySystemName(record.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -463,6 +475,10 @@ namespace Nop.Web.Factories
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
+            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            model.LastNameEnabled = _customerSettings.LastNameEnabled;
+            model.FirstNameRequired = _customerSettings.FirstNameRequired;
+            model.LastNameRequired = _customerSettings.LastNameRequired;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
@@ -534,7 +550,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -580,13 +596,15 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the password recovery model
         /// </summary>
+        /// <param name="model">Password recovery model</param>
         /// <returns>Password recovery model</returns>
-        public virtual PasswordRecoveryModel PreparePasswordRecoveryModel()
+        public virtual PasswordRecoveryModel PreparePasswordRecoveryModel(PasswordRecoveryModel model)
         {
-            var model = new PasswordRecoveryModel
-            {
-                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage
-            };
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage;
+            
             return model;
         }
 
@@ -793,9 +811,9 @@ namespace Nop.Web.Factories
         /// <returns>Customer address list model</returns>
         public virtual CustomerAddressListModel PrepareCustomerAddressListModel()
         {
-            var addresses = _workContext.CurrentCustomer.Addresses
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
                 //enabled for the current store
-                .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
+                .Where(a => a.CountryId == null || _storeMappingService.Authorize(_countryService.GetCountryByAddress(a)))
                 .ToList();
 
             var model = new CustomerAddressListModel();
@@ -822,24 +840,27 @@ namespace Nop.Web.Factories
             var items = _orderService.GetDownloadableOrderItems(_workContext.CurrentCustomer.Id);
             foreach (var item in items)
             {
+                var order = _orderService.GetOrderById(item.OrderId);
+                var product = _productService.GetProductById(item.ProductId);
+
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,
-                    OrderId = item.OrderId,
-                    CustomOrderNumber = item.Order.CustomOrderNumber,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = _localizationService.GetLocalized(item.Product, x => x.Name),
-                    ProductSeName = _urlRecordService.GetSeName(item.Product),
+                    OrderId = order.Id,
+                    CustomOrderNumber = order.CustomOrderNumber,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                    ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                    ProductSeName = _urlRecordService.GetSeName(product),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };
                 model.Items.Add(itemModel);
 
-                if (_downloadService.IsDownloadAllowed(item))
-                    itemModel.DownloadId = item.Product.DownloadId;
+                if (_orderService.IsDownloadAllowed(item))
+                    itemModel.DownloadId = product.DownloadId;
 
-                if (_downloadService.IsLicenseDownloadAllowed(item))
-                    itemModel.LicenseId = item.LicenseDownloadId.HasValue ? item.LicenseDownloadId.Value : 0;
+                if (_orderService.IsLicenseDownloadAllowed(item))
+                    itemModel.LicenseId = item.LicenseDownloadId ?? 0;
             }
 
             return model;

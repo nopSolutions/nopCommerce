@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -78,7 +78,7 @@ else
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddManufacturerToDiscountModel.SelectedManufacturerIds)),
                                         ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50",
+                                        Width = "50"
                                     },
                                     new ColumnProperty(nameof(ManufacturerModel.Name))
                                     {

@@ -5,7 +5,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Orders").Text;
+    ViewBag.PageTitle = T("Admin.Orders").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Orders");
 }
@@ -32,7 +32,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <button type="submit" name="exportxml-all">
+                        <button asp-action="ExportXml" type="submit" name="exportxml-all">
                             <i class="fa fa-file-code-o"></i>
                             @T("Admin.Common.ExportToXml.All")
                         </button>
@@ -45,7 +45,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <button type="submit" name="exportexcel-all">
+                        <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
                             <i class="fa fa-file-excel-o"></i>
                             @T("Admin.Common.ExportToExcel.All")
                         </button>
@@ -69,7 +69,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <button type="submit" name="pdf-invoice-all">
+                        <button asp-action="PdfInvoice" type="submit" name="pdf-invoice-all">
                             @T("Admin.Orders.PdfInvoices.All")
                         </button>
                     </li>
@@ -135,7 +135,7 @@
                                                     $('#search-product-name').autocomplete({
                                                         delay: 500,
                                                         minLength: 3,
-                                                        source: '@(Url.Action("ProductSearchAutoComplete"))',
+                                                        source: '@Url.Action("SearchAutoComplete", "SearchComplete")',
                                                         select: function(event, ui) {
                                                             $('#@Html.IdFor(model => model.ProductId)').val(ui.item.productid);
                                                             $('#search-product-friendly-name').text(ui.item.label);
@@ -292,8 +292,8 @@
                                 FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                 Filters = new List<FilterParameter>
                                                 {
-                                                    new FilterParameter(nameof(Model.StartDate)),
-                                                    new FilterParameter(nameof(Model.EndDate)),
+                                                    new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                                    new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.OrderStatusIds)),
                                                     new FilterParameter(nameof(Model.PaymentStatusIds)),
                                                     new FilterParameter(nameof(Model.ShippingStatusIds)),
@@ -310,20 +310,20 @@
                                                 }
                             };
                             gridModel.ColumnCollection = new List<ColumnProperty>
-                                            {
-                                                new ColumnProperty(nameof(OrderModel.Id))
-                                                {
-                                                    IsMasterCheckBox = true,
-                                                    Render = new RenderCheckBox("checkbox_orders"),
-                                                    ClassName =  NopColumnClassDefaults.CenterAll,
-                                                    Width = "50",
-                                                },
-                                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                                                {
-                                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
-                                                    Width = "80"
-                                                }
-                                            };
+                            {
+                                new ColumnProperty(nameof(OrderModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_orders"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                                {
+                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+                                    Width = "80"
+                                }
+                            };
                             //a vendor does not have access to this functionality
                             if (!Model.IsLoggedInAsVendor)
                             {
@@ -351,7 +351,6 @@
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
                             {
                                 Title = T("Admin.Orders.Fields.Customer").Text,
-                                Width = "250",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
@@ -363,7 +362,7 @@
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                             {
                                 Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                Width = "100",
+                                Width = "120",
                                 Render = new RenderDate()
                             });
                             //a vendor does not have access to this functionality
@@ -380,7 +379,7 @@
                                 Title = T("Admin.Common.View").Text,
                                 Width = "50",
                                 ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                Render = new RenderButtonView(new DataUrl("Edit"))
                             });
                             var orderSummaryColumnNumber = 8;
                         }
@@ -475,13 +474,20 @@
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-            $('#export-xml-selected-form #selectedIds').val(ids);
-            $('#export-xml-selected-form').submit();
-            updateTable('#orders-grid');
+            if (!ids) {
+                $('#exportXmlSelected-info').text("@T("Admin.Orders.NoOrders")");
+                $("#exportXmlSelected").click();
+            }
+            else {
+                $('#export-xml-selected-form #selectedIds').val(ids);
+                $('#export-xml-selected-form').submit();
+                updateTable('#orders-grid');
+            }
             return false;
         });
     });
 </script>
+<nop-alert asp-alert-id="exportXmlSelected" />
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
@@ -493,13 +499,20 @@
         $('#exportexcel-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-            $('#export-excel-selected-form #selectedIds').val(ids);
-            $('#export-excel-selected-form').submit();
-            updateTable('#orders-grid');
+            if (!ids) {
+                $('#exportExcelSelected-info').text("@T("Admin.Orders.NoOrders")");
+                $("#exportExcelSelected").click();
+            }
+            else {
+                $('#export-excel-selected-form #selectedIds').val(ids);
+                $('#export-excel-selected-form').submit();
+                updateTable('#orders-grid');
+            }
             return false;
         });
     });
 </script>
+<nop-alert asp-alert-id="exportExcelSelected" />
 
 @*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfInvoiceSelected" method="post" id="pdf-invoice-selected-form">
@@ -511,10 +524,17 @@
         $('#pdf-invoice-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-            $('#pdf-invoice-selected-form #selectedIds').val(ids);
-            $('#pdf-invoice-selected-form').submit();
-            updateTable('#orders-grid');
+            if (!ids) {
+                $('#pdfInvoiceSelected-info').text("@T("Admin.Orders.NoOrders")");
+                $("#pdfInvoiceSelected").click();
+            }
+            else {
+                $('#pdf-invoice-selected-form #selectedIds').val(ids);
+                $('#pdf-invoice-selected-form').submit();
+                updateTable('#orders-grid');
+            }
             return false;
         });
     });
 </script>
+<nop-alert asp-alert-id="pdfInvoiceSelected" />

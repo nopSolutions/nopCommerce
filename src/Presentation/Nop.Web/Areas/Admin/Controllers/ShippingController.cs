@@ -796,7 +796,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         //we ignore this filter for increase RequestFormLimits
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         //we use 2048 value because in some cases default value (1024) is too small for this action
         [RequestFormLimits(ValueCountLimit = 2048)]
         [HttpPost, ActionName("Restrictions")]
@@ -820,21 +820,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var country in countries)
                 {
                     var restrict = countryIdsToRestrict.Contains(country.Id);
+                    var shippingMethodCountryMappings =
+                        _shippingService.GetShippingMethodCountryMapping(shippingMethod.Id, country.Id);
+
                     if (restrict)
                     {
-                        if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) != null)
+                        if (shippingMethodCountryMappings.Any())
                             continue;
 
-                        shippingMethod.ShippingMethodCountryMappings.Add(new ShippingMethodCountryMapping { Country = country });
+                        _shippingService.InsertShippingMethodCountryMapping(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                     else
                     {
-                        if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) == null)
+                        if (!shippingMethodCountryMappings.Any())
                             continue;
 
-                        shippingMethod.ShippingMethodCountryMappings
-                            .Remove(shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id));
+                        _shippingService.DeleteShippingMethodCountryMapping(shippingMethodCountryMappings.FirstOrDefault());
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                 }

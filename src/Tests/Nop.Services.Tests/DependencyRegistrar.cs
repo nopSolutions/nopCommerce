@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
@@ -21,17 +21,14 @@ namespace Nop.Services.Tests
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             //cache managers
-            builder.RegisterType<TestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
+            builder.RegisterType<TestCacheManager>().As<IStaticCacheManager>().Named<IStaticCacheManager>("nop_cache_static").SingleInstance();
 
         }
 
         /// <summary>
         /// Order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 0; }
-        }
+        public int Order => 0;
     }
 
 }

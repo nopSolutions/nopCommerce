@@ -15,15 +15,17 @@ namespace Nop.Services.Media.RoxyFileman
         #region Fields
 
         private readonly Picture _picture;
+        private readonly PictureBinary _pictureBinary;
         private readonly string _fileExtension;
 
         #endregion
 
         #region Ctor
 
-        public RoxyFilemanFormFile(Picture picture, string fileExtension)
+        public RoxyFilemanFormFile(Picture picture, PictureBinary pictureBinary, string fileExtension)
         {
             _picture = picture;
+            _pictureBinary = pictureBinary;
             _fileExtension = fileExtension;
         }
 
@@ -36,7 +38,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         public Stream OpenReadStream()
         {
-            return new MemoryStream(_picture.PictureBinary.BinaryData);
+            return new MemoryStream(_pictureBinary.BinaryData);
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Gets the file length in bytes.
         /// </summary>
-        public long Length => _picture.PictureBinary.BinaryData.Length;
+        public long Length => _pictureBinary.BinaryData.Length;
 
         /// <summary>
         /// Gets the form field name from the Content-Disposition header.

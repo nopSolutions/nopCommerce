@@ -1,18 +1,19 @@
-﻿namespace Nop.Services.Logging
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Logging
 {
     /// <summary>
     /// Represents default values related to logging services
     /// </summary>
     public static partial class NopLoggingDefaults
     {
+        #region Caching defaults
+
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string ActivityTypeAllCacheKey => "Nop.activitytype.all";
+        public static CacheKey ActivityTypeAllCacheKey => new CacheKey("Nop.activitytype.all");
 
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ActivityTypePrefixCacheKey => "Nop.activitytype.";
+        #endregion
     }
 }

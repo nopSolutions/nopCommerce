@@ -18,7 +18,7 @@ namespace Nop.Core.Tests.Fakes
         }
         public FakeTypeFinder(params Type[] types)
         {
-            Assemblies = new Assembly[0];
+            Assemblies = Array.Empty<Assembly>();
             Types = types;
         }
         public FakeTypeFinder(params Assembly[] assemblies)

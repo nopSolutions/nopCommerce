@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;
@@ -80,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Currency currency, CurrencyModel model)
         {
             currency.LimitedToStores = model.SelectedStoreIds.Any();
+            _currencyService.UpdateCurrency(currency);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(currency);
             var allStores = _storeService.GetAllStores();
@@ -164,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             foreach (var rate in rateModels)
             {
-                var currency = _currencyService.GetCurrencyByCode(rate.CurrencyCode, false);
+                var currency = _currencyService.GetCurrencyByCode(rate.CurrencyCode);
                 if (currency == null)
                     continue;
 
@@ -259,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a currency with the specified id
-            var currency = _currencyService.GetCurrencyById(id, false);
+            var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 return RedirectToAction("List");
 
@@ -276,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a currency with the specified id
-            var currency = _currencyService.GetCurrencyById(model.Id, false);
+            var currency = _currencyService.GetCurrencyById(model.Id);
             if (currency == null)
                 return RedirectToAction("List");
 
@@ -326,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a currency with the specified id
-            var currency = _currencyService.GetCurrencyById(id, false);
+            var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 return RedirectToAction("List");
 
@@ -339,7 +339,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
 
                 //ensure we have at least one published currency
-                var allCurrencies = _currencyService.GetAllCurrencies(loadCacheableCopy: false);
+                var allCurrencies = _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));

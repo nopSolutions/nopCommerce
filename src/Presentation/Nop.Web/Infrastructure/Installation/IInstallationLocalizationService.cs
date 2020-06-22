@@ -31,5 +31,13 @@ namespace Nop.Web.Infrastructure.Installation
         /// </summary>
         /// <returns>Available installation languages</returns>
         IList<InstallationLanguage> GetAvailableLanguages();
+
+        /// <summary>
+        /// Get a list of available data provider types
+        /// </summary>
+        /// <param name="valuesToExclude">Values to exclude</param>
+        /// <param name="useLocalization">Localize</param>
+        /// <returns>SelectList</returns>
+        Dictionary<int, string> GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true);
     }
 }

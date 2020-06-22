@@ -36,7 +36,10 @@ namespace Nop.Services.Events
                     {
                         EngineContext.Current.Resolve<ILogger>()?.Error(exception.Message, exception);
                     }
-                    catch { }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
         }

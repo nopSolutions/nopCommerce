@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.DatesAndRanges").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Dates and ranges");
 }
@@ -15,8 +15,6 @@
     var hideRangesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRangesBlockAttributeName);
 }
 
-
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.DatesAndRanges")
