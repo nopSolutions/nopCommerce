@@ -82,7 +82,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
                 foreach (XmlNode currency in dailyRates.ChildNodes)
                 {
                     //get rate
-                    if (!decimal.TryParse(currency.Attributes["rate"].Value, out var currencyRate))
+                    if (!decimal.TryParse(currency.Attributes["rate"].Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out var currencyRate))
                         continue;
 
                     ratesToEuro.Add(new Core.Domain.Directory.ExchangeRate()

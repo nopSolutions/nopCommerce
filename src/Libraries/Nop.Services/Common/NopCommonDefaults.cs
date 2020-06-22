@@ -27,6 +27,11 @@ namespace Nop.Services.Common
         #region Maintenance
 
         /// <summary>
+        /// Gets a default timeout (in milliseconds) before restarting the application
+        /// </summary>
+        public static int RestartTimeout => 3000;
+
+        /// <summary>
         /// Gets a path to the database backup files
         /// </summary>
         public static string DbBackupsPath => "db_backups\\";

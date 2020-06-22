@@ -315,14 +315,14 @@ columns: [
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                     },
                     </text>
                     break;
                 case RenderButtonView buttonView:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
+                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View").Text</a>';
                     },
                     </text>
                     break;

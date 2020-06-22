@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prepare model
-                model = _currencyModelFactory.PrepareCurrencySearchModel(new CurrencySearchModel(), liveRates);
+                model = _currencyModelFactory.PrepareCurrencySearchModel(model, liveRates);
             }
             catch (Exception e)
             {
