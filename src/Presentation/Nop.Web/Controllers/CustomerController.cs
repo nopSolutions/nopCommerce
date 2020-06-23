@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,6 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;
@@ -189,6 +189,19 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
+        protected virtual void ValidateRequiredConsents(List<GdprConsent> consents, IFormCollection form)
+        {
+            foreach (var consent in consents)
+            {
+                var controlId = $"consent{consent.Id}";
+                var cbConsent = form[controlId];
+                if (StringValues.IsNullOrEmpty(cbConsent) || !cbConsent.ToString().Equals("on"))
+                {
+                    ModelState.AddModelError("", consent.RequiredMessage);
+                }
+            }
+        }
+
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
@@ -198,7 +211,7 @@ namespace Nop.Web.Controllers
             var attributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
+                var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -321,7 +334,7 @@ namespace Nop.Web.Controllers
                     _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.LastName")} = {newCustomerInfoModel.LastName}");
 
                 if (oldCustomerInfoModel.ParseDateOfBirth() != newCustomerInfoModel.ParseDateOfBirth())
-                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.DateOfBirth")} = {newCustomerInfoModel.ParseDateOfBirth().ToString()}");
+                    _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.DateOfBirth")} = {newCustomerInfoModel.ParseDateOfBirth()}");
 
                 if (oldCustomerInfoModel.Email != newCustomerInfoModel.Email)
                     _gdprService.InsertLog(customer, 0, GdprRequestType.ProfileChanged, $"{_localizationService.GetResource("Account.Fields.Email")} = {newCustomerInfoModel.Email}");
@@ -577,7 +590,7 @@ namespace Nop.Web.Controllers
 
             if (string.IsNullOrEmpty(_genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
-                return View(new PasswordRecoveryConfirmModel
+                return base.View(new PasswordRecoveryConfirmModel
                 {
                     DisablePasswordChanging = true,
                     Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged")
@@ -712,6 +725,15 @@ namespace Nop.Web.Controllers
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
+            }
+
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService
+                    .GetAllConsents().Where(consent => consent.DisplayDuringRegistration && consent.IsRequired).ToList();
+
+                ValidateRequiredConsents(consents, form);
             }
 
             if (ModelState.IsValid)
@@ -1096,6 +1118,15 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
+            //GDPR
+            if (_gdprSettings.GdprEnabled)
+            {
+                var consents = _gdprService
+                    .GetAllConsents().Where(consent => consent.DisplayOnCustomerInfoPage && consent.IsRequired).ToList();
+
+                ValidateRequiredConsents(consents, form);
+            }
+
             try
             {
                 if (ModelState.IsValid)
@@ -1103,8 +1134,7 @@ namespace Nop.Web.Controllers
                     //username 
                     if (_customerSettings.UsernamesEnabled && _customerSettings.AllowUsersToChangeUsernames)
                     {
-                        if (
-                            !customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
                             //change username
                             _customerRegistrationService.SetUsername(customer, model.Username.Trim());

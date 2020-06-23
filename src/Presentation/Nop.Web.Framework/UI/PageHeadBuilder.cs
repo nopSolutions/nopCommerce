@@ -15,6 +15,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
+using Nop.Services.Caching;
 using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
@@ -29,11 +30,13 @@ namespace Nop.Web.Framework.UI
         private static readonly object _lock = new object();
 
         private readonly BundleFileProcessor _processor;
+        private readonly CachingSettings _cachingSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly INopFileProvider _fileProvider;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly SeoSettings _seoSettings;
@@ -50,30 +53,30 @@ namespace Nop.Web.Framework.UI
         private string _activeAdminMenuSystemName;
         private string _editPageUrl;
 
-        //in minutes
-        private const int RECHECK_BUNDLED_FILES_PERIOD = 120;
-
         #endregion
 
         #region Ctor
         
-        public PageHeadBuilder(
+        public PageHeadBuilder(CachingSettings cachingSettings,
             CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
+            ICacheKeyService cacheKeyService,
             IWebHostEnvironment webHostEnvironment,
             INopFileProvider fileProvider,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             SeoSettings seoSettings         
             )
         {
             _processor = new BundleFileProcessor();
+            _cachingSettings = cachingSettings;
             _commonSettings = commonSettings;
             _actionContextAccessor = actionContextAccessor;
+            _cacheKeyService = cacheKeyService;
             _webHostEnvironment = webHostEnvironment;
             _fileProvider = fileProvider;
-            _cacheManager = cacheManager;            
+            _staticCacheManager = staticCacheManager;            
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _seoSettings = seoSettings;
@@ -385,9 +388,9 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}")
                     {
-                        CacheTime = RECHECK_BUNDLED_FILES_PERIOD
+                        CacheTime = _cachingSettings.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
+                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => true);
 
                     if (shouldRebuild)
                     {
@@ -400,7 +403,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
 
-                        _cacheManager.Set(cacheKey, false);
+                        _staticCacheManager.Set(cacheKey, false);
                     }
 
                     //render
@@ -445,6 +448,9 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(script))
                 return;
 
+            if (_inlineScriptParts[location].Contains(script))
+                return;
+
             _inlineScriptParts[location].Add(script);
         }
         /// <summary>
@@ -458,6 +464,9 @@ namespace Nop.Web.Framework.UI
                 _inlineScriptParts.Add(location, new List<string>());
 
             if (string.IsNullOrEmpty(script))
+                return;
+
+            if (_inlineScriptParts[location].Contains(script))
                 return;
 
             _inlineScriptParts[location].Insert(0, script);
@@ -608,9 +617,9 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}")
                     {
-                        CacheTime = RECHECK_BUNDLED_FILES_PERIOD
+                        CacheTime = _cachingSettings.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
+                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => true);
 
                     if (shouldRebuild)
                     {
@@ -623,7 +632,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
 
-                        _cacheManager.Set(cacheKey, false);
+                        _staticCacheManager.Set(cacheKey, false);
                     }
 
                     //render

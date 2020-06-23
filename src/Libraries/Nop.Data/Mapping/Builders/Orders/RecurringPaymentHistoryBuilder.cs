@@ -1,5 +1,4 @@
-﻿using System.Data;
-using FluentMigrator.Builders.Create.Table;
+﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Orders;
 using Nop.Data.Extensions;
 

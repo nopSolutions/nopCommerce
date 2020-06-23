@@ -7,7 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -21,29 +21,32 @@ namespace Nop.Services.Blogs
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _cacheManager;
-
+        private readonly IStaticCacheManager _staticCacheManager;
+        
         #endregion
 
         #region Ctor
 
         public BlogService(CatalogSettings catalogSettings,
+            ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogPost> blogPostRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager staticCacheManager)
         {
             _catalogSettings = catalogSettings;
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _blogCommentRepository = blogCommentRepository;
             _blogPostRepository = blogPostRepository;
             _storeMappingRepository = storeMappingRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -171,9 +174,9 @@ namespace Nop.Services.Blogs
         /// <returns>Blog post tags</returns>
         public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
         {
-            var cacheKey = NopBlogsCachingDefaults.BlogTagsModelCacheKey.FillCacheKey(languageId, storeId);
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogTagsModelCacheKey, languageId, storeId, showHidden);
 
-            var blogPostTags = _cacheManager.Get(cacheKey, () =>
+            var blogPostTags = _staticCacheManager.Get(cacheKey, () =>
             {
                 var rezBlogPostTags = new List<BlogPostTag>();
 
@@ -395,9 +398,9 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = NopBlogsCachingDefaults.BlogCommentsNumberCacheKey.FillCacheKey(blogPost, storeId, true);
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
             
-            return _cacheManager.Get(cacheKey, () => query.Count());
+            return _staticCacheManager.Get(cacheKey, () => query.Count());
         }
 
         /// <summary>
@@ -443,6 +446,21 @@ namespace Nop.Services.Blogs
 
             //event notification
             _eventPublisher.EntityInserted(blogComment);
+        }
+
+        /// <summary>
+        /// Update a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        public virtual void UpdateBlogComment(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException(nameof(blogComment));
+
+            _blogCommentRepository.Update(blogComment);
+
+            //event notification
+            _eventPublisher.EntityUpdated(blogComment);
         }
 
         #endregion

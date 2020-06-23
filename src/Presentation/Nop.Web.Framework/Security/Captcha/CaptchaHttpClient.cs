@@ -5,7 +5,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Security;
-using Nop.Services.Defaults;
+using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Security.Captcha
 {

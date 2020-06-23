@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
             var attributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"vendor_attribute_{attribute.Id}";
+                var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -199,6 +199,9 @@ namespace Nop.Web.Controllers
 
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
+
+            if (_customerService.IsAdmin(_workContext.CurrentCustomer))
+                ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.IsAdmin"));
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)

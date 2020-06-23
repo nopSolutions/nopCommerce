@@ -395,6 +395,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //set identifier as group name (if not specified)
             discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
+            _discountService.UpdateDiscountRequirement(discountRequirementGroup);
+            
             _discountService.UpdateDiscount(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
@@ -483,7 +485,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var product in selectedProducts)
                 {
                     if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
-                        _productService.DeleteDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
+                        _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
 
                     _productService.UpdateProduct(product);
                     _productService.UpdateHasDiscountsApplied(product);

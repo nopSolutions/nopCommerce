@@ -9,7 +9,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -24,7 +23,7 @@ namespace Nop.Services.Configuration
 
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Setting> _settingRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -32,11 +31,11 @@ namespace Nop.Services.Configuration
 
         public SettingService(IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager staticCacheManager)
         {
             _eventPublisher = eventPublisher;
             _settingRepository = settingRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -49,8 +48,9 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
-            //cache
-            return _cacheManager.Get(NopConfigurationCachingDefaults.SettingsAllAsDictionaryCacheKey, () =>
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
+            return _staticCacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
             {
                 var settings = GetAllSettings();
 
@@ -299,7 +299,9 @@ namespace Nop.Services.Configuration
                         orderby s.Name, s.StoreId
                         select s;
 
-            var settings = query.ToCachedList(NopConfigurationCachingDefaults.SettingsAllCacheKey);
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
+            var settings = query.ToCachedList(NopConfigurationDefaults.SettingsAllCacheKey);
 
             return settings;
         }
@@ -500,7 +502,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPrefix(NopConfigurationCachingDefaults.SettingsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
         }
 
         /// <summary>

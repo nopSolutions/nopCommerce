@@ -9,12 +9,12 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests
@@ -23,7 +23,7 @@ namespace Nop.Services.Tests
     {
         private readonly List<Discount> _discounts;
 
-        public TestDiscountService(
+        public TestDiscountService(ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
@@ -33,8 +33,9 @@ namespace Nop.Services.Tests
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IRepository<Order> orderRepository,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext) : base(
+            cacheKeyService,
             customerService,
             discountPluginManager,
             eventPublisher,
@@ -44,7 +45,7 @@ namespace Nop.Services.Tests
             discountRequirementRepository,
             discountUsageHistoryRepository,
             orderRepository,
-            cacheManager,
+            staticCacheManager,
             storeContext)
         {
             _discounts = new List<Discount>();
@@ -62,7 +63,6 @@ namespace Nop.Services.Tests
             return _discounts
                 .Where(x => !discountType.HasValue || x.DiscountType == discountType.Value)
                 .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
-                //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
                 .ToList();
         }
 
@@ -90,7 +90,7 @@ namespace Nop.Services.Tests
 
         public static IDiscountService Init(IQueryable<Discount> discounts = default, IQueryable<DiscountProductMapping> productDiscountMapping = null)
         {
-            var cacheManager = new TestCacheManager();
+            var staticCacheManager = new TestCacheManager();
             var discountRepo = new Mock<IRepository<Discount>>();
 
             discountRepo.Setup(r => r.Table).Returns(discounts);
@@ -108,10 +108,10 @@ namespace Nop.Services.Tests
             var productService = new Mock<IProductService>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-           
+
             var pluginService = new FakePluginService();
 
-            var discountPluginManager = new DiscountPluginManager(pluginService);
+            var discountPluginManager = new DiscountPluginManager(customerService.Object, pluginService);
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);
@@ -119,6 +119,7 @@ namespace Nop.Services.Tests
             var orderRepo = new Mock<IRepository<Order>>();
 
             var discountService = new TestDiscountService(
+                new FakeCacheKeyService(),
                 customerService.Object,
                 discountPluginManager,
                 eventPublisher.Object,
@@ -128,7 +129,7 @@ namespace Nop.Services.Tests
                 discountRequirementRepo.Object,
                 discountUsageHistoryRepo.Object,
                 orderRepo.Object,
-                cacheManager,
+                staticCacheManager,
                 storeContext.Object);
 
             return discountService;

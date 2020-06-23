@@ -41,6 +41,17 @@ namespace Nop.Services.Topics
         IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
 
         /// <summary>
+        /// Gets all topics
+        /// </summary>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="keywords">Keywords to search into body or title</param>
+        /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
+        /// <param name="showHidden">A value indicating whether to show hidden topics</param>
+        /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
+        /// <returns>Topics</returns>
+        IList<Topic> GetAllTopics(int storeId, string keywords, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
+
+        /// <summary>
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>

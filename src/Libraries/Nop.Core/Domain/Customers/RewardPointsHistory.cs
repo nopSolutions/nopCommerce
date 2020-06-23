@@ -53,8 +53,8 @@ namespace Nop.Core.Domain.Customers
         public int? ValidPoints { get; set; }
 
         /// <summary>
-        /// Gets or sets the order for which points were redeemed as a payment (spent by a customer when placing this order)
+        /// Used with order
         /// </summary>
-        public virtual int? OrderId { get; set; }
+        public Guid? UsedWithOrder { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -17,6 +17,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
@@ -27,12 +28,14 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public SpecificationAttributeService(IEventPublisher eventPublisher,
+        public SpecificationAttributeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<Product> productRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _productRepository = productRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
@@ -88,10 +91,7 @@ namespace Nop.Services.Catalog
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
 
-            //TODO: issue 239, check caching. If so, then remove pageIndex and pageSize from others cache keys
-            var specificationAttributes = query.ToCachedPagedList(NopCatalogCachingDefaults.SpecAttributesAllCacheKey, pageIndex, pageSize);
-
-            return specificationAttributes;
+            return new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -101,10 +101,10 @@ namespace Nop.Services.Catalog
         public virtual IList<SpecificationAttribute> GetSpecificationAttributesWithOptions()
         {
             var query = from sa in _specificationAttributeRepository.Table
-                join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
-                select sa;
+                        where _specificationAttributeOptionRepository.Table.Any(o => o.SpecificationAttributeId == sa.Id)
+                        select sa;
 
-            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsCacheKey);
+            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey));
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Nop.Services.Catalog
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
 
-            var specificationAttributeOptions = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesOptionsCacheKey.FillCacheKey(specificationAttributeId));
+            var specificationAttributeOptions = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecAttributesOptionsCacheKey, specificationAttributeId));
 
             return specificationAttributeOptions;
         }
@@ -320,7 +320,8 @@ namespace Nop.Services.Catalog
         {
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
-            var key = NopCatalogCachingDefaults.ProductSpecificationAttributeAllByProductIdCacheKey.FillCacheKey(
+
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey, 
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;
@@ -349,7 +350,7 @@ namespace Nop.Services.Catalog
             if (productSpecificationAttributeId == 0)
                 return null;
 
-            return _productSpecificationAttributeRepository.ToCachedGetById(productSpecificationAttributeId);
+            return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
         }
 
         /// <summary>
@@ -410,7 +411,8 @@ namespace Nop.Services.Catalog
         {
             var query = from product in _productRepository.Table
                 join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
-                where psa.Id == specificationAttributeId
+                join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id 
+                where spao.SpecificationAttributeId == specificationAttributeId
                 orderby product.Name
                 select product;
 

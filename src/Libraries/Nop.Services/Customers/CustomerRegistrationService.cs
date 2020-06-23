@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
-using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -244,7 +243,7 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.EncryptText(request.Password);
                     break;
                 case PasswordFormat.Hashed:
-                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
+                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
                     customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     break;
@@ -349,7 +348,7 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.EncryptText(request.NewPassword);
                     break;
                 case PasswordFormat.Hashed:
-                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
+                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
                     customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey,
                         request.HashedPasswordFormat ?? _customerSettings.HashedPasswordFormat);
@@ -438,7 +437,7 @@ namespace Nop.Services.Customers
 
             newUsername = newUsername.Trim();
 
-            if (newUsername.Length > NopCustomerServiceDefaults.CustomerUsernameLength)
+            if (newUsername.Length > NopCustomerServicesDefaults.CustomerUsernameLength)
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameTooLong"));
 
             var user2 = _customerService.GetCustomerByUsername(newUsername);

@@ -1,7 +1,5 @@
-@model Nop.Plugin.Tax.Avalara.Models.Tax.TaxCategorySearchModel
+@model TaxCategorySearchModel
 
-@using Nop.Web.Framework.Infrastructure
-@using Nop.Web.Framework.UI
 @{
     Layout = "_AdminLayout";
 
@@ -11,11 +9,44 @@
     Html.SetActiveMenuItemSystemName("Tax categories");
 }
 
-<form asp-controller="OverriddenTax" asp-action="Categories" method="post">
+<form asp-controller="AvalaraTax" asp-action="Categories" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Tax.Categories")
         </h1>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-warning">
+                    <i class="fa fa-exchange"></i>
+                    @T("Plugins.Tax.Avalara.TaxCodes")
+                </button>
+                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <button type="submit" name="exportTaxCodes">
+                            <i class="fa fa-exchange"></i>
+                            @T("Plugins.Tax.Avalara.TaxCodes.Export")
+                        </button>
+                    </li>
+                    <li>
+                        <button type="submit" name="importTaxCodes">
+                            <i class="fa fa-exchange"></i>
+                            @T("Plugins.Tax.Avalara.TaxCodes.Import")
+                        </button>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <button type="submit" name="deleteTaxCodes">
+                            <i class="fa fa-trash-o"></i>
+                            @T("Plugins.Tax.Avalara.TaxCodes.Delete")
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="content">
@@ -27,21 +58,21 @@
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "tax-categories-grid",
-                            UrlRead = new DataUrl("Categories", "OverriddenTax", null),
-                            UrlDelete = new DataUrl("CategoryDelete", "OverriddenTax", null),
-                            UrlUpdate = new DataUrl("TaxCategoryUpdate", "OverriddenTax", null),
+                            UrlRead = new DataUrl("Categories", "AvalaraTax", null),
+                            UrlDelete = new DataUrl("CategoryDelete", "AvalaraTax", null),
+                            UrlUpdate = new DataUrl("TaxCategoryUpdate", "AvalaraTax", null),
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,
                             ColumnCollection = new List<ColumnProperty>
                             {
-                                new ColumnProperty(nameof(Nop.Plugin.Tax.Avalara.Models.Tax.TaxCategoryModel.Name))
+                                new ColumnProperty(nameof(TaxCategoryModel.Name))
                                 {
                                     Title = T("Admin.Configuration.Tax.Categories.Fields.Name").Text,
                                     Width = "300",
                                     Editable = true,
                                     EditType = EditType.String
                                 },
-                                new ColumnProperty(nameof(Nop.Plugin.Tax.Avalara.Models.Tax.TaxCategoryModel.DisplayOrder))
+                                new ColumnProperty(nameof(TaxCategoryModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Configuration.Tax.Categories.Fields.DisplayOrder").Text,
                                     Width = "100",
@@ -49,13 +80,13 @@
                                     Editable = true,
                                     EditType = EditType.Number
                                 },
-                                new ColumnProperty(nameof(Nop.Plugin.Tax.Avalara.Models.Tax.TaxCategoryModel.Type))
+                                new ColumnProperty(nameof(TaxCategoryModel.Type))
                                 {
                                     Title = T("Plugins.Tax.Avalara.Fields.TaxCodeType").Text,
                                     Width = "100",
                                     ClassName = NopColumnClassDefaults.CenterAll,
                                 },
-                                new ColumnProperty(nameof(Nop.Plugin.Tax.Avalara.Models.Tax.TaxCategoryModel.Description))
+                                new ColumnProperty(nameof(TaxCategoryModel.Description))
                                 {
                                     Title = T("Plugins.Tax.Avalara.Fields.TaxCodeDescription").Text
                                 },
@@ -128,21 +159,20 @@
                                         $.ajax({
                                             cache: false,
                                             type: "POST",
-                                            url: "@Html.Raw(Url.Action("TaxCategoryAdd", "OverriddenTax", null))",
+                                            url: "@Html.Raw(Url.Action("TaxCategoryAdd", "AvalaraTax", null))",
                                             data: postData,
                                             success: function (data, textStatus, jqXHR) {
                                                 if (data.Result) {
                                                     updateTable('#tax-categories-grid');
+                                                    $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
+                                                    $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)")).data("kendoNumericTextBox").value(0);
+                                                    $("#@Html.IdFor(model => model.AddTaxCategory.TypeId)").val('');
                                                 } else {
-                                                    //display errors if returned
                                                     display_nop_error(data);
                                                 }
                                             },
                                             complete: function (jqXHR, textStatus) {
                                                 $('#addTaxCategory').attr('disabled', false);
-                                                $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
-                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val('');
-                                                $("#@Html.IdFor(model => model.AddTaxCategory.TypeId)").val('');
                                             }
                                         });
                                     });

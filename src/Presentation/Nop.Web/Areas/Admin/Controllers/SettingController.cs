@@ -29,7 +29,6 @@ using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -414,7 +413,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.FreeShippingOverXEnabled, model.FreeShippingOverXEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.FreeShippingOverXValue, model.FreeShippingOverXValue_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.FreeShippingOverXIncludingTax, model.FreeShippingOverXIncludingTax_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.EstimateShippingEnabled, model.EstimateShippingEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.EstimateShippingCartPageEnabled, model.EstimateShippingCartPageEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.EstimateShippingProductPageEnabled, model.EstimateShippingProductPageEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.DisplayShipmentEventsToCustomers, model.DisplayShipmentEventsToCustomers_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, model.DisplayShipmentEventsToStoreOwner_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.HideShippingTotal, model.HideShippingTotal_OverrideForStore, storeScope, false);
@@ -1004,6 +1004,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             var lastUsernameValidationEnabledValue = customerSettings.UsernameValidationEnabled;
             var lastUsernameValidationUseRegexValue = customerSettings.UsernameValidationUseRegex;
 
+            //Phone number validation settings
+            var lastPhoneNumberValidationRule = customerSettings.PhoneNumberValidationRule;
+            var lastPhoneNumberValidationEnabledValue = customerSettings.PhoneNumberValidationEnabled;
+            var lastPhoneNumberValidationUseRegexValue = customerSettings.PhoneNumberValidationUseRegex;
+
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
@@ -1025,6 +1030,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customerSettings.UsernameValidationUseRegex = lastUsernameValidationUseRegexValue;
 
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
+                }
+            }
+
+            if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
+            {
+                try
+                {
+                    //validate regex rule
+                    var unused = Regex.IsMatch("123456789", customerSettings.PhoneNumberValidationRule);
+                }
+                catch (ArgumentException)
+                {
+                    //restoring previous settings
+                    customerSettings.PhoneNumberValidationRule = lastPhoneNumberValidationRule;
+                    customerSettings.PhoneNumberValidationEnabled = lastPhoneNumberValidationEnabledValue;
+                    customerSettings.PhoneNumberValidationUseRegex = lastPhoneNumberValidationUseRegexValue;
+
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error"));
                 }
             }
 

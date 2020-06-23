@@ -18,12 +18,12 @@
             @T("Admin.System.Log")
         </h1>
         <div class="pull-right">
-            <button type="button" id="delete-selected" class="btn bg-red">
+            <button type="button" id="delete-selected" name="delete-selected" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
-            <button asp-action="ClearAll" type="submit" id="clearall" name="clearall" class="btn bg-red">
+            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.ClearLog")
             </button>

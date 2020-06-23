@@ -223,6 +223,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         //send PM model
         public SendPmModel SendPm { get; set; }
 
+        //send a private message
+        public bool AllowSendingOfPrivateMessage { get; set; }
+
         //send the welcome message
         public bool AllowSendingOfWelcomeMessage { get; set; }
 

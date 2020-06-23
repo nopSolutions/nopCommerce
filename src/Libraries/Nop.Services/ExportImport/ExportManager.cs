@@ -640,8 +640,6 @@ namespace Nop.Services.ExportImport
 
         private byte[] ExportOrderToXlsxWithProducts(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
         {
-            //TODO: _productService.GetProductById(oi.ProductId) - variant add as local func with cache
-
             var orderItemProperties = new[]
             {
                 new PropertyByName<OrderItem>("Name", oi => _productService.GetProductById(oi.ProductId).Name),
@@ -905,7 +903,10 @@ namespace Nop.Services.ExportImport
                 //vendor can't change this field
                 xmlWriter.WriteString("VendorId", product.VendorId, IgnoreExportPoductProperty(p => p.Vendor) || _workContext.CurrentVendor != null);
                 xmlWriter.WriteString("ProductTemplateId", product.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate));
-                xmlWriter.WriteString("ShowOnHomepage", product.ShowOnHomepage, IgnoreExportPoductProperty(p => p.ShowOnHomepage));
+                //vendor can't change this field
+                xmlWriter.WriteString("ShowOnHomepage", product.ShowOnHomepage, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null);
+                //vendor can't change this field
+                xmlWriter.WriteString("DisplayOrder", product.DisplayOrder, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null);
                 xmlWriter.WriteString("MetaKeywords", product.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo));
                 xmlWriter.WriteString("MetaDescription", product.MetaDescription, IgnoreExportPoductProperty(p => p.Seo));
                 xmlWriter.WriteString("MetaTitle", product.MetaTitle, IgnoreExportPoductProperty(p => p.Seo));
@@ -917,9 +918,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("IsGiftCard", product.IsGiftCard, IgnoreExportPoductProperty(p => p.IsGiftCard));
                 xmlWriter.WriteString("GiftCardType", product.GiftCardType, IgnoreExportPoductProperty(p => p.IsGiftCard));
                 xmlWriter.WriteString("OverriddenGiftCardAmount", product.OverriddenGiftCardAmount, IgnoreExportPoductProperty(p => p.IsGiftCard));
-                xmlWriter.WriteString("RequireOtherProducts", product.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart));
-                xmlWriter.WriteString("RequiredProductIds", product.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart));
-                xmlWriter.WriteString("AutomaticallyAddRequiredProducts", product.AutomaticallyAddRequiredProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart));
+                xmlWriter.WriteString("RequireOtherProducts", product.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToCart));
+                xmlWriter.WriteString("RequiredProductIds", product.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToCart));
+                xmlWriter.WriteString("AutomaticallyAddRequiredProducts", product.AutomaticallyAddRequiredProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToCart));
                 xmlWriter.WriteString("IsDownload", product.IsDownload, IgnoreExportPoductProperty(p => p.DownloadableProduct));
                 xmlWriter.WriteString("DownloadId", product.DownloadId, IgnoreExportPoductProperty(p => p.DownloadableProduct));
                 xmlWriter.WriteString("UnlimitedDownloads", product.UnlimitedDownloads, IgnoreExportPoductProperty(p => p.DownloadableProduct));
@@ -951,7 +952,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("WarehouseId", product.WarehouseId, IgnoreExportPoductProperty(p => p.Warehouse));
                 xmlWriter.WriteString("StockQuantity", product.StockQuantity);
                 xmlWriter.WriteString("DisplayStockAvailability", product.DisplayStockAvailability, IgnoreExportPoductProperty(p => p.DisplayStockAvailability));
-                xmlWriter.WriteString("DisplayStockQuantity", product.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockQuantity));
+                xmlWriter.WriteString("DisplayStockQuantity", product.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockAvailability));
                 xmlWriter.WriteString("MinStockQuantity", product.MinStockQuantity, IgnoreExportPoductProperty(p => p.MinimumStockQuantity));
                 xmlWriter.WriteString("LowStockActivityId", product.LowStockActivityId, IgnoreExportPoductProperty(p => p.LowStockActivity));
                 xmlWriter.WriteString("NotifyAdminForQuantityBelow", product.NotifyAdminForQuantityBelow, IgnoreExportPoductProperty(p => p.NotifyAdminForQuantityBelow));
@@ -979,8 +980,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("BasepriceBaseAmount", product.BasepriceBaseAmount, IgnoreExportPoductProperty(p => p.PAngV));
                 xmlWriter.WriteString("BasepriceBaseUnitId", product.BasepriceBaseUnitId, IgnoreExportPoductProperty(p => p.PAngV));
                 xmlWriter.WriteString("MarkAsNew", product.MarkAsNew, IgnoreExportPoductProperty(p => p.MarkAsNew));
-                xmlWriter.WriteString("MarkAsNewStartDateTimeUtc", product.MarkAsNewStartDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewStartDate));
-                xmlWriter.WriteString("MarkAsNewEndDateTimeUtc", product.MarkAsNewEndDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewEndDate));
+                xmlWriter.WriteString("MarkAsNewStartDateTimeUtc", product.MarkAsNewStartDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNew));
+                xmlWriter.WriteString("MarkAsNewEndDateTimeUtc", product.MarkAsNewEndDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNew));
                 xmlWriter.WriteString("Weight", product.Weight, IgnoreExportPoductProperty(p => p.Weight));
                 xmlWriter.WriteString("Length", product.Length, IgnoreExportPoductProperty(p => p.Dimensions));
                 xmlWriter.WriteString("Width", product.Width, IgnoreExportPoductProperty(p => p.Dimensions));
@@ -1227,6 +1228,8 @@ namespace Nop.Services.ExportImport
                 },
                 //vendor can't change this field
                 new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null),
+                //vendor can't change this field
+                new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("MetaTitle", p => p.MetaTitle, IgnoreExportPoductProperty(p => p.Seo)),
@@ -1242,9 +1245,9 @@ namespace Nop.Services.ExportImport
                     DropDownElements = GiftCardType.Virtual.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount, IgnoreExportPoductProperty(p => p.IsGiftCard)),
-                new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
-                new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
-                new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToTheCart)),
+                new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToCart)),
+                new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToCart)),
+                new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts, IgnoreExportPoductProperty(p => p.RequireOtherProductsAddedToCart)),
                 new PropertyByName<Product>("IsDownload", p => p.IsDownload, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("DownloadId", p => p.DownloadId, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads, IgnoreExportPoductProperty(p => p.DownloadableProduct)),
@@ -1301,7 +1304,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("WarehouseId", p => p.WarehouseId, IgnoreExportPoductProperty(p => p.Warehouse)),
                 new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
                 new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, IgnoreExportPoductProperty(p => p.DisplayStockAvailability)),
-                new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockQuantity)),
+                new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockAvailability)),
                 new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, IgnoreExportPoductProperty(p => p.MinimumStockQuantity)),
                 new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, IgnoreExportPoductProperty(p => p.LowStockActivity))
                 {
@@ -1343,8 +1346,8 @@ namespace Nop.Services.ExportImport
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew, IgnoreExportPoductProperty(p => p.MarkAsNew)),
-                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewStartDate)),
-                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewEndDate)),
+                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNew)),
+                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNew)),
                 new PropertyByName<Product>("Weight", p => p.Weight, IgnoreExportPoductProperty(p => p.Weight)),
                 new PropertyByName<Product>("Length", p => p.Length, IgnoreExportPoductProperty(p => p.Dimensions)),
                 new PropertyByName<Product>("Width", p => p.Width, IgnoreExportPoductProperty(p => p.Dimensions)),
@@ -1821,7 +1824,7 @@ namespace Nop.Services.ExportImport
             {
                 new PropertyByName<Order>("Order Number", p => p.CustomOrderNumber),
                 new PropertyByName<Order>("Order status", p => _localizationService.GetLocalizedEnum(p.OrderStatus)),
-                new PropertyByName<Order>("Order total", p => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
+                new PropertyByName<Order>("Order total", p => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(p.OrderTotal, p.CurrencyRate), true, p.CustomerCurrencyCode, false, _workContext.WorkingLanguage.Id)),
                 new PropertyByName<Order>("Shipping method", p => p.ShippingMethod),
                 new PropertyByName<Order>("Created on", p => _dateTimeHelper.ConvertToUserTime(p.CreatedOnUtc, DateTimeKind.Utc).ToString("D")),
                 new PropertyByName<Order>("Billing first name", p => orderBillingAddress(p)?.FirstName ?? string.Empty),
@@ -1854,10 +1857,10 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
-            { //TODO: _productService.GetProductById(oi.ProductId) - variant add as local func with cache
+            { 
                 new PropertyByName<OrderItem>("SKU", oi => _productService.GetProductById(oi.ProductId).Sku),
                 new PropertyByName<OrderItem>("Name", oi => _localizationService.GetLocalized(_productService.GetProductById(oi.ProductId), p => p.Name)),
-                new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
+                new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage.Id)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
                 new PropertyByName<OrderItem>("Total", oi => _priceFormatter.FormatPrice(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
             }, _catalogSettings);

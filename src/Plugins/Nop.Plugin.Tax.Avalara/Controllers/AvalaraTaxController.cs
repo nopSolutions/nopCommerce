@@ -2,279 +2,277 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
-using Nop.Plugin.Tax.Avalara.Models.Configuration;
-using Nop.Plugin.Tax.Avalara.Models.Log;
+using Nop.Core.Caching;
+using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework;
+using Nop.Web.Areas.Admin.Controllers;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Tax.Avalara.Controllers
 {
-    [Area(AreaNames.Admin)]
-    [AuthorizeAdmin]
-    [AutoValidateAntiforgeryToken]
-    public class AvalaraTaxController : BasePluginController
+    public class AvalaraTaxController : TaxController
     {
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly AvalaraTaxSettings _avalaraTaxSettings;
-        private readonly CurrencySettings _currencySettings;
-        private readonly ICountryService _countryService;
-        private readonly ICurrencyService _currencyService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly ISettingService _settingService;
-        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public AvalaraTaxController(AvalaraTaxManager avalaraTaxManager,
-            AvalaraTaxSettings avalaraTaxSettings,
-            CurrencySettings currencySettings,
-            ICountryService countryService,
-            ICurrencyService currencyService,
+            ICacheKeyService cacheKeyService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IStateProvinceService stateProvinceService,
+            IStaticCacheManager cacheManager,
+            ITaxCategoryService taxCategoryService,
+            ITaxModelFactory taxModelFactory,
             ITaxPluginManager taxPluginManager,
-            IWorkContext workContext)
+            TaxSettings taxSettings) : base(permissionService,
+                settingService,
+                taxCategoryService,
+                taxModelFactory,
+                taxPluginManager,
+                taxSettings)
         {
             _avalaraTaxManager = avalaraTaxManager;
-            _avalaraTaxSettings = avalaraTaxSettings;
-            _currencySettings = currencySettings;
-            _countryService = countryService;
-            _currencyService = currencyService;
+            _cacheKeyService = cacheKeyService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
-            _settingService = settingService;
-            _stateProvinceService = stateProvinceService;
+            _cacheManager = cacheManager;
+            _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
-            _workContext = workContext;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Check that plugin is configured
-        /// </summary>
-        /// <returns>True if it's configured; otherwise false</returns>
-        private bool IsConfigured()
-        {
-            return !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId)
-                && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
-        }
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        private void PrepareAddress(AddressModel model)
-        {
-            //populate list of countries
-            model.AvailableCountries = _countryService.GetAllCountries(showHidden: true)
-                .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
-            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-
-            //populate list of states and provinces
-            if (model.CountryId.HasValue && model.CountryId.Value > 0)
-                model.AvailableStates = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId.Value, showHidden: true)
-                    .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
-            if (!model.AvailableStates.Any())
-                model.AvailableStates.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
-        }
-
-        /// <summary>
-        /// Prepare tax transaction log list model
-        /// </summary>
-        /// <param name="model">Tax transaction log list model</param>
-        private void PrepareLogModel(TaxTransactionLogSearchModel model)
-        {
-            //prepare page parameters
-            model.SetGridPageSize();
         }
 
         #endregion
 
         #region Methods
 
-        public IActionResult Configure()
+        public override IActionResult Categories()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            //prepare common properties
-            var model = new ConfigurationModel
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
             {
-                IsConfigured = IsConfigured(),
-                AccountId = _avalaraTaxSettings.AccountId,
-                LicenseKey = _avalaraTaxSettings.LicenseKey,
-                CompanyCode = _avalaraTaxSettings.CompanyCode,
-                UseSandbox = _avalaraTaxSettings.UseSandbox,
-                CommitTransactions = _avalaraTaxSettings.CommitTransactions,
-                ValidateAddress = _avalaraTaxSettings.ValidateAddress
-            };
-
-            //prepare address model
-            PrepareAddress(model.TestAddress);
-
-            //prepare tax transaction log model
-            PrepareLogModel(model.TaxTransactionLogSearchModel);
-
-            model.HideGeneralBlock = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, AvalaraTaxDefaults.HideGeneralBlock);
-            model.HideLogBlock = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, AvalaraTaxDefaults.HideLogBlock);
-
-            //get account company list (only active)
-            var activeCompanies = _avalaraTaxManager.GetAccountCompanies(true);
-            if (activeCompanies?.Any() ?? false)
-            {
-                model.Companies = activeCompanies.OrderBy(company => company.isDefault ?? false ? 0 : 1).Select(company => new SelectListItem
-                {
-                    Text = company.isTest ?? false ? $"{company.name} (Test)" : company.name,
-                    Value = company.companyCode
-                }).ToList();
+                //if isn't active return base action result
+                RouteData.Values["controller"] = "Tax";
+                return base.Categories();
             }
 
-            var defaultCompanyCode = _avalaraTaxSettings.CompanyCode;
-            if (!model.Companies.Any())
-            {
-                //add the special item for 'there are no companies' with empty guid value
-                var noCompaniesText = _localizationService.GetResource("Plugins.Tax.Avalara.Fields.Company.NotExist");
-                model.Companies.Add(new SelectListItem { Text = noCompaniesText, Value = Guid.Empty.ToString() });
-                defaultCompanyCode = Guid.Empty.ToString();
-            }
-            else if (string.IsNullOrEmpty(_avalaraTaxSettings.CompanyCode) || _avalaraTaxSettings.CompanyCode.Equals(Guid.Empty.ToString()))
-                defaultCompanyCode = model.Companies.FirstOrDefault()?.Value;
-
-            //set the default company
-            model.CompanyCode = defaultCompanyCode;
-            _avalaraTaxSettings.CompanyCode = defaultCompanyCode;
-            _settingService.SaveSetting(_avalaraTaxSettings);
-
-            //display warning in case of company currency differ from the primary store currency
-            var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            var selectedCompany = activeCompanies?.FirstOrDefault(company => company.companyCode.Equals(defaultCompanyCode));
-            if (!selectedCompany?.baseCurrencyCode?.Equals(primaryCurrency?.CurrencyCode, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                _notificationService.WarningNotification(_localizationService.GetResource("Plugins.Tax.Avalara.Fields.Company.Currency.Warning"));
-
-            return View("~/Plugins/Tax.Avalara/Views/Configuration/Configure.cshtml", model);
-        }
-
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("save")]
-        public IActionResult Configure(ConfigurationModel model)
-        {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
-
-            if (!ModelState.IsValid)
-                return Configure();
-
-            //save settings
-            _avalaraTaxSettings.AccountId = model.AccountId;
-            _avalaraTaxSettings.LicenseKey = model.LicenseKey;
-            _avalaraTaxSettings.CompanyCode = model.CompanyCode;
-            _avalaraTaxSettings.UseSandbox = model.UseSandbox;
-            _avalaraTaxSettings.CommitTransactions = model.CommitTransactions;
-            _avalaraTaxSettings.ValidateAddress = model.ValidateAddress;
-            _settingService.SaveSetting(_avalaraTaxSettings);
-
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
-
-            return Configure();
-        }
-
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("verifyCredentials")]
-        public IActionResult VerifyCredentials(ConfigurationModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            if (!ModelState.IsValid)
-                return Configure();
-
-            //verify credentials 
-            var result = _avalaraTaxManager.Ping();
-
-            //display results
-            if (result?.authenticated ?? false)
-                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.VerifyCredentials.Verified"));
-            else
-                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.VerifyCredentials.Declined"));
-
-            return Configure();
-        }
-
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("testTax")]
-        public IActionResult TestTaxRequest(ConfigurationModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            if (!ModelState.IsValid)
-                return Configure();
-
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(AvalaraTaxDefaults.SystemName) as AvalaraTaxProvider;
-
-            //get result
-            var transaction = taxProvider.CreateEstimatedTaxTransaction(new Address
-            {
-                City = model.TestAddress?.City,
-                CountryId = model.TestAddress?.CountryId,
-                Address1 = model.TestAddress?.Address1,
-                ZipPostalCode = model.TestAddress?.ZipPostalCode,
-                StateProvinceId = model.TestAddress?.StateProvinceId
-            }, _workContext.CurrentCustomer.Id.ToString());
-
-            if (transaction?.totalTax != null)
-            {
-                //display tax rates by jurisdictions
-                model.TestTaxResult = $"Total tax rate: {transaction.totalTax:0.00}% {Environment.NewLine}";
-                if (transaction.summary?.Any() ?? false)
-                {
-                    model.TestTaxResult = transaction.summary.Aggregate(model.TestTaxResult, (resultString, rate) =>
-                        $"{resultString}Jurisdiction: {rate?.jurisName}, Tax rate: {((rate?.rate ?? 0) * 100):0.00}% {Environment.NewLine}");
-                }
-                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TestTax.Success"));
-            }
-            else
-                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TestTax.Error"));
 
             //prepare model
-            model.IsConfigured = IsConfigured();
-            PrepareAddress(model.TestAddress);
-            PrepareLogModel(model.TaxTransactionLogSearchModel);
-            model.HideGeneralBlock = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, AvalaraTaxDefaults.HideGeneralBlock);
-            model.HideLogBlock = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, AvalaraTaxDefaults.HideLogBlock);
+            var model = new Models.Tax.TaxCategorySearchModel();
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
+            var taxCodeTypes = _cacheManager.Get(cacheKey, () => _avalaraTaxManager.GetTaxCodeTypes());
+            if (taxCodeTypes != null)
+                model.AvailableTypes = taxCodeTypes.Select(type => new SelectListItem(type.Value, type.Key)).ToList();
+            model.SetGridPageSize();
 
-            return View("~/Plugins/Tax.Avalara/Views/Configuration/Configure.cshtml", model);
+            //use overridden view
+            return View("~/Plugins/Tax.Avalara/Views/Tax/Categories.cshtml", model);
+        }
+
+        [HttpPost]
+        public override IActionResult Categories(TaxCategorySearchModel searchModel)
+        {
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return base.Categories(searchModel);
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedDataTablesJson();
+
+            //get tax categories
+            var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
+
+            //get tax types and define the default value
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
+            var taxTypes = _cacheManager.Get(cacheKey, () => _avalaraTaxManager.GetTaxCodeTypes())
+                ?.Select(taxType => new { Id = taxType.Key, Name = taxType.Value });
+            var defaultType = taxTypes
+                ?.FirstOrDefault(taxType => taxType.Name.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase))
+                ?? taxTypes?.FirstOrDefault();
+
+            //prepare grid model
+            var model = new Models.Tax.TaxCategoryListModel().PrepareToGrid(searchModel, taxCategories, () =>
+            {
+                //fill in model values from the entity
+                return taxCategories.Select(taxCategory =>
+                {
+                    //fill in model values from the entity
+                    var taxCategoryModel = new Models.Tax.TaxCategoryModel
+                    {
+                        Id = taxCategory.Id,
+                        Name = taxCategory.Name,
+                        DisplayOrder = taxCategory.DisplayOrder
+                    };
+
+                    //try to get previously saved tax code type and description
+                    var taxCodeType = taxTypes?.FirstOrDefault(type =>
+                        type.Id.Equals(_genericAttributeService.GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute) ?? string.Empty))
+                        ?? defaultType;
+                    taxCategoryModel.Type = taxCodeType?.Name ?? string.Empty;
+                    taxCategoryModel.TypeId = taxCodeType?.Id ?? Guid.Empty.ToString();
+                    taxCategoryModel.Description = _genericAttributeService
+                        .GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute) ?? string.Empty;
+
+                    return taxCategoryModel;
+                });
+            });
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public IActionResult TaxCategoryUpdate(Models.Tax.TaxCategoryModel model)
+        {
+            return base.CategoryUpdate(model);
+        }
+
+        [HttpPost]
+        public IActionResult TaxCategoryAdd(Models.Tax.TaxCategoryModel model)
+        {
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return new NullJsonResult();
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            if (!ModelState.IsValid)
+                return ErrorJson(ModelState.SerializeErrors());
+
+            var taxCategory = new TaxCategory();
+            taxCategory = model.ToEntity(taxCategory);
+            _taxCategoryService.InsertTaxCategory(taxCategory);
+
+            //save tax code type as generic attribute
+            if (!string.IsNullOrEmpty(model.TypeId) && !model.TypeId.Equals(Guid.Empty.ToString()))
+                _genericAttributeService.SaveAttribute(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute, model.TypeId);
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public override IActionResult CategoryDelete(int id)
+        {
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return new NullJsonResult();
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            //try to get a tax category with the specified id
+            var taxCategory = _taxCategoryService.GetTaxCategoryById(id);
+            if (taxCategory == null)
+                throw new ArgumentException("No tax category found with the specified id");
+
+            //delete generic attributes 
+            _genericAttributeService.SaveAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute, null);
+            _genericAttributeService.SaveAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute, null);
+
+            _taxCategoryService.DeleteTaxCategory(taxCategory);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost, ActionName("Categories")]
+        [FormValueRequired("importTaxCodes")]
+        public IActionResult ImportTaxCodes()
+        {
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return Categories();
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            //import tax caodes
+            var importedTaxCodesNumber = _avalaraTaxManager.ImportTaxCodes();
+            if (importedTaxCodesNumber.HasValue)
+            {
+                //successfully imported
+                var successMessage = _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Import.Success");
+                _notificationService.SuccessNotification(string.Format(successMessage, importedTaxCodesNumber));
+            }
+            else
+                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Import.Error"));
+
+            return Categories();
+        }
+
+        [HttpPost, ActionName("Categories")]
+        [FormValueRequired("exportTaxCodes")]
+        public IActionResult ExportTaxCodes()
+        {
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return Categories();
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            //export tax codes
+            var exportedTaxCodes = _avalaraTaxManager.ExportTaxCodes();
+            if (exportedTaxCodes.HasValue)
+            {
+                if (exportedTaxCodes > 0)
+                    _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Export.Success"), exportedTaxCodes));
+                else
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Export.AlreadyExported"));
+            }
+            else
+                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Export.Error"));
+
+            return Categories();
+        }
+
+        [HttpPost, ActionName("Categories")]
+        [FormValueRequired("deleteTaxCodes")]
+        public IActionResult DeleteSystemTaxCodes()
+        {
+            //ensure that Avalara tax provider is active
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return Categories();
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            var deleted = _avalaraTaxManager.DeleteSystemTaxCodes();
+            if (deleted)
+                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Delete.Success"));
+            else
+                _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Delete.Error"));
+
+            return Categories();
         }
 
         #endregion

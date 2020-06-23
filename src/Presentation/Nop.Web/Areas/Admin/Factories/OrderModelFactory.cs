@@ -290,23 +290,25 @@ namespace Nop.Web.Areas.Admin.Factories
                         .GetDownloadById(orderItem.LicenseDownloadId.Value)?.DownloadGuid ?? Guid.Empty;
                 }
 
+                var languageId = _workContext.WorkingLanguage.Id;
+
                 //unit price
                 orderItemModel.UnitPriceInclTax = _priceFormatter
-                    .FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                    .FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, languageId, true, true);
                 orderItemModel.UnitPriceExclTax = _priceFormatter
-                    .FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                    .FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, languageId, false, true);
 
                 //discounts
                 orderItemModel.DiscountInclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountInclTax, true,
-                    primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                    primaryStoreCurrency, languageId, true, true);
                 orderItemModel.DiscountExclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountExclTax, true,
-                    primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                    primaryStoreCurrency, languageId, false, true);
 
                 //subtotal
                 orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency,
-                    _workContext.WorkingLanguage, true, true);
+                    languageId, true, true);
                 orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency,
-                    _workContext.WorkingLanguage, false, true);
+                    languageId, false, true);
 
                 //recurring info
                 if (product.IsRecurring)
@@ -375,20 +377,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var languageId = _workContext.WorkingLanguage.Id;
 
             //subtotal
             model.OrderSubtotalInclTax = _priceFormatter.FormatPrice(order.OrderSubtotalInclTax, true, primaryStoreCurrency,
-                _workContext.WorkingLanguage, true);
+                languageId, true);
             model.OrderSubtotalExclTax = _priceFormatter.FormatPrice(order.OrderSubtotalExclTax, true, primaryStoreCurrency,
-                _workContext.WorkingLanguage, false);
+                languageId, false);
             model.OrderSubtotalInclTaxValue = order.OrderSubtotalInclTax;
             model.OrderSubtotalExclTaxValue = order.OrderSubtotalExclTax;
 
             //discount (applied to order subtotal)
             var orderSubtotalDiscountInclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountInclTax, true,
-                primaryStoreCurrency, _workContext.WorkingLanguage, true);
+                primaryStoreCurrency, languageId, true);
             var orderSubtotalDiscountExclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountExclTax, true,
-                primaryStoreCurrency, _workContext.WorkingLanguage, false);
+                primaryStoreCurrency, languageId, false);
             if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
                 model.OrderSubTotalDiscountInclTax = orderSubtotalDiscountInclTaxStr;
             if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
@@ -398,9 +401,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //shipping
             model.OrderShippingInclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingInclTax, true,
-                primaryStoreCurrency, _workContext.WorkingLanguage, true);
+                primaryStoreCurrency, languageId, true);
             model.OrderShippingExclTax = _priceFormatter.FormatShippingPrice(order.OrderShippingExclTax, true,
-                primaryStoreCurrency, _workContext.WorkingLanguage, false);
+                primaryStoreCurrency, languageId, false);
             model.OrderShippingInclTaxValue = order.OrderShippingInclTax;
             model.OrderShippingExclTaxValue = order.OrderShippingExclTax;
 
@@ -408,9 +411,9 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order.PaymentMethodAdditionalFeeInclTax > decimal.Zero)
             {
                 model.PaymentMethodAdditionalFeeInclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(
-                    order.PaymentMethodAdditionalFeeInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
+                    order.PaymentMethodAdditionalFeeInclTax, true, primaryStoreCurrency, languageId, true);
                 model.PaymentMethodAdditionalFeeExclTax = _priceFormatter.FormatPaymentMethodAdditionalFee(
-                    order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+                    order.PaymentMethodAdditionalFeeExclTax, true, primaryStoreCurrency, languageId, false);
             }
 
             model.PaymentMethodAdditionalFeeInclTaxValue = order.PaymentMethodAdditionalFeeInclTax;
@@ -1057,7 +1060,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             var shippingSum = _priceFormatter
-                .FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+                .FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage.Id, false);
             var taxSum = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false);
             var totalSum = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false);
             var profitSum = _priceFormatter.FormatPrice(profit, true, false);

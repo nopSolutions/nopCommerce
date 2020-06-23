@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using NUnit.Framework;
+using Nop.Tests;
 
 namespace Nop.Services.Tests.Catalog
 {
@@ -184,7 +185,8 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _productAttributeService = new ProductAttributeService(_eventPublisher.Object,
+            _productAttributeService = new ProductAttributeService(new FakeCacheKeyService(), 
+                _eventPublisher.Object,
                 _predefinedProductAttributeValueRepo.Object,
                 _productAttributeRepo.Object,
                 _productAttributeCombinationRepo.Object,

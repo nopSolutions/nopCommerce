@@ -73,6 +73,7 @@ namespace Nop.Web.Controllers
 
                 //update totals
                 pollAnswer.NumberOfVotes = _pollService.GetPollVotingRecordsByPollAnswer(pollAnswer.Id).Count;
+                _pollService.UpdatePollAnswer(pollAnswer);
                 _pollService.UpdatePoll(poll);
             }
 

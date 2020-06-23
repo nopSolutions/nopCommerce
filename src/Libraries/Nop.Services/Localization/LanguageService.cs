@@ -5,7 +5,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -20,10 +20,11 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Language> _languageRepository;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly LocalizationSettings _localizationSettings;
 
@@ -31,17 +32,19 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LanguageService(IEventPublisher eventPublisher,
+        public LanguageService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<Language> languageRepository,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService,
             LocalizationSettings localizationSettings)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _languageRepository = languageRepository;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
             _localizationSettings = localizationSettings;
         }
@@ -92,9 +95,9 @@ namespace Nop.Services.Localization
             query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
 
             //cacheable copy
-            var key = NopLocalizationCachingDefaults.LanguagesAllCacheKey.FillCacheKey(storeId, showHidden);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
             
-            var languages = _cacheManager.Get(key, () =>
+            var languages = _staticCacheManager.Get(key, () =>
             {
                 var allLanguages = query.ToList();
 

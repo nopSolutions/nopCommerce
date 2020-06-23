@@ -8,7 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -23,7 +23,8 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
@@ -35,7 +36,8 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CountryService(CatalogSettings catalogSettings,
-            IStaticCacheManager cacheManager,
+            ICacheKeyService cacheKeyService,
+            IStaticCacheManager staticCacheManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
@@ -43,7 +45,8 @@ namespace Nop.Services.Directory
             IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _staticCacheManager = staticCacheManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _countryRepository = countryRepository;
@@ -78,8 +81,9 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = NopDirectoryCachingDefaults.CountriesAllCacheKey.FillCacheKey(languageId, showHidden);
-            return _cacheManager.Get(key, () =>
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
+
+            return _staticCacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
                 if (!showHidden)
@@ -196,7 +200,7 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var key = NopDirectoryCachingDefaults.CountriesByTwoLetterCodeCacheKey.FillCacheKey(twoLetterIsoCode);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
 
             var query = from c in _countryRepository.Table
                 where c.TwoLetterIsoCode == twoLetterIsoCode
@@ -215,7 +219,7 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var key = NopDirectoryCachingDefaults.CountriesByThreeLetterCodeCacheKey.FillCacheKey(threeLetterIsoCode);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
 
             var query = from c in _countryRepository.Table
                 where c.ThreeLetterIsoCode == threeLetterIsoCode

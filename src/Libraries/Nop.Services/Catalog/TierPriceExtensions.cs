@@ -25,6 +25,27 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Filter tier prices by customer roles
+        /// </summary>
+        /// <param name="source">Tier prices</param>
+        /// <param name="customerRoleIds">Customer role identifiers</param>
+        /// <returns>Filtered tier prices</returns>
+        public static IEnumerable<TierPrice> FilterByCustomerRole(this IEnumerable<TierPrice> source, int[] customerRoleIds)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (customerRoleIds == null)
+                throw new ArgumentNullException(nameof(customerRoleIds));
+
+            if (!customerRoleIds.Any())
+                return source;
+
+            return source.Where(tierPrice =>
+                !tierPrice.CustomerRoleId.HasValue || tierPrice.CustomerRoleId == 0 || customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
+        }
+
+        /// <summary>
         /// Remove duplicated quantities (leave only an tier price with minimum price)
         /// </summary>
         /// <param name="source">Tier prices</param>

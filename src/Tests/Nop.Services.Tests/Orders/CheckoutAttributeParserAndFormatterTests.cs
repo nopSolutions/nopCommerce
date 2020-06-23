@@ -125,14 +125,14 @@ namespace Nop.Services.Tests.Orders
             _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_1.Id)).Returns(cav2_1);
             _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_2.Id)).Returns(cav2_2);
 
-            var cacheManager = new TestCacheManager();
+            var staticCacheManager = new TestCacheManager();
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _checkoutAttributeService = new CheckoutAttributeService(cacheManager, _eventPublisher.Object,
+            _checkoutAttributeService = new CheckoutAttributeService(new FakeCacheKeyService(), staticCacheManager, _eventPublisher.Object,
                 _checkoutAttributeRepo.Object, _checkoutAttributeValueRepo.Object, _storeMappingService.Object);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);

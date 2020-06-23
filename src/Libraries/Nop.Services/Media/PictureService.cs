@@ -10,8 +10,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Extensions;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
@@ -25,9 +23,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
-using NopMediaDefaults = Nop.Services.Defaults.NopMediaDefaults;
 
 namespace Nop.Services.Media
 {
@@ -366,9 +362,19 @@ namespace Nop.Services.Media
             pictureBinary.BinaryData = binaryData;
 
             if (isNew)
+            {
                 _pictureBinaryRepository.Insert(pictureBinary);
+
+                //event notification
+                _eventPublisher.EntityInserted(pictureBinary);
+            }
             else
+            {
                 _pictureBinaryRepository.Update(pictureBinary);
+
+                //event notification
+                _eventPublisher.EntityUpdated(pictureBinary);
+            }
 
             return pictureBinary;
         }
@@ -376,12 +382,13 @@ namespace Nop.Services.Media
         /// <summary>
         /// Encode the image into a byte array in accordance with the specified image format
         /// </summary>
-        /// <typeparam name="T">Pixel data type</typeparam>
+        /// <typeparam name="TPixel">Pixel data type</typeparam>
         /// <param name="image">Image data</param>
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<T>(Image<T> image, IImageFormat imageFormat, int? quality = null) where T : struct, IPixel<T>
+        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using var stream = new MemoryStream();
             var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
@@ -428,8 +435,6 @@ namespace Nop.Services.Media
         {
             if (mimeType == null)
                 return null;
-
-            //TODO use FileExtensionContentTypeProvider to get file extension
 
             var parts = mimeType.Split('/');
             var lastPart = parts[parts.Length - 1];
@@ -504,7 +509,7 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using var image = Image.Load(filePath, out var imageFormat);
+                    using var image = Image.Load<Rgba32>(filePath, out var imageFormat);
                     image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                     {
                         Mode = ResizeMode.Max,
@@ -616,7 +621,7 @@ namespace Nop.Services.Media
                     if (targetSize != 0)
                     {
                         //resizing required
-                        using var image = Image.Load(pictureBinary, out var imageFormat);
+                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
                         image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                         {
                             Mode = ResizeMode.Max,
@@ -712,11 +717,7 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var key = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.FillCacheKey(virtualPath);
-
-            var pics = query.ToCachedPagedList(key, pageIndex, pageSize);
-
-            return pics;
+            return new PagedList<Picture>(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -865,7 +866,7 @@ namespace Nop.Services.Media
                 return picture;
 
             picture.VirtualPath = _fileProvider.GetVirtualPath(virtualPath);
-            _pictureRepository.Update(picture);
+            UpdatePicture(picture);
 
             return picture;
         }
@@ -997,7 +998,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using var image = Image.Load(pictureBinary, out var imageFormat);
+            using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
             {

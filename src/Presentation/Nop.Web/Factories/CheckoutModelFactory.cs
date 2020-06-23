@@ -127,8 +127,9 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepares the checkout pickup points model
         /// </summary>
+        /// <param name="cart">Cart</param>
         /// <returns>The checkout pickup points model</returns>
-        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel()
+        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutPickupPointsModel()
             {
@@ -166,12 +167,22 @@ namespace Nop.Web.Factories
                                 Longitude = point.Longitude,
                                 OpeningHours = point.OpeningHours
                             };
-                            if (point.PickupFee > 0)
+
+                            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                            var amount = _orderTotalCalculationService.IsFreeShipping(cart) ? 0 : point.PickupFee;
+
+                            if (amount > 0)
                             {
-                                var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
+                                amount = _taxService.GetShippingPrice(amount, _workContext.CurrentCustomer);
                                 amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                                 pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
                             }
+
+                            //adjust rate
+                            var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(point.PickupFee, cart, out var _, true);
+                            var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                            var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                            pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(rate, true);
 
                             return pickupPointModel;
                         }).ToList();
@@ -266,12 +277,13 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare shipping address model
         /// </summary>
+        /// <param name="cart">Cart</param>
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
         /// <returns>Shipping address model</returns>
-        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
+        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(IList<ShoppingCartItem> cart, 
+            int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel()
             {
@@ -279,7 +291,7 @@ namespace Nop.Web.Factories
             };
 
             if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
-                model.PickupPointsModel = PrepareCheckoutPickupPointsModel();
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             //existing addresses
             var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
@@ -337,7 +349,7 @@ namespace Nop.Web.Factories
             };
 
             if (_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
-                model.PickupPointsModel = PrepareCheckoutPickupPointsModel();
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
@@ -360,7 +372,7 @@ namespace Nop.Web.Factories
                     };
 
                     //adjust rate
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _);
+                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _, shippingOption.IsPickupInStore);
 
                     var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);

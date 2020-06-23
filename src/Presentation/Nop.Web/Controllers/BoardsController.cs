@@ -107,7 +107,7 @@ namespace Nop.Web.Controllers
             foreach (var topic in topics)
             {
                 var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
-                var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views.ToString()}";
+                var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:activeDiscussions:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -633,37 +633,32 @@ namespace Nop.Web.Controllers
 
             var forumPost = _forumService.GetPostById(id);
 
-            //TODO: ???? get topic one more time because it can be deleted (first or only post deleted)
+            if (forumPost == null)
+                return Json(new {redirect = Url.RouteUrl("Boards")});
+
+            if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
+                return Challenge();
+
             var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
+            var forumId = forumTopic.ForumId;
+            var forum = _forumService.GetForumById(forumId);
+            var forumSlug = _forumService.GetForumSeName(forum);
 
-            if (forumPost != null && forumTopic != null)
-            {
-                if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
-                    return Challenge();
+            _forumService.DeletePost(forumPost);
 
-                var forum = _forumService.GetForumById(forumTopic.ForumId);
-                var forumSlug = _forumService.GetForumSeName(forum);
-
-                if (forumTopic == null)
-                {
-                    return Json(new
-                    {
-                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = forumSlug }),
-                    });
-                }                
-
-                _forumService.DeletePost(forumPost);
-                                
+            //get topic one more time because it can be deleted (first or only post deleted)
+            forumTopic = _forumService.GetTopicById(forumPost.TopicId);
+            if (forumTopic == null)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) }),
+                    redirect = Url.RouteUrl("ForumSlug", new { id = forumId, slug = forumSlug }),
                 });
-            }
 
             return Json(new
             {
-                redirect = Url.RouteUrl("Boards"),
+                redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) }),
             });
+
         }
 
         public virtual IActionResult PostCreate(int id, int? quote)

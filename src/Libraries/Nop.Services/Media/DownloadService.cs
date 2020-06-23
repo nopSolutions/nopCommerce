@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Media
@@ -43,7 +42,7 @@ namespace Nop.Services.Media
             if (downloadId == 0)
                 return null;
 
-            return _downloadRepository.ToCachedGetById(downloadId);
+            return _downloadRepository.GetById(downloadId);
         }
 
         /// <summary>
@@ -74,6 +73,7 @@ namespace Nop.Services.Media
 
             _downloadRepository.Delete(download);
 
+            //event notification
             _eventPubisher.EntityDeleted(download);
         }
 
@@ -88,6 +88,7 @@ namespace Nop.Services.Media
 
             _downloadRepository.Insert(download);
 
+            //event notification
             _eventPubisher.EntityInserted(download);
         }
 
@@ -102,6 +103,7 @@ namespace Nop.Services.Media
 
             _downloadRepository.Update(download);
 
+            //event notification
             _eventPubisher.EntityUpdated(download);
         }
 

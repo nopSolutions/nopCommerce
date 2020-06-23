@@ -18,7 +18,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
         public new void Setup()
         {
             _dataProvider = new Mock<INopDataProvider>();
-            _validator = new CategoryValidator(_dataProvider.Object, _localizationService);
+            _validator = new CategoryValidator(_localizationService, _dataProvider.Object);
         }
 
         [Test]

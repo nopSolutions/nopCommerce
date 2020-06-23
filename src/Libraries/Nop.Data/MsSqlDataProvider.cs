@@ -75,13 +75,16 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Creates a connection to a database
+        /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public override IDbConnection CreateDbConnection(string connectionString = null)
+        protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            return new SqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+            if(string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException(nameof(connectionString));
+
+            return new SqlConnection(connectionString);
         }
 
         /// <summary>
@@ -325,21 +328,10 @@ namespace Nop.Data
         /// <param name="foreignColumn">Foreign key column name</param>
         /// <param name="primaryTable">Primary table</param>
         /// <param name="primaryColumn">Primary key column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of a foreign key</returns>
-        public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
+        public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
         {
-            var sb = new StringBuilder();
-
-            sb.Append("FK_");
-            sb.Append(foreignTable);
-            sb.Append("_");
-
-            sb.Append(isShort
-                ? $"{foreignColumn}_{primaryTable}{primaryColumn}"
-                : $"{foreignColumn}_{primaryTable}_{primaryColumn}");
-
-            return sb.ToString();
+            return $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
         }
 
         /// <summary>
@@ -347,9 +339,8 @@ namespace Nop.Data
         /// </summary>
         /// <param name="targetTable">Target table name</param>
         /// <param name="targetColumn">Target column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of an index</returns>
-        public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
+        public virtual string GetIndexName(string targetTable, string targetColumn)
         {
             return $"IX_{targetTable}_{targetColumn}";
         }

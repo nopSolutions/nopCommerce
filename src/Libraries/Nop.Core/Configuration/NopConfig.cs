@@ -73,6 +73,11 @@ namespace Nop.Core.Configuration
         public bool UseRedisForCaching { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we should ignore Redis timeout exception (Enabling this setting increases cache stability but may decrease site performance)
+        /// </summary>
+        public bool IgnoreRedisTimeoutException { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server for store the plugins info (instead of default plugin.json file)
         /// </summary>
         public bool UseRedisToStorePluginsInfo { get; set; }
@@ -116,11 +121,6 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether to copy plugins library to the /Plugins/bin directory on application startup
         /// </summary>
         public bool UsePluginsShadowCopy { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use backwards compatibility with SQL Server 2008 and SQL Server 2008R2
-        /// </summary>
-        public bool UseRowNumberForPaging { get; set; }
 
         /// <summary>
         /// Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error

@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -19,6 +19,7 @@ namespace Nop.Services.Stores
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
@@ -28,11 +29,13 @@ namespace Nop.Services.Stores
         #region Ctor
 
         public StoreMappingService(CatalogSettings catalogSettings,
-        IEventPublisher eventPublisher,
+            ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _storeMappingRepository = storeMappingRepository;
             _storeContext = storeContext;
@@ -67,7 +70,7 @@ namespace Nop.Services.Stores
             if (storeMappingId == 0)
                 return null;
 
-            return _storeMappingRepository.ToCachedGetById(storeMappingId);
+            return _storeMappingRepository.GetById(storeMappingId);
         }
 
         /// <summary>
@@ -84,7 +87,7 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingsByEntityIdNameCacheKey, entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -152,7 +155,7 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopStoreCachingDefaults.StoreMappingIdsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingIdsByEntityIdNameCacheKey, entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
                 where sm.EntityId == entityId &&

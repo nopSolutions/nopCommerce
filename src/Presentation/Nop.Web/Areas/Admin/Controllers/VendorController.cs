@@ -8,7 +8,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -134,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in vendorAttributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Vendor}{attribute.Id}";
+                var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
                 StringValues ctrlAttributes;
                 switch (attribute.AttributeControlType)
                 {

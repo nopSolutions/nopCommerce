@@ -5,6 +5,7 @@
 }
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
+@await Component.InvokeAsync("SettingMode")
 
 <form asp-controller="PayPalSmartPaymentButtons" asp-action="Configure" method="post">
     <div class="panel-group">
@@ -61,22 +62,110 @@
                         <span asp-validation-for="PaymentTypeId"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="ButtonsWidgetZones_OverrideForStore" asp-input="ButtonsWidgetZones" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="ButtonsWidgetZones" />
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Plugins.Payments.PayPalSmartPaymentButtons.Prominently")
                     </div>
-                    <div class="col-md-9">
-                        <nop-select asp-for="ButtonsWidgetZones" asp-items="Model.AvailableButtonsWidgetZones" asp-multiple="true" />
-                        <script>
-                            $(document).ready(function() {
-                                var input = $('#@Html.IdFor(model => model.ButtonsWidgetZones)').data("kendoMultiSelect");
-                                input.setOptions({ autoClose: false, filter: "contains" });
-                            });
-                        </script>
-                        <span asp-validation-for="ButtonsWidgetZones"></span>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)").click(toggleDisplayLogo);
+                            $("#@Html.IdFor(model => model.DisplayLogoInFooter)").click(toggleDisplayLogo);
+
+                            toggleDisplayLogo();
+                        });
+
+                        function toggleDisplayLogo() {
+                            if ($('#@Html.IdFor(model => model.DisplayLogoInHeaderLinks)').is(':checked')) {
+                                $('#pnlLogoInHeaderLinks').show();
+                            }
+                            else {
+                                $('#pnlLogoInHeaderLinks').hide();
+                            }
+
+                            if ($('#@Html.IdFor(model => model.DisplayLogoInFooter)').is(':checked')) {
+                                $('#pnlLogoInFooter').show();
+                            }
+                            else {
+                                $('#pnlLogoInFooter').hide();
+                            }
+                        }
+                    </script>
+
+                    <div class="panel-body">
+                        <p>
+                            Build customer trust with PayPal branding on your website.<br />
+                            Feature the PayPal button on all pages that initiate checkout. Including PayPal branding early in the checkout experience helps increase site conversion. You can also attract new customers to your site by announcing PayPal acceptance.<br />
+                            <em>TIP: You can find more PayPal logos and banners on <a href="https://www.paypal.com/gd/webapps/mpp/logo-center" target="_blank">PayPal Logo Center</a></em>
+                            <br />
+                        </p>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayButtonsOnShoppingCart_OverrideForStore" asp-input="DisplayButtonsOnShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayButtonsOnShoppingCart" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayButtonsOnShoppingCart" />
+                                <span asp-validation-for="DisplayButtonsOnShoppingCart"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayButtonsOnProductDetails_OverrideForStore" asp-input="DisplayButtonsOnProductDetails" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayButtonsOnProductDetails" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayButtonsOnProductDetails" />
+                                <span asp-validation-for="DisplayButtonsOnProductDetails"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayLogoInHeaderLinks_OverrideForStore" asp-input="DisplayLogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayLogoInHeaderLinks" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayLogoInHeaderLinks" />
+                                <span asp-validation-for="DisplayLogoInHeaderLinks"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="DisplayLogoInHeaderLinks">
+                            <div class="form-group advanced-setting" id="pnlLogoInHeaderLinks">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="LogoInHeaderLinks_OverrideForStore" asp-input="LogoInHeaderLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="LogoInHeaderLinks" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-textarea asp-for="LogoInHeaderLinks" />
+                                    <span asp-validation-for="LogoInHeaderLinks"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayLogoInFooter_OverrideForStore" asp-input="DisplayLogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayLogoInFooter" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayLogoInFooter" />
+                                <span asp-validation-for="DisplayLogoInFooter"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="DisplayLogoInFooter">
+                            <div class="form-group advanced-setting" id="pnlLogoInFooter">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="LogoInFooter_OverrideForStore" asp-input="LogoInFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="LogoInFooter" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-textarea asp-for="LogoInFooter" />
+                                    <span asp-validation-for="LogoInFooter"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
                     </div>
                 </div>
+                <div class="form-group"></div>
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
                         <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />

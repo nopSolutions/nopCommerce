@@ -76,7 +76,7 @@
     
         <script>
             function renderProductAttributeMappingValuesColumnEdit(data, type, row, meta) {
-                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")' + data + '?btnId=btnRefresh&formId=productattribute-form\', 800, 750, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")' + data + '?btnId=btnRefresh&formId=productattribute-form\', 800, 750, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
             }
         </script>
     </div>

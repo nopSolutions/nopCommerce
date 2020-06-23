@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.PageTitle = T("Admin.Configuration.ActivityLog.ActivityLog").Text;
+    ViewBag.PageTitle = T("Admin.Customers.ActivityLog").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Activity logs");
 }
@@ -14,14 +14,17 @@
 
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.Configuration.ActivityLog.ActivityLog")
+        @T("Admin.Customers.ActivityLog")
     </h1>
     <div class="pull-right">
-        <a asp-action="ClearAll" class="btn bg-red">
-            <i class="fa fa-trash-o"></i>
-            @T("Admin.Common.Clear")
-        </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
+        <form asp-controller="ActivityLog" asp-action="ClearAll" method="post">
+            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Customers.ActivityLog.Clear")
+            </button>
+            <nop-action-confirmation asp-button-id="clearall" />
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
+        </form>
     </div>
 
 </div>
@@ -110,27 +113,27 @@
                         {
                             new ColumnProperty(nameof(ActivityLogModel.ActivityLogTypeName))
                             {
-                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType").Text,
+                                Title = T("Admin.Customers.ActivityLog.Fields.ActivityLogType").Text,
                                 Width = "200"
                             },
                             new ColumnProperty(nameof(ActivityLogModel.CustomerEmail))
                             {
-                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer").Text,
+                                Title = T("Admin.Customers.ActivityLog.Fields.CustomerEmail").Text,
                                 Width = "100",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(ActivityLogModel.CustomerId)))
                             },
                             new ColumnProperty(nameof(ActivityLogModel.IpAddress))
                             {
-                                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress").Text,
+                                Title = T("Admin.Customers.ActivityLog.Fields.IpAddress").Text,
                                 Width = "100"
                             },
                             new ColumnProperty(nameof(ActivityLogModel.Comment))
                             {
-                                Title = T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment").Text
+                                Title = T("Admin.Customers.ActivityLog.Fields.Comment").Text
                             },
                             new ColumnProperty(nameof(ActivityLogModel.CreatedOn))
                             {
-                                Title = T("Admin.System.Log.Fields.CreatedOn").Text,
+                                Title = T("Admin.Customers.ActivityLog.Fields.CreatedOn").Text,
                                 Width = "200",
                                 Render = new RenderDate()
                             },

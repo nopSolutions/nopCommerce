@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -24,6 +25,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private readonly CachingSettings _cachingSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
@@ -41,7 +43,8 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderService(IEventPublisher eventPublisher,
+        public OrderService(CachingSettings cachingSettings,
+            IEventPublisher eventPublisher,
             IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
@@ -54,6 +57,7 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
+            _cachingSettings = cachingSettings;
             _eventPublisher = eventPublisher;
             _productService = productService;
             _addressRepository = addressRepository;
@@ -84,7 +88,7 @@ namespace Nop.Services.Orders
             if (orderId == 0)
                 return null;
 
-            return _orderRepository.ToCachedGetById(orderId);
+            return _orderRepository.ToCachedGetById(orderId, _cachingSettings.ShortTermCacheTime);
         }
 
         /// <summary>
@@ -464,7 +468,7 @@ namespace Nop.Services.Orders
             if (orderItemId == 0)
                 return null;
 
-            return _orderItemRepository.ToCachedGetById(orderItemId);
+            return _orderItemRepository.ToCachedGetById(orderItemId, _cachingSettings.ShortTermCacheTime);
         }
 
         /// <summary>
@@ -794,6 +798,7 @@ namespace Nop.Services.Orders
 
             _orderItemRepository.Insert(orderItem);
 
+            //event notification
             _eventPublisher.EntityInserted(orderItem);
         }
 
@@ -826,7 +831,7 @@ namespace Nop.Services.Orders
             if (orderNoteId == 0)
                 return null;
 
-            return _orderNoteRepository.ToCachedGetById(orderNoteId);
+            return _orderNoteRepository.GetById(orderNoteId);
         }
 
         /// <summary>

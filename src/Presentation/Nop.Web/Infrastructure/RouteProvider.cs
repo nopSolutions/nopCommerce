@@ -419,6 +419,13 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("TopicAuthenticate", $"{pattern}topic/authenticate",
                 new { controller = "Topic", action = "Authenticate" });
 
+            //prepare top menu (AJAX link)
+            endpointRouteBuilder.MapControllerRoute("GetCatalogRoot", $"{pattern}catalog/getcatalogroot",
+                new { controller = "Catalog", action = "GetCatalogRoot" });
+            
+            endpointRouteBuilder.MapControllerRoute("GetCatalogSubCategories", $"{pattern}catalog/getcatalogsubcategories",
+                new { controller = "Catalog", action = "GetCatalogSubCategories" });
+
             //product attributes with "upload file" type
             endpointRouteBuilder.MapControllerRoute("UploadFileProductAttribute",
                 pattern + "uploadfileproductattribute/{attributeId:min(0)}",
@@ -558,7 +565,7 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
                 pattern + "sitemap-{Id:min(0)}.xml",
                 new { controller = "Common", action = "SitemapXml" });
-
+            
             //store closed
             endpointRouteBuilder.MapControllerRoute("StoreClosed", $"{pattern}storeclosed",
                 new { controller = "Common", action = "StoreClosed" });

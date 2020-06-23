@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -25,7 +25,6 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -763,6 +762,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductTags = string.Join(", ", _productTagService.GetAllProductTagsByProductId(product.Id).Select(tag => tag.Name));
                 model.ProductAttributesExist = _productAttributeService.GetAllProductAttributes().Any();
 
+                model.CanCreateCombinations = _productAttributeService
+                    .GetProductAttributeMappingsByProductId(product.Id).Any(pam => _productAttributeService.GetProductAttributeValues(pam.Id).Any());
+
                 if (!excludeProperties)
                 {
                     model.SelectedCategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true)
@@ -906,6 +908,22 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare model stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, product, excludeProperties);
+
+            var productTags = _productTagService.GetAllProductTags();
+            var productTagsSb = new StringBuilder();
+            productTagsSb.Append("var initialProductTags = [");
+            for (var i = 0; i < productTags.Count; i++)
+            {
+                var tag = productTags[i];
+                productTagsSb.Append("'");
+                productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
+                productTagsSb.Append("'");
+                if (i != productTags.Count - 1) 
+                    productTagsSb.Append(",");
+            }
+            productTagsSb.Append("]");
+
+            model.InitialProductTags = productTagsSb.ToString();
 
             return model;
         }
@@ -1483,9 +1501,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
             }
 
-            Action<AddSpecificationAttributeLocalizedModel, int> localizedModelConfiguration;
-
-            localizedModelConfiguration = (locale, languageId) =>
+            void localizedModelConfiguration(AddSpecificationAttributeLocalizedModel locale, int languageId)
             {
                 switch (attribute.AttributeType)
                 {
@@ -1502,9 +1518,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            };
+            }
 
-            model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+            model.Locales = _localizedModelFactory.PrepareLocalizedModels((Action<AddSpecificationAttributeLocalizedModel, int>)localizedModelConfiguration);
 
             return model;
         }

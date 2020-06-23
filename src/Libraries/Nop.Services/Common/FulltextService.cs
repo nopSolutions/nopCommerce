@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Data;
+﻿using Nop.Data;
 
 namespace Nop.Services.Common
 {

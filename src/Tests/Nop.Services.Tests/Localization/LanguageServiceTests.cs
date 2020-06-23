@@ -54,7 +54,7 @@ namespace Nop.Services.Tests.Localization
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(_eventPublisher.Object, _languageRepo.Object,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
+            _languageService = new LanguageService(new FakeCacheKeyService(), _eventPublisher.Object, _languageRepo.Object,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
         }
 
         [Test]

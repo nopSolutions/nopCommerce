@@ -37,7 +37,8 @@
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
         @if (Model.ManageInventoryMethod == ManageInventoryMethod.ManageStock || Model.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
         {
-            @if (Model.StockAvailability == @T("Products.Availability.InStock").ToString() || Model.StockAvailability == @T("Products.Availability.InStockWithQuantity").ToString())
+            @if (Model.StockAvailability.Contains(@T("Products.Availability.InStock").ToString(), StringComparison.InvariantCultureIgnoreCase) || 
+                Model.StockAvailability.Contains(@T("Products.Availability.InStockWithQuantity").ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
                 <meta itemprop="availability" content="http://schema.org/InStock"/>
             }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -61,7 +60,9 @@ namespace Nop.Services.Stores
         {
             var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
 
-            var result = query.ToCachedList(NopStoreCachingDefaults.StoresAllCacheKey);
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
+            var result = query.ToCachedList(NopStoreDefaults.StoresAllCacheKey);
 
             return result;
         }

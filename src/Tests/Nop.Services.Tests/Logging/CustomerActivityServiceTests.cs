@@ -9,12 +9,14 @@ using Nop.Core.Domain.Logging;
 using Nop.Services.Logging;
 using Nop.Tests;
 using NUnit.Framework;
+using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Logging
 {
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
+        private Mock<IEventPublisher> _eventPublisher;
         private Mock<IRepository<ActivityLog>> _activityLogRepository;
         private Mock<IRepository<ActivityLogType>> _activityLogTypeRepository;
         private Mock<IWorkContext> _workContext;
@@ -68,13 +70,16 @@ namespace Nop.Services.Tests.Logging
                 CustomerId = _customer2.Id
             };
 
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+
             _workContext = new Mock<IWorkContext>();
             _webHelper = new Mock<IWebHelper>();
             _activityLogRepository = new Mock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(_activityLogRepository.Object, _activityLogTypeRepository.Object, _webHelper.Object, _workContext.Object);
+            _customerActivityService = new CustomerActivityService(new FakeCacheKeyService(), new Mock<IEventPublisher>().Object, _activityLogRepository.Object, _activityLogTypeRepository.Object, _webHelper.Object, _workContext.Object);
         }
 
         [Test]

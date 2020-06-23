@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -32,18 +33,18 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.News;
-using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Installation
 {
@@ -363,15 +364,14 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallStores()
         {
-            //var storeUrl = "http://www.yourStore.com/";
-            var storeUrl = _webHelper.GetStoreLocation(false);
+            var storeUrl = _webHelper.GetStoreLocation();
             var stores = new List<Store>
             {
                 new Store
                 {
                     Name = "Your store name",
                     Url = storeUrl,
-                    SslEnabled = false,
+                    SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                     //should we set some default company info?
@@ -706,1026 +706,6 @@ namespace Nop.Services.Installation
                 //other countries
                 new Country
                 {
-                    Name = "Argentina",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AR",
-                    ThreeLetterIsoCode = "ARG",
-                    NumericIsoCode = 32,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Armenia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AM",
-                    ThreeLetterIsoCode = "ARM",
-                    NumericIsoCode = 51,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Aruba",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AW",
-                    ThreeLetterIsoCode = "ABW",
-                    NumericIsoCode = 533,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Australia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AU",
-                    ThreeLetterIsoCode = "AUS",
-                    NumericIsoCode = 36,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Austria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AT",
-                    ThreeLetterIsoCode = "AUT",
-                    NumericIsoCode = 40,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Azerbaijan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AZ",
-                    ThreeLetterIsoCode = "AZE",
-                    NumericIsoCode = 31,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bahamas",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BS",
-                    ThreeLetterIsoCode = "BHS",
-                    NumericIsoCode = 44,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bangladesh",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BD",
-                    ThreeLetterIsoCode = "BGD",
-                    NumericIsoCode = 50,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belarus",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BY",
-                    ThreeLetterIsoCode = "BLR",
-                    NumericIsoCode = 112,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belgium",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BE",
-                    ThreeLetterIsoCode = "BEL",
-                    NumericIsoCode = 56,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belize",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BZ",
-                    ThreeLetterIsoCode = "BLZ",
-                    NumericIsoCode = 84,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bermuda",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BM",
-                    ThreeLetterIsoCode = "BMU",
-                    NumericIsoCode = 60,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bolivia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BO",
-                    ThreeLetterIsoCode = "BOL",
-                    NumericIsoCode = 68,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bosnia and Herzegowina",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BA",
-                    ThreeLetterIsoCode = "BIH",
-                    NumericIsoCode = 70,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Brazil",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BR",
-                    ThreeLetterIsoCode = "BRA",
-                    NumericIsoCode = 76,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bulgaria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BG",
-                    ThreeLetterIsoCode = "BGR",
-                    NumericIsoCode = 100,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cayman Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KY",
-                    ThreeLetterIsoCode = "CYM",
-                    NumericIsoCode = 136,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Chile",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CL",
-                    ThreeLetterIsoCode = "CHL",
-                    NumericIsoCode = 152,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "China",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CN",
-                    ThreeLetterIsoCode = "CHN",
-                    NumericIsoCode = 156,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Colombia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CO",
-                    ThreeLetterIsoCode = "COL",
-                    NumericIsoCode = 170,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Costa Rica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CR",
-                    ThreeLetterIsoCode = "CRI",
-                    NumericIsoCode = 188,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Croatia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HR",
-                    ThreeLetterIsoCode = "HRV",
-                    NumericIsoCode = 191,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cuba",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CU",
-                    ThreeLetterIsoCode = "CUB",
-                    NumericIsoCode = 192,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cyprus",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CY",
-                    ThreeLetterIsoCode = "CYP",
-                    NumericIsoCode = 196,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Czech Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CZ",
-                    ThreeLetterIsoCode = "CZE",
-                    NumericIsoCode = 203,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Denmark",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DK",
-                    ThreeLetterIsoCode = "DNK",
-                    NumericIsoCode = 208,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Dominican Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DO",
-                    ThreeLetterIsoCode = "DOM",
-                    NumericIsoCode = 214,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "East Timor",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TL",
-                    ThreeLetterIsoCode = "TLS",
-                    NumericIsoCode = 626,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ecuador",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EC",
-                    ThreeLetterIsoCode = "ECU",
-                    NumericIsoCode = 218,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Egypt",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EG",
-                    ThreeLetterIsoCode = "EGY",
-                    NumericIsoCode = 818,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Finland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FI",
-                    ThreeLetterIsoCode = "FIN",
-                    NumericIsoCode = 246,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "France",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FR",
-                    ThreeLetterIsoCode = "FRA",
-                    NumericIsoCode = 250,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Georgia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GE",
-                    ThreeLetterIsoCode = "GEO",
-                    NumericIsoCode = 268,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Germany",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DE",
-                    ThreeLetterIsoCode = "DEU",
-                    NumericIsoCode = 276,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Gibraltar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GI",
-                    ThreeLetterIsoCode = "GIB",
-                    NumericIsoCode = 292,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Greece",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GR",
-                    ThreeLetterIsoCode = "GRC",
-                    NumericIsoCode = 300,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guatemala",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GT",
-                    ThreeLetterIsoCode = "GTM",
-                    NumericIsoCode = 320,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Hong Kong",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HK",
-                    ThreeLetterIsoCode = "HKG",
-                    NumericIsoCode = 344,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Hungary",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HU",
-                    ThreeLetterIsoCode = "HUN",
-                    NumericIsoCode = 348,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "India",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IN",
-                    ThreeLetterIsoCode = "IND",
-                    NumericIsoCode = 356,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Indonesia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ID",
-                    ThreeLetterIsoCode = "IDN",
-                    NumericIsoCode = 360,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ireland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IE",
-                    ThreeLetterIsoCode = "IRL",
-                    NumericIsoCode = 372,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Israel",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IL",
-                    ThreeLetterIsoCode = "ISR",
-                    NumericIsoCode = 376,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Italy",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IT",
-                    ThreeLetterIsoCode = "ITA",
-                    NumericIsoCode = 380,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Jamaica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JM",
-                    ThreeLetterIsoCode = "JAM",
-                    NumericIsoCode = 388,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Japan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JP",
-                    ThreeLetterIsoCode = "JPN",
-                    NumericIsoCode = 392,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Jordan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JO",
-                    ThreeLetterIsoCode = "JOR",
-                    NumericIsoCode = 400,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kazakhstan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KZ",
-                    ThreeLetterIsoCode = "KAZ",
-                    NumericIsoCode = 398,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Korea, Democratic People's Republic of",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KP",
-                    ThreeLetterIsoCode = "PRK",
-                    NumericIsoCode = 408,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kuwait",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KW",
-                    ThreeLetterIsoCode = "KWT",
-                    NumericIsoCode = 414,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Malaysia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MY",
-                    ThreeLetterIsoCode = "MYS",
-                    NumericIsoCode = 458,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mexico",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MX",
-                    ThreeLetterIsoCode = "MEX",
-                    NumericIsoCode = 484,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Netherlands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NL",
-                    ThreeLetterIsoCode = "NLD",
-                    NumericIsoCode = 528,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "New Zealand",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NZ",
-                    ThreeLetterIsoCode = "NZL",
-                    NumericIsoCode = 554,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Norway",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NO",
-                    ThreeLetterIsoCode = "NOR",
-                    NumericIsoCode = 578,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Pakistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PK",
-                    ThreeLetterIsoCode = "PAK",
-                    NumericIsoCode = 586,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Palestine",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PS",
-                    ThreeLetterIsoCode = "PSE",
-                    NumericIsoCode = 275,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Paraguay",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PY",
-                    ThreeLetterIsoCode = "PRY",
-                    NumericIsoCode = 600,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Peru",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PE",
-                    ThreeLetterIsoCode = "PER",
-                    NumericIsoCode = 604,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Philippines",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PH",
-                    ThreeLetterIsoCode = "PHL",
-                    NumericIsoCode = 608,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Poland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PL",
-                    ThreeLetterIsoCode = "POL",
-                    NumericIsoCode = 616,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Portugal",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PT",
-                    ThreeLetterIsoCode = "PRT",
-                    NumericIsoCode = 620,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Puerto Rico",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PR",
-                    ThreeLetterIsoCode = "PRI",
-                    NumericIsoCode = 630,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Qatar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "QA",
-                    ThreeLetterIsoCode = "QAT",
-                    NumericIsoCode = 634,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Romania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RO",
-                    ThreeLetterIsoCode = "ROM",
-                    NumericIsoCode = 642,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Russian Federation",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RU",
-                    ThreeLetterIsoCode = "RUS",
-                    NumericIsoCode = 643,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Saudi Arabia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SA",
-                    ThreeLetterIsoCode = "SAU",
-                    NumericIsoCode = 682,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Singapore",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SG",
-                    ThreeLetterIsoCode = "SGP",
-                    NumericIsoCode = 702,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Slovakia (Slovak Republic)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SK",
-                    ThreeLetterIsoCode = "SVK",
-                    NumericIsoCode = 703,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Slovenia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SI",
-                    ThreeLetterIsoCode = "SVN",
-                    NumericIsoCode = 705,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "South Africa",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ZA",
-                    ThreeLetterIsoCode = "ZAF",
-                    NumericIsoCode = 710,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Spain",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ES",
-                    ThreeLetterIsoCode = "ESP",
-                    NumericIsoCode = 724,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sweden",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SE",
-                    ThreeLetterIsoCode = "SWE",
-                    NumericIsoCode = 752,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Switzerland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CH",
-                    ThreeLetterIsoCode = "CHE",
-                    NumericIsoCode = 756,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Taiwan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TW",
-                    ThreeLetterIsoCode = "TWN",
-                    NumericIsoCode = 158,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Thailand",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TH",
-                    ThreeLetterIsoCode = "THA",
-                    NumericIsoCode = 764,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Turkey",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TR",
-                    ThreeLetterIsoCode = "TUR",
-                    NumericIsoCode = 792,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ukraine",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UA",
-                    ThreeLetterIsoCode = "UKR",
-                    NumericIsoCode = 804,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United Arab Emirates",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AE",
-                    ThreeLetterIsoCode = "ARE",
-                    NumericIsoCode = 784,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United Kingdom",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GB",
-                    ThreeLetterIsoCode = "GBR",
-                    NumericIsoCode = 826,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United States minor outlying islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UM",
-                    ThreeLetterIsoCode = "UMI",
-                    NumericIsoCode = 581,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uruguay",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UY",
-                    ThreeLetterIsoCode = "URY",
-                    NumericIsoCode = 858,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uzbekistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UZ",
-                    ThreeLetterIsoCode = "UZB",
-                    NumericIsoCode = 860,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Venezuela",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VE",
-                    ThreeLetterIsoCode = "VEN",
-                    NumericIsoCode = 862,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Serbia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RS",
-                    ThreeLetterIsoCode = "SRB",
-                    NumericIsoCode = 688,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
                     Name = "Afghanistan",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -1834,12 +814,108 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Argentina",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AR",
+                    ThreeLetterIsoCode = "ARG",
+                    NumericIsoCode = 32,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Armenia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AM",
+                    ThreeLetterIsoCode = "ARM",
+                    NumericIsoCode = 51,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Aruba",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AW",
+                    ThreeLetterIsoCode = "ABW",
+                    NumericIsoCode = 533,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Australia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AU",
+                    ThreeLetterIsoCode = "AUS",
+                    NumericIsoCode = 36,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Austria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AT",
+                    ThreeLetterIsoCode = "AUT",
+                    NumericIsoCode = 40,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Azerbaijan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AZ",
+                    ThreeLetterIsoCode = "AZE",
+                    NumericIsoCode = 31,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bahamas",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BS",
+                    ThreeLetterIsoCode = "BHS",
+                    NumericIsoCode = 44,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Bahrain",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "BH",
                     ThreeLetterIsoCode = "BHR",
                     NumericIsoCode = 48,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bangladesh",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BD",
+                    ThreeLetterIsoCode = "BGD",
+                    NumericIsoCode = 50,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -1858,6 +934,42 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Belarus",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BY",
+                    ThreeLetterIsoCode = "BLR",
+                    NumericIsoCode = 112,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belgium",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BE",
+                    ThreeLetterIsoCode = "BEL",
+                    NumericIsoCode = 56,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belize",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BZ",
+                    ThreeLetterIsoCode = "BLZ",
+                    NumericIsoCode = 84,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Benin",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -1870,12 +982,48 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Bermuda",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BM",
+                    ThreeLetterIsoCode = "BMU",
+                    NumericIsoCode = 60,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Bhutan",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "BT",
                     ThreeLetterIsoCode = "BTN",
                     NumericIsoCode = 64,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bolivia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BO",
+                    ThreeLetterIsoCode = "BOL",
+                    NumericIsoCode = 68,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bosnia and Herzegowina",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BA",
+                    ThreeLetterIsoCode = "BIH",
+                    NumericIsoCode = 70,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -1906,6 +1054,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Brazil",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BR",
+                    ThreeLetterIsoCode = "BRA",
+                    NumericIsoCode = 76,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "British Indian Ocean Territory",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -1925,6 +1085,18 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "BRN",
                     NumericIsoCode = 96,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bulgaria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BG",
+                    ThreeLetterIsoCode = "BGR",
+                    NumericIsoCode = 100,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -1990,6 +1162,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Cayman Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KY",
+                    ThreeLetterIsoCode = "CYM",
+                    NumericIsoCode = 136,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Central African Republic",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2014,6 +1198,30 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Chile",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CL",
+                    ThreeLetterIsoCode = "CHL",
+                    NumericIsoCode = 152,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "China",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CN",
+                    ThreeLetterIsoCode = "CHN",
+                    NumericIsoCode = 156,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Christmas Island",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2032,6 +1240,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "CC",
                     ThreeLetterIsoCode = "CCK",
                     NumericIsoCode = 166,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Colombia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CO",
+                    ThreeLetterIsoCode = "COL",
+                    NumericIsoCode = 170,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2086,6 +1306,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Costa Rica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CR",
+                    ThreeLetterIsoCode = "CRI",
+                    NumericIsoCode = 188,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Cote D'Ivoire",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2093,6 +1325,66 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "CIV",
                     NumericIsoCode = 384,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Croatia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HR",
+                    ThreeLetterIsoCode = "HRV",
+                    NumericIsoCode = 191,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cuba",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CU",
+                    ThreeLetterIsoCode = "CUB",
+                    NumericIsoCode = 192,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cyprus",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CY",
+                    ThreeLetterIsoCode = "CYP",
+                    NumericIsoCode = 196,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Czech Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CZ",
+                    ThreeLetterIsoCode = "CZE",
+                    NumericIsoCode = 203,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Denmark",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DK",
+                    ThreeLetterIsoCode = "DNK",
+                    NumericIsoCode = 208,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2116,6 +1408,54 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "DM",
                     ThreeLetterIsoCode = "DMA",
                     NumericIsoCode = 212,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Dominican Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DO",
+                    ThreeLetterIsoCode = "DOM",
+                    NumericIsoCode = 214,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "East Timor",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TL",
+                    ThreeLetterIsoCode = "TLS",
+                    NumericIsoCode = 626,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ecuador",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EC",
+                    ThreeLetterIsoCode = "ECU",
+                    NumericIsoCode = 218,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Egypt",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EG",
+                    ThreeLetterIsoCode = "EGY",
+                    NumericIsoCode = 818,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2170,6 +1510,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Eswatini",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SZ",
+                    ThreeLetterIsoCode = "SWZ",
+                    NumericIsoCode = 748,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Ethiopia",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2213,6 +1565,30 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "FJI",
                     NumericIsoCode = 242,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Finland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FI",
+                    ThreeLetterIsoCode = "FIN",
+                    NumericIsoCode = 246,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "France",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FR",
+                    ThreeLetterIsoCode = "FRA",
+                    NumericIsoCode = 250,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2278,6 +1654,30 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Georgia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GE",
+                    ThreeLetterIsoCode = "GEO",
+                    NumericIsoCode = 268,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Germany",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DE",
+                    ThreeLetterIsoCode = "DEU",
+                    NumericIsoCode = 276,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Ghana",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2285,6 +1685,30 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "GHA",
                     NumericIsoCode = 288,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Gibraltar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GI",
+                    ThreeLetterIsoCode = "GIB",
+                    NumericIsoCode = 292,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Greece",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GR",
+                    ThreeLetterIsoCode = "GRC",
+                    NumericIsoCode = 300,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2332,6 +1756,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "GU",
                     ThreeLetterIsoCode = "GUM",
                     NumericIsoCode = 316,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guatemala",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GT",
+                    ThreeLetterIsoCode = "GTM",
+                    NumericIsoCode = 320,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2410,12 +1846,60 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Hong Kong",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HK",
+                    ThreeLetterIsoCode = "HKG",
+                    NumericIsoCode = 344,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Hungary",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HU",
+                    ThreeLetterIsoCode = "HUN",
+                    NumericIsoCode = 348,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Iceland",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "IS",
                     ThreeLetterIsoCode = "ISL",
                     NumericIsoCode = 352,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "India",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IN",
+                    ThreeLetterIsoCode = "IND",
+                    NumericIsoCode = 356,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Indonesia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ID",
+                    ThreeLetterIsoCode = "IDN",
+                    NumericIsoCode = 360,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2440,6 +1924,90 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "IQ",
                     ThreeLetterIsoCode = "IRQ",
                     NumericIsoCode = 368,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ireland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IE",
+                    ThreeLetterIsoCode = "IRL",
+                    NumericIsoCode = 372,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Israel",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IL",
+                    ThreeLetterIsoCode = "ISR",
+                    NumericIsoCode = 376,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Italy",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IT",
+                    ThreeLetterIsoCode = "ITA",
+                    NumericIsoCode = 380,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Jamaica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JM",
+                    ThreeLetterIsoCode = "JAM",
+                    NumericIsoCode = 388,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Japan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JP",
+                    ThreeLetterIsoCode = "JPN",
+                    NumericIsoCode = 392,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Jordan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JO",
+                    ThreeLetterIsoCode = "JOR",
+                    NumericIsoCode = 400,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kazakhstan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KZ",
+                    ThreeLetterIsoCode = "KAZ",
+                    NumericIsoCode = 398,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2476,6 +2044,30 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "KR",
                     ThreeLetterIsoCode = "KOR",
                     NumericIsoCode = 410,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Korea, Democratic People's Republic of",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KP",
+                    ThreeLetterIsoCode = "PRK",
+                    NumericIsoCode = 408,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kuwait",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KW",
+                    ThreeLetterIsoCode = "KWT",
+                    NumericIsoCode = 414,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2650,6 +2242,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Malaysia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MY",
+                    ThreeLetterIsoCode = "MYS",
+                    NumericIsoCode = 458,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Maldives",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2740,6 +2344,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "YT",
                     ThreeLetterIsoCode = "MYT",
                     NumericIsoCode = 175,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mexico",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MX",
+                    ThreeLetterIsoCode = "MEX",
+                    NumericIsoCode = 484,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2890,13 +2506,13 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
-                    Name = "Netherlands Antilles",
+                    Name = "Netherlands",
                     AllowsBilling = true,
                     AllowsShipping = true,
-                    TwoLetterIsoCode = "AN",
-                    ThreeLetterIsoCode = "ANT",
-                    NumericIsoCode = 530,
-                    SubjectToVat = false,
+                    TwoLetterIsoCode = "NL",
+                    ThreeLetterIsoCode = "NLD",
+                    NumericIsoCode = 528,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2908,6 +2524,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "NC",
                     ThreeLetterIsoCode = "NCL",
                     NumericIsoCode = 540,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "New Zealand",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NZ",
+                    ThreeLetterIsoCode = "NZL",
+                    NumericIsoCode = 554,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2986,6 +2614,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Norway",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NO",
+                    ThreeLetterIsoCode = "NOR",
+                    NumericIsoCode = 578,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Oman",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2998,12 +2638,36 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Pakistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PK",
+                    ThreeLetterIsoCode = "PAK",
+                    NumericIsoCode = 586,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Palau",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "PW",
                     ThreeLetterIsoCode = "PLW",
                     NumericIsoCode = 585,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Palestine",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PS",
+                    ThreeLetterIsoCode = "PSE",
+                    NumericIsoCode = 275,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3034,6 +2698,42 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Paraguay",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PY",
+                    ThreeLetterIsoCode = "PRY",
+                    NumericIsoCode = 600,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Peru",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PE",
+                    ThreeLetterIsoCode = "PER",
+                    NumericIsoCode = 604,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Philippines",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PH",
+                    ThreeLetterIsoCode = "PHL",
+                    NumericIsoCode = 608,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Pitcairn",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3046,12 +2746,84 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Poland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PL",
+                    ThreeLetterIsoCode = "POL",
+                    NumericIsoCode = 616,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Portugal",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PT",
+                    ThreeLetterIsoCode = "PRT",
+                    NumericIsoCode = 620,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Puerto Rico",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PR",
+                    ThreeLetterIsoCode = "PRI",
+                    NumericIsoCode = 630,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Qatar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "QA",
+                    ThreeLetterIsoCode = "QAT",
+                    NumericIsoCode = 634,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Reunion",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "RE",
                     ThreeLetterIsoCode = "REU",
                     NumericIsoCode = 638,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Romania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RO",
+                    ThreeLetterIsoCode = "ROU",
+                    NumericIsoCode = 642,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Russian Federation",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RU",
+                    ThreeLetterIsoCode = "RUS",
+                    NumericIsoCode = 643,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3142,12 +2914,36 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Saudi Arabia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SA",
+                    ThreeLetterIsoCode = "SAU",
+                    NumericIsoCode = 682,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Senegal",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "SN",
                     ThreeLetterIsoCode = "SEN",
                     NumericIsoCode = 686,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Serbia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RS",
+                    ThreeLetterIsoCode = "SRB",
+                    NumericIsoCode = 688,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3178,6 +2974,42 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Singapore",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SG",
+                    ThreeLetterIsoCode = "SGP",
+                    NumericIsoCode = 702,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Slovakia (Slovak Republic)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SK",
+                    ThreeLetterIsoCode = "SVK",
+                    NumericIsoCode = 703,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Slovenia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SI",
+                    ThreeLetterIsoCode = "SVN",
+                    NumericIsoCode = 705,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Solomon Islands",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3196,6 +3028,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "SO",
                     ThreeLetterIsoCode = "SOM",
                     NumericIsoCode = 706,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "South Africa",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ZA",
+                    ThreeLetterIsoCode = "ZAF",
+                    NumericIsoCode = 710,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3221,6 +3065,18 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "SSD",
                     NumericIsoCode = 728,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Spain",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ES",
+                    ThreeLetterIsoCode = "ESP",
+                    NumericIsoCode = 724,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -3298,12 +3154,24 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
-                    Name = "Swaziland",
+                    Name = "Sweden",
                     AllowsBilling = true,
                     AllowsShipping = true,
-                    TwoLetterIsoCode = "SZ",
-                    ThreeLetterIsoCode = "SWZ",
-                    NumericIsoCode = 748,
+                    TwoLetterIsoCode = "SE",
+                    ThreeLetterIsoCode = "SWE",
+                    NumericIsoCode = 752,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Switzerland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CH",
+                    ThreeLetterIsoCode = "CHE",
+                    NumericIsoCode = 756,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3316,6 +3184,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "SY",
                     ThreeLetterIsoCode = "SYR",
                     NumericIsoCode = 760,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Taiwan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TW",
+                    ThreeLetterIsoCode = "TWN",
+                    NumericIsoCode = 158,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3340,6 +3220,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "TZ",
                     ThreeLetterIsoCode = "TZA",
                     NumericIsoCode = 834,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Thailand",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TH",
+                    ThreeLetterIsoCode = "THA",
+                    NumericIsoCode = 764,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3406,6 +3298,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Turkey",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TR",
+                    ThreeLetterIsoCode = "TUR",
+                    NumericIsoCode = 792,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Turkmenistan",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3454,6 +3358,78 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Ukraine",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UA",
+                    ThreeLetterIsoCode = "UKR",
+                    NumericIsoCode = 804,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United Arab Emirates",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AE",
+                    ThreeLetterIsoCode = "ARE",
+                    NumericIsoCode = 784,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United Kingdom",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GB",
+                    ThreeLetterIsoCode = "GBR",
+                    NumericIsoCode = 826,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United States minor outlying islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UM",
+                    ThreeLetterIsoCode = "UMI",
+                    NumericIsoCode = 581,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uruguay",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UY",
+                    ThreeLetterIsoCode = "URY",
+                    NumericIsoCode = 858,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uzbekistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UZ",
+                    ThreeLetterIsoCode = "UZB",
+                    NumericIsoCode = 860,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Vanuatu",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3472,6 +3448,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "VA",
                     ThreeLetterIsoCode = "VAT",
                     NumericIsoCode = 336,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Venezuela",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VE",
+                    ThreeLetterIsoCode = "VEN",
+                    NumericIsoCode = 862,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -4571,7 +4559,7 @@ namespace Nop.Services.Installation
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
+                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServicesDefaults.DefaultHashedPasswordFormat));
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
@@ -5060,7 +5048,7 @@ namespace Nop.Services.Installation
             var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
             var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
             var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            
+
             var fourthOrder = new Order
             {
                 StoreId = defaultStore.Id,
@@ -6123,15 +6111,12 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CommonSettings
             {
                 UseSystemEmailForContactUsForm = true,
-                UseStoredProcedureForLoadingCategories = true,
 
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,
                 FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
                 PopupForTermsOfServiceLinks = true,
                 JqueryMigrateScriptLoggingActive = false,
@@ -6142,7 +6127,8 @@ namespace Nop.Services.Installation
                 EnableHtmlMinification = true,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
-                EnableCssBundling = false
+                EnableCssBundling = false,
+                RestartTimeout = NopCommonDefaults.RestartTimeout
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6352,7 +6338,7 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = NopCustomerServiceDefaults.DefaultHashedPasswordFormat,
+                HashedPasswordFormat = NopCustomerServicesDefaults.DefaultHashedPasswordFormat,
                 PasswordMinLength = 6,
                 PasswordRequireDigit = false,
                 PasswordRequireLowercase = false,
@@ -6409,7 +6395,10 @@ namespace Nop.Services.Installation
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
                 AllowCustomersToCheckGiftCardBalance = false,
-                DeleteGuestTaskOlderThanMinutes = 1440
+                DeleteGuestTaskOlderThanMinutes = 1440,
+                PhoneNumberValidationEnabled = false,
+                PhoneNumberValidationUseRegex = false,
+                PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
             settingService.SaveSetting(new AddressSettings
@@ -6596,7 +6585,8 @@ namespace Nop.Services.Installation
                 FreeShippingOverXEnabled = false,
                 FreeShippingOverXValue = decimal.Zero,
                 FreeShippingOverXIncludingTax = false,
-                EstimateShippingEnabled = true,
+                EstimateShippingProductPageEnabled = true,
+                EstimateShippingCartPageEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
                 HideShippingTotal = false,
@@ -6787,7 +6777,7 @@ namespace Nop.Services.Installation
                 AutomaticallyChooseLanguage = true,
                 Enabled = false,
                 CaptchaType = CaptchaType.CheckBoxReCaptchaV2,
-                ReCaptchaV3ScoreThreshold = 0.5,
+                ReCaptchaV3ScoreThreshold = 0.5M,
                 ShowOnApplyVendorPage = false,
                 ShowOnBlogCommentPage = false,
                 ShowOnContactUsPage = false,
@@ -6815,6 +6805,20 @@ namespace Nop.Services.Installation
                 Password = string.Empty,
                 BypassOnLocal = true,
                 PreAuthenticate = true
+            });
+
+            settingService.SaveSetting(new CookieSettings
+            {
+                CompareProductsCookieExpires = 24 * 10,
+                RecentlyViewedProductsCookieExpires = 24 * 10,
+                CustomerCookieExpires = 24 * 365
+            });
+
+            settingService.SaveSetting(new CachingSettings
+            {
+                ShortTermCacheTime = 5,
+                DefaultCacheTime = NopCachingDefaults.CacheTime,
+                BundledFilesCacheTime = 120
             });
         }
 
@@ -10999,7 +11003,7 @@ namespace Nop.Services.Installation
                     });
 
                     product.ApprovedRatingSum = rating;
-                    //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                    product.ApprovedTotalReviews = 1;
                 }
             }
 

@@ -57,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Poll poll, PollModel model)
         {
             poll.LimitedToStores = model.SelectedStoreIds.Any();
+            _pollService.UpdatePoll(poll);
 
             //manage store mappings
             var existingStoreMappings = _storeMappingService.GetStoreMappings(poll);

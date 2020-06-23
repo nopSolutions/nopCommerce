@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -14,7 +13,6 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -65,6 +63,39 @@ namespace Nop.Web.Areas.Admin.Factories
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
             _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual IPagedList<BestsellersReportLine> GetBestsellersReport(BestsellerSearchModel searchModel)
+        {
+            //get parameters to filter bestsellers
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+            if (_workContext.CurrentVendor != null)
+                searchModel.VendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //get bestsellers
+            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: searchModel.BillingCountryId,
+                orderBy: OrderByEnum.OrderByTotalAmount,
+                vendorId: searchModel.VendorId,
+                categoryId: searchModel.CategoryId,
+                manufacturerId: searchModel.ManufacturerId,
+                storeId: searchModel.StoreId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            return bestsellers;
         }
 
         #endregion
@@ -217,29 +248,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            //get parameters to filter bestsellers
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            if (_workContext.CurrentVendor != null)
-                searchModel.VendorId = _workContext.CurrentVendor.Id;
-            var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            //get bestsellers
-            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
-                createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                billingCountryId: searchModel.BillingCountryId,
-                orderBy: 2,
-                vendorId: searchModel.VendorId,
-                categoryId: searchModel.CategoryId,
-                manufacturerId: searchModel.ManufacturerId,
-                storeId: searchModel.StoreId,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var bestsellers = GetBestsellersReport(searchModel);
 
             //prepare list model
             var model = new BestsellerListModel().PrepareToGrid(searchModel, bestsellers, () =>
@@ -262,6 +271,23 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             return model;
+        }
+
+        /// <summary>
+        /// Get bestsellers total amount
+        /// </summary>
+        /// <param name="searchModel">Bestseller search model</param>
+        /// <returns>Bestseller total amount</returns>
+        public virtual string GetBestsellerTotalAmount(BestsellerSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            var bestsellers = GetBestsellersReport(searchModel);
+
+            var totalAmount = _priceFormatter.FormatPrice(bestsellers.Sum(bestseller => bestseller.TotalAmount), true, false);
+
+            return totalAmount;
         }
 
         #endregion

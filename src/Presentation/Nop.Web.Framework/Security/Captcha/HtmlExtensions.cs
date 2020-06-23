@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Security.Captcha
@@ -60,7 +60,7 @@ namespace Nop.Web.Framework.Security.Captcha
             var captchaTag = new TagBuilder("div") { TagRenderMode = TagRenderMode.Normal };
             captchaTag.Attributes.Add("id", id);
 
-            var scriptLoadApiTag = GenerateLoadApiScriptTag(id, "explicit", language);
+            var scriptLoadApiTag = GenerateLoadApiScriptTag(captchaSettings, id, "explicit", language);
 
             return new HtmlString(scriptCallbackTag.RenderHtmlContent() + captchaTag.RenderHtmlContent() + scriptLoadApiTag.RenderHtmlContent());
         }
@@ -113,7 +113,7 @@ namespace Nop.Web.Framework.Security.Captcha
             captchaTokenInput.Attributes.Add("id", $"g-recaptcha-response_{id}");
             captchaTokenInput.Attributes.Add("name", "g-recaptcha-response");
 
-            var scriptLoadApiTag = GenerateLoadApiScriptTag(id, publicKey, language);
+            var scriptLoadApiTag = GenerateLoadApiScriptTag(captchaSettings, id, publicKey, language);
 
             return new HtmlString(captchaTokenInput.RenderHtmlContent() + scriptCallbackTag.RenderHtmlContent() + scriptLoadApiTag.RenderHtmlContent());
         }
@@ -143,10 +143,10 @@ namespace Nop.Web.Framework.Security.Captcha
             return language;
         }
 
-        private static TagBuilder GenerateLoadApiScriptTag(string captchaId, string render, string language)
+        private static TagBuilder GenerateLoadApiScriptTag(CaptchaSettings captchaSettings, string captchaId, string render, string language)
         {
             var hl = !string.IsNullOrEmpty(language) ? $"&hl={language}" : string.Empty;
-            var url = string.Format($"{NopSecurityDefaults.RecaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", captchaId, render, hl);
+            var url = string.Format($"{captchaSettings.ReCaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", captchaId, render, hl);
             var scriptLoadApiTag = new TagBuilder("script") { TagRenderMode = TagRenderMode.Normal };
             scriptLoadApiTag.Attributes.Add("src", url);
             scriptLoadApiTag.Attributes.Add("async", null);

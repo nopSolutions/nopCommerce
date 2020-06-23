@@ -9,13 +9,13 @@
 @inject StoreInformationSettings storeInformationSettings
 @inject INopFileProvider fileProvider;
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IGenericAttributeService genericAttributeService
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
+@using Nop.Services.Common
 @using Nop.Services.Customers
-@using Nop.Services.Defaults
 @using Nop.Services.Helpers
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI
@@ -24,7 +24,8 @@
     var returnUrl = webHelper.GetRawUrl(Context.Request);
 
     //Kendo UI
-    var kendoVersion = "2019.3.1023";
+    var kendoVersion = "2020.1.406";
+    
     var currentKendoCulture = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.LanguageCulture;
     var currentCulture = CultureInfo.CurrentCulture;
 
@@ -122,12 +123,6 @@
 
     //has "Manage Maintenance" permission?
     var canManageMaintenance = permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
-
-    //X-UA-Compatible tag
-    if (commonSettings.RenderXuaCompatible)
-    {
-        Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
-    }
 
     //avatar
     var currentCustomer = workContext.CurrentCustomer;

@@ -142,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _manufacturerService.UpdateManufacturer(manufacturer);
 
             var existingAclRecords = _aclService.GetAclRecords(manufacturer);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -166,6 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
+            _manufacturerService.UpdateManufacturer(manufacturer);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(manufacturer);
             var allStores = _storeService.GetAllStores();

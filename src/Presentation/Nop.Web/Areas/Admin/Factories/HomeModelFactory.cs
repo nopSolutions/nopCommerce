@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
+using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
@@ -19,11 +20,12 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ILogger _logger;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
         private readonly NopHttpClient _nopHttpClient;
 
@@ -32,20 +34,22 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
+            ICacheKeyService cacheKeyService,
             ICommonModelFactory commonModelFactory,
             ILogger logger,
             IOrderModelFactory orderModelFactory,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext,
             NopHttpClient nopHttpClient)
         {
             _adminAreaSettings = adminAreaSettings;
+            _cacheKeyService = cacheKeyService;
             _commonModelFactory = commonModelFactory;
             _logger = logger;
             _orderModelFactory = orderModelFactory;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
             _nopHttpClient = nopHttpClient;
         }
@@ -88,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
             try
             {
                 //try to get news RSS feed
-                var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () =>
+                var rssData = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), () =>
                 {
                     try
                     {

@@ -18,7 +18,6 @@ namespace Nop.Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .UseIISIntegration()
                         .UseStartup<Startup>();
                 });
         }

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
@@ -69,8 +70,8 @@ namespace Nop.Services.Tests.Shipping
 
             var pluginService = new FakePluginService();
 
-            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
+            _pickupPluginManager = new PickupPluginManager(new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
 
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(new Store { Id = 1 });
@@ -99,24 +100,34 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void Can_load_shippingRateComputationMethods()
         {
-            var srcm = _shippingPluginManager.LoadAllPlugins();
-            srcm.Should().NotBeNull();
-            srcm.Any().Should().BeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var srcm = _shippingPluginManager.LoadAllPlugins();
+                srcm.Should().NotBeNull();
+                srcm.Any().Should().BeTrue();
+            });
         }
 
         [Test]
         public void Can_load_shippingRateComputationMethod_by_systemKeyword()
         {
-            var srcm = _shippingPluginManager.LoadPluginBySystemName("FixedRateTestShippingRateComputationMethod");
-            srcm.Should().NotBeNull();
+            RunWithTestServiceProvider(() =>
+            {
+                var srcm = _shippingPluginManager.LoadPluginBySystemName("FixedRateTestShippingRateComputationMethod");
+                srcm.Should().NotBeNull();
+            });
         }
 
         [Test]
         public void Can_load_active_shippingRateComputationMethods()
         {
-            var srcm = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames);
-            srcm.Should().NotBeNull();
-            srcm.Any().Should().BeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var srcm = _shippingPluginManager.LoadActivePlugins(_shippingSettings
+                    .ActiveShippingRateComputationMethodSystemNames);
+                srcm.Should().NotBeNull();
+                srcm.Any().Should().BeTrue();
+            });
         }
 
         [Test]
@@ -144,7 +155,10 @@ namespace Nop.Services.Tests.Shipping
                     }, product2)
                 }
             };
-            _shippingService.GetTotalWeight(request).Should().Be(50.5M);
+            RunWithTestServiceProvider(() =>
+            {
+                _shippingService.GetTotalWeight(request).Should().Be(50.5M);
+            });
         }
     }
 }

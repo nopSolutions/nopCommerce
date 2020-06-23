@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain;
-using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
 using Nop.Plugin.Widgets.FacebookPixel.Models;
 using Nop.Plugin.Widgets.FacebookPixel.Services;
@@ -36,13 +35,13 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly FacebookPixelService _facebookPixelService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -51,24 +50,24 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
         #region Ctor
 
-        public FacebookPixelController(CatalogSettings catalogSettings,
-            FacebookPixelService facebookPixelService,
+        public FacebookPixelController(FacebookPixelService facebookPixelService,
             IBaseAdminModelFactory baseAdminModelFactory,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
+            IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
             StoreInformationSettings storeInformationSettings)
         {
-            _catalogSettings = catalogSettings;
             _facebookPixelService = facebookPixelService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
+            _storeContext = storeContext;
             _storeService = storeService;
             _workContext = workContext;
             _storeInformationSettings = storeInformationSettings;
@@ -104,12 +103,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             //prepare plugin configuration model
             var model = new ConfigurationModel();
             _baseAdminModelFactory.PrepareStores(model.FacebookPixelSearchModel.AvailableStores);
-            model.FacebookPixelSearchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations
-                || model.FacebookPixelSearchModel.AvailableStores.SelectionIsNotPossible();
+            model.FacebookPixelSearchModel.HideStoresList = model.FacebookPixelSearchModel.AvailableStores.SelectionIsNotPossible();
             model.FacebookPixelSearchModel.HideSearchBlock = _genericAttributeService
                 .GetAttribute<bool>(_workContext.CurrentCustomer, FacebookPixelDefaults.HideSearchBlockAttribute);
             model.FacebookPixelSearchModel.SetGridPageSize();
-            model.HideList = !_facebookPixelService.GetConfigurations().Any();
+            model.HideList = !_facebookPixelService.GetPagedConfigurations().Any();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Configure.cshtml", model);
         }
@@ -120,7 +118,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedDataTablesJson();
 
-            var configurations = _facebookPixelService.GetConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
+            var configurations = _facebookPixelService.GetPagedConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
             var model = new FacebookPixelListModel().PrepareToGrid(searchModel, configurations, () =>
             {
                 //fill in model values from the configuration
@@ -154,7 +152,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
             //prepare other model properties
             _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
-            model.HideStoresList = _catalogSettings.IgnoreStoreLimitations || model.AvailableStores.SelectionIsNotPossible();
+            model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Create.cshtml", model);
         }
@@ -168,6 +166,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             if (ModelState.IsValid)
             {
                 //save configuration
+                model.StoreId = model.StoreId > 0 ? model.StoreId : _storeContext.CurrentStore.Id;
                 var configuration = model.ToEntity<FacebookPixelConfiguration>();
                 _facebookPixelService.InsertConfiguration(configuration);
 
@@ -178,7 +177,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
             //if we got this far, something failed, redisplay form
             _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
-            model.HideStoresList = _catalogSettings.IgnoreStoreLimitations || model.AvailableStores.SelectionIsNotPossible();
+            model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Create.cshtml", model);
         }
@@ -197,7 +196,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
             //prepare other model properties
             _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
-            model.HideStoresList = _catalogSettings.IgnoreStoreLimitations || model.AvailableStores.SelectionIsNotPossible();
+            model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
             model.HideCustomEventsSearch = !_facebookPixelService.GetCustomEvents(configuration.Id).Any();
             model.CustomEventSearchModel.ConfigurationId = configuration.Id;
             model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones = PreparePublicWidgetZones();
@@ -220,6 +219,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             {
                 //save configuration
                 var customEvents = configuration.CustomEvents;
+                model.StoreId = model.StoreId > 0 ? model.StoreId : _storeContext.CurrentStore.Id;
                 configuration = model.ToEntity<FacebookPixelConfiguration>();
                 configuration.CustomEvents = customEvents;
                 _facebookPixelService.UpdateConfiguration(configuration);
@@ -231,7 +231,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
             //if we got this far, something failed, redisplay form
             _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
-            model.HideStoresList = _catalogSettings.IgnoreStoreLimitations || model.AvailableStores.SelectionIsNotPossible();
+            model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
             model.HideCustomEventsSearch = !_facebookPixelService.GetCustomEvents(configuration.Id).Any();
             model.CustomEventSearchModel.ConfigurationId = configuration.Id;
             model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones = PreparePublicWidgetZones();

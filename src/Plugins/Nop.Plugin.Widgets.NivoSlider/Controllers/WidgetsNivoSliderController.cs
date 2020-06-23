@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;

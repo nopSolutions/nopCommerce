@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -16,6 +16,7 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly IRepository<CustomerAttributeValue> _customerAttributeValueRepository;
@@ -24,10 +25,12 @@ namespace Nop.Services.Customers
 
         #region Ctor
 
-        public CustomerAttributeService(IEventPublisher eventPublisher,
+        public CustomerAttributeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<CustomerAttribute> customerAttributeRepository,
             IRepository<CustomerAttributeValue> customerAttributeValueRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _customerAttributeRepository = customerAttributeRepository;
             _customerAttributeValueRepository = customerAttributeValueRepository;
@@ -62,7 +65,7 @@ namespace Nop.Services.Customers
                 orderby ca.DisplayOrder, ca.Id
                 select ca;
 
-            return query.ToCachedList(NopCustomerServiceCachingDefaults.CustomerAttributesAllCacheKey);
+            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = NopCustomerServiceCachingDefaults.CustomerAttributeValuesAllCacheKey.FillCacheKey(customerAttributeId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id

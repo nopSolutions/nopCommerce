@@ -15,6 +15,9 @@
   <LocaleResource Name="Account.AssociatedExternalAuth">
     <Value>External authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AccountAlreadyAssigned">
+    <Value>Account is already assigned</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.AssociatedExternalAuth.AddMoreRecords">
     <Value>You can associate your account with some external authentication systems on the following page (login once using them):</Value>
   </LocaleResource>
@@ -372,6 +375,9 @@
   <LocaleResource Name="Account.Fields.Phone">
     <Value>Phone</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Phone.NotValid">
+    <Value>Phone number is not valid</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.Phone.Required">
     <Value>Phone is required</Value>
   </LocaleResource>
@@ -634,7 +640,7 @@
     <Value>Registration not allowed. You can edit this in the admin area.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Register.Result.EmailValidation">
-    <Value>Your registration has been successfully completed. You have just been sent an email containing membership activation instructions.</Value>
+    <Value>Your registration has been successfully completed. You have just been sent an email containing activation instructions.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Register.Result.Standard">
     <Value>Your registration completed</Value>
@@ -1212,8 +1218,8 @@
   <LocaleResource Name="Address.Fields.ZipPostalCode.Required">
     <Value>Zip / postal code is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Address.OtherNonUS">
-    <Value>Other (Non US)</Value>
+  <LocaleResource Name="Address.Other">
+    <Value>Other</Value>
   </LocaleResource>
   <LocaleResource Name="Address.SelectCountry">
     <Value>Select country</Value>
@@ -1437,8 +1443,8 @@
   <LocaleResource Name="Admin.Address.Fields.ZipPostalCode.Required">
     <Value>Zip / postal code is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Address.OtherNonUS">
-    <Value>Other (Non US)</Value>
+  <LocaleResource Name="Admin.Address.Other">
+    <Value>Other</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.SelectCountry">
     <Value>Select country</Value>
@@ -3150,6 +3156,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.Hint">
     <Value>Specify period length for rental product. Price is specified for this period.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero">
+    <Value>Rental period length should be greater 0.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPricePeriod">
     <Value>Rental period</Value>
   </LocaleResource>
@@ -4014,6 +4023,12 @@
   <LocaleResource Name="Admin.Catalog.ProductTags">
     <Value>Product tags</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.BackToList">
+    <Value>back to product tags list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Deleted">
+    <Value>The product tag has been deleted successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
     <Value>Edit product tag details</Value>
   </LocaleResource>
@@ -4034,6 +4049,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
     <Value>Search by a tag name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
+    <Value>The product tag has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
     <Value>Grid</Value>
@@ -4106,6 +4124,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Edit">
     <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.EmptyItemText">
+    <Value>---</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ExcelFile">
     <Value>Excel file</Value>
@@ -4226,60 +4247,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ACL.Updated">
     <Value>The ACL has been updated successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog">
-    <Value>Activity log</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog">
-    <Value>Activity log</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType">
-    <Value>Activity log type</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
-    <Value>The activity log type.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
-    <Value>Activity log type</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment">
-    <Value>Message</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOn">
-    <Value>Created On</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom">
-    <Value>Created from</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom.Hint">
-    <Value>The creation from date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnTo">
-    <Value>Created to</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnTo.Hint">
-    <Value>The creation to date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer">
-    <Value>Customer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CustomerEmail">
-    <Value>Customer Email</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CustomerEmail.Hint">
-    <Value>A customer Email.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType">
-    <Value>Activity Types</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled">
-    <Value>Is Enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Updated">
-    <Value>The types have been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries">
     <Value>Countries</Value>
@@ -4870,7 +4837,7 @@
     <Value>The language has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile">
-    <Value>Xml file</Value>
+    <Value>XML file</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note1">
     <Value>NOTE: It can take up to several minutes.</Value>
@@ -4972,7 +4939,10 @@
     <Value>Scroll down through the list of plugins to find the newly installed plugin.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step4">
-    <Value>Click on the 'Install' link to install the plugin.</Value>
+    <Value>Click on the 'Install' link to choose the plugin for install.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Description.Step5">
+    <Value>Click on the 'Restart application to apply changes' button on the top panel to finish the installation process.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.DiscardChanges">
     <Value>Discard changes</Value>
@@ -5751,6 +5721,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
     <Value>Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
+    <Value>The regular expression for phone number validation is incorrect</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error">
     <Value>The regular expression for username validation is incorrect</Value>
   </LocaleResource>
@@ -6188,6 +6161,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled.Hint">
     <Value>Set if 'Phone number' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled">
+    <Value>Phone number validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled.Hint">
+    <Value>Check to enable phone number validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule">
+    <Value>Phone number validation rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint">
+    <Value>Set the validation rule for phone number. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for phone number validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex">
+    <Value>Use regex for phone number validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for phone number validation (when registering or changing on the "My Account" page)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneRequired">
     <Value>'Phone number' required</Value>
@@ -7768,7 +7759,7 @@
     <Value>Backorders</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo">
-    <Value>General information</Value>
+    <Value>Product info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory">
     <Value>Inventory</Value>
@@ -7777,13 +7768,13 @@
     <Value>Linked products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
-    <Value>Price</Value>
+    <Value>Prices</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping">
     <Value>Shipping</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
-    <Value>Tabs and display options</Value>
+    <Value>Panels and product species</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Button">
     <Value>Settings</Value>
@@ -7812,14 +7803,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Discounts">
     <Value>Discounts</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
     <Value>Display availability</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
-    <Value>Display stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
     <Value>Downloadable product</Value>
@@ -7850,12 +7835,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNew">
     <Value>Mark as new</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewEndDate">
-    <Value>Mark as new. End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewStartDate">
-    <Value>Mark as new. Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MaximumCartQuantity">
     <Value>Maximum cart qty</Value>
@@ -7914,7 +7893,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RelatedProducts">
     <Value>Related products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToTheCart">
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToCart">
     <Value>Require other products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Seo">
@@ -8118,11 +8097,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner.Hint">
     <Value>Check if you want a store owner to see shipment events on the shipment details pages of admin area (if supported by your shipping rate computation method).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled">
-    <Value>Estimate shipping enabled</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled">
+    <Value>Estimate shipping enabled (cart page)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
-    <Value>Check to allow customers to estimate shipping on product and shopping cart pages.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
+    <Value>Estimate shipping enabled (product page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the product details pages. Please note that all the shipping provider APIs will be called on the product details page. Also the final shipping rate in the cart may not be exactly equal to the sum of all the individual estimates.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled">
     <Value>Free shipping over 'X'</Value>
@@ -8960,9 +8945,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
     <Value>Default language</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
-    <Value>---</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
     <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>
@@ -10182,6 +10164,57 @@
   <LocaleResource Name="Admin.Customers">
     <Value>Customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.ActivityLogType">
+    <Value>Activity log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.ActivityLogType.Hint">
+    <Value>The activity log type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.Comment">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CustomerEmail">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CustomerEmail.Hint">
+    <Value>A customer Email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.IpAddress">
+    <Value>IP address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType">
+    <Value>Activity Types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType.Fields.Enabled">
+    <Value>Is Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType.Updated">
+    <Value>The types have been updated successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerAttributes">
     <Value>Custom customer attributes</Value>
   </LocaleResource>
@@ -10376,6 +10409,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.ActivityLogType">
     <Value>Activity Log Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Clear">
+    <Value>Clear activity log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.Comment">
     <Value>Comment</Value>
@@ -11060,6 +11096,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.Location">
     <Value>Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.NoCustomers">
+    <Value>No customers selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
@@ -11904,6 +11943,9 @@
   <LocaleResource Name="Admin.Orders.List.Warehouse.Hint">
     <Value>Load orders with products from a specified warehouse.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.NoOrders">
+    <Value>No orders selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError">
     <Value>This order item has an associated gift card record. Please delete it first</Value>
   </LocaleResource>
@@ -11954,10 +11996,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.PdfInvoice">
     <Value>Invoice (PDF)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.PdfInvoice.NoOrders">
-    <Value>No orders selected</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Orders.PdfInvoices">
     <Value>Print PDF invoices</Value>
   </LocaleResource>
@@ -12383,6 +12422,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.NoProducts">
+    <Value>No products selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions">
     <Value>Promotions</Value>
@@ -13151,6 +13193,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Store.Hint">
     <Value>Filter report by orders placed in a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Total">
+    <Value>Total</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Vendor">
     <Value>Vendor</Value>
@@ -14097,11 +14142,38 @@
   <LocaleResource Name="Admin.System.SeNames.Language.Standard">
     <Value>Standard</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SeNames.Name">
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.Hint">
+    <Value>Search by a "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language.Hint">
+    <Value>Search by a "Language" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Name">
     <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SeNames.Name.Hint">
+  <LocaleResource Name="Admin.System.SeNames.List.Name.Hint">
     <Value>A name to find.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Name">
+    <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo">
     <Value>System information</Value>
@@ -14392,7 +14464,7 @@
     <Value>In order to use this functionality, you have to disable the following setting: Catalog settings &gt; Ignore "limit per store" rules.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
-    <Value>You could uninstall and remove the plugin(s) which you don't use, this might increase performance</Value>
+    <Value>Uninstall and delete the plugin(s) that you don't use</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>'{0}' plugin is not compatible or cannot be loaded.</Value>
@@ -14695,10 +14767,10 @@
     <Value>Notify me when available</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Notification.Subscribed">
-    <Value>Subscribed</Value>
+    <Value>You've successfully subscribed</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Notification.Unsubscribed">
-    <Value>Unsubscribed</Value>
+    <Value>You've successfully unsubscribed</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.OnlyRegistered">
     <Value>Only registered customers can use this feature</Value>
@@ -14819,6 +14891,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout">
     <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.Address.NotFound">
+    <Value>Address can''t be loaded</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.Addresses.Invalid">
     <Value>You have {0} invalid address(es)</Value>
@@ -17787,11 +17862,20 @@
   <LocaleResource Name="Shipping.EstimateShippingPopUp.NoShippingOptions">
     <Value>No shipping options</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
+    <Value>From {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Product.IsNotFound">
+    <Value>Product is not found</Value>
+  </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.SelectShippingOption.Button">
     <Value>Apply</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.EstimatedDelivery">
     <Value>Estimated Delivery</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound">
+    <Value>Selected shipping option is not found</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.Name">
     <Value>Name</Value>
@@ -18258,6 +18342,9 @@
   <LocaleResource Name="Vendors.ApplyAccount.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.IsAdmin">
+    <Value>Administrator cannot apply for vendor account</Value>
+  </LocaleResource>
   <LocaleResource Name="Vendors.ApplyAccount.Name">
     <Value>Vendor name</Value>
   </LocaleResource>
@@ -18287,6 +18374,9 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.AddToCart.Error">
     <Value>Some product(s) from wishlist could not be moved to the cart for some reasons.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.AddToCart.NoAddedItems">
+    <Value>No products selected to add to cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.CartIsEmpty">
     <Value>The wishlist is empty!</Value>

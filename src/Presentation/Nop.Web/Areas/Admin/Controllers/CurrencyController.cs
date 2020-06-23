@@ -79,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Currency currency, CurrencyModel model)
         {
             currency.LimitedToStores = model.SelectedStoreIds.Any();
+            _currencyService.UpdateCurrency(currency);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(currency);
             var allStores = _storeService.GetAllStores();
@@ -119,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prepare model
-                model = _currencyModelFactory.PrepareCurrencySearchModel(new CurrencySearchModel(), liveRates);
+                model = _currencyModelFactory.PrepareCurrencySearchModel(model, liveRates);
             }
             catch (Exception e)
             {

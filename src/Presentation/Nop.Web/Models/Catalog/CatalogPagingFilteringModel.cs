@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Models;
@@ -356,7 +357,7 @@ namespace Nop.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    int.TryParse(spec.Trim(), out int specId);
+                    int.TryParse(spec.Trim(), out var specId);
                     if (!result.Contains(specId))
                         result.Add(specId);
                 }
@@ -372,19 +373,18 @@ namespace Nop.Web.Models.Catalog
             /// <param name="localizationService">Localization service</param>
             /// <param name="webHelper">Web helper</param>
             /// <param name="workContext">Work context</param>
-            /// <param name="cacheManager">Cache manager</param>
+            /// <param name="staticCacheManager">Cache manager</param>
             public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
                 int[] filterableSpecificationAttributeOptionIds,
+                ICacheKeyService cacheKeyService,
                 ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
-                IWebHelper webHelper, IWorkContext workContext, ICacheManager cacheManager)
+                IWebHelper webHelper, IWorkContext workContext, IStaticCacheManager staticCacheManager)
             {
                 Enabled = false;
-                var optionIds = filterableSpecificationAttributeOptionIds != null
-                    ? string.Join(",", filterableSpecificationAttributeOptionIds) : string.Empty;
-                var cacheKey = NopModelCacheDefaults.SpecsFilterModelKey.FillCacheKey(optionIds, workContext.WorkingLanguage.Id);
+                var cacheKey = cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, workContext.WorkingLanguage);
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
-                var allFilters = cacheManager.Get(cacheKey, () => allOptions.Select(sao =>
+                var allFilters = staticCacheManager.Get(cacheKey, () => allOptions.Select(sao =>
                 {
                     var specAttribute = specificationAttributeService.GetSpecificationAttributeById(sao.SpecificationAttributeId);
 

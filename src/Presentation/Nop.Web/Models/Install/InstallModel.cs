@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Data;
-using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.Install
@@ -37,6 +36,8 @@ namespace Nop.Web.Models.Install
         public bool IntegratedSecurity { get; set; }
 
         public string Username { get; set; }
+        [NoTrim]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         public string ConnectionString { get; set; }
 
@@ -45,5 +46,7 @@ namespace Nop.Web.Models.Install
 
         public List<SelectListItem> AvailableDataProviders { get; set; }
         public IDictionary<string, string> RawDataSettings => new Dictionary<string, string>();
+
+        public string RestartUrl { get; set; }
     }
 }

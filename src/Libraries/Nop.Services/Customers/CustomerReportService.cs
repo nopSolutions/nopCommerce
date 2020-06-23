@@ -7,6 +7,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 using Nop.Services.Helpers;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Customers
 {
@@ -54,7 +55,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
         public virtual IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
-            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy,
+            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364)
         {
             int? orderStatusId = null;
@@ -89,8 +90,8 @@ namespace Nop.Services.Customers
                          };
             query2 = orderBy switch
             {
-                1 => query2.OrderByDescending(x => x.OrderTotal),
-                2 => query2.OrderByDescending(x => x.OrderCount),
+                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.OrderTotal),
+                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderCount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);

@@ -64,7 +64,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+        void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
         /// Performs delete records in a table by a condition
@@ -87,18 +87,16 @@ namespace Nop.Data
         /// <param name="foreignColumn">Foreign key column name</param>
         /// <param name="primaryTable">Primary table</param>
         /// <param name="primaryColumn">Primary key column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of a foreign key</returns>
-        string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true);
+        string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn);
 
         /// <summary>
         /// Gets the name of an index
         /// </summary>
         /// <param name="targetTable">Target table name</param>
         /// <param name="targetColumn">Target column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of an index</returns>
-        string GetIndexName(string targetTable, string targetColumn, bool isShort = true);
+        string GetIndexName(string targetTable, string targetColumn);
 
         /// <summary>
         /// Returns queryable source for specified mapping class for current connection,
@@ -157,7 +155,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Type of entity</typeparam>
         /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
-
+        
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type

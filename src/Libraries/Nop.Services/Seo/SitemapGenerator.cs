@@ -15,14 +15,12 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Topics;
-using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Seo
 {
@@ -50,7 +48,6 @@ namespace Nop.Services.Seo
         private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly SecuritySettings _securitySettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
 
         #endregion
@@ -74,7 +71,6 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SecuritySettings securitySettings,
             SitemapXmlSettings sitemapSettings)
         {
             _blogSettings = blogSettings;
@@ -94,7 +90,6 @@ namespace Nop.Services.Seo
             _webHelper = webHelper;
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
-            _securitySettings = securitySettings;
             _sitemapXmlSettings = sitemapSettings;
         }
 

@@ -158,6 +158,13 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
         void InsertBlogComment(BlogComment blogComment);
+
+        /// <summary>
+        /// Update a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        void UpdateBlogComment(BlogComment blogComment);
+
         #endregion
     }
 }

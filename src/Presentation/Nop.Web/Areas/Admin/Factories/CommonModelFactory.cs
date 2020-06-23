@@ -40,6 +40,7 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -55,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
@@ -74,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
         private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxPluginManager _taxPluginManager;
@@ -97,6 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAuthenticationPluginManager authenticationPluginManager,
+            IBaseAdminModelFactory baseAdminModelFactory,
             ICurrencyService currencyService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
@@ -116,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
             IShippingPluginManager shippingPluginManager,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxPluginManager taxPluginManager,
@@ -135,6 +138,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
             _authenticationPluginManager = authenticationPluginManager;
+            _baseAdminModelFactory = baseAdminModelFactory;
             _currencyService = currencyService;
             _customerService = customerService;
             _dataProvider = dataProvider;
@@ -154,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _returnRequestService = returnRequestService;
             _searchTermService = searchTermService;
             _shippingPluginManager = shippingPluginManager;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeService = storeService;
             _taxPluginManager = taxPluginManager;
@@ -670,7 +674,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
             
-            model.CurrentStaticCacheManager = _cacheManager.GetType().Name;
+            model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
             model.RedisEnabled = _nopConfig.RedisEnabled;
             model.UseRedisToStoreDataProtectionKeys = _nopConfig.UseRedisToStoreDataProtectionKeys;
@@ -826,6 +830,32 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            //prepare available languages
+            //we insert 0 as 'Standard' language.
+            //let's insert -1 for 'All' language selection.
+            _baseAdminModelFactory.PrepareLanguages(searchModel.AvailableLanguages,
+                defaultItemText: _localizationService.GetResource("Admin.System.SeNames.List.Language.Standard"));
+            searchModel.AvailableLanguages.Insert(0,
+                new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
+            searchModel.LanguageId = -1;
+
+            //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.All")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.ActiveOnly")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.InactiveOnly")
+            });
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -842,8 +872,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
+            var languageId = searchModel.LanguageId < 0 ? null : (int?)(searchModel.LanguageId);
+
             //get URL records
             var urlRecords = _urlRecordService.GetAllUrlRecords(slug: searchModel.SeName,
+                languageId: languageId, isActive: isActive,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //get URL helper

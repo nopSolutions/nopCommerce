@@ -5,14 +5,13 @@
 @inject INopFileProvider fileProvider;
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @using System.Globalization
-@using Nop.Services.Defaults
 @using Nop.Web.Framework.UI;
-@using Nop.Core;
 @using Nop.Core.Domain.Localization
+@using Nop.Services.Common
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
     //Kendo UI
-    var kendoVersion = "2019.3.1023";
+    var kendoVersion = "2020.1.406";
     var currentKendoCulture = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.LanguageCulture;
     var currentCulture = CultureInfo.CurrentCulture;
 
@@ -102,12 +101,6 @@
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
-
-    //X-UA-Compatible tag
-    if (commonSettings.RenderXuaCompatible)
-    {
-        Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
-    }
 
     //event
     eventPublisher.Publish(new PageRenderingEvent(this.Html));

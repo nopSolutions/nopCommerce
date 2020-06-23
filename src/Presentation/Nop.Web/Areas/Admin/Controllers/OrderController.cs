@@ -299,36 +299,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
 
-        public virtual IActionResult ProductSearchAutoComplete(string term)
-        {
-            const int searchTermMinimumLength = 3;
-            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
-                return Content(string.Empty);
-
-            //a vendor should have access only to his products
-            var vendorId = 0;
-            if (_workContext.CurrentVendor != null)
-            {
-                vendorId = _workContext.CurrentVendor.Id;
-            }
-
-            //products
-            const int productNumber = 15;
-            var products = _productService.SearchProducts(
-                vendorId: vendorId,
-                keywords: term,
-                pageSize: productNumber,
-                showHidden: true);
-
-            var result = (from p in products
-                          select new
-                          {
-                              label = p.Name,
-                              productid = p.Id
-                          }).ToList();
-            return Json(result);
-        }
-
         #endregion
 
         #region Export / Import
@@ -384,10 +354,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.NoOrders"));
+                return RedirectToAction("List");
+            }
+
             try
             {
                 var xml = _exportManager.ExportOrdersToXml(orders);
-
                 return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "orders.xml");
             }
             catch (Exception exc)
@@ -413,9 +389,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
             }
 
-            var xml = _exportManager.ExportOrdersToXml(orders);
-
-            return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "orders.xml");
+            try
+            {
+                var xml = _exportManager.ExportOrdersToXml(orders);
+                return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "orders.xml");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost, ActionName("ExportExcel")]
@@ -468,6 +451,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
+
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.NoOrders"));
+                return RedirectToAction("List");
+            }
 
             try
             {
@@ -1033,14 +1023,29 @@ namespace Nop.Web.Areas.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
-            byte[] bytes;
-            using (var stream = new MemoryStream())
+            //ensure that we at least one order selected
+            if (!orders.Any())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, model.VendorId);
-                bytes = stream.ToArray();
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.NoOrders"));
+                return RedirectToAction("List");
             }
 
-            return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+            try
+            {
+                byte[] bytes;
+                using (var stream = new MemoryStream())
+                {
+                    _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, model.VendorId);
+                    bytes = stream.ToArray();
+                }
+
+                return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost]
@@ -1067,21 +1072,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            //ensure that we at least one order selected
-            if (!orders.Any())
+            try
             {
-                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                byte[] bytes;
+                using (var stream = new MemoryStream())
+                {
+                    _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
+                    bytes = stream.ToArray();
+                }
+
+                return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
-
-            byte[] bytes;
-            using (var stream = new MemoryStream())
-            {
-                _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
-                bytes = stream.ToArray();
-            }
-
-            return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
         //currently we use this method on the add product to order details pages
@@ -2464,14 +2470,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("ShipmentList");
             }
 
-            byte[] bytes;
-            using (var stream = new MemoryStream())
+            try
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
-                bytes = stream.ToArray();
-            }
+                byte[] bytes;
+                using (var stream = new MemoryStream())
+                {
+                    _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                    bytes = stream.ToArray();
+                }
 
-            return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
+                return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("ShipmentList");
+            }
         }
 
         [HttpPost]
@@ -2495,21 +2509,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 shipments = shipments.Where(HasAccessToShipment).ToList();
             }
 
-            //ensure that we at least one shipment selected
-            if (!shipments.Any())
+            try
             {
-                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
+                byte[] bytes;
+                using (var stream = new MemoryStream())
+                {
+                    _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
+                    bytes = stream.ToArray();
+                }
+
+                return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("ShipmentList");
             }
-
-            byte[] bytes;
-            using (var stream = new MemoryStream())
-            {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
-                bytes = stream.ToArray();
-            }
-
-            return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
         [HttpPost]

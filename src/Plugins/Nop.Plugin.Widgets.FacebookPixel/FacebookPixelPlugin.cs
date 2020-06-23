@@ -88,50 +88,53 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         public override void Install()
         {
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration", "Configuration");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning", "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents", "Configure custom events");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName", "Event name");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName.Hint", "Enter a name of the custom event (e.g. BlogView).");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones", "Widget zones");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones.Hint", "Choose widget zones in which the custom event will be tracked (e.g. blogpost_page_top).");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone", "Widget zone");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone.Hint", "Search custom events by the widget zone.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent", "Disable for users not accepting Cookie Consent");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent.Hint", "Check to disable the Facebook Pixel for users not accepting Cookie Consent. You may want this if you conduct business in countries that are subject to General Data Protection Regulation (GDPR). You also need to activate the \"DisplayEuCookieLawWarning\" setting on the General settings page in order to display Cookie Consent for users.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled", "Enabled");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled.Hint", "Toggle to enable/disable this Facebook Pixel configuration.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId", "Pixel ID");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Hint", "Enter the Facebook Pixel ID.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Required", "Pixel ID is required");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties", "Include User properties");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties.Hint", "Check to include User properties, data about the User, in a pixel. Then you can view User properties in the Facebook Analytics dashboard under People > User Properties.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties.Forbidden", "User Properties cannot be used together with Advanced Matching");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Store", "Store");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Store.Hint", "Choose a store in which the Facebook Pixel is used.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToCart", "Track \"AddToCart\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToCart.Hint", "Check to enable tracking standard event, when a product is added to the shopping cart.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToWishlist", "Track \"AddToWishlist\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToWishlist.Hint", "Check to enable tracking standard event, when a product is added to the wishlist.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackCompleteRegistration", "Track \"CompleteRegistration\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackCompleteRegistration.Hint", "Check to enable tracking standard event, when a registration form is completed.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackContact", "Track \"Contact\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackContact.Hint", "Check to enable tracking standard event, when a person person submits a question via contact us form.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackInitiateCheckout", "Track \"InitiateCheckout\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackInitiateCheckout.Hint", "Check to enable tracking standard event, when a person enters the checkout flow prior to completing the checkout flow.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPageView", "Track \"PageView\" event ");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPageView.Hint", "Check to enable tracking standard event, when a person lands on the website pages.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPurchase", "Track \"Purchase\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPurchase.Hint", "Check to enable tracking standard event, when an order is placed.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackSearch", "Track \"Search\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackSearch.Hint", "Check to enable tracking standard event, when a search is made.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackViewContent", "Track \"ViewContent\" event");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackViewContent.Hint", "Check to enable tracking standard event, when a person lands on a product details page.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching", "Advanced Matching");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Hint", "Check to enable Advanced Matching for tracked conversion events. In this case, some of the visitor's data (in the hashed format) will be collected by the Facebook Pixel. If you automatically implement advanced matching using the Events Manager, uncheck this setting.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Forbidden", "Advanced Matching cannot be used together with User Properties");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Search.Store", "Store");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Search.Store.Hint", "Search configuration by the store.");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents"] = "Configure custom events",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName"] = "Event name",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName.Hint"] = "Enter a name of the custom event (e.g. BlogView).",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones"] = "Widget zones",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones.Hint"] = "Choose widget zones in which the custom event will be tracked (e.g. blogpost_page_top).",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone"] = "Widget zone",
+                ["Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone.Hint"] = "Search custom events by the widget zone.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent"] = "Disable for users not accepting Cookie Consent",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent.Hint"] = "Check to disable the Facebook Pixel for users not accepting Cookie Consent. You may want this if you conduct business in countries that are subject to General Data Protection Regulation (GDPR). You also need to activate the \"DisplayEuCookieLawWarning\" setting on the General settings page in order to display Cookie Consent for users.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled"] = "Enabled",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled.Hint"] = "Toggle to enable/disable this Facebook Pixel configuration.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId"] = "Pixel ID",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Hint"] = "Enter the Facebook Pixel ID.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Required"] = "Pixel ID is required",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties"] = "Include User properties",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties.Hint"] = "Check to include User properties, data about the User, in a pixel. Then you can view User properties in the Facebook Analytics dashboard under People > User Properties.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties.Forbidden"] = "User Properties cannot be used together with Advanced Matching",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.Store"] = "Store",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.Store.Hint"] = "Choose a store in which the Facebook Pixel is used.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToCart"] = "Track \"AddToCart\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToCart.Hint"] = "Check to enable tracking standard event, when a product is added to the shopping cart.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToWishlist"] = "Track \"AddToWishlist\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToWishlist.Hint"] = "Check to enable tracking standard event, when a product is added to the wishlist.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackCompleteRegistration"] = "Track \"CompleteRegistration\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackCompleteRegistration.Hint"] = "Check to enable tracking standard event, when a registration form is completed.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackContact"] = "Track \"Contact\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackContact.Hint"] = "Check to enable tracking standard event, when a person person submits a question via contact us form.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackInitiateCheckout"] = "Track \"InitiateCheckout\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackInitiateCheckout.Hint"] = "Check to enable tracking standard event, when a person enters the checkout flow prior to completing the checkout flow.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPageView"] = "Track \"PageView\" event ",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPageView.Hint"] = "Check to enable tracking standard event, when a person lands on the website pages.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPurchase"] = "Track \"Purchase\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPurchase.Hint"] = "Check to enable tracking standard event, when an order is placed.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackSearch"] = "Track \"Search\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackSearch.Hint"] = "Check to enable tracking standard event, when a search is made.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackViewContent"] = "Track \"ViewContent\" event",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackViewContent.Hint"] = "Check to enable tracking standard event, when a person lands on a product details page.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching"] = "Advanced Matching",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Hint"] = "Check to enable Advanced Matching for tracked conversion events. In this case, some of the visitor's data (in the hashed format) will be collected by the Facebook Pixel. If you automatically implement advanced matching using the Events Manager, uncheck this setting.",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Forbidden"] = "Advanced Matching cannot be used together with User Properties",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Search.Store"] = "Store",
+                ["Plugins.Widgets.FacebookPixel.Configuration.Search.Store.Hint"] = "Search configuration by the store."
+            });
 
             base.Install();
         }
@@ -144,50 +147,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);
             _settingService.SaveSetting(_widgetSettings);
 
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.EventName.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Fields.WidgetZones.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.CustomEvents.Search.WidgetZone.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.DisableForUsersNotAcceptingCookieConsent.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Enabled.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PixelId.Required");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.PassUserProperties.Forbidden");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Store");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.Store.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToCart");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToCart.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToWishlist");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackAddToWishlist.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackCompleteRegistration");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackCompleteRegistration.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackContact");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackContact.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackInitiateCheckout");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackInitiateCheckout.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPageView");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPageView.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPurchase");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackPurchase.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackSearch");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackSearch.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackViewContent");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.TrackViewContent.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Fields.UseAdvancedMatching.Forbidden");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Search.Store");
-            _localizationService.DeletePluginLocaleResource("Plugins.Widgets.FacebookPixel.Configuration.Search.Store.Hint");
+            _localizationService.DeletePluginLocaleResources("Plugins.Widgets.FacebookPixel");
 
             base.Uninstall();
         }

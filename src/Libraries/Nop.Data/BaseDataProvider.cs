@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using LinqToDB;
@@ -9,15 +10,16 @@ using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 
 namespace Nop.Data
 {
     public abstract class BaseDataProvider
     {
-        public abstract IDbConnection CreateDbConnection(string connectionString = null);
-
         #region Utils
 
         private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
@@ -49,6 +51,13 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Gets a connection to the database for a current data provider
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        protected abstract IDbConnection GetInternalDbConnection(string connectionString);
+
+        /// <summary>
         /// Creates the database connection
         /// </summary>
         protected virtual DataConnection CreateDataConnection()
@@ -75,6 +84,25 @@ namespace Nop.Data
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        public virtual IDbConnection CreateDbConnection(string connectionString = null) 
+        {
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return dbConnection;
+
+            var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
+
+            LinqToDB.Common.Configuration.AvoidSpecificDataProviderAPI = storeSettings.DisplayMiniProfilerInPublicStore;
+
+            return storeSettings.DisplayMiniProfilerInPublicStore ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+        }
 
         /// <summary>
         /// Returns mapped entity descriptor.
@@ -106,11 +134,9 @@ namespace Nop.Data
         /// <returns>Inserted entity</returns>
         public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                entity.Id = dataContext.InsertWithInt32Identity(entity);
-                return entity;
-            }
+            using var dataContext = CreateDataConnection();
+            entity.Id = dataContext.InsertWithInt32Identity(entity);
+            return entity;
         }
 
         /// <summary>
@@ -121,10 +147,8 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                dataContext.Update(entity);
-            }
+            using var dataContext = CreateDataConnection();
+            dataContext.Update(entity);
         }
 
         /// <summary>
@@ -135,10 +159,8 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                dataContext.Delete(entity);
-            }
+            using var dataContext = CreateDataConnection();
+            dataContext.Delete(entity);
         }
 
         /// <summary>
@@ -146,14 +168,16 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        public void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataConnection())
-            {
+            using var dataContext = CreateDataConnection();
+            if (entities.All(entity => entity.Id == 0))
+                foreach (var entity in entities)
+                    dataContext.Delete(entity);
+            else
                 dataContext.GetTable<TEntity>()
                     .Where(e => e.Id.In(entities.Select(x => x.Id)))
                     .Delete();
-            }
         }
 
         /// <summary>
@@ -163,12 +187,10 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                dataContext.GetTable<TEntity>()
-                    .Where(predicate)
-                    .Delete();
-            }
+            using var dataContext = CreateDataConnection();
+            dataContext.GetTable<TEntity>()
+                .Where(predicate)
+                .Delete();
         }
 
         /// <summary>
@@ -178,10 +200,8 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataConnection(LinqToDbDataProvider))
-            {
-                dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
-            }
+            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
         /// <summary>
@@ -192,15 +212,13 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
-                var affectedRecords = command.Execute();
+            using var dataContext = CreateDataConnection();
+            var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
+            var affectedRecords = command.Execute();
 
-                UpdateOutputParameters(dataContext, dataParameters);
+            UpdateOutputParameters(dataContext, dataParameters);
 
-                return affectedRecords;
-            }
+            return affectedRecords;
         }
 
         /// <summary>
@@ -213,15 +231,13 @@ namespace Nop.Data
         /// <returns>Resulting value</returns>
         public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                var command = new CommandInfo(dataContext, procedureName, parameters);
+            using var dataContext = CreateDataConnection();
+            var command = new CommandInfo(dataContext, procedureName, parameters);
 
-                var result = command.ExecuteProc<T>();
-                UpdateOutputParameters(dataContext, parameters);
+            var result = command.ExecuteProc<T>();
+            UpdateOutputParameters(dataContext, parameters);
 
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -233,15 +249,13 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                var command = new CommandInfo(dataContext, procedureName, parameters);
+            using var dataContext = CreateDataConnection();
+            var command = new CommandInfo(dataContext, procedureName, parameters);
 
-                var affectedRecords = command.ExecuteProc();
-                UpdateOutputParameters(dataContext, parameters);
+            var affectedRecords = command.ExecuteProc();
+            UpdateOutputParameters(dataContext, parameters);
 
-                return affectedRecords;
-            }
+            return affectedRecords;
         }
 
         /// <summary>
@@ -254,13 +268,11 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                var command = new CommandInfo(dataContext, procedureName, parameters);
-                var rez = command.QueryProc<T>()?.ToList();
-                UpdateOutputParameters(dataContext, parameters);
-                return rez ?? new List<T>();
-            }
+            using var dataContext = CreateDataConnection();
+            var command = new CommandInfo(dataContext, procedureName, parameters);
+            var rez = command.QueryProc<T>()?.ToList();
+            UpdateOutputParameters(dataContext, parameters);
+            return rez ?? new List<T>();
         }
 
         /// <summary>
@@ -272,10 +284,8 @@ namespace Nop.Data
         /// <returns>Collection of values of specified type</returns>
         public IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataConnection())
-            {
-                return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
-            }
+            using var dataContext = CreateDataConnection();
+            return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
 
         #endregion

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
+using Nop.Core.Security;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -28,6 +29,7 @@ namespace Nop.Web.Framework
     {
         #region Fields
 
+        private readonly CookieSettings _cookieSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICurrencyService _currencyService;
@@ -54,7 +56,8 @@ namespace Nop.Web.Framework
 
         #region Ctor
 
-        public WebWorkContext(CurrencySettings currencySettings,
+        public WebWorkContext(CookieSettings cookieSettings,
+            CurrencySettings currencySettings,
             IAuthenticationService authenticationService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -69,6 +72,7 @@ namespace Nop.Web.Framework
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings)
         {
+            _cookieSettings = cookieSettings;
             _currencySettings = currencySettings;
             _authenticationService = authenticationService;
             _currencyService = currencyService;
@@ -113,7 +117,7 @@ namespace Nop.Web.Framework
             _httpContextAccessor.HttpContext.Response.Cookies.Delete(cookieName);
 
             //get date of cookie expiration
-            var cookieExpires = 24 * 365; //TODO make configurable
+            var cookieExpires = _cookieSettings.CustomerCookieExpires;
             var cookieExpiresDate = DateTime.Now.AddHours(cookieExpires);
 
             //if passed guid is empty set cookie as expired

@@ -4,12 +4,10 @@ using System.IO;
 using System.Net;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -44,7 +42,6 @@ namespace Nop.Web.Framework.Controllers
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
             //we customized it to allow running from controllers
 
-            //TODO add support for parameters (pass ViewComponent as input parameter)
             if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
@@ -60,14 +57,12 @@ namespace Nop.Web.Framework.Controllers
             if (viewData == null)
             {
                 throw new NotImplementedException();
-                //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
             var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
-                //TODO tempData = _tempDataDictionaryFactory.GetTempData(context.HttpContext);
             }
 
             using var writer = new StringWriter();
@@ -242,23 +237,6 @@ namespace Nop.Web.Framework.Controllers
         #region Security
 
         /// <summary>
-        /// Security check URL
-        /// </summary>
-        /// <param name="filterContext">The action executing context</param>
-        /// <remarks>Since the name of the optional URL parameter is copied into the response in the query string of the URL, 
-        /// you cannot enter arbitrary parameters of the query string in the application URL</remarks>
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            var path = Request.Path.HasValue ? Request.Path.ToString() : "";
-            var queryString = Request.QueryString.HasValue ? Request.QueryString.ToString() : "";
-            if (string.Concat(path, queryString).Contains("%26") || string.Concat(path, queryString).Contains("%3"))
-            {
-                var routeValueDictionary = new RouteValueDictionary { { "controller", "Error" }, { "action", "Error" } };
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(routeValueDictionary));
-            }
-        }
-
-        /// <summary>
         /// Access denied view
         /// </summary>
         /// <returns>Access denied view</returns>
@@ -370,6 +348,9 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="T">Model type</typeparam>
         /// <param name="model">The model to serialize.</param>
         /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        /// <remarks>
+        /// See also https://datatables.net/manual/server-side#Returned-data
+        /// </remarks>
         public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
         {
             return Json(new
@@ -377,10 +358,6 @@ namespace Nop.Web.Framework.Controllers
                 draw = model.Draw,
                 recordsTotal = model.RecordsTotal,
                 recordsFiltered = model.RecordsFiltered,
-                data = model.Data,
-
-                //TODO: remove after moving to DataTables grids
-                Total = model.Total,
                 Data = model.Data
             });
         }

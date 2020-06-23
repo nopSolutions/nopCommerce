@@ -1,6 +1,6 @@
 ﻿﻿using System;
 using FluentAssertions;
-using Nop.Core.Domain.Blogs;
+ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Blogs;
  using Nop.Tests;
@@ -16,7 +16,7 @@ namespace Nop.Services.Tests.Blogs
         [SetUp]
         public void SetUp()
         {
-            _blogService = new BlogService(new CatalogSettings(), null, null, null, null, new TestCacheManager());
+            _blogService = new BlogService(new CatalogSettings(), new FakeCacheKeyService(),  null, null, null, null, new TestCacheManager());
         }
 
         [Test]

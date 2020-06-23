@@ -4,6 +4,7 @@
     {
         public static string AccountNavigationAfter => "account_navigation_after";
         public static string AccountNavigationBefore => "account_navigation_before";
+        public static string AdminHeaderLinksAfter => "admin_header_links_after";
         public static string ApplyVendorBottom => "applyvendor_bottom";
         public static string ApplyVendorTop => "applyvendor_top";
         public static string BlogListPageAfterPost => "bloglist_page_after_post";
@@ -65,6 +66,7 @@
         public static string CheckoutPaymentInfoTop => "checkout_payment_info_top";
         public static string CheckoutPaymentMethodBottom => "checkout_payment_method_bottom";
         public static string CheckoutPaymentMethodTop => "checkout_payment_method_top";
+        public static string CheckoutPickUpPointsAfter => "checkout_pickup_points_after";
         public static string CheckoutProgressAfter => "checkout_progress_after";
         public static string CheckoutProgressBefore => "checkout_progress_before";
         public static string CheckoutShippingAddressBottom => "checkout_shipping_address_bottom";

@@ -19,7 +19,27 @@ namespace Nop.Data
 {
     public class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
+        #region Fields
+
+        //it's quite fast hash (to cheaply distinguish between objects)
+        private const string HASH_ALGORITHM = "SHA1";
+
+        #endregion
+
         #region Utils
+
+        /// <summary>
+        /// Configures the data context
+        /// </summary>
+        /// <param name="dataContext">Data context to configure</param>
+        private void ConfigureDataContext(IDataContext dataContext)
+        {
+            AdditionalSchema.SetDataType(
+                typeof(Guid),
+                new SqlDataType(DataType.NChar, typeof(Guid), 36));
+
+            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+        }
         
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
@@ -81,31 +101,21 @@ namespace Nop.Data
             return dataContext;
         }
 
-        /// <summary>
-        /// Configures the data context
-        /// </summary>
-        /// <param name="dataContext">Data context to configure</param>
-        public virtual void ConfigureDataContext(IDataContext dataContext)
-        {
-            AdditionalSchema.SetDataType(
-                typeof(Guid),
-                new SqlDataType(DataType.NChar, typeof(Guid), 36));
-
-            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
-        }
-
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Creates a connection to a database
+        /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public override IDbConnection CreateDbConnection(string connectionString = null)
+        protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            return new MySqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+            if(string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException(nameof(connectionString));
+
+            return new MySqlConnection(connectionString);
         }
 
         /// <summary>
@@ -312,11 +322,13 @@ namespace Nop.Data
         /// <param name="foreignColumn">Foreign key column name</param>
         /// <param name="primaryTable">Primary table</param>
         /// <param name="primaryColumn">Primary key column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of a foreign key</returns>
-        public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
+        public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
         {
-            return $"FK_{Guid.NewGuid():D}";
+            //mySql support only 64 chars for constraint name
+            //that is why we use hash function for create unique name
+            //see details on this topic: https://dev.mysql.com/doc/refman/8.0/en/identifier-length.html
+            return "FK_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}"), HASH_ALGORITHM);
         }
 
         /// <summary>
@@ -324,11 +336,10 @@ namespace Nop.Data
         /// </summary>
         /// <param name="targetTable">Target table name</param>
         /// <param name="targetColumn">Target column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of an index</returns>
-        public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
+        public virtual string GetIndexName(string targetTable, string targetColumn)
         {
-            return $"IX_{Guid.NewGuid():D}";
+            return "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
         }
 
         #endregion

@@ -16,7 +16,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
@@ -185,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
+                var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
                 StringValues ctrlAttributes;
 
                 switch (attribute.AttributeControlType)
@@ -684,6 +683,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                     }
 
+                    var currentCustomerRoleIds = _customerService.GetCustomerRoleIds(customer, true);
+
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
                     {
@@ -696,7 +697,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
-                            if (!_customerService.IsInCustomerRole(customer, customerRole.SystemName))
+                            if (currentCustomerRoleIds.All(roleId => roleId != customerRole.Id))
                                 _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                         }
                         else
@@ -709,10 +710,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                             }
 
                             //remove role
-                            if (_customerService.IsInCustomerRole(customer, customerRole.SystemName))
-                            {
+                            if (currentCustomerRoleIds.Any(roleId => roleId == customerRole.Id))
                                 _customerService.RemoveCustomerRoleMapping(customer, customerRole);
-                            }
                         }
                     }
 
@@ -1054,9 +1053,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (_customerService.IsGuest(customer))
                     throw new NopException("Customer should be registered");
                 if (string.IsNullOrWhiteSpace(model.SendPm.Subject))
-                    throw new NopException("PM subject is empty");
+                    throw new NopException(_localizationService.GetResource("PrivateMessages.SubjectCannotBeEmpty"));
                 if (string.IsNullOrWhiteSpace(model.SendPm.Message))
-                    throw new NopException("PM message is empty");
+                    throw new NopException(_localizationService.GetResource("PrivateMessages.MessageCannotBeEmpty"));
 
                 var privateMessage = new PrivateMessage
                 {
@@ -1686,8 +1685,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            var xml = _exportManager.ExportCustomersToXml(customers);
-            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
+            try
+            {
+                var xml = _exportManager.ExportCustomersToXml(customers);
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

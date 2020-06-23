@@ -8,7 +8,6 @@ using Nop.Core.Domain.Seo;
 using Nop.Data;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
-using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 
@@ -155,14 +154,14 @@ namespace Nop.Services.Affiliates
                 ordersQuery = ordersQuery.Where(o => !o.Deleted);
 
                 query = from a in query
-                        join o in ordersQuery on a.Id equals o.AffiliateId into a_o
-                        where a_o.Any()
+                        join o in ordersQuery on a.Id equals o.AffiliateId
                         select a;
             }
 
-            query = query.OrderByDescending(a => a.Id);
+            query = query.Distinct().OrderByDescending(a => a.Id);
 
             var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
+
             return affiliates;
         }
 

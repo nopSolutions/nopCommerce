@@ -40,11 +40,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
         /// <returns>View component result</returns>
         public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content(string.Empty);
-
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return Content(string.Empty);
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone

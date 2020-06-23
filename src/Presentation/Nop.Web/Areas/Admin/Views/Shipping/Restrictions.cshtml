@@ -60,8 +60,12 @@
                                         @foreach (var sm in Model.AvailableShippingMethods)
                                         {
                                             <th scope="col">
-                                                <strong>@sm.Name</strong>
-                                                <input type="checkbox" id="selectall-@(sm.Id)" />
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="selectall-@(sm.Id)" />
+                                                        <strong>@sm.Name</strong>
+                                                    </label>
+                                                </div>                                                                                                
                                             </th>
                                         }
                                     </tr>
@@ -77,7 +81,7 @@
                                             {
                                                 var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
                                                 <td>
-                                                    <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
+                                                    <input class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
                                                 </td>
                                             }
                                         </tr>

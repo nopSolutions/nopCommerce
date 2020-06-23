@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -30,6 +30,7 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IAddressService _addressService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
@@ -55,6 +56,7 @@ namespace Nop.Services.Shipping
         #region Ctor
 
         public ShippingService(IAddressService addressService,
+            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICountryService countryService,
             ICustomerService customerService,
@@ -76,6 +78,7 @@ namespace Nop.Services.Shipping
             ShoppingCartSettings shoppingCartSettings)
         {
             _addressService = addressService;
+            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _countryService = countryService;
             _customerService = customerService;
@@ -177,7 +180,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = NopShippingCachingDefaults.ShippingMethodsAllCacheKey.FillCacheKey(filterByCountryId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId);
             
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {
@@ -275,6 +278,9 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
 
             _shippingMethodCountryMappingRepository.Insert(shippingMethodCountryMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(shippingMethodCountryMapping);
         }
 
         /// <summary>
@@ -287,6 +293,9 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
 
             _shippingMethodCountryMappingRepository.Delete(shippingMethodCountryMapping);
+
+            //event notification
+            _eventPublisher.EntityDeleted(shippingMethodCountryMapping);
         }
 
         #endregion
@@ -332,7 +341,7 @@ namespace Nop.Services.Shipping
                         orderby wh.Name
                         select wh;
 
-            var warehouses = query.ToCachedList(NopShippingCachingDefaults.WarehousesAllCacheKey);
+            var warehouses = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
 
             if (!string.IsNullOrEmpty(name))
             {
@@ -678,7 +687,6 @@ namespace Nop.Services.Shipping
 
                 var product = _productService.GetProductById(sci.ProductId);
 
-                //TODO properly create requests for the associated products
                 if (product == null || !product.IsShipEnabled)
                 {
                     var associatedProducts = _productAttributeParser.ParseProductAttributeValues(sci.AttributesXml)
@@ -701,7 +709,6 @@ namespace Nop.Services.Shipping
                         //multiple warehouses supported
                         foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(product.Id))
                         {
-                            //TODO validate stock quantity when backorder is not allowed?
                             var tmpWarehouse = GetWarehouseById(pwi.WarehouseId);
                             if (tmpWarehouse != null)
                                 allWarehouses.Add(tmpWarehouse);

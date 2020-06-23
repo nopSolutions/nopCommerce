@@ -138,6 +138,13 @@ namespace Nop.Core.Tests
             _webHelper.ModifyQueryString("http://www.example.com/?param1=value1&param2=value1#fragment", "param1", "value2")
                 .Should().Be("http://www.example.com/?param1=value2&param2=value1#fragment");
         }
+
+        [Test]
+        public void Can_modify_queryString_in_virtual_directory()
+        {
+            _httpContext.Request.PathBase = "/nopCommercepath";
+            _webHelper.ModifyQueryString("/nopCommercepath/Controller/Action", "param1", "value1").Should().Be("/nopCommercepath/Controller/Action?param1=value1");
+        }
     }
 
     public class FakeHttpContextAccessor : IHttpContextAccessor

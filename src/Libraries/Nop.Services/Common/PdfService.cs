@@ -434,6 +434,8 @@ namespace Nop.Services.Common
             };
             totalsTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
+            var languageId = lang.Id;
+
             //order subtotal
             if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax &&
                 !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
@@ -443,9 +445,9 @@ namespace Nop.Services.Common
                 var orderSubtotalInclTaxInCustomerCurrency =
                     _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
                 var orderSubtotalInclTaxStr = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true,
-                    order.CustomerCurrencyCode, lang, true);
+                    order.CustomerCurrencyCode, languageId, true);
 
-                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id)} {orderSubtotalInclTaxStr}", font);
+                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Sub-Total", languageId)} {orderSubtotalInclTaxStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -457,9 +459,9 @@ namespace Nop.Services.Common
                 var orderSubtotalExclTaxInCustomerCurrency =
                     _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
                 var orderSubtotalExclTaxStr = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true,
-                    order.CustomerCurrencyCode, lang, false);
+                    order.CustomerCurrencyCode, languageId, false);
 
-                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id)} {orderSubtotalExclTaxStr}", font);
+                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Sub-Total", languageId)} {orderSubtotalExclTaxStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -477,9 +479,9 @@ namespace Nop.Services.Common
                     var orderSubTotalDiscountInclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
                     var orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(
-                        -orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        -orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
 
-                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Discount", lang.Id)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
+                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Discount", languageId)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -491,9 +493,9 @@ namespace Nop.Services.Common
                     var orderSubTotalDiscountExclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
                     var orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(
-                        -orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        -orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
 
-                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Discount", lang.Id)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
+                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Discount", languageId)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -509,9 +511,9 @@ namespace Nop.Services.Common
                     var orderShippingInclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
                     var orderShippingInclTaxStr = _priceFormatter.FormatShippingPrice(
-                        orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
 
-                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Shipping", lang.Id)} {orderShippingInclTaxStr}", font);
+                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Shipping", languageId)} {orderShippingInclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -522,9 +524,9 @@ namespace Nop.Services.Common
                     var orderShippingExclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
                     var orderShippingExclTaxStr = _priceFormatter.FormatShippingPrice(
-                        orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
 
-                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Shipping", lang.Id)} {orderShippingExclTaxStr}", font);
+                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Shipping", languageId)} {orderShippingExclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -540,9 +542,9 @@ namespace Nop.Services.Common
                     var paymentMethodAdditionalFeeInclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
                     var paymentMethodAdditionalFeeInclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(
-                        paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
 
-                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id)} {paymentMethodAdditionalFeeInclTaxStr}", font);
+                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", languageId)} {paymentMethodAdditionalFeeInclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -553,9 +555,9 @@ namespace Nop.Services.Common
                     var paymentMethodAdditionalFeeExclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
                     var paymentMethodAdditionalFeeExclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(
-                        paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
 
-                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id)} {paymentMethodAdditionalFeeExclTaxStr}", font);
+                    var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", languageId)} {paymentMethodAdditionalFeeExclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -587,13 +589,13 @@ namespace Nop.Services.Common
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
                     taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
-                        false, lang);
+                        false, languageId);
                 }
             }
 
             if (displayTax)
             {
-                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Tax", lang.Id)} {taxStr}", font);
+                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Tax", languageId)} {taxStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -603,11 +605,11 @@ namespace Nop.Services.Common
             {
                 foreach (var item in taxRates)
                 {
-                    var taxRate = string.Format(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id),
+                    var taxRate = string.Format(_localizationService.GetResource("PDFInvoice.TaxRate", languageId),
                         _priceFormatter.FormatTaxRate(item.Key));
                     var taxValue = _priceFormatter.FormatPrice(
                         _currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode,
-                        false, lang);
+                        false, languageId);
 
                     var p = GetPdfCell($"{taxRate} {taxValue}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -622,9 +624,9 @@ namespace Nop.Services.Common
                 var orderDiscountInCustomerCurrency =
                     _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
                 var orderDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency,
-                    true, order.CustomerCurrencyCode, false, lang);
+                    true, order.CustomerCurrencyCode, false, languageId);
 
-                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Discount", lang.Id)} {orderDiscountInCustomerCurrencyStr}", font);
+                var p = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.Discount", languageId)} {orderDiscountInCustomerCurrencyStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -633,11 +635,11 @@ namespace Nop.Services.Common
             //gift cards
             foreach (var gcuh in _giftCardService.GetGiftCardUsageHistory(order))
             {
-                var gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", lang.Id),
+                var gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", languageId),
                     _giftCardService.GetGiftCardById(gcuh.GiftCardId)?.GiftCardCouponCode);
                 var gcAmountStr = _priceFormatter.FormatPrice(
                     -_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true,
-                    order.CustomerCurrencyCode, false, lang);
+                    order.CustomerCurrencyCode, false, languageId);
 
                 var p = GetPdfCell($"{gcTitle} {gcAmountStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -648,11 +650,11 @@ namespace Nop.Services.Common
             //reward points
             if (order.RedeemedRewardPointsEntryId.HasValue && _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
             {
-                var rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id),
+                var rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", languageId),
                     -redeemedRewardPointsEntry.Points);
                 var rpAmount = _priceFormatter.FormatPrice(
                     -_currencyService.ConvertCurrency(redeemedRewardPointsEntry.UsedAmount, order.CurrencyRate),
-                    true, order.CustomerCurrencyCode, false, lang);
+                    true, order.CustomerCurrencyCode, false, languageId);
 
                 var p = GetPdfCell($"{rpTitle} {rpAmount}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -662,9 +664,9 @@ namespace Nop.Services.Common
 
             //order total
             var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-            var orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
+            var orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
 
-            var pTotal = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.OrderTotal", lang.Id)} {orderTotalStr}", titleFont);
+            var pTotal = GetPdfCell($"{_localizationService.GetResource("PDFInvoice.OrderTotal", languageId)} {orderTotalStr}", titleFont);
             pTotal.HorizontalAlignment = Element.ALIGN_RIGHT;
             pTotal.Border = Rectangle.NO_BORDER;
             totalsTable.AddCell(pTotal);
@@ -852,7 +854,7 @@ namespace Nop.Services.Common
                     var unitPriceInclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
                     unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true,
-                        order.CustomerCurrencyCode, lang, true);
+                        order.CustomerCurrencyCode, lang.Id, true);
                 }
                 else
                 {
@@ -860,7 +862,7 @@ namespace Nop.Services.Common
                     var unitPriceExclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
                     unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true,
-                        order.CustomerCurrencyCode, lang, false);
+                        order.CustomerCurrencyCode, lang.Id, false);
                 }
 
                 cellProductItem = GetPdfCell(unitPrice, font);
@@ -880,7 +882,7 @@ namespace Nop.Services.Common
                     var priceInclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
                     subTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
-                        lang, true);
+                        lang.Id, true);
                 }
                 else
                 {
@@ -888,7 +890,7 @@ namespace Nop.Services.Common
                     var priceExclTaxInCustomerCurrency =
                         _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
                     subTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
-                        lang, false);
+                        lang.Id, false);
                 }
 
                 cellProductItem = GetPdfCell(subTotal, font);
@@ -980,13 +982,12 @@ namespace Nop.Services.Common
                             new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
                     }
                     //custom attributes
-                    var customShippingAddressAttributes =
-                        _addressAttributeFormatter.FormatAttributes(shippingAddress.CustomAttributes);
+                    var customShippingAddressAttributes = _addressAttributeFormatter
+                        .FormatAttributes(shippingAddress.CustomAttributes, $"<br />{indent}");
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
-                        //TODO: we should add padding to each line (in case if we have several custom address attributes)
-                        shippingAddressPdf.AddCell(new Paragraph(
-                            indent + HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
+                        var text = HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
+                        shippingAddressPdf.AddCell(new Paragraph(indent + text, font));
                     }
 
                     shippingAddressPdf.AddCell(new Paragraph(" "));
@@ -1082,13 +1083,12 @@ namespace Nop.Services.Common
                 billingAddressPdf.AddCell(GetParagraph("PDFInvoice.VATNumber", indent, lang, font, order.VatNumber));
 
             //custom attributes
-            var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes(billingAddress.CustomAttributes);
-
+            var customBillingAddressAttributes = _addressAttributeFormatter
+                .FormatAttributes(billingAddress.CustomAttributes, $"<br />{indent}");
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
-                //TODO: we should add padding to each line (in case if we have several custom address attributes)
-                billingAddressPdf.AddCell(
-                    new Paragraph(indent + HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true), font));
+                var text = HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
+                billingAddressPdf.AddCell(new Paragraph(indent + text, font));
             }
 
             //vendors payment details

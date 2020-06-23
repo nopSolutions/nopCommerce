@@ -6,6 +6,7 @@ using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Directory
@@ -114,7 +115,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _measureService = new MeasureService(_eventPublisher.Object,
+            _measureService = new MeasureService(new FakeCacheKeyService(), _eventPublisher.Object,
                 _measureDimensionRepository.Object,
                 _measureWeightRepository.Object,
                 _measureSettings);

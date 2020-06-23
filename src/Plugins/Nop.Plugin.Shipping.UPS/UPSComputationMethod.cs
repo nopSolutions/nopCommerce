@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
@@ -93,53 +94,62 @@ namespace Nop.Plugin.Shipping.UPS
                 PackagingType = PackagingType.ExpressBox,
                 PackingPackageVolume = 5184,
                 PackingType = PackingType.PackByDimensions,
-                PassDimensions = true
+                PassDimensions = true,
+                WeightType = "LBS",
+                DimensionsType = "IN"
             });
 
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions", "Pack by dimensions");
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage", "Pack by one item per package");
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByVolume", "Pack by volume");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey", "Access Key");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey.Hint", "Specify UPS access key.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccountNumber", "Account number");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccountNumber.Hint", "Specify UPS account number (required to get negotiated rates).");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge", "Additional handling charge");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices", "Carrier Services");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint", "Select the services you want to offer to customers.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification", "UPS Customer Classification");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification.Hint", "Choose customer classification.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage", "Insure package");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage.Hint", "Check to insure packages.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType", "UPS Packaging Type");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType.Hint", "Choose UPS packaging type.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume", "Package volume");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume.Hint", "Enter your package volume.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType", "Packing type");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType.Hint", "Choose preferred packing type.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions", "Pass dimensions");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions.Hint", "Check if you want to pass package dimensions when requesting rates.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password", "Password");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password.Hint", "Specify UPS password.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType", "UPS Pickup Type");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType.Hint", "Choose UPS pickup type.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled", "Saturday Delivery enabled");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint", "Check to get rates for Saturday Delivery options.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing", "Tracing");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing.Hint", "Check if you want to record plugin tracing in System Log. Warning: The entire request and response XML will be logged (including AccessKey/Username,Password). Do not leave this enabled in a production environment.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username", "Username");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username.Hint", "Specify UPS username.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.UseSandbox", "Use sandbox");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.UseSandbox.Hint", "Check to use sandbox (testing environment).");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Arrived", "Arrived");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Booked", "Booked");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Delivered", "Delivered");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Departed", "Departed");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.ExportScanned", "Export scanned");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.NotDelivered", "Not delivered");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.OriginScanned", "Origin scanned");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Pickup", "Pickup");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions"] = "Pack by dimensions",
+                ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage"] = "Pack by one item per package",
+                ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByVolume"] = "Pack by volume",
+                ["Plugins.Shipping.UPS.Fields.AccessKey"] = "Access Key",
+                ["Plugins.Shipping.UPS.Fields.AccessKey.Hint"] = "Specify UPS access key.",
+                ["Plugins.Shipping.UPS.Fields.AccountNumber"] = "Account number",
+                ["Plugins.Shipping.UPS.Fields.AccountNumber.Hint"] = "Specify UPS account number (required to get negotiated rates).",
+                ["Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge"] = "Additional handling charge",
+                ["Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge.Hint"] = "Enter additional handling fee to charge your customers.",
+                ["Plugins.Shipping.UPS.Fields.AvailableCarrierServices"] = "Carrier Services",
+                ["Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint"] = "Select the services you want to offer to customers.",
+                ["Plugins.Shipping.UPS.Fields.CustomerClassification"] = "UPS Customer Classification",
+                ["Plugins.Shipping.UPS.Fields.CustomerClassification.Hint"] = "Choose customer classification.",
+                ["Plugins.Shipping.UPS.Fields.DimensionsType"] = "Dimensions type",
+                ["Plugins.Shipping.UPS.Fields.DimensionsType.Hint"] = "Choose dimensions type (inches or centimeters).",
+                ["Plugins.Shipping.UPS.Fields.InsurePackage"] = "Insure package",
+                ["Plugins.Shipping.UPS.Fields.InsurePackage.Hint"] = "Check to insure packages.",
+                ["Plugins.Shipping.UPS.Fields.PackagingType"] = "UPS Packaging Type",
+                ["Plugins.Shipping.UPS.Fields.PackagingType.Hint"] = "Choose UPS packaging type.",
+                ["Plugins.Shipping.UPS.Fields.PackingPackageVolume"] = "Package volume",
+                ["Plugins.Shipping.UPS.Fields.PackingPackageVolume.Hint"] = "Enter your package volume.",
+                ["Plugins.Shipping.UPS.Fields.PackingType"] = "Packing type",
+                ["Plugins.Shipping.UPS.Fields.PackingType.Hint"] = "Choose preferred packing type.",
+                ["Plugins.Shipping.UPS.Fields.PassDimensions"] = "Pass dimensions",
+                ["Plugins.Shipping.UPS.Fields.PassDimensions.Hint"] = "Check if you want to pass package dimensions when requesting rates.",
+                ["Plugins.Shipping.UPS.Fields.Password"] = "Password",
+                ["Plugins.Shipping.UPS.Fields.Password.Hint"] = "Specify UPS password.",
+                ["Plugins.Shipping.UPS.Fields.PickupType"] = "UPS Pickup Type",
+                ["Plugins.Shipping.UPS.Fields.PickupType.Hint"] = "Choose UPS pickup type.",
+                ["Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled"] = "Saturday Delivery enabled",
+                ["Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint"] = "Check to get rates for Saturday Delivery options.",
+                ["Plugins.Shipping.UPS.Fields.Tracing"] = "Tracing",
+                ["Plugins.Shipping.UPS.Fields.Tracing.Hint"] = "Check if you want to record plugin tracing in System Log. Warning: The entire request and response XML will be logged (including AccessKey/Username,Password). Do not leave this enabled in a production environment.",
+                ["Plugins.Shipping.UPS.Fields.Username"] = "Username",
+                ["Plugins.Shipping.UPS.Fields.Username.Hint"] = "Specify UPS username.",
+                ["Plugins.Shipping.UPS.Fields.UseSandbox"] = "Use sandbox",
+                ["Plugins.Shipping.UPS.Fields.UseSandbox.Hint"] = "Check to use sandbox (testing environment).",
+                ["Plugins.Shipping.UPS.Fields.WeightType"] = "Weight type",
+                ["Plugins.Shipping.UPS.Fields.WeightType.Hint"] = "Choose the weight type (pounds or kilograms).",
+                ["Plugins.Shipping.UPS.Tracker.Arrived"] = "Arrived",
+                ["Plugins.Shipping.UPS.Tracker.Booked"] = "Booked",
+                ["Plugins.Shipping.UPS.Tracker.Delivered"] = "Delivered",
+                ["Plugins.Shipping.UPS.Tracker.Departed"] = "Departed",
+                ["Plugins.Shipping.UPS.Tracker.ExportScanned"] = "Export scanned",
+                ["Plugins.Shipping.UPS.Tracker.NotDelivered"] = "Not delivered",
+                ["Plugins.Shipping.UPS.Tracker.OriginScanned"] = "Origin scanned",
+                ["Plugins.Shipping.UPS.Tracker.Pickup"] = "Pickup"
+            });
 
             base.Install();
         }
@@ -153,49 +163,8 @@ namespace Nop.Plugin.Shipping.UPS
             _settingService.DeleteSetting<UPSSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions");
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage");
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByVolume");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccountNumber");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccountNumber.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.UseSandbox");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.UseSandbox.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Arrived");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Booked");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Delivered");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Departed");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.ExportScanned");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.NotDelivered");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.OriginScanned");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Pickup");
+            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Shipping.UPS");
+            _localizationService.DeletePluginLocaleResources("Plugins.Shipping.UPS");
 
             base.Uninstall();
         }

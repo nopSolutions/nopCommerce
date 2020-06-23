@@ -370,7 +370,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -421,7 +421,8 @@ namespace Nop.Web.Factories
                 .Count;
             foreach (var record in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
             {
-                var authMethod = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                var authMethod = _authenticationPluginManager
+                    .LoadPluginBySystemName(record.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -549,7 +550,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }

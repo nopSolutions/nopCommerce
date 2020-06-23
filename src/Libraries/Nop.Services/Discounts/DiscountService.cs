@@ -8,7 +8,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -25,6 +25,7 @@ namespace Nop.Services.Discounts
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IEventPublisher _eventPublisher;
@@ -34,14 +35,15 @@ namespace Nop.Services.Discounts
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
 
         #endregion
 
         #region Ctor
 
-        public DiscountService(ICustomerService customerService,
+        public DiscountService(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
@@ -50,9 +52,10 @@ namespace Nop.Services.Discounts
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IRepository<Order> orderRepository,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext)
         {
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _discountPluginManager = discountPluginManager;
             _eventPublisher = eventPublisher;
@@ -62,7 +65,7 @@ namespace Nop.Services.Discounts
             _discountRequirementRepository = discountRequirementRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
             _orderRepository = orderRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
         }
 
@@ -182,8 +185,8 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = NopDiscountCachingDefaults.DiscountAllCacheKey
-                .FillCacheKey(showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey
+                , showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
 
             var query = _discountRepository.Table;
 
@@ -194,14 +197,6 @@ namespace Nop.Services.Discounts
                     (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
             }
 
-            //filter by dates
-            if (startDateUtc.HasValue)
-                query = query.Where(discount =>
-                    !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
-            if (endDateUtc.HasValue)
-                query = query.Where(discount =>
-                    !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
-
             //filter by coupon code
             if (!string.IsNullOrEmpty(couponCode))
                 query = query.Where(discount => discount.CouponCode == couponCode);
@@ -210,20 +205,24 @@ namespace Nop.Services.Discounts
             if (!string.IsNullOrEmpty(discountName))
                 query = query.Where(discount => discount.Name.Contains(discountName));
 
-            //filter by type
-            if (discountType.HasValue)
-                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
-
             query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
-            var discounts = query.ToCachedList(cacheKey);
+            query = query.ToCachedList(cacheKey).AsQueryable();
 
             //we know that this method is usually invoked multiple times
-            //that's why we filter discounts by type on the application layer
+            //that's why we filter discounts by type and dates on the application layer
             if (discountType.HasValue)
-                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
+                query = query.Where(discount => discount.DiscountType == discountType.Value);
 
-            return discounts.ToList();
+            //filter by dates
+            if (startDateUtc.HasValue)
+                query = query.Where(discount =>
+                    !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+            if (endDateUtc.HasValue)
+                query = query.Where(discount =>
+                    !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -602,8 +601,9 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.FillCacheKey(discount);
-            var requirements = _cacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount);
+
+            var requirements = _staticCacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
 
             //get top-level group
             var topLevelGroup = requirements.FirstOrDefault();
@@ -639,7 +639,7 @@ namespace Nop.Services.Discounts
             if (discountUsageHistoryId == 0)
                 return null;
 
-            return _discountUsageHistoryRepository.ToCachedGetById(discountUsageHistoryId);
+            return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
         }
 
         /// <summary>

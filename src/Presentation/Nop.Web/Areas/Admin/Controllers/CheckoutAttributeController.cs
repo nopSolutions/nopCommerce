@@ -113,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             checkoutAttribute.LimitedToStores = model.SelectedStoreIds.Any();
+            _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(checkoutAttribute);
             var allStores = _storeService.GetAllStores();

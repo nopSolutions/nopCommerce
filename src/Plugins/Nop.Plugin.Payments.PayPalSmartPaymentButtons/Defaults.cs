@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Nop.Core;
-using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
 {
@@ -50,6 +49,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         public static string PaymentRequestSessionKey => "OrderPaymentInfo";
 
         /// <summary>
+        /// Gets the name of a generic attribute to store the refund identifier
+        /// </summary>
+        public static string RefundIdAttributeName => "PayPalSmartPaymentButtonsRefundId";
+
+        /// <summary>
         /// Gets the service js script URL
         /// </summary>
         public static string ServiceScriptUrl => "https://www.paypal.com/sdk/js";
@@ -69,17 +73,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         };
 
         /// <summary>
-        /// Gets a list of available widget zones to display logo and buttons (Prominently feature)
-        /// </summary>
-        public static Dictionary<int, string> AvailableButtonsWidgetZones => new Dictionary<int, string>
-        {
-            //[1] = PublicWidgetZones.ProductDetailsAddInfo, //PayPal asked for now to remove the buttons from the product details page, well ok.
-            [2] = PublicWidgetZones.OrderSummaryContentAfter,
-            [3] = PublicWidgetZones.HeaderLinksBefore,
-            [4] = PublicWidgetZones.Footer,
-        };
-
-        /// <summary>
         /// Gets a name of the view component to display payment info in public store
         /// </summary>
         public const string PAYMENT_INFO_VIEW_COMPONENT_NAME = "PayPalSmartPaymentButtonsPaymentInfo";
@@ -90,8 +83,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         public const string SCRIPT_VIEW_COMPONENT_NAME = "PayPalSmartPaymentButtonsScript";
 
         /// <summary>
-        /// Gets a name of the view component to display logo and buttons
+        /// Gets a name of the view component to display buttons
         /// </summary>
         public const string BUTTONS_VIEW_COMPONENT_NAME = "PayPalSmartPaymentButtonsButtons";
+
+        /// <summary>
+        /// Gets a name of the view component to display logo
+        /// </summary>
+        public const string LOGO_VIEW_COMPONENT_NAME = "PayPalSmartPaymentButtonsLogo";
     }
 }

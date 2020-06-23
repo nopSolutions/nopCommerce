@@ -1,35 +1,31 @@
 ﻿@model (string WidgetZone, int ProductId)
 
-@if (Model.WidgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter))
+@if (Model.ProductId > 0)
+{
+    <div>
+        <div class="add-to-cart-panel" id="paypal-button-container@($"-{Model.ProductId}")"></div>
+    </div>
+}
+else
 {
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#checkout').after('<div id="paypal-button-container"></div>');
             $('#checkout').hide();
         });
     </script>
 }
 
-@if (Model.WidgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo))
-{
-    <div>
-        <div class="add-to-cart-panel" id="paypal-button-container@(Model.ProductId > 0 ? $"-{Model.ProductId}" : null)"></div>
-    </div>
-}
-
 <script asp-location="Footer">
     $(document).ready(function() {
         var paymentForm = paypal.Buttons({
             onClick: function (e, n) {
-                //terms of service
-                if ($('#termsofservice').length > 0) {
-                    //terms of service element exists
-                    if (!$('#termsofservice').is(':checked')) {
-                        $("#terms-of-service-warning-box").dialog();
-                        return false;
-                    }
+                if ($('#checkout').length > 0) {
+                    $('#checkout').click();
                 }
-                window.location = '@Url.RouteUrl("Checkout")';
+                if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+                    $('#add-to-cart-button-@Model.ProductId').click();
+                }
                 return false;
             },
             style: {

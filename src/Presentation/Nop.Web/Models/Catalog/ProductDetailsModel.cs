@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
+using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -28,6 +29,7 @@ namespace Nop.Web.Models.Catalog
             ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
+            ProductEstimateShipping = new ProductEstimateShippingModel();
         }
 
         //picture(s)
@@ -98,6 +100,8 @@ namespace Nop.Web.Models.Catalog
         public IList<ManufacturerBriefInfoModel> ProductManufacturers { get; set; }
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
+
+        public ProductEstimateShippingModel ProductEstimateShipping { get; set; }
 
         public IList<TierPriceModel> TierPrices { get; set; }
 
@@ -307,6 +311,11 @@ namespace Nop.Web.Models.Catalog
             public bool CustomerEntersQty { get; set; }
 
             public int Quantity { get; set; }
+        }
+
+        public partial class ProductEstimateShippingModel : EstimateShippingModel
+        {
+            public int ProductId { get; set; }
         }
 
         #endregion

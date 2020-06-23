@@ -46,8 +46,7 @@
                             <div class="custombody">
                                 <div class="form-group">
                                     <div class="logo">
-                                        <img src="@Url.Content("~/Plugins/Misc.SendinBlue/logo.jpg")" alt="" />
-                                        <i class="sib-logo-icon"></i> <span class="t-logo-text">sendinblue</span>
+                                        <img src="@Url.Content("~/Plugins/Misc.SendinBlue/logo.png")" alt="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -472,8 +471,8 @@
                                                             updateTable('#sms-grid');
 
                                                             //clear input value
-                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val('');
-                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val('');
+                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(@(Model.AddSms.DefaultSelectedMessageId));
+                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(@(Model.AddSms.DefaultSelectedPhoneTypeId));
                                                             $("#@Html.IdFor(model => model.AddSms.Text)").val('');
 
                                                         } else {

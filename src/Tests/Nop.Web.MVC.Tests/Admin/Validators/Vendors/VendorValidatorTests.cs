@@ -18,7 +18,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
         public new void Setup()
         {
             _dataProvider = new Mock<INopDataProvider>();
-            _validator = new VendorValidator(_dataProvider.Object, _localizationService);
+            _validator = new VendorValidator(_localizationService, _dataProvider.Object);
         }
 
         [Test]

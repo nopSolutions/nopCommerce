@@ -23,7 +23,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -56,7 +55,6 @@ namespace Nop.Services.ExportImport
         private readonly ICustomerActivityService _customerActivityService;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
-        private readonly IEncryptionService _encryptionService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
@@ -93,7 +91,6 @@ namespace Nop.Services.ExportImport
             ICustomerActivityService customerActivityService,
             INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
-            IEncryptionService encryptionService,
             IHttpClientFactory httpClientFactory,
             ILocalizationService localizationService,
             ILogger logger,
@@ -126,7 +123,6 @@ namespace Nop.Services.ExportImport
             _customerActivityService = customerActivityService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
-            _encryptionService = encryptionService;
             _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
             _localizationService = localizationService;
@@ -351,6 +347,7 @@ namespace Nop.Services.ExportImport
         {
             //performance optimization, load all pictures hashes
             //it will only be used if the images are stored in the SQL Server database (not compact)
+            var trimByteCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = _productService.GetProductsImagesIds(allProductsBySku.Select(p => p.Id).ToArray());
             var allPicturesHashes = _pictureService.GetPicturesHash(productsImagesIds.SelectMany(p => p.Value).ToArray());
 
@@ -367,15 +364,15 @@ namespace Nop.Services.ExportImport
                         var pictureAlreadyExists = false;
                         if (!product.IsNew)
                         {
-                            var newImageHash = _encryptionService.CreateHash(
+                            var newImageHash = HashHelper.CreateHash(
                                 newPictureBinary,
                                 IMAGE_HASH_ALGORITHM,
-                                _dataProvider.SupportedLengthOfBinaryHash);
-                                    
-                            var newValidatedImageHash = _encryptionService.CreateHash(
+                                trimByteCount);
+
+                            var newValidatedImageHash = HashHelper.CreateHash(
                                 _pictureService.ValidatePicture(newPictureBinary, mimeType), 
                                 IMAGE_HASH_ALGORITHM,
-                                _dataProvider.SupportedLengthOfBinaryHash);
+                                trimByteCount);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                                 ? productsImagesIds[product.ProductItem.Id]
@@ -1319,6 +1316,11 @@ namespace Nop.Services.ExportImport
                             //vendor can't change this field
                             if (_workContext.CurrentVendor == null)
                                 product.ShowOnHomepage = property.BooleanValue;
+                            break;
+                        case "DisplayOrder":
+                            //vendor can't change this field
+                            if (_workContext.CurrentVendor == null)
+                                product.DisplayOrder = property.IntValue;
                             break;
                         case "MetaKeywords":
                             product.MetaKeywords = property.StringValue;

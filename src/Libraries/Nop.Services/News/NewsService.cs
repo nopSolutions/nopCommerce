@@ -6,7 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -20,6 +20,7 @@ namespace Nop.Services.News
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
@@ -30,12 +31,14 @@ namespace Nop.Services.News
         #region Ctor
 
         public NewsService(CatalogSettings catalogSettings,
+            ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             IRepository<NewsComment> newsCommentRepository,
             IRepository<NewsItem> newsItemRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
             _catalogSettings = catalogSettings;
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _newsCommentRepository = newsCommentRepository;
             _newsItemRepository = newsItemRepository;
@@ -131,6 +134,7 @@ namespace Nop.Services.News
             }
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
+
             return news;
         }
 
@@ -285,7 +289,7 @@ namespace Nop.Services.News
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = NopNewsCachingDefaults.NewsCommentsNumberCacheKey.FillCacheKey(newsItem, storeId, isApproved);
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
             return query.ToCachedCount(cacheKey);
         }
@@ -333,6 +337,21 @@ namespace Nop.Services.News
 
             //event notification
             _eventPublisher.EntityInserted(comment);
+        }
+
+        /// <summary>
+        /// Update a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        public virtual void UpdateNewsComment(NewsComment comment)
+        {
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
+
+            _newsCommentRepository.Update(comment);
+
+            //event notification
+            _eventPublisher.EntityUpdated(comment);
         }
 
         #endregion

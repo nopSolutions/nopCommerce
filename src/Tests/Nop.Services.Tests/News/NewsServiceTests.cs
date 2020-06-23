@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Nop.Core.Domain.News;
 using Nop.Services.News;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.News
@@ -14,7 +15,7 @@ namespace Nop.Services.Tests.News
         [SetUp]
         public new void SetUp()
         {
-            _newsService = new NewsService(null, null, null, null, null);
+            _newsService = new NewsService(null, new FakeCacheKeyService(), null, null, null, null);
         }
 
         [Test]

@@ -14,6 +14,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -45,7 +46,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
@@ -53,8 +54,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingService _shippingService;        
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ShipStationSettings _shipStationSettings;
 
@@ -62,8 +64,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
         #region Ctor
 
-        public ShipStationService(IAddressService addressService,
-            ICacheManager cacheManager,
+        public ShipStationService(ICacheKeyService cacheKeyService,
+            IAddressService addressService,
             ICountryService countryService,
             ICustomerService customerService,
             ILogger logger,
@@ -73,11 +75,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             IShipmentService shipmentService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             ShipStationSettings shipStationSettings)
         {
             _addressService = addressService;
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
             _countryService = countryService;
             _customerService = customerService;
             _logger = logger;
@@ -87,6 +90,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             _shipmentService = shipmentService;
             _shippingService = shippingService;
             _stateProvinceService = stateProvinceService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shipStationSettings = shipStationSettings;
         }
@@ -160,7 +164,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 Weight = new Weight { Value = weight }
             };
 
-            if (_shipStationSettings.SendDimensio)
+            if (_shipStationSettings.PassDimensions)
             {
                 int length, height, width;
 
@@ -266,14 +270,14 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         
         protected virtual IList<Carrier> GetCarriers()
         {
-            var rez = _cacheManager.Get(_carriersCacheKey, () =>
+            var rez = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForShortTermCache(_carriersCacheKey), () =>
             {
                 var data = SendGetRequest($"{API_URL}{LIST_CARRIERS_CMD}");
                 return TryGetError(data) ? new List<Carrier>() : JsonConvert.DeserializeObject<List<Carrier>>(data);
             });
 
             if (!rez.Any())
-                _cacheManager.Remove(_carriersCacheKey);
+                _staticCacheManager.Remove(_carriersCacheKey);
 
             return rez;
         }
@@ -282,12 +286,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         {
             var services = GetCarriers().SelectMany(carrier =>
             {
-                var apiUrl = _serviceCacheKey.FillCacheKey(carrier.Code);
+                var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
-                var data = _cacheManager.Get(apiUrl, () => SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
+                var data = _staticCacheManager.Get(cacheKey, () => SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
                 
                 if (!data.Any())
-                    _cacheManager.Remove(apiUrl);
+                    _staticCacheManager.Remove(cacheKey);
 
                 var serviceList = JsonConvert.DeserializeObject<List<Service>>(data);
                 
