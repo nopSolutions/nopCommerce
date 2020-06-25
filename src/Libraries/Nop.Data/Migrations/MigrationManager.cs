@@ -49,6 +49,7 @@ namespace Nop.Data.Migrations
             _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
             {
                 [typeof(int)] = c => c.AsInt32(),
+                [typeof(long)] = c => c.AsInt64(),
                 [typeof(string)] = c => c.AsString(int.MaxValue).Nullable(),
                 [typeof(bool)] = c => c.AsBoolean(),
                 [typeof(decimal)] = c => c.AsDecimal(18, 4),
