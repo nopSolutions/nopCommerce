@@ -435,9 +435,10 @@ namespace Nop.Services.Localization
 
             var lsNamesList = _lsrRepository.Table
                 .Where(lsr => lsr.LanguageId == language.Id)
-                .GroupBy(lsr => lsr.ResourceName, (key, groupedLsr) => 
-                    groupedLsr.OrderBy(lsr => lsr.Id).Last())
-                .ToDictionary(lsr => lsr.ResourceName, lsr => lsr);
+                .OrderBy(lsr => lsr.Id)
+                .Select(it => new {it.ResourceName, it})
+                .ToList()
+                .ToSafeDictionary(lsr => lsr.ResourceName, lsr => lsr.it, null);
 
             var lrsToUpdateList = new List<LocaleStringResource>();
             var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
