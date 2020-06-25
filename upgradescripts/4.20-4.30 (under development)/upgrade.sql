@@ -967,6 +967,12 @@ set @resources='
   <LocaleResource Name="Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning">
     <Value><![CDATA[Ensure that you have correctly filled in the ''Shipping origin'' under <a href=\"{0}\" target=\"_blank\">Shipping settings</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.AltText">
+    <Value>Image alternate text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.AltText.Hint">
+    <Value>Enter alternate text that will be added to image.</Value>
+  </LocaleResource>
 </Language>
 '
 
