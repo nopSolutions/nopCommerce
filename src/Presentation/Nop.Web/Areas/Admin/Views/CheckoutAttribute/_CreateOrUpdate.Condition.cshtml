@@ -86,7 +86,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
-                                                    <nop-editor asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
+                                                    <input type="checkbox" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected"/>
                                                     @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
                                                 </label>
                                             </div>
