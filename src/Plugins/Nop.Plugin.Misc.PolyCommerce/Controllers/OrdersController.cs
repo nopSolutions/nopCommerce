@@ -42,6 +42,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IProductService _productService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
+        private readonly IProductAttributeService _productAttributeService;
 
         public OrdersController(IRepository<Order> orderRepository,
             ICustomerActivityService customerActivityService,
@@ -58,7 +59,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             ICurrencyService currencyService,
             IOrderService orderService,
             CurrencySettings currencySettings,
-            IProductService productService)
+            IProductService productService, 
+            IProductAttributeService productAttributeService)
         {
             _orderRepository = orderRepository;
             _customerActivityService = customerActivityService;
@@ -76,6 +78,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             _productService = productService;
             _currencyService = currencyService;
             _currencySettings = currencySettings;
+            _productAttributeService = productAttributeService;
         }
 
         [HttpGet]
@@ -251,7 +254,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     CurrencyRate = 1,
                     CustomOrderNumber = string.Empty,
                     OrderShippingInclTax = model.OrderShippingTotalInclTax,
-                    OrderShippingExclTax = model.OrderShippingTotalExclTax,
+                    OrderShippingExclTax = model.OrderShippingTotalExclTax
                 };
 
                 _orderService.InsertOrder(order);
@@ -263,7 +266,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 // insert order items...
                 foreach (var orderItem in model.OrderItems)
                 {
-                    var product = _productService.GetProductById(orderItem.ExternalProductId);
+                    var product = _productService.GetProductById((int)orderItem.ExternalProductId);
 
                     var newItem = new OrderItem
                     {

@@ -119,7 +119,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 Mpn = product.ManufacturerPartNumber,
                 InventoryLevel = product.StockQuantity,
                 BrandId = product.VendorId,
-                ProductId = product.Id,
+                ExternalProductId = product.Id,
                 Name = product.Name,
                 Price = product.Price,
                 Sku = product.Sku,
@@ -144,8 +144,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     {
                         var attributes = _productAttributeParser.ParseProductAttributeMappings(productAttrComb.AttributesXml);
 
-                        var externalProductId = long.Parse(product.Id.ToString() + productAttrComb.Id.ToString());
-
                         var imageUrl = productAttrComb.PictureId != 0 ? _pictureService.GetPictureUrl(productAttrComb.PictureId) : null;
 
                         var variation = new PolyCommerceProductVariation
@@ -154,7 +152,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                             Sku = productAttrComb.Sku,
                             Gtin = productAttrComb.Gtin,
                             Mpn = productAttrComb.ManufacturerPartNumber,
-                            ExternalProductId = externalProductId,
+                            ExternalProductId = productAttrComb.Id,
                             Price = productAttrComb.OverriddenPrice ?? product.Price,
                             ProductVariationOptionValues = new List<PolyCommerceProductVariationOptionValue>(),
                             Images = imageUrl

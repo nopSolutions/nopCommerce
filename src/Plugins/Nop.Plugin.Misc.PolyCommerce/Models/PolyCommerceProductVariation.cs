@@ -6,7 +6,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
 {
     public class PolyCommerceProductVariation
     {
-        public long ExternalProductId { get; set; }
+        public int ExternalProductId { get; set; }
         public int InventoryLevel { get; set; }
         public decimal? Price { get; set; }
         public decimal? CostPrice { get; set; }

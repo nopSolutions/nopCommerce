@@ -6,7 +6,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
 {
     public class PolyCommerceOrderItem
     {
-        public int ExternalProductId { get; set; }
+        public long ExternalProductId { get; set; }
+        public bool IsVariant { get; set; }
         public decimal UnitPriceInclTax { get; set; }
         public decimal UnitPriceExclTax { get; set; }
         public decimal PriceInclTax { get; set; }
