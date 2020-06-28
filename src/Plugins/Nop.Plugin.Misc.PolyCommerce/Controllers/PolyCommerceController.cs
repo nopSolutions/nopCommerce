@@ -94,14 +94,14 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
                 var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
-
+                var storeUrl = new Uri($"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}");
 
                 var request = new PolyCommerceLoginModel
                 {
                     StoreName = _storeContext.CurrentStore.Name,
                     CustomerGuid = _workContext.CurrentCustomer.CustomerGuid.ToString(),
                     UserId = _workContext.CurrentCustomer.Id.ToString(),
-                    StoreUrl = _storeContext.CurrentStore.Url,
+                    StoreUrl = storeUrl.AbsoluteUri,
                     StoreToken = storeToken,
                     Username = _workContext.CurrentCustomer.Username,
                     UserEmail = _workContext.CurrentCustomer.Email,

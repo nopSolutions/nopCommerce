@@ -47,7 +47,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
         public bool IsDownload { get; set; }
 
         public int MinInventoryLevel { get; set; }
-
-        public IEnumerable<PolyCommerceProductAttribute> ProductAttributes { get; set; } = new List<PolyCommerceProductAttribute>();
+        public List<string> Errors { get; set; } = new List<string>();
+        public List<PolyCommerceProductAttribute> ProductAttributes { get; set; } = new List<PolyCommerceProductAttribute>();
+        public List<PolyCommerceProductVariation> ProductVariations { get; set; } = new List<PolyCommerceProductVariation>();
     }
 }
