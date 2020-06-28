@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
     {
         public int ExternalProductId { get; set; }
         public int InventoryLevel { get; set; }
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
         public decimal? CostPrice { get; set; }
         public string Sku { get; set; }
         public string Mpn { get; set; }
