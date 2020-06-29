@@ -611,6 +611,15 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
+            //check if pickup point is selected on the shipping address step
+            if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            {
+                var selectedPickUpPoint = _genericAttributeService
+                    .GetAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
+                if (selectedPickUpPoint != null)
+                    return RedirectToRoute("CheckoutPaymentMethod");
+            }
+
             //model
             var model = _checkoutModelFactory.PrepareShippingMethodModel(cart, _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer));
 
