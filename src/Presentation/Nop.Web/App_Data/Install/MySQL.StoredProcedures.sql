@@ -570,7 +570,7 @@ BEGIN
 		SET  @sql_command = concat(@sql_command, '
 			AND (not p.SubjectToAcl OR EXISTS (
 					SELECT 1 
-					from aclRecord as acl 
+					from AclRecord as acl 
 					where acl.CustomerRoleId in (', `AllowedCustomerRoleIds` ,') 
 						and acl.`EntityId` = p.`Id` AND acl.`EntityName` = ''Product''
 					)
