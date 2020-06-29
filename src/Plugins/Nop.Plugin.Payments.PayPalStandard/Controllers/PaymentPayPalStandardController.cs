@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -476,13 +477,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
         }
 
-        public IActionResult IPNHandler()
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> IPNHandler()
         {
             byte[] parameters;
 
             using (var stream = new MemoryStream())
             {
-                Request.Body.CopyTo(stream);
+                await Request.Body.CopyToAsync(stream);
                 parameters = stream.ToArray();
             }
 
