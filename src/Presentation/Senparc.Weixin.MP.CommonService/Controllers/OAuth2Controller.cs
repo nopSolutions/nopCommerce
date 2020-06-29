@@ -11,6 +11,7 @@ using Nop.Core.Domain.Weixin;
 using Nop.Services.Weixin;
 using Senparc.Weixin.MP.CommonService.Utilities;
 using StackExchange.Profiling.Internal;
+using Nop.Services.Suppliers;
 
 namespace Senparc.Weixin.MP.CommonService.Controllers
 {
@@ -23,6 +24,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWUserService _wUserService;
+        private readonly ISupplierUserAuthorityMappingService _supplierUserAuthorityMappingService;
 
         #endregion
 
@@ -32,12 +34,14 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
             IWUserService wUserService,
             IWebHelper webHelper,
             IWorkContext workContext,
+            ISupplierUserAuthorityMappingService supplierUserAuthorityMappingService,
             SenparcWeixinSetting senparcWeixinSetting)
         {
             _fileProvider = fileProvider;
             _wUserService = wUserService;
             _webHelper = webHelper;
             _workContext = workContext;
+            _supplierUserAuthorityMappingService = supplierUserAuthorityMappingService;
             _senparcWeixinSetting = senparcWeixinSetting;
         }
 
@@ -64,8 +68,8 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                 return Content("验证失败！");
             }
 
-            //判断是否userinfo授权
-            var useUserinfo = state.StartsWith("userinfo", StringComparison.InvariantCultureIgnoreCase);
+            //判断是否使用的userinfo的Oauth授权
+            var isUserInfoOauthType = state.StartsWith("userinfo", StringComparison.InvariantCultureIgnoreCase);
 
             //为了安全清除session
             HttpContext.Session.Remove(NopWeixinDefaults.WeixinOauthStateString);
@@ -87,7 +91,7 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                 return Content(ex.Message);
             }
 
-            //初始化Session信息
+            //初始化基础Session信息
             var oauthSession = new OauthSession
             {
                 OpenId = accessTokenResult.openid,
@@ -96,350 +100,164 @@ namespace Senparc.Weixin.MP.CommonService.Controllers
                 CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
             };
 
-            //保存session
+            //保存基础session信息
             HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
 
-            //不确定是否已经关注，这里都进行一次用户信息获取尝试
-            try
+            //初始化用户数据库基础信息
+            #region 初始化用户数据库基础信息
+            var insertCurrentUser = false;
+            var needUpdateCurrentUser = false;
+            var currentUser = _wUserService.GetWUserByOpenId(accessTokenResult.openid);
+            if (currentUser == null)
             {
-                var localWUserInfo = _wUserService.GetWUserByOpenId(accessTokenResult.openid);
-                if (localWUserInfo != null)
+                insertCurrentUser = true; //需要插入
+                needUpdateCurrentUser = true;// 需要更新（插入即更新）
+                currentUser = new WUser
                 {
-                    //本地已经保存，使用本地信息
-                    //超过10小时未更新，尝试获取最新信息，并更新
-                    if (localWUserInfo.UpdateTime + 36000 < Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now))
+                    OpenId = accessTokenResult.openid,
+                    RefereeId = 0, //从State参数中分离查找
+                    WConfigId = 0,
+                    OpenIdHash = CommonHelper.StringToLong(accessTokenResult.openid),
+                    CheckInType = WCheckInType.Oauth,  //每个渠道不同
+                    LanguageType = WLanguageType.ZH_CN,
+                    Sex = 0,
+                    RoleType = WRoleType.Visitor,
+                    SceneType = WSceneType.None,
+                    Status = 0,
+                    SupplierShopId = 0,  //需要参数传入重新赋值
+                    QrScene = 0,
+                    Subscribe = false,
+                    AllowReferee = true,
+                    AllowResponse = true,
+                    AllowOrder = true,
+                    AllowNotice = false,
+                    AllowOrderNotice = false,
+                    InBlackList = false,
+                    Deleted = false,
+                    SubscribeTime = 0,
+                    UnSubscribeTime = 0,
+                    UpdateTime = 0,
+                    CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
+                };
+
+                //获取推荐人Id
+                var stateParams = state.Split("_", StringSplitOptions.RemoveEmptyEntries);
+                if (stateParams.Length == 2 && !string.IsNullOrEmpty(stateParams[1]))
+                {
+                    long.TryParse(stateParams[1], out var refereeOpenIdHash);
+                    if (refereeOpenIdHash > 0)
                     {
-                        var userInfo = AdvancedAPIs.UserApi.Info(_senparcWeixinSetting.WeixinAppId, accessTokenResult.openid);
-                        if (userInfo != null && userInfo.errcode != ReturnCode.请求成功)
-                        {
-                            //已经关注
-                            if (userInfo.subscribe == 1)
-                            {
-                                #region 本地已保存/需更新/请求成功/已关注
-
-                                //Session赋值
-                                oauthSession.UserBaseInfo.HeadImgUrl = userInfo.headimgurl;
-                                oauthSession.UserBaseInfo.NickName = userInfo.nickname;
-                                oauthSession.UserBaseInfo.OpenId = userInfo.openid;
-                                oauthSession.UserBaseInfo.Subscribe = true;
-                                oauthSession.UserBaseInfo.SubscribeTime = (int)userInfo.subscribe_time;
-                                oauthSession.UserBaseInfo.UnionId = userInfo.unionid;
-                                //保存session
-                                HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                //WUser更新
-                                localWUserInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
-                                localWUserInfo.NickName = userInfo.nickname;
-                                localWUserInfo.Subscribe = true;
-                                localWUserInfo.SubscribeTime = (int)userInfo.subscribe_time;
-                                localWUserInfo.UnionId = userInfo.unionid;
-                                localWUserInfo.City = userInfo.city;
-                                localWUserInfo.Country = userInfo.country;
-                                localWUserInfo.Province = userInfo.province;
-                                localWUserInfo.Sex = Convert.ToByte(userInfo.sex);
-                                localWUserInfo.UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now);
-                                //update
-                                _wUserService.UpdateWUser(localWUserInfo);
-
-                                #endregion
-                            }
-                            else
-                            {
-                                #region 本地已保存/需更新/请求成功/未关注
-
-                                //又取消关注了，先使用本地已经保存信息，再尝试使用OauthApi获取信息
-                                //Session赋值
-                                oauthSession.UserBaseInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrl(localWUserInfo.HeadImgUrl);
-                                oauthSession.UserBaseInfo.NickName = localWUserInfo.NickName;
-                                oauthSession.UserBaseInfo.OpenId = localWUserInfo.OpenId;
-                                oauthSession.UserBaseInfo.Subscribe = false;
-                                oauthSession.UserBaseInfo.UnSubscribeTime = localWUserInfo.UnSubscribeTime;
-                                oauthSession.UserBaseInfo.UnionId = localWUserInfo.UnionId;
-                                //保存session
-                                HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                //先更新关注状态，保持数据库同步
-                                localWUserInfo.Subscribe = false;
-                                _wUserService.UpdateWUser(localWUserInfo);
-
-                                //开始尝试使用OauthApi获取
-                                if (useUserinfo)
-                                {
-                                    var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                                    if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
-                                    {
-                                        //Session赋值
-                                        oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
-                                        oauthSession.UserBaseInfo.NickName = userBaseInfo.nickname;
-                                        oauthSession.UserBaseInfo.OpenId = userBaseInfo.openid;
-                                        oauthSession.UserBaseInfo.Subscribe = false;
-                                        oauthSession.UserBaseInfo.UnionId = userBaseInfo.unionid;
-                                        //保存session
-                                        HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                        //WUser更新
-                                        localWUserInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userBaseInfo.headimgurl);
-                                        localWUserInfo.NickName = userBaseInfo.nickname;
-                                        localWUserInfo.Subscribe = false;
-                                        localWUserInfo.UnionId = userBaseInfo.unionid;
-                                        localWUserInfo.City = userBaseInfo.city;
-                                        localWUserInfo.Country = userBaseInfo.country;
-                                        localWUserInfo.Province = userBaseInfo.province;
-                                        localWUserInfo.Sex = Convert.ToByte(userBaseInfo.sex);
-                                        localWUserInfo.UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now);
-                                        //update
-                                        _wUserService.UpdateWUser(localWUserInfo);
-                                    }
-                                }
-
-                                #endregion
-                            }
-                        }
-                        else
-                        {
-                            #region 本地已保存/需更新/请求失败/未知关注
-                            //userInfo 获取失败，先使用默认
-                            //Session赋值
-                            oauthSession.UserBaseInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrl(localWUserInfo.HeadImgUrl);
-                            oauthSession.UserBaseInfo.NickName = localWUserInfo.NickName;
-                            oauthSession.UserBaseInfo.OpenId = localWUserInfo.OpenId;
-                            oauthSession.UserBaseInfo.Subscribe = localWUserInfo.Subscribe;
-                            oauthSession.UserBaseInfo.SubscribeTime = localWUserInfo.SubscribeTime;
-                            oauthSession.UserBaseInfo.UnSubscribeTime = localWUserInfo.UnSubscribeTime;
-                            oauthSession.UserBaseInfo.UnionId = localWUserInfo.UnionId;
-                            //保存session
-                            HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                            //开始尝试使用OauthApi获取
-                            if (useUserinfo)
-                            {
-                                var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                                if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
-                                {
-                                    //Session赋值
-                                    oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
-                                    oauthSession.UserBaseInfo.NickName = userBaseInfo.nickname;
-                                    oauthSession.UserBaseInfo.OpenId = userBaseInfo.openid;
-                                    oauthSession.UserBaseInfo.UnionId = userBaseInfo.unionid;
-
-                                    //保存session
-                                    HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                    //WUser更新
-                                    localWUserInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userBaseInfo.headimgurl);
-                                    localWUserInfo.NickName = userBaseInfo.nickname;
-                                    localWUserInfo.UnionId = userBaseInfo.unionid;
-                                    localWUserInfo.City = userBaseInfo.city;
-                                    localWUserInfo.Country = userBaseInfo.country;
-                                    localWUserInfo.Province = userBaseInfo.province;
-                                    localWUserInfo.Sex = Convert.ToByte(userBaseInfo.sex);
-                                    localWUserInfo.UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now);
-                                    //update
-                                    _wUserService.UpdateWUser(localWUserInfo);
-                                }
-                            }
-
-                            #endregion
-                        }
+                        var refereeUser = _wUserService.GetWUserByOpenIdHash(refereeOpenIdHash);
+                        if (refereeUser != null)
+                            currentUser.RefereeId = refereeUser.Id;
                     }
                     else
                     {
-                        #region 本地已保存/不更新/不请求/未知关注
-
-                        //本地已保存，不需要更新
-                        //Session赋值
-                        oauthSession.UserBaseInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrl(localWUserInfo.HeadImgUrl);
-                        oauthSession.UserBaseInfo.NickName = localWUserInfo.NickName;
-                        oauthSession.UserBaseInfo.OpenId = localWUserInfo.OpenId;
-                        oauthSession.UserBaseInfo.Subscribe = localWUserInfo.Subscribe;
-                        oauthSession.UserBaseInfo.SubscribeTime = localWUserInfo.SubscribeTime;
-                        oauthSession.UserBaseInfo.UnSubscribeTime = localWUserInfo.UnSubscribeTime;
-                        oauthSession.UserBaseInfo.UnionId = localWUserInfo.UnionId;
-                        //保存session
-                        HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                        //开始尝试使用OauthApi获取
-                        if (useUserinfo)
-                        {
-                            var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                            if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
-                            {
-                                //Session赋值
-                                oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
-                                oauthSession.UserBaseInfo.NickName = userBaseInfo.nickname;
-                                oauthSession.UserBaseInfo.OpenId = userBaseInfo.openid;
-                                oauthSession.UserBaseInfo.UnionId = userBaseInfo.unionid;
-
-                                //保存session
-                                HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                //WUser更新
-                                localWUserInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userBaseInfo.headimgurl);
-                                localWUserInfo.NickName = userBaseInfo.nickname;
-                                localWUserInfo.UnionId = userBaseInfo.unionid;
-                                localWUserInfo.City = userBaseInfo.city;
-                                localWUserInfo.Country = userBaseInfo.country;
-                                localWUserInfo.Province = userBaseInfo.province;
-                                localWUserInfo.Sex = Convert.ToByte(userBaseInfo.sex);
-                                localWUserInfo.UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now);
-                                //update
-                                _wUserService.UpdateWUser(localWUserInfo);
-                            }
-                        }
-
-                        #endregion
+                        var refereeUser = _wUserService.GetWUserByOpenId(stateParams[1]);
+                        if (refereeUser != null)
+                            currentUser.RefereeId = refereeUser.Id;
                     }
                 }
-                else
+
+                //获取SupplierShopId
+                var supplierUserAuthorityMapping = _supplierUserAuthorityMappingService.GetEntityByUserId(currentUser.RefereeId);
+                if (supplierUserAuthorityMapping != null)
+                    currentUser.SupplierShopId = supplierUserAuthorityMapping.SupplierShopId ?? 0;
+            }
+
+            #endregion
+
+            try
+            {
+                //使用UserApi获取用户基础信息
+                #region 使用UserApi获取用户基础信息
+                var userInfoGetSuccess = false; //UserApi获取是否成功
+                if (currentUser.UpdateTime + 36000 < Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now))
                 {
-
-                    //本地未保存，插入
-                    var initUser = new WUser
-                    {
-                        OpenId = accessTokenResult.openid,
-                        RefereeId = 0,
-                        WConfigId = 0,
-                        OpenIdHash = CommonHelper.StringToLong(accessTokenResult.openid),
-                        CheckInType = WCheckInType.Oauth,
-                        LanguageType = WLanguageType.ZH_CN,
-                        Sex = 0,
-                        RoleType = WRoleType.Visitor,
-                        SceneType = WSceneType.None,
-                        Status = 0,
-                        QrScene = 0,
-                        Subscribe = false,
-                        AllowReferee = true,
-                        AllowResponse = true,
-                        AllowOrder = true,
-                        AllowNotice = false,
-                        AllowOrderNotice = false,
-                        InBlackList = false,
-                        Deleted = false,
-                        SubscribeTime = 0,
-                        UnSubscribeTime = 0,
-                        UpdateTime = 0,
-                        CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
-                    };
-
                     var userInfo = AdvancedAPIs.UserApi.Info(_senparcWeixinSetting.WeixinAppId, accessTokenResult.openid);
                     if (userInfo != null && userInfo.errcode == ReturnCode.请求成功)
                     {
-                        //userInfo请求成功
+                        needUpdateCurrentUser = true;// 需要更新
                         if (userInfo.subscribe == 1)
                         {
-                            #region 本地未保存/请求成功/已关注
+                            userInfoGetSuccess = true;  //UserApi获取成功
 
-                            //已经关注
-                            initUser.UnionId = userInfo.unionid;
-                            initUser.NickName = userInfo.nickname;
-                            initUser.Province = userInfo.province;
-                            initUser.City = userInfo.city;
-                            initUser.Country = userInfo.country;
-                            initUser.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
-                            initUser.Remark = userInfo.remark;
-                            initUser.GroupId = userInfo.groupid.ToString();
-                            initUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
-                            initUser.Sex = Convert.ToByte(userInfo.sex);
-                            initUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
-                            initUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
-                            initUser.UpdateTime = (int)userInfo.subscribe_time;
-                            initUser.SubscribeTime = (int)userInfo.subscribe_time;
-                            initUser.Subscribe = true;
-                            //insert
-                            _wUserService.InsertWUser(initUser);
-
-                            //Session赋值
-                            oauthSession.UserBaseInfo.HeadImgUrl = userInfo.headimgurl;
-                            oauthSession.UserBaseInfo.NickName = userInfo.nickname;
-                            oauthSession.UserBaseInfo.OpenId = userInfo.openid;
-                            oauthSession.UserBaseInfo.UnionId = userInfo.unionid;
-                            oauthSession.UserBaseInfo.Subscribe = true;
-                            oauthSession.UserBaseInfo.SubscribeTime = (int)userInfo.subscribe_time;
-
-                            //保存session
-                            HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                            #endregion
+                            currentUser.Subscribe = true;
+                            currentUser.NickName = userInfo.nickname;
+                            currentUser.Sex = Convert.ToByte(userInfo.sex);
+                            currentUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var outLanguage) ? (WLanguageType)outLanguage : WLanguageType.ZH_CN;
+                            currentUser.City = userInfo.city;
+                            currentUser.Province = userInfo.province;
+                            currentUser.Country = userInfo.country;
+                            currentUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
+                            currentUser.SubscribeTime = (int)userInfo.subscribe_time;
+                            currentUser.UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now);
+                            currentUser.UnionId = userInfo.unionid;
+                            currentUser.Remark = userInfo.remark;
+                            currentUser.GroupId = userInfo.groupid.ToString();
+                            currentUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
+                            currentUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
                         }
                         else
                         {
-                            #region 本地未保存/请求成功/未关注
-
-                            //未关注
-                            //开始尝试使用OauthApi获取
-                            if (useUserinfo)
-                            {
-                                var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                                if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
-                                {
-                                    //Session赋值
-                                    oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
-                                    oauthSession.UserBaseInfo.NickName = userBaseInfo.nickname;
-                                    oauthSession.UserBaseInfo.OpenId = userBaseInfo.openid;
-                                    oauthSession.UserBaseInfo.UnionId = userBaseInfo.unionid;
-                                    oauthSession.UserBaseInfo.Subscribe = false;
-
-                                    //保存session
-                                    HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                    //initUser更新
-                                    initUser.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userBaseInfo.headimgurl);
-                                    initUser.NickName = userBaseInfo.nickname;
-                                    initUser.UnionId = userBaseInfo.unionid;
-                                    initUser.City = userBaseInfo.city;
-                                    initUser.Country = userBaseInfo.country;
-                                    initUser.Province = userBaseInfo.province;
-                                    initUser.Sex = Convert.ToByte(userBaseInfo.sex);
-                                    //insert
-                                    _wUserService.InsertWUser(initUser);
-                                }
-                            }
-
-                            #endregion
+                            currentUser.Subscribe = false;
                         }
-                    }
-                    else
-                    {
-                        #region 本地未保存/请求失败/未知关注
-
-                        //userInfo请求失败
-                        //开始尝试使用OauthApi获取
-                        if (useUserinfo)
-                        {
-                            var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
-                            if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
-                            {
-                                //Session赋值
-                                oauthSession.UserBaseInfo.HeadImgUrl = userBaseInfo.headimgurl;
-                                oauthSession.UserBaseInfo.NickName = userBaseInfo.nickname;
-                                oauthSession.UserBaseInfo.OpenId = userBaseInfo.openid;
-                                oauthSession.UserBaseInfo.UnionId = userBaseInfo.unionid;
-                                oauthSession.UserBaseInfo.Subscribe = false;
-
-                                //保存session
-                                HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
-
-                                //initUser更新
-                                initUser.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userBaseInfo.headimgurl);
-                                initUser.NickName = userBaseInfo.nickname;
-                                initUser.UnionId = userBaseInfo.unionid;
-                                initUser.City = userBaseInfo.city;
-                                initUser.Country = userBaseInfo.country;
-                                initUser.Province = userBaseInfo.province;
-                                initUser.Sex = Convert.ToByte(userBaseInfo.sex);
-                                //insert
-                                _wUserService.InsertWUser(initUser);
-                            }
-                        }
-
-                        #endregion
                     }
                 }
+
+                #endregion
+
+                //使用SnapUserInfo获取用户基础信息
+                #region 使用SnapUserInfo获取用户基础信息
+                if (!userInfoGetSuccess && isUserInfoOauthType)
+                {
+                    var userBaseInfo = OAuthApi.GetUserInfo(accessTokenResult.access_token, accessTokenResult.openid);
+                    if (userBaseInfo != null && !string.IsNullOrEmpty(userBaseInfo.nickname))
+                    {
+                        needUpdateCurrentUser = true;// 需要更新
+
+                        currentUser.NickName = userBaseInfo.nickname;
+                        currentUser.Sex = Convert.ToByte(userBaseInfo.sex);
+                        currentUser.City = userBaseInfo.city;
+                        currentUser.Province = userBaseInfo.province;
+                        currentUser.Country = userBaseInfo.country;
+                        currentUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userBaseInfo.headimgurl);
+                        currentUser.UnionId = userBaseInfo.unionid;
+                        currentUser.UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now);
+                    }
+                }
+                #endregion
+
             }
             catch
             {
-                //do nothing 不做任何操作，获取用户基本信息，这里不能影响跳转操作
+                //do nothing 进入该步骤表示授权成功，能否获取用户基本信息不重要，这里不能影响跳转操作
             }
+
+            //更新oauthSession信息
+            #region 更新oauthSession信息
+
+            oauthSession.UserBaseInfo.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrl(currentUser.HeadImgUrl);
+            oauthSession.UserBaseInfo.NickName = currentUser.NickName;
+            oauthSession.UserBaseInfo.OpenId = currentUser.OpenId;
+            oauthSession.UserBaseInfo.Subscribe = currentUser.Subscribe;
+            oauthSession.UserBaseInfo.SubscribeTime = currentUser.SubscribeTime;
+            oauthSession.UserBaseInfo.UnSubscribeTime = currentUser.UnSubscribeTime;
+            oauthSession.UserBaseInfo.UnionId = currentUser.UnionId;
+            //保存更新
+            HttpContext.Session.Set(NopWeixinDefaults.WeixinOauthSession, oauthSession);
+
+            #endregion
+
+            //用户基础信息插入/更新
+            #region 用户基础信息插入/更新
+            if (insertCurrentUser)
+                _wUserService.InsertWUser(currentUser);
+            else if (needUpdateCurrentUser)
+                _wUserService.UpdateWUser(currentUser);
+
+            #endregion
+
 
             if (!string.IsNullOrEmpty(returnUrl))
             {

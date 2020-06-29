@@ -16,11 +16,30 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
-
+        /// <summary>
+        /// Gets or sets the subtitle
+        /// </summary>
+        public string SubTitle { get; set; }
+        /// <summary>
+        /// 调用别名
+        /// </summary>
+        public string IndexName { get; set; }
+        /// <summary>
+        /// 交叉栏目Ids
+        /// </summary>
+        public string CrossCategories { get; set; }
+        /// <summary>
+        /// 摘要
+        /// </summary>
+        public string Summary { get; set; }
         /// <summary>
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// URL
+        /// </summary>
+        public string Url { get; set; }
 
         /// <summary>
         /// Gets or sets a value of used category template identifier
@@ -91,6 +110,18 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
+        /// <summary>
+        /// 栏目首页模板名称
+        /// </summary>
+        public string IndexTemplateName { get; set; }
+        /// <summary>
+        /// 栏目列表模板名称
+        /// </summary>
+        public string ListTemplateName { get; set; }
+        /// <summary>
+        /// 栏目详情页模板名称
+        /// </summary>
+        public string ItemTemplateName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published

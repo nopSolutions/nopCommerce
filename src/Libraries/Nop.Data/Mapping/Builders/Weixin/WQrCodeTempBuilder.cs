@@ -18,6 +18,7 @@ namespace Nop.Data.Mapping.Builders.Weixin
         {
             table
                 .WithColumn(nameof(WQrCodeTemp.OpenId)).AsAnsiString(32).NotNullable()
+                .WithColumn(nameof(WQrCodeTemp.SceneValue)).AsAnsiString(64).Nullable()
                 .WithColumn(nameof(WQrCodeTemp.Ticket)).AsAnsiString(255).Nullable()
                 .WithColumn(nameof(WQrCodeTemp.Url)).AsAnsiString(255).Nullable()
                 ;

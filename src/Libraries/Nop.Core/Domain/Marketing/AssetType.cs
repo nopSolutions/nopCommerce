@@ -26,7 +26,7 @@
         /// </summary>
         VirtualCard = 5,
         /// <summary>
-        /// 抵用券
+        /// 抵用券/兑换券
         /// </summary>
         Voucher = 6,
         /// <summary>

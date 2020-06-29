@@ -36,20 +36,6 @@
         }
 
         /// <summary>
-        /// 场景类型
-        /// </summary>
-        public byte WSceneTypeId { get; set; }
-
-        /// <summary>
-        /// 场景类型
-        /// </summary>
-        public WSceneType WSceneType
-        {
-            get => (WSceneType)WSceneTypeId;
-            set => WSceneTypeId = (byte)value;
-        }
-
-        /// <summary>
         /// 二维码系统名称
         /// </summary>
         public string SysName { get; set; }

@@ -19,7 +19,19 @@ namespace Nop.Core.Domain.Suppliers
         /// <summary>
         /// 店铺描述
         /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// 店铺内容
+        /// </summary>
         public string Content { get; set; }
+        /// <summary>
+        /// 店铺门图，横图/大图
+        /// </summary>
+        public string ImageUrl { get; set; }
+        /// <summary>
+        /// 店铺缩微图，方图/小图
+        /// </summary>
+        public string ThumbImageUrl { get; set; }
         /// <summary>
         /// 所在国家
         /// </summary>

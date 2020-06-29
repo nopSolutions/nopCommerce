@@ -8,9 +8,9 @@ namespace Nop.Core.Domain.Marketing
     public partial class UserAsset : BaseEntity
     {
         /// <summary>
-        /// OpenId
+        /// OwnerUserId【WUser.Id】
         /// </summary>
-        public string OpenId { get; set; }
+        public int OwnerUserId { get; set; }
 
         /// <summary>
         /// 合伙人备注信息

@@ -78,6 +78,17 @@ namespace Nop.Core.Domain.Orders
         public int DownloadCount { get; set; }
 
         /// <summary>
+        /// 订单详情产品审核状态（产品需要审核的默认未通过>0,各值为未通过审核的原因，无需审核的默认通过=0）
+        /// </summary>
+        public int VerifyStatus { get; set; }
+
+        /// <summary>
+        /// 该产品订单过期时间（多个产品有过期时间时，采用最小过期时间为准）,订单页提示：该订单有抢购商品，需要在x秒之内完成支付
+        /// </summary>
+
+        public int OrderExpireTime { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether download is activated
         /// </summary>
         public bool IsDownloadActivated { get; set; }

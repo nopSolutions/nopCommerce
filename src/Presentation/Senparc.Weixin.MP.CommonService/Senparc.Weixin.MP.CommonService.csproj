@@ -9,15 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Senparc.NeuChar" Version="1.2.106" />
+    <PackageReference Include="Senparc.NeuChar" Version="1.2.108" />
     <PackageReference Include="Senparc.WebSocket" Version="0.10.502" />
     <PackageReference Include="Senparc.Weixin" Version="6.7.502" />
     <PackageReference Include="Senparc.Weixin.Cache.CsRedis" Version="0.1.502" />
     <PackageReference Include="Senparc.Weixin.Cache.Memcached" Version="2.6.502" />
     <PackageReference Include="Senparc.Weixin.Cache.Redis" Version="2.8.502" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.10.502" />
-    <PackageReference Include="Senparc.Weixin.Open" Version="4.7.502" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.5.502.1" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.7.502.1" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.5.502.3" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.7.502" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.8.502" />
   </ItemGroup>

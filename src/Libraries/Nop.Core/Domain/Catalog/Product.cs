@@ -26,6 +26,22 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 副标题
+        /// </summary>
+        public string SubTitle { get; set; }
+        /// <summary>
+        /// 封面图(长图或大图)
+        /// </summary>
+        public string CoverImageUrl { get; set; }
+        /// <summary>
+        /// 缩微图（方图或小图）
+        /// </summary>
+        public string CoverThumbImageUrl { get; set; }
+        /// <summary>
+        /// 跳转链接
+        /// </summary>
+        public string Url { get; set; }
 
         /// <summary>
         /// Gets or sets the short description
@@ -36,7 +52,58 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the full description
         /// </summary>
         public string FullDescription { get; set; }
-
+        /// <summary>
+        /// 是否允许评论
+        /// </summary>
+        public bool AllowComment { get; set; }
+        /// <summary>
+        /// 是否特价商品
+        /// </summary>
+        public bool SpecialPrice { get; set; }
+        /// <summary>
+        /// 是否折扣商品
+        /// </summary>
+        public bool DiscountPrice { get; set; }
+        /// <summary>
+        /// 置顶
+        /// </summary>
+        public bool IsTop { get; set; }
+        /// <summary>
+        /// 是否推荐
+        /// </summary>
+        public bool IsRecommend { get; set; }
+        /// <summary>
+        /// 是否热门
+        /// </summary>
+        public bool IsHot { get; set; }
+        /// <summary>
+        /// 是否幻灯片
+        /// </summary>
+        public bool IsSlide { get; set; }
+        /// <summary>
+        /// 是否图片
+        /// </summary>
+        public bool IsImage { get; set; }
+        /// <summary>
+        /// 是否延迟加载详情内容中的图片
+        /// </summary>
+        public bool LazyLoadImages { get; set; }
+        /// <summary>
+        /// 部分类型产品需要后台验证后才能付款
+        /// </summary>
+        public bool OrdersNeedVerify { get; set; }
+        /// <summary>
+        /// 订单支付过期秒数（过期前支付，主要用于抢购商品）
+        /// </summary>
+        public int OrderExpireSeconds { get; set; }
+        /// <summary>
+        /// 积分：正为返还，负数为消费
+        /// </summary>
+        public int Points { get; set; }
+        /// <summary>
+        /// 虚拟币：正为返还，负数为消费
+        /// </summary>
+        public decimal VirtualCurrency { get; set; }
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
@@ -128,6 +195,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
         /// </summary>
         public string Gtin { get; set; }
+        /// <summary>
+        /// 是否供应商提供的兑换券
+        /// </summary>
+        public bool IsVoucherCoupon { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product is gift card
@@ -554,6 +625,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }
+        /// <summary>
+        /// 浏览次数
+        /// </summary>
+        public int ViewCount { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of product creation

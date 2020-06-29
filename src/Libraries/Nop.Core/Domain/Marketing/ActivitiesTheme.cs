@@ -47,7 +47,7 @@ namespace Nop.Core.Domain.Marketing
         /// <summary>
         /// 活动二维码图片
         /// </summary>
-        public string Qrcode { get; set; }
+        public string QrcodeUrl { get; set; }
         /// <summary>
         /// 开始时间
         /// </summary>

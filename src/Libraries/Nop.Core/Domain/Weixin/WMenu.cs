@@ -62,13 +62,25 @@
         /// </summary>
         public byte Status { get; set; }
         /// <summary>
-        /// 是否启用个性化条件
+        /// 菜单发布时间
         /// </summary>
-        public bool Personal { get; set; }
+        public int PublishTime { get; set; }
+        /// <summary>
+        /// 菜单取消发布时间
+        /// </summary>
+        public int UnPublishTime { get; set; }
+        /// <summary>
+        /// 菜单是否有效（系统返回的值）
+        /// </summary>
+        public bool IsMenuOpen { get; set; }
         /// <summary>
         /// 发布
         /// </summary>
         public bool Published { get; set; }
+        /// <summary>
+        /// 是否启用个性化条件
+        /// </summary>
+        public bool Personal { get; set; }
         /// <summary>
         /// 删除
         /// </summary>

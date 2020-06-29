@@ -10,9 +10,23 @@
         /// </summary>
         public string OpenId { get; set; }
         /// <summary>
-        /// 背景图ID，不使用背景图，值为0
+        /// 【WSceneType】二维码功能：adver，vote，command等
         /// </summary>
-        public int QrCodeImageId { get; set; }
+        public byte WSceneTypeId { get; set; }
+        /// <summary>
+        /// 【WSceneType】二维码功能：adver，vote，command等
+        /// </summary>
+        public WSceneType WSceneType
+        {
+            get => (WSceneType)WSceneTypeId;
+            set => WSceneTypeId = (byte)value;
+        }
+
+        /// <summary>
+        /// 场景字符串值（只保存中间部分）
+        /// </summary>
+        public string SceneValue { get; set; }
+
         /// <summary>
         /// 过期时间 = 创建时间 + 过期秒数
         /// </summary>

@@ -1,12 +1,13 @@
 ﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Weixin;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Weixin
 {
     /// <summary>
     /// Represents a vendor note entity builder
     /// </summary>
-    public partial class WQrCodeImageBuilder : NopEntityBuilder<WQrCodeImage>
+    public partial class WKeywordAutoreplyKeywordBuilder : NopEntityBuilder<WKeywordAutoreplyKeyword>
     {
         #region Methods
 
@@ -17,11 +18,7 @@ namespace Nop.Data.Mapping.Builders.Weixin
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(WQrCodeImage.Title)).AsString(64).NotNullable()
-                .WithColumn(nameof(WQrCodeImage.Description)).AsString(255).Nullable()
-                .WithColumn(nameof(WQrCodeImage.ImageUrl)).AsAnsiString(1024).Nullable()
-                .WithColumn(nameof(WQrCodeImage.ImageUrlOriginal)).AsAnsiString(1024).Nullable()
-                .WithColumn(nameof(WQrCodeImage.TagIdList)).AsAnsiString(64).Nullable()
+                .WithColumn(nameof(WKeywordAutoreplyKeyword.Content)).AsString(30).NotNullable()
                 ;
         }
 

@@ -8,6 +8,10 @@ namespace Nop.Core.Domain.Marketing
     public partial class DivisionsCodeChina : BaseEntity
     {
         /// <summary>
+        /// 国家代码（保留暂不用）
+        /// </summary>
+        public string CountryCode { get; set; }
+        /// <summary>
         /// 区划代码
         /// </summary>
         public string AreaCode { get; set; }

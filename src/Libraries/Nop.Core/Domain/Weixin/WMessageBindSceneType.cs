@@ -11,7 +11,7 @@
         //临时二维码消息
         QrcodeTemp = 2,
 
-        //图片消息
-        Image = 3
+        //广告图片消息
+        AdverImage = 3
     }
 }

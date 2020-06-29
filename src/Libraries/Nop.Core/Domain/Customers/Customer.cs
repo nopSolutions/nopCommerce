@@ -38,9 +38,13 @@ namespace Nop.Core.Domain.Customers
         public string OpenId { get; set; }
 
         /// <summary>
-        /// 推荐用户OpenId
+        /// 推荐用户WuserId
         /// </summary>
-        public string OpenIdReferee { get; set; }
+        public int RefereeId { get; set; }
+        /// <summary>
+        /// 推荐用户最近更新时间
+        /// </summary>
+        public int RefereeIdUpdateTime { get; set; }
 
         /// <summary>
         /// Gets or sets the customer GUID

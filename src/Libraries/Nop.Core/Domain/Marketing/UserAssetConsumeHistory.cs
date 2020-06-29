@@ -9,6 +9,10 @@ namespace Nop.Core.Domain.Marketing
     public partial class UserAssetConsumeHistory : BaseEntity
     {
         /// <summary>
+        /// 资产消费明细所属人ID
+        /// </summary>
+        public int OwnerUserId { get; set; }
+        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; }
@@ -48,10 +52,6 @@ namespace Nop.Core.Domain.Marketing
         /// 是否无效（购买订单退货或取消时，标注为无效，并备注退单）
         /// </summary>
         public bool IsInvalid { get; set; }
-        /// <summary>
-        /// 是否展示出来
-        /// </summary>
-        public bool Published { get; set; }
         /// <summary>
         /// 删除（不直接删除）
         /// </summary>

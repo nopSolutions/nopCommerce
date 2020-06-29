@@ -87,6 +87,7 @@ namespace Nop.Data.Migrations
 
             _migrationManager.BuildTable<Product>(Create);
             _migrationManager.BuildTable<ProductTemplate>(Create);
+            _migrationManager.BuildTable<ProductComment>(Create);
             _migrationManager.BuildTable<BackInStockSubscription>(Create);
             _migrationManager.BuildTable<RelatedProduct>(Create);
             _migrationManager.BuildTable<ReviewType>(Create);
@@ -139,6 +140,7 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<ProductSpecificationAttribute>(Create);
 
             _migrationManager.BuildTable<TierPrice>(Create);
+            _migrationManager.BuildTable<TierDeductPrice>(Create);
 
             _migrationManager.BuildTable<Warehouse>(Create);
             _migrationManager.BuildTable<DeliveryDate>(Create);
@@ -225,9 +227,18 @@ namespace Nop.Data.Migrations
 
             _migrationManager.BuildTable<WLocation>(Create);
             _migrationManager.BuildTable<WMenu>(Create);
+            _migrationManager.BuildTable<WMenuButton>(Create);
             _migrationManager.BuildTable<WMessage>(Create);
             _migrationManager.BuildTable<WOauth>(Create);
             _migrationManager.BuildTable<WMessageBindMapping>(Create);
+
+            _migrationManager.BuildTable<WAutoreplyNewsInfo>(Create);
+
+            _migrationManager.BuildTable<WMessageAutoReply>(Create);
+            _migrationManager.BuildTable<WKeywordAutoreply>(Create);
+            _migrationManager.BuildTable<WKeywordAutoreplyKeyword>(Create);
+            _migrationManager.BuildTable<WKeywordAutoreplyReply>(Create);
+            
 
             _migrationManager.BuildTable<WShareLink>(Create);
             _migrationManager.BuildTable<WJSDKShare>(Create);
@@ -236,11 +247,9 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<WQrCodeCategory>(Create);
             _migrationManager.BuildTable<WQrCodeChannel>(Create);
             _migrationManager.BuildTable<WQrCodeLimit>(Create);
-
-            _migrationManager.BuildTable<WQrCodeImage>(Create);
-            _migrationManager.BuildTable<WQrCodeImageProductMapping>(Create);
             
             _migrationManager.BuildTable<WQrCodeLimitUserMapping>(Create);
+            _migrationManager.BuildTable<QrCodeLimitBindingSource>(Create);
 
             _migrationManager.BuildTable<WQrCodeTemp>(Create);
 
@@ -252,6 +261,19 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<SupplierProductMapping>(Create);
             _migrationManager.BuildTable<SupplierUserAuthorityMapping>(Create);
             _migrationManager.BuildTable<SupplierShopTagMapping>(Create);
+            _migrationManager.BuildTable<SupplierShopUserFollowMapping>(Create);
+
+            _migrationManager.BuildTable<SupplierVoucherCoupon>(Create);
+            _migrationManager.BuildTable<SupplierVoucherCouponAppliedValue>(Create);
+            _migrationManager.BuildTable<ProductSupplierVoucherCouponMapping>(Create);
+            _migrationManager.BuildTable<QrCodeSupplierVoucherCouponMapping>(Create);
+            _migrationManager.BuildTable<UserSupplierVoucherCoupon>(Create);
+
+            _migrationManager.BuildTable<ProductAdvertImage>(Create);
+            _migrationManager.BuildTable<MarketingAdvertWay>(Create);
+            _migrationManager.BuildTable<MarketingAdvertAddress>(Create);
+            _migrationManager.BuildTable<UserAdvertChannelAnalysis>(Create);
+
 
             _migrationManager.BuildTable<DivisionsCodeChina>(Create);
             _migrationManager.BuildTable<ProductExtendLabel>(Create);
@@ -260,7 +282,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<ActivitiesTheme>(Create);
             _migrationManager.BuildTable<CustomTeam>(Create);
             _migrationManager.BuildTable<CustomTeamOrder>(Create);
-            _migrationManager.BuildTable<GiftsSendItem>(Create);
             _migrationManager.BuildTable<OfficialCustomer>(Create);
             _migrationManager.BuildTable<PartnerApplicationForm>(Create);
             _migrationManager.BuildTable<PartnerServiceInfo>(Create);
@@ -274,8 +295,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<UserAsset>(Create);
             _migrationManager.BuildTable<UserAssetIncomeHistory>(Create);
             _migrationManager.BuildTable<UserAssetConsumeHistory>(Create);
-            _migrationManager.BuildTable<UserCreateProductCoupon>(Create);
-
 
         }
     }

@@ -21,6 +21,7 @@ namespace Nop.Data.Mapping.Builders.Marketing
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
+                .WithColumn(nameof(UserAssetConsumeHistory.OwnerUserId)).AsInt32().ForeignKey<WUser>()
                 .WithColumn(nameof(UserAssetConsumeHistory.Remark)).AsString(512).Nullable()
                 .WithColumn(nameof(UserAssetConsumeHistory.UserAssetIncomeHistoryId)).AsInt32().Nullable().ForeignKey<UserAssetIncomeHistory>().OnDelete(Rule.None)
                 .WithColumn(nameof(UserAssetConsumeHistory.UsedWithOrderId)).AsInt32().Nullable().ForeignKey<OrderItem>().OnDelete(Rule.None)

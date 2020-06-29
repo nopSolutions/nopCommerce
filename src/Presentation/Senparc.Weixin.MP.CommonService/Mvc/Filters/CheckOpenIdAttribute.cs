@@ -75,26 +75,28 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
             /// Set the wuser openid of current customer
             /// </summary>
             /// <param name="affiliate">Affiliate</param>
-            protected void SetCustomerOpenId(string openId, long openIdHash)
+            protected void SetCustomerOpenId(string refereeOpenId, long refereeOpenIdHash)
             {
                 var update = false;
 
                 //不能自己推荐自己
-                if (!string.IsNullOrEmpty(openId) && openId.Length < 32 && openId != _workContext.CurrentCustomer.OpenId)
+                if (!string.IsNullOrEmpty(refereeOpenId) && refereeOpenId.Length < 32 && refereeOpenId != _workContext.CurrentCustomer.OpenId)
                 {
-                    var refereeUser = _wUserService.GetWUserByOpenId(openId);
+                    var refereeUser = _wUserService.GetWUserByOpenId(refereeOpenId);
                     if (refereeUser != null)
                     {
-                        _workContext.CurrentCustomer.OpenIdReferee = refereeUser.OpenId;
+                        _workContext.CurrentCustomer.RefereeId = refereeUser.Id;
+                        _workContext.CurrentCustomer.RefereeIdUpdateTime = Convert.ToInt32(Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now));
                         update = true;
                     }
                 }
-                else if (openIdHash > 0)
+                else if (refereeOpenIdHash > 0)
                 {
-                    var refereeUser = _wUserService.GetWUserByOpenIdHash(openIdHash);
+                    var refereeUser = _wUserService.GetWUserByOpenIdHash(refereeOpenIdHash);
                     if (refereeUser != null && refereeUser.OpenId != _workContext.CurrentCustomer.OpenId)
                     {
-                        _workContext.CurrentCustomer.OpenIdReferee = refereeUser.OpenId;
+                        _workContext.CurrentCustomer.RefereeId = refereeUser.Id;
+                        _workContext.CurrentCustomer.RefereeIdUpdateTime = Convert.ToInt32(Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now));
                         update = true;
                     }
                 }
@@ -137,8 +139,8 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
                 if (request?.Query == null || !request.Query.Any())
                     return;
 
-                var openIds = request.Query[WUSER_OPENID_QUERY_PARAMETER_NAME];
-                var openIdsHash = request.Query[WUSER_OPENID_HASH_QUERY_PARAMETER_NAME];
+                var openIds = request.Query[WUSER_OPENID_QUERY_PARAMETER_NAME];  //这里是推荐人OpenId
+                var openIdsHash = request.Query[WUSER_OPENID_HASH_QUERY_PARAMETER_NAME]; //这里是推荐人OpenIdHash
 
                 var openId = openIds.Any() ? openIds.FirstOrDefault() : string.Empty;
                 var openIdHash = openIdsHash.Any() ? (long.TryParse(openIdsHash.FirstOrDefault(), out var hashResult) ? hashResult : 0) : 0;

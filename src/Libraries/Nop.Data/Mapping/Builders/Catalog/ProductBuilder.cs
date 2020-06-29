@@ -18,11 +18,15 @@ namespace Nop.Data.Mapping.Builders.Catalog
         {
             table
                 .WithColumn(nameof(Product.Name)).AsString(400).NotNullable()
+                .WithColumn(nameof(Product.SubTitle)).AsString(512).Nullable()
                 .WithColumn(nameof(Product.MetaKeywords)).AsString(400).Nullable()
                 .WithColumn(nameof(Product.MetaTitle)).AsString(400).Nullable()
                 .WithColumn(nameof(Product.Sku)).AsString(400).Nullable()
                 .WithColumn(nameof(Product.ManufacturerPartNumber)).AsString(400).Nullable()
                 .WithColumn(nameof(Product.Gtin)).AsString(400).Nullable()
+                .WithColumn(nameof(Product.CoverImageUrl)).AsAnsiString(1024).Nullable()
+                .WithColumn(nameof(Product.CoverThumbImageUrl)).AsAnsiString(1024).Nullable()
+                .WithColumn(nameof(Product.VirtualCurrency)).AsDecimal(9,2)
                 .WithColumn(nameof(Product.RequiredProductIds)).AsString(1000).Nullable()
                 .WithColumn(nameof(Product.AllowedQuantities)).AsString(1000).Nullable();
         }

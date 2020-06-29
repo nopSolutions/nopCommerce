@@ -26,7 +26,7 @@ namespace Nop.Data.Mapping.Builders.Marketing
                 .WithColumn(nameof(ActivitiesTheme.BannerImageUrl)).AsString(1024).Nullable()
                 .WithColumn(nameof(ActivitiesTheme.ShareImageUrl)).AsString(1024).Nullable()
                 .WithColumn(nameof(ActivitiesTheme.Url)).AsString(1024).Nullable()
-                .WithColumn(nameof(ActivitiesTheme.Qrcode)).AsString(1024).Nullable()
+                .WithColumn(nameof(ActivitiesTheme.QrcodeUrl)).AsString(1024).Nullable()
                 .WithColumn(nameof(ActivitiesTheme.StartDateTimeUtc)).AsDateTime2().Nullable()
                 .WithColumn(nameof(ActivitiesTheme.EndDateTimeUtc)).AsDateTime2().Nullable()
                 ;

@@ -14,12 +14,24 @@
         /// </summary>
         Saler = 1,
         /// <summary>
-        /// 核销员
+        /// 是否财务管理员
         /// </summary>
-        Verifier = 2,
+        FinancialManager = 2,
         /// <summary>
-        /// 商家
+        /// 是否核销员
         /// </summary>
-        Store = 2,
+        VerifyManager = 3,
+        /// <summary>
+        /// 是否预定订单确认员
+        /// </summary>
+        OrderConfirmer = 4,
+        /// <summary>
+        /// 产品发布员
+        /// </summary>
+        ProductPulisher = 5,
+        /// <summary>
+        /// 供应商家
+        /// </summary>
+        Store = 6,
     }
 }

@@ -17,5 +17,8 @@ namespace Nop.Core.Domain.Suppliers
         /// </summary>
         public int ProductId { get; set; }
 
+        public int SupplierShopId { get; set; }
+
+        public int DisplayOrder { get; set; }
     }
 }

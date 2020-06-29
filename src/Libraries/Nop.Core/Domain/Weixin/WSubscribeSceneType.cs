@@ -22,5 +22,7 @@
         ADD_SCENE_PROFILE_ITEM = 6,
         //ADD_SCENE_PAID 支付后关注
         ADD_SCENE_PAID = 7,
+        //微信广告
+        ADD_SCENE_WECHAT_ADVERTISEMENT = 8,
     }
 }

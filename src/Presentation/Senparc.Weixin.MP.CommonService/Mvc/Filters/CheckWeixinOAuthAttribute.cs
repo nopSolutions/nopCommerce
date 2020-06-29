@@ -161,7 +161,31 @@ namespace Senparc.Weixin.MP.CommonService.Mvc.Filters
                 }
 
                 //初始化Oauth State
-                var oauthStateString = ((_oauthScope == OAuthScope.snsapi_userinfo) ? "userinfo_" : "base_") + SystemTime.Now.Ticks.ToString();
+                var oauthStateString = ((_oauthScope == OAuthScope.snsapi_userinfo) ? "userinfo" : "base") + SystemTime.Now.Ticks.ToString();
+
+                //check request query parameters
+                var request = filterContext.HttpContext.Request;
+                if (request?.Query == null || !request.Query.Any())
+                {
+                    //do nothing
+                }
+                else
+                {
+                    var openIds = request.Query["openid"];  //这里是推荐人OpenId
+                    var openIdsHash = request.Query["openidhash"]; //这里是推荐人OpenIdHash
+
+                    var openId = openIds.Any() ? openIds.FirstOrDefault() : string.Empty;
+                    var openIdHash = openIdsHash.Any() ? (long.TryParse(openIdsHash.FirstOrDefault(), out var hashResult) ? hashResult : 0) : 0;
+
+                    if (!string.IsNullOrEmpty(openId))
+                    {
+                        oauthStateString += "_" + openId;
+                    }
+                    else if (openIdHash > 0)
+                    {
+                        oauthStateString += "_" + openIdHash.ToString();
+                    }
+                }
 
                 //保存state
                 filterContext.HttpContext.Session.SetString(NopWeixinDefaults.WeixinOauthStateString, oauthStateString);

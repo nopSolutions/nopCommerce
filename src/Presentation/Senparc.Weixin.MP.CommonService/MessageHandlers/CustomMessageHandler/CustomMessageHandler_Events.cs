@@ -24,12 +24,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Core.Domain.Weixin;
+using Nop.Core.Domain.Suppliers;
+using Nop.Core.Domain.Marketing;
 using Nop.Services.Weixin;
+using Nop.Services.Suppliers;
+using Nop.Services.Marketing;
 using Nop.Services.Helpers;
 using Senparc.CO2NET.Helpers;
 using Nop.Core;
 using Org.BouncyCastle.Ocsp;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+
+using Senparc.Weixin.MP.CommonService.Utilities;
 
 namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
 {
@@ -49,65 +55,12 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
                 ? "-"
                 : string.Format("{0}.{1}.{2}", fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart, fileVersionInfo.FileBuildPart);
 
-            return string.Format(
-@"欢迎关注【Senparc.Weixin 微信公众平台SDK】，当前运行版本：v{0}。
-您可以发送【文字】【位置】【图片】【语音】【文件】等不同类型的信息，查看不同格式的回复。
-
-您也可以直接点击菜单查看各种类型的回复。
-还可以点击菜单体验微信支付。
-
-SDK官方地址：https://weixin.senparc.com
-SDK Demo：https://sdk.weixin.senparc.com
-源代码及Demo下载地址：https://github.com/JeffreySu/WeiXinMPSDK
-Nuget地址：https://www.nuget.org/packages/Senparc.Weixin.MP
-QQ群：289181996
-
-===============
-更多：
-
-1、JSSDK测试：https://sdk.weixin.senparc.com/WeixinJSSDK
-
-2、开放平台测试（建议PC上打开）：https://sdk.weixin.senparc.com/OpenOAuth/JumpToMpOAuth
-
-3、回复关键字：
-
-【open】   进入第三方开放平台（Senparc.Weixin.Open）测试
-
-【tm】     测试异步模板消息
-
-【openid】 获取OpenId等用户信息
-
-【约束】   测试微信浏览器约束
-
-【AsyncTest】 异步并发测试
-
-【错误】    体验发生错误无法返回正确信息
-
-【容错】    体验去重容错
-
-【ex】      体验错误日志推送提醒
-
-【mute】     不返回任何消息，也无出错信息
-
-【jssdk】    测试JSSDK图文转发接口
-
-格式：【数字#数字】，如2010#0102，调用正则表达式匹配
-
-【订阅】     测试“一次性订阅消息”接口
-",
-                version);
+            return string.Format(@"欢迎关注【微信公众平台SDK】，当前运行版本：v{0}。", version);
         }
 
         public string GetDownloadInfo(CodeRecord codeRecord)
         {
-            return string.Format(@"您已通过二维码验证，浏览器即将开始下载 Senparc.Weixin SDK 帮助文档。
-当前选择的版本：v{0}（{1}）
-
-我们期待您的意见和建议，客服热线：400-031-8816。
-
-感谢您对盛派网络的支持！
-
-© {2} Senparc", codeRecord.Version, codeRecord.IsWebVersion ? "网页版" : ".chm文档版", SystemTime.Now.Year);
+            return string.Format(@"您已通过二维码验证，浏览器即将开始下载,当前选择的版本：v{0}（{1}）", codeRecord.Version, codeRecord.IsWebVersion ? "网页版" : ".chm文档版", SystemTime.Now.Year);
         }
 
         public override IResponseMessageBase OnTextOrEventRequest(RequestMessageText requestMessage)
@@ -395,130 +348,216 @@ QQ群：289181996
         /// <returns></returns>
         public override IResponseMessageBase OnEvent_ScanRequest(RequestMessageEvent_Scan requestMessage)
         {
-            var scanQrcodeLimit = false; //是否通过扫描永久二维码进入
-            int scenicId;    //场景值：永久二维码进入=二维码ID，临时二维码进入=背景图ID
-            var openIdReferee = string.Empty;  //推荐人OpenId
+            var scenicId = 0;    //场景值：永久二维码进入=二维码ID，临时二维码进入=背景图ID
             var messageIds = new List<int>();   //多个消息ID，以二维码消息优先，覆盖背景图消息。
+            IResponseMessageBase responseMessage = null; //回复消息
+
+            var wuserService = EngineContext.Current.Resolve<IWUserService>();
+            var wmessageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
+            var qrcodeLimitUserService = EngineContext.Current.Resolve<IWQrCodeLimitUserService>();
+            var qrCodeLimitBindingSourceService = EngineContext.Current.Resolve<IQrCodeLimitBindingSourceService>();
+            var supplierUserAuthorityMappingService = EngineContext.Current.Resolve<ISupplierUserAuthorityMappingService>();
 
             //分析二维码参数，获取sceneId和推荐人ID
             #region 分析二维码参数，获取sceneId和推荐人ID
 
-            if (!string.IsNullOrEmpty(requestMessage.EventKey))
+            if (string.IsNullOrEmpty(requestMessage.EventKey))
+                return new SuccessResponseMessage();
+
+            var sceneStr = requestMessage.EventKey.Replace("qrscene_", "");
+
+            if (string.IsNullOrEmpty(sceneStr))
+                return new SuccessResponseMessage();
+
+            Nop.Services.Weixin.QrCodeSceneString.QrCodeSceneParam qrCodeSceneParam = null;
+            if (sceneStr.Contains("_"))
             {
-                var sceneStr = requestMessage.EventKey.Replace("qrscene_", "");
-
-                if(sceneStr.Contains("_"))  //非纯数字,临时二维码
+                //临时二维码
+                qrCodeSceneParam = Nop.Services.Weixin.QrCodeSceneString.GetTempSceneParams(sceneStr);
+                qrCodeSceneParam.IsQrCodeLimit = false;
+            }
+            else
+            {
+                //纯数字，永久二维码 传递的参数初始化基础值
+                qrCodeSceneParam = new QrCodeSceneString.QrCodeSceneParam()
                 {
-                    scanQrcodeLimit = false; //临时二维码进入
+                    SceneType = WSceneType.None,
+                    IsQrCodeLimit = true,
+                };
+            }
 
-                    var sceneParams = sceneStr.Split('_');  //分解参数
-                    var sceneType = (WSceneType)Enum.Parse(typeof(WSceneType), sceneParams[0], true);
+            //临时二维码操作
+            if (!qrCodeSceneParam.IsQrCodeLimit)
+            {
+                responseMessage = GetQrCodeTempPassiveResponseMessage(qrCodeSceneParam);
 
-                    switch (sceneType)
-                    {
-                        case WSceneType.Adver:
-                            {
-                                //adver + openidreferrr + image_id + add_time
-                                openIdReferee = sceneParams[1];
-                                int.TryParse(sceneParams[2], out scenicId);
+                //获取绑定消息
+                if (responseMessage == null)
+                    messageIds = wmessageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeTemp);
+            }
 
-                                if (scenicId > 0)
-                                {
-                                    var qrcodeImageService = EngineContext.Current.Resolve<IWQrCodeImageService>();
-                                    var qrcodeImage = qrcodeImageService.GetWQrCodeImageById(scenicId);
+            //永久二维码操作
+            if (qrCodeSceneParam.IsQrCodeLimit)
+            {
+                int.TryParse(sceneStr, out scenicId);
 
-                                    //临时二维码进入，只有背景图绑定了消息
-                                    if (qrcodeImage != null)
-                                    {
-                                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
-                                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
-                                    }
-                                }
-                                break;
-                            }
-                        case WSceneType.Verify:
-                            {
-                                //verify + openid_hash + 验证码
-                                break;
-                            }
-                        case WSceneType.Command:
-                            {
-                                //command + openid_hash + 命令
-                                break;
-                            }
-                        case WSceneType.Vote:
-                            {
-                                //vote + openid_hash + 投票项目ID（场景值）+ 创建时间
-                                //vote+投票发起人，系统官方发起为0 +项目ID（场景值）+创建时间
-
-                                break;
-                            }
-                        case WSceneType.IDCard:
-                            {
-                                break;
-                            }
-                        case WSceneType.None:
-                        default:
-                            break;
-                    }
-                }
-                else  //纯数字，永久二维码
+                if (scenicId > 0)
                 {
-                    scanQrcodeLimit = true; //永久二维码进入
-
-                    int.TryParse(sceneStr, out scenicId);
-
-                    if (scenicId > 0)
+                    //获取推荐人
+                    var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
+                    if (qrcodeLimitUser != null)
                     {
-                        var qrcodeLimitUserService = EngineContext.Current.Resolve<IWQrCodeLimitUserService>();
-                        var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
-                        if (qrcodeLimitUser != null)
+                        if (qrcodeLimitUser.ExpireTime > 0 && qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now))
                         {
-                            if (qrcodeLimitUser.ExpireTime > 0 &&
-                                qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
-                                )
-                            {
-                                openIdReferee = qrcodeLimitUser.OpenId; //永久二维码在指定过期时间前，分配给指定用户
-                            }
-                        }
-
-                        //获取绑定消息
-                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
-                        //获取永久二维码绑定消息
-                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeLimit);
-                        if (messageIds.Count == 0)
-                        {
-                            //获取背景图绑定消息
-                            messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
+                            //永久二维码在指定过期时间前，分配给指定用户
+                            qrCodeSceneParam.OpenIdReferee = qrcodeLimitUser.OpenId;
                         }
                     }
 
-                }
+                    //获取永久二维码一对一绑定信息
+                    
+                    var qrCodeLimitBindingSource = qrCodeLimitBindingSourceService.GetEntityByQrcodeLimitId(scenicId);
+                    if (qrCodeLimitBindingSource != null)
+                    {
+                        qrCodeSceneParam.SceneType = qrCodeLimitBindingSource.WSceneType;
 
+                        if (qrCodeLimitBindingSource.MessageResponse)
+                            responseMessage = GetQrCodeLimitPassiveResponseMessage(qrCodeLimitBindingSource);
+
+                        if (qrCodeLimitBindingSource.MessageResponse && qrCodeLimitBindingSource.UseBindingMessage)
+                        {
+                            //获取绑定消息
+                            messageIds = wmessageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeLimit);
+                        }
+                    }
+                }
             }
 
             #endregion
 
-            //获取推荐人信息
-            if (!string.IsNullOrEmpty(openIdReferee))
+            //根据推荐人状态重新跳转推荐人信息
+            var refereeUser = wuserService.GetWUserByOpenId(qrCodeSceneParam.OpenIdReferee);
+            if (
+                qrCodeSceneParam.OpenIdReferee== requestMessage.FromUserName||  //不能自己推荐自己
+                refereeUser == null || 
+                refereeUser.Deleted || 
+                !refereeUser.Subscribe || 
+                !refereeUser.AllowReferee)
             {
-                var wuserService = EngineContext.Current.Resolve<IWUserService>();
-                var wuser = wuserService.GetWUserByOpenId(openIdReferee);
+                qrCodeSceneParam.OpenIdReferee = string.Empty;
+            }
 
-                if (wuser != null && !wuser.Deleted && wuser.Subscribe && wuser.AllowReferee)
+            //更新或插入数据，判断当前用户是否已保存数据库
+            #region 更新或插入数据，判断当前用户是否已保存数据库
+
+            var currentUser = wuserService.GetWUserByOpenId(requestMessage.FromUserName);
+            if (currentUser == null)
+            {
+                //本地未保存，插入
+                currentUser = new WUser
                 {
-                    //do nothing
+                    OpenId = requestMessage.FromUserName,
+                    RefereeId = (refereeUser != null && !string.IsNullOrEmpty(qrCodeSceneParam.OpenIdReferee)) ? refereeUser.Id : 0,
+                    WConfigId = 0,
+                    OpenIdHash = CommonHelper.StringToLong(requestMessage.FromUserName),
+                    CheckInType = WCheckInType.Subscribe,  //每个进入接口不同
+                    LanguageType = WLanguageType.ZH_CN,
+                    Sex = 0,
+                    RoleType = WRoleType.Visitor,
+                    SceneType = WSceneType.None,  //需要重新判断设置
+                    Status = 0,
+                    SupplierShopId = 0,  //需要重新判断设置
+                    QrScene = 0,   //需要重新判断设置
+                    Subscribe = true,
+                    AllowReferee = true,
+                    AllowResponse = true,
+                    AllowOrder = true,
+                    AllowNotice = false,
+                    AllowOrderNotice = false,
+                    InBlackList = false,
+                    Deleted = false,
+                    SubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
+                    UnSubscribeTime = 0,
+                    UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
+                    CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
+                };
+
+                var userInfo = AdvancedAPIs.UserApi.Info(_senparcWeixinSetting.WeixinAppId, requestMessage.FromUserName);
+                if (userInfo != null && userInfo.errcode == ReturnCode.请求成功)
+                {
+                    currentUser.UnionId = userInfo.unionid;
+                    currentUser.NickName = userInfo.nickname;
+                    currentUser.Province = userInfo.province;
+                    currentUser.City = userInfo.city;
+                    currentUser.Country = userInfo.country;
+                    currentUser.HeadImgUrl = HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
+                    currentUser.Remark = userInfo.remark;
+                    currentUser.GroupId = userInfo.groupid.ToString();
+                    currentUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
+                    currentUser.Sex = Convert.ToByte(userInfo.sex);
+                    currentUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
+                    currentUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
+                    currentUser.UpdateTime = (int)userInfo.subscribe_time;
+                    currentUser.SubscribeTime = (int)userInfo.subscribe_time;
                 }
-                else
+
+                //设置用户绑定供应商/店铺信息
+                var supplierUserAuthorityMapping = supplierUserAuthorityMappingService.GetEntityByUserId(currentUser.RefereeId);
+                if (supplierUserAuthorityMapping != null)
                 {
-                    openIdReferee = string.Empty; 
+                    currentUser.SupplierShopId = supplierUserAuthorityMapping.SupplierShopId ?? 0;
+                }
+                //设置SceneType
+                currentUser.SceneType = qrCodeSceneParam.SceneType;
+                //设置SceneId
+                int.TryParse(qrCodeSceneParam.Value, out var qrcodeTempValue);
+                currentUser.QrScene = qrCodeSceneParam.IsQrCodeLimit ? scenicId : (1000000 + qrcodeTempValue);
+
+                //insert
+                wuserService.InsertWUser(currentUser);
+            }
+            else
+            {
+                if (!currentUser.Subscribe)
+                {
+                    currentUser.Subscribe = true;
+                    wuserService.UpdateWUser(currentUser);
                 }
             }
 
-            //回复消息
-            #region 循环消息
+            #endregion
 
-            var responseMessage = GetResponseMessagesByIds(messageIds);
+            //处理二维码绑定的赠送卡券
+            #region 处理二维码绑定的赠送卡券
+
+            var giftCardIds = new List<int>();
+            //临时二维码参数赋值操作
+            if (!qrCodeSceneParam.IsQrCodeLimit && qrCodeSceneParam.SceneType == WSceneType.GiftCard)
+            {
+                int.TryParse(qrCodeSceneParam.Value, out var giftCardId);
+                if (giftCardId > 0)
+                    giftCardIds.Add(giftCardId);
+            }
+            //永久二维码绑定的卡券ID赋值操作
+            if (qrCodeSceneParam.IsQrCodeLimit)
+            {
+                var qrCodeSupplierVoucherCouponMappingService= EngineContext.Current.Resolve<IQrCodeSupplierVoucherCouponMappingService>();
+                var qrCodeSupplierVoucherCouponMappings = qrCodeSupplierVoucherCouponMappingService.GetEntitiesByQrCodeId(scenicId, true, false);
+                foreach (var item in qrCodeSupplierVoucherCouponMappings)
+                    giftCardIds.Add(item.SupplierVoucherCouponId);
+            }
+            //向扫码人后台添加对应的卡券（判断是否已经领取）,并返回回复信息
+            responseMessage = GetAndSetSupplierVoucherCouponPassiveResponseMessage(giftCardIds, qrCodeSceneParam, requestMessage.FromUserName);
+
+            #endregion
+
+
+            //回复消息
+            #region 回复消息
+
+            if (responseMessage == null)
+                responseMessage = GetResponseMessagesByIds(messageIds);
+
             if (responseMessage != null)
                 return responseMessage;
 
@@ -568,258 +607,217 @@ QQ群：289181996
         /// <returns></returns>
         public override IResponseMessageBase OnEvent_SubscribeRequest(RequestMessageEvent_Subscribe requestMessage)
         {
-            var scanQrcodeLimit = false; //是否通过扫描永久二维码进入
             var scenicId = 0;    //场景值：永久二维码进入=二维码ID，临时二维码进入=背景图ID
-            var sceneType = WSceneType.None; //进入场景类型
-            var openIdReferee = string.Empty;  //推荐人OpenId
             var messageIds = new List<int>();   //多个消息ID，以二维码消息优先，覆盖背景图消息。
+            IResponseMessageBase responseMessage = null; //回复消息
 
             var wuserService = EngineContext.Current.Resolve<IWUserService>();
+            var wmessageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
+            var qrcodeLimitUserService = EngineContext.Current.Resolve<IWQrCodeLimitUserService>();
+            var qrCodeLimitBindingSourceService = EngineContext.Current.Resolve<IQrCodeLimitBindingSourceService>();
+            var supplierUserAuthorityMappingService = EngineContext.Current.Resolve<ISupplierUserAuthorityMappingService>();
 
             //分析二维码参数，获取sceneId和推荐人ID
             #region 分析二维码参数，获取sceneId和推荐人ID
 
-            if (!string.IsNullOrEmpty(requestMessage.EventKey))
+            if (string.IsNullOrEmpty(requestMessage.EventKey))
+                return new SuccessResponseMessage();
+
+            var sceneStr = requestMessage.EventKey.Replace("qrscene_", "");
+            if (string.IsNullOrEmpty(sceneStr))
+                return new SuccessResponseMessage();
+
+            Nop.Services.Weixin.QrCodeSceneString.QrCodeSceneParam qrCodeSceneParam = null;
+            if (sceneStr.Contains("_"))
             {
-                var sceneStr = requestMessage.EventKey.Replace("qrscene_", "");
-
-                if (sceneStr.Contains("_"))  //非纯数字,临时二维码
-                {
-                    scanQrcodeLimit = false; //临时二维码进入
-
-                    var sceneParams = sceneStr.Split('_');  //分解参数
-                    sceneType = (WSceneType)Enum.Parse(typeof(WSceneType), sceneParams[0], true);
-
-                    switch (sceneType)
-                    {
-                        case WSceneType.Adver:
-                            {
-                                //adver + openidreferrr + image_id + add_time
-                                openIdReferee = sceneParams[1];
-                                int.TryParse(sceneParams[2], out scenicId);
-
-                                if (scenicId > 0)
-                                {
-                                    var qrcodeImageService = EngineContext.Current.Resolve<IWQrCodeImageService>();
-                                    var qrcodeImage = qrcodeImageService.GetWQrCodeImageById(scenicId);
-
-                                    //临时二维码进入，只有背景图绑定了消息
-                                    if (qrcodeImage != null)
-                                    {
-                                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
-                                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
-                                    }
-                                }
-                                break;
-                            }
-                        case WSceneType.Verify:
-                            {
-                                //verify + openid_hash + 验证码
-                                break;
-                            }
-                        case WSceneType.Command:
-                            {
-                                //command + openid_hash + 命令
-                                break;
-                            }
-                        case WSceneType.Vote:
-                            {
-                                //vote + openid_hash + 投票项目ID（场景值）+ 创建时间
-                                //vote+投票发起人，系统官方发起为0 +项目ID（场景值）+创建时间
-
-                                break;
-                            }
-                        case WSceneType.IDCard:
-                            {
-                                break;
-                            }
-                        case WSceneType.None:
-                        default:
-                            break;
-                    }
-                }
-                else  //纯数字，永久二维码
-                {
-                    scanQrcodeLimit = true; //永久二维码进入
-                    int.TryParse(sceneStr, out scenicId);
-
-                    if (scenicId > 0)
-                    {
-                        var wqrcodeLimitServise = EngineContext.Current.Resolve<IWQrCodeLimitService>();
-                        var wqrcodeLimit = wqrcodeLimitServise.GetWQrCodeLimitByQrCodeId(scenicId);
-                        if (wqrcodeLimit != null)
-                        {
-                            sceneType = wqrcodeLimit.WSceneType;
-                        }
-
-                        var qrcodeLimitUserService = EngineContext.Current.Resolve<IWQrCodeLimitUserService>();
-                        var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
-                        if (qrcodeLimitUser != null)
-                        {
-                            if (qrcodeLimitUser.ExpireTime > 0 &&
-                                qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
-                                )
-                            {
-                                openIdReferee = qrcodeLimitUser.OpenId; //永久二维码在指定过期时间前，分配给指定用户
-                            }
-                        }
-
-                        //获取绑定消息
-                        var messageBindService = EngineContext.Current.Resolve<IWMessageBindService>();
-                        //获取永久二维码绑定消息
-                        messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeLimit);
-                        if (messageIds.Count == 0)
-                        {
-                            //获取背景图绑定消息
-                            messageIds = messageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.Image);
-                        }
-                    }
-
-                }
-
-            }
-
-
-            #endregion
-
-            //获取推荐人信息
-            #region 获取推荐人信息
-
-            var refereeUserId = 0;
-            //不能自己推荐自己
-            if (!string.IsNullOrEmpty(openIdReferee) && openIdReferee != requestMessage.FromUserName)
-            {
-                var wuser = wuserService.GetWUserByOpenId(openIdReferee);
-                if (wuser != null && !wuser.Deleted && wuser.Subscribe && wuser.AllowReferee)
-                {
-                    refereeUserId = wuser.Id;
-                    //do nothing
-                }
-            }
-
-            #endregion
-
-            // 添加/修改新用户信息
-            #region 添加/修改新用户信息
-
-            var newUser = wuserService.GetWUserByOpenId(requestMessage.FromUserName);
-            var userInfo = AdvancedAPIs.UserApi.Info(_senparcWeixinSetting.WeixinAppId, requestMessage.FromUserName);
-            if (newUser != null)
-            {
-                try
-                {
-                    newUser.RefereeId = refereeUserId;
-                    newUser.WConfigId = 0;
-                    newUser.CheckInType = WCheckInType.Subscribe;
-                    newUser.SceneType = sceneType;
-                    newUser.QrScene = scanQrcodeLimit ? scenicId : (1000000 + scenicId);
-                    //newUser.QrSceneStr = string.Empty;
-                    newUser.Subscribe = true;
-                    newUser.SubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime);
-                    
-                    if(userInfo.errcode== ReturnCode.请求成功)
-                    {
-                        newUser.UnionId = userInfo.unionid;
-                        newUser.NickName = userInfo.nickname;
-                        newUser.Province = userInfo.province;
-                        newUser.City = userInfo.city;
-                        newUser.Country = userInfo.country;
-                        newUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
-                        newUser.Remark = userInfo.remark;
-                        newUser.GroupId = userInfo.groupid.ToString();
-                        newUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
-                        newUser.Sex = Convert.ToByte(userInfo.sex);
-                        newUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
-                        newUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
-                        newUser.UpdateTime = (int)userInfo.subscribe_time;
-                        newUser.SubscribeTime = (int)userInfo.subscribe_time;
-                    }
-
-                    //update
-                    wuserService.UpdateWUser(newUser);
-                }
-                catch(Exception ex)
-                {
-
-                }
-                
+                //临时二维码
+                qrCodeSceneParam = Nop.Services.Weixin.QrCodeSceneString.GetTempSceneParams(sceneStr);
+                qrCodeSceneParam.IsQrCodeLimit = false;
             }
             else
             {
-                try
+                //纯数字，永久二维码 传递的参数初始化基础值
+                qrCodeSceneParam = new QrCodeSceneString.QrCodeSceneParam()
                 {
-                    //Insert
-                    var initUser = new WUser
-                    {
-                        OpenId = requestMessage.FromUserName,
-                        RefereeId = refereeUserId,
-                        WConfigId = 0,
-                        OpenIdHash = CommonHelper.StringToLong(requestMessage.FromUserName),
-                        CheckInType = WCheckInType.Subscribe,
-                        LanguageType = WLanguageType.ZH_CN,
-                        Sex = 0,
-                        RoleType = WRoleType.Visitor,
-                        SceneType = WSceneType.Adver,
-                        Status = 0,
-                        QrScene = scanQrcodeLimit ? scenicId : (1000000 + scenicId),
-                        //QrSceneStr = string.Empty,
-                        Subscribe = true,
-                        AllowReferee = true,
-                        AllowResponse = true,
-                        AllowOrder = true,
-                        AllowNotice = false,
-                        AllowOrderNotice = false,
-                        InBlackList = false,
-                        Deleted = false,
-                        SubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime),
-                        UnSubscribeTime = 0,
-                        UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
-                        CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
-                    };
+                    SceneType = WSceneType.None,
+                    IsQrCodeLimit = true,
+                };
+            }
 
-                    if (userInfo.errcode == ReturnCode.请求成功)
+            //临时二维码操作
+            if (!qrCodeSceneParam.IsQrCodeLimit)
+            {
+                responseMessage = GetQrCodeTempPassiveResponseMessage(qrCodeSceneParam);
+
+                //获取绑定消息
+                if (responseMessage == null)
+                    messageIds = wmessageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeTemp);
+            }
+            //永久二维码操作
+            if (qrCodeSceneParam.IsQrCodeLimit)
+            {
+                int.TryParse(sceneStr, out scenicId);
+
+                if (scenicId > 0)
+                {
+                    //获取推荐人
+                    var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
+                    if (qrcodeLimitUser != null)
                     {
-                        initUser.UnionId = userInfo.unionid;
-                        initUser.NickName = userInfo.nickname;
-                        initUser.Province = userInfo.province;
-                        initUser.City = userInfo.city;
-                        initUser.Country = userInfo.country;
-                        initUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
-                        initUser.Remark = userInfo.remark;
-                        initUser.GroupId = userInfo.groupid.ToString();
-                        initUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
-                        initUser.Sex = Convert.ToByte(userInfo.sex);
-                        initUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
-                        initUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
-                        initUser.UpdateTime = (int)userInfo.subscribe_time;
-                        initUser.SubscribeTime = (int)userInfo.subscribe_time;
+                        if (qrcodeLimitUser.ExpireTime > 0 && qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now))
+                        {
+                            //永久二维码在指定过期时间前，分配给指定用户
+                            qrCodeSceneParam.OpenIdReferee = qrcodeLimitUser.OpenId;
+                        }
                     }
 
-                    //insert
-                    wuserService.InsertWUser(initUser);
+                    //获取永久二维码一对一绑定信息
 
-                }
-                catch
-                {
+                    var qrCodeLimitBindingSource = qrCodeLimitBindingSourceService.GetEntityByQrcodeLimitId(scenicId);
+                    if (qrCodeLimitBindingSource != null)
+                    {
+                        qrCodeSceneParam.SceneType = qrCodeLimitBindingSource.WSceneType;
 
+                        if (qrCodeLimitBindingSource.MessageResponse)
+                            responseMessage = GetQrCodeLimitPassiveResponseMessage(qrCodeLimitBindingSource);
+
+                        if (qrCodeLimitBindingSource.MessageResponse && qrCodeLimitBindingSource.UseBindingMessage)
+                        {
+                            //获取绑定消息
+                            messageIds = wmessageBindService.GetMessageBindIds(scenicId, WMessageBindSceneType.QrcodeLimit);
+                        }
+                    }
                 }
             }
 
             #endregion
 
-            //首次回复循环消息
-            #region 循环消息
+            //根据推荐人状态重新跳转推荐人信息
+            var refereeUser = wuserService.GetWUserByOpenId(qrCodeSceneParam.OpenIdReferee);
+            if (
+                qrCodeSceneParam.OpenIdReferee == requestMessage.FromUserName ||  //不能自己推荐自己
+                refereeUser == null ||
+                refereeUser.Deleted ||
+                !refereeUser.Subscribe ||
+                !refereeUser.AllowReferee)
+            {
+                qrCodeSceneParam.OpenIdReferee = string.Empty;
+            }
 
-            var responseMessage = GetResponseMessagesByIds(messageIds);
-            if (responseMessage != null)
-                return responseMessage;
+            // 添加/修改新用户信息
+            #region // 添加/修改新用户信息
+
+            var currentUser = wuserService.GetWUserByOpenId(requestMessage.FromUserName);
+            var insertNewUser = false; //是否插入新信息
+            if (currentUser == null)
+            {
+                insertNewUser = true;  //需要插入新信息
+
+                //初始化基本信息
+                currentUser = new WUser
+                {
+                    OpenId = requestMessage.FromUserName,
+                    RefereeId = (refereeUser != null && !string.IsNullOrEmpty(qrCodeSceneParam.OpenIdReferee)) ? refereeUser.Id : 0,
+                    WConfigId = 0,
+                    OpenIdHash = CommonHelper.StringToLong(requestMessage.FromUserName),
+                    CheckInType = WCheckInType.Subscribe,  //每个渠道不同
+                    LanguageType = WLanguageType.ZH_CN,
+                    Sex = 0,
+                    RoleType = WRoleType.Visitor,
+                    SceneType = WSceneType.None,  //需要参数传入重新赋值
+                    Status = 0,
+                    SupplierShopId = 0,  //需要参数传入重新赋值
+                    QrScene = 0, //需要参数传入重新赋值
+                    Subscribe = true,
+                    AllowReferee = true,
+                    AllowResponse = true,
+                    AllowOrder = true,
+                    AllowNotice = false,
+                    AllowOrderNotice = false,
+                    InBlackList = false,
+                    Deleted = false,
+                    SubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
+                    UnSubscribeTime = 0,
+                    UpdateTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now),
+                    CreatTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now)
+                };
+            }
+            else
+            {
+                currentUser.Subscribe = true;
+            }
+
+            //获取最新用户信息
+            var userInfo = AdvancedAPIs.UserApi.Info(_senparcWeixinSetting.WeixinAppId, requestMessage.FromUserName);
+            if (userInfo.errcode == ReturnCode.请求成功)
+            {
+                currentUser.UnionId = userInfo.unionid;
+                currentUser.NickName = userInfo.nickname;
+                currentUser.Province = userInfo.province;
+                currentUser.City = userInfo.city;
+                currentUser.Country = userInfo.country;
+                currentUser.HeadImgUrl = Utilities.HeadImageUrlHelper.GetHeadImageUrlKey(userInfo.headimgurl);
+                currentUser.Remark = userInfo.remark;
+                currentUser.GroupId = userInfo.groupid.ToString();
+                currentUser.TagIdList = string.Join(",", userInfo.tagid_list) + (userInfo.tagid_list.Length > 0 ? "," : "");
+                currentUser.Sex = Convert.ToByte(userInfo.sex);
+                currentUser.LanguageType = Enum.TryParse(typeof(WLanguageType), userInfo.language, true, out var wLanguageType) ? (WLanguageType)wLanguageType : WLanguageType.ZH_CN;
+                currentUser.SubscribeSceneType = Enum.TryParse(typeof(WSubscribeSceneType), userInfo.subscribe_scene, true, out var wSubscribeSceneType) ? (WSubscribeSceneType)wSubscribeSceneType : WSubscribeSceneType.ADD_SCENE_OTHERS;
+                currentUser.UpdateTime = (int)userInfo.subscribe_time;
+                currentUser.SubscribeTime = (int)userInfo.subscribe_time;
+            }
+
+            //设置用户绑定供应商/店铺信息
+            var supplierUserAuthorityMapping = supplierUserAuthorityMappingService.GetEntityByUserId(currentUser.RefereeId);
+            if (supplierUserAuthorityMapping != null)
+            {
+                currentUser.SupplierShopId = supplierUserAuthorityMapping.SupplierShopId ?? 0;
+            }
+            //设置SceneType
+            currentUser.SceneType = qrCodeSceneParam.SceneType;
+            //设置SceneId
+            int.TryParse(qrCodeSceneParam.Value, out var qrcodeTempValue);
+            currentUser.QrScene = qrCodeSceneParam.IsQrCodeLimit ? scenicId : (1000000 + qrcodeTempValue);
+
+            if (insertNewUser)
+                wuserService.InsertWUser(currentUser);
+            else
+                wuserService.UpdateWUser(currentUser);
 
             #endregion
 
-            //循环消息中没有回复任何消息时，检查关注消息设置
-            #region 循环消息中没有回复任何消息时，检查关注默认消息设置
+            //处理二维码绑定的赠送卡券
+            #region 处理二维码绑定的赠送卡券
 
-            //TODO: 自动回复消息设置绑定的消息ID
+            var giftCardIds = new List<int>();
+            //临时二维码参数赋值操作
+            if (!qrCodeSceneParam.IsQrCodeLimit && qrCodeSceneParam.SceneType == WSceneType.GiftCard)
+            {
+                int.TryParse(qrCodeSceneParam.Value, out var giftCardId);
+                if (giftCardId > 0)
+                    giftCardIds.Add(giftCardId);
+            }
+            //永久二维码绑定的卡券ID赋值操作
+            if (qrCodeSceneParam.IsQrCodeLimit)
+            {
+                var qrCodeSupplierVoucherCouponMappingService = EngineContext.Current.Resolve<IQrCodeSupplierVoucherCouponMappingService>();
+                var qrCodeSupplierVoucherCouponMappings = qrCodeSupplierVoucherCouponMappingService.GetEntitiesByQrCodeId(scenicId, true, false);
+                foreach (var item in qrCodeSupplierVoucherCouponMappings)
+                    giftCardIds.Add(item.SupplierVoucherCouponId);
+            }
+            //向扫码人后台添加对应的卡券（判断是否已经领取）,并返回回复信息
+            responseMessage = GetAndSetSupplierVoucherCouponPassiveResponseMessage(giftCardIds, qrCodeSceneParam, requestMessage.FromUserName);
+
+            #endregion
+
+            //回复消息
+            #region 回复消息
+
+            if (responseMessage == null)
+                responseMessage = GetResponseMessagesByIds(messageIds);
+
+            if (responseMessage != null)
+                return responseMessage;
 
             #endregion
 
@@ -836,7 +834,7 @@ QQ群：289181996
         {
             var wuserService = EngineContext.Current.Resolve<IWUserService>();
             var wuser = wuserService.GetWUserByOpenId(requestMessage.FromUserName);
-            if(wuser!=null)
+            if (wuser != null)
             {
                 wuser.Subscribe = false;
                 wuser.UnSubscribeTime = (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime);

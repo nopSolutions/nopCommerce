@@ -20,8 +20,11 @@ namespace Nop.Data.Mapping.Builders.Suppliers
             table
                 .WithColumn(nameof(SupplierShop.SupplierId)).AsInt32().ForeignKey<Supplier>()
                 .WithColumn(nameof(SupplierShop.Name)).AsString(64).NotNullable()
+                .WithColumn(nameof(SupplierShop.Description)).AsString(255).Nullable()
                 .WithColumn(nameof(SupplierShop.Content)).AsString(1024).Nullable()
                 .WithColumn(nameof(SupplierShop.Country)).AsString(15).Nullable()
+                .WithColumn(nameof(SupplierShop.ImageUrl)).AsAnsiString(1024).Nullable()
+                .WithColumn(nameof(SupplierShop.ThumbImageUrl)).AsAnsiString(1024).Nullable()
                 .WithColumn(nameof(SupplierShop.Province)).AsString(15).Nullable()
                 .WithColumn(nameof(SupplierShop.City)).AsString(15).Nullable()
                 .WithColumn(nameof(SupplierShop.District)).AsString(15).Nullable()

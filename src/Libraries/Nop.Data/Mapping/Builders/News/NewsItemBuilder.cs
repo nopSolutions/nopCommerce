@@ -20,6 +20,13 @@ namespace Nop.Data.Mapping.Builders.News
         {
             table
                 .WithColumn(nameof(NewsItem.Title)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(NewsItem.SubTitle)).AsString(512).Nullable()
+                .WithColumn(nameof(NewsItem.Tags)).AsString(512).Nullable()
+                .WithColumn(nameof(NewsItem.ImageUrl)).AsAnsiString(1024).Nullable()
+                .WithColumn(nameof(NewsItem.Url)).AsAnsiString(1024).Nullable()
+                .WithColumn(nameof(NewsItem.Sources)).AsString(64).Nullable()
+                .WithColumn(nameof(NewsItem.Author)).AsString(64).Nullable()
+                .WithColumn(nameof(NewsItem.ViewName)).AsAnsiString(64).Nullable()
                 .WithColumn(nameof(NewsItem.Short)).AsString(int.MaxValue).NotNullable()
                 .WithColumn(nameof(NewsItem.Full)).AsString(int.MaxValue).NotNullable()
                 .WithColumn(nameof(NewsItem.MetaKeywords)).AsString(400).Nullable()

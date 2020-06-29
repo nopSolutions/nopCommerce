@@ -8,6 +8,7 @@ namespace Nop.Core.Domain.Suppliers
     /// </summary>
     public partial class Supplier : BaseEntity
     {
+        public int StoreId { get; set; }
         /// <summary>
         /// 供应商名称
         /// </summary>
@@ -100,6 +101,10 @@ namespace Nop.Core.Domain.Suppliers
         /// 状态（保留字段，审核状态，过期状态等）
         /// </summary>
         public byte Status { get; set; }
+        /// <summary>
+        /// 是否个人店铺
+        /// </summary>
+        public bool IsPersonal { get; set; }
         /// <summary>
         /// 发布
         /// </summary>
