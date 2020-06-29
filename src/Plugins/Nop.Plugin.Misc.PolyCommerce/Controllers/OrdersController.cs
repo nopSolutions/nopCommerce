@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -266,7 +267,17 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 // insert order items...
                 foreach (var orderItem in model.OrderItems)
                 {
-                    var product = _productService.GetProductById((int)orderItem.ExternalProductId);
+                    ProductAttributeCombination productCombination = null;
+
+                    // if product is a variant, ExternalProductId will be ProductCombination.Id. If product is not a variant, ExternalProductId will be Product.Id
+                    if (orderItem.IsVariant)
+                    {
+                        productCombination = _productAttributeService.GetProductAttributeCombinationById((int)orderItem.ExternalProductId);
+                    }
+
+                    var productId = productCombination?.ProductId ?? (int)orderItem.ExternalProductId;
+
+                    var product = _productService.GetProductById(productId);
 
                     var newItem = new OrderItem
                     {
@@ -278,7 +289,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                         PriceInclTax = orderItem.PriceInclTax,
                         PriceExclTax = orderItem.PriceExclTax,
                         AttributeDescription = string.Empty,
-                        AttributesXml = string.Empty,
+                        AttributesXml = productCombination?.AttributesXml ?? string.Empty,
                         Quantity = orderItem.Quantity,
                         DiscountAmountInclTax = decimal.Zero,
                         DiscountAmountExclTax = decimal.Zero,
@@ -289,7 +300,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     };
 
                     _orderItemRepository.Insert(newItem);
-                    _productService.AdjustInventory(product, orderItem.Quantity * -1);
+                    _productService.AdjustInventory(product, orderItem.Quantity * -1, productCombination?.AttributesXml ?? string.Empty);                
 
                     // NopCommerce Core does not update UpdatedOnUtc date inside AdjustInventory() method
                     product.UpdatedOnUtc = DateTime.UtcNow;
