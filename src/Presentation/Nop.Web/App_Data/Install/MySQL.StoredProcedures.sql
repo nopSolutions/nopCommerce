@@ -611,12 +611,8 @@ BEGIN
 		SET  @sql_command = concat(@sql_command, '
 			AND (p.Id in (
 					select psa.ProductId 
-					from `Product_SpecificationAttribute_Mapping` as psa 
-                    INNER JOIN (
-						select sao.SpecificationAttributeId 
-						from `SpecificationAttributeOption` as sao 
-						where sao.Id in (', `FilteredSpecs`, ')
-						) as sa on sa.SpecificationAttributeId = psa.Id
+                    from `Product_SpecificationAttribute_Mapping` as psa 
+                    where psa.SpecificationAttributeOptionId in (', `FilteredSpecs`, ') and psa.AllowFiltering
                 )
 			)');
     end if;
