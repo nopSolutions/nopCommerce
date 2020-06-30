@@ -117,7 +117,7 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        bool IsDatabaseExists();
+        bool DatabaseExists();
 
         /// <summary>
         /// Creates a backup of the database

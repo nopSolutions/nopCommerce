@@ -94,7 +94,7 @@ namespace Nop.Data
         /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            if (IsDatabaseExists())
+            if (DatabaseExists())
                 return;
 
             var builder = GetConnectionStringBuilder();
@@ -130,7 +130,7 @@ namespace Nop.Data
                 if (i == triesToConnect)
                     throw new Exception("Unable to connect to the new database. Please try one more time");
 
-                if (!IsDatabaseExists())
+                if (!DatabaseExists())
                     Thread.Sleep(1000);
                 else
                     break;
@@ -141,7 +141,7 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool IsDatabaseExists()
+        public bool DatabaseExists()
         {
             try
             {
