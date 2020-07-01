@@ -65,6 +65,10 @@ namespace Nop.Data
                             case "DataConnectionString":
                                 dataSettings.ConnectionString = value;
                                 continue;
+                            case "SQLCommandTimeout":
+                                //If parsing isn't successful, we set a negative timeout, that means the current provider will usе a default value
+                                dataSettings.SQLCommandTimeout = int.TryParse(value, out var timeout) ? timeout : -1;
+                                continue;
                             default:
                                 dataSettings.RawDataSettings.Add(key, value);
                                 continue;
@@ -137,6 +141,14 @@ namespace Nop.Data
                 return _databaseIsInstalled.Value;
             }
         }
+
+        /// <summary>
+        /// Gets the command execution timeout.
+        /// </summary>
+        /// <value>
+        /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
+        /// </value>
+        public static int SQLCommandTimeout => LoadSettings()?.SQLCommandTimeout ?? -1;
 
         #endregion
     }
