@@ -256,6 +256,30 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
+        public void Should_be_available_when_current_date_is_in_range()
+        {
+            var product = new Product
+            {
+                AvailableStartDateTimeUtc = DateTime.UtcNow.AddDays(-1),
+                AvailableEndDateTimeUtc = DateTime.UtcNow.AddDays(1)
+            };
+
+            _productService.ProductIsAvailable(product).Should().BeTrue();
+        }
+
+        [Test]
+        public void Should_not_be_available_when_current_date_is_not_in_range()
+        {
+            var product = new Product
+            {
+                AvailableStartDateTimeUtc = DateTime.UtcNow.AddDays(-2),
+                AvailableEndDateTimeUtc = DateTime.UtcNow.AddDays(-1)
+            };
+
+            _productService.ProductIsAvailable(product).Should().BeFalse();
+        }
+
+        [Test]
         public void Can_parse_allowed_quantities()
         {
             var product = new Product
