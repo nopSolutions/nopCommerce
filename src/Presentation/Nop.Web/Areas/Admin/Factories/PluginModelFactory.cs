@@ -270,7 +270,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //pre-select current version
             //current version name and named on official site do not match. that's why we use "Contains"
-            var currentVersionItem = searchModel.AvailableVersions.FirstOrDefault(x => x.Text.Contains(NopVersion.CurrentVersion));
+            var currentVersionItem = searchModel.AvailableVersions.FirstOrDefault(x => x.Text.Contains(NopVersion.CURRENT_VERSION));
             if (currentVersionItem != null)
             {
                 searchModel.SearchVersionId = int.Parse(currentVersionItem.Value);

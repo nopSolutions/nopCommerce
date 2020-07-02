@@ -709,7 +709,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Manufacturers");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var manufacturer in manufacturers)
             {
@@ -804,7 +804,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Categories");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
             WriteCategories(xmlWriter, 0);
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
@@ -868,7 +868,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Products");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var product in products)
             {
@@ -1379,7 +1379,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Orders");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var order in orders)
             {
@@ -1636,7 +1636,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Customers");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var customer in customers)
             {

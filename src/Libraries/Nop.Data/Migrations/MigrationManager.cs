@@ -186,7 +186,14 @@ namespace Nop.Data.Migrations
                 if (isUpdateProcess && migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any())
                     continue;
 
-                _migrationRunner.MigrateUp(migrationInfo.Version);
+                try
+                {
+                    _migrationRunner.MigrateUp(migrationInfo.Version);
+                }
+                catch (PreventFixMigrationException)
+                {
+                   //ignore
+                }
             }
         }
 

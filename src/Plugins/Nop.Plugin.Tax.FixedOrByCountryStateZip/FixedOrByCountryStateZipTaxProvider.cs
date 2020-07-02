@@ -260,7 +260,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             _settingService.SaveSetting(new FixedOrByCountryStateZipTaxSettings());
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fixed"] = "Fixed rate",
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip"] = "By Country",
@@ -300,7 +300,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             _settingService.DeleteSettings(fixedRates);
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Tax.FixedOrByCountryStateZip");
+            _localizationService.DeleteLocaleResources("Plugins.Tax.FixedOrByCountryStateZip");
 
             base.Uninstall();
         }

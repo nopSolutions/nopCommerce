@@ -11,6 +11,14 @@ namespace Nop.Data.Migrations
     {
         private static readonly string[] _dateFormats = { "yyyy-MM-dd HH:mm:ss", "yyyy.MM.dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss:fffffff", "yyyy.MM.dd HH:mm:ss:fffffff", "yyyy/MM/dd HH:mm:ss:fffffff" };
 
+        private static long GetMigrationVersion(string nopVersion, MigrationType migrationType)
+        {
+            long version = int.MaxValue + Math.Abs(nopVersion.GetHashCode()) +
+                           Math.Abs(migrationType.ToString().GetHashCode());
+
+            return version;
+        }
+
         /// <summary>
         /// Initializes a new instance of the NopMigrationAttribute class
         /// </summary>
@@ -27,6 +35,27 @@ namespace Nop.Data.Migrations
         /// <param name="description">The migration description</param>
         public NopMigrationAttribute(string dateTime, string description) :
             base(DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks, description)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the NopMigrationAttribute class
+        /// </summary>
+        /// <param name="nopVersion">The nopCommerce full version number</param>
+        /// <param name="migrationType">The migration type</param>
+        public NopMigrationAttribute(string nopVersion, MigrationType migrationType) :
+            base(GetMigrationVersion(nopVersion, migrationType), null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the NopMigrationAttribute class
+        /// </summary>
+        /// <param name="nopVersion">The nopCommerce full version number</param>
+        /// <param name="migrationType">The migration type</param>
+        /// <param name="description">The migration description</param>
+        public NopMigrationAttribute(string nopVersion, MigrationType migrationType, string description) :
+            base(GetMigrationVersion(nopVersion, migrationType), description)
         {
         }
     }

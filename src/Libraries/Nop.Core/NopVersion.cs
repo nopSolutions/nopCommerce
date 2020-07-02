@@ -6,12 +6,18 @@
     public static class NopVersion
     {
         /// <summary>
-        /// Gets or sets the store version
+        /// Gets the major store version
         /// </summary>
-        public static string CurrentVersion { get; } = "4.40";
+        public const string CURRENT_VERSION = "4.40";
 
-        public static string MinorVersion { get; } = "0";
+        /// <summary>
+        /// Gets the minor store version
+        /// </summary>
+        public const string MINOR_VERSION = "0";
 
-        public static string FullVersion { get; } = $"{CurrentVersion}.{MinorVersion}";
+        /// <summary>
+        /// Gets the full store version
+        /// </summary>
+        public const string FULL_VERSION = CURRENT_VERSION + "." + MINOR_VERSION;
     }
 }
