@@ -679,7 +679,7 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public virtual void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null)
+        public virtual void AddOrUpdateLocaleResource(string resourceName, string resourceValue, string languageCulture = null)
         {
             foreach (var lang in _languageService.GetAllLanguages(true))
             {
