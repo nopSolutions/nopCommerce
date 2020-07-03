@@ -180,7 +180,10 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in migrations)
             {
-                if(isUpdateProcess && migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any())
+                if (migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any())
+                    continue;
+
+                if (isUpdateProcess && migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any())
                     continue;
 
                 _migrationRunner.MigrateUp(migrationInfo.Version);
@@ -198,6 +201,9 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in migrations)
             {
+                if (migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any())
+                    continue;
+
                 _migrationRunner.Down(migrationInfo.Migration);
                 _versionLoader.DeleteVersion(migrationInfo.Version);
             }
