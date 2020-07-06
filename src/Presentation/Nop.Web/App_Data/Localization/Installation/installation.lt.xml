@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Naudoti SQL Serverio paskyrą</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Naudoti standartine duomenų talpykla (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Slaptažodis</Value>
   </LocaleResource>

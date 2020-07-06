@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>使用 SQL Server 账户</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>使用嵌入式数据存储(SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>数据库密码</Value>
   </LocaleResource>
