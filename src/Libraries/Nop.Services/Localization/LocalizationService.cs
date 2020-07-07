@@ -432,12 +432,11 @@ namespace Nop.Services.Localization
 
             if (xmlStreamReader.EndOfStream)
                 return;
+            
+            var lsNamesList = new Dictionary<string, LocaleStringResource>();
 
-            var lsNamesList = _lsrRepository.Table
-                .Where(lsr => lsr.LanguageId == language.Id)
-                .GroupBy(lsr => lsr.ResourceName, (key, groupedLsr) => 
-                    groupedLsr.OrderBy(lsr => lsr.Id).Last())
-                .ToDictionary(lsr => lsr.ResourceName, lsr => lsr);
+            foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id))
+                lsNamesList[localeStringResource.ResourceName] = localeStringResource;
 
             var lrsToUpdateList = new List<LocaleStringResource>();
             var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
