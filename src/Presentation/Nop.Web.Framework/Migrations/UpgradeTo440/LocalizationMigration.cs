@@ -110,6 +110,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "ShoppingCart.UpdateCartItem",
                 "Tax.SelectType"
             });
+
+            localizationService.AddLocaleResource(new Dictionary<string, string>
+            {
+                ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)"
+            });
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

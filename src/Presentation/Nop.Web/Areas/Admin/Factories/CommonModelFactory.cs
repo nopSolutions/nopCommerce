@@ -559,6 +559,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var plugins = _pluginService.GetPlugins<IPlugin>();
 
             var notEnabled = new List<string>();
+            var notEnabledSystemNames = new List<string>();
 
             foreach (var plugin in plugins)
             {
@@ -599,14 +600,19 @@ namespace Nop.Web.Areas.Admin.Factories
                     continue;
 
                 notEnabled.Add(plugin.PluginDescriptor.FriendlyName);
+                notEnabledSystemNames.Add(plugin.PluginDescriptor.SystemName);
             }
 
             if (notEnabled.Any())
             {
+                //get URL helper
+                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)}"
+                    DontEncode = true,
+                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names=notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
