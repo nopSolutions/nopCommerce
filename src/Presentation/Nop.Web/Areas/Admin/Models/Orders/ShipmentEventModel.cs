@@ -1,5 +1,5 @@
-﻿using System;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using System;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {

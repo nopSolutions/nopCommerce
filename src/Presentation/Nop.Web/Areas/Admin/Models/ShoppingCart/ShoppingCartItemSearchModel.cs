@@ -1,6 +1,6 @@
-﻿using System;
-using Nop.Core.Domain.Orders;
+﻿using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Models;
+using System;
 
 namespace Nop.Web.Areas.Admin.Models.ShoppingCart
 {

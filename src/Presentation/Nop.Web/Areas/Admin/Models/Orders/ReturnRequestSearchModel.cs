@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
     /// <summary>
     /// Represents a return request search model
     /// </summary>
-    public class ReturnRequestSearchModel: BaseSearchModel
+    public class ReturnRequestSearchModel : BaseSearchModel
     {
         #region Ctor
 

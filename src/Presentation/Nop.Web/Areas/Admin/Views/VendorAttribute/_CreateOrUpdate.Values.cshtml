@@ -1,7 +1,7 @@
 ﻿@model VendorAttributeModel
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "vendorattributevalues-grid",
@@ -50,7 +50,7 @@
             }
         </script>
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "VendorAttribute", new { vendorAttributeId = Model.Id, btnId = "btnRefresh", formId = "vendorattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
             @T("Admin.Vendors.VendorAttributes.Values.AddNew")
         </button>
@@ -70,7 +70,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Vendors.VendorAttributes.Values.SaveBeforeEdit")
     </div>
 }

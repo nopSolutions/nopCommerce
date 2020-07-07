@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
+using System.Collections.Generic;
 
 namespace Nop.Web.Areas.Admin.Models.Discounts
 {

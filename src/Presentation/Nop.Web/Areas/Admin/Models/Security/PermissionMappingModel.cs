@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Areas.Admin.Models.Customers;
+﻿using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Models;
+using System.Collections.Generic;
 
 namespace Nop.Web.Areas.Admin.Models.Security
 {

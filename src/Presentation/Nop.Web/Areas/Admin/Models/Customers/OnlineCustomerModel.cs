@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+using System;
 
 namespace Nop.Web.Areas.Admin.Models.Customers
 {
@@ -22,7 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.OnlineCustomers.Fields.LastActivityDate")]
         public DateTime LastActivityDate { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage")]
         public string LastVisitedPage { get; set; }
 

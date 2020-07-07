@@ -93,7 +93,7 @@
         var dataSrc = $(tableSelector).DataTable().data();
         $(tableSelector).DataTable().clear().rows.add(dataSrc).draw();
         $(tableSelector).DataTable().columns.adjust();
-        
+
         @if (isMasterCheckBoxUsed)
         {
             <text>clearMasterCheckbox();</text>
@@ -101,13 +101,13 @@
     }
 
     function updateTable(tableSelector) {
-        $(tableSelector).DataTable().ajax.reload();     
+        $(tableSelector).DataTable().ajax.reload();
         $(tableSelector).DataTable().columns.adjust();
-        
+
         @if (isMasterCheckBoxUsed)
         {
             <text>clearMasterCheckbox();</text>
-        }    
+        }
     }
 
     function updateTableWidth(tableSelector) {
@@ -152,14 +152,16 @@
                     });
                 }
                 updateMasterCheckbox();
-            });
+            });			
             </text>
         }
-        $('#@Model.Name').DataTable().columns.adjust();
-
-        $('.panel').on('panel:toggle', function (e) {
+		
+		$('#@Model.Name').DataTable().columns.adjust();
+        		
+		$('.panel').on('panel:toggle', function (e) {
             updateTableWidth('#@Model.Name');
         })
+
     });
 </script>
 
@@ -202,7 +204,7 @@
                             $('#@Model.Name').DataTable().draw(false);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            alert(errorThrown);
+                            alert(errorThrown);                            
                         }
                     });
                 }
@@ -356,7 +358,7 @@
                      $('#@Model.Name').DataTable().draw(false);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert(errorThrown);
+                    alert(errorThrown);                   
                 }
             });
         }

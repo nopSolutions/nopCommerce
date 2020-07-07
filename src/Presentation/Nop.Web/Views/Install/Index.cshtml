@@ -12,14 +12,15 @@
     <link rel="shortcut icon" href="/icons/icons_0/favicon.ico">
     @if (ILS.GetCurrentLanguage().IsRightToLeft)
     {
-        <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.rtl.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/bootstrap-4.4.1/css/bootstrap-rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/adminlte3/css/adminlte-rtl.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/adminlte3/css/custom.css")" type="text/css" rel="stylesheet" />
     }
     else
     {
-        <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/bootstrap-4.4.1/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib/adminlte3/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
     }
     <script src="@Url.Content("~/lib/jquery/jquery-3.4.1.min.js")"></script>
@@ -27,16 +28,16 @@
     <script src="@Url.Content("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js")"></script>
     <script src="@Url.Content("~/js/public.common.js")"></script>
 </head>
-<body class="skin-blue">
+<body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         <div class="content-header clearfix">
             <div class="row">
-                <div class="col-xs-offset-9 col-xs-3">
+                <div class="col-md-3">
                     <select name="language" id="language" class="language-selector form-control" onchange="window.location.href=this.value;" asp-items="Model.AvailableLanguages"></select>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-md-12 text-center">
                     <div class="logo-wrapper">
                         <div class="logo"></div>
                     </div>
@@ -121,8 +122,8 @@
                             collationInput.hide();
                         }
                     }
-
-                    @if (!string.IsNullOrEmpty(Model.RestartUrl))
+					
+					@if (!string.IsNullOrEmpty(Model.RestartUrl))
                     {
                         <text>
                             $(document).ready(function () {
@@ -143,48 +144,48 @@
 
                 <div class="form-horizontal">
                     <div class="panel margin-t-30">
-                        <div class="panel-heading">
+                        <div class="card-header">
                             <div class="row">
-                                <div class="col-xs-4 text-right">
+                                <div class="col-md-5 text-left" style="font-size: 17px; font-weight: bold;">
                                     @ILS.GetResource("StoreInformation")
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <div class="col-xs-4">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <label class="control-label">
                                         @ILS.GetResource("AdminEmail")
                                     </label>
                                 </div>
-                                <div class="col-xs-7">
+                                <div class="col-md-9">
                                     <input asp-for="AdminEmail" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-4">
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <label class="control-label">
                                         @ILS.GetResource("AdminPassword")
                                     </label>
                                 </div>
-                                <div class="col-xs-7">
+                                <div class="col-md-9">
                                     <input asp-for="AdminPassword" class="form-control" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-4">
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <label class="control-label">
                                         @ILS.GetResource("ConfirmPassword")
                                     </label>
                                 </div>
-                                <div class="col-xs-7">
+                                <div class="col-md-9">
                                     <input asp-for="ConfirmPassword" class="form-control" />
                                 </div>
                             </div>
                             @if (!Model.DisableSampleDataOption)
                             {
-                                <div class="form-group">
-                                    <div class="col-xs-7 col-xs-offset-4">
+                                <div class="form-group row">
+                                    <div class="col-md-12 text-center">
                                         <div class="checkbox">
                                             <label>
                                                 <input asp-for="InstallSampleData" />
@@ -197,27 +198,27 @@
                         </div>
                     </div>
 
-                    <div class="panel margin-t-10">
-                        <div class="panel-heading">
+                    <div class="panel margin-t-10" style="text-align:center">
+                        <div class="card-header">
                             <div class="row">
-                                <div class="col-xs-4 text-right">
+                                <div class="col-md-5 text-left" style="font-size: 17px; font-weight: bold;">
                                     @ILS.GetResource("DatabaseInformation")
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <div class="col-xs-4">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <label class="control-label">
                                         @ILS.GetResource("Database")
                                     </label>
                                 </div>
-                                <div class="col-xs-7">
+                                <div class="col-md-9">
                                     <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-7 col-xs-offset-4">
+                            <div class="form-group row">
+                                <div class="col-md-12 text-center">
                                     <div class="checkbox">
                                         <label>
                                             <nop-editor asp-for="CreateDatabaseIfNotExists" />
@@ -226,8 +227,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-xs-7 col-xs-offset-4">
+                            <div class="form-group row">
+                                <div class="col-md-12 text-center">
                                     <div class="checkbox">
                                         <label>
                                             <nop-editor asp-for="ConnectionStringRaw" />
@@ -239,13 +240,13 @@
                             <div id="sqlConnectionInfo">
                                 <hr />
                                 @await Html.PartialAsync("_Install.ConnectionString", Model)
-                                <div class="form-group" id="sqlDatabaseConnectionString">
-                                    <div class="col-xs-4">
+                                <div class="form-group row" id="sqlDatabaseConnectionString">
+                                    <div class="col-md-3">
                                         <label class="control-label">
                                             @ILS.GetResource("ConnectionString")
                                         </label>
                                     </div>
-                                    <div class="col-xs-7">
+                                    <div class="col-md-9">
                                         <input asp-for="ConnectionString" class="form-control" />
                                         <span class="hint">
                                             @ILS.GetResource("Example"):<br />
@@ -256,8 +257,8 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="form-group" id="sqlConnectionInfo">
-                                    <div class="col-xs-7 col-xs-offset-4">
+                                <div class="form-group row" id="sqlConnectionInfo">
+                                    <div class="col-md-12 text-center">
                                         <div class="checkbox">
                                             <label>
                                                 <input asp-for="UseCustomCollation" />
@@ -268,8 +269,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group margin-t-30">
-                                <div class="col-xs-12 text-center">
+                            <div class="form-group row margin-t-30">
+                                <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-md btn-install margin-l-5">@ILS.GetResource("Install")</button>
                                 </div>
                             </div>
@@ -282,7 +283,7 @@
         <div class="content-footer">
             <form asp-action="RestartInstall" asp-controller="Install" id="restart-form" method="post">
                 <div class="row">
-                    <div class="col-xs-12 text-center">
+                    <div class="col-md-12 text-center">
                         <button type="submit" class="btn btn-md btn-default" title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
                     </div>
                 </div>

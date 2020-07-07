@@ -6,7 +6,7 @@
         $("#@Html.IdFor(model => model.CustomerSettings.FirstNameRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.LastNameRequired)").click(toggleCustomerRequiredFormField);
-        $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
+		$("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
@@ -55,14 +55,13 @@
         } else {
             $('#pnlCustomerFirstNameRequired').hide();
         }
-
         if ($('#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)').is(':checked')) {
             $('#pnlCustomerLastNameRequired').show();
         } else {
             $('#pnlCustomerLastNameRequired').hide();
         }
-
-        if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
+		
+		if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
             $('#pnlCustomerDateOfBirthRequired').show();
         } else {
             $('#pnlCustomerDateOfBirthRequired').hide();
@@ -143,11 +142,11 @@
 </script>
 
 <div class="panel-group">
-    <div class="panel-body">
+    <div class="card-body">
         <p>
             <em>@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields.Description")</em>
         </p>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.GenderEnabled" />
             </div>
@@ -156,7 +155,7 @@
                 <span asp-validation-for="CustomerSettings.GenderEnabled"></span>
             </div>
         </div>
-        <div class="form-group">
+		<div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.FirstNameEnabled" />
             </div>
@@ -166,7 +165,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.FirstNameEnabled">
-            <div class="form-group" id="pnlCustomerFirstNameRequired">
+            <div class="form-group row" id="pnlCustomerFirstNameRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.FirstNameRequired" />
                 </div>
@@ -176,7 +175,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.LastNameEnabled" />
             </div>
@@ -186,7 +185,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.LastNameEnabled">
-            <div class="form-group" id="pnlCustomerLastNameRequired">
+            <div class="form-group row" id="pnlCustomerLastNameRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.LastNameRequired" />
                 </div>
@@ -196,7 +195,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.DateOfBirthEnabled" />
             </div>
@@ -206,7 +205,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.DateOfBirthEnabled">
-            <div class="form-group" id="pnlCustomerDateOfBirthRequired">
+            <div class="form-group row" id="pnlCustomerDateOfBirthRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.DateOfBirthRequired" />
                 </div>
@@ -216,7 +215,7 @@
                 </div>
             </div>
             <nop-nested-setting asp-for="CustomerSettings.DateOfBirthRequired">
-                <div class="form-group" id="pnlDateOfBirthMinimumAge">
+                <div class="form-group row" id="pnlDateOfBirthMinimumAge">
                     <div class="col-md-3">
                         <nop-label asp-for="CustomerSettings.DateOfBirthMinimumAge" />
                     </div>
@@ -227,7 +226,7 @@
                 </div>
             </nop-nested-setting>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CompanyEnabled" />
             </div>
@@ -237,7 +236,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.CompanyEnabled">
-            <div class="form-group" id="pnlCustomerCompanyRequired">
+            <div class="form-group row" id="pnlCustomerCompanyRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CompanyRequired" />
                 </div>
@@ -247,7 +246,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.StreetAddressEnabled" />
             </div>
@@ -257,7 +256,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.StreetAddressEnabled">
-            <div class="form-group" id="pnlCustomerStreetAddressRequired">
+            <div class="form-group row" id="pnlCustomerStreetAddressRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.StreetAddressRequired" />
                 </div>
@@ -267,7 +266,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.StreetAddress2Enabled" />
             </div>
@@ -277,7 +276,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.StreetAddress2Enabled">
-            <div class="form-group" id="pnlCustomerStreetAddress2Required">
+            <div class="form-group row" id="pnlCustomerStreetAddress2Required">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.StreetAddress2Required" />
                 </div>
@@ -287,7 +286,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.ZipPostalCodeEnabled" />
             </div>
@@ -297,7 +296,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.ZipPostalCodeEnabled">
-            <div class="form-group" id="pnlCustomerZipPostalCodeRequired">
+            <div class="form-group row" id="pnlCustomerZipPostalCodeRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.ZipPostalCodeRequired" />
                 </div>
@@ -307,7 +306,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CityEnabled" />
             </div>
@@ -317,7 +316,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.CityEnabled">
-            <div class="form-group" id="pnlCustomerCityRequired">
+            <div class="form-group row" id="pnlCustomerCityRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CityRequired" />
                 </div>
@@ -327,7 +326,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CountyEnabled" />
             </div>
@@ -337,7 +336,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.CountyEnabled">
-            <div class="form-group" id="pnlCustomerCountyRequired">
+            <div class="form-group row" id="pnlCustomerCountyRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CountyRequired" />
                 </div>
@@ -347,7 +346,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.CountryEnabled" />
             </div>
@@ -357,7 +356,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.CountryEnabled">
-            <div class="form-group" id="pnlCustomerCountryRequired">
+            <div class="form-group row" id="pnlCustomerCountryRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CountryRequired" />
                 </div>
@@ -367,7 +366,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group" id="pnlCustomerStateProvinceEnabled">
+        <div class="form-group row" id="pnlCustomerStateProvinceEnabled">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.StateProvinceEnabled" />
             </div>
@@ -377,7 +376,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.StateProvinceEnabled">
-            <div class="form-group" id="pnlCustomerStateProvinceRequired">
+            <div class="form-group row" id="pnlCustomerStateProvinceRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.StateProvinceRequired" />
                 </div>
@@ -387,7 +386,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.PhoneEnabled" />
             </div>
@@ -397,7 +396,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.PhoneEnabled">
-            <div class="form-group" id="pnlCustomerPhoneRequired">
+            <div class="form-group row" id="pnlCustomerPhoneRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.PhoneRequired" />
                 </div>
@@ -407,7 +406,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.FaxEnabled" />
             </div>
@@ -417,7 +416,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.FaxEnabled">
-            <div class="form-group" id="pnlCustomerFaxRequired">
+            <div class="form-group row" id="pnlCustomerFaxRequired">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.FaxRequired" />
                 </div>
@@ -427,7 +426,7 @@
                 </div>
             </div>
         </nop-nested-setting>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.AcceptPrivacyPolicyEnabled" />
             </div>
@@ -436,7 +435,7 @@
                 <span asp-validation-for="CustomerSettings.AcceptPrivacyPolicyEnabled"></span>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.NewsletterEnabled" />
             </div>
@@ -446,7 +445,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="CustomerSettings.NewsletterEnabled">
-            <div class="form-group" id="pnlCustomerNewsletterTickedByDefault">
+            <div class="form-group row" id="pnlCustomerNewsletterTickedByDefault">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.NewsletterTickedByDefault" />
                 </div>
@@ -458,7 +457,7 @@
         </nop-nested-setting>
     </div>
     
-    <div class="panel panel-body">
+    <div class="panel card-body">
         @*render custom customer attributes*@
         @await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml", Model.CustomerAttributeSearchModel)
     </div>

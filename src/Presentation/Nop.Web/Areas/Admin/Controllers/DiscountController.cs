@@ -396,8 +396,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //set identifier as group name (if not specified)
             discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
             _discountService.UpdateDiscountRequirement(discountRequirementGroup);
-            
-            _discountService.UpdateDiscount(discount);
+			
+			_discountService.UpdateDiscount(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
         }

@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Components;
+using System.Linq;
 
 namespace Nop.Web.Areas.Admin.Components
 {

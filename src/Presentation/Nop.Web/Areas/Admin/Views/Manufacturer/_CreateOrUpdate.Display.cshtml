@@ -1,7 +1,7 @@
 ﻿@model ManufacturerModel
 
-<div class="panel-body">
-    <div class="form-group advanced-setting">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Published" />
         </div>
@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllowCustomersToSelectPageSize" />
         </div>
@@ -22,7 +22,7 @@
     </div>
 
     <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
-        <div id="pnlPageSize" class="form-group advanced-setting">
+        <div id="pnlPageSize" class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="PageSize" />
             </div>
@@ -31,7 +31,7 @@
                 <span asp-validation-for="PageSize"></span>
             </div>
         </div>
-        <div id="pnlPageSizeOptions" class="form-group advanced-setting">
+        <div id="pnlPageSizeOptions" class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="PageSizeOptions" />
             </div>
@@ -42,7 +42,7 @@
         </div>
     </nop-nested-setting>
 
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="PriceRanges" />
         </div>
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DisplayOrder" />
         </div>
@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <div class="form-group" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+    <div class="form-group row" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="col-md-3">
             <nop-label asp-for="ManufacturerTemplateId" />
         </div>

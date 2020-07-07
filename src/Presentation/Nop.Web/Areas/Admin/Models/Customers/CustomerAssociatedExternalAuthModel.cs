@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")]
         public string ExternalIdentifier { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")]
         public string AuthMethodName { get; set; }
 

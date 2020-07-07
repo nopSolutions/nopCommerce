@@ -1,6 +1,6 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Models;
-using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
         public int? OrderIdent { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.CustomOrderNumberMask")]
         public string CustomOrderNumberMask { get; set; }
         public bool CustomOrderNumberMask_OverrideForStore { get; set; }

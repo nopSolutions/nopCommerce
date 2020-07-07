@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
-                
+
                 _returnRequestService.UpdateReturnRequest(returnRequest);
 
                 //activity log
@@ -246,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(new ReturnRequestReasonModel(), null);
-            
+
             return View(model);
         }
 
@@ -266,7 +266,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
 
-                return continueEditing 
+                return continueEditing
                     ? RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id })
                     : RedirectToAction("ReturnRequestReasonList");
             }
@@ -290,7 +290,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = _returnRequestModelFactory.PrepareReturnRequestReasonModel(null, returnRequestReason);
-            
+
             return View(model);
         }
 
@@ -317,7 +317,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestReasonList");
-                
+
                 return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
             }
 
@@ -335,7 +335,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a return request reason with the specified id
-            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id) 
+            var returnRequestReason = _returnRequestService.GetReturnRequestReasonById(id)
                 ?? throw new ArgumentException("No return request reason found with the specified id", nameof(id));
 
             _returnRequestService.DeleteReturnRequestReason(returnRequestReason);
@@ -400,8 +400,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
 
-                return continueEditing 
-                    ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id }) 
+                return continueEditing
+                    ? RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id })
                     : RedirectToAction("ReturnRequestActionList");
             }
 
@@ -451,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestActionList");
-                
+
                 return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
             }
 

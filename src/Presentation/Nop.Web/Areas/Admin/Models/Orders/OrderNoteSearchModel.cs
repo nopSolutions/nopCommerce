@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     {
         #region Properties
 
-        public  int OrderId { get; set; }
+        public int OrderId { get; set; }
 
         #endregion
     }

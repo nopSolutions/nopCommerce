@@ -1,22 +1,22 @@
 ﻿@model BestsellerBriefSearchModel
-@using Nop.Services.Orders;
+@using Nop.Services.Orders; 
 
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
-    const string panelId = "bestsellers-report-amount-box";
+    const string panelId = "bestsellers-report-amount-card";
     const string hidePanelAttributeName = "Reports.HideBestsellersBriefReportByAmountPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 
-<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
-    <div class="box-header with-border">
-        <h3 class="box-title">
+<div class="card card-primary card-outline @if(hidePanel){<text>collapsed-card</text>}" id="@panelId">
+    <div class="card-header with-border">
+        <h3 class="card-title">
             <i class="fa fa-star-o"></i>
             @T("Admin.Reports.Sales.BestSellers.ByAmount")
         </h3>
-        <div class="box-tools pull-right">
-            <button class="btn btn-box-tool" data-widget="collapse">
+        <div class="card-tools pull-right">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 @if (hidePanel)
                 {
                     <text><i class="fa fa-plus"></i></text>
@@ -30,13 +30,13 @@
     </div>
     <script>
         $(document).ready(function () {
-            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
-                var collapsed = !$('#@panelId').hasClass('collapsed-box');
+            $('#@panelId').on('click', 'button[data-card-widget="collapse"]', function () {
+                var collapsed = !$('#@panelId').hasClass('collapsed-card');
                 saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
             });
         });
     </script>
-    <div class="box-body">
+    <div class="card-body">
 
         @await Html.PartialAsync("Table", new DataTablesModel
         {

@@ -15,7 +15,7 @@
     Html.AppendScriptParts("~/lib/tagEditor/jquery.caret.min.js");
 }
 
-<script>
+    <script>
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -53,29 +53,37 @@
             $('#group-visible-individually').show();
             $('#group-associated-products').hide();
 
-            $('[data-panel-name=product-price]').show();
-            $('[data-panel-name=product-shipping]').show();
-            $('[data-panel-name=product-inventory]').show();
-            $('[data-panel-name=product-giftcard]').show();
-            $('[data-panel-name=product-downloadable]').show();
-            $('[data-panel-name=product-rental]').show();
-            $('[data-panel-name=product-recurring]').show();
+            $('[data-card-name=product-price]').show();
+            $('[data-card-name=product-shipping]').show();
+            $('[data-card-name=product-inventory]').show();
+            $('[data-card-name=product-giftcard]').show();
+            $('[data-card-name=product-downloadable]').show();
+            $('[data-card-name=product-rental]').show();
+            $('[data-card-name=product-recurring]').show();
         } else if (selectedProductTypeId == groupedProductId) {
+
             $('#group-required-other-products').hide();
             $('#group-visible-individually').hide();
             $('#group-associated-products').show();
-            updateTableWidth('#associatedproducts-grid');
 
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
+            updateTableWidth('#associatedproducts-grid');
+
+            $('[data-card-name=product-price]').hide();
+            $('[data-card-name=product-shipping]').hide();
+            $('[data-card-name=product-inventory]').hide();
+            $('[data-card-name=product-giftcard]').hide();
+            $('[data-card-name=product-downloadable]').hide();
+            $('[data-card-name=product-rental]').hide();
+            $('[data-card-name=product-recurring]').hide();
 
 
-            $('[data-panel-name=product-price]').hide();
-            $('[data-panel-name=product-shipping]').hide();
-            $('[data-panel-name=product-inventory]').hide();
-            $('[data-panel-name=product-giftcard]').hide();
-            $('[data-panel-name=product-downloadable]').hide();
-            $('[data-panel-name=product-rental]').hide();
-            $('[data-panel-name=product-recurring]').hide();
+
+            @*updateTableWidth('#associatedproducts-grid');
+
+
+			$('#associatedproducts-grid').DataTable().columns.adjust();*@
+
         }
 
         //templates
@@ -197,12 +205,14 @@
             warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.Id, sku: $(this).val() });
         });
     });
-</script>
+    </script>
 
-<div class="panel-body">
-    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-        @<div>
-            <div class="form-group">
+
+<div class="card-body">
+    <div class="sub-panel">
+        @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
+       @<div>
+            <div class="form-group row">
                <div class="col-md-3">
                    <nop-label asp-for="@Model.Locales[item].Name" />
                </div>
@@ -211,7 +221,7 @@
                    <span asp-validation-for="@Model.Locales[item].Name"></span>
                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                <div class="col-md-3">
                    <nop-label asp-for="@Model.Locales[item].ShortDescription" />
                </div>
@@ -220,7 +230,7 @@
                    <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                <div class="col-md-3">
                    <nop-label asp-for="@Model.Locales[item].FullDescription" />
                </div>
@@ -233,7 +243,7 @@
         </div>
         ,
         @<div>
-            <div class="form-group">
+            <div class="form-group row">
                <div class="col-md-3">
                    <nop-label asp-for="Name" />
                </div>
@@ -242,7 +252,7 @@
                    <span asp-validation-for="Name"></span>
                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                <div class="col-md-3">
                    <nop-label asp-for="ShortDescription" />
                </div>
@@ -251,7 +261,7 @@
                    <span asp-validation-for="ShortDescription"></span>
                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                <div class="col-md-3">
                    <nop-label asp-for="FullDescription" />
                </div>
@@ -261,31 +271,30 @@
                </div>
             </div>
          </div>))
-
-    <div class="form-group">
-        <div class="col-md-3">
-            <nop-label asp-for="Sku" />
+		 		 
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Sku" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Sku" />
+                <span asp-validation-for="Sku"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Sku" />
-            <span asp-validation-for="Sku"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-3">
-            <nop-label asp-for="SelectedCategoryIds" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
-            <script>
-                $(document).ready(function() {
-                    var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
-                    categoryIdsInput.setOptions({
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedCategoryIds" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
+                <script>
+                    $(document).ready(function() {
+						var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
+						categoryIdsInput.setOptions({
                         autoClose: false,
                         filter: "contains"
                     });
-
-                    @if (Model.AvailableCategories.Count == 0)
+					@if (Model.AvailableCategories.Count == 0)
                     {
                         <text>
                             categoryIdsInput.setOptions({
@@ -297,24 +306,23 @@
                         </text>
                     }
                 });
-            </script>
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="SelectedManufacturerIds" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
-            <script>
-                $(document).ready(function() {
+        <div class="form-group row @(Model.ProductEditorSettingsModel.Manufacturers ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedManufacturerIds" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
+                <script>
+                   $(document).ready(function() {
                     var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
                     manufacturersIdsInput.setOptions({
                         autoClose: false,
                         filter: "contains"
                     });
-
-                    @if (Model.AvailableManufacturers.Count == 0)
+					@if (Model.AvailableManufacturers.Count == 0)
                     {
                         <text>
                             manufacturersIdsInput.setOptions({
@@ -326,93 +334,93 @@
                          </text>
                     }
                 });
-            </script>
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Published ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="Published" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Published" />
-            <span asp-validation-for="Published"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ProductTags ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="ProductTags" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="ProductTags" />
-            <span asp-validation-for="ProductTags"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.GTIN ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="Gtin" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="Gtin" />
-            <span asp-validation-for="Gtin"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ManufacturerPartNumber ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="ManufacturerPartNumber" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="ManufacturerPartNumber" />
-            <span asp-validation-for="ManufacturerPartNumber"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <div class="col-md-3">
-            <nop-label asp-for="ShowOnHomepage" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="ShowOnHomepage" />
-            <span asp-validation-for="ShowOnHomepage"></span>
-        </div>
-    </div>
-    <nop-nested-setting asp-for="ShowOnHomepage">
-        <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.Published ? null : "advanced-setting")">
             <div class="col-md-3">
-                <nop-label asp-for="DisplayOrder" />
+                <nop-label asp-for="Published" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="DisplayOrder" />
-                <span asp-validation-for="DisplayOrder"></span>
+                <nop-editor asp-for="Published" />
+                <span asp-validation-for="Published"></span>
             </div>
         </div>
-    </nop-nested-setting>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ProductTags ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="ProductTags" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductTags" />
+                <span asp-validation-for="ProductTags"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.GTIN ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="Gtin" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Gtin" />
+                <span asp-validation-for="Gtin"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ManufacturerPartNumber ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="ManufacturerPartNumber" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ManufacturerPartNumber" />
+                <span asp-validation-for="ManufacturerPartNumber"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            <div class="col-md-3">
+                <nop-label asp-for="ShowOnHomepage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowOnHomepage" />
+                <span asp-validation-for="ShowOnHomepage"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="ShowOnHomepage">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.ShowOnHomepage  ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                <div class="col-md-3">
+                    <nop-label asp-for="DisplayOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
 
-    <div class="form-group @(Model.ProductEditorSettingsModel.ProductType ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="ProductTypeId" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="ProductTypeId" asp-items="@(((ProductType)Model.ProductTypeId).ToSelectList())" />
-            <span asp-validation-for="ProductTypeId"></span>
-        </div>
-    </div>
-    @if (Model.Id > 0 && Model.AssociatedToProductId > 0)
-    {
-        <div class="form-group @(Model.ProductEditorSettingsModel.ProductType ? null : "advanced-setting")">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ProductType ? null : "advanced-setting")">
             <div class="col-md-3">
-                <nop-label asp-for="AssociatedToProductId" />
+                <nop-label asp-for="ProductTypeId" />
             </div>
             <div class="col-md-9">
-                <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.AssociatedToProductId">@Model.AssociatedToProductName</a>
+                <nop-select asp-for="ProductTypeId" asp-items="@(((ProductType)Model.ProductTypeId).ToSelectList())" />
+                <span asp-validation-for="ProductTypeId"></span>
             </div>
         </div>
-    }
-    <div class="panel panel-default margin-bottom" id="group-associated-products">
-        <div class="panel-heading">
-            @T("Admin.Catalog.Products.AssociatedProducts")
-        </div>
-        @if (Model.Id > 0)
+        @if (Model.Id > 0 && Model.AssociatedToProductId > 0)
         {
-            <div class="panel-body">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.ProductType ? null : "advanced-setting")">
+                <div class="col-md-3">
+                    <nop-label asp-for="AssociatedToProductId" />
+                </div>
+                <div class="col-md-9">
+                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.AssociatedToProductId">@Model.AssociatedToProductName</a>
+                </div>
+            </div>
+        }
+        <div class="card card-default margin-bottom" id="group-associated-products">
+            <div class="card-header">
+                @T("Admin.Catalog.Products.AssociatedProducts")
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="card-body">                
                 <ul class="common-list">
                     <li>
                         @T("Admin.Catalog.Products.AssociatedProducts.Note1")
@@ -432,7 +440,7 @@
                     LengthMenu = Model.AssociatedProductSearchModel.AvailablePageSizes,
                     ColumnCollection = new List<ColumnProperty>
                         {
-                            new ColumnProperty(nameof(AssociatedProductModel.ProductName))
+						new ColumnProperty(nameof(AssociatedProductModel.ProductName))
                             {
                                 Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.Product").Text
                             },
@@ -465,61 +473,62 @@
                                 Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
                                 ClassName = NopColumnClassDefaults.Button
                             }
+                               
                         }
-                })
-            </div>
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewAssociatedProduct" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">
-                    @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
-                </button>
-                <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
-                <script>
-                    $(document).ready(function () {
-                        $('#btnRefreshAssociatedProducts').click(function () {
-                            //refresh grid
-                            updateTable('#associatedproducts-grid');
-
-                            //return false to don't reload a page
-                            return false;
-                        });
-                    });
-                </script>
-            </div>
-        }
-        else
-        {
-            <div class="panel-body">
-                @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
-            </div>
-        }
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ProductTemplate ? null : "advanced-setting")" @(Model.AvailableProductTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null) id="pnlProductTemplateId">
-        <div class="col-md-3">
-            <nop-label asp-for="ProductTemplateId" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="ProductTemplateId" asp-items="Model.AvailableProductTemplates" />
-            <span asp-validation-for="ProductTemplateId"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.VisibleIndividually ? null : "advanced-setting")" id="group-visible-individually">
-        <div class="col-md-3">
-            <nop-label asp-for="VisibleIndividually" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="VisibleIndividually" />
-            <span asp-validation-for="VisibleIndividually"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.ACL ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="SelectedCustomerRoleIds" />
-        </div>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-4">
-                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
+                    })
+                </div>
+                <div class="card-footer">
+                    <button type="submit" id="btnAddNewAssociatedProduct" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
                     <script>
+                        $(document).ready(function () {
+                            $('#btnRefreshAssociatedProducts').click(function () {
+                                //refresh grid
+                                updateTable('#associatedproducts-grid');
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="card-body">
+                    @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ProductTemplate ? null : "advanced-setting")" @(Model.AvailableProductTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null) id="nnpnlProductTemplateId">
+            <div class="col-md-3">
+                <nop-label asp-for="ProductTemplateId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="ProductTemplateId" asp-items="Model.AvailableProductTemplates" />
+                <span asp-validation-for="ProductTemplateId"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.VisibleIndividually ? null : "advanced-setting")" id="group-visible-individually">
+            <div class="col-md-3">
+                <nop-label asp-for="VisibleIndividually" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="VisibleIndividually" />
+                <span asp-validation-for="VisibleIndividually"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.ACL ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedCustomerRoleIds" />
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                        <script>
                         $(document).ready(function() {
                             var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)')
                                 .data("kendoMultiSelect");
@@ -540,23 +549,23 @@
                                 </text>
                             }
                         });
-                    </script>
-                </div>
-                <div class="col-md-8">
-                    @await Component.InvokeAsync("AclDisabledWarning")
+                        </script>
+                    </div>
+                    <div class="col-md-8">
+                        @await Component.InvokeAsync("AclDisabledWarning")
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="SelectedStoreIds" />
-        </div>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-4">
-                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                    <script>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.Stores ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedStoreIds" />
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                        <script>
                         $(document).ready(function() {
                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                             storesIdsInput.setOptions({
@@ -576,141 +585,141 @@
                                 </text>
                             }
                         });
-                    </script>
-                </div>
-                <div class="col-md-8">
-                    @await Component.InvokeAsync("MultistoreDisabledWarning")
+                        </script>
+                    </div>
+                    <div class="col-md-8">
+                        @await Component.InvokeAsync("MultistoreDisabledWarning")
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.Vendor ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <div class="col-md-3">
-            <nop-label asp-for="VendorId" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
-            <span asp-validation-for="VendorId"></span>
-        </div>
-    </div>
-    <div class="@(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart ? null : "advanced-setting")" id="group-required-other-products">
-        <div class="form-group">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.Vendor ? null : "advanced-setting")" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <div class="col-md-3">
-                <nop-label asp-for="RequireOtherProducts" />
+                <nop-label asp-for="VendorId" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="RequireOtherProducts" />
-                <span asp-validation-for="RequireOtherProducts"></span>
+                <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                <span asp-validation-for="VendorId"></span>
             </div>
         </div>
-        <nop-nested-setting asp-for="RequireOtherProducts">
-            <div class="form-group" id="pnlRequiredProductIds">
+        <div class="@(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToCart  ? null : "advanced-setting")" id="group-required-other-products">
+            <div class="form-group row">
                 <div class="col-md-3">
-                    <nop-label asp-for="RequiredProductIds" />
-                    <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
-                        @T("Common.Wait...")
-                    </span>
+                    <nop-label asp-for="RequireOtherProducts" />
                 </div>
                 <div class="col-md-9">
-                    <div class="input-group">
-                        <nop-editor asp-for="RequiredProductIds" />
-                        <span class="input-group-btn">
-                            <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                            <script>
-                                $(document).ready(function () {
-                                    $('#btnRefreshRequiredProducts').click(function () {
-                                        //refresh product list
-                                        loadRequiredProductFriendlyNames();
-
-                                        //return false to don't reload a page
-                                        return false;
-                                    });
-                                });
-                            </script>
-                            <button type="submit" id="btnAddNewRequiredProduct" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 850, true); return false;" class="btn btn-info">
-                                @T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")
-                            </button>
-                        </span>
-                    </div>
-                    <span id="required-product-names"></span>
-                    @Html.ValidationMessageFor(model => model.RequiredProductIds)
+                    <nop-editor asp-for="RequireOtherProducts" />
+                    <span asp-validation-for="RequireOtherProducts"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
+            <nop-nested-setting asp-for="RequireOtherProducts">
+                <div class="form-group row" id="pnlRequiredProductIds">
+                    <div class="col-md-3">
+                        <nop-label asp-for="RequiredProductIds" />
+                        <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
+                            @T("Common.Wait...")
+                        </span>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <nop-editor asp-for="RequiredProductIds" />
+                            <span class="input-group-btn">
+                                <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
+                                <script>
+                                    $(document).ready(function () {
+                                        $('#btnRefreshRequiredProducts').click(function () {
+                                            //refresh product list
+                                            loadRequiredProductFriendlyNames();
+
+                                            //return false to don't reload a page
+                                            return false;
+                                        });
+                                    });
+                                </script>
+                                <button type="submit" id="btnAddNewRequiredProduct" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 850, true); return false;" class="btn btn-info">
+                                    @T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")
+                                </button>
+                            </span>
+                        </div>
+                        <span id="required-product-names"></span>
+                        @Html.ValidationMessageFor(model => model.RequiredProductIds)
+                    </div>
+                </div>
+                <div class="form-group row" id="pnlAutomaticallyAddRequiredProducts">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AutomaticallyAddRequiredProducts" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AutomaticallyAddRequiredProducts" />
+                        <span asp-validation-for="AutomaticallyAddRequiredProducts"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.AllowCustomerReviews ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowCustomerReviews" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowCustomerReviews" />
+                <span asp-validation-for="AllowCustomerReviews"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableStartDate ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="AvailableStartDateTimeUtc" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AvailableStartDateTimeUtc" />
+                <span asp-validation-for="AvailableStartDateTimeUtc"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.AvailableEndDate ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="AvailableEndDateTimeUtc" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AvailableEndDateTimeUtc" />
+                <span asp-validation-for="AvailableEndDateTimeUtc"></span>
+            </div>
+        </div>
+        <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")">
+            <div class="col-md-3">
+                <nop-label asp-for="MarkAsNew" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MarkAsNew" />
+                <span asp-validation-for="MarkAsNew"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="MarkAsNew">
+            <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
                 <div class="col-md-3">
-                    <nop-label asp-for="AutomaticallyAddRequiredProducts" />
+                    <nop-label asp-for="MarkAsNewStartDateTimeUtc" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="AutomaticallyAddRequiredProducts" />
-                    <span asp-validation-for="AutomaticallyAddRequiredProducts"></span>
+                    <nop-editor asp-for="MarkAsNewStartDateTimeUtc" />
+                    <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
+                </div>
+            </div>
+            <div class="form-group row @(Model.ProductEditorSettingsModel.MarkAsNew  ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
+                <div class="col-md-3">
+                    <nop-label asp-for="MarkAsNewEndDateTimeUtc" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MarkAsNewEndDateTimeUtc" />
+                    <span asp-validation-for="MarkAsNewEndDateTimeUtc"></span>
                 </div>
             </div>
         </nop-nested-setting>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AllowCustomerReviews ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="AllowCustomerReviews" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="AllowCustomerReviews" />
-            <span asp-validation-for="AllowCustomerReviews"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AvailableStartDate ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="AvailableStartDateTimeUtc" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="AvailableStartDateTimeUtc" />
-            <span asp-validation-for="AvailableStartDateTimeUtc"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AvailableEndDate ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="AvailableEndDateTimeUtc" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="AvailableEndDateTimeUtc" />
-            <span asp-validation-for="AvailableEndDateTimeUtc"></span>
-        </div>
-    </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="MarkAsNew" />
-        </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="MarkAsNew" />
-            <span asp-validation-for="MarkAsNew"></span>
-        </div>
-    </div>
-    <nop-nested-setting asp-for="MarkAsNew">
-        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
+        <div class="form-group row @(Model.ProductEditorSettingsModel.AdminComment ? null : "advanced-setting")">
             <div class="col-md-3">
-                <nop-label asp-for="MarkAsNewStartDateTimeUtc" />
+                <nop-label asp-for="AdminComment" />
             </div>
             <div class="col-md-9">
-                <nop-editor asp-for="MarkAsNewStartDateTimeUtc" />
-                <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
+                <nop-textarea asp-for="AdminComment" />
+                <span asp-validation-for="AdminComment"></span>
             </div>
-        </div>
-        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
-            <div class="col-md-3">
-                <nop-label asp-for="MarkAsNewEndDateTimeUtc" />
-            </div>
-            <div class="col-md-9">
-                <nop-editor asp-for="MarkAsNewEndDateTimeUtc" />
-                <span asp-validation-for="MarkAsNewEndDateTimeUtc"></span>
-            </div>
-        </div>
-    </nop-nested-setting>
-    <div class="form-group @(Model.ProductEditorSettingsModel.AdminComment ? null : "advanced-setting")">
-        <div class="col-md-3">
-            <nop-label asp-for="AdminComment" />
-        </div>
-        <div class="col-md-9">
-            <nop-textarea asp-for="AdminComment" />
-            <span asp-validation-for="AdminComment"></span>
         </div>
     </div>
-</div>         
-          
+</div>

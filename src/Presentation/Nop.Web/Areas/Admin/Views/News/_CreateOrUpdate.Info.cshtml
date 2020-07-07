@@ -1,7 +1,7 @@
 @model NewsItemModel
 
-<div class="panel-body">
-    <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+<div class="card-body">
+    <div class="form-group row" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="col-md-3">
             <nop-label asp-for="LanguageId" />
         </div>
@@ -10,7 +10,7 @@
             <span asp-validation-for="LanguageId"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Title" />
         </div>
@@ -19,7 +19,7 @@
             <span asp-validation-for="Title"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Short" />
         </div>
@@ -28,13 +28,16 @@
             <span asp-validation-for="Short"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Full" />
         </div>
         <div class="col-md-9">
-            <div class="input-group input-group-required">
-                <nop-editor asp-for="Full" asp-template="RichEditor" />
+            
+            <div class="input-group-append input-group-required">                
+                <div class="input-group">
+                    <nop-editor asp-for="Full" asp-template="RichEditor" />
+                </div>
                 <div class="input-group-btn">
                     <nop-required />
                 </div>
@@ -42,7 +45,7 @@
             <span asp-validation-for="Full"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllowComments" />
         </div>
@@ -51,7 +54,7 @@
             <span asp-validation-for="AllowComments"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="StartDateUtc" />
         </div>
@@ -60,7 +63,7 @@
             <span asp-validation-for="StartDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="EndDateUtc" />
         </div>
@@ -69,7 +72,7 @@
             <span asp-validation-for="EndDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
         </div>
@@ -105,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Published" />
         </div>

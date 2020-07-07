@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -69,6 +69,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool PopupForTermsOfServiceLinks { get; set; }
         public bool PopupForTermsOfServiceLinks_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreGroupName")]
+        public string StoreGroupName { get; set; } //Mycode
+        public bool StoreGroupName_OverrideForStore { get; set; }
         #endregion
 
         #region Nested classes

@@ -7,6 +7,7 @@
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
 
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.Providers.Title")
@@ -17,11 +18,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     <p>
                         @T("Admin.Configuration.Shipping.Providers.DownloadMorePlugins")
                     </p>
@@ -43,7 +45,7 @@
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Fields.SystemName").Text,
                                     Width = "250"
-                                },
+                                },                                
                                 new ColumnProperty(nameof(ShippingProviderModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder").Text,
@@ -91,4 +93,5 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+</section>

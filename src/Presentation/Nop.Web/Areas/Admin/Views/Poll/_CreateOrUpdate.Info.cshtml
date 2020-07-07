@@ -1,7 +1,7 @@
 @model PollModel
 
-<div class="panel-body">
-    <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+<div class="card-body">
+    <div class="form-group row" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="col-md-3">
             <nop-label asp-for="LanguageId" />
         </div>
@@ -10,7 +10,7 @@
             <span asp-validation-for="LanguageId"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Name" />
         </div>
@@ -19,7 +19,7 @@
             <span asp-validation-for="Name"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Published" />
         </div>
@@ -28,7 +28,7 @@
             <span asp-validation-for="Published"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ShowOnHomepage" />
         </div>
@@ -37,7 +37,7 @@
             <span asp-validation-for="ShowOnHomepage"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="AllowGuestsToVote" />
         </div>
@@ -46,7 +46,7 @@
             <span asp-validation-for="AllowGuestsToVote"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="StartDateUtc" />
         </div>
@@ -55,7 +55,7 @@
             <span asp-validation-for="StartDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="EndDateUtc" />
         </div>
@@ -64,7 +64,7 @@
             <span asp-validation-for="EndDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
         </div>
@@ -93,7 +93,7 @@
             </script>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SystemKeyword" />
         </div>
@@ -102,7 +102,7 @@
             <span asp-validation-for="SystemKeyword"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="DisplayOrder" />
         </div>

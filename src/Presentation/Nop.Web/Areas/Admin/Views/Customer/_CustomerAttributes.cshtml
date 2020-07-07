@@ -6,7 +6,7 @@
 {
     var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{customerAttribute.Id}";
     var textPrompt = customerAttribute.Name;
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <div class="label-wrapper">
                 <label class="control-label">
@@ -60,7 +60,7 @@
                     break;
                 case AttributeControlType.TextBox:
                     {
-                        <input name="@(controlId)" type="text" id="@(controlId)" value="@(customerAttribute.DefaultValue)" class="form-control"/>
+                        <input name="@(controlId)" type="text" id="@(controlId)" value="@(customerAttribute.DefaultValue)" class="form-control" />
                     }
                     break;
                 case AttributeControlType.MultilineTextbox:

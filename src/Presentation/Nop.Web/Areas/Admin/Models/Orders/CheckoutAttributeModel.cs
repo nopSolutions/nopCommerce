@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
     /// <summary>
     /// Represents a checkout attribute model
     /// </summary>
-    public partial class CheckoutAttributeModel : BaseNopEntityModel, 
+    public partial class CheckoutAttributeModel : BaseNopEntityModel,
         ILocalizedModel<CheckoutAttributeLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor

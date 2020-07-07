@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //get topics
             var topics = _topicService.GetAllTopics(showHidden: true,
                 keywords: searchModel.SearchKeywords,
-                storeId: searchModel.SearchStoreId,
+				storeId: searchModel.SearchStoreId,
                 ignorAcl: true);
 
             var pagedTopics = topics.ToPagedList(searchModel);

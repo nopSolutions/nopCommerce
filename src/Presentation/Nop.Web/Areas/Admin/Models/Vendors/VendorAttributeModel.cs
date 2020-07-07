@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Nop.Web.Framework.Models;
+﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {

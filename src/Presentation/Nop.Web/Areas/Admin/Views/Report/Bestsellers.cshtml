@@ -14,6 +14,7 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Reports.Sales.Bestsellers")
@@ -23,21 +24,22 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+            <div class="card card-default panel-search">
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
                         <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-up" aria-hidden="true"></i></div>
                     </div>
 
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
                         <div class="row">
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="StartDate" />
                                     </div>
@@ -45,7 +47,7 @@
                                         <nop-editor asp-for="StartDate" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="EndDate" />
                                     </div>
@@ -53,7 +55,7 @@
                                         <nop-editor asp-for="EndDate" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         <nop-label asp-for="StoreId" />
                                     </div>
@@ -61,7 +63,7 @@
                                         <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         <nop-label asp-for="OrderStatusId" />
                                     </div>
@@ -69,7 +71,7 @@
                                         <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="PaymentStatusId" />
                                     </div>
@@ -79,7 +81,7 @@
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CategoryId" />
                                     </div>
@@ -87,7 +89,7 @@
                                         <nop-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="ManufacturerId" />
                                     </div>
@@ -95,7 +97,7 @@
                                         <nop-select asp-for="ManufacturerId" asp-items="Model.AvailableManufacturers" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="BillingCountryId" />
                                     </div>
@@ -103,7 +105,7 @@
                                         <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group row" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-md-4">
                                         <nop-label asp-for="VendorId" />
                                     </div>
@@ -125,8 +127,8 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "salesreport-grid",
@@ -173,7 +175,6 @@
                     })
 
                     <script>
-
                         function bestsellerfootercallback(tfoot, data, start, end, display) {
                                 //update order totals summary
                                 var postData = {
@@ -188,7 +189,6 @@
                                     CategoryId: $('#@Html.IdFor(model => model.CategoryId)').val()
                                 };
                                 addAntiForgeryToken(postData);
-
                                 $.ajax({
                                     cache: false,
                                     type: "POST",
@@ -210,3 +210,4 @@
         </div>
     </div>
 </div>
+</section>

@@ -7,6 +7,7 @@
     Html.SetActiveMenuItemSystemName("Widgets");
 }
 
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Widgets")
@@ -17,11 +18,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "widgets-grid",
@@ -89,3 +91,4 @@
         </div>
     </div>
 </div>
+</section>

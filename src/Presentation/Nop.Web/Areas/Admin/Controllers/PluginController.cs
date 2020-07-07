@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 if (archivefile == null || archivefile.Length == 0)
-                    throw new NopException(_localizationService.GetResource("Admin.Common.UploadFile"));
+                throw new NopException(_localizationService.GetResource("Admin.Common.UploadFile"));
 
                 var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
                 var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
@@ -187,6 +187,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
+                //restart application
                 return View("RestartApplication", Url.Action("List", "Plugin"));
             }
             catch (Exception exc)

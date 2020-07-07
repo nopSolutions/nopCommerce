@@ -1,7 +1,7 @@
 @model TemplatesModel
 
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="card card-default">
+    <div class="card-body">
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerTemplateListButtons })
 
         @await Html.PartialAsync("Table", new DataTablesModel
@@ -53,12 +53,12 @@
             }
         })
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card card-default">
+            <div class="card-header">
                 @T("Admin.Common.AddNewRecord")
             </div>
-            <div class="panel-body">
-                <div class="form-group">
+            <div class="card-body">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="@Model.AddManufacturerTemplate.Name" />
                     </div>
@@ -67,7 +67,7 @@
                         <span asp-validation-for="@Model.AddManufacturerTemplate.Name"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="@Model.AddManufacturerTemplate.ViewPath" />
                     </div>
@@ -76,7 +76,7 @@
                         <span asp-validation-for="@Model.AddManufacturerTemplate.ViewPath"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="@Model.AddManufacturerTemplate.DisplayOrder" />
                     </div>
@@ -85,7 +85,7 @@
                         <span asp-validation-for="@Model.AddManufacturerTemplate.DisplayOrder"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-9 col-md-offset-3">
                         <button type="button" id="addManufacturerTemplate" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                     </div>

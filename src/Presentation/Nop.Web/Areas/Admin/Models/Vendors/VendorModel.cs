@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Web.Areas.Admin.Models.Vendors
 {
@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.DisplayOrder")]
-        public int DisplayOrder { get; set; }        
+        public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
         public string MetaKeywords { get; set; }
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         #endregion
 
         #region Nested classes
-        
+
         public partial class VendorAttributeModel : BaseNopEntityModel
         {
             public VendorAttributeModel()

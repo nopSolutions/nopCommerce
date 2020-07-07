@@ -350,7 +350,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
+                return AccessDeniedView();           
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))

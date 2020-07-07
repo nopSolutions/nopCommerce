@@ -1,7 +1,7 @@
 ﻿@model IList<ProductAttributeCombinationModel.ProductAttributeModel>
 
 @using Nop.Core.Domain.Catalog;
-@using Nop.Services.Catalog
+@using Nop.Services.Catalog;
 
 @inject CatalogSettings catalogSettings
 
@@ -11,7 +11,7 @@
     {
         var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
         var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-sm-4">
                 <div class="label-wrapper">
                     <label class="control-label">
@@ -80,13 +80,11 @@
                             break;
                         case AttributeControlType.Datepicker:
                             {
-                                <nop-date-picker 
-                                    asp-day-name="@(controlId + "_day")" 
-                                    asp-month-name="@(controlId + "_month")" 
-                                    asp-year-name="@(controlId + "_year")"
-                                    asp-begin-year="@(DateTime.Now.Year)"
-                                    asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                />
+                                <nop-date-picker asp-day-name="@(controlId + "_day")"
+                                                 asp-month-name="@(controlId + "_month")"
+                                                 asp-year-name="@(controlId + "_year")"
+                                                 asp-begin-year="@(DateTime.Now.Year)"
+                                                 asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)" />
                             }
                             break;
                         case AttributeControlType.FileUpload:

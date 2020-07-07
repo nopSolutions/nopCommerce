@@ -14,16 +14,17 @@
             @T("Admin.Customers.ActivityLogType")
         </h1>
         <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
+            <button type="submit" name="save" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
         </div>
     </div>
-    <div class="content">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <section class="content">
+    <div class="container-fluid">
+        <div class="card card-default">
+            <div class="card-body">
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
                     Name = "activityLogType-grid",
@@ -51,10 +52,11 @@
                     {
                         typeModel.Id,
                         typeModel.Name,
-                        Enabled = typeModel.Enabled
+                        Enabled = typeModel.Enabled.ToString().ToLowerInvariant()
                     }).ToList())
                 })
             </div>
         </div>
     </div>
+    </section>
 </form>

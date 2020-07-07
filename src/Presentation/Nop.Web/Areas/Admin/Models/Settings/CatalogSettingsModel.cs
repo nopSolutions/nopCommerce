@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -25,11 +25,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         #region Properties
 
         public int ActiveStoreScopeConfiguration { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
         public bool AllowViewUnpublishedProductPage { get; set; }
         public bool AllowViewUnpublishedProductPage_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts")]
         public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
         public bool DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore { get; set; }
@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedNumber")]
         public int ProductsAlsoPurchasedNumber { get; set; }
         public bool ProductsAlsoPurchasedNumber_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfProductTags")]
         public int NumberOfProductTags { get; set; }
         public bool NumberOfProductTags_OverrideForStore { get; set; }
@@ -230,7 +230,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts")]
         public bool IncludeFullDescriptionInCompareProducts { get; set; }
         public bool IncludeFullDescriptionInCompareProducts_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay")]
         public int ManufacturersBlockItemsToDisplay { get; set; }
         public bool ManufacturersBlockItemsToDisplay_OverrideForStore { get; set; }
@@ -266,7 +266,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes")]
         public bool ExportImportProductSpecificationAttributes { get; set; }
         public bool ExportImportProductSpecificationAttributes_OverrideForStore { get; set; }
-        
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb")]
         public bool ExportImportProductCategoryBreadcrumb { get; set; }
         public bool ExportImportProductCategoryBreadcrumb_OverrideForStore { get; set; }

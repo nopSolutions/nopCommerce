@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public AddressModel DefaultTaxAddress { get; set; }
         public bool DefaultTaxAddress_OverrideForStore { get; set; }
-       
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingIsTaxable")]
         public bool ShippingIsTaxable { get; set; }
         public bool ShippingIsTaxable_OverrideForStore { get; set; }

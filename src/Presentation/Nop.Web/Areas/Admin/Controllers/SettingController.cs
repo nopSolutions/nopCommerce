@@ -1004,11 +1004,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             var lastUsernameValidationEnabledValue = customerSettings.UsernameValidationEnabled;
             var lastUsernameValidationUseRegexValue = customerSettings.UsernameValidationUseRegex;
 
-            //Phone number validation settings
+			//Phone number validation settings
             var lastPhoneNumberValidationRule = customerSettings.PhoneNumberValidationRule;
             var lastPhoneNumberValidationEnabledValue = customerSettings.PhoneNumberValidationEnabled;
             var lastPhoneNumberValidationUseRegexValue = customerSettings.PhoneNumberValidationUseRegex;
-
+			
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
@@ -1033,7 +1033,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
 
-            if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
+			if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
             {
                 try
                 {
@@ -1050,7 +1050,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error"));
                 }
             }
-
+			
             _settingService.SaveSetting(customerSettings);
 
             addressSettings = model.AddressSettings.ToSettings(addressSettings);
@@ -1269,7 +1269,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //social pages
             storeInformationSettings.FacebookLink = model.StoreInformationSettings.FacebookLink;
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
-            storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
+            storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;            
             //contact us
             commonSettings.SubjectFieldOnContactUsForm = model.StoreInformationSettings.SubjectFieldOnContactUsForm;
             commonSettings.UseSystemEmailForContactUsForm = model.StoreInformationSettings.UseSystemEmailForContactUsForm;
@@ -1303,7 +1303,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.DisplayEuCookieLawWarning, model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.FacebookLink, model.StoreInformationSettings.FacebookLink_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.TwitterLink, model.StoreInformationSettings.TwitterLink_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.YoutubeLink, model.StoreInformationSettings.YoutubeLink_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.YoutubeLink, model.StoreInformationSettings.YoutubeLink_OverrideForStore, storeScope, false);     
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.SubjectFieldOnContactUsForm, model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseSystemEmailForContactUsForm, model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.PopupForTermsOfServiceLinks, model.StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore, storeScope, false);

@@ -1,6 +1,6 @@
 @model OrderModel
 
-<div class="panel-body">
+<div class="card-body">
     <div class="sub-panel">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
@@ -53,7 +53,7 @@
         </script>
     </div>
 
-    <div class="panel panel-default">
+    <div class="card card-default">
         <script>
             $(document).ready(function () {
                 $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
@@ -70,12 +70,12 @@
             }
         </script>
 
-        <div class="panel-heading">
+        <div class="card-header">
             @T("Admin.Orders.OrderNotes.AddTitle")
         </div>
 
-        <div class="panel-body">
-            <div class="form-group">
+        <div class="card-body">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AddOrderNoteMessage" />
                 </div>
@@ -84,7 +84,7 @@
                     <span asp-validation-for="AddOrderNoteMessage"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AddOrderNoteDownloadId" />
                 </div>
@@ -101,7 +101,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AddOrderNoteDisplayToCustomer" />
                 </div>
@@ -110,7 +110,7 @@
                     <span asp-validation-for="AddOrderNoteDisplayToCustomer"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-9 col-md-offset-3">
                     <button type="button" id="addOrderNote" class="btn btn-primary">@T("Admin.Orders.OrderNotes.AddButton")</button>
                 </div>
