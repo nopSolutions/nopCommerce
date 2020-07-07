@@ -4,20 +4,23 @@ Admin.Navigation = (function () {
     var buildMap = function () {
         var map = {};
 
-        var linkElements = $("a.menu-item-link");
+        var linkElements = $("a.nav-link");
 
         linkElements.each(function () {
-            var parents = $(this).parentsUntil(".sidebar-menu");
+            var parents = $(this).parentsUntil(".nav-sidebar");
             var href;
             var title;
             var parent;
             var grandParent;
+            var n1;
+            var n2;
+            var n3;
             switch (parents.length) {
                 // items in level one
                 case 1:
                     {
                         href = $(parents).find("a").attr("href");
-                        title = $(parents).find("a").find("span").html();
+                        title = $(parents).find("a").find("p").html();
                         map[href] = { title: title, link: href, parent: null, grandParent: null };
 
                         break;
@@ -26,8 +29,11 @@ Admin.Navigation = (function () {
                 case 3:
                     {
                         href = $(parents).eq(0).find("a").attr("href");
-                        title = $(parents).eq(0).find("a").find("span").html();
-                        parent = $(parents).eq(2).find("a").find("span").html();
+                        title = $(parents).eq(0).find("a").find("p").html();
+                        n1 = title.indexOf("<i class");
+                        parent = $(parents).eq(2).find("a").find("p").html();
+                        n2 = parent.indexOf("<i class");
+                        parent = parent.substring(0, n2);
                         map[href] = { title: title, link: href, parent: parent, grandParent: null };
 
                         break;
@@ -36,9 +42,13 @@ Admin.Navigation = (function () {
                 case 5:
                     {
                         href = $(parents).eq(0).find("a").attr("href");
-                        title = $(parents).eq(0).find("a").find("span").html();
-                        parent = $(parents).eq(2).find("a").find("span").html();
-                        grandParent = $(parents).eq(4).find("a").find("span").html();
+                        title = $(parents).eq(0).find("a").find("p").html();
+                        parent = $(parents).eq(2).find("a").find("p").html();
+                        n2 = parent.indexOf("<i class");
+                        parent = parent.substring(0, n2);
+                        grandParent = $(parents).eq(4).find("a").find("p").html();
+                        n3 = grandParent.indexOf("<i class");
+                        grandParent = grandParent.substring(0, n3);
                         map[href] = { title: title, link: href, parent: parent, grandParent: grandParent };
                         break;
                     }
