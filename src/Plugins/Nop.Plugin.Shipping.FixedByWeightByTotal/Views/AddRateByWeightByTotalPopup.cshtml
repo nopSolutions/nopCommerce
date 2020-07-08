@@ -15,9 +15,11 @@
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
-        </div>
-    </div>
+    <section class="content">
+		<div class="container-fluid">
+			<div class="form-horizontal">
+				@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
+			</div>
+		</div>
+    </section>
 </form>

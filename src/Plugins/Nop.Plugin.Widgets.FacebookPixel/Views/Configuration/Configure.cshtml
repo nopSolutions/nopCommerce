@@ -14,8 +14,8 @@
         <div class="panel-group">
             @if (!Model.HideList && !Model.FacebookPixelSearchModel.HideStoresList)
             {
-                <div class="panel panel-default panel-search">
-                    <div class="panel-body">
+                <div class="card card-default panel-search">
+                    <div class="card-body">
                         <div class="row search-row @(!Model.FacebookPixelSearchModel.HideSearchBlock ? "opened" : "")" data-hideAttribute="@FacebookPixelDefaults.HideSearchBlockAttribute">
                             <div class="search-text">@T("Admin.Common.Search")</div>
                             <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
@@ -48,10 +48,10 @@
                 </div>
             }
 
-            <div class="panel panel-default">
+            <div class="card card-default">
                 @if (!Model.HideList)
                 {
-                    <div class="panel-body">
+                    <div class="card-body">
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "grid",
@@ -92,8 +92,8 @@
                         })
                     </div>
                 }
-                <div class="panel-footer">
-                    <a asp-controller="FacebookPixel" asp-action="Create" class="btn bg-blue">
+                <div class="card-footer">
+                    <a asp-controller="FacebookPixel" asp-action="Create" class="btn btn-primary">
                         <i class="fa fa-plus-square"></i>
                         @T("Admin.Common.AddNew") @T("Plugins.Widgets.FacebookPixel.Configuration")
                     </a>
