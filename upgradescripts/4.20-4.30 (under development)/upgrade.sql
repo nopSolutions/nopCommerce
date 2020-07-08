@@ -3036,7 +3036,7 @@ WHERE [Name] = N'securitysettings.forcesslforallpages'
 GO
 
 --new column
-IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeightByTotalRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeightByTotalRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeightByTotalRecord]') AND NAME = 'TransitDays')
 BEGIN
 	ALTER TABLE [ShippingByWeightByTotalRecord]
@@ -3045,7 +3045,7 @@ END
 GO
 
 --new column
-IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[StorePickupPoint]') AND NAME = 'TransitDays')
 BEGIN
 	ALTER TABLE [StorePickupPoint]
