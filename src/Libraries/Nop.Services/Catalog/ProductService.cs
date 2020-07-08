@@ -1544,7 +1544,7 @@ namespace Nop.Services.Catalog
                 pwi.ReservedQuantity += qty;
             }
 
-            UpdateProduct(product);
+            UpdateProductWarehouseInventory(productInventory);
         }
 
         /// <summary>
@@ -1569,6 +1569,8 @@ namespace Nop.Services.Catalog
 
             var selectQty = Math.Min(productInventory.StockQuantity - productInventory.ReservedQuantity, quantity);
             productInventory.ReservedQuantity += selectQty;
+
+            UpdateProductWarehouseInventory(productInventory);
 
             //remove from reserve in other warehouses what has just been reserved in the current warehouse to equalize the total
             var productAnotherInventories = _productWarehouseInventoryRepository.Table
@@ -1595,7 +1597,7 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            UpdateProduct(product);
+            UpdateProductWarehouseInventory(productAnotherInventories);
         }
 
         /// <summary>
