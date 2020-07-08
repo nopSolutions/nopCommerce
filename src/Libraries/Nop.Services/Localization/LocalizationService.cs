@@ -435,7 +435,8 @@ namespace Nop.Services.Localization
             
             var lsNamesList = new Dictionary<string, LocaleStringResource>();
 
-            foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id))
+            foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id)
+                .OrderBy(lsr => lsr.Id))
                 lsNamesList[localeStringResource.ResourceName] = localeStringResource;
 
             var lrsToUpdateList = new List<LocaleStringResource>();
