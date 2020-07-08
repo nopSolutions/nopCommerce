@@ -437,7 +437,7 @@ namespace Nop.Services.Localization
 
             foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id)
                 .OrderBy(lsr => lsr.Id))
-                lsNamesList[localeStringResource.ResourceName.ToLower()] = localeStringResource;
+                lsNamesList[localeStringResource.ResourceName.ToLowerInvariant()] = localeStringResource;
 
             var lrsToUpdateList = new List<LocaleStringResource>();
             var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
