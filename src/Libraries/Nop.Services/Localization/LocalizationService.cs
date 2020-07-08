@@ -141,7 +141,7 @@ namespace Nop.Services.Localization
                         {
                             using var lrReader = languageReader.ReadSubtree();
                             if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
-                                result.Add((name, lrReader.ReadString()));
+                                result.Add((name.ToLowerInvariant(), lrReader.ReadString()));
                         }
 
                     break;
@@ -437,7 +437,7 @@ namespace Nop.Services.Localization
 
             foreach (var localeStringResource in _lsrRepository.Table.Where(lsr => lsr.LanguageId == language.Id)
                 .OrderBy(lsr => lsr.Id))
-                lsNamesList[localeStringResource.ResourceName] = localeStringResource;
+                lsNamesList[localeStringResource.ResourceName.ToLower()] = localeStringResource;
 
             var lrsToUpdateList = new List<LocaleStringResource>();
             var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
