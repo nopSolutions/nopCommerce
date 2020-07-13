@@ -41,7 +41,7 @@ Evaluate the functionality and convenience of nopCommerce as a customer and stor
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/github/public-demo.png#v1)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/github/admin-demo.png#v1)](https://admin-demo.nopcommerce.com/admin/)
+[![ScreenShot](https://www.nopcommerce.com/images/github/public-demo.png#v1)](https://frontend.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/github/admin-demo.png#v1)](https://admin-demo.nopcommerce.com/admin/)
 
 
 ### nopCommerce resources ###
