@@ -203,7 +203,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                 //Special case, if we are in last step of checkout, we can use order total for conversion value
                 var isOrderCompletedPage = controller.ToString().Equals("checkout", StringComparison.InvariantCultureIgnoreCase) &&
                     action.ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase);
-                if (isOrderCompletedPage && _googleAnalyticsSettings.UseJsToSendEcommerceInfo)
+                if (isOrderCompletedPage && _googleAnalyticsSettings.EnableEcommerce && _googleAnalyticsSettings.UseJsToSendEcommerceInfo)
                 {
                     var lastOrder = GetLastOrder();
                     script += GetEcommerceScript(lastOrder);
