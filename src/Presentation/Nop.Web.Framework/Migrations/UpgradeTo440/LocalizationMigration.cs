@@ -1,24 +1,26 @@
-﻿using FluentMigrator;
-using Nop.Core;
+﻿using System.Collections.Generic;
+using FluentMigrator;
+using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration(NopVersion.FULL_VERSION, MigrationType.Localization, "version 4.40. Update localization")]
+    [NopMigration(MigrationType.Localization)]
+    [SkipMigrationOnInstall]
     public class LocalizationMigration : MigrationBase
-    {
-        private readonly ILocalizationService _localizationService;
-
-        public LocalizationMigration(ILocalizationService localizationService)
-        {
-            _localizationService = localizationService;
-        }
-
+    { 
         /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
-            //use _localizationService to add, update and delete localization resources
+            if(!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            //do not use DI, because it produces exception on the installation process
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+            //use localizationService to add, update and delete localization resources
             
             #if DEBUG
             throw new PreventFixMigrationException();

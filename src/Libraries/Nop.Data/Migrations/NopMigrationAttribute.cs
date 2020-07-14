@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using FluentMigrator;
+using Nop.Core;
 
 namespace Nop.Data.Migrations
 {
@@ -11,12 +12,23 @@ namespace Nop.Data.Migrations
     {
         private static readonly string[] _dateFormats = { "yyyy-MM-dd HH:mm:ss", "yyyy.MM.dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss:fffffff", "yyyy.MM.dd HH:mm:ss:fffffff", "yyyy/MM/dd HH:mm:ss:fffffff" };
 
-        private static long GetMigrationVersion(string nopVersion, MigrationType migrationType)
+        private static string GetDescription(MigrationType migrationType)
         {
-            long version = int.MaxValue + Math.Abs(nopVersion.GetHashCode()) +
-                           Math.Abs(migrationType.ToString().GetHashCode());
+            return $"nopCommerce version {NopVersion.FULL_VERSION}. Update {migrationType.ToString()}";
+        }
+        
+        private static long GetVersion(string dateTime = null)
+        {
+            if (!string.IsNullOrEmpty(dateTime))
+                return DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks;
 
-            return version;
+            var date = $"{NopVersion.VERSION_STARTED_ON} 00:00:00";
+
+            #if DEBUG
+            date = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss");
+            #endif
+
+            return GetVersion(date);
         }
 
         /// <summary>
@@ -24,7 +36,7 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="dateTime">The migration date time string to convert on version</param>
         public NopMigrationAttribute(string dateTime) :
-            base(DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks, null)
+            base(GetVersion(dateTime), null)
         {
         }
 
@@ -34,28 +46,16 @@ namespace Nop.Data.Migrations
         /// <param name="dateTime">The migration date time string to convert on version</param>
         /// <param name="description">The migration description</param>
         public NopMigrationAttribute(string dateTime, string description) :
-            base(DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks, description)
+            base(GetVersion(dateTime), description)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the NopMigrationAttribute class
         /// </summary>
-        /// <param name="nopVersion">The nopCommerce full version number</param>
         /// <param name="migrationType">The migration type</param>
-        public NopMigrationAttribute(string nopVersion, MigrationType migrationType) :
-            base(GetMigrationVersion(nopVersion, migrationType), null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the NopMigrationAttribute class
-        /// </summary>
-        /// <param name="nopVersion">The nopCommerce full version number</param>
-        /// <param name="migrationType">The migration type</param>
-        /// <param name="description">The migration description</param>
-        public NopMigrationAttribute(string nopVersion, MigrationType migrationType, string description) :
-            base(GetMigrationVersion(nopVersion, migrationType), description)
+        public NopMigrationAttribute(MigrationType migrationType) :
+            base(GetVersion() + (int)migrationType, GetDescription(migrationType))
         {
         }
     }

@@ -178,23 +178,24 @@ namespace Nop.Data.Migrations
         {
             var migrations = GetMigrations(assembly);
 
-            foreach (var migrationInfo in migrations)
+            bool needToExecute(IMigrationInfo migrationInfo1)
             {
-                if (migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any())
-                    continue;
+                var skip = migrationInfo1.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any() || isUpdateProcess && migrationInfo1.Migration.GetType()
+                    .GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any() || !isUpdateProcess && migrationInfo1.Migration.GetType()
+                    .GetCustomAttributes(typeof(SkipMigrationOnInstallAttribute)).Any();
 
-                if (isUpdateProcess && migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any())
-                    continue;
+                return !skip;
+            }
 
+            foreach (var migrationInfo in migrations.Where(needToExecute))
                 try
                 {
                     _migrationRunner.MigrateUp(migrationInfo.Version);
                 }
                 catch (PreventFixMigrationException)
                 {
-                   //ignore
+                    //ignore
                 }
-            }
         }
 
         /// <summary>

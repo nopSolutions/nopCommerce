@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
-using Nop.Core;
 
 namespace Nop.Data.Migrations.UpgradeTo440
 {
-    [NopMigration(NopVersion.FULL_VERSION, MigrationType.Data, "version 4.40. Update data on the database")]
+    [NopMigration(MigrationType.Data)]
+    [SkipMigrationOnInstall]
     public class DataMigration : MigrationBase
     {      
         /// <summary>

@@ -18,6 +18,6 @@
         /// <summary>
         /// Setting
         /// </summary>
-        Setting = 15
+        Settings = 15
     }
 }

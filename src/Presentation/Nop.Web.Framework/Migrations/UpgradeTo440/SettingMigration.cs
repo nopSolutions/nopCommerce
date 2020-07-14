@@ -1,24 +1,26 @@
 ﻿using FluentMigrator;
-using Nop.Core;
+using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration(NopVersion.FULL_VERSION, MigrationType.Setting, "version 4.40. Update settings")]
+    [NopMigration(MigrationType.Settings)]
+    [SkipMigrationOnInstall]
     public class SettingMigration: MigrationBase
     {
-        private readonly ISettingService _settingService;
-
-        public SettingMigration(ISettingService settingService)
-        {
-            _settingService = settingService;
-        }
-
+        /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
-            //use _settingService to add, update and delete settings
-            
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            //do not use DI, because it produces exception on the installation process
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+
+            //use settingService to add, update and delete settings
+
             #if DEBUG
             throw new PreventFixMigrationException();
             #endif
