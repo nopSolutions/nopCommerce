@@ -3349,3 +3349,21 @@ BEGIN
 	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Pickup.PickupInStore base schema';
 END
 GO
+
+--add new slug to "reservedurlrecordslugs" setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.reservedurlrecordslugs')
+BEGIN
+	DECLARE @NewUrlRecord nvarchar(4000)
+	SET @NewUrlRecord = N'products'
+	
+	DECLARE @reservedurlrecordslugs nvarchar(4000)
+	SELECT @reservedurlrecordslugs = [Value] FROM [Setting] WHERE [name] = N'seosettings.reservedurlrecordslugs'
+	
+	IF (PATINDEX('%[,]' + @NewUrlRecord + '[,]%', @reservedurlrecordslugs) = 0 or PATINDEX('%[,]' + @NewUrlRecord, @reservedurlrecordslugs) = 0)
+	BEGIN
+		UPDATE [Setting]
+		SET [Value] = @reservedurlrecordslugs + ',' + @NewUrlRecord
+		WHERE [name] = N'seosettings.reservedurlrecordslugs'
+	END
+END
+GO

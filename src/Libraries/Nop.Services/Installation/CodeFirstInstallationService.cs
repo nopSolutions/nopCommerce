@@ -6177,6 +6177,7 @@ namespace Nop.Services.Installation
                     "config",
                     "eucookielawaccept",
                     "page-not-found",
+                    "products",
                     //system names are not allowed (anyway they will cause a runtime error),
                     "con",
                     "lpt1",
