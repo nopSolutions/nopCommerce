@@ -7,7 +7,7 @@
 @using Nop.Web.Framework.UI
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage();
