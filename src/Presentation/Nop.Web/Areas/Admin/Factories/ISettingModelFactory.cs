@@ -109,6 +109,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>GDPR consent model</returns>
         GdprConsentModel PrepareGdprConsentModel(GdprConsentModel model, GdprConsent gdprConsent, bool excludeProperties = false);
 
+        WeixinSettingsModel PrepareWeixinSettingsModel();
+
         /// <summary>
         /// Prepare general and common settings model
         /// </summary>

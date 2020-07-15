@@ -1,0 +1,25 @@
+﻿@model QrCodeLimitModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+@{
+    const string hideInfoBlockAttributeName = "QrCodeLimitPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideBindsourceBlockAttributeName = "QrCodeLimitPage.HideBindsourceBlock";
+    var hideBindsourceBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBindsourceBlockAttributeName);
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="qrcodelimit-panels">
+            <nop-panel asp-name="qrcodelimit-info" asp-icon="fa fa-info" asp-title="@T("Admin.Weixin.QrCodeLimits.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateQrCodeLimit.Info", Model)</nop-panel>
+            <nop-panel asp-name="qrcodelimit-Bindsource" asp-icon="fa fa-info" asp-title="@T("Admin.Weixin.QrCodeLimits.Bindsource")" asp-hide-block-attribute-name="@hideBindsourceBlockAttributeName" asp-hide="@hideBindsourceBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateQrCodeLimit.Bindsource", Model)</nop-panel>
+            @if (Model.Id > 0)
+            {
+                <nop-panel asp-name="qrcodelimit-user" asp-icon="fa fa-info" asp-title="@T("Admin.Weixin.QrCodeLimits.User")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateQrCodeLimit.User", Model)</nop-panel>
+            }
+        </nop-panels>
+    </div>
+</div>

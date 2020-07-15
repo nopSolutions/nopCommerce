@@ -313,29 +313,35 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
         {
             //这里是微信客户端（通过微信服务器）自动发送过来的位置信息
             var locationService = EngineContext.Current.Resolve<IWLocationService>();
-            var location = locationService.GetLocationByOpenId(requestMessage.FromUserName);
-            if (location != null &&
+            var userService = EngineContext.Current.Resolve<IWUserService>();
+            var user = userService.GetWUserByOpenId(requestMessage.FromUserName);
+            if (user != null)
+            {
+                var location = locationService.GetLocationByUserId(user.Id);
+
+                if (location != null &&
                 CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime) - (long)location.CreateTime > 600 //10分钟内不更新
                 )
-            {
-                location.Latitude = Convert.ToDecimal(requestMessage.Latitude);
-                location.Longitude = Convert.ToDecimal(requestMessage.Longitude);
-                location.Precision = Convert.ToDecimal(requestMessage.Precision);
-                location.CreateTime = Convert.ToInt32(CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime));
-                
-                //update
-                locationService.UpdateLocation(location);
-            }
-            else
-            {
-                locationService.InsertLocation(new WLocation
                 {
-                    OpenId = requestMessage.FromUserName,
-                    Latitude = Convert.ToDecimal(requestMessage.Latitude),
-                    Longitude = Convert.ToDecimal(requestMessage.Longitude),
-                    Precision = Convert.ToDecimal(requestMessage.Precision),
-                    CreateTime = Convert.ToInt32(CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime))
-                });
+                    location.Latitude = Convert.ToDecimal(requestMessage.Latitude);
+                    location.Longitude = Convert.ToDecimal(requestMessage.Longitude);
+                    location.Precision = Convert.ToDecimal(requestMessage.Precision);
+                    location.CreateTime = Convert.ToInt32(CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime));
+
+                    //update
+                    locationService.UpdateLocation(location);
+                }
+                else
+                {
+                    locationService.InsertLocation(new WLocation
+                    {
+                        UserId = user.Id,
+                        Latitude = Convert.ToDecimal(requestMessage.Latitude),
+                        Longitude = Convert.ToDecimal(requestMessage.Longitude),
+                        Precision = Convert.ToDecimal(requestMessage.Precision),
+                        CreateTime = Convert.ToInt32(CO2NET.Helpers.DateTimeHelper.GetUnixDateTime(requestMessage.CreateTime))
+                    });
+                }
             }
 
             return new SuccessResponseMessage();
@@ -404,13 +410,18 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
                 if (scenicId > 0)
                 {
                     //获取推荐人
-                    var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
+                    var qrcodeLimitUser = qrcodeLimitUserService.GetActiveEntityByQrCodeLimitIdOrUserId(scenicId, 0);
                     if (qrcodeLimitUser != null)
                     {
-                        if (qrcodeLimitUser.ExpireTime > 0 && qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now))
+                        if (qrcodeLimitUser.ExpireTime > DateTime.Now)
                         {
                             //永久二维码在指定过期时间前，分配给指定用户
-                            qrCodeSceneParam.OpenIdReferee = qrcodeLimitUser.OpenId;
+                            var qrcodeRefereeUser = wuserService.GetWUserById(qrcodeLimitUser.UserId);
+                            if (qrcodeRefereeUser != null)
+                            {
+                                qrCodeSceneParam.OpenIdReferee = qrcodeRefereeUser.OpenId;
+                            }
+                            
                         }
                     }
 
@@ -627,7 +638,7 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
             if (string.IsNullOrEmpty(sceneStr))
                 return new SuccessResponseMessage();
 
-            Nop.Services.Weixin.QrCodeSceneString.QrCodeSceneParam qrCodeSceneParam = null;
+            QrCodeSceneString.QrCodeSceneParam qrCodeSceneParam;
             if (sceneStr.Contains("_"))
             {
                 //临时二维码
@@ -661,13 +672,15 @@ namespace Senparc.Weixin.MP.CommonService.CustomMessageHandler
                 if (scenicId > 0)
                 {
                     //获取推荐人
-                    var qrcodeLimitUser = qrcodeLimitUserService.GetEntityByQrcodeLimitId(scenicId);
+                    var qrcodeLimitUser = qrcodeLimitUserService.GetActiveEntityByQrCodeLimitIdOrUserId(scenicId, 0);
                     if (qrcodeLimitUser != null)
                     {
-                        if (qrcodeLimitUser.ExpireTime > 0 && qrcodeLimitUser.ExpireTime > (int)Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now))
+                        if (qrcodeLimitUser.ExpireTime > DateTime.Now)
                         {
                             //永久二维码在指定过期时间前，分配给指定用户
-                            qrCodeSceneParam.OpenIdReferee = qrcodeLimitUser.OpenId;
+                            var qrcodeRefereeUser = wuserService.GetWUserById(qrcodeLimitUser.UserId);
+                            if (qrcodeRefereeUser != null)
+                                qrCodeSceneParam.OpenIdReferee = qrcodeRefereeUser.OpenId;
                         }
                     }
 

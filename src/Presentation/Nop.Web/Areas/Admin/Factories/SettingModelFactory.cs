@@ -20,6 +20,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Weixin;
 using Nop.Data;
 using Nop.Services;
 using Nop.Services.Common;
@@ -1440,6 +1441,37 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare localized models
             if (!excludeProperties)
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare forum settings model
+        /// </summary>
+        /// <returns>Forum settings model</returns>
+        public virtual WeixinSettingsModel PrepareWeixinSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var weixinSettings = _settingService.LoadSetting<WeixinSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = weixinSettings.ToSettingsModel<WeixinSettingsModel>();
+
+            //fill in additional values (not existing in the entity)
+            model.ActiveStoreScopeConfiguration = storeId;
+
+            if (storeId <= 0)
+                return model;
+
+            //fill in overridden values
+            model.ForcedAccessWeChatBrowser_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.ForcedAccessWeChatBrowser, storeId);
+            model.CheckWebBrowser_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.CheckWebBrowser, storeId);
+            model.UseSnsapiBase_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.UseSnsapiBase, storeId);
+            model.Debug_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.Debug, storeId);
+            model.TraceLog_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.TraceLog, storeId);
+            model.JSSDKDebug_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.JSSDKDebug, storeId);
+            model.JsApiList_OverrideForStore = _settingService.SettingExists(weixinSettings, x => x.JsApiList, storeId);
 
             return model;
         }

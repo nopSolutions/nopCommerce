@@ -310,9 +310,19 @@ namespace Nop.Services.Weixin
         /// <param name="pageSize"></param>
         /// <param name="showDeleted"></param>
         /// <returns></returns>
-        public virtual IPagedList<WUser> GetUsers(int pageIndex = 0, int pageSize = int.MaxValue, bool showDeleted = false)
+        public virtual IPagedList<WUser> GetAllUsers(
+            string nickName = null,
+            string remark = null,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue,
+            bool showDeleted = false)
         {
             var query = _wUserRepository.Table;
+
+            if (!string.IsNullOrEmpty(nickName))
+                query = query.Where(v => v.NickName.Contains(nickName));
+            if (!string.IsNullOrEmpty(remark))
+                query = query.Where(v => v.Remark.Contains(remark));
 
             if (!showDeleted)
                 query = query.Where(v => v.Deleted);

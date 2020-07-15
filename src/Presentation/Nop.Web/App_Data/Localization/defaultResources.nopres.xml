@@ -6549,6 +6549,33 @@
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogUserProfileChanges.Hint">
     <Value>Check to log user profile changes (if this feature is enabled in your store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin">
+    <Value>Weixin settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.ForcedAccessWeChatBrowser">
+    <Value>Forced Access WeChat Browser</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.CheckWebBrowser">
+    <Value>Check WebBrowser</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.UseSnsapiBase">
+    <Value>Use SnsapiBase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.Debug">
+    <Value>Weixin Debug</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.TraceLog">
+    <Value>TraceLog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.JSSDKDebug">
+    <Value>JSSDKDebug</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.JsApiList">
+    <Value>JsApiList</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Weixin.BlockTitle.Common">
+    <Value>Common</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
   </LocaleResource>

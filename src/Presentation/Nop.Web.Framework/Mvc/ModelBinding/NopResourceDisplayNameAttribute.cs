@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text.RegularExpressions;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -43,6 +44,10 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         {
             get
             {
+                //判断非英文和符号
+                if (!Regex.IsMatch(ResourceKey, "[-A-Za-z0-9._]"))
+                    return ResourceKey;  //直接返回key值
+
                 //get working language identifier
                 var workingLanguageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
 

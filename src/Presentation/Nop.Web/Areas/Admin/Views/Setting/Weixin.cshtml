@@ -1,0 +1,42 @@
+@model WeixinSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Weixin").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Weixin settings");
+}
+
+
+@{
+    const string hideCommonBlockAttributeName = "WeixinSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+}
+
+<form asp-controller="Setting" asp-action="Weixin" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Weixin")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WeixinSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+            
+            <nop-panels id="weixinsettings-panels">
+                <nop-panel asp-name="weixinsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Weixin.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Weixin.Common", Model)</nop-panel>
+            </nop-panels>
+        </div>
+    </div>
+</form>

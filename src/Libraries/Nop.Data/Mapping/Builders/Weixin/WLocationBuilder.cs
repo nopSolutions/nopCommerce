@@ -17,7 +17,6 @@ namespace Nop.Data.Mapping.Builders.Weixin
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(WLocation.OpenId)).AsAnsiString(32).NotNullable()
                 .WithColumn(nameof(WLocation.Latitude)).AsDecimal(9, 6)
                 .WithColumn(nameof(WLocation.Longitude)).AsDecimal(9, 6)
                 .WithColumn(nameof(WLocation.Precision)).AsDecimal(9, 6)

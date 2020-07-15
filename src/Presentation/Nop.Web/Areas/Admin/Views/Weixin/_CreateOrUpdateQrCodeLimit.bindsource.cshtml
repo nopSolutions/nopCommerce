@@ -1,0 +1,104 @@
+﻿@model QrCodeLimitModel
+
+@using Nop.Core.Domain.Weixin;
+@using Nop.Services;
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.SupplierId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.SupplierId" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.SupplierShopId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.SupplierShopId" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.ProductId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.ProductId" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.Address" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.Address" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.MarketingAdvertWayId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.MarketingAdvertWayId" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.UseFixUrl" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.UseFixUrl" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.Url" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.Url" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.MessageResponse" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.MessageResponse" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.WSceneTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="BindingSource.WSceneTypeId" asp-items="@(((WSceneType)Model.BindingSource.WSceneTypeId).ToSelectList())" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.MessageTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="BindingSource.MessageTypeId" asp-items="@(((WMessageType)Model.BindingSource.MessageTypeId).ToSelectList())" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.Content" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.Content" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="BindingSource.UseBindingMessage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BindingSource.UseBindingMessage" />
+        </div>
+    </div>
+
+</div>

@@ -11,6 +11,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Domain.Marketing;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
@@ -20,10 +21,12 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Suppliers;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Weixin;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
@@ -59,6 +62,7 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
+using Nop.Web.Areas.Admin.Models.Weixin;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
@@ -89,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMediaMaps();
             CreateMessagesMaps();
             CreateNewsMaps();
+            CreateWeixinMaps();
             CreateOrdersMaps();
             CreatePaymentsMaps();
             CreatePluginsMaps();
@@ -940,6 +945,51 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.PrivateMessagesPageSize, options => options.Ignore())
                 .ForMember(settings => settings.StrippedTopicMaxLength, options => options.Ignore())
                 .ForMember(settings => settings.TopicSubjectMaxLength, options => options.Ignore());
+        }
+
+        /// <summary>
+        /// Create weixin maps 
+        /// </summary>
+        protected virtual void CreateWeixinMaps()
+        {
+
+            CreateMap<WeixinSettings, WeixinSettingsModel>()
+                .ForMember(model => model.ForcedAccessWeChatBrowser_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.CheckWebBrowser_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.UseSnsapiBase_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.Debug_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.TraceLog_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.JSSDKDebug_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.JsApiList_OverrideForStore, options => options.Ignore());
+            CreateMap<WeixinSettingsModel, WeixinSettings>();
+
+            CreateMap<WUser, UserModel>()
+                .ForMember(model => model.HeadImgUrl, options => options.Ignore())
+                .ForMember(model => model.SubscribeTime, options => options.Ignore())
+                .ForMember(model => model.UnSubscribeTime, options => options.Ignore())
+                .ForMember(model => model.UpdateTime, options => options.Ignore())
+                .ForMember(model => model.CreatTime, options => options.Ignore());
+
+            CreateMap<UserModel, WUser>()
+                .ForMember(entity => entity.HeadImgUrl, options => options.Ignore())
+                .ForMember(entity => entity.SubscribeTime, options => options.Ignore())
+                .ForMember(entity => entity.UnSubscribeTime, options => options.Ignore())
+                .ForMember(entity => entity.UpdateTime, options => options.Ignore())
+                .ForMember(entity => entity.CreatTime, options => options.Ignore());
+
+            CreateMap<WQrCodeLimit, QrCodeLimitModel>()
+                .ForMember(model => model.BindingSource, options => options.Ignore());
+            CreateMap<QrCodeLimitModel, WQrCodeLimit>();
+
+            CreateMap<WQrCodeLimitUserMapping, QrCodeLimitUserModel>();
+            CreateMap<QrCodeLimitUserModel, WQrCodeLimitUserMapping>();
+
+            CreateMap<WUser, AddUserRelatedUserModel>();
+            CreateMap<AddUserRelatedUserModel, WUser>();
+
+            CreateMap<QrCodeLimitBindingSource, QrCodeLimitBindingSourceModel>();
+            CreateMap<QrCodeLimitBindingSourceModel, QrCodeLimitBindingSource>();
+
         }
 
         /// <summary>

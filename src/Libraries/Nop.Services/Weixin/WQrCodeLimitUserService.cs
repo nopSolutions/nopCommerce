@@ -20,6 +20,8 @@ namespace Nop.Services.Weixin
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<WUser> _wUserRepository;
+        private readonly IRepository<WQrCodeLimit> _wQrCodeLimitRepository;
         private readonly IRepository<WQrCodeLimitUserMapping> _wQrCodeLimitUserMappingRepository;
 
         #endregion
@@ -27,9 +29,13 @@ namespace Nop.Services.Weixin
         #region Ctor
 
         public WQrCodeLimitUserService(IEventPublisher eventPublisher,
+            IRepository<WUser> wUserRepository,
+            IRepository<WQrCodeLimit> wQrCodeLimitRepository,
             IRepository<WQrCodeLimitUserMapping> wQrCodeLimitUserMappingRepository)
         {
             _eventPublisher = eventPublisher;
+            _wUserRepository = wUserRepository;
+            _wQrCodeLimitRepository = wQrCodeLimitRepository;
             _wQrCodeLimitUserMappingRepository = wQrCodeLimitUserMappingRepository;
         }
 
@@ -48,43 +54,23 @@ namespace Nop.Services.Weixin
             _eventPublisher.EntityInserted(entity);
         }
 
-        public virtual void DeleteEntity(WQrCodeLimitUserMapping entity, bool delete = false)
+        public virtual void DeleteEntity(WQrCodeLimitUserMapping entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            if(delete)
-            {
-                _wQrCodeLimitUserMappingRepository.Delete(entity);
-            }
-            else
-            {
-                entity.Deleted = true;
-                UpdateEntity(entity);
-            }
+            _wQrCodeLimitUserMappingRepository.Delete(entity);
 
             //event notification
             _eventPublisher.EntityDeleted(entity);
         }
 
-        public virtual void DeleteEntities(IList<WQrCodeLimitUserMapping> entities, bool deleted = false)
+        public virtual void DeleteEntities(IList<WQrCodeLimitUserMapping> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            if(deleted)
-            {
-                _wQrCodeLimitUserMappingRepository.Delete(entities);
-            }
-            else
-            {
-                foreach (var entity in entities)
-                {
-                    entity.Deleted = true;
-                }
-                //delete wUser
-                UpdateEntities(entities);
-            }
+            _wQrCodeLimitUserMappingRepository.Delete(entities);
 
             foreach (var entity in entities)
             {
@@ -127,20 +113,61 @@ namespace Nop.Services.Weixin
             return _wQrCodeLimitUserMappingRepository.GetById(id);
         }
 
-        public virtual WQrCodeLimitUserMapping GetEntityByQrcodeLimitId(int qrCodeLimitId)
+        public virtual WQrCodeLimitUserMapping GetActiveEntityByQrCodeLimitIdOrUserId(int qrCodeLimitId, int userId)
         {
-            if (qrCodeLimitId == 0)
+            if (qrCodeLimitId == 0 && userId == 0)
+                return null;
+
+            var query = _wQrCodeLimitUserMappingRepository.Table;
+            query = query.Where(t => t.Published);
+            query = query.Where(t => t.ExpireTime > DateTime.Now);
+            if (qrCodeLimitId > 0)
+            {
+                query = query.Where(t => t.QrCodeLimitId == qrCodeLimitId);
+            } 
+            if (userId > 0)
+            {
+                query = query.Where(t => t.UserId == userId);
+            }
+
+            return query.FirstOrDefault();
+        }
+
+        public virtual WQrCodeLimitUserMapping GetEntityByQrCodeLimitIdAndUserId(int qrCodeLimitId, int userId)
+        {
+            if (qrCodeLimitId == 0 || userId == 0)
                 return null;
 
             var query = from t in _wQrCodeLimitUserMappingRepository.Table
                         where t.QrCodeLimitId == qrCodeLimitId &&
-                        t.ExpireTime > Nop.Core.Weixin.Helpers.DateTimeHelper.GetUnixDateTime(DateTime.Now) &&
-                        t.Published &&
-                        !t.Deleted
-                        orderby t.Id descending
+                        t.UserId == userId
                         select t;
 
             return query.FirstOrDefault();
+        }
+
+        public virtual List<WQrCodeLimitUserMapping> GetEntitiesByQrcodeLimitId(int qrCodeLimitId)
+        {
+            if (qrCodeLimitId == 0)
+                return new List<WQrCodeLimitUserMapping>();
+
+            var query = from t in _wQrCodeLimitUserMappingRepository.Table
+                        where t.QrCodeLimitId == qrCodeLimitId
+                        select t;
+
+            return query.ToList();
+        }
+
+        public virtual List<WQrCodeLimitUserMapping> GetEntitiesByUserId(int userId)
+        {
+            if (userId == 0)
+                return new List<WQrCodeLimitUserMapping>();
+
+            var query = from t in _wQrCodeLimitUserMappingRepository.Table
+                        where t.UserId== userId
+                        select t;
+
+            return query.ToList();
         }
 
         public virtual List<WQrCodeLimitUserMapping> GetEntitiesByIds(int[] wEntityIds)
@@ -149,40 +176,31 @@ namespace Nop.Services.Weixin
                 return new List<WQrCodeLimitUserMapping>();
 
             var query = from t in _wQrCodeLimitUserMappingRepository.Table
-                        where wEntityIds.Contains(t.Id) &&
-                        !t.Deleted
+                        where wEntityIds.Contains(t.Id)
                         select t;
 
             return query.ToList();
         }
 
         public virtual IPagedList<WQrCodeLimitUserMapping> GetEntities(
-            string openId = "", 
+            int userId = 0,
             int qrCodeLimitId = 0,
-            int? expireTime = null, 
-            bool? published = null, 
-            bool showDeleted = false, 
+            DateTime? expireTime = null,
+            bool? published = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _wQrCodeLimitUserMappingRepository.Table;
 
-            if (!string.IsNullOrEmpty(openId))
-                query = query.Where(v => v.OpenId == openId);
+            if (userId > 0)
+                query = query.Where(v => v.UserId == userId);
             if (qrCodeLimitId > 0)
                 query = query.Where(v => v.QrCodeLimitId == qrCodeLimitId);
             if (expireTime.HasValue)
             {
-                if (expireTime.Value == 0)
-                    query = query.Where(v => v.ExpireTime == expireTime);
-                else if (expireTime.Value > 0)
-                {
-                    query = query.Where(v => v.ExpireTime >= expireTime);
-                }
+                query = query.Where(v => v.ExpireTime >= expireTime);
             }
-            if(published.HasValue)
+            if (published.HasValue)
                 query = query.Where(v => v.Published == published);
-            if (!showDeleted)
-                query = query.Where(v => v.Deleted);
 
             query = query.OrderBy(v => v.Id);
 

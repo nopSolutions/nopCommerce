@@ -1,0 +1,21 @@
+﻿@model UserModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+@{
+    const string hideInfoBlockAttributeName = "UserPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="user-panels">
+            <nop-panel asp-name="user-info" asp-icon="fa fa-info" asp-title="@T("Admin.Weixin.Users.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateUser.Info", Model)</nop-panel>
+            @if (Model.Id > 0)
+            {
+
+            }
+        </nop-panels>
+    </div>
+</div>

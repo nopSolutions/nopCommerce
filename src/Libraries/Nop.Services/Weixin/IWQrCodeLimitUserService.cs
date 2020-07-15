@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Weixin;
 
@@ -13,9 +14,9 @@ namespace Nop.Services.Weixin
 
         void InsertEntity(WQrCodeLimitUserMapping entity);
 
-        void DeleteEntity(WQrCodeLimitUserMapping entity, bool delete = false);
+        void DeleteEntity(WQrCodeLimitUserMapping entity);
 
-        void DeleteEntities(IList<WQrCodeLimitUserMapping> entities, bool deleted = false);
+        void DeleteEntities(IList<WQrCodeLimitUserMapping> entities);
 
         void UpdateEntity(WQrCodeLimitUserMapping entity);
 
@@ -23,11 +24,17 @@ namespace Nop.Services.Weixin
 
         WQrCodeLimitUserMapping GetEntityById(int id);
 
-        WQrCodeLimitUserMapping GetEntityByQrcodeLimitId(int qrCodeLimitId);
+        WQrCodeLimitUserMapping GetActiveEntityByQrCodeLimitIdOrUserId(int qrCodeLimitId, int userId);
+
+        WQrCodeLimitUserMapping GetEntityByQrCodeLimitIdAndUserId(int qrCodeLimitId, int userId);
+
+        List<WQrCodeLimitUserMapping> GetEntitiesByQrcodeLimitId(int qrCodeLimitId);
+
+        List<WQrCodeLimitUserMapping> GetEntitiesByUserId(int userId);
 
         List<WQrCodeLimitUserMapping> GetEntitiesByIds(int[] wEntityIds);
 
-        IPagedList<WQrCodeLimitUserMapping> GetEntities(string openId = "", int qrCodeLimitId = 0, int? expireTime = null, bool? published = null, bool showDeleted = false, int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<WQrCodeLimitUserMapping> GetEntities(int userId = 0, int qrCodeLimitId = 0, DateTime? expireTime = null, bool? published = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
     }

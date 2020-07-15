@@ -19,7 +19,7 @@ namespace Nop.Services.Weixin
 
         WLocation GetLocationById(int id);
 
-        WLocation GetLocationByOpenId(string openId);
+        WLocation GetLocationByUserId(int userId);
 
         IPagedList<WLocation> GetLocations(int pageIndex = 0, int pageSize = int.MaxValue);
 

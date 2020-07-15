@@ -1,0 +1,74 @@
+@model WeixinSettingsModel
+
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ForcedAccessWeChatBrowser_OverrideForStore" asp-input="ForcedAccessWeChatBrowser" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ForcedAccessWeChatBrowser" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ForcedAccessWeChatBrowser" />
+                <span asp-validation-for="ForcedAccessWeChatBrowser"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CheckWebBrowser_OverrideForStore" asp-input="CheckWebBrowser" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CheckWebBrowser" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CheckWebBrowser" />
+                <span asp-validation-for="CheckWebBrowser"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="UseSnsapiBase_OverrideForStore" asp-input="UseSnsapiBase" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="UseSnsapiBase" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="UseSnsapiBase" />
+                <span asp-validation-for="UseSnsapiBase"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="Debug_OverrideForStore" asp-input="Debug" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="Debug" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Debug" />
+                <span asp-validation-for="Debug"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="TraceLog_OverrideForStore" asp-input="TraceLog" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="TraceLog" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TraceLog" />
+                <span asp-validation-for="TraceLog"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="JSSDKDebug_OverrideForStore" asp-input="JSSDKDebug" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="JSSDKDebug" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="JSSDKDebug" />
+                <span asp-validation-for="JSSDKDebug"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="JsApiList_OverrideForStore" asp-input="JsApiList" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="JsApiList" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="JsApiList" />
+                <span asp-validation-for="JsApiList"></span>
+            </div>
+        </div>
+    </div>

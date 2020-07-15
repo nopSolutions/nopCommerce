@@ -1,0 +1,36 @@
+@model UserModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Weixin.Users.EditUserDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Users list");
+}
+
+<form asp-controller="Weixin" asp-action="UserEdit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Weixin.Users.EditUserDetails") - @Model.NickName@if (!string.IsNullOrEmpty(Model.Remark)) {<span>(@Model.Remark)</span>}
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="UserList">@T("Admin.Weixin.Users.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendetemplatemessage-window">
+                <i class="fa fa-at"></i>
+                @T("Admin.Weixin.Users.SendTemplateMessage")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.UserDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateUser", Model)
+</form>

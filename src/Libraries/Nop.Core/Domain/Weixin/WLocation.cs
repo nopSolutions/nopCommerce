@@ -8,7 +8,7 @@
         /// <summary>
         /// 用户ID
         /// </summary>
-        public string OpenId { get; set; }
+        public int UserId { get; set; }
         /// <summary>
         /// 地理位置纬度
         /// </summary>

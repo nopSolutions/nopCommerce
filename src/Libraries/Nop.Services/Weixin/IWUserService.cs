@@ -89,7 +89,7 @@ namespace Nop.Services.Weixin
         /// <param name="pageSize"></param>
         /// <param name="showDeleted"></param>
         /// <returns></returns>
-        IPagedList<WUser> GetUsers(int pageIndex = 0, int pageSize = int.MaxValue, bool showDeleted = false);
+        IPagedList<WUser> GetAllUsers(string nickName = null, string remark = null, int pageIndex = 0, int pageSize = int.MaxValue, bool showDeleted = false);
 
         /// <summary>
         /// 获取自己推荐的用户列表信息

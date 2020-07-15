@@ -93,16 +93,14 @@ namespace Nop.Services.Weixin
             return _wLocationRepository.GetById(id);
         }
 
-        public virtual WLocation GetLocationByOpenId(string openId)
+        public virtual WLocation GetLocationByUserId(int userId)
         {
-            if (string.IsNullOrEmpty(openId))
+            if (userId == 0)
                 return null;
 
-            openId = openId.Trim();
-
             var query = from location in _wLocationRepository.Table
-                        orderby location.Id
-                        where location.OpenId == openId
+                        where location.UserId == userId
+                        orderby location.Id descending
                         select location;
 
             return query.FirstOrDefault();

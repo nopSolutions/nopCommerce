@@ -1,0 +1,69 @@
+﻿@model QrCodeLimitModel
+
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="QrCodeId" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.QrCodeId</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="SysName" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SysName" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Description" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Description" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Ticket" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.Ticket</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Url" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.Url</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="SceneStr" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.SceneStr</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="TagIdList" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TagIdList" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="FixedUse" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="FixedUse" />
+            </div>
+        </div>
+
+    </div>

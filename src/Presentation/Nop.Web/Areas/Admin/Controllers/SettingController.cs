@@ -24,6 +24,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Weixin;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
@@ -40,6 +41,7 @@ using Nop.Services.Orders;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Services.Weixin;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
@@ -1227,6 +1229,57 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Gdpr");
         }
+
+        #endregion
+
+        #region Weixin
+
+        public virtual IActionResult Weixin()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //prepare model
+
+            var model = _settingModelFactory.PrepareWeixinSettingsModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult Weixin(WeixinSettingsModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //load settings for a chosen store scope
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
+            var weixinSettings = _settingService.LoadSetting<WeixinSettings>(storeScope);
+            weixinSettings = model.ToSettings(weixinSettings);
+
+            //we do not clear cache after each setting update.
+            //this behavior can increase performance because cached settings will not be cleared 
+            //and loaded from database after each update
+
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.ForcedAccessWeChatBrowser, model.ForcedAccessWeChatBrowser_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.CheckWebBrowser, model.CheckWebBrowser_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.UseSnsapiBase, model.UseSnsapiBase_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.Debug, model.Debug_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.TraceLog, model.TraceLog_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.JSSDKDebug, model.JSSDKDebug_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(weixinSettings, x => x.JsApiList, model.JsApiList_OverrideForStore, storeScope, false);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            //activity log
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+
+            return RedirectToAction("Weixin");
+        }
+
 
         #endregion
 

@@ -1,0 +1,230 @@
+﻿@model UserModel
+
+@using Newtonsoft.Json
+
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="NickName" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.NickName</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Remark" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Remark" />
+                <span asp-validation-for="Remark"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="OpenId" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.OpenId</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="RefereeId" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.RefereeId</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="OpenIdHash" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.OpenIdHash</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Province" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.Province / @Model.City</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="HeadImgUrl" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HeadImgUrl" />
+                <span asp-validation-for="HeadImgUrl"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="TagIdList" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="TagIdList" />
+                <span asp-validation-for="TagIdList"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Sex" />
+            </div>
+            <div class="col-md-9">
+                <div class="raw">
+                    <div class="col-md-1">
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButton("Sex", "N", (Model.Sex == 0), new { id = "Sex_Unknown" })
+                                @T("Admin.Weixin.Users.Fields.Sex.Unknown")
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButton("Sex", "M", (Model.Sex == 1), new { id = "Sex_Male" })
+                                @T("Admin.Weixin.Users.Fields.Sex.Male")
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButton("Sex", "F", (Model.Sex == 2), new { id = "Sex_Female" })
+                                @T("Admin.Weixin.Users.Fields.Sex.Female")
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="SupplierShopId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SupplierShopId" />
+                <span asp-validation-for="SupplierShopId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="QrScene" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="QrScene" />
+                <span asp-validation-for="QrScene"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="QrSceneStr" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="QrSceneStr" />
+                <span asp-validation-for="QrSceneStr"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Subscribe" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Subscribe" />
+                <span asp-validation-for="Subscribe"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowReferee" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowReferee" />
+                <span asp-validation-for="AllowReferee"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowResponse" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowResponse" />
+                <span asp-validation-for="AllowResponse"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowOrder" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowOrder" />
+                <span asp-validation-for="AllowOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowNotice" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowNotice" />
+                <span asp-validation-for="AllowNotice"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AllowOrderNotice" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllowOrderNotice" />
+                <span asp-validation-for="AllowOrderNotice"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="InBlackList" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="InBlackList" asp-disabled="false" />
+                <span asp-validation-for="InBlackList"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="SubscribeTime" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.SubscribeTime</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="UnSubscribeTime" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.UnSubscribeTime</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="UpdateTime" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.UpdateTime</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="CreatTime" />
+            </div>
+            <div class="col-md-9">
+                <div class="form-text-row">@Model.CreatTime</div>
+            </div>
+        </div>
+
+    </div>

@@ -17,7 +17,6 @@ namespace Nop.Data.Mapping.Builders.Weixin
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(WQrCodeLimitUserMapping.OpenId)).AsAnsiString(32).NotNullable()
                 .WithColumn(nameof(WQrCodeLimitUserMapping.UserName)).AsString(32).Nullable()
                 .WithColumn(nameof(WQrCodeLimitUserMapping.Description)).AsString(1024).Nullable()
                 .WithColumn(nameof(WQrCodeLimitUserMapping.TelNumber)).AsString(512).Nullable()

@@ -29,9 +29,12 @@ namespace Nop.Data.Mapping.Builders.News
                 .WithColumn(nameof(NewsItem.ViewName)).AsAnsiString(64).Nullable()
                 .WithColumn(nameof(NewsItem.Short)).AsString(int.MaxValue).NotNullable()
                 .WithColumn(nameof(NewsItem.Full)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(NewsItem.MetaKeywords)).AsString(400).Nullable()
-                .WithColumn(nameof(NewsItem.MetaTitle)).AsString(400).Nullable()
-                .WithColumn(nameof(NewsItem.LanguageId)).AsInt32().ForeignKey<Language>();
+                .WithColumn(nameof(NewsItem.MetaKeywords)).AsString(512).Nullable()
+                .WithColumn(nameof(NewsItem.MetaTitle)).AsString(512).Nullable()
+                .WithColumn(nameof(NewsItem.VideoUrl)).AsAnsiString(1024).Nullable()
+                .WithColumn(nameof(NewsItem.LanguageId)).AsInt32().ForeignKey<Language>()
+                .WithColumn(nameof(NewsItem.UpdateOnUtc)).AsDateTime2().Nullable()
+                ;
         }
 
         #endregion

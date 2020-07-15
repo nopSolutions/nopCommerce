@@ -31,6 +31,10 @@ namespace Nop.Core.Domain.News
         /// </summary>
         public string ImageUrl { get; set; }
         /// <summary>
+        /// 视频地址
+        /// </summary>
+        public string VideoUrl { get; set; }
+        /// <summary>
         /// Gets or sets the short text
         /// </summary>
         public string Short { get; set; }
@@ -127,6 +131,11 @@ namespace Nop.Core.Domain.News
         /// 排序
         /// </summary>
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime? UpdateOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of entity creation

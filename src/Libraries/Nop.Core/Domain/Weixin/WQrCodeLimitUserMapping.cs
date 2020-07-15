@@ -1,4 +1,6 @@
-﻿namespace Nop.Core.Domain.Weixin
+﻿using System;
+
+namespace Nop.Core.Domain.Weixin
 {
     /// <summary>
     /// Represents an WQrCodeLimitUserMapping
@@ -8,7 +10,7 @@
         /// <summary>
         /// 绑定到用户的ID
         /// </summary>
-        public string OpenId { get; set; }
+        public int UserId { get; set; }
         /// <summary>
         /// 永久二维码数字ID
         /// </summary>
@@ -32,15 +34,11 @@
         /// <summary>
         /// 绑定用户的过期时间
         /// </summary>
-        public int ExpireTime { get; set; }
+        public DateTime ExpireTime { get; set; }
         /// <summary>
         /// 发布标志
         /// </summary>
         public bool Published { get; set; }
-        /// <summary>
-        /// 删除标志
-        /// </summary>
-        public bool Deleted { get; set; }
 
     }
 }

@@ -16,6 +16,14 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the comment text
         /// </summary>
         public string CommentText { get; set; }
+        /// <summary>
+        /// 回复内容
+        /// </summary>
+        public string ReplyContent { get; set; }
+        /// <summary>
+        /// 回复时间
+        /// </summary>
+        public DateTime? RepliedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the news item identifier
@@ -31,7 +39,10 @@ namespace Nop.Core.Domain.News
         /// Gets or sets a value indicating whether the comment is approved
         /// </summary>
         public bool IsApproved { get; set; }
-
+        /// <summary>
+        /// 是否展现
+        /// </summary>
+        public bool Published { get; set; }
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>

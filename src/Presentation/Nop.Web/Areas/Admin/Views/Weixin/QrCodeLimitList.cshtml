@@ -1,0 +1,151 @@
+﻿@model QrCodeLimitSearchModel
+
+@using Nop.Core.Domain.Weixin;
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Weixin.QrCodeLimits").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("QrCodeLimits");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "QrCodeLimitListPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+    <form asp-controller="Weixin" asp-action="QrCodeLimitList" method="post">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.Weixin.QrCodeLimits")
+            </h1>
+            <div class="pull-right">
+                <a asp-action="QrCodeLimitCreate" class="btn bg-blue">
+                    <i class="fa fa-plus-square"></i>
+                    @T("Admin.Common.AddNew")
+                </a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="form-horizontal">
+                <div class="panel-group">
+                    <div class="panel panel-default panel-search">
+                        <div class="panel-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                            </div>
+
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="WQrCodeCategoryId" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="WQrCodeCategoryId" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="WQrCodeChannelId" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="WQrCodeChannelId" />
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchSysName" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchSysName" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchFixedUse" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchFixedUse" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchHasCreated" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchHasCreated" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7 col-md-offset-5">
+                                        <button type="button" id="search-qrcodelimits" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "qrcodelists-grid",
+                            UrlRead = new DataUrl("QrCodeLimitList", "Weixin", null),
+                            SearchButtonId = "search-qrcodelimits",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchSysName)),
+                                new FilterParameter(nameof(Model.SearchFixedUse), typeof(bool)),
+                                new FilterParameter(nameof(Model.SearchHasCreated), typeof(bool)),
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(QrCodeLimitModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_qrcodelimits"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(QrCodeLimitModel.Id))
+                                {
+                                    Title = T("Admin.Weixin.QrCodeLimits.Fields.Id").Text
+                                },
+                                new ColumnProperty(nameof(QrCodeLimitModel.SysName))
+                                {
+                                    Title = T("Admin.Weixin.QrCodeLimits.Fields.SysName").Text
+                                },
+                                new ColumnProperty(nameof(QrCodeLimitModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("QrCodeLimitEdit"))
+                                }
+                            }
+                        })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

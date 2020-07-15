@@ -58,7 +58,9 @@
         public static string CustomerAttributeValueDetailsTop => "admin_customer_attribute_value_details_top";
         public static string CustomerDetailsBlock => "admin_customer_details_block";
         public static string CustomerDetailsButtons => "admin_customer_details_buttons";
+        public static string UserDetailsButtons => "admin_weixin_user_details_buttons";
         public static string CustomerListButtons => "admin_customer_list_buttons";
+        public static string WeixinUserListButtons => "admin_weixin_user_list_buttons";
         public static string CustomerRoleDetailsBottom => "admin_customer_role_details_bottom";
         public static string CustomerRoleDetailsButtons => "admin_customer_role_details_buttons";
         public static string CustomerRoleDetailsTop => "admin_customer_role_details_top";
@@ -139,6 +141,8 @@
         public static string NewsLetterSubscriptionListButtons => "admin_newsletter_subscription_list_buttons";
         public static string NewsListButtons => "admin_news_list_buttons";
         public static string NewsSettingsButtons => "admin_news_settings_buttons";
+        public static string WeixinSettingsButtons => "admin_weixin_settings_buttons";
+
         public static string OnlineCustomerListButtons => "admin_online_customer_list_buttons";
         public static string OrderAddressDetailsBottom => "admin_order_address_details_bottom";
         public static string OrderAddressDetailsButtons => "admin_order_address_details_buttons";
