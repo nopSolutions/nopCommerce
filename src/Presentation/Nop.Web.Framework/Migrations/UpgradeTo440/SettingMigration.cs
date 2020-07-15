@@ -6,7 +6,7 @@ using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration(MigrationType.Settings)]
+    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Settings)]
     [SkipMigrationOnInstall]
     public class SettingMigration: MigrationBase
     {
@@ -20,10 +20,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
             //use settingService to add, update and delete settings
-
-            #if DEBUG
-            throw new PreventFixMigrationException();
-            #endif
         }
 
         public override void Down()

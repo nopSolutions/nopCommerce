@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -7,7 +6,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo440
 {
-    [NopMigration(MigrationType.Localization)]
+    [NopMigration("2020-06-10 00:00:00", "4.40.0", UpdateMigrationType.Localization)]
     [SkipMigrationOnInstall]
     public class LocalizationMigration : MigrationBase
     { 
@@ -21,10 +20,6 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            
-            #if DEBUG
-            throw new PreventFixMigrationException();
-            #endif
         }
 
         /// <summary>Collects the DOWN migration expressions</summary>

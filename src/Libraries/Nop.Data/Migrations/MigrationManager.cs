@@ -46,7 +46,7 @@ namespace Nop.Data.Migrations
             ITypeFinder typeFinder,
             IVersionLoader versionLoader)
         {
-            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
+            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>
             {
                 [typeof(int)] = c => c.AsInt32(),
                 [typeof(long)] = c => c.AsInt64(),
@@ -188,14 +188,7 @@ namespace Nop.Data.Migrations
             }
 
             foreach (var migrationInfo in migrations.Where(needToExecute))
-                try
-                {
                     _migrationRunner.MigrateUp(migrationInfo.Version);
-                }
-                catch (PreventFixMigrationException)
-                {
-                    //ignore
-                }
         }
 
         /// <summary>

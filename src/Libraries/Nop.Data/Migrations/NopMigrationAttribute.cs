@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using FluentMigrator;
-using Nop.Core;
 
 namespace Nop.Data.Migrations
 {
@@ -10,25 +9,19 @@ namespace Nop.Data.Migrations
     /// </summary>
     public partial class NopMigrationAttribute : MigrationAttribute
     {
-        private static readonly string[] _dateFormats = { "yyyy-MM-dd HH:mm:ss", "yyyy.MM.dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss:fffffff", "yyyy.MM.dd HH:mm:ss:fffffff", "yyyy/MM/dd HH:mm:ss:fffffff" };
-
-        private static string GetDescription(MigrationType migrationType)
+        private static long GetVersion(string dateTime)
         {
-            return $"nopCommerce version {NopVersion.FULL_VERSION}. Update {migrationType.ToString()}";
+            return DateTime.ParseExact(dateTime, NopMigrationDefaults.DateFormats, CultureInfo.InvariantCulture).Ticks;
+        }
+
+        private static long GetVersion(string dateTime, UpdateMigrationType migrationType)
+        {
+            return GetVersion(dateTime) + (int)migrationType;
         }
         
-        private static long GetVersion(string dateTime = null)
+        private static string GetDescription(string nopVersion, UpdateMigrationType migrationType)
         {
-            if (!string.IsNullOrEmpty(dateTime))
-                return DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks;
-
-            var date = $"{NopVersion.VERSION_STARTED_ON} 00:00:00";
-
-            #if DEBUG
-            date = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss");
-            #endif
-
-            return GetVersion(date);
+            return string.Format(NopMigrationDefaults.UpdateMigrationDescription, nopVersion, migrationType.ToString());
         }
 
         /// <summary>
@@ -53,9 +46,11 @@ namespace Nop.Data.Migrations
         /// <summary>
         /// Initializes a new instance of the NopMigrationAttribute class
         /// </summary>
+        /// <param name="dateTime">The migration date time string to convert on version</param>
+        /// <param name="nopVersion">nopCommerce full version</param>
         /// <param name="migrationType">The migration type</param>
-        public NopMigrationAttribute(MigrationType migrationType) :
-            base(GetVersion() + (int)migrationType, GetDescription(migrationType))
+        public NopMigrationAttribute(string dateTime, string nopVersion, UpdateMigrationType migrationType) :
+            base(GetVersion(dateTime, migrationType), GetDescription(nopVersion, migrationType))
         {
         }
     }
