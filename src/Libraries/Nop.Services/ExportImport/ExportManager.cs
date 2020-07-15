@@ -1339,16 +1339,16 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("ProductTags", GetProductTags, IgnoreExportProductProperty(p => p.ProductTags)),
                 new PropertyByName<Product>("IsLimitedToStores", p => p.LimitedToStores, IgnoreExportLimitedToStore()),
                 new PropertyByName<Product>("LimitedToStores", GetLimitedToStores, IgnoreExportLimitedToStore()),
-                new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
-                new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
-                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2]),
-                new PropertyByName<Product>("Picture4", p => GetPictures(p)[3]),
-                new PropertyByName<Product>("Picture5", p => GetPictures(p)[4]),
-                new PropertyByName<Product>("Picture6", p => GetPictures(p)[5]),
-                new PropertyByName<Product>("Picture7", p => GetPictures(p)[6]),
-                new PropertyByName<Product>("Picture8", p => GetPictures(p)[7]),
-                new PropertyByName<Product>("Picture9", p => GetPictures(p)[8]),
-                new PropertyByName<Product>("Picture10", p => GetPictures(p)[9])
+                new PropertyByName<Product>("Picture1", p => GetPicture(p, 0)),
+                new PropertyByName<Product>("Picture2", p => GetPicture(p, 1)),
+                new PropertyByName<Product>("Picture3", p => GetPicture(p, 2)),
+                new PropertyByName<Product>("Picture4", p => GetPicture(p, 3)),
+                new PropertyByName<Product>("Picture5", p => GetPicture(p, 4)),
+                new PropertyByName<Product>("Picture6", p => GetPicture(p, 5)),
+                new PropertyByName<Product>("Picture7",p => GetPicture(p, 6)),
+                new PropertyByName<Product>("Picture8", p => GetPicture(p, 7)),
+                new PropertyByName<Product>("Picture9", p => GetPicture(p, 8)),
+                new PropertyByName<Product>("Picture10", p => GetPicture(p, 9))
 
             };
 
