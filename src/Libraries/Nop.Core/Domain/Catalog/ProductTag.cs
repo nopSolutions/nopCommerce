@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public string Name { get; set; }
         //product tag seo update by Lancelot
-        public string MetaKeywords { get; set; }
-        public string MetaDescription { get; set; }
+        public string? MetaKeywords { get; set; }
+        public string? MetaDescription { get; set; }
     }
 }
