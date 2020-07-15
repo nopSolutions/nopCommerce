@@ -81,7 +81,7 @@
         function renderColumnOrderInfo(data, type, row, meta) {
             if (row.OrderId > 0) {
                 var textRenderer = $.fn.dataTable.render.text().display;
-                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View")</a>';
+                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View").Text</a>';
             } else {
                 return 'order item is deleted';
             }

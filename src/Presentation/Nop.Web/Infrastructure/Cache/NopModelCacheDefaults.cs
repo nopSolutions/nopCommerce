@@ -304,7 +304,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for widget info
         /// </summary>
         /// <remarks>
-        /// {0} : current customer ID
+        /// {0} : current customer role IDs hash
         /// {1} : current store ID
         /// {2} : widget zone
         /// {3} : current theme name

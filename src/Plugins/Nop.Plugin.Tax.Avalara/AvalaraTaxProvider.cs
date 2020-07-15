@@ -185,7 +185,7 @@ namespace Nop.Plugin.Tax.Avalara
             }
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Create"] = "Create request",
                 ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.CreateResponse"] = "Create response",
@@ -292,8 +292,8 @@ namespace Nop.Plugin.Tax.Avalara
             _settingService.DeleteSetting<AvalaraTaxSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Tax.Avalara.Domain");
-            _localizationService.DeletePluginLocaleResources("Plugins.Tax.Avalara");
+            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Tax.Avalara.Domain");
+            _localizationService.DeleteLocaleResources("Plugins.Tax.Avalara");
 
             base.Uninstall();
         }

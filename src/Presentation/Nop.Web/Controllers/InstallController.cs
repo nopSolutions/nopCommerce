@@ -58,9 +58,17 @@ namespace Nop.Web.Controllers
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
-                DataProvider = DataProviderType.SqlServer,
-                AvailableDataProviders = _locService.GetAvailableProviderTypes()?.ToList()
+                DataProvider = DataProviderType.SqlServer
             };
+
+            model.AvailableDataProviders.AddRange(
+                _locService.GetAvailableProviderTypes()
+                .OrderBy(v => v.Value)
+                .Select(pt => new SelectListItem
+                {
+                    Value = pt.Key.ToString(),
+                    Text = pt.Value
+                }));
 
             foreach (var lang in _locService.GetAvailableLanguages())
             {
@@ -91,9 +99,16 @@ namespace Nop.Web.Controllers
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code
                 });
-
-                model.AvailableDataProviders = _locService.GetAvailableProviderTypes()?.ToList();
             }
+
+            model.AvailableDataProviders.AddRange(
+                _locService.GetAvailableProviderTypes()
+                    .OrderBy(v => v.Value)
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.Key.ToString(),
+                        Text = pt.Value
+                    }));
 
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
@@ -154,7 +169,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //check whether database exists
-                    if (!dataProvider.IsDatabaseExists())
+                    if (!dataProvider.DatabaseExists())
                         throw new Exception(_locService.GetResource("DatabaseNotExists"));
                 }
 
@@ -206,11 +221,7 @@ namespace Nop.Web.Controllers
                 }
                 catch { }
 
-                //restart application
-                webHelper.RestartAppDomain();
-
-                //Redirect to home page
-                return RedirectToRoute("Homepage");
+                return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
             }
             catch (Exception exception)
@@ -248,12 +259,18 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("Homepage");
 
-            //restart application
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            webHelper.RestartAppDomain();
+            return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
+        }
 
-            //Redirect to home page
-            return RedirectToRoute("Homepage");
+        public virtual IActionResult RestartApplication()
+        {
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
+
+            //restart application
+            EngineContext.Current.Resolve<IWebHelper>().RestartAppDomain();
+
+            return new EmptyResult();
         }
 
         #endregion

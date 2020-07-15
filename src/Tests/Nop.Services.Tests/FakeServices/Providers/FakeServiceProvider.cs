@@ -22,12 +22,8 @@ namespace Nop.Services.Tests.FakeServices.Providers
 
         public override object GetService(Type serviceType)
         {
-            var service = base.GetService(serviceType);
-
-            if (service is null)
-                return _services.FirstOrDefault(t => serviceType.IsAssignableFrom(t.type)).service;
-
-            return service;
+            return _services.FirstOrDefault(t => serviceType.IsAssignableFrom(t.type)).service
+                ?? base.GetService(serviceType);
         }
     }
 }

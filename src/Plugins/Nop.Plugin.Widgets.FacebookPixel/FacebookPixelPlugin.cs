@@ -88,7 +88,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// </summary>
         public override void Install()
         {
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
@@ -147,7 +147,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);
             _settingService.SaveSetting(_widgetSettings);
 
-            _localizationService.DeletePluginLocaleResources("Plugins.Widgets.FacebookPixel");
+            _localizationService.DeleteLocaleResources("Plugins.Widgets.FacebookPixel");
 
             base.Uninstall();
         }

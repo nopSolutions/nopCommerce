@@ -45,9 +45,6 @@ namespace Nop.Web.Framework.Models
 
         #region Properties
 
-        //There is a bug with a complex model binding in ASP.NET Core, it'll be fixed for further .NET Core  3.0 release (https://github.com/aspnet/AspNetCore/pull/6793). 
-        //At now we just add a workaround and remove Form from base model 
-        //TODO: uncomment after updating to NET Core 3.0
         ////MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add it to the model
         //[XmlIgnore]
         //public IFormCollection Form { get; set; }

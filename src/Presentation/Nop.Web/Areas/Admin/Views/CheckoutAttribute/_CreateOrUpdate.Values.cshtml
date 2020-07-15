@@ -3,7 +3,6 @@
 @if (Model.Id > 0)
 {
     <div class="panel-body">
-        @*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type'*@
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "checkoutattributevalues-grid",
@@ -87,6 +86,6 @@ else
 
 <script>
     function renderColumnEdit(data, type, row, meta) {
-        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=checkoutattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+        return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=checkoutattribute-form\', 800, 400, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
     }
 </script>

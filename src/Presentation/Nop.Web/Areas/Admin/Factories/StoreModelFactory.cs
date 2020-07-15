@@ -104,7 +104,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, defaultItemText: _localizationService.GetResource("Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText"));
+            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, 
+                defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
 
             //prepare localized models
             if (!excludeProperties)

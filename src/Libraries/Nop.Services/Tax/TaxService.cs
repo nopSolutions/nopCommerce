@@ -130,8 +130,6 @@ namespace Nop.Services.Tax
             if (customerVatStatus == VatNumberStatus.Valid)
                 return false;
 
-            //TODO: use specified company name? (both address and registration one)
-
             //consumer
             return true;
         }

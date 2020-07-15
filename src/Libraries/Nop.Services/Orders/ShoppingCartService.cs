@@ -434,10 +434,11 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
+        /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string attributesXml, decimal customerEnteredPrice,
-            int quantity)
+        public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product, 
+            string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -556,6 +557,50 @@ namespace Nop.Services.Orders
                                 }
                                 else
                                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                            }
+
+                            if (warnings.Any())
+                                return warnings;
+
+                            //validate product quantity with non combinable product attributes
+                            var productAttributeMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                            if (productAttributeMappings?.Any() == true)
+                            {
+                                var onlyCombinableAttributes = productAttributeMappings.All(mapping => !mapping.IsNonCombinable());
+                                if (!onlyCombinableAttributes)
+                                {
+                                    var cart = GetShoppingCart(customer, shoppingCartType, storeId);
+                                    var totalAddedQuantity = cart
+                                        .Where(item => item.ProductId == product.Id)
+                                        .Sum(product => product.Quantity);
+
+                                    var alreadyExistedItem = cart.FirstOrDefault(item => item.Id == shoppingCartItemId);
+                                    if (alreadyExistedItem == null)
+                                    {
+                                        //it's new item
+                                        totalAddedQuantity += quantity;
+                                    }
+                                    else
+                                    {
+                                        //it's existing item, then add to total the added quantity only
+                                        if (quantity > alreadyExistedItem.Quantity)
+                                            totalAddedQuantity += quantity - alreadyExistedItem.Quantity;
+                                    }
+
+                                    if (maximumQuantityCanBeAdded < totalAddedQuantity)
+                                    {
+                                        if (maximumQuantityCanBeAdded <= 0)
+                                        {
+                                            var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                            var warning = productAvailabilityRange == null ? _localizationService.GetResource("ShoppingCart.OutOfStock")
+                                                : string.Format(_localizationService.GetResource("ShoppingCart.AvailabilityRange"),
+                                                    _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                                            warnings.Add(warning);
+                                        }
+                                        else
+                                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                    }
+                                }
                             }
                         }
 
@@ -1009,7 +1054,7 @@ namespace Nop.Services.Orders
 
             //standard properties
             if (getStandardWarnings)
-                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity));
+                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity, shoppingCartItemId, storeId));
 
             //selected attributes
             if (getAttributesWarnings)

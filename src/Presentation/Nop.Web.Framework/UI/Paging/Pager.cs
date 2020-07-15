@@ -472,7 +472,6 @@ namespace Nop.Web.Framework.UI.Paging
             var parametersWithEmptyValues = new List<string>();
 			foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
 			{
-			    //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
                 var value = viewContext.HttpContext.Request.Query[key].ToString();
                 if (renderEmptyParameters && string.IsNullOrEmpty(value))
 			    {

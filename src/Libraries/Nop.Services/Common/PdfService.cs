@@ -982,13 +982,12 @@ namespace Nop.Services.Common
                             new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
                     }
                     //custom attributes
-                    var customShippingAddressAttributes =
-                        _addressAttributeFormatter.FormatAttributes(shippingAddress.CustomAttributes);
+                    var customShippingAddressAttributes = _addressAttributeFormatter
+                        .FormatAttributes(shippingAddress.CustomAttributes, $"<br />{indent}");
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
-                        //TODO: we should add padding to each line (in case if we have several custom address attributes)
-                        shippingAddressPdf.AddCell(new Paragraph(
-                            indent + HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
+                        var text = HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
+                        shippingAddressPdf.AddCell(new Paragraph(indent + text, font));
                     }
 
                     shippingAddressPdf.AddCell(new Paragraph(" "));
@@ -1084,13 +1083,12 @@ namespace Nop.Services.Common
                 billingAddressPdf.AddCell(GetParagraph("PDFInvoice.VATNumber", indent, lang, font, order.VatNumber));
 
             //custom attributes
-            var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes(billingAddress.CustomAttributes);
-
+            var customBillingAddressAttributes = _addressAttributeFormatter
+                .FormatAttributes(billingAddress.CustomAttributes, $"<br />{indent}");
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
-                //TODO: we should add padding to each line (in case if we have several custom address attributes)
-                billingAddressPdf.AddCell(
-                    new Paragraph(indent + HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true), font));
+                var text = HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
+                billingAddressPdf.AddCell(new Paragraph(indent + text, font));
             }
 
             //vendors payment details

@@ -419,7 +419,7 @@ namespace Nop.Services.Catalog
 
             //insert
             _productRepository.Insert(product);
-            
+
             //event notification
             _eventPublisher.EntityInserted(product);
         }
@@ -435,7 +435,7 @@ namespace Nop.Services.Catalog
 
             //update
             _productRepository.Update(product);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(product);
         }
@@ -451,7 +451,7 @@ namespace Nop.Services.Catalog
 
             //update
             _productRepository.Update(products);
-            
+
             //event notification
             foreach (var product in products)
             {
@@ -777,7 +777,7 @@ namespace Nop.Services.Catalog
             }
             //return products
             var totalRecords = pTotalRecords.Value != DBNull.Value ? Convert.ToInt32(pTotalRecords.Value) : 0;
-            
+
             return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
         }
 
@@ -943,7 +943,7 @@ namespace Nop.Services.Catalog
                 join p in _productRepository.Table on pac.ProductId equals p.Id
                 where
                     //filter by combinations with stock quantity less than the minimum
-                    pac.StockQuantity < pac.NotifyAdminForQuantityBelow  &&
+                    pac.StockQuantity < pac.NotifyAdminForQuantityBelow &&
                     //filter by products with tracking inventory by attributes
                     p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                     //ignore deleted products
@@ -1077,6 +1077,8 @@ namespace Nop.Services.Catalog
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
+
+            dateTime ??= DateTime.UtcNow;
 
             if (product.AvailableStartDateTimeUtc.HasValue && product.AvailableStartDateTimeUtc.Value > dateTime)
                 return false;
@@ -1500,19 +1502,6 @@ namespace Nop.Services.Catalog
                     AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
                 }
             }
-
-            //TODO send back in stock notifications?
-            //also do not forget to uncomment some code above ("prevStockQuantity")
-            //if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-            //    product.BackorderMode == BackorderMode.NoBackorders &&
-            //    product.AllowBackInStockSubscriptions &&
-            //    product.GetTotalStockQuantity() > 0 &&
-            //    prevStockQuantity <= 0 &&
-            //    product.Published &&
-            //    !product.Deleted)
-            //{
-            //    //_backInStockSubscriptionService.SendNotificationsToSubscribers(product);
-            //}
         }
 
         /// <summary>
@@ -1555,7 +1544,7 @@ namespace Nop.Services.Catalog
                 pwi.ReservedQuantity += qty;
             }
 
-            UpdateProduct(product);
+            UpdateProductWarehouseInventory(productInventory);
         }
 
         /// <summary>
@@ -1580,6 +1569,8 @@ namespace Nop.Services.Catalog
 
             var selectQty = Math.Min(productInventory.StockQuantity - productInventory.ReservedQuantity, quantity);
             productInventory.ReservedQuantity += selectQty;
+
+            UpdateProductWarehouseInventory(productInventory);
 
             //remove from reserve in other warehouses what has just been reserved in the current warehouse to equalize the total
             var productAnotherInventories = _productWarehouseInventoryRepository.Table
@@ -1606,7 +1597,7 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            UpdateProduct(product);
+            UpdateProductWarehouseInventory(productAnotherInventories);
         }
 
         /// <summary>
@@ -1681,8 +1672,6 @@ namespace Nop.Services.Catalog
 
             //quantity change history
             AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message);
-
-            //TODO add support for bundled products (AttributesXml)
         }
 
         /// <summary>
@@ -1707,7 +1696,7 @@ namespace Nop.Services.Catalog
             var pwi = _productWarehouseInventoryRepository.Table.FirstOrDefault(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
             if (pwi == null)
                 return 0;
-            
+
             var shipment = _shipmentRepository.ToCachedGetById(shipmentItem.ShipmentId);
 
             //not shipped yet? hence "BookReservedInventory" method was not invoked
@@ -1723,8 +1712,6 @@ namespace Nop.Services.Catalog
 
             //quantity change history
             AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message);
-
-            //TODO add support for bundled products (AttributesXml)
 
             return qty;
         }
@@ -2006,22 +1993,13 @@ namespace Nop.Services.Catalog
                 return null;
 
             //get actual tier prices
-            var actualTierPrices = GetTierPricesByProduct(product.Id).OrderBy(price => price.Quantity)
+            return GetTierPricesByProduct(product.Id)
+                .OrderBy(price => price.Quantity)
                 .FilterByStore(storeId)
+                .FilterByCustomerRole(_catalogSettings.IgnoreAcl ? Array.Empty<int>() : _customerService.GetCustomerRoleIds(customer))
                 .FilterByDate()
-                .RemoveDuplicatedQuantities();
-
-            if (!_catalogSettings.IgnoreAcl)
-            {
-                var customerRoleIds = _customerService.GetCustomerRoleIds(customer);
-
-                actualTierPrices = actualTierPrices.Where(tierPrice =>
-                   !tierPrice.CustomerRoleId.HasValue ||
-                   tierPrice.CustomerRoleId.Value == 0 ||
-                   customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
-            }
-
-            return actualTierPrices.ToList();
+                .RemoveDuplicatedQuantities()
+                .ToList();
         }
 
         /// <summary>
@@ -2044,7 +2022,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Delete(tierPrice);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
         }
@@ -2072,7 +2050,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Insert(tierPrice);
-            
+
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
         }
@@ -2087,7 +2065,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Update(tierPrice);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);
         }
@@ -2273,7 +2251,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(pr => pr.StoreId == storeId);
             if (productId > 0)
                 query = query.Where(pr => pr.ProductId == productId);
-            
+
             query = from productReview in query
                 join product in _productRepository.Table on productReview.ProductId equals product.Id
                 where
@@ -2469,7 +2447,7 @@ namespace Nop.Services.Catalog
 
             //update
             _productReviewRepository.Update(productReview);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(productReview);
         }
@@ -2541,7 +2519,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(pwi));
 
             _productWarehouseInventoryRepository.Delete(pwi);
-            
+
             _eventPublisher.EntityDeleted(pwi);
         }
 
@@ -2689,9 +2667,9 @@ namespace Nop.Services.Catalog
                 _eventPublisher.EntityDeleted(pdcm.dcm);
 
                 //update "HasDiscountsApplied" property
-                UpdateHasDiscountsApplied(pdcm.product);                    
-            }   
-        }        
+                UpdateHasDiscountsApplied(pdcm.product);
+            }
+        }
 
         /// <summary>
         /// Get a discount-product mapping records by product identifier

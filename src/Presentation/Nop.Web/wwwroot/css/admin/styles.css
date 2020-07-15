@@ -656,6 +656,10 @@ td.k-state-focused.k-state-selected {
 .k-window-titlebar {
     height: 2em;
 }
+.table th .checkbox {
+  min-height: 0;
+  padding-top: 0;
+}
 
 /*GRID FOOTER*/
 .k-pager-numbers .k-link {

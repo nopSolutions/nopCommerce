@@ -177,34 +177,34 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
+        void AddOrUpdateLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
 
         /// <summary>
         /// Add locale resources
         /// </summary>
         /// <param name="resources">Resource name-value pairs</param>
         /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
-        void AddPluginLocaleResource(IDictionary<string, string> resources, int? languageId = null);
+        void AddLocaleResource(IDictionary<string, string> resources, int? languageId = null);
 
         /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
-        void DeletePluginLocaleResource(string resourceName);
+        void DeleteLocaleResource(string resourceName);
 
         /// <summary>
         /// Delete locale resources
         /// </summary>
         /// <param name="resourceNames">Resource names</param>
         /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
-        void DeletePluginLocaleResources(IList<string> resourceNames, int? languageId = null);
+        void DeleteLocaleResources(IList<string> resourceNames, int? languageId = null);
 
         /// <summary>
         /// Delete locale resources by the passed name prefix
         /// </summary>
         /// <param name="resourceNamePrefix">Resource name prefix</param>
         /// <param name="languageId">Language identifier; pass null to delete resources by prefix from all languages</param>
-        void DeletePluginLocaleResources(string resourceNamePrefix, int? languageId = null);
+        void DeleteLocaleResources(string resourceNamePrefix, int? languageId = null);
 
         /// <summary>
         /// Get localized friendly name of a plugin

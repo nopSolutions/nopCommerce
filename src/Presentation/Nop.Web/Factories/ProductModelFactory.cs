@@ -12,6 +12,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Caching;
 using Nop.Services.Catalog;
@@ -66,6 +67,7 @@ namespace Nop.Web.Factories
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly ITaxService _taxService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -74,6 +76,7 @@ namespace Nop.Web.Factories
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
+        private readonly ShippingSettings _shippingSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -106,6 +109,7 @@ namespace Nop.Web.Factories
             ISpecificationAttributeService specificationAttributeService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IShoppingCartModelFactory shoppingCartModelFactory,
             ITaxService taxService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
@@ -114,6 +118,7 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
             SeoSettings seoSettings,
+            ShippingSettings shippingSettings,
             VendorSettings vendorSettings)
         {
             _captchaSettings = captchaSettings;
@@ -142,6 +147,7 @@ namespace Nop.Web.Factories
             _specificationAttributeService = specificationAttributeService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
             _taxService = taxService;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
@@ -150,6 +156,7 @@ namespace Nop.Web.Factories
             _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
             _seoSettings = seoSettings;
+            _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
         }
 
@@ -1318,6 +1325,31 @@ namespace Nop.Web.Factories
                     model.RentalEndDate = updatecartitem.RentalEndDateUtc;
                 }
             }
+
+            //estimate shipping
+            if (_shippingSettings.EstimateShippingProductPageEnabled && !model.IsFreeShipping)
+            {
+                var wrappedProduct = new ShoppingCartItem()
+                {
+                    StoreId = _storeContext.CurrentStore.Id,
+                    ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    ProductId = product.Id,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+
+                var estimateShippingModel = _shoppingCartModelFactory.PrepareEstimateShippingModel(new[] { wrappedProduct });
+
+                model.ProductEstimateShipping.ProductId = product.Id;
+                model.ProductEstimateShipping.Enabled = estimateShippingModel.Enabled;
+                model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
+                model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
+                model.ProductEstimateShipping.ZipPostalCode = estimateShippingModel.ZipPostalCode;
+                model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
+                model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
+            }
+            else
+                model.ProductEstimateShipping.Enabled = false;
 
             //associated products
             if (product.ProductType == ProductType.GroupedProduct)

@@ -125,7 +125,7 @@ namespace Nop.Data
         /// <param name="triesToConnect"></param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            if (IsDatabaseExists())
+            if (DatabaseExists())
                 return;
 
             var builder = GetConnectionStringBuilder();
@@ -162,7 +162,7 @@ namespace Nop.Data
                 if (i == triesToConnect)
                     throw new Exception("Unable to connect to the new database. Please try one more time");
 
-                if (!IsDatabaseExists())
+                if (!DatabaseExists())
                     Thread.Sleep(1000);
                 else
                     break;
@@ -173,7 +173,7 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool IsDatabaseExists()
+        public bool DatabaseExists()
         {
             try
             {
@@ -336,11 +336,10 @@ namespace Nop.Data
         /// </summary>
         /// <param name="targetTable">Target table name</param>
         /// <param name="targetColumn">Target column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of an index</returns>
-        public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
+        public virtual string GetIndexName(string targetTable, string targetColumn)
         {
-            return $"IX_{Guid.NewGuid():D}";
+            return "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
         }
 
         #endregion

@@ -84,7 +84,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             };
             _settingService.SaveSetting(settings);
 
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.NivoSlider.Picture1"] = "Picture 1",
                 ["Plugins.Widgets.NivoSlider.Picture2"] = "Picture 2",
@@ -113,7 +113,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             _settingService.DeleteSetting<NivoSliderSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Widgets.NivoSlider");
+            _localizationService.DeleteLocaleResources("Plugins.Widgets.NivoSlider");
 
             base.Uninstall();
         }

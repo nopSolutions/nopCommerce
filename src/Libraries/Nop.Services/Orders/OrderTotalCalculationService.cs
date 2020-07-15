@@ -464,7 +464,7 @@ namespace Nop.Services.Orders
                         if (updateOrderParameters.PickupPoint == null)
                         {
                             //or try to get the cheapest shipping option for the shipping to the customer address 
-                            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins();
                             if (shippingRateComputationMethods.Any())
                             {
                                 var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);
@@ -971,9 +971,10 @@ namespace Nop.Services.Orders
         /// <param name="shippingRate">Shipping rate to adjust</param>
         /// <param name="cart">Cart</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="applyToPickupInStore">Adjust shipping rate to pickup in store shipping option rate</param>
         /// <returns>Adjusted shipping rate</returns>
-        public virtual decimal AdjustShippingRate(decimal shippingRate,
-            IList<ShoppingCartItem> cart, out List<Discount> appliedDiscounts)
+        public virtual decimal AdjustShippingRate(decimal shippingRate, IList<ShoppingCartItem> cart, 
+            out List<Discount> appliedDiscounts, bool applyToPickupInStore = false)
         {
             appliedDiscounts = new List<Discount>();
 
@@ -989,7 +990,7 @@ namespace Nop.Services.Orders
 
             var adjustedRate = shippingRate;
 
-            if (!_shippingSettings.AllowPickupInStore || pickupPoint == null || !_shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore)
+            if (!(applyToPickupInStore && _shippingSettings.AllowPickupInStore && _shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore))
             {
                 adjustedRate += GetShoppingCartAdditionalShippingCharge(cart);
             }
@@ -1067,7 +1068,7 @@ namespace Nop.Services.Orders
             if (shippingOption != null)
             {
                 //use last shipping option (get from cache)
-                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscounts);
+                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscounts, shippingOption.IsPickupInStore);
             }
             else
             {

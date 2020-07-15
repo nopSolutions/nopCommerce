@@ -464,7 +464,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var pluginDescriptor = item.PluginDescriptor;
 
                         //ensure that plugin is compatible with the current version
-                        if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                        if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CURRENT_VERSION, StringComparer.InvariantCultureIgnoreCase))
                         {
                             incompatiblePlugins.Add(pluginDescriptor.SystemName);
                             continue;

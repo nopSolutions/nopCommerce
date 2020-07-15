@@ -46,10 +46,10 @@ namespace Nop.Services.Orders
         /// <param name="shippingRate">Shipping rate to adjust</param>
         /// <param name="cart">Cart</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="applyToPickupInStore">Adjust shipping rate to pickup point rate</param>
         /// <returns>Adjusted shipping rate</returns>
-        decimal AdjustShippingRate(decimal shippingRate,
-            IList<ShoppingCartItem> cart, out List<Discount> appliedDiscounts);
-
+        decimal AdjustShippingRate(decimal shippingRate, IList<ShoppingCartItem> cart, out List<Discount> appliedDiscounts, bool applyToPickupInStore = false);
+        
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>

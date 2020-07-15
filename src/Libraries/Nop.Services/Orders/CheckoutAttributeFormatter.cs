@@ -118,7 +118,6 @@ namespace Nop.Services.Orders
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                                 string attributeText;
                                 var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
                                 //encode (if required)

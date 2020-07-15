@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Sử dụng tài khoản SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Sử dụng lưu trữ dữ liệu tích hợp (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>Mật khẩu SQL</Value>
   </LocaleResource>

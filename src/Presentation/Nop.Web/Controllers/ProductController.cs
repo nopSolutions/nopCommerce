@@ -197,17 +197,12 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult EstimateShipping([FromQuery] ProductEstimateShippingModel model, IFormCollection form)
+        public virtual IActionResult EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
-                return BadRequest();
-            
-            var product = _productService.GetProductById(model.ProductId);
-            if (product == null || product.Deleted || !product.Published)
-                return NotFound();
+                model = new ProductDetailsModel.ProductEstimateShippingModel();
 
             var errors = new List<string>();
-
             if (string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
@@ -215,7 +210,21 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return BadRequest(new { Errors = errors });
+                return Json(new { 
+                    success = false,
+                    errors = errors
+                });
+            
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null || product.Deleted)
+            {
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShippingPopUp.Product.IsNotFound"));
+                return Json(new
+                {
+                    success = false,
+                    errors = errors
+                });
+            }
 
             var wrappedProduct = new ShoppingCartItem()
             {
@@ -227,7 +236,6 @@ namespace Nop.Web.Controllers
             };
 
             var addToCartWarnings = new List<string>();
-
             //customer entered price
             wrappedProduct.CustomerEnteredPrice = _productAttributeParser.ParseCustomerEnteredPrice(product, form);
 
@@ -242,9 +250,13 @@ namespace Nop.Web.Controllers
             wrappedProduct.RentalStartDateUtc = rentalStartDate;
             wrappedProduct.RentalEndDateUtc = rentalEndDate;
 
-            var modelResult = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode);
+            var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
 
-            return Json(modelResult);
+            return Json(new
+            {
+                success = true,
+                result = result
+            });
         }
 
         #endregion

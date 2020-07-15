@@ -762,6 +762,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductTags = string.Join(", ", _productTagService.GetAllProductTagsByProductId(product.Id).Select(tag => tag.Name));
                 model.ProductAttributesExist = _productAttributeService.GetAllProductAttributes().Any();
 
+                model.CanCreateCombinations = _productAttributeService
+                    .GetProductAttributeMappingsByProductId(product.Id).Any(pam => _productAttributeService.GetProductAttributeValues(pam.Id).Any());
+
                 if (!excludeProperties)
                 {
                     model.SelectedCategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true)

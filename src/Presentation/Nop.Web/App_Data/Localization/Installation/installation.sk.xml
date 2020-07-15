@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Použiť účet SQL Serveru</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Použiť vstavanú databázu (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL - heslo</Value>
   </LocaleResource>
