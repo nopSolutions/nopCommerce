@@ -28,7 +28,6 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
@@ -42,7 +41,6 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Ctor
 
         public AvalaraTaxController(AvalaraTaxManager avalaraTaxManager,
-            ICacheKeyService cacheKeyService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
@@ -60,7 +58,6 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 taxSettings)
         {
             _avalaraTaxManager = avalaraTaxManager;
-            _cacheKeyService = cacheKeyService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
@@ -89,7 +86,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             //prepare model
             var model = new Models.Tax.TaxCategorySearchModel();
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
+            var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
             var taxCodeTypes = _cacheManager.Get(cacheKey, () => _avalaraTaxManager.GetTaxCodeTypes());
             if (taxCodeTypes != null)
                 model.AvailableTypes = taxCodeTypes.Select(type => new SelectListItem(type.Value, type.Key)).ToList();
@@ -113,7 +110,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //get tax types and define the default value
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
+            var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
             var taxTypes = _cacheManager.Get(cacheKey, () => _avalaraTaxManager.GetTaxCodeTypes())
                 ?.Select(taxType => new { Id = taxType.Key, Name = taxType.Value });
             var defaultType = taxTypes

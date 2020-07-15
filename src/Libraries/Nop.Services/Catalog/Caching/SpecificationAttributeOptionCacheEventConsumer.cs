@@ -15,7 +15,7 @@ namespace Nop.Services.Catalog.Caching
         protected override void ClearCache(SpecificationAttributeOption entity)
         {
             Remove(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
-            Remove(_cacheKeyService.PrepareKey(NopCatalogDefaults.SpecAttributesOptionsCacheKey, entity.SpecificationAttributeId));
+            Remove(_staticCacheManager.PrepareKey(NopCatalogDefaults.SpecAttributesOptionsCacheKey, entity.SpecificationAttributeId));
 
             RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdsPrefixCacheKey);
         }

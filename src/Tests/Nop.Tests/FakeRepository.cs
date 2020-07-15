@@ -86,13 +86,13 @@ namespace Nop.Tests
         {
             Setup(r => r.Table).Returns(_table.AsQueryable());
 
-            Setup(r => r.Insert(It.IsAny<T>())).Callback((T value) => Insert(value));
-            Setup(r => r.Insert(It.IsAny<IEnumerable<T>>())).Callback((IEnumerable<T> values) => Insert(values.ToList()));
+            Setup(r => r.Insert(It.IsAny<T>(), It.IsAny<bool>())).Callback((T value, bool publishEvent) => Insert(value));
+            Setup(r => r.Insert(It.IsAny<IList<T>>(), It.IsAny<bool>())).Callback((IList<T> values, bool publishEvent) => Insert(values.ToList()));
 
-            Setup(r => r.Delete(It.IsAny<T>())).Callback((T value) => Delete(value));
-            Setup(r => r.Delete(It.IsAny<IEnumerable<T>>())).Callback((IEnumerable<T> values) => Delete(values));
+            Setup(r => r.Delete(It.IsAny<T>(), It.IsAny<bool>())).Callback((T value, bool publishEvent) => Delete(value));
+            Setup(r => r.Delete(It.IsAny<IList<T>>(), It.IsAny<bool>())).Callback((IList<T> values, bool publishEvent) => Delete(values));
 
-            Setup(r => r.GetById(It.Is<int>(x => x > 0))).Returns((int id) => GetById(id));
+            Setup(r => r.GetById(It.Is<int>(x => x > 0), It.IsAny<int?>())).Returns((int id, int? cacheTime) => GetById(id));
         }
 
         public void ResetRepository()

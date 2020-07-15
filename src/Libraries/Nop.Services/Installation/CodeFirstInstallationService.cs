@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -36,7 +35,6 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -4608,8 +4606,8 @@ namespace Nop.Services.Installation
             //first order
             var firstCustomer = _customerRepository.Table.First(c => c.Email == "steve_gates@nopCommerce.com");
 
-            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.BillingAddressId)));
-            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.ShippingAddressId)));
+            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4778,8 +4776,8 @@ namespace Nop.Services.Installation
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email == "arthur_holmes@nopCommerce.com");
 
-            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.BillingAddressId)));
-            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.ShippingAddressId)));
+            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4900,7 +4898,7 @@ namespace Nop.Services.Installation
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email == "james_pan@nopCommerce.com");
 
-            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(thirdCustomer.BillingAddressId)));
+            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
@@ -5045,9 +5043,9 @@ namespace Nop.Services.Installation
             //fourth order
             var fourthCustomer = _customerRepository.Table.First(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
-            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
-            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
 
             var fourthOrder = new Order
             {
@@ -5260,8 +5258,8 @@ namespace Nop.Services.Installation
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
-            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.BillingAddressId)));
-            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.ShippingAddressId)));
+            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
@@ -6812,13 +6810,6 @@ namespace Nop.Services.Installation
                 CompareProductsCookieExpires = 24 * 10,
                 RecentlyViewedProductsCookieExpires = 24 * 10,
                 CustomerCookieExpires = 24 * 365
-            });
-
-            settingService.SaveSetting(new CachingSettings
-            {
-                ShortTermCacheTime = 5,
-                DefaultCacheTime = NopCachingDefaults.CacheTime,
-                BundledFilesCacheTime = 120
             });
         }
 

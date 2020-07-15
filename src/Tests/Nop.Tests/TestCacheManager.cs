@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 
 namespace Nop.Tests
 {
     /// <summary>
     /// Represents a null cache (caches nothing)
     /// </summary>
-    public partial class TestCacheManager : IStaticCacheManager
+    public partial class TestCacheManager : CacheKeyService, IStaticCacheManager
     {
         private bool _disposed;
+
+        public TestCacheManager() : base(new NopConfig())
+        {
+
+        }
 
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it

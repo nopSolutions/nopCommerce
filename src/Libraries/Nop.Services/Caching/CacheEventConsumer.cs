@@ -10,12 +10,10 @@ namespace Nop.Services.Caching
         IConsumer<EntityUpdatedEvent<TEntity>>,
         IConsumer<EntityDeletedEvent<TEntity>> where TEntity : BaseEntity
     {
-        protected readonly ICacheKeyService _cacheKeyService;
-        private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStaticCacheManager _staticCacheManager;
 
         protected CacheEventConsumer()
         {
-            _cacheKeyService = EngineContext.Current.Resolve<ICacheKeyService>();
             _staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
         }
 

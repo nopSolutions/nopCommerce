@@ -3,19 +3,19 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Tax;
 using Nop.Services.Tests.FakeServices.Providers;
@@ -85,8 +85,8 @@ namespace Nop.Services.Tests.Tax
             var mappings = new List<CustomerCustomerRoleMapping>();
 
             _customerCustomerRoleMappingRepo.Setup(r => r.Table).Returns(mappings.AsQueryable());
-            _customerCustomerRoleMappingRepo.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>())).Callback(
-                (CustomerCustomerRoleMapping ccrm) => { mappings.Add(ccrm); });
+            _customerCustomerRoleMappingRepo.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>(), It.IsAny<bool>())).Callback(
+                (CustomerCustomerRoleMapping ccrm, bool publishEvent) => { mappings.Add(ccrm); });
 
             _stateProvinceService = new Mock<IStateProvinceService>();
             _logger = new Mock<ILogger>();
@@ -97,10 +97,7 @@ namespace Nop.Services.Tests.Tax
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _customerService = new CustomerService(new CachingSettings(),
-                new CustomerSettings(),
-                new FakeCacheKeyService(),
-                _eventPublisher.Object,
+            _customerService = new CustomerService(new CustomerSettings(),
                 _genericAttributeService.Object,
                 null,
                 null,
@@ -111,6 +108,7 @@ namespace Nop.Services.Tests.Tax
                 null,
                 null,
                 new TestCacheManager(),
+                new NopConfig(), 
                 _storeContext.Object,
                 null);
 

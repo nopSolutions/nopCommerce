@@ -14,10 +14,8 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -36,11 +34,9 @@ namespace Nop.Services.Catalog
         protected readonly CatalogSettings _catalogSettings;
         protected readonly CommonSettings _commonSettings;
         protected readonly IAclService _aclService;
-        protected readonly ICacheKeyService _cacheKeyService;
         protected readonly ICustomerService _customerService;
         protected readonly INopDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
-        protected readonly IEventPublisher _eventPublisher;
         protected readonly ILanguageService _languageService;
         protected readonly ILocalizationService _localizationService;
         protected readonly IProductAttributeParser _productAttributeParser;
@@ -75,11 +71,9 @@ namespace Nop.Services.Catalog
         public ProductService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
-            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
-            IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IProductAttributeParser productAttributeParser,
@@ -100,7 +94,7 @@ namespace Nop.Services.Catalog
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<TierPrice> tierPriceRepository,
-            IRepository<Warehouse> warehouseRepositor,
+            IRepository<Warehouse> warehouseRepository,
             IStaticCacheManager staticCacheManager,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
@@ -110,11 +104,9 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
             _aclService = aclService;
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
-            _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizationService = localizationService;
             _productAttributeParser = productAttributeParser;
@@ -135,7 +127,7 @@ namespace Nop.Services.Catalog
             _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _storeMappingRepository = storeMappingRepository;
             _tierPriceRepository = tierPriceRepository;
-            _warehouseRepository = warehouseRepositor;
+            _warehouseRepository = warehouseRepository;
             _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
@@ -312,15 +304,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         public virtual void DeleteProduct(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            product.Deleted = true;
-            //delete product
-            UpdateProduct(product);
-
-            //event notification
-            _eventPublisher.EntityDeleted(product);
+           _productRepository.Delete(product);
         }
 
         /// <summary>
@@ -329,22 +313,7 @@ namespace Nop.Services.Catalog
         /// <param name="products">Products</param>
         public virtual void DeleteProducts(IList<Product> products)
         {
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
-
-            foreach (var product in products)
-            {
-                product.Deleted = true;
-            }
-
-            //delete product
-            UpdateProducts(products);
-
-            foreach (var product in products)
-            {
-                //event notification
-                _eventPublisher.EntityDeleted(product);
-            }
+           _productRepository.Delete(products);
         }
 
         /// <summary>
@@ -353,14 +322,15 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IList<Product> GetAllProductsDisplayedOnHomepage()
         {
-            var query = from p in _productRepository.Table
-                        orderby p.DisplayOrder, p.Id
-                        where p.Published &&
-                        !p.Deleted &&
-                        p.ShowOnHomepage
-                        select p;
-
-            var products = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
+            var products = _productRepository.GetAll(query =>
+            {
+                return from p in query
+                       orderby p.DisplayOrder, p.Id
+                    where p.Published &&
+                          !p.Deleted &&
+                          p.ShowOnHomepage
+                    select p;
+            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
 
             return products;
         }
@@ -372,10 +342,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product</returns>
         public virtual Product GetProductById(int productId)
         {
-            if (productId == 0)
-                return null;
-
-            return _productRepository.ToCachedGetById(productId);
+            return _productRepository.GetById(productId);
         }
 
         /// <summary>
@@ -385,27 +352,7 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IList<Product> GetProductsByIds(int[] productIds)
         {
-            if (productIds == null || productIds.Length == 0)
-                return new List<Product>();
-
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsByIdsCacheKey, productIds);
-
-            var query = from p in _productRepository.Table
-                        where productIds.Contains(p.Id) && !p.Deleted
-                        select p;
-
-            var products = query.ToCachedList(key);
-
-            //sort by passed identifiers
-            var sortedProducts = new List<Product>();
-            foreach (var id in productIds)
-            {
-                var product = products.FirstOrDefault(x => x.Id == id);
-                if (product != null)
-                    sortedProducts.Add(product);
-            }
-
-            return sortedProducts;
+            return _productRepository.GetByIds(productIds);
         }
 
         /// <summary>
@@ -414,14 +361,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         public virtual void InsertProduct(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            //insert
             _productRepository.Insert(product);
-
-            //event notification
-            _eventPublisher.EntityInserted(product);
         }
 
         /// <summary>
@@ -430,14 +370,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         public virtual void UpdateProduct(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            //update
             _productRepository.Update(product);
-
-            //event notification
-            _eventPublisher.EntityUpdated(product);
         }
 
         /// <summary>
@@ -446,17 +379,7 @@ namespace Nop.Services.Catalog
         /// <param name="products">Products</param>
         public virtual void UpdateProducts(IList<Product> products)
         {
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
-
-            //update
             _productRepository.Update(products);
-
-            //event notification
-            foreach (var product in products)
-            {
-                _eventPublisher.EntityUpdated(product);
-            }
         }
 
         /// <summary>
@@ -512,7 +435,7 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryNumberOfProductsCacheKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryNumberOfProductsCacheKey,
                 allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
@@ -1697,7 +1620,7 @@ namespace Nop.Services.Catalog
             if (pwi == null)
                 return 0;
 
-            var shipment = _shipmentRepository.ToCachedGetById(shipmentItem.ShipmentId);
+            var shipment = _shipmentRepository.GetById(shipmentItem.ShipmentId);
 
             //not shipped yet? hence "BookReservedInventory" method was not invoked
             if (!shipment.ShippedDateUtc.HasValue)
@@ -1726,13 +1649,7 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProduct">Related product</param>
         public virtual void DeleteRelatedProduct(RelatedProduct relatedProduct)
         {
-            if (relatedProduct == null)
-                throw new ArgumentNullException(nameof(relatedProduct));
-
             _relatedProductRepository.Delete(relatedProduct);
-
-            //event notification
-            _eventPublisher.EntityDeleted(relatedProduct);
         }
 
         /// <summary>
@@ -1751,7 +1668,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsRelatedCacheKey, productId, showHidden));
+            var relatedProducts = query.ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsRelatedCacheKey, productId, showHidden));
 
             return relatedProducts;
         }
@@ -1763,10 +1680,7 @@ namespace Nop.Services.Catalog
         /// <returns>Related product</returns>
         public virtual RelatedProduct GetRelatedProductById(int relatedProductId)
         {
-            if (relatedProductId == 0)
-                return null;
-
-            return _relatedProductRepository.ToCachedGetById(relatedProductId);
+            return _relatedProductRepository.GetById(relatedProductId);
         }
 
         /// <summary>
@@ -1775,13 +1689,7 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProduct">Related product</param>
         public virtual void InsertRelatedProduct(RelatedProduct relatedProduct)
         {
-            if (relatedProduct == null)
-                throw new ArgumentNullException(nameof(relatedProduct));
-
             _relatedProductRepository.Insert(relatedProduct);
-
-            //event notification
-            _eventPublisher.EntityInserted(relatedProduct);
         }
 
         /// <summary>
@@ -1790,13 +1698,7 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProduct">Related product</param>
         public virtual void UpdateRelatedProduct(RelatedProduct relatedProduct)
         {
-            if (relatedProduct == null)
-                throw new ArgumentNullException(nameof(relatedProduct));
-
             _relatedProductRepository.Update(relatedProduct);
-
-            //event notification
-            _eventPublisher.EntityUpdated(relatedProduct);
         }
 
         /// <summary>
@@ -1824,13 +1726,7 @@ namespace Nop.Services.Catalog
         /// <param name="crossSellProduct">Cross-sell identifier</param>
         public virtual void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
-            if (crossSellProduct == null)
-                throw new ArgumentNullException(nameof(crossSellProduct));
-
             _crossSellProductRepository.Delete(crossSellProduct);
-
-            //event notification
-            _eventPublisher.EntityDeleted(crossSellProduct);
         }
 
         /// <summary>
@@ -1873,10 +1769,7 @@ namespace Nop.Services.Catalog
         /// <returns>Cross-sell product</returns>
         public virtual CrossSellProduct GetCrossSellProductById(int crossSellProductId)
         {
-            if (crossSellProductId == 0)
-                return null;
-
-            return _crossSellProductRepository.ToCachedGetById(crossSellProductId);
+            return _crossSellProductRepository.GetById(crossSellProductId);
         }
 
         /// <summary>
@@ -1885,13 +1778,7 @@ namespace Nop.Services.Catalog
         /// <param name="crossSellProduct">Cross-sell product</param>
         public virtual void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
         {
-            if (crossSellProduct == null)
-                throw new ArgumentNullException(nameof(crossSellProduct));
-
             _crossSellProductRepository.Insert(crossSellProduct);
-
-            //event notification
-            _eventPublisher.EntityInserted(crossSellProduct);
         }
 
         /// <summary>
@@ -1900,13 +1787,7 @@ namespace Nop.Services.Catalog
         /// <param name="crossSellProduct">Cross-sell product</param>
         public virtual void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
         {
-            if (crossSellProduct == null)
-                throw new ArgumentNullException(nameof(crossSellProduct));
-
             _crossSellProductRepository.Update(crossSellProduct);
-
-            //event notification
-            _eventPublisher.EntityUpdated(crossSellProduct);
         }
 
         /// <summary>
@@ -2009,7 +1890,7 @@ namespace Nop.Services.Catalog
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
             return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
-                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTierPricesCacheKey, productId));
+                .ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTierPricesCacheKey, productId));
         }
 
         /// <summary>
@@ -2018,13 +1899,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPrice">Tier price</param>
         public virtual void DeleteTierPrice(TierPrice tierPrice)
         {
-            if (tierPrice == null)
-                throw new ArgumentNullException(nameof(tierPrice));
-
             _tierPriceRepository.Delete(tierPrice);
-
-            //event notification
-            _eventPublisher.EntityDeleted(tierPrice);
         }
 
         /// <summary>
@@ -2034,10 +1909,7 @@ namespace Nop.Services.Catalog
         /// <returns>Tier price</returns>
         public virtual TierPrice GetTierPriceById(int tierPriceId)
         {
-            if (tierPriceId == 0)
-                return null;
-
-            return _tierPriceRepository.ToCachedGetById(tierPriceId);
+            return _tierPriceRepository.GetById(tierPriceId);
         }
 
         /// <summary>
@@ -2046,13 +1918,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPrice">Tier price</param>
         public virtual void InsertTierPrice(TierPrice tierPrice)
         {
-            if (tierPrice == null)
-                throw new ArgumentNullException(nameof(tierPrice));
-
             _tierPriceRepository.Insert(tierPrice);
-
-            //event notification
-            _eventPublisher.EntityInserted(tierPrice);
         }
 
         /// <summary>
@@ -2061,13 +1927,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPrice">Tier price</param>
         public virtual void UpdateTierPrice(TierPrice tierPrice)
         {
-            if (tierPrice == null)
-                throw new ArgumentNullException(nameof(tierPrice));
-
             _tierPriceRepository.Update(tierPrice);
-
-            //event notification
-            _eventPublisher.EntityUpdated(tierPrice);
         }
 
         /// <summary>
@@ -2103,13 +1963,7 @@ namespace Nop.Services.Catalog
         /// <param name="productPicture">Product picture</param>
         public virtual void DeleteProductPicture(ProductPicture productPicture)
         {
-            if (productPicture == null)
-                throw new ArgumentNullException(nameof(productPicture));
-
             _productPictureRepository.Delete(productPicture);
-
-            //event notification
-            _eventPublisher.EntityDeleted(productPicture);
         }
 
         /// <summary>
@@ -2136,10 +1990,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product picture</returns>
         public virtual ProductPicture GetProductPictureById(int productPictureId)
         {
-            if (productPictureId == 0)
-                return null;
-
-            return _productPictureRepository.ToCachedGetById(productPictureId);
+            return _productPictureRepository.GetById(productPictureId);
         }
 
         /// <summary>
@@ -2148,13 +1999,7 @@ namespace Nop.Services.Catalog
         /// <param name="productPicture">Product picture</param>
         public virtual void InsertProductPicture(ProductPicture productPicture)
         {
-            if (productPicture == null)
-                throw new ArgumentNullException(nameof(productPicture));
-
             _productPictureRepository.Insert(productPicture);
-
-            //event notification
-            _eventPublisher.EntityInserted(productPicture);
         }
 
         /// <summary>
@@ -2163,13 +2008,7 @@ namespace Nop.Services.Catalog
         /// <param name="productPicture">Product picture</param>
         public virtual void UpdateProductPicture(ProductPicture productPicture)
         {
-            if (productPicture == null)
-                throw new ArgumentNullException(nameof(productPicture));
-
             _productPictureRepository.Update(productPicture);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productPicture);
         }
 
         /// <summary>
@@ -2235,49 +2074,51 @@ namespace Nop.Services.Catalog
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _productReviewRepository.Table;
-
-            if (approved.HasValue)
-                query = query.Where(pr => pr.IsApproved == approved);
-            if (customerId > 0)
-                query = query.Where(pr => pr.CustomerId == customerId);
-            if (fromUtc.HasValue)
-                query = query.Where(pr => fromUtc.Value <= pr.CreatedOnUtc);
-            if (toUtc.HasValue)
-                query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
-            if (!string.IsNullOrEmpty(message))
-                query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
-            if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
-                query = query.Where(pr => pr.StoreId == storeId);
-            if (productId > 0)
-                query = query.Where(pr => pr.ProductId == productId);
-
-            query = from productReview in query
-                join product in _productRepository.Table on productReview.ProductId equals product.Id
-                where
-                    (vendorId == 0 || product.VendorId == vendorId) &&
-                    //ignore deleted products
-                    !product.Deleted
-                select productReview;
-
-            //filter by limited to store products
-            if (storeId > 0 && !showHidden && !_catalogSettings.IgnoreStoreLimitations)
+            var productReviews = _productReviewRepository.GetAllPaged(query =>
             {
+                if (approved.HasValue)
+                    query = query.Where(pr => pr.IsApproved == approved);
+                if (customerId > 0)
+                    query = query.Where(pr => pr.CustomerId == customerId);
+                if (fromUtc.HasValue)
+                    query = query.Where(pr => fromUtc.Value <= pr.CreatedOnUtc);
+                if (toUtc.HasValue)
+                    query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
+                if (!string.IsNullOrEmpty(message))
+                    query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
+                if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
+                    query = query.Where(pr => pr.StoreId == storeId);
+                if (productId > 0)
+                    query = query.Where(pr => pr.ProductId == productId);
+
                 query = from productReview in query
+                    join product in _productRepository.Table on productReview.ProductId equals product.Id
+                    where
+                        (vendorId == 0 || product.VendorId == vendorId) &&
+                        //ignore deleted products
+                        !product.Deleted
+                    select productReview;
+
+                //filter by limited to store products
+                if (storeId > 0 && !showHidden && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    query = from productReview in query
                         join product in _productRepository.Table on productReview.ProductId equals product.Id
                         join storeMapping in _storeMappingRepository.Table
-                            on new { Id = productReview.ProductId, Name = nameof(Product) }
-                            equals new { Id = storeMapping.EntityId, Name = storeMapping.EntityName } into storeMappingsWithNulls
+                            on new {Id = productReview.ProductId, Name = nameof(Product)}
+                            equals new {Id = storeMapping.EntityId, Name = storeMapping.EntityName} into
+                            storeMappingsWithNulls
                         from storeMapping in storeMappingsWithNulls.DefaultIfEmpty()
                         where !product.LimitedToStores || storeMapping.StoreId == storeId
                         select productReview;
-            }
+                }
 
-            query = _catalogSettings.ProductReviewsSortByCreatedDateAscending
-                ? query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id)
-                : query.OrderByDescending(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id);
+                query = _catalogSettings.ProductReviewsSortByCreatedDateAscending
+                    ? query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id)
+                    : query.OrderByDescending(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id);
 
-            var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
 
             return productReviews;
         }
@@ -2289,10 +2130,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product review</returns>
         public virtual ProductReview GetProductReviewById(int productReviewId)
         {
-            if (productReviewId == 0)
-                return null;
-
-            return _productReviewRepository.ToCachedGetById(productReviewId);
+            return _productReviewRepository.GetById(productReviewId);
         }
 
         /// <summary>
@@ -2302,23 +2140,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product reviews</returns>
         public virtual IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds)
         {
-            if (productReviewIds == null || productReviewIds.Length == 0)
-                return new List<ProductReview>();
-
-            var query = from pr in _productReviewRepository.Table
-                        where productReviewIds.Contains(pr.Id)
-                        select pr;
-            var productReviews = query.ToList();
-            //sort by passed identifiers
-            var sortedProductReviews = new List<ProductReview>();
-            foreach (var id in productReviewIds)
-            {
-                var productReview = productReviews.Find(x => x.Id == id);
-                if (productReview != null)
-                    sortedProductReviews.Add(productReview);
-            }
-
-            return sortedProductReviews;
+            return _productReviewRepository.GetByIds(productReviewIds);
         }
 
         /// <summary>
@@ -2327,13 +2149,7 @@ namespace Nop.Services.Catalog
         /// <param name="productReview">Product review</param>
         public virtual void InsertProductReview(ProductReview productReview)
         {
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
-
             _productReviewRepository.Insert(productReview);
-
-            //event notification
-            _eventPublisher.EntityInserted(productReview);
         }
 
         /// <summary>
@@ -2342,13 +2158,7 @@ namespace Nop.Services.Catalog
         /// <param name="productReview">Product review</param>
         public virtual void DeleteProductReview(ProductReview productReview)
         {
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
-
             _productReviewRepository.Delete(productReview);
-
-            //event notification
-            _eventPublisher.EntityDeleted(productReview);
         }
 
         /// <summary>
@@ -2357,16 +2167,7 @@ namespace Nop.Services.Catalog
         /// <param name="productReviews">Product reviews</param>
         public virtual void DeleteProductReviews(IList<ProductReview> productReviews)
         {
-            if (productReviews == null)
-                throw new ArgumentNullException(nameof(productReviews));
-
             _productReviewRepository.Delete(productReviews);
-
-            //event notification
-            foreach (var productReview in productReviews)
-            {
-                _eventPublisher.EntityDeleted(productReview);
-            }
         }
 
         /// <summary>
@@ -2375,13 +2176,7 @@ namespace Nop.Services.Catalog
         /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
         public virtual void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness)
         {
-            if (productReviewHelpfulness == null)
-                throw new ArgumentNullException(nameof(productReviewHelpfulness));
-
             _productReviewHelpfulnessRepository.Insert(productReviewHelpfulness);
-
-            //event notification
-            _eventPublisher.EntityInserted(productReviewHelpfulness);
         }
 
         /// <summary>
@@ -2407,17 +2202,12 @@ namespace Nop.Services.Catalog
                 };
 
                 InsertProductReviewHelpfulness(prh);
-
-                //event notification
-                _eventPublisher.EntityInserted(prh);
             }
             else
             {
                 //existing one
                 prh.WasHelpful = helpfulness;
                 _productReviewHelpfulnessRepository.Update(prh);
-                //event notification
-                _eventPublisher.EntityUpdated(prh);
             }
         }
 
@@ -2442,14 +2232,7 @@ namespace Nop.Services.Catalog
         /// <param name="productReview">Product review</param>
         public virtual void UpdateProductReview(ProductReview productReview)
         {
-            if (productReview == null)
-                throw new ArgumentNullException(nameof(productReview));
-
-            //update
             _productReviewRepository.Update(productReview);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productReview);
         }
 
         /// <summary>
@@ -2465,9 +2248,6 @@ namespace Nop.Services.Catalog
             (productReview.HelpfulYesTotal, productReview.HelpfulNoTotal) = GetHelpfulnessCounts(productReview);
 
             _productReviewRepository.Update(productReview);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productReview);
         }
 
         #endregion
@@ -2480,7 +2260,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual IList<ProductWarehouseInventory> GetAllProductWarehouseInventoryRecords(int productId)
         {
-            return _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == productId).ToList();
+            return _productWarehouseInventoryRepository.GetAll(query => query.Where(pwi => pwi.ProductId == productId));
         }
 
         /// <summary>
@@ -2490,10 +2270,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual Warehouse GetWarehousesById(int warehouseId)
         {
-            if (warehouseId == 0)
-                return null;
-
-            return _warehouseRepository.ToCachedGetById(warehouseId);
+            return _warehouseRepository.GetById(warehouseId);
         }
 
         /// <summary>
@@ -2515,12 +2292,7 @@ namespace Nop.Services.Catalog
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
         public virtual void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
-            if (pwi == null)
-                throw new ArgumentNullException(nameof(pwi));
-
             _productWarehouseInventoryRepository.Delete(pwi);
-
-            _eventPublisher.EntityDeleted(pwi);
         }
 
         /// <summary>
@@ -2529,13 +2301,7 @@ namespace Nop.Services.Catalog
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
         public virtual void InsertProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
-            if (pwi == null)
-                throw new ArgumentNullException(nameof(pwi));
-
             _productWarehouseInventoryRepository.Insert(pwi);
-
-            //event notification
-            _eventPublisher.EntityInserted(pwi);
         }
 
         /// <summary>
@@ -2544,13 +2310,7 @@ namespace Nop.Services.Catalog
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
         public virtual void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
-            if (pwi == null)
-                throw new ArgumentNullException(nameof(pwi));
-
             _productWarehouseInventoryRepository.Update(pwi);
-
-            //event notification
-            _eventPublisher.EntityUpdated(pwi);
         }
 
         /// <summary>
@@ -2559,19 +2319,7 @@ namespace Nop.Services.Catalog
         /// <param name="pwis">Records to manage product inventory per warehouse</param>
         public virtual void UpdateProductWarehouseInventory(IList<ProductWarehouseInventory> pwis)
         {
-            if (pwis == null)
-                throw new ArgumentNullException(nameof(pwis));
-
-            if (!pwis.Any())
-                return;
-
             _productWarehouseInventoryRepository.Update(pwis);
-
-            //event notification
-            foreach (var pwi in pwis)
-            {
-                _eventPublisher.EntityUpdated(pwi);
-            }
         }
 
         #endregion
@@ -2608,9 +2356,6 @@ namespace Nop.Services.Catalog
             };
 
             _stockQuantityHistoryRepository.Insert(historyEntry);
-
-            //event notification
-            _eventPublisher.EntityInserted(historyEntry);
         }
 
         /// <summary>
@@ -2663,9 +2408,7 @@ namespace Nop.Services.Catalog
             foreach (var pdcm in mappingsWithProducts.ToList())
             {
                 _discountProductMappingRepository.Delete(pdcm.dcm);
-                //event notification
-                _eventPublisher.EntityDeleted(pdcm.dcm);
-
+                
                 //update "HasDiscountsApplied" property
                 UpdateHasDiscountsApplied(pdcm.product);
             }
@@ -2677,7 +2420,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual IList<DiscountProductMapping> GetAllDiscountsAppliedToProduct(int productId)
         {
-            return _discountProductMappingRepository.Table.Where(dcm => dcm.EntityId == productId).ToList();
+            return _discountProductMappingRepository.GetAll(query => query.Where(dcm => dcm.EntityId == productId));
         }
 
         /// <summary>
@@ -2697,13 +2440,7 @@ namespace Nop.Services.Catalog
         /// <param name="discountProductMapping">Discount-product mapping</param>
         public virtual void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping)
         {
-            if (discountProductMapping is null)
-                throw new ArgumentNullException(nameof(discountProductMapping));
-
             _discountProductMappingRepository.Insert(discountProductMapping);
-
-            //event notification
-            _eventPublisher.EntityInserted(discountProductMapping);
         }
 
         /// <summary>
@@ -2712,13 +2449,7 @@ namespace Nop.Services.Catalog
         /// <param name="discountProductMapping">Discount-product mapping</param>
         public virtual void DeleteDiscountProductMapping(DiscountProductMapping discountProductMapping)
         {
-            if (discountProductMapping is null)
-                throw new ArgumentNullException(nameof(discountProductMapping));
-
             _discountProductMappingRepository.Delete(discountProductMapping);
-
-            //event notification
-            _eventPublisher.EntityDeleted(discountProductMapping);
         }
 
         #endregion

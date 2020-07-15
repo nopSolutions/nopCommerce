@@ -12,13 +12,10 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -39,14 +36,12 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -73,14 +68,12 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
-            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -103,14 +96,12 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _currencyService = currencyService;
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
-            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
@@ -248,9 +239,6 @@ namespace Nop.Services.Orders
                 _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes,
                     checkoutAttributesXml, storeId);
             }
-
-            //event notification
-            _eventPublisher.EntityDeleted(shoppingCartItem);
 
             if (!_catalogSettings.RemoveRequiredProducts)
                 return;
@@ -708,7 +696,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _cacheKeyService.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
             return _staticCacheManager.Get(key, () => items.ToList());
         }
@@ -1544,9 +1532,6 @@ namespace Nop.Services.Orders
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
 
                 _sciRepository.Update(shoppingCartItem);
-                
-                //event notification
-                _eventPublisher.EntityUpdated(shoppingCartItem);
             }
             else
             {
@@ -1604,9 +1589,6 @@ namespace Nop.Services.Orders
                 customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
 
                 _customerService.UpdateCustomer(customer);
-
-                //event notification
-                _eventPublisher.EntityInserted(shoppingCartItem);
             }
 
             return warnings;
@@ -1635,7 +1617,7 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = _sciRepository.ToCachedGetById(shoppingCartItemId);
+            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId);
 
             if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;
@@ -1668,9 +1650,6 @@ namespace Nop.Services.Orders
 
                 _sciRepository.Update(shoppingCartItem);
                 _customerService.UpdateCustomer(customer);
-
-                //event notification
-                _eventPublisher.EntityUpdated(shoppingCartItem);
             }
             else
             {

@@ -15,13 +15,13 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Product entity)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductManufacturersByProductPrefixCacheKey, entity);
+            var prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.ProductManufacturersByProductPrefixCacheKey, entity);
             RemoveByPrefix(prefix);
 
             Remove(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey);
             RemoveByPrefix(NopCatalogDefaults.ProductsByIdsPrefixCacheKey);
 
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey, entity);
+            prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey, entity);
             RemoveByPrefix(prefix);
 
             RemoveByPrefix(NopOrderDefaults.ShoppingCartPrefixCacheKey);

@@ -12,7 +12,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Tests;
 using NUnit.Framework;
@@ -22,7 +21,7 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        private readonly Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
+
         private readonly Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
@@ -67,7 +66,6 @@ namespace Nop.Services.Tests.Discounts
 
             _discountRepo.Setup(x => x.Table).Returns(new List<Discount> { discount1, discount2 }.AsQueryable());
 
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
             _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
             _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
             _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
@@ -79,10 +77,8 @@ namespace Nop.Services.Tests.Discounts
 
             _discountPluginManager = new DiscountPluginManager(new Mock<ICustomerService>().Object, pluginService);
             _discountService = new DiscountService(
-                new FakeCacheKeyService(),
                 _customerService.Object,
                 _discountPluginManager,
-                _eventPublisher.Object,
                 _localizationService.Object,
                 _productService.Object,
                 _discountRepo.Object,
@@ -269,7 +265,7 @@ namespace Nop.Services.Tests.Discounts
 
         static DiscountExtensions()
         {
-            _discountService = new DiscountService(new FakeCacheKeyService(), null, null, null,
+            _discountService = new DiscountService(null, null,
                 null, null, null, null, null, null, null, null);
         }
 

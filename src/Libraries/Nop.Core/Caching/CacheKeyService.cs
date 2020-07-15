@@ -2,25 +2,24 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Nop.Core;
-using Nop.Core.Caching;
+using Nop.Core.Configuration;
 
-namespace Nop.Services.Caching
+namespace Nop.Core.Caching
 {
-    public partial class CacheKeyService : ICacheKeyService
+    public abstract partial class CacheKeyService
     {
         #region Fields
 
-        private readonly CachingSettings _cachingSettings;
+        protected readonly NopConfig _nopConfig;
         private const string HASH_ALGORITHM = "SHA1";
 
         #endregion
 
         #region Ctor
 
-        public CacheKeyService(CachingSettings cachingSettings)
+        protected CacheKeyService(NopConfig nopConfig)
         {
-            _cachingSettings = cachingSettings;
+            _nopConfig = nopConfig;
         }
 
         #endregion
@@ -96,7 +95,7 @@ namespace Nop.Services.Caching
         {
             var key = FillCacheKey(cacheKey, keyObjects);
 
-            key.CacheTime = _cachingSettings.DefaultCacheTime;
+            key.CacheTime = _nopConfig.DefaultCacheTime;
 
             return key;
         }
@@ -111,7 +110,7 @@ namespace Nop.Services.Caching
         {
             var key = FillCacheKey(cacheKey, keyObjects);
 
-            key.CacheTime = _cachingSettings.ShortTermCacheTime;
+            key.CacheTime = _nopConfig.ShortTermCacheTime;
 
             return key;
         }

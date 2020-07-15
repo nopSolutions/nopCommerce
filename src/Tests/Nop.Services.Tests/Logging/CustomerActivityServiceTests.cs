@@ -6,10 +6,10 @@ using Nop.Core;
 using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Events;
 using Nop.Services.Logging;
 using Nop.Tests;
 using NUnit.Framework;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Logging
 {
@@ -79,7 +79,7 @@ namespace Nop.Services.Tests.Logging
             _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(new FakeCacheKeyService(), new Mock<IEventPublisher>().Object, _activityLogRepository.Object, _activityLogTypeRepository.Object, _webHelper.Object, _workContext.Object);
+            _customerActivityService = new CustomerActivityService(_activityLogRepository.Object, _activityLogTypeRepository.Object, new TestCacheManager(), _webHelper.Object, _workContext.Object);
         }
 
         [Test]

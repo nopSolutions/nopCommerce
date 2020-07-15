@@ -4,7 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -15,6 +15,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
@@ -22,7 +23,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -126,7 +126,6 @@ namespace Nop.Services.Tests.Orders
             _geoLookupService = new Mock<IGeoLookupService>();
             _countryService = new Mock<ICountryService>();
             _stateProvinceService = new Mock<IStateProvinceService>();
-            _eventPublisher = new Mock<IEventPublisher>();
             _addressService = new Mock<IAddressService>();
             _rewardPointService = new Mock<IRewardPointService>();
             _webHelper = new Mock<IWebHelper>();
@@ -160,7 +159,7 @@ namespace Nop.Services.Tests.Orders
             _currencySettings = new CurrencySettings();
 
             //price calculation service
-            _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, new FakeCacheKeyService(), _categoryService.Object,
+            _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
                 _currencyService.Object, _customerService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
                 _productService.Object, staticCacheManager, _storeContext.Object, _workContext);
 
@@ -187,11 +186,9 @@ namespace Nop.Services.Tests.Orders
             var shippingMethodCountryMappingRepository = new Mock<IRepository<ShippingMethodCountryMapping>>();
 
             _shippingService = new ShippingService(_addressService.Object,
-                new FakeCacheKeyService(),
                 _checkoutAttributeParser.Object,
                 _countryService.Object,
                 _customerService.Object,
-                _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
@@ -204,6 +201,7 @@ namespace Nop.Services.Tests.Orders
                 _warehouseRepository.Object,
                 _shippingPluginManager,
                 _stateProvinceService.Object,
+                new TestCacheManager(), 
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);
@@ -239,15 +237,15 @@ namespace Nop.Services.Tests.Orders
 
             _recurringPaymentRepository = new Mock<IRepository<RecurringPayment>>();
             var recurringPayments = new List<RecurringPayment>();
-            _recurringPaymentRepository.Setup(r => r.Insert(It.IsAny<RecurringPayment>())).Callback((RecurringPayment rph) => recurringPayments.Add(rph));
+            _recurringPaymentRepository.Setup(r => r.Insert(It.IsAny<RecurringPayment>(), It.IsAny<bool>())).Callback((RecurringPayment rph, bool publishEvent) => recurringPayments.Add(rph));
             _recurringPaymentRepository.Setup(r => r.Table).Returns(recurringPayments.AsQueryable());
 
             _recurringPaymentHistoryRepository = new Mock<IRepository<RecurringPaymentHistory>>();
             var recurringPaymentHistory = new List<RecurringPaymentHistory>();
-            _recurringPaymentHistoryRepository.Setup(r => r.Insert(It.IsAny<RecurringPaymentHistory>())).Callback((RecurringPaymentHistory rph) => recurringPaymentHistory.Add(rph));
+            _recurringPaymentHistoryRepository.Setup(r => r.Insert(It.IsAny<RecurringPaymentHistory>(), It.IsAny<bool>())).Callback((RecurringPaymentHistory rph, bool publishEvent) => recurringPaymentHistory.Add(rph));
             _recurringPaymentHistoryRepository.Setup(r => r.Table).Returns(recurringPaymentHistory.AsQueryable());
 
-            _orderService = new OrderService(new CachingSettings(), _eventPublisher.Object, null, null, null, null, null, null, null, null, _recurringPaymentRepository.Object, _recurringPaymentHistoryRepository.Object, _shipmentService.Object);
+            _orderService = new OrderService(null, null, null, null, null, null, null, null, _recurringPaymentRepository.Object, _recurringPaymentHistoryRepository.Object, _shipmentService.Object, new NopConfig());
 
 
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,

@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Directory
@@ -19,10 +17,9 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IRepository<Currency> _currencyRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
 
         #endregion
@@ -30,17 +27,15 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CurrencyService(CurrencySettings currencySettings,
-            ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
             IExchangeRatePluginManager exchangeRatePluginManager,
             IRepository<Currency> currencyRepository,
+            IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService)
         {
-            _cacheKeyService = cacheKeyService;
             _currencySettings = currencySettings;
-            _eventPublisher = eventPublisher;
             _exchangeRatePluginManager = exchangeRatePluginManager;
             _currencyRepository = currencyRepository;
+            _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
         }
 
@@ -56,13 +51,7 @@ namespace Nop.Services.Directory
         /// <param name="currency">Currency</param>
         public virtual void DeleteCurrency(Currency currency)
         {
-            if (currency == null)
-                throw new ArgumentNullException(nameof(currency));
-
             _currencyRepository.Delete(currency);
-
-            //event notification
-            _eventPublisher.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -72,10 +61,7 @@ namespace Nop.Services.Directory
         /// <returns>Currency</returns>
         public virtual Currency GetCurrencyById(int currencyId)
         {
-            if (currencyId == 0)
-                return null;
-            
-            return _currencyRepository.ToCachedGetById(currencyId);
+            return _currencyRepository.GetById(currencyId);
         }
 
         /// <summary>
@@ -99,16 +85,17 @@ namespace Nop.Services.Directory
         /// <returns>Currencies</returns>
         public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
-            var query = _currencyRepository.Table;
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
 
-            if (!showHidden)
-                query = query.Where(c => c.Published);
+            var currencies = _currencyRepository.GetAll(query =>
+            {
+                if (!showHidden)
+                    query = query.Where(c => c.Published);
 
-            query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
-
-            var currencies = query.ToCachedList(key);
+                return query;
+            }, key);
 
             //store mapping
             if (storeId > 0)
@@ -125,13 +112,7 @@ namespace Nop.Services.Directory
         /// <param name="currency">Currency</param>
         public virtual void InsertCurrency(Currency currency)
         {
-            if (currency == null)
-                throw new ArgumentNullException(nameof(currency));
-
             _currencyRepository.Insert(currency);
-
-            //event notification
-            _eventPublisher.EntityInserted(currency);
         }
 
         /// <summary>
@@ -140,13 +121,7 @@ namespace Nop.Services.Directory
         /// <param name="currency">Currency</param>
         public virtual void UpdateCurrency(Currency currency)
         {
-            if (currency == null)
-                throw new ArgumentNullException(nameof(currency));
-
             _currencyRepository.Update(currency);
-
-            //event notification
-            _eventPublisher.EntityUpdated(currency);
         }
 
         #endregion

@@ -6,11 +6,6 @@
     public static partial class NopCachingDefaults
     {
         /// <summary>
-        /// Gets the default cache time in minutes
-        /// </summary>
-        public static int CacheTime => 60;
-        
-        /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>

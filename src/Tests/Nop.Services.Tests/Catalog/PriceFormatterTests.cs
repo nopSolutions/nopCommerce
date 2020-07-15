@@ -10,11 +10,11 @@ using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Tests;
@@ -80,10 +80,9 @@ namespace Nop.Services.Tests.Catalog
             var pluginService = new FakePluginService();
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new Mock<ICustomerService>().Object, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
-                new FakeCacheKeyService(),
-                null,
                 _exchangeRatePluginManager,
                 _currencyRepo.Object,
+                new TestCacheManager(), 
                 _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();

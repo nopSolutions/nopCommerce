@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Logging
 {
@@ -18,10 +16,9 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
@@ -29,17 +26,15 @@ namespace Nop.Services.Logging
 
         #region Ctor
 
-        public CustomerActivityService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<ActivityLog> activityLogRepository,
+        public CustomerActivityService(IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
+            IStaticCacheManager staticCacheManager,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
+            _staticCacheManager = staticCacheManager;
             _webHelper = webHelper;
             _workContext = workContext;
         }
@@ -54,13 +49,7 @@ namespace Nop.Services.Logging
         /// <param name="activityLogType">Activity log type item</param>
         public virtual void InsertActivityType(ActivityLogType activityLogType)
         {
-            if (activityLogType == null)
-                throw new ArgumentNullException(nameof(activityLogType));
-
             _activityLogTypeRepository.Insert(activityLogType);
-
-            //event notification
-            _eventPublisher.EntityInserted(activityLogType);
         }
 
         /// <summary>
@@ -69,13 +58,7 @@ namespace Nop.Services.Logging
         /// <param name="activityLogType">Activity log type item</param>
         public virtual void UpdateActivityType(ActivityLogType activityLogType)
         {
-            if (activityLogType == null)
-                throw new ArgumentNullException(nameof(activityLogType));
-
             _activityLogTypeRepository.Update(activityLogType);
-
-            //event notification
-            _eventPublisher.EntityUpdated(activityLogType);
         }
 
         /// <summary>
@@ -84,13 +67,7 @@ namespace Nop.Services.Logging
         /// <param name="activityLogType">Activity log type</param>
         public virtual void DeleteActivityType(ActivityLogType activityLogType)
         {
-            if (activityLogType == null)
-                throw new ArgumentNullException(nameof(activityLogType));
-
             _activityLogTypeRepository.Delete(activityLogType);
-
-            //event notification
-            _eventPublisher.EntityDeleted(activityLogType);
         }
 
         /// <summary>
@@ -99,10 +76,12 @@ namespace Nop.Services.Logging
         /// <returns>Activity log type items</returns>
         public virtual IList<ActivityLogType> GetAllActivityTypes()
         {
-            var query = from alt in _activityLogTypeRepository.Table
-                        orderby alt.Name
-                        select alt;
-            var activityLogTypes = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopLoggingDefaults.ActivityTypeAllCacheKey));
+            var activityLogTypes = _activityLogTypeRepository.GetAll(query=>
+            {
+                return from alt in query
+                    orderby alt.Name
+                    select alt;
+            }, _staticCacheManager.PrepareKeyForDefaultCache(NopLoggingDefaults.ActivityTypeAllCacheKey));
 
             return activityLogTypes;
         }
@@ -114,10 +93,7 @@ namespace Nop.Services.Logging
         /// <returns>Activity log type item</returns>
         public virtual ActivityLogType GetActivityTypeById(int activityLogTypeId)
         {
-            if (activityLogTypeId == 0)
-                return null;
-
-            return _activityLogTypeRepository.ToCachedGetById(activityLogTypeId);
+            return _activityLogTypeRepository.GetById(activityLogTypeId);
         }
 
         /// <summary>
@@ -163,9 +139,6 @@ namespace Nop.Services.Logging
             };
             _activityLogRepository.Insert(logItem);
 
-            //event notification
-            _eventPublisher.EntityInserted(logItem);
-
             return logItem;
         }
 
@@ -175,13 +148,7 @@ namespace Nop.Services.Logging
         /// <param name="activityLog">Activity log type</param>
         public virtual void DeleteActivity(ActivityLog activityLog)
         {
-            if (activityLog == null)
-                throw new ArgumentNullException(nameof(activityLog));
-
             _activityLogRepository.Delete(activityLog);
-
-            //event notification
-            _eventPublisher.EntityDeleted(activityLog);
         }
 
         /// <summary>
@@ -201,35 +168,37 @@ namespace Nop.Services.Logging
             int? customerId = null, int? activityLogTypeId = null, string ipAddress = null, string entityName = null, int? entityId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _activityLogRepository.Table;
+            return _activityLogRepository.GetAllPaged(query =>
+            {
 
-            //filter by IP
-            if (!string.IsNullOrEmpty(ipAddress))
-                query = query.Where(logItem => logItem.IpAddress.Contains(ipAddress));
+                //filter by IP
+                if (!string.IsNullOrEmpty(ipAddress))
+                    query = query.Where(logItem => logItem.IpAddress.Contains(ipAddress));
 
-            //filter by creation date
-            if (createdOnFrom.HasValue)
-                query = query.Where(logItem => createdOnFrom.Value <= logItem.CreatedOnUtc);
-            if (createdOnTo.HasValue)
-                query = query.Where(logItem => createdOnTo.Value >= logItem.CreatedOnUtc);
+                //filter by creation date
+                if (createdOnFrom.HasValue)
+                    query = query.Where(logItem => createdOnFrom.Value <= logItem.CreatedOnUtc);
+                if (createdOnTo.HasValue)
+                    query = query.Where(logItem => createdOnTo.Value >= logItem.CreatedOnUtc);
 
-            //filter by log type
-            if (activityLogTypeId.HasValue && activityLogTypeId.Value > 0)
-                query = query.Where(logItem => activityLogTypeId == logItem.ActivityLogTypeId);
+                //filter by log type
+                if (activityLogTypeId.HasValue && activityLogTypeId.Value > 0)
+                    query = query.Where(logItem => activityLogTypeId == logItem.ActivityLogTypeId);
 
-            //filter by customer
-            if (customerId.HasValue && customerId.Value > 0)
-                query = query.Where(logItem => customerId.Value == logItem.CustomerId);
+                //filter by customer
+                if (customerId.HasValue && customerId.Value > 0)
+                    query = query.Where(logItem => customerId.Value == logItem.CustomerId);
 
-            //filter by entity
-            if (!string.IsNullOrEmpty(entityName))
-                query = query.Where(logItem => logItem.EntityName.Equals(entityName));
-            if (entityId.HasValue && entityId.Value > 0)
-                query = query.Where(logItem => entityId.Value == logItem.EntityId);
+                //filter by entity
+                if (!string.IsNullOrEmpty(entityName))
+                    query = query.Where(logItem => logItem.EntityName.Equals(entityName));
+                if (entityId.HasValue && entityId.Value > 0)
+                    query = query.Where(logItem => entityId.Value == logItem.EntityId);
 
-            query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
+                query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
 
-            return new PagedList<ActivityLog>(query, pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -239,10 +208,7 @@ namespace Nop.Services.Logging
         /// <returns>Activity log item</returns>
         public virtual ActivityLog GetActivityById(int activityLogId)
         {
-            if (activityLogId == 0)
-                return null;
-
-            return _activityLogRepository.GetById(activityLogId);
+            return _activityLogRepository.GetById(activityLogId, 0);
         }
 
         /// <summary>

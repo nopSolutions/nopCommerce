@@ -19,7 +19,7 @@ namespace Nop.Services.Stores.Caching
             Remove(NopStoreDefaults.StoresAllCacheKey);
             RemoveByPrefix(NopOrderDefaults.ShoppingCartPrefixCacheKey);
 
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopLocalizationDefaults.LanguagesByStoreIdPrefixCacheKey, entity);
+            var prefix = _staticCacheManager.PrepareKeyPrefix(NopLocalizationDefaults.LanguagesByStoreIdPrefixCacheKey, entity);
 
             RemoveByPrefix(prefix);
         }

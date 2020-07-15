@@ -19,14 +19,13 @@ namespace Nop.Core.Caching
     /// Represents a manager for caching in Redis store (http://redis.io/).
     /// Mostly it'll be used when running in a web farm or Azure. But of course it can be also used on any server or environment
     /// </summary>
-    public partial class RedisCacheManager : IStaticCacheManager
+    public partial class RedisCacheManager : CacheKeyService, IStaticCacheManager
     {
         #region Fields
 
         private bool _disposed;
         private readonly IDatabase _db;
         private readonly IRedisConnectionWrapper _connectionWrapper;
-        private readonly NopConfig _config;
         private readonly PerRequestCache _perRequestCache;
 
         #endregion
@@ -35,12 +34,10 @@ namespace Nop.Core.Caching
 
         public RedisCacheManager(IHttpContextAccessor httpContextAccessor,
             IRedisConnectionWrapper connectionWrapper,
-            NopConfig config)
+            NopConfig config) : base(config)
         {
             if (string.IsNullOrEmpty(config.RedisConnectionString))
                 throw new Exception("Redis connection string is empty");
-
-            _config = config;
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
@@ -49,7 +46,7 @@ namespace Nop.Core.Caching
 
             _perRequestCache = new PerRequestCache(httpContextAccessor);
         }
-        
+
         #endregion
         
         #region Utilities
@@ -161,7 +158,7 @@ namespace Nop.Core.Caching
             catch (RedisTimeoutException)
             {
                 //ignore the RedisTimeoutException if specified by settings
-                if (_config.IgnoreRedisTimeoutException)
+                if (_nopConfig.IgnoreRedisTimeoutException)
                     return (false, default);
 
                 //or rethrow the exception

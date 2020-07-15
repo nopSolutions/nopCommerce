@@ -15,7 +15,7 @@ namespace Nop.Services.Customers.Caching
         protected override void ClearCache(CustomerAttributeValue entity)
         {
             Remove(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey);
-            Remove(_cacheKeyService.PrepareKey(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, entity.CustomerAttributeId));
+            Remove(_staticCacheManager.PrepareKey(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, entity.CustomerAttributeId));
         }
     }
 }

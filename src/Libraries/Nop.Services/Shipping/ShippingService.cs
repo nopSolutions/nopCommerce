@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -30,11 +29,9 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
@@ -47,6 +44,7 @@ namespace Nop.Services.Shipping
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -56,11 +54,9 @@ namespace Nop.Services.Shipping
         #region Ctor
 
         public ShippingService(IAddressService addressService,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICountryService countryService,
             ICustomerService customerService,
-            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
@@ -73,16 +69,15 @@ namespace Nop.Services.Shipping
             IRepository<Warehouse> warehouseRepository,
             IShippingPluginManager shippingPluginManager,
             IStateProvinceService stateProvinceService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
             _addressService = addressService;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _countryService = countryService;
             _customerService = customerService;
-            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _logger = logger;
@@ -95,6 +90,7 @@ namespace Nop.Services.Shipping
             _warehouseRepository = warehouseRepository;
             _shippingPluginManager = shippingPluginManager;
             _stateProvinceService = stateProvinceService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shippingSettings = shippingSettings;
             _shoppingCartSettings = shoppingCartSettings;
@@ -151,13 +147,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethod">The shipping method</param>
         public virtual void DeleteShippingMethod(ShippingMethod shippingMethod)
         {
-            if (shippingMethod == null)
-                throw new ArgumentNullException(nameof(shippingMethod));
-
             _shippingMethodRepository.Delete(shippingMethod);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(shippingMethod);
         }
 
         /// <summary>
@@ -167,10 +157,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping method</returns>
         public virtual ShippingMethod GetShippingMethodById(int shippingMethodId)
         {
-            if (shippingMethodId == 0)
-                return null;
-
-            return _shippingMethodRepository.ToCachedGetById(shippingMethodId);
+            return _shippingMethodRepository.GetById(shippingMethodId);
         }
 
         /// <summary>
@@ -180,10 +167,12 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId);
             
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {
+                //TODO: попробуй свернуть все к _shippingMethodRepository.GetAll()
+
                 var query1 = from sm in _shippingMethodRepository.Table
                     join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
                     where smcm.CountryId == filterByCountryId.Value
@@ -199,11 +188,12 @@ namespace Nop.Services.Shipping
                 return query2.ToCachedList(key);
             }
 
-            var query = from sm in _shippingMethodRepository.Table
-                orderby sm.DisplayOrder, sm.Id
-                select sm;
-
-            return query.ToCachedList(key);
+            return _shippingMethodRepository.GetAll(query=>
+            {
+                return from sm in query
+                    orderby sm.DisplayOrder, sm.Id
+                    select sm;
+            }, key);
         }
 
         /// <summary>
@@ -212,13 +202,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethod">Shipping method</param>
         public virtual void InsertShippingMethod(ShippingMethod shippingMethod)
         {
-            if (shippingMethod == null)
-                throw new ArgumentNullException(nameof(shippingMethod));
-
             _shippingMethodRepository.Insert(shippingMethod);
-
-            //event notification
-            _eventPublisher.EntityInserted(shippingMethod);
         }
 
         /// <summary>
@@ -227,13 +211,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethod">Shipping method</param>
         public virtual void UpdateShippingMethod(ShippingMethod shippingMethod)
         {
-            if (shippingMethod == null)
-                throw new ArgumentNullException(nameof(shippingMethod));
-
             _shippingMethodRepository.Update(shippingMethod);
-
-            //event notification
-            _eventPublisher.EntityUpdated(shippingMethod);
         }
 
         /// <summary>
@@ -274,13 +252,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
         public virtual void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping)
         {
-            if (shippingMethodCountryMapping == null)
-                throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
-
             _shippingMethodCountryMappingRepository.Insert(shippingMethodCountryMapping);
-
-            //event notification
-            _eventPublisher.EntityInserted(shippingMethodCountryMapping);
         }
 
         /// <summary>
@@ -289,13 +261,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
         public virtual void DeleteShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping)
         {
-            if (shippingMethodCountryMapping == null)
-                throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
-
             _shippingMethodCountryMappingRepository.Delete(shippingMethodCountryMapping);
-
-            //event notification
-            _eventPublisher.EntityDeleted(shippingMethodCountryMapping);
         }
 
         #endregion
@@ -308,13 +274,7 @@ namespace Nop.Services.Shipping
         /// <param name="warehouse">The warehouse</param>
         public virtual void DeleteWarehouse(Warehouse warehouse)
         {
-            if (warehouse == null)
-                throw new ArgumentNullException(nameof(warehouse));
-
             _warehouseRepository.Delete(warehouse);
-
-            //event notification
-            _eventPublisher.EntityDeleted(warehouse);
         }
 
         /// <summary>
@@ -324,10 +284,7 @@ namespace Nop.Services.Shipping
         /// <returns>Warehouse</returns>
         public virtual Warehouse GetWarehouseById(int warehouseId)
         {
-            if (warehouseId == 0)
-                return null;
-
-            return _warehouseRepository.ToCachedGetById(warehouseId);
+            return _warehouseRepository.GetById(warehouseId);
         }
 
         /// <summary>
@@ -337,16 +294,15 @@ namespace Nop.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual IList<Warehouse> GetAllWarehouses(string name = null)
         {
-            var query = from wh in _warehouseRepository.Table
-                        orderby wh.Name
-                        select wh;
-
-            var warehouses = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
-
-            if (!string.IsNullOrEmpty(name))
+            var warehouses = _warehouseRepository.GetAll(query=>
             {
+                return from wh in query
+                    orderby wh.Name
+                    select wh;
+            }, _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
+
+            if (!string.IsNullOrEmpty(name)) 
                 warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();
-            }
 
             return warehouses;
         }
@@ -357,13 +313,7 @@ namespace Nop.Services.Shipping
         /// <param name="warehouse">Warehouse</param>
         public virtual void InsertWarehouse(Warehouse warehouse)
         {
-            if (warehouse == null)
-                throw new ArgumentNullException(nameof(warehouse));
-
             _warehouseRepository.Insert(warehouse);
-
-            //event notification
-            _eventPublisher.EntityInserted(warehouse);
         }
 
         /// <summary>
@@ -372,13 +322,7 @@ namespace Nop.Services.Shipping
         /// <param name="warehouse">Warehouse</param>
         public virtual void UpdateWarehouse(Warehouse warehouse)
         {
-            if (warehouse == null)
-                throw new ArgumentNullException(nameof(warehouse));
-
             _warehouseRepository.Update(warehouse);
-
-            //event notification
-            _eventPublisher.EntityUpdated(warehouse);
         }
 
         #endregion

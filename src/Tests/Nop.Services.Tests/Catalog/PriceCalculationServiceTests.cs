@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -56,6 +57,8 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
+            base.SetUp();
+
             _serviceProvider = new TestServiceProvider();
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
@@ -72,20 +75,20 @@ namespace Nop.Services.Tests.Catalog
             _customerCustomerRoleMappingRepository.Setup(r => r.Table)
                 .Returns(customerCustomerRoleMapping.AsQueryable());
 
-            _customerCustomerRoleMappingRepository.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>()))
+            _customerCustomerRoleMappingRepository.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>(), It.IsAny<bool>()))
                 .Callback(
-                    (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
+                    (CustomerCustomerRoleMapping ccrm, bool publishEvent) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(new CachingSettings(), null, new FakeCacheKeyService(),  null, null, null, null,
+            _customerService = new CustomerService(null, null, null, null,
                 null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null,
-                new TestCacheManager(), _storeContext.Object, null);
+                new TestCacheManager(), new NopConfig(),  _storeContext.Object, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
             _productRepository = new Mock<IRepository<Product>>();
             _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
-            _productRepository.Setup(p => p.GetById(It.IsAny<int>()))
-                .Returns((int id) => GetMockProducts().FirstOrDefault(p => p.Id == id));
+            _productRepository.Setup(p => p.GetById(It.IsAny<int>(), null))
+                .Returns((int id, int? cacheTime) => GetMockProducts().FirstOrDefault(p => p.Id == id));
 
             _tierPriceRepository = new Mock<IRepository<TierPrice>>();
             _tierPriceRepository.Setup(t => t.Table).Returns(GetMockTierPrices);
@@ -97,11 +100,11 @@ namespace Nop.Services.Tests.Catalog
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(),  _customerService,
-                null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, _customerService,
+                null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
-                null, null, null, null, new LocalizationSettings());
+                new TestCacheManager(), null, null, null, new LocalizationSettings());
 
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
@@ -126,7 +129,7 @@ namespace Nop.Services.Tests.Catalog
 
             _priceCalcService = new PriceCalculationService(_catalogSettings,
                 new CurrencySettings { PrimaryStoreCurrencyId = 1 },
-                new FakeCacheKeyService(), _categoryService.Object,
+                _categoryService.Object,
                 _serviceProvider.CurrencyService.Object, _customerService, _discountService,
                 _manufacturerService.Object, _productAttributeParser.Object,
                 _productService, _staticCacheManager, _storeContext.Object, _workContext.Object);

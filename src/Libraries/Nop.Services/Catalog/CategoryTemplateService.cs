@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -16,21 +13,18 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CategoryTemplateService(ICacheKeyService cacheKeyService,
-        IEventPublisher eventPublisher,
-            IRepository<CategoryTemplate> categoryTemplateRepository)
+        public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _categoryTemplateRepository = categoryTemplateRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -43,13 +37,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryTemplate">Category template</param>
         public virtual void DeleteCategoryTemplate(CategoryTemplate categoryTemplate)
         {
-            if (categoryTemplate == null)
-                throw new ArgumentNullException(nameof(categoryTemplate));
-
             _categoryTemplateRepository.Delete(categoryTemplate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(categoryTemplate);
         }
 
         /// <summary>
@@ -58,11 +46,12 @@ namespace Nop.Services.Catalog
         /// <returns>Category templates</returns>
         public virtual IList<CategoryTemplate> GetAllCategoryTemplates()
         {
-            var query = from pt in _categoryTemplateRepository.Table
-                        orderby pt.DisplayOrder, pt.Id
-                        select pt;
-
-            var templates = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryTemplatesAllCacheKey));
+            var templates = _categoryTemplateRepository.GetAll(query =>
+            {
+                return from pt in query
+                    orderby pt.DisplayOrder, pt.Id
+                    select pt;
+            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryTemplatesAllCacheKey));
 
             return templates;
         }
@@ -74,10 +63,7 @@ namespace Nop.Services.Catalog
         /// <returns>Category template</returns>
         public virtual CategoryTemplate GetCategoryTemplateById(int categoryTemplateId)
         {
-            if (categoryTemplateId == 0)
-                return null;
-
-            return _categoryTemplateRepository.ToCachedGetById(categoryTemplateId);
+            return _categoryTemplateRepository.GetById(categoryTemplateId);
         }
 
         /// <summary>
@@ -86,13 +72,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryTemplate">Category template</param>
         public virtual void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
         {
-            if (categoryTemplate == null)
-                throw new ArgumentNullException(nameof(categoryTemplate));
-
             _categoryTemplateRepository.Insert(categoryTemplate);
-
-            //event notification
-            _eventPublisher.EntityInserted(categoryTemplate);
         }
 
         /// <summary>
@@ -101,13 +81,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryTemplate">Category template</param>
         public virtual void UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
         {
-            if (categoryTemplate == null)
-                throw new ArgumentNullException(nameof(categoryTemplate));
-
             _categoryTemplateRepository.Update(categoryTemplate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(categoryTemplate);
         }
 
         #endregion

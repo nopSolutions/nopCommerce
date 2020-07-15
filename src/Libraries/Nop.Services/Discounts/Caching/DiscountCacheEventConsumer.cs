@@ -15,13 +15,13 @@ namespace Nop.Services.Discounts.Caching
         protected override void ClearCache(Discount entity)
         {
             RemoveByPrefix(NopDiscountDefaults.DiscountAllPrefixCacheKey);
-            var cacheKey = _cacheKeyService.PrepareKey(NopDiscountDefaults.DiscountRequirementModelCacheKey, entity);
+            var cacheKey = _staticCacheManager.PrepareKey(NopDiscountDefaults.DiscountRequirementModelCacheKey, entity);
             Remove(cacheKey);
 
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopDiscountDefaults.DiscountCategoryIdsByDiscountPrefixCacheKey, entity);
+            var prefix = _staticCacheManager.PrepareKeyPrefix(NopDiscountDefaults.DiscountCategoryIdsByDiscountPrefixCacheKey, entity);
             RemoveByPrefix(prefix);
 
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopDiscountDefaults.DiscountManufacturerIdsByDiscountPrefixCacheKey, entity);
+            prefix = _staticCacheManager.PrepareKeyPrefix(NopDiscountDefaults.DiscountManufacturerIdsByDiscountPrefixCacheKey, entity);
             RemoveByPrefix(prefix);
         }
     }

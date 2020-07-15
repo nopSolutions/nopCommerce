@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
-using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Vendors
 {
@@ -16,24 +14,21 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<VendorAttribute> _vendorAttributeRepository;
         private readonly IRepository<VendorAttributeValue> _vendorAttributeValueRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public VendorAttributeService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<VendorAttribute> vendorAttributeRepository,
-            IRepository<VendorAttributeValue> vendorAttributeValueRepository)
+        public VendorAttributeService(IRepository<VendorAttribute> vendorAttributeRepository,
+            IRepository<VendorAttributeValue> vendorAttributeValueRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _vendorAttributeRepository = vendorAttributeRepository;
             _vendorAttributeValueRepository = vendorAttributeValueRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -48,9 +43,10 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attributes</returns>
         public virtual IList<VendorAttribute> GetAllVendorAttributes()
         {
-            return _vendorAttributeRepository.Table
-                .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
-                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
+            return _vendorAttributeRepository.GetAll(
+                query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder)
+                    .ThenBy(vendorAttribute => vendorAttribute.Id)
+                , _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
         }
 
         /// <summary>
@@ -60,10 +56,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute</returns>
         public virtual VendorAttribute GetVendorAttributeById(int vendorAttributeId)
         {
-            if (vendorAttributeId == 0)
-                return null;
-
-            return _vendorAttributeRepository.ToCachedGetById(vendorAttributeId);
+            return _vendorAttributeRepository.GetById(vendorAttributeId);
         }
 
         /// <summary>
@@ -72,13 +65,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorAttribute">Vendor attribute</param>
         public virtual void InsertVendorAttribute(VendorAttribute vendorAttribute)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
             _vendorAttributeRepository.Insert(vendorAttribute);
-
-            //event notification
-            _eventPublisher.EntityInserted(vendorAttribute);
         }
 
         /// <summary>
@@ -87,13 +74,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorAttribute">Vendor attribute</param>
         public virtual void UpdateVendorAttribute(VendorAttribute vendorAttribute)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
             _vendorAttributeRepository.Update(vendorAttribute);
-
-            //event notification
-            _eventPublisher.EntityUpdated(vendorAttribute);
         }
 
         /// <summary>
@@ -102,13 +83,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorAttribute">Vendor attribute</param>
         public virtual void DeleteVendorAttribute(VendorAttribute vendorAttribute)
         {
-            if (vendorAttribute == null)
-                throw new ArgumentNullException(nameof(vendorAttribute));
-
             _vendorAttributeRepository.Delete(vendorAttribute);
-
-            //event notification
-            _eventPublisher.EntityDeleted(vendorAttribute);
         }
 
         #endregion
@@ -122,7 +97,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
 
             return _vendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
@@ -138,10 +113,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute value</returns>
         public virtual VendorAttributeValue GetVendorAttributeValueById(int vendorAttributeValueId)
         {
-            if (vendorAttributeValueId == 0)
-                return null;
-
-            return _vendorAttributeValueRepository.ToCachedGetById(vendorAttributeValueId);
+            return _vendorAttributeValueRepository.GetById(vendorAttributeValueId);
         }
 
         /// <summary>
@@ -150,13 +122,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
         public virtual void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
         {
-            if (vendorAttributeValue == null)
-                throw new ArgumentNullException(nameof(vendorAttributeValue));
-
             _vendorAttributeValueRepository.Insert(vendorAttributeValue);
-
-            //event notification
-            _eventPublisher.EntityInserted(vendorAttributeValue);
         }
 
         /// <summary>
@@ -165,13 +131,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
         public virtual void UpdateVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
         {
-            if (vendorAttributeValue == null)
-                throw new ArgumentNullException(nameof(vendorAttributeValue));
-
             _vendorAttributeValueRepository.Update(vendorAttributeValue);
-
-            //event notification
-            _eventPublisher.EntityUpdated(vendorAttributeValue);
         }
 
         /// <summary>
@@ -180,13 +140,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
         public virtual void DeleteVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
         {
-            if (vendorAttributeValue == null)
-                throw new ArgumentNullException(nameof(vendorAttributeValue));
-
             _vendorAttributeValueRepository.Delete(vendorAttributeValue);
-
-            //event notification
-            _eventPublisher.EntityDeleted(vendorAttributeValue);
         }
 
         #endregion

@@ -5,13 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
-    public partial class MemoryCacheManager : ILocker, IStaticCacheManager
+    public partial class MemoryCacheManager : CacheKeyService, ILocker, IStaticCacheManager
     {
         #region Fields
 
@@ -27,7 +28,7 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        public MemoryCacheManager(IMemoryCache memoryCache)
+        public MemoryCacheManager(IMemoryCache memoryCache, NopConfig nopConfig) : base(nopConfig)
         {
             _memoryCache = memoryCache;
         }

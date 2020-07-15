@@ -16,7 +16,7 @@ namespace Nop.Services.Localization.Caching
         {
             Remove(NopLocalizationDefaults.LocalizedPropertyAllCacheKey);
 
-            var cacheKey = _cacheKeyService.PrepareKey(NopLocalizationDefaults.LocalizedPropertyCacheKey,
+            var cacheKey = _staticCacheManager.PrepareKey(NopLocalizationDefaults.LocalizedPropertyCacheKey,
                 entity.LanguageId, entity.EntityId, entity.LocaleKeyGroup, entity.LocaleKey);
 
             Remove(cacheKey);

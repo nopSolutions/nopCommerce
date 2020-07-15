@@ -5,7 +5,6 @@ using Moq;
 using Nop.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Tests;
@@ -20,7 +19,6 @@ namespace Nop.Services.Tests.Localization
         private Mock<IStoreMappingService> _storeMappingService;
         private ILanguageService _languageService;
         private Mock<ISettingService> _settingService;
-        private Mock<IEventPublisher> _eventPublisher;
         private LocalizationSettings _localizationSettings;
 
         [SetUp]
@@ -50,11 +48,8 @@ namespace Nop.Services.Tests.Localization
 
             _settingService = new Mock<ISettingService>();
 
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(new FakeCacheKeyService(), _eventPublisher.Object, _languageRepo.Object,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
+            _languageService = new LanguageService(_languageRepo.Object,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
         }
 
         [Test]

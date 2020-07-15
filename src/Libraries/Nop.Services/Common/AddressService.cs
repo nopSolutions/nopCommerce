@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -18,35 +16,32 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly AddressSettings _addressSettings;
-        private readonly CachingSettings _cachingSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ICountryService _countryService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Address> _addressRepository;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly NopConfig _nopConfig;
 
         #endregion
 
         #region Ctor
 
         public AddressService(AddressSettings addressSettings,
-            CachingSettings cachingSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             ICountryService countryService,
-            IEventPublisher eventPublisher,
             IRepository<Address> addressRepository,
-            IStateProvinceService stateProvinceService)
+            IStateProvinceService stateProvinceService,
+            NopConfig nopConfig)
         {
             _addressSettings = addressSettings;
-            _cachingSettings = cachingSettings;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
             _countryService = countryService;
-            _eventPublisher = eventPublisher;
             _addressRepository = addressRepository;
             _stateProvinceService = stateProvinceService;
+            _nopConfig = nopConfig;
         }
 
         #endregion
@@ -59,13 +54,7 @@ namespace Nop.Services.Common
         /// <param name="address">Address</param>
         public virtual void DeleteAddress(Address address)
         {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
-
             _addressRepository.Delete(address);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(address);
         }
 
         /// <summary>
@@ -109,10 +98,7 @@ namespace Nop.Services.Common
         /// <returns>Address</returns>
         public virtual Address GetAddressById(int addressId)
         {
-            if (addressId == 0)
-                return null;
-            
-            return _addressRepository.ToCachedGetById(addressId, _cachingSettings.ShortTermCacheTime);
+            return _addressRepository.GetById(addressId, cacheTime: _nopConfig.ShortTermCacheTime);
         }
 
         /// <summary>
@@ -133,9 +119,6 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
-            
-            //event notification
-            _eventPublisher.EntityInserted(address);
         }
 
         /// <summary>
@@ -154,9 +137,6 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(address);
         }
 
         /// <summary>

@@ -59,6 +59,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //add NopConfig configuration parameters
             var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            Singleton<NopConfig>.Instance = nopConfig;
 
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));

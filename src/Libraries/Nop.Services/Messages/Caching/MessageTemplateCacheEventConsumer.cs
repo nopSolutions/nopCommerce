@@ -15,7 +15,7 @@ namespace Nop.Services.Messages.Caching
         protected override void ClearCache(MessageTemplate entity)
         {
             RemoveByPrefix(NopMessageDefaults.MessageTemplatesAllPrefixCacheKey);
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopMessageDefaults.MessageTemplatesByNamePrefixCacheKey, entity.Name);
+            var prefix = _staticCacheManager.PrepareKeyPrefix(NopMessageDefaults.MessageTemplatesByNamePrefixCacheKey, entity.Name);
             RemoveByPrefix(prefix);
         }
     }

@@ -4,7 +4,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Messages;
 using NUnit.Framework;
 

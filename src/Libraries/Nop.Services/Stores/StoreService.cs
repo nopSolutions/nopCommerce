@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Stores
 {
@@ -15,18 +14,18 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Store> _storeRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public StoreService(IEventPublisher eventPublisher,
-            IRepository<Store> storeRepository)
+        public StoreService(IRepository<Store> storeRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
             _storeRepository = storeRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -47,9 +46,6 @@ namespace Nop.Services.Stores
                 throw new Exception("You cannot delete the only configured store");
 
             _storeRepository.Delete(store);
-
-            //event notification
-            _eventPublisher.EntityDeleted(store);
         }
 
         /// <summary>
@@ -58,11 +54,10 @@ namespace Nop.Services.Stores
         /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores()
         {
-            var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
-
-            //we can not use ICacheKeyService because it'll cause circular references.
-            //that's why we use the default cache time
-            var result = query.ToCachedList(NopStoreDefaults.StoresAllCacheKey);
+            var result = _storeRepository.GetAll(query =>
+            {
+                return from s in query orderby s.DisplayOrder, s.Id select s;
+            }, _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoresAllCacheKey));
 
             return result;
         }
@@ -74,12 +69,7 @@ namespace Nop.Services.Stores
         /// <returns>Store</returns>
         public virtual Store GetStoreById(int storeId)
         {
-            if (storeId == 0)
-                return null;
-
-            var store = _storeRepository.ToCachedGetById(storeId);
-
-            return store;
+            return _storeRepository.GetById(storeId);
         }
 
         /// <summary>
@@ -88,13 +78,7 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         public virtual void InsertStore(Store store)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
-
             _storeRepository.Insert(store);
-
-            //event notification
-            _eventPublisher.EntityInserted(store);
         }
 
         /// <summary>
@@ -103,13 +87,7 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         public virtual void UpdateStore(Store store)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
-            
             _storeRepository.Update(store);
-
-            //event notification
-            _eventPublisher.EntityUpdated(store);
         }
 
         /// <summary>

@@ -38,7 +38,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressService _addressService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICountryService _countryService;
@@ -54,6 +53,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IProductService _productService;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -78,7 +78,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         public AvalaraTaxManager(AvalaraTaxSettings avalaraTaxSettings,
             IActionContextAccessor actionContextAccessor,
             IAddressService addressService,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICountryService countryService,
@@ -94,6 +93,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             IProductService productService,
             IRepository<GenericAttribute> genericAttributeRepository,
             IRepository<TaxCategory> taxCategoryRepository,
+            IStaticCacheManager staticCacheManager,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -111,7 +111,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _avalaraTaxSettings = avalaraTaxSettings;
             _actionContextAccessor = actionContextAccessor;
             _addressService = addressService;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _countryService = countryService;
@@ -127,6 +126,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _productService = productService;
             _genericAttributeRepository = genericAttributeRepository;
             _taxCategoryRepository = taxCategoryRepository;
+            _staticCacheManager = staticCacheManager;
             _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -978,7 +978,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 : taxRateRequest.Product?.TaxCategoryId
                 ?? 0)?.Name;
             var itemCode = taxRateRequest.Product?.Sku;
-            var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(AvalaraTaxDefaults.TaxRateCacheKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(AvalaraTaxDefaults.TaxRateCacheKey,
                 customer,
                 taxCode,
                 itemCode,

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using LinqToDB.Data;
 using Nop.Core;
+using Nop.Core.Caching;
 
 namespace Nop.Data
 {
@@ -16,23 +17,35 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Get entity by identifier
+        /// Get the entity entry
         /// </summary>
-        /// <param name="id">Identifier</param>
-        /// <returns>Entity</returns>
-        TEntity GetById(object id);
+        /// <param name="id">Entity entry identifier</param>
+        /// <param name="cacheTime">Cache time in minutes; pass null to use default value; pass 0 to do not cache</param>
+        /// <returns>Entity entry</returns>
+        TEntity GetById(int? id, int? cacheTime = null);
 
         /// <summary>
-        /// Insert entity
+        /// Get entity entries by identifiers
         /// </summary>
-        /// <param name="entity">Entity</param>
-        void Insert(TEntity entity);
+        /// <param name="ids">Entity entry identifiers</param>
+        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <returns>Entity entries</returns>
+        IList<TEntity> GetByIds(IList<int> ids, CacheKey cacheKey = null);
 
         /// <summary>
-        /// Insert entities
+        /// Insert the entity entry
         /// </summary>
-        /// <param name="entities">Entities</param>
-        void Insert(IEnumerable<TEntity> entities);
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Insert(TEntity entity, bool publishEvent = true);
+
+        /// <summary>
+        /// Insert entity entries
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Insert(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Loads the original copy of the entity
@@ -43,31 +56,35 @@ namespace Nop.Data
         TEntity LoadOriginalCopy(TEntity entity);
 
         /// <summary>
-        /// Update entity
+        /// Update the entity entry
         /// </summary>
-        /// <param name="entity">Entity</param>
-        void Update(TEntity entity);
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Update(TEntity entity, bool publishEvent = true);
 
         /// <summary>
-        /// Update entities
+        /// Update entity entries
         /// </summary>
-        /// <param name="entities">Entities</param>
-        void Update(IEnumerable<TEntity> entities);
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Update(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
-        /// Delete entity
+        /// Delete the entity entry
         /// </summary>
-        /// <param name="entity">Entity</param>
-        void Delete(TEntity entity);
+        /// <param name="entity">Entity entry</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Delete(TEntity entity, bool publishEvent = true);
 
         /// <summary>
-        /// Delete entities
+        /// Delete entity entries
         /// </summary>
-        /// <param name="entities">Entities</param>
-        void Delete(IEnumerable<TEntity> entities);
+        /// <param name="entities">Entity entries</param>
+        /// <param name="publishEvent">Whether to publish event notification</param>
+        void Delete(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
-        /// Delete entities
+        /// Delete entity entries (soft deletion and event notification are not supported)
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
         void Delete(Expression<Func<TEntity, bool>> predicate);
@@ -87,6 +104,25 @@ namespace Nop.Data
         /// <param name="resetIdentity">Performs reset identity column</param>
         void Truncate(bool resetIdentity = false);
 
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <returns>Entity entries</returns>
+        IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, CacheKey cacheKey = null);
+
+        /// <summary>
+        /// Get paged list of all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
+        /// <returns>Paged list of entity entries</returns>
+        IPagedList<TEntity> GetAllPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
+
         #endregion
 
         #region Properties
@@ -95,7 +131,7 @@ namespace Nop.Data
         /// Gets a table
         /// </summary>
         IQueryable<TEntity> Table { get; }
-        
+
         #endregion
     }
 }

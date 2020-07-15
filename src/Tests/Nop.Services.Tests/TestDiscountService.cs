@@ -9,11 +9,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Tests;
 
@@ -23,10 +21,8 @@ namespace Nop.Services.Tests
     {
         private readonly List<Discount> _discounts;
 
-        public TestDiscountService(ICacheKeyService cacheKeyService,
-            ICustomerService customerService,
+        public TestDiscountService(ICustomerService customerService,
             IDiscountPluginManager discountPluginManager,
-            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IProductService productService,
             IRepository<Discount> discountRepository,
@@ -35,10 +31,8 @@ namespace Nop.Services.Tests
             IRepository<Order> orderRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext) : base(
-            cacheKeyService,
             customerService,
             discountPluginManager,
-            eventPublisher,
             localizationService,
             productService,
             discountRepository,
@@ -107,8 +101,6 @@ namespace Nop.Services.Tests
             var localizationService = new Mock<ILocalizationService>();
             var productService = new Mock<IProductService>();
 
-            var eventPublisher = new Mock<IEventPublisher>();
-
             var pluginService = new FakePluginService();
 
             var discountPluginManager = new DiscountPluginManager(customerService.Object, pluginService);
@@ -119,10 +111,8 @@ namespace Nop.Services.Tests
             var orderRepo = new Mock<IRepository<Order>>();
 
             var discountService = new TestDiscountService(
-                new FakeCacheKeyService(),
                 customerService.Object,
                 discountPluginManager,
-                eventPublisher.Object,
                 localizationService.Object,
                 productService.Object,
                 discountRepo.Object,
