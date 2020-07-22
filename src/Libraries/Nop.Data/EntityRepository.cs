@@ -17,8 +17,8 @@ namespace Nop.Data
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
         private ITable<TEntity> _entities;
+        private readonly INopDataProvider _dataProvider;
 
         #endregion
 
@@ -64,11 +64,9 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            using (var transaction = new TransactionScope())
-            {
-                _dataProvider.BulkInsertEntities(entities);
-                transaction.Complete();
-            }
+            using var transaction = new TransactionScope();
+            _dataProvider.BulkInsertEntities(entities);
+            transaction.Complete();
         }
 
         /// <summary>
@@ -121,7 +119,6 @@ namespace Nop.Data
 
             _dataProvider.DeleteEntity(entity);
         }
-        
 
         /// <summary>
         /// Delete entities
@@ -180,7 +177,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.GetTable<TEntity>());
+        protected virtual ITable<TEntity> Entities => _entities ??= _dataProvider.GetTable<TEntity>();
 
         #endregion
     }
