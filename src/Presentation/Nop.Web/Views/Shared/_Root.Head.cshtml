@@ -1,5 +1,5 @@
-﻿@using Nop.Core.Domain
-@using StackExchange.Profiling
+﻿@using StackExchange.Profiling
+@using Nop.Core.Configuration
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
 @using Nop.Services.Events
@@ -11,7 +11,7 @@
 @inject IPermissionService permissionService
 @inject IWorkContext workContext
 @inject SeoSettings seoSettings
-@inject StoreInformationSettings storeInformationSettings
+@inject NopConfig nopConfig
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
@@ -30,14 +30,15 @@
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery/jquery-3.4.1.min.js");
-    
+
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
-    var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
-        && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
+
+    var displayMiniProfiler = nopConfig.MiniProfilerEnabled && permissionService.Authorize(StandardPermissionProvider.AccessProfiling);
+
     //event
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }

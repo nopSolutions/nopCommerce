@@ -127,7 +127,12 @@ namespace Nop.Core.Configuration
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether should use MiniProfiler services
+        /// </summary>
+        public bool MiniProfilerEnabled { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether we should use Azure blob storage
         /// </summary>

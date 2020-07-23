@@ -10,7 +10,7 @@ using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Nop.Core;
-using Nop.Core.Domain;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using StackExchange.Profiling;
@@ -99,11 +99,11 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return dbConnection;
 
-            var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
+            var nopConfig = EngineContext.Current.Resolve<NopConfig>();
 
-            LinqToDB.Common.Configuration.AvoidSpecificDataProviderAPI = storeSettings.DisplayMiniProfilerInPublicStore;
+            LinqToDB.Common.Configuration.AvoidSpecificDataProviderAPI = nopConfig.MiniProfilerEnabled;
 
-            return storeSettings.DisplayMiniProfilerInPublicStore ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+            return nopConfig.MiniProfilerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
         }
 
         /// <summary>

@@ -339,24 +339,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopMiniProfiler(this IServiceCollection services)
         {
-            //whether database is already installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
+            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
 
-            services.AddMiniProfiler(miniProfilerOptions =>
+            if (DataSettingsManager.DatabaseIsInstalled && nopConfig.MiniProfilerEnabled)
             {
-                //use memory cache provider for storing each result
-                ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
+                services.AddMiniProfiler(miniProfilerOptions =>
+                {
+                    //use memory cache provider for storing each result
+                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
 
-                //whether MiniProfiler should be displayed
-                miniProfilerOptions.ShouldProfile = request =>
-                    EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-
-                //determine who can access the MiniProfiler results
-                miniProfilerOptions.ResultsAuthorize = request =>
-                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            });
+                    //determine who can access the MiniProfiler results
+                    miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessProfiling);
+                });
+            }
         }
 
         /// <summary>
