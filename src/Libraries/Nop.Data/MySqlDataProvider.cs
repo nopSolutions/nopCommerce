@@ -35,11 +35,8 @@ namespace Nop.Data
         /// <param name="dataContext">Data context to configure</param>
         private void ConfigureDataContext(IDataContext dataContext)
         {
-            AdditionalSchema.SetDataType(
-                typeof(Guid),
-                new SqlDataType(DataType.NChar, typeof(Guid), 36));
-
-            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+            dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
+            dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
         }
 
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -370,7 +367,7 @@ namespace Nop.Data
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider();
+        protected override IDataProvider LinqToDbDataProvider => MySqlTools.GetDataProvider();
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
