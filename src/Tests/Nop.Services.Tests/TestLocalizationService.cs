@@ -6,6 +6,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Tests;
 
 namespace Nop.Services.Tests
 {
@@ -22,7 +23,7 @@ namespace Nop.Services.Tests
                 new  Mock<ILanguageService>().Object,
                 new  Mock<ILocalizedEntityService>().Object,
                 new  Mock<ILogger>().Object,
-                new  Mock<IRepository<LocaleStringResource>>().Object,
+                new  FakeRepository<LocaleStringResource>(),
                 new  Mock<ISettingService>().Object,
                 new  Mock<IStaticCacheManager>().Object,
                 new  Mock<IWorkContext>().Object,

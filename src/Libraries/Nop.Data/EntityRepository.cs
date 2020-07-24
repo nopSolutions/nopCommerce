@@ -297,7 +297,7 @@ namespace Nop.Data
         /// <returns>Entity entries</returns>
         public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, CacheKey cacheKey = null)
         {
-            var query = _dataProvider.GetTable<TEntity>() as IQueryable<TEntity>;
+            var query = Table;
             if (func != null)
                 query = func.Invoke(query);
 

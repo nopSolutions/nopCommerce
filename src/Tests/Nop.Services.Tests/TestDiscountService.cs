@@ -85,17 +85,10 @@ namespace Nop.Services.Tests
         public static IDiscountService Init(IQueryable<Discount> discounts = default, IQueryable<DiscountProductMapping> productDiscountMapping = null)
         {
             var staticCacheManager = new TestCacheManager();
-            var discountRepo = new Mock<IRepository<Discount>>();
-
-            discountRepo.Setup(r => r.Table).Returns(discounts);
-
-            var discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
-            discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
-            var discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-
-            var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
-
-            discountMappingRepo.Setup(x => x.Table).Returns(productDiscountMapping);
+            var discountRepo = new FakeRepository<Discount>(discounts.ToList());
+            
+            var discountRequirementRepo = new FakeRepository<DiscountRequirement>();
+            var discountUsageHistoryRepo = new FakeRepository<DiscountUsageHistory>();
 
             var customerService = new Mock<ICustomerService>();
             var localizationService = new Mock<ILocalizationService>();
@@ -108,17 +101,17 @@ namespace Nop.Services.Tests
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);
 
-            var orderRepo = new Mock<IRepository<Order>>();
+            var orderRepo = new FakeRepository<Order>();
 
             var discountService = new TestDiscountService(
                 customerService.Object,
                 discountPluginManager,
                 localizationService.Object,
                 productService.Object,
-                discountRepo.Object,
-                discountRequirementRepo.Object,
-                discountUsageHistoryRepo.Object,
-                orderRepo.Object,
+                discountRepo,
+                discountRequirementRepo,
+                discountUsageHistoryRepo,
+                orderRepo,
                 staticCacheManager,
                 storeContext.Object);
 

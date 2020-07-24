@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moq;
+using System.Linq.Expressions;
+using LinqToDB.Data;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Data;
 
 namespace Nop.Tests
 {
-    public class FakeRepository<T> : Mock<IRepository<T>>, IFakeRepository<T> where T : BaseEntity
+    public class FakeRepository<T> : IRepository<T>, IFakeRepository<T> where T: BaseEntity
     {
         private readonly int[] _initIds = Array.Empty<int>();
 
@@ -15,13 +17,11 @@ namespace Nop.Tests
 
         public FakeRepository(IList<T> initData = null)
         {
-            if (initData != null)
-            {
-                Insert(initData);
-                _initIds = initData.Select(e => e.Id).ToArray();
-            }
+            if (initData == null) 
+                return;
 
-            SetupGRUD();
+            Insert(initData);
+            _initIds = initData.Select(e => e.Id).ToArray();
         }
 
         private void SetNewId(T entity)
@@ -37,72 +37,112 @@ namespace Nop.Tests
 
             entity.Id = _table.Max(e => e.Id) + 1;
         }
+       
+        public T GetById(int? id, int? cacheTime = null)
+        {
+            return _table.FirstOrDefault(x => x.Id == Convert.ToInt32(id));
+        }
 
-        protected T Insert(T entity)
+        public IList<T> GetByIds(IList<int> ids, CacheKey cacheKey = null)
+        {
+            return _table.Where(p => ids.Contains(p.Id)).ToList();
+        }
+
+        public void Insert(T entity, bool publishEvent = true)
         {
             SetNewId(entity);
 
             if (!_table.Add(entity))
                 throw new ArgumentException($"Entity with id#{entity.Id} already exist");
-
-            return entity;
         }
 
-        protected IEnumerable<T> Insert(IList<T> entities)
+        public void Insert(IList<T> entities, bool publishEvent = true)
         {
             if (entities is null)
                 throw new ArgumentException(nameof(entities));
 
-            foreach (var item in entities)
-            {
+            foreach (var item in entities) 
                 Insert(item);
-            }
-
-            return entities;
         }
 
-        protected void Delete(T entity)
+        public T LoadOriginalCopy(T entity)
+        {
+            return entity;
+        }
+
+        public void Update(T entity, bool publishEvent = true)
+        {
+            Delete(_table.FirstOrDefault(x => x.Id == entity.Id));
+            Insert(entity);
+        }
+
+        public void Update(IList<T> entities, bool publishEvent = true)
+        {
+            Delete(_table.Where(x => entities.Any(p=>p.Id==x.Id)).ToList());
+            Insert(entities);
+        }
+
+        public void Delete(T entity, bool publishEvent = true)
         {
             _table.Remove(entity);
         }
 
-        protected void Delete(IEnumerable<T> entities)
+        public void Delete(IList<T> entities, bool publishEvent = true)
         {
             if (entities is null)
                 throw new ArgumentException(nameof(entities));
 
-            foreach (var item in entities)
-            {
+            foreach (var item in entities) 
                 _table.Remove(item);
-            }
         }
 
-        private T GetById(object id)
+        public void Delete(Expression<Func<T, bool>> predicate)
         {
-            return _table.FirstOrDefault(x => x.Id == Convert.ToInt32(id));
+            var foo = predicate.Compile();
+            Delete(_table.ToList().Where(p=>foo(p)).ToList());
         }
 
-        protected void SetupGRUD()
+        public IList<T> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
         {
-            Setup(r => r.Table).Returns(_table.AsQueryable());
+            throw new NotImplementedException();
+        }
 
-            Setup(r => r.Insert(It.IsAny<T>(), It.IsAny<bool>())).Callback((T value, bool publishEvent) => Insert(value));
-            Setup(r => r.Insert(It.IsAny<IList<T>>(), It.IsAny<bool>())).Callback((IList<T> values, bool publishEvent) => Insert(values.ToList()));
+        public void Truncate(bool resetIdentity = false)
+        {
+            throw new NotImplementedException();
+        }
 
-            Setup(r => r.Delete(It.IsAny<T>(), It.IsAny<bool>())).Callback((T value, bool publishEvent) => Delete(value));
-            Setup(r => r.Delete(It.IsAny<IList<T>>(), It.IsAny<bool>())).Callback((IList<T> values, bool publishEvent) => Delete(values));
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <returns>Entity entries</returns>
+        public virtual IList<T> GetAll(Func<IQueryable<T>, IQueryable<T>> func = null, CacheKey cacheKey = null)
+        {
+            var query = _table.AsQueryable();
+            if (func != null)
+                query = func.Invoke(query);
 
-            Setup(r => r.GetById(It.Is<int>(x => x > 0), It.IsAny<int?>())).Returns((int id, int? cacheTime) => GetById(id));
+            return query.ToList();
+        }
+
+        public IPagedList<T> GetAllPaged(Func<IQueryable<T>, IQueryable<T>> func = null, int pageIndex = 0, int pageSize = int.MaxValue,
+            bool getOnlyTotalCount = false)
+        {
+            return new PagedList<T>(GetAll(func), pageIndex, pageSize);
+        }
+
+        public IQueryable<T> Table => _table.AsQueryable();
+
+        public IRepository<T> GetRepository()
+        {
+            return this;
         }
 
         public void ResetRepository()
         {
             _table.RemoveWhere(e => !_initIds.Contains(e.Id));
-        }
-
-        public IRepository<T> GetRepository()
-        {
-            return Object;
         }
     }
 }

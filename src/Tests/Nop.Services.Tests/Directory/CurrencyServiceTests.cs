@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -16,7 +15,7 @@ namespace Nop.Services.Tests.Directory
     [TestFixture]
     public class CurrencyServiceTests : ServiceTest
     {
-        private Mock<IRepository<Currency>> _currencyRepository;
+        private FakeRepository<Currency> _currencyRepository;
         private Mock<IStoreMappingService> _storeMappingService;
         private CurrencySettings _currencySettings;
         private ICurrencyService _currencyService;
@@ -69,11 +68,7 @@ namespace Nop.Services.Tests.Directory
                 UpdatedOnUtc = DateTime.UtcNow,
                 RoundingType = RoundingType.Rounding001
             };
-            _currencyRepository = new Mock<IRepository<Currency>>();
-            _currencyRepository.Setup(x => x.Table).Returns(new List<Currency> { _currencyUSD, _currencyEUR, _currencyRUR }.AsQueryable());
-            _currencyRepository.Setup(x => x.GetById(_currencyUSD.Id, null)).Returns(_currencyUSD);
-            _currencyRepository.Setup(x => x.GetById(_currencyEUR.Id, null)).Returns(_currencyEUR);
-            _currencyRepository.Setup(x => x.GetById(_currencyRUR.Id, null)).Returns(_currencyRUR);
+            _currencyRepository = new FakeRepository<Currency>(new List<Currency> { _currencyUSD, _currencyEUR, _currencyRUR });
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
@@ -87,7 +82,7 @@ namespace Nop.Services.Tests.Directory
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new Mock<ICustomerService>().Object, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 _exchangeRatePluginManager,
-                _currencyRepository.Object,
+                _currencyRepository,
                 new TestCacheManager(), 
                 _storeMappingService.Object);
         }

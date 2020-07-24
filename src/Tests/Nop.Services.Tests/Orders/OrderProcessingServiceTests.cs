@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
@@ -16,7 +15,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
-using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -64,8 +62,8 @@ namespace Nop.Services.Tests.Orders
         private PriceCalculationService _priceCalcService;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILocalizationService> _localizationService;
-        private Mock<IRepository<ShippingMethod>> _shippingMethodRepository;
-        private Mock<IRepository<Warehouse>> _warehouseRepository;
+        private FakeRepository<ShippingMethod> _shippingMethodRepository;
+        private FakeRepository<Warehouse> _warehouseRepository;
         private NullLogger _logger;
         private ShippingService _shippingService;
         private Mock<IShipmentService> _shipmentService;
@@ -81,8 +79,8 @@ namespace Nop.Services.Tests.Orders
         private OrderTotalCalculationService _orderTotalCalcService;
 
         private IOrderService _orderService;
-        private Mock<IRepository<RecurringPayment>> _recurringPaymentRepository;
-        private Mock<IRepository<RecurringPaymentHistory>> _recurringPaymentHistoryRepository;
+        private FakeRepository<RecurringPayment> _recurringPaymentRepository;
+        private FakeRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
 
         private Mock<IWebHelper> _webHelper;
         private Mock<ILanguageService> _languageService;
@@ -116,8 +114,8 @@ namespace Nop.Services.Tests.Orders
             _productAttributeParser = new Mock<IProductAttributeParser>();
             _eventPublisher = new Mock<IEventPublisher>();
             _localizationService = new Mock<ILocalizationService>();
-            _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
-            _warehouseRepository = new Mock<IRepository<Warehouse>>();
+            _shippingMethodRepository = new FakeRepository<ShippingMethod>();
+            _warehouseRepository = new FakeRepository<Warehouse>();
             _shipmentService = new Mock<IShipmentService>();
             _paymentService = new Mock<IPaymentService>();
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
@@ -183,7 +181,7 @@ namespace Nop.Services.Tests.Orders
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
-            var shippingMethodCountryMappingRepository = new Mock<IRepository<ShippingMethodCountryMapping>>();
+            var shippingMethodCountryMappingRepository = new FakeRepository<ShippingMethodCountryMapping>();
 
             _shippingService = new ShippingService(_addressService.Object,
                 _checkoutAttributeParser.Object,
@@ -196,9 +194,9 @@ namespace Nop.Services.Tests.Orders
                 _priceCalcService,
                 _productAttributeParser.Object,
                 _productService.Object,
-                _shippingMethodRepository.Object,
-                shippingMethodCountryMappingRepository.Object,
-                _warehouseRepository.Object,
+                _shippingMethodRepository,
+                shippingMethodCountryMappingRepository,
+                _warehouseRepository,
                 _shippingPluginManager,
                 _stateProvinceService.Object,
                 new TestCacheManager(), 
@@ -235,19 +233,12 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _recurringPaymentRepository = new Mock<IRepository<RecurringPayment>>();
-            var recurringPayments = new List<RecurringPayment>();
-            _recurringPaymentRepository.Setup(r => r.Insert(It.IsAny<RecurringPayment>(), It.IsAny<bool>())).Callback((RecurringPayment rph, bool publishEvent) => recurringPayments.Add(rph));
-            _recurringPaymentRepository.Setup(r => r.Table).Returns(recurringPayments.AsQueryable());
+            _recurringPaymentRepository = new FakeRepository<RecurringPayment>();
 
-            _recurringPaymentHistoryRepository = new Mock<IRepository<RecurringPaymentHistory>>();
-            var recurringPaymentHistory = new List<RecurringPaymentHistory>();
-            _recurringPaymentHistoryRepository.Setup(r => r.Insert(It.IsAny<RecurringPaymentHistory>(), It.IsAny<bool>())).Callback((RecurringPaymentHistory rph, bool publishEvent) => recurringPaymentHistory.Add(rph));
-            _recurringPaymentHistoryRepository.Setup(r => r.Table).Returns(recurringPaymentHistory.AsQueryable());
-
-            _orderService = new OrderService(null, null, null, null, null, null, null, null, _recurringPaymentRepository.Object, _recurringPaymentHistoryRepository.Object, _shipmentService.Object, new NopConfig());
-
-
+            _recurringPaymentHistoryRepository = new FakeRepository<RecurringPaymentHistory>();
+           
+            _orderService = new OrderService(null, null, null, null, null, null, null, null, _recurringPaymentRepository, _recurringPaymentHistoryRepository, _shipmentService.Object, new NopConfig());
+            
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
                 _addressService.Object,
                 _checkoutAttributeParser.Object,

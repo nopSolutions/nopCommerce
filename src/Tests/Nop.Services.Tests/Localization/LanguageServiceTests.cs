@@ -2,7 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Nop.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -15,7 +14,7 @@ namespace Nop.Services.Tests.Localization
     [TestFixture]
     public class LanguageServiceTests : ServiceTest
     {
-        private Mock<IRepository<Language>> _languageRepo;
+        private FakeRepository<Language> _languageRepo;
         private Mock<IStoreMappingService> _storeMappingService;
         private ILanguageService _languageService;
         private Mock<ISettingService> _settingService;
@@ -24,7 +23,6 @@ namespace Nop.Services.Tests.Localization
         [SetUp]
         public new void SetUp()
         {
-            _languageRepo = new Mock<IRepository<Language>>();
             var lang1 = new Language
             {
                 Name = "English",
@@ -42,14 +40,14 @@ namespace Nop.Services.Tests.Localization
                 DisplayOrder = 2
             };
 
-            _languageRepo.Setup(x => x.Table).Returns(new List<Language> { lang1, lang2 }.AsQueryable());
+            _languageRepo = new FakeRepository<Language>(new List<Language> { lang1, lang2 });
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
             _settingService = new Mock<ISettingService>();
 
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(_languageRepo.Object,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
+            _languageService = new LanguageService(_languageRepo,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
         }
 
         [Test]

@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -225,6 +226,7 @@ namespace Nop.Services.Tests.Orders
         [SetUp]
         public override void SetUp()
         {
+            base.SetUp();
             _fakeDataStore.ResetStore();
         }
 

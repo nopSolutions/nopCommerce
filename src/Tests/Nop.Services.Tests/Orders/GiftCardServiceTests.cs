@@ -1,21 +1,19 @@
 ﻿﻿using FluentAssertions;
 using Nop.Core.Domain.Orders;
-﻿using System.Collections.Generic;
-using System.Linq;
-using Moq;
+ using Moq;
  using Nop.Core.Events;
- using Nop.Data;
-using Nop.Services.Orders;
-using NUnit.Framework;
+ using Nop.Services.Orders;
+ using Nop.Tests;
+ using NUnit.Framework;
 
 namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
     public class GiftCardServiceTests : ServiceTest
     {
-        private Mock<IRepository<GiftCard>> _giftCardRepository;
-        private Mock<IRepository<GiftCardUsageHistory>> _giftCardUsageHistoryRepository;
-        private Mock<IRepository<OrderItem>> _orderItemRepository;
+        private FakeRepository<GiftCard> _giftCardRepository;
+        private FakeRepository<GiftCardUsageHistory> _giftCardUsageHistoryRepository;
+        private FakeRepository<OrderItem> _orderItemRepository;
         private Mock<IEventPublisher> _eventPublisher;
         private IGiftCardService _giftCardService;
 
@@ -26,16 +24,9 @@ namespace Nop.Services.Tests.Orders
 
             _eventPublisher = new Mock<IEventPublisher>();
 
-            _giftCardRepository = new Mock<IRepository<GiftCard>>();
+            _giftCardRepository = new FakeRepository<GiftCard>();
 
-            var giftCardStore = new List<GiftCard>();
-
-            _giftCardRepository.Setup(r => r.Insert(It.IsAny<GiftCard>(), It.IsAny<bool>())).Callback((GiftCard gc, bool publishEvent) => giftCardStore.Add(gc));
-            _giftCardRepository.Setup(r => r.Table).Returns(giftCardStore.AsQueryable());
-
-            _giftCardRepository.Setup(r => r.GetById(It.IsAny<int>(), null)).Returns((int id, int? cacheTime) => _giftCardRepository.Object.Table.FirstOrDefault(x => x.Id == id));
-
-            _giftCardRepository.Object.Insert(
+            _giftCardRepository.Insert(
                 new GiftCard
                 {
                     Id = 1,
@@ -43,23 +34,18 @@ namespace Nop.Services.Tests.Orders
                     IsGiftCardActivated = true
                 });
 
-            _giftCardRepository.Object.Insert(
+            _giftCardRepository.Insert(
                 new GiftCard
                 {
                     Id = 2,
                     Amount = 100
                 });
 
-            _giftCardUsageHistoryRepository = new Mock<IRepository<GiftCardUsageHistory>>();
+            _giftCardUsageHistoryRepository = new FakeRepository<GiftCardUsageHistory>();
 
-            var giftCardUsageHistoryStore = new List<GiftCardUsageHistory>();
+            _orderItemRepository = new FakeRepository<OrderItem>();
 
-            _giftCardUsageHistoryRepository.Setup(r => r.Insert(It.IsAny<GiftCardUsageHistory>(), It.IsAny<bool>())).Callback((GiftCardUsageHistory gcuh, bool publishEvent) => giftCardUsageHistoryStore.Add(gcuh));
-            _giftCardUsageHistoryRepository.Setup(r => r.Table).Returns(giftCardUsageHistoryStore.AsQueryable());
-
-            _orderItemRepository = new Mock<IRepository<OrderItem>>();
-
-            _giftCardService = new GiftCardService(null, _eventPublisher.Object, _giftCardRepository.Object, _giftCardUsageHistoryRepository.Object, _orderItemRepository.Object);
+            _giftCardService = new GiftCardService(null, _eventPublisher.Object, _giftCardRepository, _giftCardUsageHistoryRepository, _orderItemRepository);
         }
 
         [Test]

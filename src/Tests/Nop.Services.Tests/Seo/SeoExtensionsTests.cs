@@ -4,9 +4,9 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
-using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Seo
@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Seo
     public class SeoExtensionsTests
     {
         private Mock<ILanguageService> _languageService;
-        private Mock<IRepository<UrlRecord>> _urlRecordRepository;
+        private FakeRepository<UrlRecord> _urlRecordRepository;
         private Mock<IStaticCacheManager> _staticCacheManager;
         private Mock<IWorkContext> _workContext;
         private LocalizationSettings _localizationSettings;
@@ -26,13 +26,13 @@ namespace Nop.Services.Tests.Seo
         public void SetUp()
         {
             _languageService = new Mock<ILanguageService>();
-            _urlRecordRepository = new Mock<IRepository<UrlRecord>>();
+            _urlRecordRepository = new FakeRepository<UrlRecord>();
             _staticCacheManager = new Mock<IStaticCacheManager>();
             _workContext = new Mock<IWorkContext>();
             _localizationSettings = new LocalizationSettings();
             _seoSettings = new SeoSettings();
 
-            _urlRecordService = new UrlRecordService(_languageService.Object, _urlRecordRepository.Object,
+            _urlRecordService = new UrlRecordService(_languageService.Object, _urlRecordRepository,
                 _staticCacheManager.Object, _workContext.Object, _localizationSettings, _seoSettings);
         }
 
