@@ -22,6 +22,19 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:55390"
+    },
+    /*
+     *   To trust the certificate run 'dotnet dev-certs https --trust' (Windows and macOS only).
+     *   For establishing trust on other platforms refer to the platform specific documentation.
+     *   For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
+     */
+    "Nop.Web SSL": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }
