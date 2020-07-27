@@ -18,8 +18,10 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Core.Http;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -75,12 +77,12 @@ namespace Nop.Web.Controllers
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
-        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
@@ -123,12 +125,12 @@ namespace Nop.Web.Controllers
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
             ILogger logger,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IProductService productService,
-            IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             ITaxService taxService,
@@ -167,12 +169,12 @@ namespace Nop.Web.Controllers
             _giftCardService = giftCardService;
             _localizationService = localizationService;
             _logger = logger;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
             _productService = productService;
-            _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _taxService = taxService;
@@ -200,6 +202,29 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", consent.RequiredMessage);
                 }
             }
+        }
+
+        protected virtual string ParseSelectedProvider(IFormCollection form)
+        {
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            var multiFactorAuthenticationProviders = _multiFactorAuthenticationPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).ToList();
+            foreach (var provider in multiFactorAuthenticationProviders)
+            {
+                var controlId = $"provider_{provider.PluginDescriptor.SystemName}";
+
+                var curProvider = form[controlId];
+                if (!StringValues.IsNullOrEmpty(curProvider))
+                {
+                    var selectedProvider = curProvider.ToString();
+                    if (!string.IsNullOrEmpty(selectedProvider))
+                    {
+                        return selectedProvider;
+                    }
+                }
+            }
+            return string.Empty;
         }
 
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
@@ -420,23 +445,19 @@ namespace Nop.Web.Controllers
                                 ? _customerService.GetCustomerByUsername(model.Username)
                                 : _customerService.GetCustomerByEmail(model.Email);
 
-                            //migrate shopping cart
-                            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
-
-                            //sign in new customer
-                            _authenticationService.SignIn(customer, model.RememberMe);
-
-                            //raise event       
-                            _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
-
-                            //activity log
-                            _customerActivityService.InsertActivity(customer, "PublicStore.Login",
-                                _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
-
-                            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                                return RedirectToRoute("Homepage");
-
-                            return Redirect(returnUrl);
+                            return _customerRegistrationService.SignInCustomer(customer, returnUrl, model.RememberMe);
+                        }
+                    case CustomerLoginResults.MultiFactorAuthenticationRequired:
+                        {
+                            var userName = _customerSettings.UsernamesEnabled ? model.Username : model.Email;
+                            var customerMultiFactorAuthenticationInfo = new CustomerMultiFactorAuthenticationInfo
+                            {
+                                UserName = userName,
+                                RememberMe = model.RememberMe,
+                                ReturnUrl = returnUrl
+                            };
+                            HttpContext.Session.Set(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, customerMultiFactorAuthenticationInfo);
+                            return RedirectToRoute("MultiFactorVerification");
                         }
                     case CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
@@ -464,6 +485,34 @@ namespace Nop.Web.Controllers
             model = _customerModelFactory.PrepareLoginModel(model.CheckoutAsGuest);
             return View(model);
         }
+
+        /// <summary>
+        /// The entry point for injecting a plugin component of type "MultiFactorAuth"
+        /// </summary>
+        /// <returns>User verification page for Multi-factor authentication. Served by an authentication provider.</returns>
+        public virtual IActionResult MultiFactorVerification()
+        {
+            if (!_multiFactorAuthenticationPluginManager.HasActivePlugins())
+                return RedirectToRoute("Login");
+
+            var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
+            var userName = customerMultiFactorAuthenticationInfo.UserName;
+            if (string.IsNullOrEmpty(userName))
+                return RedirectToRoute("HomePage");
+
+            var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(userName) : _customerService.GetCustomerByEmail(userName);
+            if (customer == null)
+                return RedirectToRoute("HomePage");
+
+            var selectedProvider = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            if (string.IsNullOrEmpty(selectedProvider))
+                return RedirectToRoute("HomePage");
+
+            var model = new MultiFactorAuthenticationProviderModel();
+            model = _customerModelFactory.PrepareMultiFactorAuthenticationProviderModel(model, selectedProvider, true);
+
+            return View(model);
+        }        
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -1781,6 +1830,87 @@ namespace Nop.Web.Controllers
                     model.Message = _localizationService.GetResource("CheckGiftCardBalance.GiftCardCouponCode.Invalid");
                 }
             }
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region Multi-factor Authentication
+
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
+        public virtual IActionResult MultiFactorAuthentication()
+        {
+            if (!_multiFactorAuthenticationPluginManager.HasActivePlugins())
+            {
+                return RedirectToRoute("CustomerInfo");
+            }
+
+            var model = new MultiFactorAuthenticationModel();
+            model = _customerModelFactory.PrepareMultiFactorAuthenticationModel(model);
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult MultiFactorAuthentication(MultiFactorAuthenticationModel model, IFormCollection form)
+        {
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
+                return Challenge();
+
+            var customer = _workContext.CurrentCustomer;
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    //save MultiFactorIsEnabledAttribute
+                    if (!model.IsEnabled)
+                    {
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
+
+                        //raise change multi-factor authentication provider event       
+                        _eventPublisher.Publish(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+                    }
+                    else
+                    {
+                        //save selected multi-factor authentication provider
+                        var selectedProvider = ParseSelectedProvider(form);
+                        var lastSavedProvider = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+                        if (string.IsNullOrEmpty(selectedProvider) && !string.IsNullOrEmpty(lastSavedProvider))
+                        {
+                            selectedProvider = lastSavedProvider;
+                        }
+
+                        if (selectedProvider != lastSavedProvider)
+                        {
+                            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, selectedProvider);
+
+                            //raise change multi-factor authentication provider event       
+                            _eventPublisher.Publish(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+                        }
+                    }
+
+                    return RedirectToRoute("MultiFactorAuthenticationSettings");
+                }
+            }
+            catch (Exception exc)
+            {
+                ModelState.AddModelError("", exc.Message);
+            }
+
+            //If we got this far, something failed, redisplay form
+            model = _customerModelFactory.PrepareMultiFactorAuthenticationModel(model);
+            return View(model);
+        }
+
+        public virtual IActionResult ConfigureMultiFactorAuthenticationProvider(string providerSysName)
+        {
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
+                return Challenge();
+
+            var model = new MultiFactorAuthenticationProviderModel();
+            model = _customerModelFactory.PrepareMultiFactorAuthenticationProviderModel(model, providerSysName);
 
             return View(model);
         }

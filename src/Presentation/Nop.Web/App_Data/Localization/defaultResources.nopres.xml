@@ -540,6 +540,21 @@
   <LocaleResource Name="Account.MyAccount">
     <Value>My account</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.MultiFactorAuthentication.Fields.IsEnabled">
+    <Value>Is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.MultiFactorAuthentication.Description">
+    <Value><![CDATA[<p>To activate multi-factor authentication for your account, you need: </p></br><ol><li>1. Activate the 'Is enabled' setting.</li><li>2. Choose one of the multi-factor authentication providers.</li><li>3. Save.</li><li>4. Configure the selected multi-factor authentication provider by following the instructions on the individual settings page of the selected provider.</li></ol></br><p> WARNING. After saving the selected provider, be sure to configure it, otherwise you will be denied access the next time you try to enter your account.</p>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.MultiFactorAuthentication.Providers">
+    <Value>Authentication providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.MultiFactorAuthentication.Providers.NoActive">
+    <Value>No active providers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.MultiFactorAuthentication.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Navigation">
     <Value>My account</Value>
   </LocaleResource>
@@ -4863,25 +4878,49 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Updated">
     <Value>The email account has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
+  <LocaleResource Name="Admin.Configuration.Authentication">
+    <Value>Authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods">
     <Value>External authentication</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods.BackToList">
     <Value>back to external authentication method list</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Configure">
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods.Configure">
     <Value>Configure</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder">
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName">
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName">
     <Value>Friendly name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive">
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive">
     <Value>Is active</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName">
+  <LocaleResource Name="Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName">
+    <Value>System name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods">
+    <Value>Multi-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods.BackToList">
+    <Value>back to multi-factor authentication method list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods.Fields.FriendlyName">
+    <Value>Friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods.Fields.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Authentication.MultiFactorMethods.Fields.SystemName">
     <Value>System name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages">
@@ -6185,7 +6224,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultStoreTimeZone.Hint">
     <Value>The default store time zone used to display dates.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice">
     <Value>Force entering email twice</Value>
   </LocaleResource>
@@ -16395,6 +16434,9 @@
   <LocaleResource Name="Messages.Order.TotalDiscount">
     <Value>Discount:</Value>
   </LocaleResource>
+  <LocaleResource Name="MultiFactorAuthentication.Notification.SelectedMethodIsNotActive">
+    <Value>The multi-factor authentication provider specified in your account settings has been deactivated. Please contact your administrator.</Value>
+  </LocaleResource>
   <LocaleResource Name="News">
     <Value>News</Value>
   </LocaleResource>
@@ -16767,6 +16809,12 @@
   <LocaleResource Name="PageTitle.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.MultiFactorAuthentication">
+    <Value>Multi-factor authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.MultiFactorVerification">
+    <Value>Multi-factor verification</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.NewProducts">
     <Value>New Products</Value>
   </LocaleResource>
@@ -17040,6 +17088,12 @@
   <LocaleResource Name="Permission.AllowCustomerImpersonation">
     <Value>Admin area. Allow Customer Impersonation</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.Authentication.ManageExternalMethods">
+    <Value>Admin area. Manage External Authentication Methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.Authentication.ManageMultifactorMethods">
+    <Value>Admin area. Manage Multi-factor Authentication Methods</Value>
+  </LocaleResource>
   <LocaleResource Name="Permission.DisplayPrices">
     <Value>Public store. Display Prices</Value>
   </LocaleResource>
@@ -17090,10 +17144,7 @@
   </LocaleResource>
   <LocaleResource Name="Permission.ManageEmailAccounts">
     <Value>Admin area. Manage Email Accounts</Value>
-  </LocaleResource>
-  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
-    <Value>Admin area. Manage External Authentication Methods</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Permission.ManageForums">
     <Value>Admin area. Manage Forums</Value>
   </LocaleResource>

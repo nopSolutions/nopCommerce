@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Factories
@@ -119,5 +120,21 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>check gift card balance model</returns>
         CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel();
+
+        /// <summary>
+        /// Prepare the multi-factor authentication model
+        /// </summary>
+        /// <param name="model">Multi-factor authentication model</param>
+        /// <returns>Multi-factor authentication model</returns>
+        MultiFactorAuthenticationModel PrepareMultiFactorAuthenticationModel(MultiFactorAuthenticationModel model);
+
+        /// <summary>
+        /// Prepare the multi-factor provider model
+        /// </summary>
+        /// <param name="providerModel">Multi-factor provider model</param>
+        /// <param name="sysName">Multi-factor provider system name</param>
+        /// <param name="isLogin">Is login page</param>
+        /// <returns>Multi-factor authentication model</returns>
+        MultiFactorAuthenticationProviderModel PrepareMultiFactorAuthenticationProviderModel(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false);
     }
 }

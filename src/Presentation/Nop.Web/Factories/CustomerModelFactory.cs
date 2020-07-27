@@ -14,6 +14,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -58,6 +59,7 @@ namespace Nop.Web.Factories
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
@@ -99,6 +101,7 @@ namespace Nop.Web.Factories
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
@@ -136,6 +139,7 @@ namespace Nop.Web.Factories
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
@@ -173,6 +177,7 @@ namespace Nop.Web.Factories
                 Accepted = accepted
             };
         }
+
         #endregion
 
         #region Methods
@@ -800,6 +805,17 @@ namespace Nop.Web.Factories
                 });
             }
 
+            if (_multiFactorAuthenticationPluginManager.HasActivePlugins())
+            {
+                model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+                {
+                    RouteName = "MultiFactorAuthenticationSettings",
+                    Title = _localizationService.GetResource("PageTitle.MultiFactorAuthentication"),
+                    Tab = CustomerNavigationEnum.MultiFactorAuthentication,
+                    ItemClass = "customer-multiFactor-authentication"
+                });
+            }
+
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
             return model;
@@ -935,6 +951,54 @@ namespace Nop.Web.Factories
         {
             var model = new CheckGiftCardBalanceModel();
             return model;
+        }
+
+        /// <summary>
+        /// Prepare the multi-factor authentication model
+        /// </summary>
+        /// <param name="model">Multi-factor authentication model</param>
+        /// <returns>Multi-factor authentication model</returns>
+        public virtual MultiFactorAuthenticationModel PrepareMultiFactorAuthenticationModel(MultiFactorAuthenticationModel model)
+        {            
+            var customer = _workContext.CurrentCustomer;
+
+            model.IsEnabled = !string.IsNullOrEmpty(
+                _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
+            
+            var multiFactorAuthenticationProviders = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, _storeContext.CurrentStore.Id).ToList();            
+            foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
+            {
+                var providerModel = new MultiFactorAuthenticationProviderModel();
+                var sysName = multiFactorAuthenticationProvider.PluginDescriptor.SystemName;
+                providerModel = PrepareMultiFactorAuthenticationProviderModel(providerModel, sysName);                
+                model.Providers.Add(providerModel);
+            }
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare the multi-factor authentication provider model
+        /// </summary>
+        /// <param name="providerModel">Multi-factor authentication provider model</param>
+        /// <param name="sysName">Multi-factor authentication provider system name</param>
+        /// <returns>Multi-factor authentication model</returns>
+        public virtual MultiFactorAuthenticationProviderModel PrepareMultiFactorAuthenticationProviderModel(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false)
+        {
+            var customer = _workContext.CurrentCustomer;
+            var selectedProvider = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+
+            var multiFactorAuthenticationProvider = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, _storeContext.CurrentStore.Id)
+                    .Where(provider => provider.PluginDescriptor.SystemName == sysName).FirstOrDefault();
+
+            providerModel.Name = _localizationService.GetLocalizedFriendlyName(multiFactorAuthenticationProvider, _workContext.WorkingLanguage.Id);
+            providerModel.SystemName = sysName;
+            providerModel.Description = multiFactorAuthenticationProvider.Description;
+            providerModel.LogoUrl = _multiFactorAuthenticationPluginManager.GetPluginLogoUrl(multiFactorAuthenticationProvider);
+            providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName(): multiFactorAuthenticationProvider.GetPublicViewComponentName();
+            providerModel.Selected = sysName == selectedProvider;
+
+            return providerModel;
         }
 
         #endregion

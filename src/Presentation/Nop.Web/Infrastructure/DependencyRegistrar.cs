@@ -56,6 +56,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<ManufacturerModelFactory>().As<IManufacturerModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<MeasureModelFactory>().As<IMeasureModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<MessageTemplateModelFactory>().As<IMessageTemplateModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<MultiFactorAuthenticationMethodModelFactory>().As<IMultiFactorAuthenticationMethodModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<NewsletterSubscriptionModelFactory>().As<INewsletterSubscriptionModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<NewsModelFactory>().As<INewsModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>().InstancePerLifetimeScope();

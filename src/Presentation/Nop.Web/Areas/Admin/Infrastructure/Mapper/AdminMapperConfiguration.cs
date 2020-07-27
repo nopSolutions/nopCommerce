@@ -27,6 +27,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -42,6 +43,7 @@ using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
+using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Areas.Admin.Models.Logging;
@@ -77,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateConfigMaps();
             CreateAffiliatesMaps();
             CreateAuthenticationMaps();
+            CreateMultiFactorAuthenticationMaps();
             CreateBlogsMaps();
             CreateCatalogMaps();
             CreateCmsMaps();
@@ -234,6 +237,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateAuthenticationMaps()
         {
             CreateMap<IExternalAuthenticationMethod, ExternalAuthenticationMethodModel>();
+        }
+
+        /// <summary>
+        /// Create multi-factor authentication maps 
+        /// </summary>
+        protected virtual void CreateMultiFactorAuthenticationMaps()
+        {
+            CreateMap<IMultiFactorAuthenticationMethod, MultiFactorAuthenticationMethodModel>();
         }
 
         /// <summary>
