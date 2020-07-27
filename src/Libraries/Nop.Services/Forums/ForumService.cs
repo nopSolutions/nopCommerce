@@ -446,26 +446,27 @@ namespace Nop.Services.Forums
             var searchKeywords = !string.IsNullOrEmpty(keywords);
             var searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
             var searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
-            
-            //TODO: попробуй свернуть все к _forumPostRepository.GetAll()
 
-            var query1 = from ft in _forumTopicRepository.Table
-                         join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
-                         where
-                         (forumId == 0 || ft.ForumId == forumId) &&
-                         (customerId == 0 || ft.CustomerId == customerId) &&
-                         (!searchKeywords ||
-                            (searchTopicTitles && ft.Subject.Contains(keywords)) ||
-                            (searchPostText && fp.Text.Contains(keywords))) &&
-                         (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
-                         select ft.Id;
+            var topics = _forumTopicRepository.GetAllPaged(query =>
+            {
+                var query1 = from ft in query
+                    join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
+                    where
+                        (forumId == 0 || ft.ForumId == forumId) &&
+                        (customerId == 0 || ft.CustomerId == customerId) &&
+                        (!searchKeywords ||
+                         (searchTopicTitles && ft.Subject.Contains(keywords)) ||
+                         (searchPostText && fp.Text.Contains(keywords))) &&
+                        (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
+                    select ft.Id;
 
-            var query2 = from ft in _forumTopicRepository.Table
-                         where query1.Contains(ft.Id)
-                         orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
-                         select ft;
+                var query2 = from ft in query
+                    where query1.Contains(ft.Id)
+                    orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
+                    select ft;
 
-            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+                return query2;
+            }, pageIndex, pageSize);
 
             return topics;
         }
@@ -865,25 +866,25 @@ namespace Nop.Services.Forums
         public virtual IPagedList<ForumSubscription> GetAllSubscriptions(int customerId = 0, int forumId = 0,
             int topicId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
+            var forumSubscriptions = _forumSubscriptionRepository.GetAllPaged(query =>
+            {
+                var fsQuery = from fs in query
+                    join c in _customerRepository.Table on fs.CustomerId equals c.Id
+                    where
+                        (customerId == 0 || fs.CustomerId == customerId) &&
+                        (forumId == 0 || fs.ForumId == forumId) &&
+                        (topicId == 0 || fs.TopicId == topicId) &&
+                        c.Active &&
+                        !c.Deleted
+                    select fs.SubscriptionGuid;
 
-            //TODO: попробуй свернуть все к _forumPostRepository.GetAll()
+                var rez = from fs in query
+                    where fsQuery.Contains(fs.SubscriptionGuid)
+                    orderby fs.CreatedOnUtc descending, fs.SubscriptionGuid descending
+                    select fs;
 
-            var fsQuery = from fs in _forumSubscriptionRepository.Table
-                          join c in _customerRepository.Table on fs.CustomerId equals c.Id
-                          where
-                          (customerId == 0 || fs.CustomerId == customerId) &&
-                          (forumId == 0 || fs.ForumId == forumId) &&
-                          (topicId == 0 || fs.TopicId == topicId) && 
-                          c.Active && 
-                          !c.Deleted
-                          select fs.SubscriptionGuid;
-
-            var query = from fs in _forumSubscriptionRepository.Table
-                        where fsQuery.Contains(fs.SubscriptionGuid)
-                        orderby fs.CreatedOnUtc descending, fs.SubscriptionGuid descending
-                        select fs;
-
-            var forumSubscriptions = new PagedList<ForumSubscription>(query, pageIndex, pageSize);
+                return rez;
+            }, pageIndex, pageSize);
 
             return forumSubscriptions;
         }

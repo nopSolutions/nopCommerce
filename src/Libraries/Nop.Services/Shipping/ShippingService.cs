@@ -9,7 +9,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -168,25 +167,24 @@ namespace Nop.Services.Shipping
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId);
-            
+
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
-            {
-                //TODO: попробуй свернуть все к _shippingMethodRepository.GetAll()
+                return _shippingMethodRepository.GetAll(query =>
+                {
+                    var query1 = from sm in query
+                        join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                        where smcm.CountryId == filterByCountryId.Value
+                        select sm.Id;
 
-                var query1 = from sm in _shippingMethodRepository.Table
-                    join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
-                    where smcm.CountryId == filterByCountryId.Value
-                    select sm.Id;
+                    query1 = query1.Distinct();
 
-                query1 = query1.Distinct();
+                    var query2 = from sm in query
+                        where !query1.Contains(sm.Id)
+                        orderby sm.DisplayOrder, sm.Id
+                        select sm;
 
-                var query2 = from sm in _shippingMethodRepository.Table
-                    where !query1.Contains(sm.Id)
-                    orderby sm.DisplayOrder, sm.Id
-                    select sm;
-
-                return query2.ToCachedList(key);
-            }
+                    return query2;
+                }, key);
 
             return _shippingMethodRepository.GetAll(query=>
             {
