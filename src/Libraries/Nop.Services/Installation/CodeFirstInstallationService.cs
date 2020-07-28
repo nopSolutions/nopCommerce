@@ -6865,6 +6865,12 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallSpecificationAttributes()
         {
+            var sag1 = InsertInstallationData(
+                new SpecificationAttributeGroup
+                {
+                    Name = "System unit"
+                });
+
             var sa1 = InsertInstallationData(
                 new SpecificationAttribute
                 {
@@ -6908,7 +6914,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "CPU Type",
-                    DisplayOrder = 2
+                    DisplayOrder = 2,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             InsertInstallationData(
@@ -6929,7 +6936,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "Memory",
-                    DisplayOrder = 3
+                    DisplayOrder = 3,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             InsertInstallationData(
@@ -6956,7 +6964,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "Hard drive",
-                    DisplayOrder = 5
+                    DisplayOrder = 5,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             InsertInstallationData(
@@ -11489,6 +11498,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "AddNewSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Add a new specification attribute group"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "AddNewStateProvince",
                     Enabled = true,
                     Name = "Add a new state or province"
@@ -11744,6 +11759,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "DeleteSpecAttribute",
                     Enabled = true,
                     Name = "Delete a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Delete a specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -12014,6 +12035,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "EditSpecAttribute",
                     Enabled = true,
                     Name = "Edit a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "EditSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Edit a specification attribute group"
                 },
                 new ActivityLogType
                 {

@@ -2,18 +2,18 @@
 
 @{
     //page title
-    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
-<form asp-controller="SpecificationAttribute" asp-action="Create" method="post" id="specificationattribute-form">
+<form asp-controller="SpecificationAttribute" asp-action="CreateSpecificationAttribute" method="post" id="specificationattribute-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.AddNew")
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew")
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.BackToList")</a>
+                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">
@@ -28,5 +28,5 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdate", Model)
+    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute", Model)
 </form>

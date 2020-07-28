@@ -252,6 +252,8 @@
         public static string SpecificationAttributeOptionDetailsBottom => "admin_specification_attribute_option_details_bottom";
         public static string SpecificationAttributeOptionDetailsButtons => "admin_specification_attribute_option_details_buttons";
         public static string SpecificationAttributeOptionDetailsTop => "admin_specification_attribute_option_details_top";
+        public static string SpecificationAttributeGroupDetailsButtons => "admin_specification_attribute_group_details_buttons";
+        public static string SpecificationAttributeGroupDetailsBlock => "admin_specification_attribute_group_details_block";
         public static string StoreDetailsBottom => "admin_store_details_bottom";
         public static string StoreDetailsButtons => "admin_store_details_buttons";
         public static string StoreDetailsTop => "admin_store_details_top";

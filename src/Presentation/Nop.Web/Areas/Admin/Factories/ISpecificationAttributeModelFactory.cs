@@ -9,18 +9,36 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ISpecificationAttributeModelFactory
     {
         /// <summary>
-        /// Prepare specification attribute search model
+        /// Prepare specification attribute group search model
         /// </summary>
-        /// <param name="searchModel">Specification attribute search model</param>
-        /// <returns>Specification attribute search model</returns>
-        SpecificationAttributeSearchModel PrepareSpecificationAttributeSearchModel(SpecificationAttributeSearchModel searchModel);
+        /// <param name="searchModel">Specification attribute group search model</param>
+        /// <returns>Specification attribute group search model</returns>
+        SpecificationAttributeGroupSearchModel PrepareSpecificationAttributeGroupSearchModel(SpecificationAttributeGroupSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare paged specification attribute group list model
+        /// </summary>
+        /// <param name="searchModel">Specification attribute group search model</param>
+        /// <returns>Specification attribute group list model</returns>
+        SpecificationAttributeGroupListModel PrepareSpecificationAttributeGroupListModel(SpecificationAttributeGroupSearchModel searchModel);
+
+        /// <summary>
+        /// Prepare specification attribute group model
+        /// </summary>
+        /// <param name="model">Specification attribute group model</param>
+        /// <param name="specificationAttributeGroup">Specification attribute group</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Specification attribute group model</returns>
+        SpecificationAttributeGroupModel PrepareSpecificationAttributeGroupModel(SpecificationAttributeGroupModel model,
+            SpecificationAttributeGroup specificationAttributeGroup, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged specification attribute list model
         /// </summary>
         /// <param name="searchModel">Specification attribute search model</param>
+        /// <param name="group">Specification attribute group</param>
         /// <returns>Specification attribute list model</returns>
-        SpecificationAttributeListModel PrepareSpecificationAttributeListModel(SpecificationAttributeSearchModel searchModel);
+        SpecificationAttributeListModel PrepareSpecificationAttributeListModel(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group);
 
         /// <summary>
         /// Prepare specification attribute model
