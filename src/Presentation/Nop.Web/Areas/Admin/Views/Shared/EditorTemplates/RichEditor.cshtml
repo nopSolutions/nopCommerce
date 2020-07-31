@@ -115,7 +115,8 @@
             convert_urls: false,
             //ensure that special chars are not encoded. For example, ä, ö and ü should NOT become "&auml;", "&ouml;" and "&uuml;"
             //Otherwise, database searches become impossible when words contain a character of this kind
-            entity_encoding: "raw",
+            entity_encoding: "named",
+            entities: '160,nbsp',
             @if (allowJavaScript)
             {
                 <text>

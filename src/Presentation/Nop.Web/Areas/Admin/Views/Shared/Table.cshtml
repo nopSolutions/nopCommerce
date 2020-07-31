@@ -1,5 +1,10 @@
 ﻿@model DataTablesModel
 @using System.Net;
+
+@{ 
+    Html.AppendScriptParts("~/js/admin.table.js");
+}
+
 @functions
 {
     string GetUrl(DataUrl dataUrl)
@@ -50,72 +55,6 @@
 }
 
 <script>
-    var entityMap = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '/': '&#x2F;',
-        '`': '&#x60;',
-        '=': '&#x3D;'
-    };
-
-    function escapeHtml (string) {
-        if (string == null) {
-            return '';
-        }
-        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-            return entityMap[s];
-        });
-    }
-
-    @if (isMasterCheckBoxUsed)
-    {
-        //selectedIds - This variable will be used on views. It can not be renamed
-        <text>
-        var selectedIds = [];
-
-        function updateMasterCheckbox() {
-            var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-            var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-        }
-
-        function clearMasterCheckbox() {
-            $('#mastercheckbox').prop('checked', false).change();
-            selectedIds = [];
-        }
-        </text>
-    }
-
-    function updateTableSrc(tableSelector) {
-        var dataSrc = $(tableSelector).DataTable().data();
-        $(tableSelector).DataTable().clear().rows.add(dataSrc).draw();
-        $(tableSelector).DataTable().columns.adjust();
-        
-        @if (isMasterCheckBoxUsed)
-        {
-            <text>clearMasterCheckbox();</text>
-        }
-    }
-
-    function updateTable(tableSelector) {
-        $(tableSelector).DataTable().ajax.reload();     
-        $(tableSelector).DataTable().columns.adjust();
-        
-        @if (isMasterCheckBoxUsed)
-        {
-            <text>clearMasterCheckbox();</text>
-        }    
-    }
-
-    function updateTableWidth(tableSelector) {
-        if ($.fn.DataTable.isDataTable(tableSelector)) {
-            $(tableSelector).DataTable().columns.adjust();
-        }
-    }
-
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
              @await Html.PartialAsync("_Table.Definition", Model)
@@ -126,7 +65,7 @@
             <text>
             $('#@Model.SearchButtonId').click(function() {
                 $('#@Model.Name').DataTable().ajax.reload();
-                $('.checkboxGroups').prop('checked', false).change();
+                $('#@Model.Name .checkboxGroups').prop('checked', false).change();
                 selectedIds = [];
                 return false;
             });
@@ -135,11 +74,11 @@
         @if (isMasterCheckBoxUsed)
         {
             <text>
-            $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            $('.mastercheckbox', $('#@Model.Name').parents('.dataTables_scroll').first()).first().click(function () {
+                $('#@Model.Name .checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
 
-            $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
+            $('#@Model.Name').on('change', 'input[type=checkbox][class!=mastercheckbox][class=checkboxGroups]', function (e) {
                 var $check = $(this);
                 var checked = jQuery.inArray($check.val(), selectedIds);
                 if ($check.is(':checked') == true) {
@@ -151,7 +90,7 @@
                         return item != $check.val();
                     });
                 }
-                updateMasterCheckbox();
+                updateMasterCheckbox($('#@Model.Name').parents('.dataTables_scroll').first());
             });
             </text>
         }
@@ -401,15 +340,16 @@
 {
     foreach (var curModel in listOfTables)
     {
-        var modelName = ReplaceName(curModel.Name);
+        var tableName = ReplaceName(curModel.Name);
         if (curModel.ChildTable != null)
         {
             <text>
-                <script>
-                function getchild_@(modelName)(d) {
-                    return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
+                <script>                   
+                function getchild_@(tableName)(d) {
+                    return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '_@(tableName)' + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
                 }
-                $(document).ready(function () {
+                    $(document).ready(function () {
+
                     // Add event listener for opening and closing childs
                     $('#@curModel.Name tbody').on('click', 'td.child-control', function () {
                         var tr = $(this).closest('tr');
@@ -425,20 +365,41 @@
                         }
                         else {
                             // Open this row
-                            row.child(getchild_@(modelName)(row.data())).show();
-                            var classid = '#child' + row.data().@(curModel.PrimaryKeyColumn);
+                            row.child(getchild_@(tableName)(row.data())).show();
+                            var classid = '#child' + row.data().@(curModel.PrimaryKeyColumn) + '_@(tableName)';
                             $(classid).DataTable({
                                 @await Html.PartialAsync("_Table.Definition", curModel.ChildTable)
                             }).draw;
                             tr.addClass('shown');
                             tdi.first().removeClass('fa-caret-right');
                             tdi.first().addClass(' fa-caret-down');
+                            ///
+                            $('.mastercheckbox', $(classid).parents('.dataTables_scroll').first()).first().click(function () {
+                                $(classid + ' .checkboxGroups').prop('checked', $(this).is(':checked')).change();
+                            });
+
+                            $(classid).on('change', 'input[type=checkbox][class!=mastercheckbox][class=checkboxGroups]', function (e) {
+                                var $check = $(this);
+                                var checked = jQuery.inArray($check.val(), selectedIds);
+                                if ($check.is(':checked') == true) {
+                                    if (checked == -1) {
+                                        selectedIds.push($check.val());
+                                    }
+                                } else if (checked > -1) {
+                                    selectedIds = $.grep(selectedIds, function (item, index) {
+                                        return item != $check.val();
+                                    });
+                                }
+                                updateMasterCheckbox($(classid).parents('.dataTables_scroll').first());
+                            });
+                            ///
                         }
                         $('#@curModel.Name').DataTable().columns.adjust();
                     });
                 });
                 </script>
+                
             </text>
-        }
+        }            
     }
 }
