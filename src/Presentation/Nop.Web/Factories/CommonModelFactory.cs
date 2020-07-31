@@ -531,7 +531,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey, 
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
                 _workContext.WorkingLanguage,
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
                 _storeContext.CurrentStore);
@@ -636,7 +636,8 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = blogPostsGroupTitle,
                         Name = post.Title,
-                        Url = urlHelper.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(post) })
+                        Url = urlHelper.RouteUrl("BlogPost",
+                            new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false) })
                     }));
                 }
 
@@ -649,7 +650,8 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = newsGroupTitle,
                         Name = newsItem.Title,
-                        Url = urlHelper.RouteUrl("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem) })
+                        Url = urlHelper.RouteUrl("NewsItem",
+                            new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) })
                     }));
                 }
 
