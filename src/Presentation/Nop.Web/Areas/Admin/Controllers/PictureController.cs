@@ -33,13 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = "No file uploaded"
-                });
-            }
+                return Json(new { success = false, message = "No file uploaded" });
 
             const string qqFileNameParameter = "qqfilename";
 
@@ -51,6 +45,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
+
+            if (picture == null)
+                return Json(new { success = false, message = "Wrong file format" });
+
             return Json(new
             {
                 success = true,
