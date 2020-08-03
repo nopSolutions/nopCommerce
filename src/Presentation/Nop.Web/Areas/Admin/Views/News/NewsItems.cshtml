@@ -140,7 +140,7 @@
                     <script>
                         function renderColumnComments(data, type, row, meta) {
                             var link = "NewsComments?filterByNewsItemId=" + data;
-                            var title = '@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")';
+                            var title = '@T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text';
                             var countComments = row.ApprovedComments + row.NotApprovedComments;
                             return '<a class="btn btn-default" href="' + link + '">' + title + ' - ' + countComments + ' (' + row.NotApprovedComments + ')' + '</a>';
                         }

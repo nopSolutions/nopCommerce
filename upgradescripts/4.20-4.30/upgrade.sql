@@ -967,6 +967,12 @@ set @resources='
   <LocaleResource Name="Plugins.Tax.Avalara.Fields.TaxOriginAddressType.ShippingOrigin.Warning">
     <Value><![CDATA[Ensure that you have correctly filled in the ''Shipping origin'' under <a href=\"{0}\" target=\"_blank\">Shipping settings</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.AltText">
+    <Value>Image alternate text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.AltText.Hint">
+    <Value>Enter alternate text that will be added to image.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3030,7 +3036,7 @@ WHERE [Name] = N'securitysettings.forcesslforallpages'
 GO
 
 --new column
-IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeightByTotalRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeightByTotalRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeightByTotalRecord]') AND NAME = 'TransitDays')
 BEGIN
 	ALTER TABLE [ShippingByWeightByTotalRecord]
@@ -3039,7 +3045,7 @@ END
 GO
 
 --new column
-IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[StorePickupPoint]') AND NAME = 'TransitDays')
 BEGIN
 	ALTER TABLE [StorePickupPoint]
@@ -3306,5 +3312,58 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.restartti
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'commonsettings.restarttimeout', N'3000', 0)
+END
+GO
+
+-- remove the Nop.Plugin.Widgets.FacebookPixel plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[FacebookPixelConfiguration]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Widgets.FacebookPixel base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Tax.FixedOrByCountryStateZip plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[TaxRate]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Tax.FixedOrByCountryStateZip base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Tax.Avalara plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[TaxTransactionLog]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Tax.Avalara base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Shipping.FixedByWeightByTotal plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ShippingByWeightByTotalRecord]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Shipping.FixedByWeightByTotal base schema';
+END
+GO
+
+-- remove the Nop.Plugin.Pickup.PickupInStore plugin migration if it table not exists
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[StorePickupPoint]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [MigrationVersionInfo] WHERE [Description] = 'Pickup.PickupInStore base schema';
+END
+GO
+
+--add new slug to "reservedurlrecordslugs" setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.reservedurlrecordslugs')
+BEGIN
+	DECLARE @NewUrlRecord nvarchar(4000)
+	SET @NewUrlRecord = N'products'
+	
+	DECLARE @reservedurlrecordslugs nvarchar(4000)
+	SELECT @reservedurlrecordslugs = [Value] FROM [Setting] WHERE [name] = N'seosettings.reservedurlrecordslugs'
+	
+	IF (PATINDEX('%[,]' + @NewUrlRecord + '[,]%', @reservedurlrecordslugs) = 0 or PATINDEX('%[,]' + @NewUrlRecord, @reservedurlrecordslugs) = 0)
+	BEGIN
+		UPDATE [Setting]
+		SET [Value] = @reservedurlrecordslugs + ',' + @NewUrlRecord
+		WHERE [name] = N'seosettings.reservedurlrecordslugs'
+	END
 END
 GO

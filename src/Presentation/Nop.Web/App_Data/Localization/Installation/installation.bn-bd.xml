@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL সার্ভার অ্যাকাউন্ট ব্যবহার করুন</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>বিল্ট ইন ডাটা স্টোরেজ ব্যবহার করুন (SQL সার্ভার কমপ্যাক্ট)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL পাসওয়ার্ড</Value>
   </LocaleResource>

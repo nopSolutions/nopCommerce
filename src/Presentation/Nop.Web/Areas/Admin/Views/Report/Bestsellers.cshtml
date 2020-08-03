@@ -196,7 +196,7 @@
                                     data: postData,
                                     success: function (data, textStatus, jqXHR) {
                                         if (data) {
-                                            var reportSummary = '<div><strong>@T("Admin.Reports.Sales.Bestsellers.Total"): </strong> <span>' + data['aggregatortotal'] + '</span></div>';
+                                            var reportSummary = '<div><strong>@T("Admin.Reports.Sales.Bestsellers.Total").Text: </strong> <span>' + data['aggregatortotal'] + '</span></div>';
                                             var orderTotalsColumn = $('#salesreport-grid').DataTable().column(@(bestsellerSummaryColumnNumber));
                                             $(orderTotalsColumn.footer()).html(reportSummary);
                                         }

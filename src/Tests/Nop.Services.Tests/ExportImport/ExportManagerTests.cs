@@ -147,7 +147,9 @@ namespace Nop.Services.Tests.ExportImport
             _authenticationService.Setup(p => p.GetAuthenticatedCustomer()).Returns(GetTestCustomer());
             _pictureService.Setup(p => p.GetPictureById(1)).Returns(picture);
             _pictureService.Setup(p => p.GetThumbLocalPath(picture, 0, true)).Returns(@"c:\temp\picture.png");
-            _pictureService.Setup(p => p.GetPicturesByProductId(1, 3)).Returns(new List<Picture> { picture });
+            _pictureService.Setup(p => p.GetPicturesByProductId(1, 1)).Returns(new List<Picture> { picture });
+            _pictureService.Setup(p => p.GetPicturesByProductId(1, 2)).Returns(new List<Picture> { picture, picture });
+            _pictureService.Setup(p => p.GetPicturesByProductId(1, 3)).Returns(new List<Picture> { });
             _productTemplateService.Setup(p => p.GetAllProductTemplates()).Returns(new List<ProductTemplate> { new ProductTemplate { Id = 1 } });
             _dateRangeService.Setup(d => d.GetAllDeliveryDates()).Returns(new List<DeliveryDate> { new DeliveryDate { Id = 1 } });
             _dateRangeService.Setup(d => d.GetAllProductAvailabilityRanges()).Returns(new List<ProductAvailabilityRange> { new ProductAvailabilityRange { Id = 1 } });

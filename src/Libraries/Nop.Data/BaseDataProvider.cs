@@ -75,8 +75,10 @@ namespace Nop.Data
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            var dataContext = new DataConnection(dataProvider, CreateDbConnection());
-            dataContext.AddMappingSchema(AdditionalSchema);
+            var dataContext = new DataConnection(dataProvider, CreateDbConnection(), AdditionalSchema)
+            {
+                CommandTimeout = DataSettingsManager.SQLCommandTimeout
+            };
 
             return dataContext;
         }
@@ -90,7 +92,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public virtual IDbConnection CreateDbConnection(string connectionString = null) 
+        public virtual IDbConnection CreateDbConnection(string connectionString = null)
         {
             var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
 
@@ -122,7 +124,7 @@ namespace Nop.Data
         /// <returns>Queryable source</returns>
         public virtual ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) {MappingSchema = AdditionalSchema}
+            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = AdditionalSchema }
                 .GetTable<TEntity>();
         }
 
@@ -308,7 +310,7 @@ namespace Nop.Data
                     return Singleton<MappingSchema>.Instance;
 
                 Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) {MetadataReader = new FluentMigratorMetadataReader()};
+                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
 
                 return Singleton<MappingSchema>.Instance;
             }

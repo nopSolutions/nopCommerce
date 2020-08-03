@@ -235,17 +235,17 @@
                                 res = res + '<br />';
                                 //allow configuration only when a plugin has a configuration URL specified
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>';
+                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
                                 }
                                 if (row.Installed) {
-                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                                 }
 
                                 return res;
                             }
 
                             function renderColumnFriendlyName(data, type, row, meta) {
-                                var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed"): ';
+                                var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed").Text: ';
                                 if (row.Installed) {
                                     isInstall = isInstall + '<i class="fa fa-check true-icon"></i></li>';
                                 }
@@ -255,7 +255,7 @@
 
                                 var canChange = '';
                                 if (row.CanChangeEnabled) {
-                                    canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): ';
+                                    canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled").Text: ';
                                     if (row.IsEnabled) {
                                         canChange = canChange + '<i class="fa fa-check true-icon"></i>';
                                     }
@@ -266,19 +266,19 @@
                                 };
 
                                 return '<ul class="common-list">' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.Version"): ' +  row.Version + '</li>' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.Author"): ' + row.Author + '</li>' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): ' + row.SystemName + '</li>' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): ' + row.DisplayOrder + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.Version").Text: ' +  row.Version + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.Author").Text: ' + row.Author + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.SystemName").Text: ' + row.SystemName + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text: ' + row.DisplayOrder + '</li>' +
                                     isInstall + 
                                     canChange;
                             }
 
                             function renderColumnInstalled(data, type, row, meta) {
                                 if (row.Installed) {
-                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button>';
+                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
                                 } else {
-                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button>';
+                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
                                 }
                             }
                         </script>

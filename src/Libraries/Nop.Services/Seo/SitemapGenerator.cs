@@ -245,7 +245,9 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetNewsItemUrls()
         {
             return _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id)
-                .Select(news => GetLocalizedSitemapUrl("NewsItem", GetSeoRouteParams(news), news.CreatedOnUtc));
+                .Select(news => GetLocalizedSitemapUrl("NewsItem",
+                    lang => new { SeName = _urlRecordService.GetSeName(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
+                    news.CreatedOnUtc));
         }
 
         /// <summary>
@@ -307,7 +309,9 @@ namespace Nop.Services.Seo
         {
             return _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id)
                 .Where(p => p.IncludeInSitemap)
-                .Select(post => GetLocalizedSitemapUrl("BlogPost", GetSeoRouteParams(post)));
+                .Select(post => GetLocalizedSitemapUrl("BlogPost",
+                    lang => new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
+                    post.CreatedOnUtc));
         }
 
         /// <summary>

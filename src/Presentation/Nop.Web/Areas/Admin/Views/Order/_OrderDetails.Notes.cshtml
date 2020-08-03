@@ -48,7 +48,7 @@
 
         <script>
             function renderColumnDownloadId(data, type, row, meta) {
-                return (row.DownloadId > 0) ? '<a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=' + row.DownloadGuid + '"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a>' : '@T("Admin.Orders.OrderNotes.Fields.Download.Link.No")';
+                return (row.DownloadId > 0) ? '<a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=' + row.DownloadGuid + '"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link").Text</a>' : '@T("Admin.Orders.OrderNotes.Fields.Download.Link.No").Text';
             }
         </script>
     </div>

@@ -1078,6 +1078,8 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
+            dateTime ??= DateTime.UtcNow;
+
             if (product.AvailableStartDateTimeUtc.HasValue && product.AvailableStartDateTimeUtc.Value > dateTime)
                 return false;
 
@@ -1527,7 +1529,7 @@ namespace Nop.Services.Catalog
             // 1st pass: Applying reserved
             foreach (var item in productInventory)
             {
-                var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
+                var selectQty = Math.Min(Math.Max(0, item.StockQuantity - item.ReservedQuantity), qty);
                 item.ReservedQuantity += selectQty;
                 qty -= selectQty;
 
@@ -1542,58 +1544,7 @@ namespace Nop.Services.Catalog
                 pwi.ReservedQuantity += qty;
             }
 
-            UpdateProduct(product);
-        }
-
-        /// <summary>
-        /// Balance the given quantity in the warehouses.
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="warehouseId">Warehouse identifier</param>
-        /// <param name="quantity">Quantity</param>
-        public virtual void BalanceInventory(Product product, int warehouseId, int quantity)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            //Warehouse to which reserve is being transferred
-            var productInventory = _productWarehouseInventoryRepository.Table
-                .Where(pwi => pwi.ProductId == product.Id && pwi.WarehouseId == warehouseId)
-                .ToList()
-                .FirstOrDefault();
-
-            if (productInventory == null)
-                return;
-
-            var selectQty = Math.Min(productInventory.StockQuantity - productInventory.ReservedQuantity, quantity);
-            productInventory.ReservedQuantity += selectQty;
-
-            //remove from reserve in other warehouses what has just been reserved in the current warehouse to equalize the total
-            var productAnotherInventories = _productWarehouseInventoryRepository.Table
-                .Where(pwi => pwi.ProductId == product.Id && pwi.WarehouseId != warehouseId)
-                .OrderByDescending(ob => ob.ReservedQuantity)
-                .ToList();
-
-            var qty = selectQty;
-            //We need to make a balance in all warehouses, as resources of one warehouse may not be enough
-            foreach (var productAnotherInventory in productAnotherInventories)
-            {
-                if (qty > 0)
-                {
-                    if (productAnotherInventory.ReservedQuantity >= qty)
-                    {
-                        productAnotherInventory.ReservedQuantity -= qty;
-                    }
-                    else
-                    {
-                        //Here we can transfer only a part of the reserve, the rest will be sought in other warehouses.
-                        qty = selectQty - productAnotherInventory.ReservedQuantity;
-                        productAnotherInventory.ReservedQuantity = 0;
-                    }
-                }
-            }
-
-            UpdateProduct(product);
+            UpdateProductWarehouseInventory(productInventory);
         }
 
         /// <summary>

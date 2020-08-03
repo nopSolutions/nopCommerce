@@ -46,9 +46,10 @@ namespace Nop.Data.Migrations
             ITypeFinder typeFinder,
             IVersionLoader versionLoader)
         {
-            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
+            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>
             {
                 [typeof(int)] = c => c.AsInt32(),
+                [typeof(long)] = c => c.AsInt64(),
                 [typeof(string)] = c => c.AsString(int.MaxValue).Nullable(),
                 [typeof(bool)] = c => c.AsBoolean(),
                 [typeof(decimal)] = c => c.AsDecimal(18, 4),
@@ -177,13 +178,17 @@ namespace Nop.Data.Migrations
         {
             var migrations = GetMigrations(assembly);
 
-            foreach (var migrationInfo in migrations)
+            bool needToExecute(IMigrationInfo migrationInfo1)
             {
-                if(isUpdateProcess && migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any())
-                    continue;
+                var skip = migrationInfo1.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any() || isUpdateProcess && migrationInfo1.Migration.GetType()
+                    .GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any() || !isUpdateProcess && migrationInfo1.Migration.GetType()
+                    .GetCustomAttributes(typeof(SkipMigrationOnInstallAttribute)).Any();
 
-                _migrationRunner.MigrateUp(migrationInfo.Version);
+                return !skip;
             }
+
+            foreach (var migrationInfo in migrations.Where(needToExecute))
+                    _migrationRunner.MigrateUp(migrationInfo.Version);
         }
 
         /// <summary>
@@ -197,6 +202,9 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in migrations)
             {
+                if (migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any())
+                    continue;
+
                 _migrationRunner.Down(migrationInfo.Migration);
                 _versionLoader.DeleteVersion(migrationInfo.Version);
             }

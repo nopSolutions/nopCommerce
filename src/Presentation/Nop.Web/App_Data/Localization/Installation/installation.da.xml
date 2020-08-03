@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Brug SQL Server konto</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Brug indbygget data-lagring (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>

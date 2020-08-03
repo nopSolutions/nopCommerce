@@ -209,7 +209,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService.SaveSetting(settings);
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Payment.CheckMoneyOrder.AdditionalFee"] = "Additional fee",
                 ["Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint"] = "The additional fee.",
@@ -234,7 +234,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             _settingService.DeleteSetting<CheckMoneyOrderPaymentSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Payment.CheckMoneyOrder");
+            _localizationService.DeleteLocaleResources("Plugins.Payment.CheckMoneyOrder");
 
             base.Uninstall();
         }

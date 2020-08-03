@@ -82,7 +82,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
                 foreach (XmlNode currency in dailyRates.ChildNodes)
                 {
                     //get rate
-                    if (!decimal.TryParse(currency.Attributes["rate"].Value, out var currencyRate))
+                    if (!decimal.TryParse(currency.Attributes["rate"].Value, NumberStyles.Currency, CultureInfo.InvariantCulture, out var currencyRate))
                         continue;
 
                     ratesToEuro.Add(new Core.Domain.Directory.ExchangeRate()
@@ -122,7 +122,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         public override void Install()
         {
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
+            _localizationService.AddOrUpdateLocaleResource("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
 
             base.Install();
         }
@@ -133,7 +133,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         public override void Uninstall()
         {
             //locales
-            _localizationService.DeletePluginLocaleResource("Plugins.ExchangeRate.EcbExchange.Error");
+            _localizationService.DeleteLocaleResource("Plugins.ExchangeRate.EcbExchange.Error");
 
             base.Uninstall();
         }

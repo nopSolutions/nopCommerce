@@ -315,6 +315,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View("RestartApplication", Url.Action("List", "Plugin"));
         }
 
+        public virtual IActionResult UninstallAndDeleteUnusedPlugins(string[] names)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            foreach (var name in names) 
+                _pluginService.PreparePluginToUninstall(name);
+
+            _pluginService.UninstallPlugins();
+
+            foreach (var name in names)
+                _pluginService.PreparePluginToDelete(name);
+
+            _pluginService.DeletePlugins();
+
+            return View("RestartApplication", Url.Action("Warnings", "Common"));
+        }
+
         [HttpPost, ActionName("List")]
         [FormValueRequired("plugin-apply-changes")]
         public virtual IActionResult ApplyChanges()

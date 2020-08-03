@@ -67,12 +67,12 @@
 
                         <script>
                             function renderColumnSystemName(data, type, row, meta) {
-                                return '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>';
+                                return '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text</a>';
                             }
 
                             function renderColumnConfigure(data, type, row, meta) {
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure")</a>';
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure").Text</a>';
                                 } else {
                                     return '';
                                 }
