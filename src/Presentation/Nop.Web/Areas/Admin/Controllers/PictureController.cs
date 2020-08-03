@@ -51,6 +51,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
+
+            ///todo 
+            ///not sure we need this, as valid formats already handled on front-end side - Picture.cstml
+            if (picture == null)
+                return Json(new { success = false, message = "Wrong file format" });
+
             return Json(new
             {
                 success = true,
