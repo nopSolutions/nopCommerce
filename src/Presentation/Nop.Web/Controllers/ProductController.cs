@@ -211,8 +211,8 @@ namespace Nop.Web.Controllers
 
             if (errors.Count > 0)
                 return Json(new { 
-                    success = false,
-                    errors = errors
+                    Success = false,
+                    Errors = errors
                 });
             
             var product = _productService.GetProductById(model.ProductId);
@@ -221,8 +221,8 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShippingPopUp.Product.IsNotFound"));
                 return Json(new
                 {
-                    success = false,
-                    errors = errors
+                    Success = false,
+                    Errors = errors
                 });
             }
 
@@ -252,11 +252,7 @@ namespace Nop.Web.Controllers
 
             var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
 
-            return Json(new
-            {
-                success = true,
-                result = result
-            });
+            return Json(result);
         }
 
         #endregion
