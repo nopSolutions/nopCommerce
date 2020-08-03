@@ -1,10 +1,5 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Domain.Localization;
-using Nop.Data;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -12,7 +7,7 @@ namespace Nop.Web.Infrastructure
     /// <summary>
     /// Represents provider that provided basic routes
     /// </summary>
-    public partial class RouteProvider : IRouteProvider
+    public partial class RouteProvider : BaseRouteProvider, IRouteProvider
     {
         #region Methods
 
@@ -22,17 +17,7 @@ namespace Nop.Web.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            var pattern = string.Empty;
-            if (DataSettingsManager.DatabaseIsInstalled)
-            {
-                var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
-                if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                {
-                    var langservice = endpointRouteBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguages().ToList();
-                    pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/";
-                }
-            }
+            var pattern = GetRouterPattern(endpointRouteBuilder);
 
             //areas
             endpointRouteBuilder.MapControllerRoute(name: "areaRoute",
@@ -422,7 +407,7 @@ namespace Nop.Web.Infrastructure
             //prepare top menu (AJAX link)
             endpointRouteBuilder.MapControllerRoute("GetCatalogRoot", $"{pattern}catalog/getcatalogroot",
                 new { controller = "Catalog", action = "GetCatalogRoot" });
-            
+
             endpointRouteBuilder.MapControllerRoute("GetCatalogSubCategories", $"{pattern}catalog/getcatalogsubcategories",
                 new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
@@ -565,7 +550,7 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
                 pattern + "sitemap-{Id:min(0)}.xml",
                 new { controller = "Common", action = "SitemapXml" });
-            
+
             //store closed
             endpointRouteBuilder.MapControllerRoute("StoreClosed", $"{pattern}storeclosed",
                 new { controller = "Common", action = "StoreClosed" });
