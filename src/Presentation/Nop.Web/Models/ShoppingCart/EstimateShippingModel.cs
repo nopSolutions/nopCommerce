@@ -13,6 +13,8 @@ namespace Nop.Web.Models.ShoppingCart
             AvailableStates = new List<SelectListItem>();
         }
 
+        public int RequestDelay { get; set; }
+
         public bool Enabled { get; set; }
 
         public int? CountryId { get; set; }

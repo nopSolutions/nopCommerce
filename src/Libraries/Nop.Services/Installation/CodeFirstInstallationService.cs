@@ -6595,7 +6595,8 @@ namespace Nop.Services.Installation
                 BypassShippingMethodSelectionIfOnlyOne = false,
                 UseCubeRootMethod = true,
                 ConsiderAssociatedProductsDimensions = true,
-                ShipSeparatelyOneItemEach = true
+                ShipSeparatelyOneItemEach = true,
+                RequestDelay = 300,
             });
 
             settingService.SaveSetting(new PaymentSettings

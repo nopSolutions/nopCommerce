@@ -730,6 +730,7 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel
             {
+                RequestDelay = _shippingSettings.RequestDelay,
                 Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart)
             };
             if (model.Enabled)
