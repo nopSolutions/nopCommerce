@@ -96,8 +96,6 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            //we cannot inject ICacheKeyService into constructor because it'll cause circular references.
-            //that's why we resolve it here this way
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
             
             var query = from ga in _genericAttributeRepository.Table

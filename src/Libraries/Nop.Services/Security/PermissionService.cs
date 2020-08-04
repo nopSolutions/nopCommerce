@@ -188,7 +188,7 @@ namespace Nop.Services.Security
                     }
 
                     var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
-                                        
+
                     if (!defaultMappingProvided)
                         continue;
 
@@ -330,11 +330,10 @@ namespace Nop.Services.Security
         /// <param name="customerRoleId">Customer role identifier</param>
         public virtual void DeletePermissionRecordCustomerRoleMapping(int permissionId, int customerRoleId)
         {
-            var mapping = _permissionRecordCustomerRoleMappingRepository.Table.FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
-
-            //TODO: Add error description
+            var mapping = _permissionRecordCustomerRoleMappingRepository.Table
+                .FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
             if (mapping is null)
-                throw new Exception(string.Empty);
+                return;
 
             _permissionRecordCustomerRoleMappingRepository.Delete(mapping);
         }
