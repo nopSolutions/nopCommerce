@@ -159,7 +159,7 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
-            return _subscriptionRepository.GetById(newsLetterSubscriptionId);
+            return _subscriptionRepository.GetById(newsLetterSubscriptionId, cache => default);
         }
 
         /// <summary>

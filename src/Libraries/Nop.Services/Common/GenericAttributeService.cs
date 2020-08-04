@@ -59,7 +59,7 @@ namespace Nop.Services.Common
         /// <returns>An attribute</returns>
         public virtual GenericAttribute GetAttributeById(int attributeId)
         {
-            return _genericAttributeRepository.GetById(attributeId, 0);
+            return _genericAttributeRepository.GetById(attributeId);
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
@@ -33,7 +32,6 @@ namespace Nop.Services.Forums
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -54,7 +52,6 @@ namespace Nop.Services.Forums
             IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<ForumTopic> forumTopicRepository,
             IRepository<PrivateMessage> forumPrivateMessageRepository,
-            IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -71,7 +68,6 @@ namespace Nop.Services.Forums
             _forumSubscriptionRepository = forumSubscriptionRepository;
             _forumTopicRepository = forumTopicRepository;
             _forumPrivateMessageRepository = forumPrivateMessageRepository;
-            _staticCacheManager = staticCacheManager;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
@@ -245,7 +241,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum group</returns>
         public virtual ForumGroup GetForumGroupById(int forumGroupId)
         {
-            return _forumGroupRepository.GetById(forumGroupId);
+            return _forumGroupRepository.GetById(forumGroupId, cache => default);
         }
 
         /// <summary>
@@ -259,7 +255,7 @@ namespace Nop.Services.Forums
                 return from fg in query
                     orderby fg.DisplayOrder, fg.Id
                     select fg;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopForumDefaults.ForumGroupAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopForumDefaults.ForumGroupAllCacheKey));
         }
 
         /// <summary>
@@ -319,7 +315,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum</returns>
         public virtual Forum GetForumById(int forumId)
         {
-            return _forumRepository.GetById(forumId);
+            return _forumRepository.GetById(forumId, cache => default);
         }
 
         /// <summary>
@@ -329,15 +325,13 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopForumDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId);
-
             var forums = _forumRepository.GetAll(query =>
             {
                 return from f in query
                     orderby f.DisplayOrder, f.Id
                     where f.ForumGroupId == forumGroupId
                     select f;
-            }, key);
+            }, cache => cache.PrepareKeyForDefaultCache(NopForumDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId));
 
             return forums;
         }
@@ -408,7 +402,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum Topic</returns>
         public virtual ForumTopic GetTopicById(int forumTopicId, bool increaseViews)
         {
-            var forumTopic = _forumTopicRepository.GetById(forumTopicId);
+            var forumTopic = _forumTopicRepository.GetById(forumTopicId, cache => default);
 
             if (forumTopic == null)
                 return null;
@@ -622,7 +616,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum Post</returns>
         public virtual ForumPost GetPostById(int forumPostId)
         {
-            return _forumPostRepository.GetById(forumPostId);
+            return _forumPostRepository.GetById(forumPostId, cache => default);
         }
 
         /// <summary>
@@ -748,7 +742,7 @@ namespace Nop.Services.Forums
         /// <returns>Private message</returns>
         public virtual PrivateMessage GetPrivateMessageById(int privateMessageId)
         {
-            return _forumPrivateMessageRepository.GetById(privateMessageId);
+            return _forumPrivateMessageRepository.GetById(privateMessageId, cache => default);
         }
 
         /// <summary>
@@ -851,7 +845,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum subscription</returns>
         public virtual ForumSubscription GetSubscriptionById(int forumSubscriptionId)
         {
-            return _forumSubscriptionRepository.GetById(forumSubscriptionId);
+            return _forumSubscriptionRepository.GetById(forumSubscriptionId, cache => default);
         }
 
         /// <summary>

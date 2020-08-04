@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
@@ -14,17 +13,14 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public ProductTemplateService(IRepository<ProductTemplate> productTemplateRepository,
-            IStaticCacheManager staticCacheManager)
+        public ProductTemplateService(IRepository<ProductTemplate> productTemplateRepository)
         {
             _productTemplateRepository = productTemplateRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -51,7 +47,7 @@ namespace Nop.Services.Catalog
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
                     select pt;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTemplatesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTemplatesAllCacheKey));
             
             return templates;
         }
@@ -63,7 +59,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product template</returns>
         public virtual ProductTemplate GetProductTemplateById(int productTemplateId)
         {
-            return _productTemplateRepository.GetById(productTemplateId);
+            return _productTemplateRepository.GetById(productTemplateId, cache => default);
         }
 
         /// <summary>

@@ -203,7 +203,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment</returns>
         public virtual Shipment GetShipmentById(int shipmentId)
         {
-            return _shipmentRepository.GetById(shipmentId, 0);
+            return _shipmentRepository.GetById(shipmentId);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment item</returns>
         public virtual ShipmentItem GetShipmentItemById(int shipmentItemId)
         {
-            return _siRepository.GetById(shipmentItemId, 0);
+            return _siRepository.GetById(shipmentItemId);
         }
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment tracker</returns>
         public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
         {
-            var order = _orderRepository.GetById(shipment.OrderId);
+            var order = _orderRepository.GetById(shipment.OrderId, cache => default);
 
             if (!order.PickupInStore)
             {

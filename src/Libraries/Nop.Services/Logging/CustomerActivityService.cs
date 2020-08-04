@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
@@ -18,7 +17,6 @@ namespace Nop.Services.Logging
 
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
@@ -28,13 +26,11 @@ namespace Nop.Services.Logging
 
         public CustomerActivityService(IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IStaticCacheManager staticCacheManager,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
-            _staticCacheManager = staticCacheManager;
             _webHelper = webHelper;
             _workContext = workContext;
         }
@@ -81,7 +77,7 @@ namespace Nop.Services.Logging
                 return from alt in query
                     orderby alt.Name
                     select alt;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopLoggingDefaults.ActivityTypeAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopLoggingDefaults.ActivityTypeAllCacheKey));
 
             return activityLogTypes;
         }
@@ -93,7 +89,7 @@ namespace Nop.Services.Logging
         /// <returns>Activity log type item</returns>
         public virtual ActivityLogType GetActivityTypeById(int activityLogTypeId)
         {
-            return _activityLogTypeRepository.GetById(activityLogTypeId);
+            return _activityLogTypeRepository.GetById(activityLogTypeId, cache => default);
         }
 
         /// <summary>
@@ -208,7 +204,7 @@ namespace Nop.Services.Logging
         /// <returns>Activity log item</returns>
         public virtual ActivityLog GetActivityById(int activityLogId)
         {
-            return _activityLogRepository.GetById(activityLogId, 0);
+            return _activityLogRepository.GetById(activityLogId);
         }
 
         /// <summary>

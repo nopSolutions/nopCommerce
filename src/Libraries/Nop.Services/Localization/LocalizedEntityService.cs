@@ -71,7 +71,7 @@ namespace Nop.Services.Localization
             {
                 return from lp in query
                     select lp;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyAllCacheKey));
         }
 
         #endregion
@@ -94,7 +94,7 @@ namespace Nop.Services.Localization
         /// <returns>Localized property</returns>
         public virtual LocalizedProperty GetLocalizedPropertyById(int localizedPropertyId)
         {
-            return _localizedPropertyRepository.GetById(localizedPropertyId, 0);
+            return _localizedPropertyRepository.GetById(localizedPropertyId);
         }
 
         /// <summary>

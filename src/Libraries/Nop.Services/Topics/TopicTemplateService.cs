@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
 
@@ -14,17 +13,14 @@ namespace Nop.Services.Topics
         #region Fields
 
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository,
-            IStaticCacheManager staticCacheManager)
+        public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository)
         {
             _topicTemplateRepository = topicTemplateRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -51,7 +47,7 @@ namespace Nop.Services.Topics
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
                     select pt;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicTemplatesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicTemplatesAllCacheKey));
 
             return templates;
         }
@@ -63,7 +59,7 @@ namespace Nop.Services.Topics
         /// <returns>Topic template</returns>
         public virtual TopicTemplate GetTopicTemplateById(int topicTemplateId)
         {
-            return _topicTemplateRepository.GetById(topicTemplateId);
+            return _topicTemplateRepository.GetById(topicTemplateId, cache => default);
         }
 
         /// <summary>

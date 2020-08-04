@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
@@ -14,17 +13,14 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository,
-            IStaticCacheManager staticCacheManager)
+        public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository)
         {
             _categoryTemplateRepository = categoryTemplateRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -51,7 +47,7 @@ namespace Nop.Services.Catalog
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
                     select pt;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryTemplatesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerTemplatesAllCacheKey));
 
             return templates;
         }
@@ -63,7 +59,7 @@ namespace Nop.Services.Catalog
         /// <returns>Category template</returns>
         public virtual CategoryTemplate GetCategoryTemplateById(int categoryTemplateId)
         {
-            return _categoryTemplateRepository.GetById(categoryTemplateId);
+            return _categoryTemplateRepository.GetById(categoryTemplateId, cache => default);
         }
 
         /// <summary>

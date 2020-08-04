@@ -55,7 +55,7 @@ namespace Nop.Services.Common
                 return from aa in query
                     orderby aa.DisplayOrder, aa.Id
                     select aa;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributesAllCacheKey));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute</returns>
         public virtual AddressAttribute GetAddressAttributeById(int addressAttributeId)
         {
-            return _addressAttributeRepository.GetById(addressAttributeId);
+            return _addressAttributeRepository.GetById(addressAttributeId, cache => default);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute value</returns>
         public virtual AddressAttributeValue GetAddressAttributeValueById(int addressAttributeValueId)
         {
-            return _addressAttributeValueRepository.GetById(addressAttributeValueId);
+            return _addressAttributeValueRepository.GetById(addressAttributeValueId, cache => default);
         }
 
         /// <summary>

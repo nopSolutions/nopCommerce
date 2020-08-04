@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -37,7 +36,6 @@ namespace Nop.Services.Customers
         private readonly IRepository<GenericAttribute> _gaRepository;
         private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
         private readonly IStaticCacheManager _staticCacheManager;
-        private readonly NopConfig _nopConfig;
         private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -56,7 +54,6 @@ namespace Nop.Services.Customers
             IRepository<GenericAttribute> gaRepository,
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
-            NopConfig nopConfig,
             IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings)
         {
@@ -71,7 +68,6 @@ namespace Nop.Services.Customers
             _gaRepository = gaRepository;
             _shoppingCartRepository = shoppingCartRepository;
             _staticCacheManager = staticCacheManager;
-            _nopConfig = nopConfig;
             _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
         }
@@ -381,7 +377,8 @@ namespace Nop.Services.Customers
         /// <returns>A customer</returns>
         public virtual Customer GetCustomerById(int customerId)
         {
-            return _customerRepository.GetById(customerId, cacheTime: _nopConfig.ShortTermCacheTime);
+            return _customerRepository.GetById(customerId,
+                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(Customer).ToLower(), customerId));
         }
 
         /// <summary>
@@ -1059,7 +1056,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer role</returns>
         public virtual CustomerRole GetCustomerRoleById(int customerRoleId)
         {
-            return _customerRoleRepository.GetById(customerRoleId);
+            return _customerRoleRepository.GetById(customerRoleId, cache => default);
         }
 
         /// <summary>
@@ -1116,8 +1113,6 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer, showHidden);
-
             return _customerRoleRepository.GetAll(query =>
             {
                 return from cr in query
@@ -1125,7 +1120,7 @@ namespace Nop.Services.Customers
                     where crm.CustomerId == customer.Id &&
                           (showHidden || cr.Active)
                     select cr;
-            }, key);
+            }, cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer, showHidden));
         }
 
         /// <summary>

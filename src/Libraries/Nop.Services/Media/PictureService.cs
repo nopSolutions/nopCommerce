@@ -657,7 +657,7 @@ namespace Nop.Services.Media
         /// <returns>Picture</returns>
         public virtual Picture GetPictureById(int pictureId)
         {
-            return _pictureRepository.GetById(pictureId);
+            return _pictureRepository.GetById(pictureId, cache => default);
         }
 
         /// <summary>

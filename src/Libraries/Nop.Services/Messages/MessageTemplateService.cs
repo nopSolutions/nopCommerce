@@ -88,7 +88,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template</returns>
         public virtual MessageTemplate GetMessageTemplateById(int messageTemplateId)
         {
-            return _messageTemplateRepository.GetById(messageTemplateId);
+            return _messageTemplateRepository.GetById(messageTemplateId, cache => default);
         }
 
         /// <summary>
@@ -126,8 +126,6 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
-
             return _messageTemplateRepository.GetAll(query =>
             {
                 query = query.OrderBy(t => t.Name);
@@ -148,7 +146,7 @@ namespace Nop.Services.Messages
                 query = query.Distinct().OrderBy(t => t.Name);
 
                 return query;
-            }, key);
+            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
         }
 
         /// <summary>

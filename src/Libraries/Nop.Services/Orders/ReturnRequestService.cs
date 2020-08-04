@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 
@@ -18,7 +17,6 @@ namespace Nop.Services.Orders
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -26,13 +24,11 @@ namespace Nop.Services.Orders
 
         public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
-            IRepository<ReturnRequestReason> returnRequestReasonRepository,
-            IStaticCacheManager staticCacheManager)
+            IRepository<ReturnRequestReason> returnRequestReasonRepository)
         {
             _returnRequestRepository = returnRequestRepository;
             _returnRequestActionRepository = returnRequestActionRepository;
             _returnRequestReasonRepository = returnRequestReasonRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -55,7 +51,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request</returns>
         public virtual ReturnRequest GetReturnRequestById(int returnRequestId)
         {
-            return _returnRequestRepository.GetById(returnRequestId, 0);
+            return _returnRequestRepository.GetById(returnRequestId);
         }
 
         /// <summary>
@@ -125,7 +121,7 @@ namespace Nop.Services.Orders
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
                     select rra;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestActionAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestActionAllCacheKey));
         }
 
         /// <summary>
@@ -135,7 +131,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request action</returns>
         public virtual ReturnRequestAction GetReturnRequestActionById(int returnRequestActionId)
         {
-            return _returnRequestActionRepository.GetById(returnRequestActionId);
+            return _returnRequestActionRepository.GetById(returnRequestActionId, cache => default);
         }
 
         /// <summary>
@@ -194,7 +190,7 @@ namespace Nop.Services.Orders
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
                     select rra;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestReasonAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestReasonAllCacheKey));
         }
 
         /// <summary>
@@ -204,7 +200,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request reason</returns>
         public virtual ReturnRequestReason GetReturnRequestReasonById(int returnRequestReasonId)
         {
-            return _returnRequestReasonRepository.GetById(returnRequestReasonId);
+            return _returnRequestReasonRepository.GetById(returnRequestReasonId, cache => default);
         }
 
         /// <summary>

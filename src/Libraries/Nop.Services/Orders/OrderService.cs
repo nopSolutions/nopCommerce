@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Configuration;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -34,7 +34,6 @@ namespace Nop.Services.Orders
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         private readonly IShipmentService _shipmentService;
-        private readonly NopConfig _nopConfig;
 
         #endregion
 
@@ -50,8 +49,7 @@ namespace Nop.Services.Orders
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
-            IShipmentService shipmentService,
-            NopConfig nopConfig)
+            IShipmentService shipmentService)
         {
             _productService = productService;
             _addressRepository = addressRepository;
@@ -64,7 +62,6 @@ namespace Nop.Services.Orders
             _recurringPaymentRepository = recurringPaymentRepository;
             _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
             _shipmentService = shipmentService;
-            _nopConfig = nopConfig;
         }
 
         #endregion
@@ -80,7 +77,8 @@ namespace Nop.Services.Orders
         /// <returns>Order</returns>
         public virtual Order GetOrderById(int orderId)
         {
-            return _orderRepository.GetById(orderId, cacheTime: _nopConfig.ShortTermCacheTime);
+            return _orderRepository.GetById(orderId,
+                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(Order).ToLower(), orderId));
         }
 
         /// <summary>
@@ -422,7 +420,8 @@ namespace Nop.Services.Orders
         /// <returns>Order item</returns>
         public virtual OrderItem GetOrderItemById(int orderItemId)
         {
-            return _orderItemRepository.GetById(orderItemId, cacheTime: _nopConfig.ShortTermCacheTime);
+            return _orderItemRepository.GetById(orderItemId,
+                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(OrderItem).ToLower(), orderItemId));
         }
 
         /// <summary>
@@ -764,7 +763,7 @@ namespace Nop.Services.Orders
         /// <returns>Order note</returns>
         public virtual OrderNote GetOrderNoteById(int orderNoteId)
         {
-            return _orderNoteRepository.GetById(orderNoteId, 0);
+            return _orderNoteRepository.GetById(orderNoteId);
         }
 
         /// <summary>
@@ -846,7 +845,7 @@ namespace Nop.Services.Orders
         /// <returns>Recurring payment</returns>
         public virtual RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
         {
-            return _recurringPaymentRepository.GetById(recurringPaymentId);
+            return _recurringPaymentRepository.GetById(recurringPaymentId, cache => default);
         }
 
         /// <summary>

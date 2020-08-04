@@ -157,7 +157,7 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resource</returns>
         public virtual LocaleStringResource GetLocaleStringResourceById(int localeStringResourceId)
         {
-            return _lsrRepository.GetById(localeStringResourceId);
+            return _lsrRepository.GetById(localeStringResourceId, cache => default);
         }
 
         /// <summary>

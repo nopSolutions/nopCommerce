@@ -334,7 +334,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result</returns>
         public virtual ExternalAuthenticationRecord GetExternalAuthenticationRecordById(int externalAuthenticationRecordId)
         {
-            return _externalAuthenticationRecordRepository.GetById(externalAuthenticationRecordId);
+            return _externalAuthenticationRecordRepository.GetById(externalAuthenticationRecordId, cache => default);
         }
 
         /// <summary>

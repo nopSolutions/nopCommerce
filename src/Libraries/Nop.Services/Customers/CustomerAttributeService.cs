@@ -55,7 +55,7 @@ namespace Nop.Services.Customers
                 return from ca in query
                     orderby ca.DisplayOrder, ca.Id
                     select ca;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute</returns>
         public virtual CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
         {
-            return _customerAttributeRepository.GetById(customerAttributeId);
+            return _customerAttributeRepository.GetById(customerAttributeId, cache => default);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute value</returns>
         public virtual CustomerAttributeValue GetCustomerAttributeValueById(int customerAttributeValueId)
         {
-            return _customerAttributeValueRepository.GetById(customerAttributeValueId);
+            return _customerAttributeValueRepository.GetById(customerAttributeValueId, cache => default);
         }
 
         /// <summary>

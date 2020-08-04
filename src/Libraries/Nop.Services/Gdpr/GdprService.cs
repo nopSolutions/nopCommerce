@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Events;
@@ -40,7 +39,6 @@ namespace Nop.Services.Gdpr
         private readonly IProductService _productService;
         private readonly IRepository<GdprConsent> _gdprConsentRepository;
         private readonly IRepository<GdprLog> _gdprLogRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreService _storeService;
 
@@ -61,7 +59,6 @@ namespace Nop.Services.Gdpr
             IProductService productService,
             IRepository<GdprConsent> gdprConsentRepository,
             IRepository<GdprLog> gdprLogRepository,
-            IStaticCacheManager staticCacheManager,
             IShoppingCartService shoppingCartService,
             IStoreService storeService)
         {
@@ -78,7 +75,6 @@ namespace Nop.Services.Gdpr
             _productService = productService;
             _gdprConsentRepository = gdprConsentRepository;
             _gdprLogRepository = gdprLogRepository;
-            _staticCacheManager = staticCacheManager;
             _shoppingCartService = shoppingCartService;
             _storeService = storeService;
         }
@@ -96,7 +92,7 @@ namespace Nop.Services.Gdpr
         /// <returns>GDPR consent</returns>
         public virtual GdprConsent GetConsentById(int gdprConsentId)
         {
-            return _gdprConsentRepository.GetById(gdprConsentId);
+            return _gdprConsentRepository.GetById(gdprConsentId, cache => default);
         }
 
         /// <summary>
@@ -110,7 +106,7 @@ namespace Nop.Services.Gdpr
                 return from c in query
                     orderby c.DisplayOrder, c.Id
                     select c;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopGdprDefaults.ConsentsAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopGdprDefaults.ConsentsAllCacheKey));
 
             return gdprConsents;
         }
@@ -173,7 +169,7 @@ namespace Nop.Services.Gdpr
         /// <returns>GDPR log</returns>
         public virtual GdprLog GetLogById(int gdprLogId)
         {
-            return _gdprLogRepository.GetById(gdprLogId, 0);
+            return _gdprLogRepository.GetById(gdprLogId);
         }
 
         /// <summary>

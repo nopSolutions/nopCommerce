@@ -147,7 +147,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discount</returns>
         public virtual Discount GetDiscountById(int discountId)
         {
-            return _discountRepository.GetById(discountId);
+            return _discountRepository.GetById(discountId, cache => default);
         }
 
         /// <summary>
@@ -167,9 +167,6 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey
-                , showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
-
             var discounts = _discountRepository.GetAll(query =>
             {
                 if (!showHidden)
@@ -188,7 +185,9 @@ namespace Nop.Services.Discounts
                 query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
                 return query;
-            }, cacheKey).AsQueryable();
+            }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey, 
+                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty))
+            .AsQueryable();
 
             //we know that this method is usually invoked multiple times
             //that's why we filter discounts by type and dates on the application layer
@@ -377,7 +376,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirementId">Discount requirement identifier</param>
         public virtual DiscountRequirement GetDiscountRequirementById(int discountRequirementId)
         {
-            return _discountRequirementRepository.GetById(discountRequirementId);
+            return _discountRequirementRepository.GetById(discountRequirementId, cache => default);
         }
 
         /// <summary>
@@ -588,7 +587,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discount usage history</returns>
         public virtual DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId)
         {
-            return _discountUsageHistoryRepository.GetById(discountUsageHistoryId, 0);
+            return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
         }
 
         /// <summary>

@@ -330,7 +330,7 @@ namespace Nop.Services.Catalog
                           !p.Deleted &&
                           p.ShowOnHomepage
                     select p;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
 
             return products;
         }
@@ -342,7 +342,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product</returns>
         public virtual Product GetProductById(int productId)
         {
-            return _productRepository.GetById(productId);
+            return _productRepository.GetById(productId, cache => default);
         }
 
         /// <summary>
@@ -1620,7 +1620,7 @@ namespace Nop.Services.Catalog
             if (pwi == null)
                 return 0;
 
-            var shipment = _shipmentRepository.GetById(shipmentItem.ShipmentId);
+            var shipment = _shipmentRepository.GetById(shipmentItem.ShipmentId, cache => default);
 
             //not shipped yet? hence "BookReservedInventory" method was not invoked
             if (!shipment.ShippedDateUtc.HasValue)
@@ -1680,7 +1680,7 @@ namespace Nop.Services.Catalog
         /// <returns>Related product</returns>
         public virtual RelatedProduct GetRelatedProductById(int relatedProductId)
         {
-            return _relatedProductRepository.GetById(relatedProductId);
+            return _relatedProductRepository.GetById(relatedProductId, cache => default);
         }
 
         /// <summary>
@@ -1769,7 +1769,7 @@ namespace Nop.Services.Catalog
         /// <returns>Cross-sell product</returns>
         public virtual CrossSellProduct GetCrossSellProductById(int crossSellProductId)
         {
-            return _crossSellProductRepository.GetById(crossSellProductId);
+            return _crossSellProductRepository.GetById(crossSellProductId, cache => default);
         }
 
         /// <summary>
@@ -1909,7 +1909,7 @@ namespace Nop.Services.Catalog
         /// <returns>Tier price</returns>
         public virtual TierPrice GetTierPriceById(int tierPriceId)
         {
-            return _tierPriceRepository.GetById(tierPriceId);
+            return _tierPriceRepository.GetById(tierPriceId, cache => default);
         }
 
         /// <summary>
@@ -1990,7 +1990,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product picture</returns>
         public virtual ProductPicture GetProductPictureById(int productPictureId)
         {
-            return _productPictureRepository.GetById(productPictureId);
+            return _productPictureRepository.GetById(productPictureId, cache => default);
         }
 
         /// <summary>
@@ -2130,7 +2130,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product review</returns>
         public virtual ProductReview GetProductReviewById(int productReviewId)
         {
-            return _productReviewRepository.GetById(productReviewId);
+            return _productReviewRepository.GetById(productReviewId, cache => default);
         }
 
         /// <summary>
@@ -2270,7 +2270,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual Warehouse GetWarehousesById(int warehouseId)
         {
-            return _warehouseRepository.GetById(warehouseId);
+            return _warehouseRepository.GetById(warehouseId, cache => default);
         }
 
         /// <summary>

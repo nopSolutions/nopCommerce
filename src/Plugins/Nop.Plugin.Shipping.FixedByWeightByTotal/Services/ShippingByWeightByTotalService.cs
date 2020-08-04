@@ -50,15 +50,13 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <returns>List of the shipping by weight record</returns>
         public virtual IPagedList<ShippingByWeightByTotalRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(_shippingByWeightByTotalAllKey);
-            var rez =
-                _sbwtRepository.GetAll(query =>
-                {
-                    return from sbw in query
-                        orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId,
-                            sbw.WeightFrom, sbw.OrderSubtotalFrom
-                        select sbw;
-                }, key);
+            var rez = _sbwtRepository.GetAll(query =>
+            {
+                return from sbw in query
+                    orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId,
+                        sbw.WeightFrom, sbw.OrderSubtotalFrom
+                    select sbw;
+            }, cache => cache.PrepareKeyForShortTermCache(_shippingByWeightByTotalAllKey));
 
             var records = new PagedList<ShippingByWeightByTotalRecord>(rez, pageIndex, pageSize);
 
@@ -155,7 +153,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <returns>Shipping by weight record</returns>
         public virtual ShippingByWeightByTotalRecord GetById(int shippingByWeightRecordId)
         {
-            return _sbwtRepository.GetById(shippingByWeightRecordId, 0);
+            return _sbwtRepository.GetById(shippingByWeightRecordId);
         }
 
         /// <summary>

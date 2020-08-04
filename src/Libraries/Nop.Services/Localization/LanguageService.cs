@@ -111,7 +111,7 @@ namespace Nop.Services.Localization
         /// <returns>Language</returns>
         public virtual Language GetLanguageById(int languageId)
         {
-            return _languageRepository.GetById(languageId);
+            return _languageRepository.GetById(languageId, cache => default);
         }
 
         /// <summary>

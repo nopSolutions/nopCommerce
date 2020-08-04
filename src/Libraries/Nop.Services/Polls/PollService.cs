@@ -49,7 +49,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll</returns>
         public virtual Poll GetPollById(int pollId)
         {
-            return _pollRepository.GetById(pollId);
+            return _pollRepository.GetById(pollId, cache => default);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         public virtual PollAnswer GetPollAnswerById(int pollAnswerId)
         {
-            return _pollAnswerRepository.GetById(pollAnswerId);
+            return _pollAnswerRepository.GetById(pollAnswerId, cache => default);
         }
 
         /// <summary>

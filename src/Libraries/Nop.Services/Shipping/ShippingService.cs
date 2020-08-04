@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -43,7 +42,6 @@ namespace Nop.Services.Shipping
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -68,7 +66,6 @@ namespace Nop.Services.Shipping
             IRepository<Warehouse> warehouseRepository,
             IShippingPluginManager shippingPluginManager,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings)
@@ -89,7 +86,6 @@ namespace Nop.Services.Shipping
             _warehouseRepository = warehouseRepository;
             _shippingPluginManager = shippingPluginManager;
             _stateProvinceService = stateProvinceService;
-            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _shippingSettings = shippingSettings;
             _shoppingCartSettings = shoppingCartSettings;
@@ -156,7 +152,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping method</returns>
         public virtual ShippingMethod GetShippingMethodById(int shippingMethodId)
         {
-            return _shippingMethodRepository.GetById(shippingMethodId);
+            return _shippingMethodRepository.GetById(shippingMethodId, cache => default);
         }
 
         /// <summary>
@@ -166,9 +162,8 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId);
-
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+            { 
                 return _shippingMethodRepository.GetAll(query =>
                 {
                     var query1 = from sm in query
@@ -184,14 +179,15 @@ namespace Nop.Services.Shipping
                         select sm;
 
                     return query2;
-                }, key);
+                }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
+            }
 
             return _shippingMethodRepository.GetAll(query=>
             {
                 return from sm in query
                     orderby sm.DisplayOrder, sm.Id
                     select sm;
-            }, key);
+            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
         }
 
         /// <summary>
@@ -282,7 +278,7 @@ namespace Nop.Services.Shipping
         /// <returns>Warehouse</returns>
         public virtual Warehouse GetWarehouseById(int warehouseId)
         {
-            return _warehouseRepository.GetById(warehouseId);
+            return _warehouseRepository.GetById(warehouseId, cache => default);
         }
 
         /// <summary>
@@ -297,7 +293,7 @@ namespace Nop.Services.Shipping
                 return from wh in query
                     orderby wh.Name
                     select wh;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
 
             if (!string.IsNullOrEmpty(name)) 
                 warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();

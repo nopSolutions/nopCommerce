@@ -44,7 +44,7 @@ namespace Nop.Services.Tasks
         /// <returns>Task</returns>
         public virtual ScheduleTask GetTaskById(int taskId)
         {
-            return _taskRepository.GetById(taskId);
+            return _taskRepository.GetById(taskId, cache => default);
         }
 
         /// <summary>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 
@@ -15,17 +14,14 @@ namespace Nop.Services.Stores
         #region Fields
 
         private readonly IRepository<Store> _storeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public StoreService(IRepository<Store> storeRepository,
-            IStaticCacheManager staticCacheManager)
+        public StoreService(IRepository<Store> storeRepository)
         {
             _storeRepository = storeRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -57,7 +53,7 @@ namespace Nop.Services.Stores
             var result = _storeRepository.GetAll(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoresAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopStoreDefaults.StoresAllCacheKey));
 
             return result;
         }
@@ -69,7 +65,7 @@ namespace Nop.Services.Stores
         /// <returns>Store</returns>
         public virtual Store GetStoreById(int storeId)
         {
-            return _storeRepository.GetById(storeId);
+            return _storeRepository.GetById(storeId, cache => default);
         }
 
         /// <summary>

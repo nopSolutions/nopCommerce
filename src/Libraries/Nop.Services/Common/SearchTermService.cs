@@ -43,7 +43,7 @@ namespace Nop.Services.Common
         /// <returns>Search term</returns>
         public virtual SearchTerm GetSearchTermById(int searchTermId)
         {
-            return _searchTermRepository.GetById(searchTermId);
+            return _searchTermRepository.GetById(searchTermId, cache => default);
         }
 
         /// <summary>

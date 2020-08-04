@@ -1617,7 +1617,7 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId);
+            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId, cache => default);
 
             if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;

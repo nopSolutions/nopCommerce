@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Configuration;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
 using Nop.Services.Directory;
@@ -21,7 +21,6 @@ namespace Nop.Services.Common
         private readonly ICountryService _countryService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly NopConfig _nopConfig;
 
         #endregion
 
@@ -32,8 +31,7 @@ namespace Nop.Services.Common
             IAddressAttributeService addressAttributeService,
             ICountryService countryService,
             IRepository<Address> addressRepository,
-            IStateProvinceService stateProvinceService,
-            NopConfig nopConfig)
+            IStateProvinceService stateProvinceService)
         {
             _addressSettings = addressSettings;
             _addressAttributeParser = addressAttributeParser;
@@ -41,7 +39,6 @@ namespace Nop.Services.Common
             _countryService = countryService;
             _addressRepository = addressRepository;
             _stateProvinceService = stateProvinceService;
-            _nopConfig = nopConfig;
         }
 
         #endregion
@@ -98,7 +95,8 @@ namespace Nop.Services.Common
         /// <returns>Address</returns>
         public virtual Address GetAddressById(int addressId)
         {
-            return _addressRepository.GetById(addressId, cacheTime: _nopConfig.ShortTermCacheTime);
+            return _addressRepository.GetById(addressId,
+                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(Address).ToLower(), addressId));
         }
 
         /// <summary>

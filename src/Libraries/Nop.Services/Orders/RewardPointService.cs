@@ -248,7 +248,7 @@ namespace Nop.Services.Orders
         /// <returns>Reward point history entry</returns>
         public virtual RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId)
         {
-            return _rewardPointsHistoryRepository.GetById(rewardPointsHistoryId, 0);
+            return _rewardPointsHistoryRepository.GetById(rewardPointsHistoryId);
         }
 
         /// <summary>

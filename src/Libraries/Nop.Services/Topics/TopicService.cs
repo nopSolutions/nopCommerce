@@ -76,7 +76,7 @@ namespace Nop.Services.Topics
         /// <returns>Topic</returns>
         public virtual Topic GetTopicById(int topicId)
         {
-            return _topicRepository.GetById(topicId);
+            return _topicRepository.GetById(topicId, cache => default);
         }
 
         /// <summary>
@@ -130,13 +130,6 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            var key = ignorAcl
-                ? _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden,
-                    onlyIncludedInTopMenu)
-                : _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey,
-                    storeId, showHidden, onlyIncludedInTopMenu,
-                    _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
-
             return _topicRepository.GetAll(query =>
             {
                 query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
@@ -181,7 +174,13 @@ namespace Nop.Services.Topics
                 }
 
                 return query;
-            }, key);
+            }, cache =>
+            {
+                return ignorAcl
+                    ? cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu)
+                    : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu,
+                        _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+            });
         }
 
         /// <summary>

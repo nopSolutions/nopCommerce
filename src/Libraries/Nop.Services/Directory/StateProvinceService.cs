@@ -52,7 +52,7 @@ namespace Nop.Services.Directory
         /// <returns>State/province</returns>
         public virtual StateProvince GetStateProvinceById(int stateProvinceId)
         {
-            return _stateProvinceRepository.GetById(stateProvinceId);
+            return _stateProvinceRepository.GetById(stateProvinceId, cache => default);
         }
 
         /// <summary>

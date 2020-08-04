@@ -15,23 +15,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         #region Fields
 
         private readonly IRepository<TaxRate> _taxRateRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="staticCacheManager">Cache manager</param>
-        /// <param name="taxRateRepository">Tax rate repository</param>
-        public CountryStateZipService(IRepository<TaxRate> taxRateRepository,
-            IStaticCacheManager staticCacheManager)
+        public CountryStateZipService(IRepository<TaxRate> taxRateRepository)
         {
-       
             _taxRateRepository = taxRateRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -53,14 +44,12 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <returns>Tax rates</returns>
         public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY);
-
             var rez = _taxRateRepository.GetAll(query =>
             {
                 return from tr in query
                     orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
                     select tr;
-            }, key);
+            }, cache => cache.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY));
 
             var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);
 
@@ -74,7 +63,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <returns>Tax rate</returns>
         public virtual TaxRate GetTaxRateById(int taxRateId)
         {
-            return _taxRateRepository.GetById(taxRateId, 0);
+            return _taxRateRepository.GetById(taxRateId);
         }
 
         /// <summary>

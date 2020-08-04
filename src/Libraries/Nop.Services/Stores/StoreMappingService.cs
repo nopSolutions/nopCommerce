@@ -57,7 +57,7 @@ namespace Nop.Services.Stores
         /// <returns>Store mapping record</returns>
         public virtual StoreMapping GetStoreMappingById(int storeMappingId)
         {
-            return _storeMappingRepository.GetById(storeMappingId, 0);
+            return _storeMappingRepository.GetById(storeMappingId);
         }
 
         /// <summary>

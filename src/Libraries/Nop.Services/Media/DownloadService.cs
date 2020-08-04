@@ -36,7 +36,7 @@ namespace Nop.Services.Media
         /// <returns>Download</returns>
         public virtual Download GetDownloadById(int downloadId)
         {
-            return _downloadRepository.GetById(downloadId, 0);
+            return _downloadRepository.GetById(downloadId);
         }
 
         /// <summary>

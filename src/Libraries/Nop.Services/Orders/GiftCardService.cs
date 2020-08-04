@@ -59,7 +59,7 @@ namespace Nop.Services.Orders
         /// <returns>Gift card entry</returns>
         public virtual GiftCard GetGiftCardById(int giftCardId)
         {
-            return _giftCardRepository.GetById(giftCardId);
+            return _giftCardRepository.GetById(giftCardId, cache => default);
         }
 
         /// <summary>

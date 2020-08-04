@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 
@@ -16,17 +15,14 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
-            IStaticCacheManager staticCacheManager)
+        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository)
         {
             _emailAccountRepository = emailAccountRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -115,7 +111,7 @@ namespace Nop.Services.Messages
         /// <returns>Email account</returns>
         public virtual EmailAccount GetEmailAccountById(int emailAccountId)
         {
-            return _emailAccountRepository.GetById(emailAccountId);
+            return _emailAccountRepository.GetById(emailAccountId, cache => default);
         }
 
         /// <summary>
@@ -129,7 +125,7 @@ namespace Nop.Services.Messages
                 return from ea in query
                     orderby ea.Id
                     select ea;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopMessageDefaults.EmailAccountsAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.EmailAccountsAllCacheKey));
 
             return emailAccounts;
         }

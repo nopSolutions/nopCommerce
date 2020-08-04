@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
 
@@ -14,17 +13,14 @@ namespace Nop.Services.Tax
         #region Fields
 
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository,
-            IStaticCacheManager staticCacheManager)
+        public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository)
         {
             _taxCategoryRepository = taxCategoryRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -51,7 +47,7 @@ namespace Nop.Services.Tax
                 return from tc in query
                     orderby tc.DisplayOrder, tc.Id
                     select tc;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopTaxDefaults.TaxCategoriesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopTaxDefaults.TaxCategoriesAllCacheKey));
 
             return taxCategories;
         }
@@ -63,7 +59,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax category</returns>
         public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
         {
-            return _taxCategoryRepository.GetById(taxCategoryId);
+            return _taxCategoryRepository.GetById(taxCategoryId, cache => default);
         }
 
         /// <summary>

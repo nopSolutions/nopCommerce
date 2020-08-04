@@ -43,9 +43,9 @@ namespace Nop.Services.Catalog
         /// <returns>Review types</returns>
         public virtual IList<ReviewType> GetAllReviewTypes()
         {
-            return _reviewTypeRepository.GetAll(query => query
-                    .OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id),
-                _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ReviewTypeAllCacheKey));
+            return _reviewTypeRepository.GetAll(
+                query => query.OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id),
+                cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ReviewTypeAllCacheKey));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nop.Services.Catalog
         /// <returns>Review type</returns>
         public virtual ReviewType GetReviewTypeById(int reviewTypeId)
         {
-            return _reviewTypeRepository.GetById(reviewTypeId);
+            return _reviewTypeRepository.GetById(reviewTypeId, cache => default);
         }
 
         /// <summary>

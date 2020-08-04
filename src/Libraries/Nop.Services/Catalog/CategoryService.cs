@@ -226,9 +226,6 @@ namespace Nop.Services.Catalog
         public virtual IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden = false)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryIdCacheKey,
-                parentCategoryId, showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
-
             var categories = _categoryRepository.GetAll(query =>
             {
                 if (!showHidden)
@@ -272,7 +269,8 @@ namespace Nop.Services.Catalog
                 }
 
                 return query;
-            }, key);
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryIdCacheKey,
+                parentCategoryId, showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore));
 
             return categories;
         }
@@ -292,7 +290,7 @@ namespace Nop.Services.Catalog
                           !c.Deleted &&
                           c.ShowOnHomepage
                     select c;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllDisplayedOnHomepageCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllDisplayedOnHomepageCacheKey));
 
             if (showHidden)
                 return categories;
@@ -380,7 +378,7 @@ namespace Nop.Services.Catalog
         /// <returns>Category</returns>
         public virtual Category GetCategoryById(int categoryId)
         {
-            return _categoryRepository.GetById(categoryId);
+            return _categoryRepository.GetById(categoryId, cache => default);
         }
 
         /// <summary>
@@ -616,7 +614,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product category mapping</returns>
         public virtual ProductCategory GetProductCategoryById(int productCategoryId)
         {
-            return _productCategoryRepository.GetById(productCategoryId);
+            return _productCategoryRepository.GetById(productCategoryId, cache => default);
         }
 
         /// <summary>

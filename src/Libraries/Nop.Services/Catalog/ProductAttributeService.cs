@@ -98,7 +98,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute </returns>
         public virtual ProductAttribute GetProductAttributeById(int productAttributeId)
         {
-            return _productAttributeRepository.GetById(productAttributeId);
+            return _productAttributeRepository.GetById(productAttributeId, cache => default);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping</returns>
         public virtual ProductAttributeMapping GetProductAttributeMappingById(int productAttributeMappingId)
         {
-            return _productAttributeMappingRepository.GetById(productAttributeMappingId);
+            return _productAttributeMappingRepository.GetById(productAttributeMappingId, cache => default);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute value</returns>
         public virtual ProductAttributeValue GetProductAttributeValueById(int productAttributeValueId)
         {
-            return _productAttributeValueRepository.GetById(productAttributeValueId);
+            return _productAttributeValueRepository.GetById(productAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace Nop.Services.Catalog
         /// <returns>Predefined product attribute value</returns>
         public virtual PredefinedProductAttributeValue GetPredefinedProductAttributeValueById(int id)
         {
-            return _predefinedProductAttributeValueRepository.GetById(id);
+            return _predefinedProductAttributeValueRepository.GetById(id, cache => default);
         }
 
         /// <summary>
@@ -347,15 +347,13 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductAttributeCombination>();
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsAllCacheKey, productId);
-
             var combinations = _productAttributeCombinationRepository.GetAll(query =>
             {
                 return from c in query
                        orderby c.Id
                     where c.ProductId == productId
                     select c;
-            }, key);
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductAttributeCombinationsAllCacheKey, productId));
 
             return combinations;
         }
@@ -367,7 +365,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute combination</returns>
         public virtual ProductAttributeCombination GetProductAttributeCombinationById(int productAttributeCombinationId)
         {
-            return _productAttributeCombinationRepository.GetById(productAttributeCombinationId);
+            return _productAttributeCombinationRepository.GetById(productAttributeCombinationId, cache => default);
         }
 
         /// <summary>

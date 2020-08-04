@@ -182,7 +182,7 @@ namespace Nop.Services.Configuration
         /// <returns>Setting</returns>
         public virtual Setting GetSettingById(int settingId)
         {
-            return _settingRepository.GetById(settingId);
+            return _settingRepository.GetById(settingId, cache => default);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace Nop.Services.Configuration
                 return from s in query
                        orderby s.Name, s.StoreId
                     select s;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopConfigurationDefaults.SettingsAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopConfigurationDefaults.SettingsAllCacheKey));
             
             return settings;
         }

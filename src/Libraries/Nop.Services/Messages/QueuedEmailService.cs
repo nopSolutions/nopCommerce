@@ -72,7 +72,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email</returns>
         public virtual QueuedEmail GetQueuedEmailById(int queuedEmailId)
         {
-            return _queuedEmailRepository.GetById(queuedEmailId);
+            return _queuedEmailRepository.GetById(queuedEmailId, cache => default);
         }
 
         /// <summary>

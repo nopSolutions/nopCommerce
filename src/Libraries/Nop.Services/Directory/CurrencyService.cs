@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
 using Nop.Services.Stores;
@@ -19,7 +18,6 @@ namespace Nop.Services.Directory
         private readonly CurrencySettings _currencySettings;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IRepository<Currency> _currencyRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
 
         #endregion
@@ -29,13 +27,11 @@ namespace Nop.Services.Directory
         public CurrencyService(CurrencySettings currencySettings,
             IExchangeRatePluginManager exchangeRatePluginManager,
             IRepository<Currency> currencyRepository,
-            IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService)
         {
             _currencySettings = currencySettings;
             _exchangeRatePluginManager = exchangeRatePluginManager;
             _currencyRepository = currencyRepository;
-            _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
         }
 
@@ -61,7 +57,7 @@ namespace Nop.Services.Directory
         /// <returns>Currency</returns>
         public virtual Currency GetCurrencyById(int currencyId)
         {
-            return _currencyRepository.GetById(currencyId);
+            return _currencyRepository.GetById(currencyId, cache => default);
         }
 
         /// <summary>
@@ -85,8 +81,6 @@ namespace Nop.Services.Directory
         /// <returns>Currencies</returns>
         public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
-
             var currencies = _currencyRepository.GetAll(query =>
             {
                 if (!showHidden)
@@ -95,7 +89,7 @@ namespace Nop.Services.Directory
                 query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
                 return query;
-            }, key);
+            }, cache => cache.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden));
 
             //store mapping
             if (storeId > 0)

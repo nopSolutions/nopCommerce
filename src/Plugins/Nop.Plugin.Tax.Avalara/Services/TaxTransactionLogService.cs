@@ -68,7 +68,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>Log item</returns>
         public virtual TaxTransactionLog GetTaxTransactionLogById(int logItemId)
         {
-            return _taxTransactionLogRepository.GetById(logItemId, 0);
+            return _taxTransactionLogRepository.GetById(logItemId);
         }
 
         /// <summary>

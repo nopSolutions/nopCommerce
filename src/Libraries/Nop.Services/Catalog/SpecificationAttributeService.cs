@@ -52,7 +52,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute</returns>
         public virtual SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
         {
-            return _specificationAttributeRepository.GetById(specificationAttributeId);
+            return _specificationAttributeRepository.GetById(specificationAttributeId, cache => default);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute option</returns>
         public virtual SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOptionId)
         {
-            return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
+            return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId, cache => default);
         }
 
         /// <summary>
@@ -272,7 +272,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product specification attribute mapping</returns>
         public virtual ProductSpecificationAttribute GetProductSpecificationAttributeById(int productSpecificationAttributeId)
         {
-            return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId, 0);
+            return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
         }
 
         /// <summary>

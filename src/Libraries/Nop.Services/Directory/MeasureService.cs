@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
 
@@ -17,7 +16,6 @@ namespace Nop.Services.Directory
 
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly MeasureSettings _measureSettings;
 
         #endregion
@@ -26,12 +24,10 @@ namespace Nop.Services.Directory
 
         public MeasureService(IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
-            IStaticCacheManager staticCacheManager,
             MeasureSettings measureSettings)
         {
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
-            _staticCacheManager = staticCacheManager;
             _measureSettings = measureSettings;
         }
 
@@ -57,7 +53,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure dimension</returns>
         public virtual MeasureDimension GetMeasureDimensionById(int measureDimensionId)
         {
-            return _measureDimensionRepository.GetById(measureDimensionId);
+            return _measureDimensionRepository.GetById(measureDimensionId, cache => default);
         }
 
         /// <summary>
@@ -88,7 +84,7 @@ namespace Nop.Services.Directory
                 return from md in query
                     orderby md.DisplayOrder, md.Id
                     select md;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
             
             return measureDimensions;
         }
@@ -211,7 +207,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure weight</returns>
         public virtual MeasureWeight GetMeasureWeightById(int measureWeightId)
         {
-            return _measureWeightRepository.GetById(measureWeightId);
+            return _measureWeightRepository.GetById(measureWeightId, cache => default);
         }
 
         /// <summary>
@@ -242,7 +238,7 @@ namespace Nop.Services.Directory
                 return from mw in query
                     orderby mw.DisplayOrder, mw.Id
                     select mw;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
             
             return measureWeights;
         }

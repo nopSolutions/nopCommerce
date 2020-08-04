@@ -199,7 +199,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer</returns>
         public virtual Manufacturer GetManufacturerById(int manufacturerId)
         {
-            return _manufacturerRepository.GetById(manufacturerId);
+            return _manufacturerRepository.GetById(manufacturerId, cache => default);
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product manufacturer mapping</returns>
         public virtual ProductManufacturer GetProductManufacturerById(int productManufacturerId)
         {
-            return _productManufacturerRepository.GetById(productManufacturerId);
+            return _productManufacturerRepository.GetById(productManufacturerId, cache => default);
         }
 
         /// <summary>

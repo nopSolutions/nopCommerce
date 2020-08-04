@@ -44,7 +44,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor</returns>
         public virtual Vendor GetVendorById(int vendorId)
         {
-            return _vendorRepository.GetById(vendorId);
+            return _vendorRepository.GetById(vendorId, cache => default);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor note</returns>
         public virtual VendorNote GetVendorNoteById(int vendorNoteId)
         {
-            return _vendorNoteRepository.GetById(vendorNoteId);
+            return _vendorNoteRepository.GetById(vendorNoteId, cache => default);
         }
 
         /// <summary>

@@ -6,12 +6,14 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Caching
 {
+    /// <summary>
+    /// Represents the default cache key service implementation
+    /// </summary>
     public abstract partial class CacheKeyService
     {
         #region Fields
 
         protected readonly NopConfig _nopConfig;
-        private const string HASH_ALGORITHM = "SHA1";
 
         #endregion
 
@@ -27,10 +29,10 @@ namespace Nop.Core.Caching
         #region Utilities
 
         /// <summary>
-        /// Creates the hash sum of identifiers list
+        /// Creates the hash value of the passed identifiers
         /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
+        /// <param name="ids">Collection of identifiers</param>
+        /// <returns>String hash value</returns>
         protected virtual string CreateIdsHash(IEnumerable<int> ids)
         {
             var identifiers = ids.ToList();
@@ -38,7 +40,8 @@ namespace Nop.Core.Caching
             if (!identifiers.Any())
                 return string.Empty;
 
-            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", identifiers.OrderBy(id => id))), HASH_ALGORITHM);
+            var identifiersString = string.Join(", ", identifiers.OrderBy(id => id));
+            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(identifiersString), NopCachingDefaults.HashAlgorithm);
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace Nop.Core.Caching
             {
                 null => "null",
                 IEnumerable<int> ids => CreateIdsHash(ids),
-                IEnumerable<BaseEntity> entities => CreateIdsHash(entities.Select(e => e.Id)),
+                IEnumerable<BaseEntity> entities => CreateIdsHash(entities.Select(entity => entity.Id)),
                 BaseEntity entity => entity.Id,
                 decimal param => param.ToString(CultureInfo.InvariantCulture),
                 _ => parameter

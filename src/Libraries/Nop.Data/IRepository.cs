@@ -20,25 +20,26 @@ namespace Nop.Data
         /// Get the entity entry
         /// </summary>
         /// <param name="id">Entity entry identifier</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entry</returns>
-        TEntity GetById(int? id, CacheKey cacheKey = null);
+        TEntity GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null);
 
         /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entries</returns>
-        IList<TEntity> GetByIds(IList<int> ids, CacheKey cacheKey = null);
+        IList<TEntity> GetByIds(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null);
 
         /// <summary>
         /// Get all entity entries
         /// </summary>
         /// <param name="func">Function to select entries</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entries</returns>
-        IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, CacheKey cacheKey = null);
+        IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+            Func<IStaticCacheManager, CacheKey> getCacheKey = null);
 
         /// <summary>
         /// Get paged list of all entity entries

@@ -47,28 +47,34 @@ namespace Nop.Data
         /// Get the entity entry
         /// </summary>
         /// <param name="id">Entity entry identifier</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entry</returns>
-        public virtual TEntity GetById(int? id, CacheKey cacheKey = null)
+        public virtual TEntity GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
             if (!id.HasValue || id == 0)
                 return null;
 
             TEntity getEntity()
             {
-                return Entities.FirstOrDefault(e => e.Id == Convert.ToInt32(id));
+                return Entities.FirstOrDefault(entity => entity.Id == Convert.ToInt32(id));
             }
 
-            return cacheKey == null ? getEntity() : _staticCacheManager.Get(cacheKey, getEntity);
+            if (getCacheKey == null)
+                return getEntity();
+
+            //caching
+            var cacheKey = getCacheKey(_staticCacheManager)
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopCachingDefaults.EntityByIdCacheKey, typeof(TEntity).Name.ToLower(), id);
+            return _staticCacheManager.Get(cacheKey, getEntity);
         }
 
         /// <summary>
         /// Get entity entries by identifiers
         /// </summary>
         /// <param name="ids">Entity entry identifiers</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entries</returns>
-        public virtual IList<TEntity> GetByIds(IList<int> ids, CacheKey cacheKey = null)
+        public virtual IList<TEntity> GetByIds(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
             if (!ids?.Any() ?? true)
                 return new List<TEntity>();
@@ -94,20 +100,37 @@ namespace Nop.Data
                 return sortedEntries;
             }
 
-            return cacheKey == null ? getByIds() : _staticCacheManager.Get(cacheKey, getByIds);
+            if (getCacheKey == null)
+                return getByIds();
+
+            //caching
+            var cacheKey = getCacheKey(_staticCacheManager)
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopCachingDefaults.EntitiesByIdsCacheKey, typeof(TEntity).Name.ToLower(), ids);
+            return _staticCacheManager.Get(cacheKey, getByIds);
         }
 
         /// <summary>
         /// Get all entity entries
         /// </summary>
         /// <param name="func">Function to select entries</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entries</returns>
-        public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, CacheKey cacheKey = null)
+        public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+            Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
-            var query = func != null ? func.Invoke(Table) : Table;
+            IList<TEntity> getAll()
+            {
+                var query = func != null ? func(Table) : Table;
+                return query.ToList();
+            }
 
-            return cacheKey == null ? query.ToList() : _staticCacheManager.Get(cacheKey, query.ToList);
+            if (getCacheKey == null)
+                return getAll();
+
+            //caching
+            var cacheKey = getCacheKey(_staticCacheManager)
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopCachingDefaults.AllEntitiesCacheKey, typeof(TEntity).Name.ToLower());
+            return _staticCacheManager.Get(cacheKey, getAll);
         }
 
         /// <summary>
@@ -121,7 +144,7 @@ namespace Nop.Data
         public virtual IPagedList<TEntity> GetAllPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var query = func != null ? func.Invoke(Table) : Table;
+            var query = func != null ? func(Table) : Table;
 
             return new PagedList<TEntity>(query, pageIndex, pageSize, getOnlyTotalCount);
         }

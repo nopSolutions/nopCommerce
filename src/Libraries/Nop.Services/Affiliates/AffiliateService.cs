@@ -58,7 +58,7 @@ namespace Nop.Services.Affiliates
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateById(int affiliateId)
         {
-            return _affiliateRepository.GetById(affiliateId);
+            return _affiliateRepository.GetById(affiliateId, cache => default);
         }
 
         /// <summary>

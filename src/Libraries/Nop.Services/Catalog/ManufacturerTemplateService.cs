@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 
@@ -14,17 +13,14 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
-            IStaticCacheManager staticCacheManager)
+        public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository)
         {
             _manufacturerTemplateRepository = manufacturerTemplateRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -51,7 +47,7 @@ namespace Nop.Services.Catalog
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
                     select pt;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerTemplatesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerTemplatesAllCacheKey));
 
             return templates;
         }
@@ -63,7 +59,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer template</returns>
         public virtual ManufacturerTemplate GetManufacturerTemplateById(int manufacturerTemplateId)
         {
-            return _manufacturerTemplateRepository.GetById(manufacturerTemplateId);
+            return _manufacturerTemplateRepository.GetById(manufacturerTemplateId, cache => default);
         }
 
         /// <summary>

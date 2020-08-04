@@ -141,7 +141,7 @@ namespace Nop.Services.Catalog
         /// <returns>Subscription</returns>
         public virtual BackInStockSubscription GetSubscriptionById(int subscriptionId)
         {
-            return _backInStockSubscriptionRepository.GetById(subscriptionId);
+            return _backInStockSubscriptionRepository.GetById(subscriptionId, cache => default);
         }
 
         /// <summary>

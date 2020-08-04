@@ -772,7 +772,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 return null;
 
             return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), () =>
-                _facebookPixelConfigurationRepository.GetById(configurationId, 0));
+                _facebookPixelConfigurationRepository.GetById(configurationId));
         }
 
         /// <summary>

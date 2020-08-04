@@ -44,9 +44,8 @@ namespace Nop.Services.Vendors
         public virtual IList<VendorAttribute> GetAllVendorAttributes()
         {
             return _vendorAttributeRepository.GetAll(
-                query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder)
-                    .ThenBy(vendorAttribute => vendorAttribute.Id)
-                , _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
+                query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id),
+                cache => cache.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute</returns>
         public virtual VendorAttribute GetVendorAttributeById(int vendorAttributeId)
         {
-            return _vendorAttributeRepository.GetById(vendorAttributeId);
+            return _vendorAttributeRepository.GetById(vendorAttributeId, cache => default);
         }
 
         /// <summary>
@@ -113,7 +112,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute value</returns>
         public virtual VendorAttributeValue GetVendorAttributeValueById(int vendorAttributeValueId)
         {
-            return _vendorAttributeValueRepository.GetById(vendorAttributeValueId);
+            return _vendorAttributeValueRepository.GetById(vendorAttributeValueId, cache => default);
         }
 
         /// <summary>

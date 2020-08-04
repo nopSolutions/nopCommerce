@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
 
@@ -15,19 +14,16 @@ namespace Nop.Services.Shipping.Date
 
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
         public DateRangeService(IRepository<DeliveryDate> deliveryDateRepository,
-            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
-            IStaticCacheManager staticCacheManager)
+            IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
             _deliveryDateRepository = deliveryDateRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -43,7 +39,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Delivery date</returns>
         public virtual DeliveryDate GetDeliveryDateById(int deliveryDateId)
         {
-            return _deliveryDateRepository.GetById(deliveryDateId);
+            return _deliveryDateRepository.GetById(deliveryDateId, cache => default);
         }
 
         /// <summary>
@@ -57,7 +53,7 @@ namespace Nop.Services.Shipping.Date
                 return from dd in query
                     orderby dd.DisplayOrder, dd.Id
                     select dd;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.DeliveryDatesAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.DeliveryDatesAllCacheKey));
 
             return deliveryDates;
         }
@@ -100,7 +96,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Product availability range</returns>
         public virtual ProductAvailabilityRange GetProductAvailabilityRangeById(int productAvailabilityRangeId)
         {
-            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.GetById(productAvailabilityRangeId) : null;
+            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.GetById(productAvailabilityRangeId, cache => default) : null;
         }
 
         /// <summary>
@@ -114,7 +110,7 @@ namespace Nop.Services.Shipping.Date
                 return from par in query
                     orderby par.DisplayOrder, par.Id
                     select par;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopShippingDefaults.ProductAvailabilityAllCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ProductAvailabilityAllCacheKey));
         }
 
         /// <summary>

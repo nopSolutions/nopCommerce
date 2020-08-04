@@ -82,7 +82,7 @@ namespace Nop.Services.Messages
         /// <returns>Campaign</returns>
         public virtual Campaign GetCampaignById(int campaignId)
         {
-            return _campaignRepository.GetById(campaignId);
+            return _campaignRepository.GetById(campaignId, cache => default);
         }
 
         /// <summary>

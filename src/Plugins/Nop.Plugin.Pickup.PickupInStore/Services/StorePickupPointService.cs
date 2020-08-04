@@ -58,7 +58,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <returns>Pickup points</returns>
         public virtual IPagedList<StorePickupPoint> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(_pickupPointAllKey, storeId);
             var rez = _storePickupPointRepository.GetAll(query =>
             {
                 if (storeId > 0)
@@ -66,7 +65,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
                 query = query.OrderBy(point => point.DisplayOrder).ThenBy(point => point.Name);
 
                 return query;
-            }, key);
+            }, cache => cache.PrepareKeyForShortTermCache(_pickupPointAllKey, storeId));
 
             return new PagedList<StorePickupPoint>(rez, pageIndex, pageSize);
         }
@@ -78,7 +77,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <returns>Pickup point</returns>
         public virtual StorePickupPoint GetStorePickupPointById(int pickupPointId)
         {
-            return _storePickupPointRepository.GetById(pickupPointId, 0);
+            return _storePickupPointRepository.GetById(pickupPointId);
         }
 
         /// <summary>

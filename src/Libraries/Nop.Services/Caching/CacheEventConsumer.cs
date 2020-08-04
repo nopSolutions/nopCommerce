@@ -59,8 +59,7 @@ namespace Nop.Services.Caching
         /// <param name="eventMessage">Event message</param>
         public virtual void HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
         {
-            var entity = eventMessage.Entity;
-            ClearCache(entity, EntityEventType.Insert);
+            ClearCache(eventMessage.Entity, EntityEventType.Insert);
         }
 
         /// <summary>
@@ -69,9 +68,6 @@ namespace Nop.Services.Caching
         /// <param name="eventMessage">Event message</param>
         public virtual void HandleEvent(EntityUpdatedEvent<TEntity> eventMessage)
         {
-            var entity = eventMessage.Entity;
-
-            _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
             ClearCache(eventMessage.Entity, EntityEventType.Update);
         }
 
@@ -81,9 +77,6 @@ namespace Nop.Services.Caching
         /// <param name="eventMessage">Event message</param>
         public virtual void HandleEvent(EntityDeletedEvent<TEntity> eventMessage)
         {
-            var entity = eventMessage.Entity;
-
-            _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
             ClearCache(eventMessage.Entity, EntityEventType.Delete);
         }
 

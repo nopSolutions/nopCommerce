@@ -1146,8 +1146,7 @@ namespace Nop.Services.Seo
         /// <returns>URL record</returns>
         public virtual IList<UrlRecord> GetUrlRecordsByIds(int[] urlRecordIds)
         {
-            return _urlRecordRepository.GetByIds(urlRecordIds,
-                _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordByIdsCacheKey, urlRecordIds));
+            return _urlRecordRepository.GetByIds(urlRecordIds, cache => default);
         }
 
         /// <summary>
@@ -1157,7 +1156,7 @@ namespace Nop.Services.Seo
         /// <returns>URL record</returns>
         public virtual UrlRecord GetUrlRecordById(int urlRecordId)
         {
-            return _urlRecordRepository.GetById(urlRecordId);
+            return _urlRecordRepository.GetById(urlRecordId, cache => default);
         }
 
         /// <summary>
@@ -1236,7 +1235,7 @@ namespace Nop.Services.Seo
                 query = query.OrderBy(ur => ur.Slug);
 
                 return query;
-            }, _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey)).AsQueryable();
+            }, cache => cache.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey)).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(slug))
                 urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug));

@@ -146,7 +146,7 @@ namespace Nop.Services.Logging
         /// <returns>Log item</returns>
         public virtual Log GetLogById(int logId)
         {
-            return _logRepository.GetById(logId, 0);
+            return _logRepository.GetById(logId);
         }
 
         /// <summary>
