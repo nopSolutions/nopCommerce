@@ -156,7 +156,6 @@ namespace Nop.Services.Topics
                     _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var query = _topicRepository.Table;
-            query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
             if (!showHidden)
                 query = query.Where(t => t.Published);
@@ -209,9 +208,9 @@ namespace Nop.Services.Topics
                             where !c.LimitedToStores || storeId == sm.StoreId
                             select c;
                 }
-
-                query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
             }
+
+            query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
             return query.ToCachedList(key);
         }

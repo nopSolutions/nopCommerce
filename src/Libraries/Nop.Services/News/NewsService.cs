@@ -118,8 +118,6 @@ namespace Nop.Services.News
                 query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
             }
 
-            query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
-
             //Store mapping
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
@@ -129,9 +127,9 @@ namespace Nop.Services.News
                         from sm in n_sm.DefaultIfEmpty()
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
-
-                query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }
+
+            query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
 

@@ -166,25 +166,23 @@ namespace Nop.Services.Messages
 
             //store mapping
             query = from t in query
-                join sm in _storeMappingRepository.Table
-                    on new
-                    {
-                        c1 = t.Id,
-                        c2 = nameof(MessageTemplate)
-                    } 
-                    equals new
-                    {
-                        c1 = sm.EntityId,
-                        c2 = sm.EntityName
-                    } 
-                    into tSm
-                from sm in tSm.DefaultIfEmpty()
-                where !t.LimitedToStores || storeId == sm.StoreId
-                select t;
+                    join sm in _storeMappingRepository.Table
+                        on new
+                        {
+                            c1 = t.Id,
+                            c2 = nameof(MessageTemplate)
+                        }
+                        equals new
+                        {
+                            c1 = sm.EntityId,
+                            c2 = sm.EntityName
+                        }
+                        into tSm
+                    from sm in tSm.DefaultIfEmpty()
+                    where !t.LimitedToStores || storeId == sm.StoreId
+                    select t;
 
-            query = query.Distinct().OrderBy(t => t.Name);
-
-            return query.ToCachedList(key);
+            return query.Distinct().ToCachedList(key);
         }
 
         /// <summary>

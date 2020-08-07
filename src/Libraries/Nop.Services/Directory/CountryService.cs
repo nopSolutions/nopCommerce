@@ -88,7 +88,6 @@ namespace Nop.Services.Directory
                 var query = _countryRepository.Table;
                 if (!showHidden)
                     query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
 
                 if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                 {
@@ -100,9 +99,9 @@ namespace Nop.Services.Directory
                             from sc in c_sc.DefaultIfEmpty()
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;
-
-                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 }
+
+                query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
 
                 var countries = query.ToList();
 
@@ -160,7 +159,7 @@ namespace Nop.Services.Directory
         {
             if (countryId == 0)
                 return null;
-            
+
             return _countryRepository.ToCachedGetById(countryId);
         }
 
@@ -203,8 +202,8 @@ namespace Nop.Services.Directory
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
 
             var query = from c in _countryRepository.Table
-                where c.TwoLetterIsoCode == twoLetterIsoCode
-                select c;
+                        where c.TwoLetterIsoCode == twoLetterIsoCode
+                        select c;
 
             return query.ToCachedFirstOrDefault(key);
         }
@@ -222,8 +221,8 @@ namespace Nop.Services.Directory
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
 
             var query = from c in _countryRepository.Table
-                where c.ThreeLetterIsoCode == threeLetterIsoCode
-                select c;
+                        where c.ThreeLetterIsoCode == threeLetterIsoCode
+                        select c;
 
             return query.ToCachedFirstOrDefault(key);
         }
