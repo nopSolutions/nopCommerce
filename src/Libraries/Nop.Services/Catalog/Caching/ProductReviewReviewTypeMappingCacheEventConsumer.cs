@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -14,7 +15,7 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ProductReviewReviewTypeMapping entity)
         {
-            Remove(NopCatalogDefaults.ReviewTypeAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
 
             var cacheKey = _staticCacheManager.PrepareKey(NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey, entity.ProductReviewId);
             Remove(cacheKey);

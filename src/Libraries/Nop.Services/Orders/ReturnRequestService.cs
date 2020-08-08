@@ -121,7 +121,7 @@ namespace Nop.Services.Orders
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
                     select rra;
-            }, cache => cache.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestActionAllCacheKey));
+            }, cache => default);
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Nop.Services.Orders
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
                     select rra;
-            }, cache => cache.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestReasonAllCacheKey));
+            }, cache => default);
         }
 
         /// <summary>

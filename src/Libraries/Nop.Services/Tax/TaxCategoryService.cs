@@ -47,7 +47,7 @@ namespace Nop.Services.Tax
                 return from tc in query
                     orderby tc.DisplayOrder, tc.Id
                     select tc;
-            }, cache => cache.PrepareKeyForDefaultCache(NopTaxDefaults.TaxCategoriesAllCacheKey));
+            }, cache => default);
 
             return taxCategories;
         }

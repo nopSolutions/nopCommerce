@@ -26,35 +26,6 @@ namespace Nop.Services.Shipping
 
         #endregion
 
-        #region Warehouses
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public static CacheKey WarehousesAllCacheKey => new CacheKey("Nop.warehouse.all");
-
-        #endregion
-
-        #region Date
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public static CacheKey DeliveryDatesAllCacheKey => new CacheKey("Nop.deliverydates.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public static CacheKey ProductAvailabilityAllCacheKey => new CacheKey("Nop.productavailability.all");
-
-        #endregion
-
         #endregion
     }
 }

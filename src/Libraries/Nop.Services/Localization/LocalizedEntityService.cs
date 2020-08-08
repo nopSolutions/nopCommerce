@@ -71,7 +71,7 @@ namespace Nop.Services.Localization
             {
                 return from lp in query
                     select lp;
-            }, cache => cache.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyAllCacheKey));
+            }, cache => default);
         }
 
         #endregion

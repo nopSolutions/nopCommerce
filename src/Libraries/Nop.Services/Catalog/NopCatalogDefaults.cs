@@ -297,11 +297,6 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey ProductTagAllCacheKey => new CacheKey("Nop.producttag.all", ProductTagPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
         /// <remarks>
         /// {0} : store ID
         /// {1} : hash of list of customer roles IDs
@@ -325,11 +320,6 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Review type
-
-        /// <summary>
-        /// Key for caching all review types
-        /// </summary>
-        public static CacheKey ReviewTypeAllCacheKey => new CacheKey("Nop.reviewType.all");
 
         /// <summary>
         /// Key for caching product review and review type mapping
@@ -387,33 +377,6 @@ namespace Nop.Services.Catalog
         /// {0} : specification attribute ID
         /// </remarks>
         public static CacheKey SpecAttributesOptionsCacheKey => new CacheKey("Nop.productspecificationattribute.options-{0}");
-
-        #endregion
-
-        #region Category template
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey CategoryTemplatesAllCacheKey => new CacheKey("Nop.categorytemplate.all");
-
-        #endregion
-
-        #region Manufacturer template
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey ManufacturerTemplatesAllCacheKey => new CacheKey("Nop.manufacturertemplate.all");
-
-        #endregion
-
-        #region Product template
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey ProductTemplatesAllCacheKey => new CacheKey("Nop.producttemplates.all");
 
         #endregion
 

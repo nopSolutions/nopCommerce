@@ -266,7 +266,7 @@ namespace Nop.Services.Configuration
                 return from s in query
                        orderby s.Name, s.StoreId
                     select s;
-            }, cache => cache.PrepareKeyForDefaultCache(NopConfigurationDefaults.SettingsAllCacheKey));
+            }, cache => default);
             
             return settings;
         }

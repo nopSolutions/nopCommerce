@@ -84,7 +84,7 @@ namespace Nop.Services.Directory
                 return from md in query
                     orderby md.DisplayOrder, md.Id
                     select md;
-            }, cache => cache.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
+            }, cache => default);
             
             return measureDimensions;
         }
@@ -238,7 +238,7 @@ namespace Nop.Services.Directory
                 return from mw in query
                     orderby mw.DisplayOrder, mw.Id
                     select mw;
-            }, cache => cache.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
+            }, cache => default);
             
             return measureWeights;
         }

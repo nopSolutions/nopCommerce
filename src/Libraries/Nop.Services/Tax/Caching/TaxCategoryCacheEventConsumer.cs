@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Tax;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Tax;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Tax.Caching
@@ -14,7 +15,7 @@ namespace Nop.Services.Tax.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(TaxCategory entity)
         {
-            Remove(NopTaxDefaults.TaxCategoriesAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

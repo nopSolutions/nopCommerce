@@ -125,7 +125,7 @@ namespace Nop.Services.Messages
                 return from ea in query
                     orderby ea.Id
                     select ea;
-            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.EmailAccountsAllCacheKey));
+            }, cache => default);
 
             return emailAccounts;
         }

@@ -45,7 +45,7 @@ namespace Nop.Services.Vendors
         {
             return _vendorAttributeRepository.GetAll(
                 query => query.OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id),
-                cache => cache.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
+                cache => default);
         }
 
         /// <summary>

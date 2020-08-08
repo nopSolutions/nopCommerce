@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Vendors;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Vendors.Caching
@@ -14,7 +15,7 @@ namespace Nop.Services.Vendors.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(VendorAttribute entity)
         {
-            base.Remove(NopVendorDefaults.VendorAttributesAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
 
             var cacheKey = _staticCacheManager.PrepareKey(NopVendorDefaults.VendorAttributeValuesAllCacheKey, entity);
 

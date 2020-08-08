@@ -53,7 +53,7 @@ namespace Nop.Services.Stores
             var result = _storeRepository.GetAll(query =>
             {
                 return from s in query orderby s.DisplayOrder, s.Id select s;
-            }, cache => cache.PrepareKeyForDefaultCache(NopStoreDefaults.StoresAllCacheKey));
+            }, cache => default);
 
             return result;
         }

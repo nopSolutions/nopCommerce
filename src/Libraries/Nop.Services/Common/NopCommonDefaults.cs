@@ -161,11 +161,6 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey AddressAttributesAllCacheKey => new CacheKey("Nop.addressattribute.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>

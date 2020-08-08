@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Shipping.Caching
@@ -10,7 +11,7 @@ namespace Nop.Services.Shipping.Caching
     {
         protected override void ClearCache(Warehouse entity)
         {
-            Remove(NopShippingDefaults.WarehousesAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

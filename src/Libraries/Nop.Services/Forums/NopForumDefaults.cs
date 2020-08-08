@@ -12,11 +12,6 @@ namespace Nop.Services.Forums
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey ForumGroupAllCacheKey => new CacheKey("Nop.forumgroup.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
         /// <remarks>
         /// {0} : forum group ID
         /// </remarks>

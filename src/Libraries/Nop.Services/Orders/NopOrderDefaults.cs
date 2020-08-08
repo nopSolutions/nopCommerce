@@ -57,24 +57,6 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Return requests
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public static CacheKey ReturnRequestReasonAllCacheKey => new CacheKey("Nop.returnrequestreason.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// </remarks>
-        public static CacheKey ReturnRequestActionAllCacheKey => new CacheKey("Nop.returnrequestactions.all");
-
-        #endregion
-
         #endregion
     }
 }

@@ -55,7 +55,7 @@ namespace Nop.Services.Customers
                 return from ca in query
                     orderby ca.DisplayOrder, ca.Id
                     select ca;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
+            }, cache => default);
         }
 
         /// <summary>

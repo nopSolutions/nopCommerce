@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Topics;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Topics.Caching
@@ -15,7 +16,7 @@ namespace Nop.Services.Topics.Caching
         /// <param name="entityEventType">Entity event type</param>
         protected override void ClearCache(TopicTemplate entity, EntityEventType entityEventType)
         {
-            Remove(NopTopicDefaults.TopicTemplatesAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

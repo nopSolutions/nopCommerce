@@ -45,7 +45,7 @@ namespace Nop.Services.Catalog
         {
             return _reviewTypeRepository.GetAll(
                 query => query.OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id),
-                cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ReviewTypeAllCacheKey));
+                cache => default);
         }
 
         /// <summary>

@@ -34,11 +34,6 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey CustomerAttributesAllCacheKey => new CacheKey("Nop.customerattribute.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
         /// <remarks>
         /// {0} : customer attribute ID
         /// </remarks>

@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Directory;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Directory.Caching
@@ -14,7 +15,7 @@ namespace Nop.Services.Directory.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(MeasureDimension entity)
         {
-            Remove(NopDirectoryDefaults.MeasureDimensionsAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

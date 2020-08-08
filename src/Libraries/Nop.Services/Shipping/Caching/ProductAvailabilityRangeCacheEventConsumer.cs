@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Shipping.Caching
@@ -14,7 +15,7 @@ namespace Nop.Services.Shipping.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ProductAvailabilityRange entity)
         {
-            Remove(NopShippingDefaults.ProductAvailabilityAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

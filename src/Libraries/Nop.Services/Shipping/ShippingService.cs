@@ -187,7 +187,7 @@ namespace Nop.Services.Shipping
                 return from sm in query
                     orderby sm.DisplayOrder, sm.Id
                     select sm;
-            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId));
+            }, cache => default);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Nop.Services.Shipping
                 return from wh in query
                     orderby wh.Name
                     select wh;
-            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
+            }, cache => default);
 
             if (!string.IsNullOrEmpty(name)) 
                 warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();

@@ -31,15 +31,6 @@ namespace Nop.Services.Stores
 
         #endregion
 
-        #region Stores
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey StoresAllCacheKey => new CacheKey("Nop.stores.all");
-
-        #endregion
-
         #endregion
     }
 }

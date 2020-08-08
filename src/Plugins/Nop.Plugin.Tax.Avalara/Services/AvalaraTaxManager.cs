@@ -53,11 +53,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IProductService _productService;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ISettingService _settingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -93,11 +92,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
             IProductService productService,
             IRepository<GenericAttribute> genericAttributeRepository,
             IRepository<TaxCategory> taxCategoryRepository,
-            IStaticCacheManager staticCacheManager,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager,
             IUrlHelperFactory urlHelperFactory,
@@ -126,11 +124,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _productService = productService;
             _genericAttributeRepository = genericAttributeRepository;
             _taxCategoryRepository = taxCategoryRepository;
-            _staticCacheManager = staticCacheManager;
             _settingService = settingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
             _urlHelperFactory = urlHelperFactory;
@@ -813,7 +810,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
                 //delete tax categories
                 _taxCategoryRepository.Delete(taxCategory => categoriesIds.Contains(taxCategory.Id));
-                _cacheManager.Remove(NopTaxDefaults.TaxCategoriesAllCacheKey);
+                _staticCacheManager.Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, nameof(TaxCategory).ToLower()));
 
                 //delete generic attributes
                 _genericAttributeRepository
@@ -989,7 +986,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 taxRateRequest.Address.ZipPostalCode);
 
             //get tax rate
-            return _cacheManager.Get(cacheKey, () =>
+            return _staticCacheManager.Get(cacheKey, () =>
             {
                 return HandleFunction(() =>
                 {

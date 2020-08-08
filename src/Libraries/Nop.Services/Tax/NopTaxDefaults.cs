@@ -7,13 +7,5 @@ namespace Nop.Services.Tax
     /// </summary>
     public static partial class NopTaxDefaults
     {
-        #region Caching defaults
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey TaxCategoriesAllCacheKey => new CacheKey("Nop.taxcategory.all");
-
-        #endregion
     }
 }

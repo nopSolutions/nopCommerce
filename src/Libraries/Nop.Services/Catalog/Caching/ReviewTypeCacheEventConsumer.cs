@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -18,7 +19,7 @@ namespace Nop.Services.Catalog.Caching
             if (entityEventType == EntityEventType.Delete)
                 RemoveByPrefix(NopCatalogDefaults.ProductReviewReviewTypeMappingAllPrefixCacheKey);
 
-            Remove(NopCatalogDefaults.ReviewTypeAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

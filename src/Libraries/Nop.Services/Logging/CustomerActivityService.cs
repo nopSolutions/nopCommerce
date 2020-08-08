@@ -77,7 +77,7 @@ namespace Nop.Services.Logging
                 return from alt in query
                     orderby alt.Name
                     select alt;
-            }, cache => cache.PrepareKeyForDefaultCache(NopLoggingDefaults.ActivityTypeAllCacheKey));
+            }, cache => default);
 
             return activityLogTypes;
         }

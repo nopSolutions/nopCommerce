@@ -55,7 +55,7 @@ namespace Nop.Services.Common
                 return from aa in query
                     orderby aa.DisplayOrder, aa.Id
                     select aa;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributesAllCacheKey));
+            }, cache => default);
         }
 
         /// <summary>

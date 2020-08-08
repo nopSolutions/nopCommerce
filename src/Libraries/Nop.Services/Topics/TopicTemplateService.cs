@@ -47,7 +47,7 @@ namespace Nop.Services.Topics
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
                     select pt;
-            }, cache => cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicTemplatesAllCacheKey));
+            }, cache => default);
 
             return templates;
         }

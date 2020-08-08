@@ -47,7 +47,7 @@ namespace Nop.Services.Catalog
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
                     select pt;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTemplatesAllCacheKey));
+            }, cache => default);
             
             return templates;
         }

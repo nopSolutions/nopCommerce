@@ -60,20 +60,6 @@ namespace Nop.Services.Directory
 
         #endregion
 
-        #region Measures
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey MeasureDimensionsAllCacheKey => new CacheKey("Nop.measuredimension.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey MeasureWeightsAllCacheKey => new CacheKey("Nop.measureweight.all");
-
-        #endregion
-
         #region States and provinces
 
         /// <summary>

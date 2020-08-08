@@ -255,7 +255,7 @@ namespace Nop.Services.Forums
                 return from fg in query
                     orderby fg.DisplayOrder, fg.Id
                     select fg;
-            }, cache => cache.PrepareKeyForDefaultCache(NopForumDefaults.ForumGroupAllCacheKey));
+            }, cache => default);
         }
 
         /// <summary>

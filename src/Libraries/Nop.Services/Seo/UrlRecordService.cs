@@ -1235,7 +1235,7 @@ namespace Nop.Services.Seo
                 query = query.OrderBy(ur => ur.Slug);
 
                 return query;
-            }, cache => cache.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey)).AsQueryable();
+            }, cache => default).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(slug))
                 urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug));

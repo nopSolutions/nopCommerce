@@ -137,7 +137,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTags(string tagName = null)
         {
-            var allProductTags = _productTagRepository.GetAll(getCacheKey: cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllCacheKey));
+            var allProductTags = _productTagRepository.GetAll(getCacheKey: cache => default);
 
             if (!string.IsNullOrEmpty(tagName)) 
                 allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();

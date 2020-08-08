@@ -106,7 +106,7 @@ namespace Nop.Services.Gdpr
                 return from c in query
                     orderby c.DisplayOrder, c.Id
                     select c;
-            }, cache => cache.PrepareKeyForDefaultCache(NopGdprDefaults.ConsentsAllCacheKey));
+            }, cache => default);
 
             return gdprConsents;
         }

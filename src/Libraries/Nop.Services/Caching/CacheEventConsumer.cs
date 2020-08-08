@@ -6,16 +6,32 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Caching
 {
-    public abstract partial class CacheEventConsumer<TEntity> : IConsumer<EntityInsertedEvent<TEntity>>,
+    /// <summary>
+    /// Represents the base cache event consumer
+    /// </summary>
+    /// <typeparam name="TEntity">Entity type</typeparam>
+    public abstract partial class CacheEventConsumer<TEntity> :
+        IConsumer<EntityInsertedEvent<TEntity>>,
         IConsumer<EntityUpdatedEvent<TEntity>>,
-        IConsumer<EntityDeletedEvent<TEntity>> where TEntity : BaseEntity
+        IConsumer<EntityDeletedEvent<TEntity>>
+        where TEntity : BaseEntity
     {
+        #region Fields
+
         protected readonly IStaticCacheManager _staticCacheManager;
+
+        #endregion
+
+        #region Ctor
 
         protected CacheEventConsumer()
         {
             _staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
         }
+
+        #endregion
+
+        #region Utilities
 
         /// <summary>
         /// entity
@@ -53,6 +69,10 @@ namespace Nop.Services.Caching
             _staticCacheManager.Remove(cacheKey);
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Handle entity inserted event
         /// </summary>
@@ -80,11 +100,17 @@ namespace Nop.Services.Caching
             ClearCache(eventMessage.Entity, EntityEventType.Delete);
         }
 
+        #endregion
+
+        #region Nested
+
         protected enum EntityEventType
         {
             Insert,
             Update,
             Delete
         }
+
+        #endregion
     }
 }

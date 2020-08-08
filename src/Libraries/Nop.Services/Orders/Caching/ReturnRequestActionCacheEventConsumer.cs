@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Orders.Caching
@@ -14,7 +15,7 @@ namespace Nop.Services.Orders.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ReturnRequestAction entity)
         {
-            Remove(NopOrderDefaults.ReturnRequestActionAllCacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
         }
     }
 }

@@ -53,11 +53,6 @@ namespace Nop.Services.Topics
         /// </remarks>
         public static string TopicBySystemNamePrefixCacheKey => "Nop.topics.systemName-{0}";
 
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey TopicTemplatesAllCacheKey => new CacheKey("Nop.topictemplates.all");
-
         #endregion
     }
 }

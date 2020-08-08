@@ -53,7 +53,7 @@ namespace Nop.Services.Shipping.Date
                 return from dd in query
                     orderby dd.DisplayOrder, dd.Id
                     select dd;
-            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.DeliveryDatesAllCacheKey));
+            }, cache => default);
 
             return deliveryDates;
         }
@@ -110,7 +110,7 @@ namespace Nop.Services.Shipping.Date
                 return from par in query
                     orderby par.DisplayOrder, par.Id
                     select par;
-            }, cache => cache.PrepareKeyForDefaultCache(NopShippingDefaults.ProductAvailabilityAllCacheKey));
+            }, cache => default);
         }
 
         /// <summary>
