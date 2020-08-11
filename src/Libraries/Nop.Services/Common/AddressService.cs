@@ -96,7 +96,7 @@ namespace Nop.Services.Common
         public virtual Address GetAddressById(int addressId)
         {
             return _addressRepository.GetById(addressId,
-                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(Address).ToLower(), addressId));
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Address>.ByIdCacheKey, addressId));
         }
 
         /// <summary>

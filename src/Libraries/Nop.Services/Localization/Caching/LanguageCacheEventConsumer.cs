@@ -17,11 +17,7 @@ namespace Nop.Services.Localization.Caching
             Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity));
             Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity));
             Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity));
-
-            var prefix = _staticCacheManager.PrepareKeyPrefix(NopLocalizationDefaults.LocaleStringResourcesByResourceNamePrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-
-            RemoveByPrefix(NopLocalizationDefaults.LanguagesAllPrefixCacheKey);
+            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity));
         }
     }
 }

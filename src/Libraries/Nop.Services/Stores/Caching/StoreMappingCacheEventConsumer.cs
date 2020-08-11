@@ -14,16 +14,8 @@ namespace Nop.Services.Stores.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(StoreMapping entity)
         {
-            var entityId = entity.EntityId;
-            var entityName = entity.EntityName;
-
-            var key = _staticCacheManager.PrepareKey(NopStoreDefaults.StoreMappingsByEntityIdNameCacheKey, entityId, entityName);
-
-            Remove(key);
-
-            key = _staticCacheManager.PrepareKey(NopStoreDefaults.StoreMappingIdsByEntityIdNameCacheKey, entityId, entityName);
-            
-            Remove(key);
+            Remove(_staticCacheManager.PrepareKey(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName));
+            Remove(_staticCacheManager.PrepareKey(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName));
         }
     }
 }

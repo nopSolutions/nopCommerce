@@ -39,8 +39,6 @@ namespace Nop.Services.Seo
 
         #region Caching defaults
 
-        #region URL records
-
         /// <summary>
         /// Gets a key for caching
         /// </summary>
@@ -49,7 +47,7 @@ namespace Nop.Services.Seo
         /// {1} : entity name
         /// {2} : language ID
         /// </remarks>
-        public static CacheKey UrlRecordActiveByIdNameLanguageCacheKey => new CacheKey("Nop.urlrecord.active.id-name-language-{0}-{1}-{2}");
+        public static CacheKey UrlRecordCacheKey => new CacheKey("Nop.urlrecord.{0}-{1}-{2}");
 
         /// <summary>
         /// Gets a key for caching
@@ -57,9 +55,7 @@ namespace Nop.Services.Seo
         /// <remarks>
         /// {0} : slug
         /// </remarks>
-        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.active.slug-{0}");
-
-        #endregion
+        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.byslug.{0}");
 
         #endregion
     }

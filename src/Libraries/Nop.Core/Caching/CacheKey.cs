@@ -11,74 +11,42 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class CacheKey
     {
-        #region Fields
-
-        protected string _keyFormat = string.Empty;
-
-        #endregion
-
         #region Ctor
 
         /// <summary>
-        /// Initialize a new instance of CacheKey with additional parameters
+        /// Initialize a new instance with key and prefixes
         /// </summary>
-        /// <param name="cacheKey">Cache key object</param>
-        /// <param name="createCacheKeyParameters">Function to create parameters</param>
-        /// <param name="keyObjects">Objects to create parameters</param>
-        public CacheKey(CacheKey cacheKey, Func<object, object> createCacheKeyParameters, params object[] keyObjects)
-        {
-            Init(cacheKey.Key, cacheKey.CacheTime, cacheKey.Prefixes.ToArray());
-
-            if (!keyObjects.Any())
-                return;
-
-            Key = string.Format(_keyFormat, keyObjects.Select(createCacheKeyParameters).ToArray());
-
-            for (var i = 0; i < Prefixes.Count; i++)
-                Prefixes[i] = string.Format(Prefixes[i], keyObjects.Select(createCacheKeyParameters).ToArray());
-        }
-
-        /// <summary>
-        /// Initialize a new instance of CacheKey with key, cache time and prefixes
-        /// </summary>
-        /// <param name="key">Cache key</param>
-        /// <param name="cacheTime">Cache time; pass null to use the default value</param>
-        /// <param name="prefixes">Prefixes for remove by prefix functionality</param>
-        public CacheKey(string key, int? cacheTime = null, params string[] prefixes)
-        {
-            Init(key, cacheTime, prefixes);
-        }
-
-        /// <summary>
-        /// Initialize a new instance of CacheKey with key and prefixes
-        /// </summary>
-        /// <param name="key">Cache key</param>
+        /// <param name="key">Key</param>
         /// <param name="prefixes">Prefixes for remove by prefix functionality</param>
         public CacheKey(string key, params string[] prefixes)
         {
-            Init(key, null, prefixes);
+            Key = key;
+            Prefixes.AddRange(prefixes.Where(prefix => !string.IsNullOrEmpty(prefix)));
         }
 
         #endregion
 
-        #region Utilities
+        #region Methods
 
         /// <summary>
-        /// Init instance of CacheKey
+        /// Create a new instance from the current one and fill it with passed parameters
         /// </summary>
-        /// <param name="cacheKey">Cache key</param>
-        /// <param name="cacheTime">Cache time; set to null to use the default value</param>
-        /// <param name="prefixes">Prefixes for remove by prefix functionality</param>
-        protected void Init(string cacheKey, int? cacheTime = null, params string[] prefixes)
+        /// <param name="createCacheKeyParameters">Function to create parameters</param>
+        /// <param name="keyObjects">Objects to create parameters</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey Create(Func<object, object> createCacheKeyParameters, params object[] keyObjects)
         {
-            Key = cacheKey;
+            var cacheKey = new CacheKey(Key, Prefixes.ToArray());
 
-            _keyFormat = cacheKey;
+            if (!keyObjects.Any())
+                return cacheKey;
 
-            if (cacheTime.HasValue)
-                CacheTime = cacheTime.Value;
+            cacheKey.Key = string.Format(cacheKey.Key, keyObjects.Select(createCacheKeyParameters).ToArray());
 
-            Prefixes.AddRange(prefixes.Where(prefix => !string.IsNullOrEmpty(prefix)));
+            for (var i = 0; i < cacheKey.Prefixes.Count; i++)
+                cacheKey.Prefixes[i] = string.Format(cacheKey.Prefixes[i], keyObjects.Select(createCacheKeyParameters).ToArray());
+
+            return cacheKey;
         }
 
         #endregion

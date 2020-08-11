@@ -240,8 +240,8 @@ namespace Nop.Services.Localization
                 });
 
                 //remove separated resource 
-                _staticCacheManager.Remove(_staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId));
-                _staticCacheManager.Remove(_staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId));
+                _staticCacheManager.Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId));
+                _staticCacheManager.Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId));
 
                 return rez;
             }
@@ -305,7 +305,7 @@ namespace Nop.Services.Localization
             else
             {
                 //gradual loading
-                var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesByResourceNameCacheKey
+                var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesByNameCacheKey
                     , languageId, resourceKey);
 
                 var query = from l in _lsrRepository.Table
@@ -416,7 +416,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(lrsToInsertList.Values.ToList(), false);
 
             //clear cache
-            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
@@ -680,7 +680,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(locales, false);
 
             //clear cache
-            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
@@ -708,7 +708,7 @@ namespace Nop.Services.Localization
                 resourceNames.Contains(locale.ResourceName, StringComparer.InvariantCultureIgnoreCase));
 
             //clear cache
-            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
@@ -723,7 +723,7 @@ namespace Nop.Services.Localization
                 locale.ResourceName.StartsWith(resourceNamePrefix, StringComparison.InvariantCultureIgnoreCase));
 
             //clear cache
-            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>

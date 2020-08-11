@@ -1,5 +1,4 @@
-﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Customers.Caching
@@ -15,8 +14,7 @@ namespace Nop.Services.Customers.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(CustomerAttribute entity)
         {
-            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
-            Remove(_staticCacheManager.PrepareKey(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, entity));
+            Remove(_staticCacheManager.PrepareKey(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, entity));
         }
     }
 }

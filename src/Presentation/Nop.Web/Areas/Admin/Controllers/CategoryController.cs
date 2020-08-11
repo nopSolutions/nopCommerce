@@ -332,10 +332,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //if parent category changes, we need to clear cache for previous parent category
                 if (category.ParentCategoryId != model.ParentCategoryId)
                 {
-                    var prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, category.ParentCategoryId);
-                    _staticCacheManager.RemoveByPrefix(prefix);
-                    prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, category.ParentCategoryId);
-                    _staticCacheManager.RemoveByPrefix(prefix);
+                    _staticCacheManager.RemoveByPrefix(_staticCacheManager
+                        .PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId));
+                    _staticCacheManager.RemoveByPrefix(_staticCacheManager
+                        .PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId));
                 }
 
                 category = model.ToEntity(category);

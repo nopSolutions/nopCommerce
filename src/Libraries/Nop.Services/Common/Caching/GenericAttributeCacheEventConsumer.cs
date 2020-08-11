@@ -14,8 +14,7 @@ namespace Nop.Services.Common.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(GenericAttribute entity)
         {
-            var cacheKey = _staticCacheManager.PrepareKey(NopCommonDefaults.GenericAttributeCacheKey, entity.EntityId, entity.KeyGroup);
-            Remove(cacheKey);
+            Remove(_staticCacheManager.PrepareKey(NopCommonDefaults.GenericAttributeCacheKey, entity.EntityId, entity.KeyGroup));
         }
     }
 }

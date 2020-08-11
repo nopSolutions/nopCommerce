@@ -330,7 +330,7 @@ namespace Nop.Services.Catalog
                           !p.Deleted &&
                           p.ShowOnHomepage
                     select p;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsHomepageCacheKey));
 
             return products;
         }
@@ -352,7 +352,7 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IList<Product> GetProductsByIds(int[] productIds)
         {
-            return _productRepository.GetByIds(productIds);
+            return _productRepository.GetByIds(productIds, cache => default);
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryNumberOfProductsCacheKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey,
                 allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
@@ -1668,7 +1668,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsRelatedCacheKey, productId, showHidden));
+            var relatedProducts = query.ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.RelatedProductsCacheKey, productId, showHidden));
 
             return relatedProducts;
         }
@@ -1890,7 +1890,7 @@ namespace Nop.Services.Catalog
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
             return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
-                .ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTierPricesCacheKey, productId));
+                .ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId));
         }
 
         /// <summary>

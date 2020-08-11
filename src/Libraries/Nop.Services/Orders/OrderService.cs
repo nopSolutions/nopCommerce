@@ -78,7 +78,7 @@ namespace Nop.Services.Orders
         public virtual Order GetOrderById(int orderId)
         {
             return _orderRepository.GetById(orderId,
-                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(Order).ToLower(), orderId));
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Order>.ByIdCacheKey, orderId));
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace Nop.Services.Orders
         public virtual OrderItem GetOrderItemById(int orderItemId)
         {
             return _orderItemRepository.GetById(orderItemId,
-                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(OrderItem).ToLower(), orderItemId));
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<OrderItem>.ByIdCacheKey, orderItemId));
         }
 
         /// <summary>

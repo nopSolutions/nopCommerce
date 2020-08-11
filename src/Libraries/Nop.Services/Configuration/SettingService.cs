@@ -467,7 +467,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _staticCacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
         }
 
         /// <summary>

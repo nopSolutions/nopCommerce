@@ -7,7 +7,7 @@ using Nop.Services.Events;
 namespace Nop.Services.Caching
 {
     /// <summary>
-    /// Represents the base cache event consumer
+    /// Represents the base entity cache event consumer
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     public abstract partial class CacheEventConsumer<TEntity> :
@@ -34,12 +34,32 @@ namespace Nop.Services.Caching
         #region Utilities
 
         /// <summary>
-        /// entity
+        /// Clear cache by entity event type
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
         protected virtual void ClearCache(TEntity entity, EntityEventType entityEventType)
         {
+            if (entityEventType == EntityEventType.Insert)
+            {
+                RemoveByPrefix(NopEntityCacheDefaults<TEntity>.ByIdsPrefix);
+                RemoveByPrefix(NopEntityCacheDefaults<TEntity>.AllPrefix);
+            }
+
+            if (entityEventType == EntityEventType.Update)
+            {
+                Remove(_staticCacheManager.PrepareKey(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity));
+                RemoveByPrefix(NopEntityCacheDefaults<TEntity>.ByIdsPrefix);
+                RemoveByPrefix(NopEntityCacheDefaults<TEntity>.AllPrefix);
+            }
+
+            if (entityEventType == EntityEventType.Delete)
+            {
+                Remove(_staticCacheManager.PrepareKey(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity));
+                RemoveByPrefix(NopEntityCacheDefaults<TEntity>.ByIdsPrefix);
+                RemoveByPrefix(NopEntityCacheDefaults<TEntity>.AllPrefix);
+            }
+
             ClearCache(entity);
         }
 

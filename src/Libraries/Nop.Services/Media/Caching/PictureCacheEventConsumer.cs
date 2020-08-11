@@ -14,7 +14,7 @@ namespace Nop.Services.Media.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Picture entity)
         {
-            RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
     }
 }

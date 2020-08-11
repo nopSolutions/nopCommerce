@@ -552,7 +552,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, discount);
 
             var requirements = _staticCacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
 

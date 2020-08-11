@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
 {
@@ -9,22 +10,13 @@ namespace Nop.Services.Shipping
     {
         #region Caching defaults
 
-        #region Shipping methods
-
         /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
         /// {0} : country identifier
         /// </remarks>
-        public static CacheKey ShippingMethodsAllCacheKey => new CacheKey("Nop.shippingmethod.all-{0}", ShippingMethodsAllPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ShippingMethodsAllPrefixCacheKey => "Nop.shippingmethod.all";
-
-        #endregion
+        public static CacheKey ShippingMethodsAllCacheKey => new CacheKey("Nop.shippingmethod.all.{0}", NopEntityCacheDefaults<ShippingMethod>.AllPrefix);
 
         #endregion
     }

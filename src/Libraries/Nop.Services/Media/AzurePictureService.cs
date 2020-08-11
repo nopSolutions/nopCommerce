@@ -206,7 +206,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
 
         #endregion

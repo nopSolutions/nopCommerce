@@ -378,7 +378,7 @@ namespace Nop.Services.Customers
         public virtual Customer GetCustomerById(int customerId)
         {
             return _customerRepository.GetById(customerId,
-                cache => cache.PrepareKeyForShortTermCache(NopCachingDefaults.EntityByIdCacheKey, nameof(Customer).ToLower(), customerId));
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Customer>.ByIdCacheKey, customerId));
         }
 
         /// <summary>
@@ -1444,7 +1444,7 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId
                 select address;
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesByCustomerIdCacheKey, customerId);
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
 
             return _staticCacheManager.Get(key, () => query.ToList());
         }
@@ -1465,7 +1465,7 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId && address.Id == addressId
                 select address;
 
-            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKeyCacheKey, customerId, addressId);
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
 
             return _staticCacheManager.Get(key, () => query.Single());
         }

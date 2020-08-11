@@ -11,6 +11,15 @@ namespace Nop.Core.Caching
     /// </summary>
     public abstract partial class CacheKeyService
     {
+        #region Constants
+
+        /// <summary>
+        /// Gets an algorithm used to create the hash value of identifiers need to cache
+        /// </summary>
+        private string HashAlgorithm => "SHA1";
+
+        #endregion
+
         #region Fields
 
         protected readonly NopConfig _nopConfig;
@@ -41,7 +50,7 @@ namespace Nop.Core.Caching
                 return string.Empty;
 
             var identifiersString = string.Join(", ", identifiers.OrderBy(id => id));
-            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(identifiersString), NopCachingDefaults.HashAlgorithm);
+            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(identifiersString), HashAlgorithm);
         }
 
         /// <summary>
@@ -62,17 +71,6 @@ namespace Nop.Core.Caching
             };
         }
 
-        /// <summary>
-        /// Creates a copy of cache key and fills it by set parameters
-        /// </summary>
-        /// <param name="cacheKey">Initial cache key</param>
-        /// <param name="keyObjects">Parameters to create cache key</param>
-        /// <returns>Cache key</returns>
-        protected virtual CacheKey FillCacheKey(CacheKey cacheKey, params object[] keyObjects)
-        {
-            return new CacheKey(cacheKey, CreateCacheKeyParameters, keyObjects);
-        }
-
         #endregion
 
         #region Methods
@@ -85,7 +83,7 @@ namespace Nop.Core.Caching
         /// <returns>Cache key</returns>
         public virtual CacheKey PrepareKey(CacheKey cacheKey, params object[] keyObjects)
         {
-            return FillCacheKey(cacheKey, keyObjects);
+            return cacheKey.Create(CreateCacheKeyParameters, keyObjects);
         }
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace Nop.Core.Caching
         /// <returns>Cache key</returns>
         public virtual CacheKey PrepareKeyForDefaultCache(CacheKey cacheKey, params object[] keyObjects)
         {
-            var key = FillCacheKey(cacheKey, keyObjects);
+            var key = cacheKey.Create(CreateCacheKeyParameters, keyObjects);
 
             key.CacheTime = _nopConfig.DefaultCacheTime;
 
@@ -111,7 +109,7 @@ namespace Nop.Core.Caching
         /// <returns>Cache key</returns>
         public virtual CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] keyObjects)
         {
-            var key = FillCacheKey(cacheKey, keyObjects);
+            var key = cacheKey.Create(CreateCacheKeyParameters, keyObjects);
 
             key.CacheTime = _nopConfig.ShortTermCacheTime;
 

@@ -1,5 +1,4 @@
-﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Shipping.Caching
@@ -9,13 +8,5 @@ namespace Nop.Services.Shipping.Caching
     /// </summary>
     public partial class DeliveryDateCacheEventConsumer : CacheEventConsumer<DeliveryDate>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override void ClearCache(DeliveryDate entity)
-        {
-            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
-        }
     }
 }

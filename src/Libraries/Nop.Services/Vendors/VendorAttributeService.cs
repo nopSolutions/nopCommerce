@@ -96,7 +96,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
 
             return _vendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)

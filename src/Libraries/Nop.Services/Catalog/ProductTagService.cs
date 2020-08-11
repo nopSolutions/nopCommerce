@@ -159,7 +159,7 @@ namespace Nop.Services.Catalog
                     where ppt.ProductId == productId
                     orderby pt.Id
                     select pt;
-            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllByProductIdCacheKey, productId));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId));
 
             return productTags;
         }
@@ -326,7 +326,7 @@ namespace Nop.Services.Catalog
             }
 
             //cache
-            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<ProductTag>.Prefix);
         }
 
         #endregion

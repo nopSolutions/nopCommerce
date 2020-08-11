@@ -15,23 +15,14 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Category entity)
         {
-            var prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-            prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
-
-            prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-            prefix = _staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
-            
-            RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesAllPrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefixCacheKey);
-            
-            RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
-
-            RemoveByPrefix(NopDiscountDefaults.DiscountCategoryIdsPrefixCacheKey);
+            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity));
+            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId));
+            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity));
+            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId));
+            RemoveByPrefix(NopCatalogDefaults.CategoriesHomepagePrefix);
+            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefix);
+            RemoveByPrefix(NopCatalogDefaults.CategoryProductsNumberPrefix);
+            RemoveByPrefix(NopDiscountDefaults.CategoryIdsPrefix);
         }
     }
 }

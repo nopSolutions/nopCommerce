@@ -15,7 +15,7 @@ namespace Nop.Services.Forums
         /// <remarks>
         /// {0} : forum group ID
         /// </remarks>
-        public static CacheKey ForumAllByForumGroupIdCacheKey => new CacheKey("Nop.forum.allbyforumgroupid-{0}");
+        public static CacheKey ForumByForumGroupCacheKey => new CacheKey("Nop.forum.byforumgroup.{0}");
 
         #endregion
     }

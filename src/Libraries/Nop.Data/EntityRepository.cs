@@ -64,7 +64,7 @@ namespace Nop.Data
 
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
-                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopCachingDefaults.EntityByIdCacheKey, typeof(TEntity).Name.ToLower(), id);
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
             return _staticCacheManager.Get(cacheKey, getEntity);
         }
 
@@ -105,7 +105,7 @@ namespace Nop.Data
 
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
-                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopCachingDefaults.EntitiesByIdsCacheKey, typeof(TEntity).Name.ToLower(), ids);
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdsCacheKey, ids);
             return _staticCacheManager.Get(cacheKey, getByIds);
         }
 
@@ -129,7 +129,7 @@ namespace Nop.Data
 
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
-                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopCachingDefaults.AllEntitiesCacheKey, typeof(TEntity).Name.ToLower());
+                ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
             return _staticCacheManager.Get(cacheKey, getAll);
         }
 

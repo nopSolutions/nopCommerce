@@ -1,5 +1,4 @@
-﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Domain.Directory;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Directory.Caching
@@ -9,13 +8,5 @@ namespace Nop.Services.Directory.Caching
     /// </summary>
     public partial class MeasureWeightCacheEventConsumer : CacheEventConsumer<MeasureWeight>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override void ClearCache(MeasureWeight entity)
-        {
-            Remove(_staticCacheManager.PrepareKey(NopCachingDefaults.AllEntitiesCacheKey, entity.GetType().Name.ToLower()));
-        }
     }
 }

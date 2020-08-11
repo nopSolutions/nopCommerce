@@ -164,7 +164,7 @@ namespace Nop.Services.Common
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        public static CacheKey AddressAttributeValuesAllCacheKey => new CacheKey("Nop.addressattributevalue.all-{0}");
+        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new CacheKey("Nop.addressattributevalue.byattribute.{0}");
 
         #endregion
 

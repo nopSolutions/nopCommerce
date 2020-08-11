@@ -331,7 +331,7 @@ namespace Nop.Services.Forums
                     orderby f.DisplayOrder, f.Id
                     where f.ForumGroupId == forumGroupId
                     select f;
-            }, cache => cache.PrepareKeyForDefaultCache(NopForumDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId));
+            }, cache => cache.PrepareKeyForDefaultCache(NopForumDefaults.ForumByForumGroupCacheKey, forumGroupId));
 
             return forums;
         }
