@@ -14,7 +14,7 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(PredefinedProductAttributeValue entity)
         {
-            Remove(_staticCacheManager.PrepareKey(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, entity.ProductAttributeId));
+            Remove(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, entity.ProductAttributeId);
         }
     }
 }

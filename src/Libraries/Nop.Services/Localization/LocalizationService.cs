@@ -240,16 +240,17 @@ namespace Nop.Services.Localization
                 });
 
                 //remove separated resource 
-                _staticCacheManager.Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId));
-                _staticCacheManager.Remove(_staticCacheManager.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId));
+                _staticCacheManager.Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId);
+                _staticCacheManager.Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId);
 
                 return rez;
             }
 
             //performance optimization of the site startup
-            key = _staticCacheManager.PrepareKeyForDefaultCache(
-                    loadPublicLocales.Value ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
-                    languageId);
+            key = _staticCacheManager.PrepareKeyForDefaultCache(loadPublicLocales.Value
+                ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey
+                : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
+                languageId);
 
             return _staticCacheManager.Get(key, () =>
             {

@@ -14,9 +14,9 @@ namespace Nop.Services.Discounts.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Discount entity)
         {
-            Remove(_staticCacheManager.PrepareKey(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity));
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity));
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity));
+            Remove(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity);
+            RemoveByPrefix(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity);
+            RemoveByPrefix(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity);
         }
     }
 }

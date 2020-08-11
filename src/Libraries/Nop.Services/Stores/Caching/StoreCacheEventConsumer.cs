@@ -18,7 +18,7 @@ namespace Nop.Services.Stores.Caching
         protected override void ClearCache(Store entity)
         {
             RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopLocalizationDefaults.LanguagesByStorePrefix, entity));
+            RemoveByPrefix(NopLocalizationDefaults.LanguagesByStorePrefix, entity);
         }
     }
 }

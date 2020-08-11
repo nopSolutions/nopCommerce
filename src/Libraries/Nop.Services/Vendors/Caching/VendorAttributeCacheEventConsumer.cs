@@ -15,7 +15,7 @@ namespace Nop.Services.Vendors.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(VendorAttribute entity)
         {
-            Remove(_staticCacheManager.PrepareKey(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, entity));
+            Remove(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, entity);
         }
     }
 }

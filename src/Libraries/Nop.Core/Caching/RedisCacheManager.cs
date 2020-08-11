@@ -48,11 +48,11 @@ namespace Nop.Core.Caching
         }
 
         #endregion
-        
+
         #region Utilities
 
         /// <summary>
-        /// Gets the list of cache keys prefix
+        /// Get the list of cache keys prefix
         /// </summary>
         /// <param name="endPoint">Network address</param>
         /// <param name="prefix">String key pattern</param>
@@ -72,9 +72,9 @@ namespace Nop.Core.Caching
 
             return keys;
         }
-        
+
         /// <summary>
-        /// Gets the value associated with the specified key.
+        /// Get the value associated with the specified key.
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
@@ -102,9 +102,9 @@ namespace Nop.Core.Caching
 
             return item;
         }
-        
+
         /// <summary>
-        /// Adds the specified key and object to the cache
+        /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
@@ -125,7 +125,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// Get a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
@@ -141,7 +141,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Attempts to execute the passed function and ignores the RedisTimeoutException if specified by settings
+        /// Try to execute the passed function and ignore the RedisTimeoutException if specified by settings
         /// </summary>
         /// <typeparam name="T">Type of item which returned by the action</typeparam>
         /// <param name="action">The function to be tried to perform</param>
@@ -194,7 +194,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Gets or sets the value associated with the specified key.
+        /// Get or sets the value associated with the specified key.
         /// </summary>
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Key of cached item</param>
@@ -257,7 +257,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Adds the specified key and object to the cache
+        /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
@@ -278,7 +278,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// Get a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
@@ -296,26 +296,32 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Remove the value with the specified key from the cache
         /// </summary>
-        /// <param name="key">Key of cached item</param>
-        public virtual void Remove(CacheKey key)
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        public void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
+            cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
+
             //we should always persist the data protection key list
-            if (key.Key.Equals(NopDataProtectionDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
+            if (cacheKey.Key.Equals(NopDataProtectionDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
                 return;
 
             //remove item from caches
-            TryPerformAction(() => _db.KeyDelete(key.Key));
-            _perRequestCache.Remove(key.Key);
+            TryPerformAction(() => _db.KeyDelete(cacheKey.Key));
+            _perRequestCache.Remove(cacheKey.Key);
         }
 
         /// <summary>
-        /// Removes items by key prefix
+        /// Remove items by cache key prefix
         /// </summary>
-        /// <param name="prefix">String key prefix</param>
-        public virtual void RemoveByPrefix(string prefix)
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        public void RemoveByPrefix(string prefix, params object[] prefixParameters)
         {
+            prefix = PrepareKeyPrefix(prefix, prefixParameters);
+
             _perRequestCache.RemoveByPrefix(prefix);
 
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
@@ -337,7 +343,7 @@ namespace Nop.Core.Caching
 
                 //we can't use _perRequestCache.Clear(),
                 //because HttpContext stores some server data that we should not delete
-                foreach (var redisKey in keys) 
+                foreach (var redisKey in keys)
                     _perRequestCache.Remove(redisKey.ToString());
 
                 TryPerformAction(() => _db.KeyDelete(keys.ToArray()));
@@ -392,7 +398,7 @@ namespace Nop.Core.Caching
             #region Utilities
 
             /// <summary>
-            /// Gets a key/value collection that can be used to share data within the scope of this request
+            /// Get a key/value collection that can be used to share data within the scope of this request
             /// </summary>
             protected virtual IDictionary<object, object> GetItems()
             {
@@ -400,7 +406,7 @@ namespace Nop.Core.Caching
             }
 
             #endregion
-            
+
             #region Methods
 
             /// <summary>
@@ -429,14 +435,14 @@ namespace Nop.Core.Caching
                 var result = acquire();
 
                 //and set in cache (if cache time is defined)
-                using (new ReaderWriteLockDisposable(_locker)) 
+                using (new ReaderWriteLockDisposable(_locker))
                     items[key] = result;
 
                 return result;
             }
 
             /// <summary>
-            /// Adds the specified key and object to the cache
+            /// Add the specified key and object to the cache
             /// </summary>
             /// <param name="key">Key of cached item</param>
             /// <param name="data">Value for caching</param>
@@ -456,7 +462,7 @@ namespace Nop.Core.Caching
             }
 
             /// <summary>
-            /// Gets a value indicating whether the value associated with the specified key is cached
+            /// Get a value indicating whether the value associated with the specified key is cached
             /// </summary>
             /// <param name="key">Key of cached item</param>
             /// <returns>True if item already is in cache; otherwise false</returns>
@@ -470,7 +476,7 @@ namespace Nop.Core.Caching
             }
 
             /// <summary>
-            /// Removes the value with the specified key from the cache
+            /// Remove the value with the specified key from the cache
             /// </summary>
             /// <param name="key">Key of cached item</param>
             public virtual void Remove(string key)
@@ -483,7 +489,7 @@ namespace Nop.Core.Caching
             }
 
             /// <summary>
-            /// Removes items by key prefix
+            /// Remove items by key prefix
             /// </summary>
             /// <param name="prefix">String key prefix</param>
             public virtual void RemoveByPrefix(string prefix)
@@ -524,7 +530,7 @@ namespace Nop.Core.Caching
                     items?.Clear();
                 }
             }
-            
+
             #endregion
         }
 

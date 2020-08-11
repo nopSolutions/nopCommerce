@@ -48,14 +48,14 @@ namespace Nop.Services.Caching
 
             if (entityEventType == EntityEventType.Update)
             {
-                Remove(_staticCacheManager.PrepareKey(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity));
+                Remove(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity);
                 RemoveByPrefix(NopEntityCacheDefaults<TEntity>.ByIdsPrefix);
                 RemoveByPrefix(NopEntityCacheDefaults<TEntity>.AllPrefix);
             }
 
             if (entityEventType == EntityEventType.Delete)
             {
-                Remove(_staticCacheManager.PrepareKey(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity));
+                Remove(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, entity);
                 RemoveByPrefix(NopEntityCacheDefaults<TEntity>.ByIdsPrefix);
                 RemoveByPrefix(NopEntityCacheDefaults<TEntity>.AllPrefix);
             }
@@ -72,21 +72,23 @@ namespace Nop.Services.Caching
         }
 
         /// <summary>
-        /// Removes items by key prefix
+        /// Removes items by cache key prefix
         /// </summary>
-        /// <param name="prefixCacheKey">String key prefix</param>
-        protected virtual void RemoveByPrefix(string prefixCacheKey)
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        protected virtual void RemoveByPrefix(string prefix, params object[] prefixParameters)
         {
-            _staticCacheManager.RemoveByPrefix(prefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(prefix, prefixParameters);
         }
 
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Remove the value with the specified key from the cache
         /// </summary>
-        /// <param name="cacheKey">Key of cached item</param>
-        protected virtual void Remove(CacheKey cacheKey)
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        public void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
-            _staticCacheManager.Remove(cacheKey);
+            _staticCacheManager.Remove(cacheKey, cacheKeyParameters);
         }
 
         #endregion

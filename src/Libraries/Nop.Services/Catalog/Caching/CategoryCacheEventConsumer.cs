@@ -15,10 +15,10 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Category entity)
         {
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity));
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId));
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity));
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId));
+            RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId);
             RemoveByPrefix(NopCatalogDefaults.CategoriesHomepagePrefix);
             RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefix);
             RemoveByPrefix(NopCatalogDefaults.CategoryProductsNumberPrefix);

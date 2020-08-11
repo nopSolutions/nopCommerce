@@ -15,10 +15,10 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entityEventType">Entity event type</param>
         protected override void ClearCache(ProductAttribute entity, EntityEventType entityEventType)
         {
-            if (entityEventType != EntityEventType.Insert)
-                return;
+            if (entityEventType == EntityEventType.Insert)
+                Remove(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, entity);
 
-            Remove(_staticCacheManager.PrepareKey(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, entity));
+            base.ClearCache(entity, entityEventType);
         }
     }
 }

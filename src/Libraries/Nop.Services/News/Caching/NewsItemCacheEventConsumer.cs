@@ -14,7 +14,7 @@ namespace Nop.Services.News.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(NewsItem entity)
         {
-            RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity));
+            RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity);
         }
     }
 }

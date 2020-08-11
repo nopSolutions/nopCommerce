@@ -14,9 +14,8 @@ namespace Nop.Services.Seo.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(UrlRecord entity)
         {
-            Remove(_staticCacheManager.PrepareKey(NopSeoDefaults.UrlRecordCacheKey,
-                entity.EntityId, entity.EntityName, entity.LanguageId));
-            Remove(_staticCacheManager.PrepareKey(NopSeoDefaults.UrlRecordBySlugCacheKey, entity.Slug));
+            Remove(NopSeoDefaults.UrlRecordCacheKey, entity.EntityId, entity.EntityName, entity.LanguageId);
+            Remove(NopSeoDefaults.UrlRecordBySlugCacheKey, entity.Slug);
         }
     }
 }

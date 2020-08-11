@@ -16,7 +16,9 @@ namespace Nop.Services.News.Caching
         protected override void ClearCache(NewsComment entity, EntityEventType entityEventType)
         {
             if (entityEventType == EntityEventType.Delete)
-                RemoveByPrefix(_staticCacheManager.PrepareKeyPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId));
+                RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId);
+
+            base.ClearCache(entity, entityEventType);
         }
     }
 }

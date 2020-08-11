@@ -92,12 +92,14 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Remove the value with the specified key from the cache
         /// </summary>
-        /// <param name="key">Key of cached item</param>
-        public void Remove(CacheKey key)
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        public void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
-            _memoryCache.Remove(key.Key);
+            cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
+            _memoryCache.Remove(cacheKey.Key);
         }
 
         /// <summary>
@@ -127,7 +129,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Adds the specified key and object to the cache
+        /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
@@ -140,7 +142,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// Get a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
@@ -179,7 +181,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Remove the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         public void Remove(string key)
@@ -188,11 +190,14 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes items by key prefix
+        /// Remove items by cache key prefix
         /// </summary>
-        /// <param name="prefix">String key prefix</param>
-        public void RemoveByPrefix(string prefix)
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        public void RemoveByPrefix(string prefix, params object[] prefixParameters)
         {
+            prefix = PrepareKeyPrefix(prefix, prefixParameters);
+
             _prefixes.TryRemove(prefix, out var tokenSource);
             tokenSource?.Cancel();
             tokenSource?.Dispose();
