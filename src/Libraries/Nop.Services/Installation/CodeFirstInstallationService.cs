@@ -53,9 +53,7 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
         private readonly INopDataProvider _dataProvider;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<Address> _addressRepository;
@@ -90,9 +88,7 @@ namespace Nop.Services.Installation
 
         #region Ctor
 
-        public CodeFirstInstallationService(IAddressService addressService,
-            INopDataProvider dataProvider,
-            IGenericAttributeService genericAttributeService,
+        public CodeFirstInstallationService(INopDataProvider dataProvider,
             INopFileProvider fileProvider,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<Address> addressRepository,
@@ -123,9 +119,7 @@ namespace Nop.Services.Installation
             IRepository<UrlRecord> urlRecordRepository,
             IWebHelper webHelper)
         {
-            _addressService = addressService;
             _dataProvider = dataProvider;
-            _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
             _activityLogTypeRepository = activityLogTypeRepository;
             _addressRepository = addressRepository;
@@ -176,7 +170,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InsertInstallationData<T>(IList<T> entities) where T : BaseEntity
         {
-            if(!entities.Any())
+            if (!entities.Any())
                 return;
 
             InsertInstallationData(entities.ToArray());
@@ -192,7 +186,7 @@ namespace Nop.Services.Installation
             if (!entities.Any())
                 return;
 
-            foreach (var entity in entities) 
+            foreach (var entity in entities)
                 _dataProvider.UpdateEntity(entity);
         }
 
@@ -4162,8 +4156,24 @@ namespace Nop.Services.Installation
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
             InsertInstallationData(new CustomerPassword
@@ -4214,8 +4224,24 @@ namespace Nop.Services.Installation
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
             InsertInstallationData(new CustomerPassword
@@ -4265,8 +4291,24 @@ namespace Nop.Services.Installation
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
             InsertInstallationData(new CustomerPassword
@@ -4317,10 +4359,24 @@ namespace Nop.Services.Installation
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute,
-                defaultFifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute,
-                defaultFifthUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
             InsertInstallationData(new CustomerPassword
@@ -4371,8 +4427,24 @@ namespace Nop.Services.Installation
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
             InsertInstallationData(new CustomerPassword
@@ -4483,8 +4555,24 @@ namespace Nop.Services.Installation
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.FirstNameAttribute, "John");
-            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.LastNameAttribute, "Smith");
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "John",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "Smith",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -4535,11 +4623,13 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
+            var addressService = EngineContext.Current.Resolve<IAddressService>();
+
             //first order
             var firstCustomer = _customerRepository.Table.First(c => c.Email == "steve_gates@nopCommerce.com");
 
-            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
-            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
+            var firstCustomerBillingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4708,8 +4798,8 @@ namespace Nop.Services.Installation
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email == "arthur_holmes@nopCommerce.com");
 
-            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
-            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
+            var secondCustomerBillingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4830,7 +4920,7 @@ namespace Nop.Services.Installation
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email == "james_pan@nopCommerce.com");
 
-            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
+            var thirdCustomerBillingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
@@ -4975,9 +5065,9 @@ namespace Nop.Services.Installation
             //fourth order
             var fourthCustomer = _customerRepository.Table.First(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
-            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
-            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
-            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerBillingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
 
             var fourthOrder = new Order
             {
@@ -5190,8 +5280,8 @@ namespace Nop.Services.Installation
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
-            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
-            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
+            var fifthCustomerBillingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = InsertInstallationData(addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
