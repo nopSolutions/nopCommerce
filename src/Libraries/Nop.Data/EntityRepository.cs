@@ -102,9 +102,10 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            foreach (var entity in entities)
+            using (var transaction = new TransactionScope())
             {
-                Update(entity);
+                _dataProvider.UpdateEntities(entities);
+                transaction.Complete();
             }
         }
 

@@ -154,6 +154,18 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void UpdateEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            dataContext.Merge(entities);
+        }
+
+        /// <summary>
         /// Deletes record in table. Record to delete identified
         /// by match on primary key value from obj value.
         /// </summary>
