@@ -13,7 +13,7 @@ using Nop.Core.Events;
 namespace Nop.Data
 {
     /// <summary>
-    /// Represents the Entity repository
+    /// Represents the entity repository implementation
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
@@ -23,13 +23,16 @@ namespace Nop.Data
         private readonly IEventPublisher _eventPublisher;
         private readonly INopDataProvider _dataProvider;
         private readonly IStaticCacheManager _staticCacheManager;
+
         private ITable<TEntity> _entities;
 
         #endregion
 
         #region Ctor
 
-        public EntityRepository(IEventPublisher eventPublisher, INopDataProvider dataProvider, IStaticCacheManager staticCacheManager)
+        public EntityRepository(IEventPublisher eventPublisher,
+            INopDataProvider dataProvider,
+            IStaticCacheManager staticCacheManager)
         {
             _eventPublisher = eventPublisher;
             _dataProvider = dataProvider;
@@ -44,9 +47,9 @@ namespace Nop.Data
         /// Get the entity entry
         /// </summary>
         /// <param name="id">Entity entry identifier</param>
-        /// <param name="cacheTime">Cache time in minutes; pass null to use default value; pass 0 to do not cache</param>
+        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
         /// <returns>Entity entry</returns>
-        public virtual TEntity GetById(int? id, int? cacheTime = null)
+        public virtual TEntity GetById(int? id, CacheKey cacheKey = null)
         {
             if (!id.HasValue || id == 0)
                 return null;
@@ -56,19 +59,8 @@ namespace Nop.Data
                 return Entities.FirstOrDefault(e => e.Id == Convert.ToInt32(id));
             }
 
-            if (cacheTime == 0)
-                return getEntity();
-
-            //caching
-            var cacheKey = new CacheKey(BaseEntity.GetEntityCacheKey(typeof(TEntity), id));
-            if (cacheTime.HasValue)
-                cacheKey.CacheTime = cacheTime.Value;
-            else
-                cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(cacheKey);
-
-            return _staticCacheManager.Get(cacheKey, getEntity);
+            return cacheKey == null ? getEntity() : _staticCacheManager.Get(cacheKey, getEntity);
         }
-
 
         /// <summary>
         /// Get entity entries by identifiers
@@ -87,7 +79,7 @@ namespace Nop.Data
                 if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) != null)
                     query = Entities.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
 
-                //get entries 
+                //get entries
                 var entries = query.Where(entry => ids.Contains(entry.Id)).ToList();
 
                 //sort by passed identifiers
@@ -102,13 +94,38 @@ namespace Nop.Data
                 return sortedEntries;
             }
 
-            if (cacheKey == null)
-                return getByIds();
-
-            //caching
-            return _staticCacheManager.Get(cacheKey, getByIds);
+            return cacheKey == null ? getByIds() : _staticCacheManager.Get(cacheKey, getByIds);
         }
-        
+
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
+        /// <returns>Entity entries</returns>
+        public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, CacheKey cacheKey = null)
+        {
+            var query = func != null ? func.Invoke(Table) : Table;
+
+            return cacheKey == null ? query.ToList() : _staticCacheManager.Get(cacheKey, query.ToList);
+        }
+
+        /// <summary>
+        /// Get paged list of all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
+        /// <returns>Paged list of entity entries</returns>
+        public virtual IPagedList<TEntity> GetAllPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+        {
+            var query = func != null ? func.Invoke(Table) : Table;
+
+            return new PagedList<TEntity>(query, pageIndex, pageSize, getOnlyTotalCount);
+        }
+
         /// <summary>
         /// Insert the entity entry
         /// </summary>
@@ -126,11 +143,9 @@ namespace Nop.Data
                 _eventPublisher.EntityInserted(entity);
         }
 
-
         /// <summary>
         /// Insert entity entries
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Insert(IList<TEntity> entities, bool publishEvent = true)
@@ -138,14 +153,11 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            using (var transaction = new TransactionScope())
-            {
-                _dataProvider.BulkInsertEntities(entities);
-                transaction.Complete();
-            }
+            using var transaction = new TransactionScope();
+            _dataProvider.BulkInsertEntities(entities);
+            transaction.Complete();
 
-            
-            if (!publishEvent) 
+            if (!publishEvent)
                 return;
 
             //event notification
@@ -154,21 +166,8 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Loads the original copy of the entity
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Copy of the passed entity</returns>
-        public virtual TEntity LoadOriginalCopy(TEntity entity)
-        {
-            return _dataProvider.GetTable<TEntity>()
-                .FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
-        }
-        
-        /// <summary>
         /// Update the entity entry
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Update(TEntity entity, bool publishEvent = true)
@@ -182,11 +181,10 @@ namespace Nop.Data
             if (publishEvent)
                 _eventPublisher.EntityUpdated(entity);
         }
-        
+
         /// <summary>
         /// Update entity entries
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         public virtual void Update(IList<TEntity> entities, bool publishEvent = true)
@@ -194,10 +192,10 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            if(!entities.Any())
+            if (!entities.Any())
                 return;
 
-            foreach (var entity in entities) 
+            foreach (var entity in entities)
                 Update(entity, publishEvent);
         }
 
@@ -212,10 +210,12 @@ namespace Nop.Data
             {
                 case null:
                     throw new ArgumentNullException(nameof(entity));
+
                 case ISoftDeletedEntity softDeletedEntity:
                     softDeletedEntity.Deleted = true;
                     _dataProvider.UpdateEntity(entity);
                     break;
+
                 default:
                     _dataProvider.DeleteEntity(entity);
                     break;
@@ -239,11 +239,13 @@ namespace Nop.Data
             if (entities.OfType<ISoftDeletedEntity>().Any())
             {
                 foreach (var entity in entities)
+                {
                     if (entity is ISoftDeletedEntity softDeletedEntity)
                     {
                         softDeletedEntity.Deleted = true;
                         _dataProvider.UpdateEntity(entity);
                     }
+                }
             }
             else
                 _dataProvider.BulkDeleteEntities(entities);
@@ -257,7 +259,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Delete entities
+        /// Delete entity entries by the passed predicate
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
@@ -269,15 +271,25 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Executes command using System.Data.CommandType.StoredProcedure command type
-        /// and returns results as collection of values of specified type
+        /// Loads the original copy of the entity entry
         /// </summary>
-        /// <param name="storeProcedureName">Store procedure name</param>
-        /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Collection of query result records</returns>
-        public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
+        /// <param name="entity">Entity entry</param>
+        /// <returns>Copy of the passed entity entry</returns>
+        public virtual TEntity LoadOriginalCopy(TEntity entity)
         {
-            return _dataProvider.QueryProc<TEntity>(storeProcedureName, dataParameters?.ToArray());
+            return _dataProvider.GetTable<TEntity>()
+                .FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
+        }
+
+        /// <summary>
+        /// Executes SQL using System.Data.CommandType.StoredProcedure command type and returns results as collection of values of specified type
+        /// </summary>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Entity entries</returns>
+        public virtual IList<TEntity> EntityFromSql(string procedureName, params DataParameter[] parameters)
+        {
+            return _dataProvider.QueryProc<TEntity>(procedureName, parameters?.ToArray());
         }
 
         /// <summary>
@@ -287,39 +299,6 @@ namespace Nop.Data
         public virtual void Truncate(bool resetIdentity = false)
         {
             _dataProvider.GetTable<TEntity>().Truncate(resetIdentity);
-        }
-        
-        /// <summary>
-        /// Get all entity entries
-        /// </summary>
-        /// <param name="func">Function to select entries</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
-        /// <returns>Entity entries</returns>
-        public virtual IList<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, CacheKey cacheKey = null)
-        {
-            var query = Table;
-            if (func != null)
-                query = func.Invoke(query);
-
-            return cacheKey == null ? query.ToList() : _staticCacheManager.Get(cacheKey, query.ToList);
-        }
-
-        /// <summary>
-        /// Get paged list of all entity entries
-        /// </summary>
-        /// <param name="func">Function to select entries</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
-        /// <returns>Paged list of entity entries</returns>
-        public virtual IPagedList<TEntity> GetAllPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
-        {
-            var query = _dataProvider.GetTable<TEntity>() as IQueryable<TEntity>;
-            if (func != null)
-                query = func.Invoke(query);
-
-            return new PagedList<TEntity>(query, pageIndex, pageSize, getOnlyTotalCount);
         }
 
         #endregion
@@ -334,7 +313,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.GetTable<TEntity>());
+        protected virtual ITable<TEntity> Entities => _entities ??= _dataProvider.GetTable<TEntity>();
 
         #endregion
     }
