@@ -16,5 +16,6 @@ namespace Nop.Web.Models.Common
         public bool AllowPrivateMessages { get; set; }
         public string UnreadPrivateMessages { get; set; }
         public string AlertMessage { get; set; }
+        public bool IsRegistrationDisabled { get; set; }
     }
 }
