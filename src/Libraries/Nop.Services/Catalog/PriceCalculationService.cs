@@ -481,7 +481,7 @@ namespace Nop.Services.Catalog
                     var associatedProduct = _productService.GetProductById(value.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        adjustment = GetFinalPrice(associatedProduct, _workContext.CurrentCustomer) * value.Quantity;
+                        adjustment = GetFinalPrice(associatedProduct, customer) * value.Quantity;
                     }
 
                     break;
