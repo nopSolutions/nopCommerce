@@ -88,7 +88,6 @@ namespace Nop.Services.Directory
                 var query = _countryRepository.Table;
                 if (!showHidden)
                     query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
 
                 if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                 {
@@ -102,6 +101,9 @@ namespace Nop.Services.Directory
                             select c;
 
                     query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                }
+                else {
+                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 }
 
                 var countries = query.ToList();
