@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Stores
 {
@@ -81,7 +80,7 @@ namespace Nop.Services.Stores
                         sm.EntityName == entityName
                         select sm;
 
-            var storeMappings = query.ToCachedList(key);
+            var storeMappings = _staticCacheManager.Get(key, query.ToList);
 
             return storeMappings;
         }
@@ -143,7 +142,7 @@ namespace Nop.Services.Stores
                       sm.EntityName == entityName
                 select sm.StoreId;
 
-            return query.ToCachedArray(key);
+            return _staticCacheManager.Get(key, query.ToArray);
         }
 
         /// <summary>

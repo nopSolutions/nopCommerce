@@ -9,7 +9,6 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
@@ -594,7 +593,7 @@ namespace Nop.Services.Catalog
                         select pc;
 
             if (showHidden)
-                return query.ToCachedList(key);
+                return _staticCacheManager.Get(key, query.ToList);
 
             var categoryIds = GetCategoriesByIds(query.Select(pc => pc.CategoryId).ToArray())
                 .Where(category => _aclService.Authorize(category) && _storeMappingService.Authorize(category, storeId))
@@ -604,7 +603,7 @@ namespace Nop.Services.Catalog
                     where categoryIds.Contains(pc.CategoryId)
                     select pc;
 
-            return query.ToCachedList(key);
+            return _staticCacheManager.Get(key, query.ToList);
         }
 
         /// <summary>

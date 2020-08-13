@@ -12,7 +12,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -451,7 +450,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             query = query.OrderBy(configuration => configuration.Id);
 
-            return query.ToCachedList(key);
+            return _staticCacheManager.Get(key, query.ToList);
         }
 
         #endregion

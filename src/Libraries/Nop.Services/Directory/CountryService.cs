@@ -7,7 +7,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Directory
@@ -177,7 +176,7 @@ namespace Nop.Services.Directory
                 where c.TwoLetterIsoCode == twoLetterIsoCode
                 select c;
 
-            return query.ToCachedFirstOrDefault(key);
+            return _staticCacheManager.Get(key, query.FirstOrDefault);
         }
 
         /// <summary>
@@ -196,7 +195,7 @@ namespace Nop.Services.Directory
                 where c.ThreeLetterIsoCode == threeLetterIsoCode
                 select c;
 
-            return query.ToCachedFirstOrDefault(key);
+            return _staticCacheManager.Get(key, query.FirstOrDefault);
         }
 
         /// <summary>

@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Catalog
 {
@@ -103,7 +102,7 @@ namespace Nop.Services.Catalog
                 orderby pam.Id
                 where pam.ProductReviewId == productReviewId
                 select pam;
-            var productReviewReviewTypeMappings = query.ToCachedList(key);
+            var productReviewReviewTypeMappings = _staticCacheManager.Get(key, query.ToList);
 
             return productReviewReviewTypeMappings;
         }

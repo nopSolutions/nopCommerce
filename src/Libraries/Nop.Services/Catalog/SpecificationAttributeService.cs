@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Catalog
 {
@@ -90,7 +89,7 @@ namespace Nop.Services.Catalog
                         where _specificationAttributeOptionRepository.Table.Any(o => o.SpecificationAttributeId == sa.Id)
                         select sa;
 
-            return query.ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey));
+            return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey), query.ToList);
         }
 
         /// <summary>
@@ -260,7 +259,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(psa => psa.ShowOnProductPage == showOnProductPage.Value);
             query = query.OrderBy(psa => psa.DisplayOrder).ThenBy(psa => psa.Id);
 
-            var productSpecificationAttributes = query.ToCachedList(key);
+            var productSpecificationAttributes = _staticCacheManager.Get(key, query.ToList);
 
             return productSpecificationAttributes;
         }

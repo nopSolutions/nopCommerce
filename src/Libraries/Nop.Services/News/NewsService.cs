@@ -7,7 +7,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.News
 {
@@ -251,7 +250,7 @@ namespace Nop.Services.News
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
-            return query.ToCachedCount(cacheKey);
+            return _staticCacheManager.Get(cacheKey, query.Count);
         }
 
         /// <summary>

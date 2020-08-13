@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -108,7 +107,7 @@ namespace Nop.Services.Common
                 orderby aav.DisplayOrder, aav.Id
                 where aav.AddressAttributeId == addressAttributeId
                 select aav;
-            var addressAttributeValues = query.ToCachedList(key);
+            var addressAttributeValues = _staticCacheManager.Get(key, query.ToList);
 
             return addressAttributeValues;
         }

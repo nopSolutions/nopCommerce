@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 
@@ -65,7 +64,7 @@ namespace Nop.Services.Security
                 orderby pr.Id
                 select pr;
 
-            return query.ToCachedList(key);
+            return _staticCacheManager.Get(key, query.ToList);
         }
 
         #endregion

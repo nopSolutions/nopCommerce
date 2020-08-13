@@ -12,7 +12,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 
@@ -1075,7 +1074,7 @@ namespace Nop.Services.Customers
                 orderby cr.Id
                 where cr.SystemName == systemName
                 select cr;
-            var customerRole = query.ToCachedFirstOrDefault(key);
+            var customerRole = _staticCacheManager.Get(key, query.FirstOrDefault);
 
             return customerRole;
         }
@@ -1137,7 +1136,7 @@ namespace Nop.Services.Customers
                 where showHidden || cr.Active
                 select cr;
 
-            var customerRoles = query.ToCachedList(key);
+            var customerRoles = _staticCacheManager.Get(key, query.ToList);
 
             return customerRoles;
         }

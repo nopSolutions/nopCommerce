@@ -74,7 +74,7 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public T Get<T>(CacheKey key, Func<T> acquire)
         {
-            if (key.CacheTime <= 0)
+            if ((key?.CacheTime ?? 0) <= 0)
                 return acquire();
 
             var result = _memoryCache.GetOrCreate(key.Key, entry =>
@@ -111,7 +111,7 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
-            if (key.CacheTime <= 0)
+            if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
             var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
@@ -135,7 +135,7 @@ namespace Nop.Core.Caching
         /// <param name="data">Value for caching</param>
         public void Set(CacheKey key, object data)
         {
-            if (key.CacheTime <= 0 || data == null)
+            if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return;
 
             _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));

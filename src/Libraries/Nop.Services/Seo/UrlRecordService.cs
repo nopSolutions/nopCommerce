@@ -7,7 +7,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -1213,7 +1212,7 @@ namespace Nop.Services.Seo
                 orderby ur.IsActive descending, ur.Id
                 select ur;
 
-            var urlRecord = query.ToCachedFirstOrDefault(key);
+            var urlRecord = _staticCacheManager.Get(key, query.FirstOrDefault);
 
             return urlRecord;
         }
@@ -1292,7 +1291,7 @@ namespace Nop.Services.Seo
                 orderby ur.Id descending
                 select ur.Slug;
 
-            var rezSlug = query.ToCachedFirstOrDefault(key) ?? string.Empty;
+            var rezSlug = _staticCacheManager.Get(key, query.FirstOrDefault) ?? string.Empty;
 
             return rezSlug;
         }

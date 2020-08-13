@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Customers
 {
@@ -108,7 +107,7 @@ namespace Nop.Services.Customers
                 orderby cav.DisplayOrder, cav.Id
                 where cav.CustomerAttributeId == customerAttributeId
                 select cav;
-            var customerAttributeValues = query.ToCachedList(key);
+            var customerAttributeValues = _staticCacheManager.Get(key, query.ToList);
 
             return customerAttributeValues;
         }

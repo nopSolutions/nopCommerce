@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -102,7 +101,7 @@ namespace Nop.Services.Common
                 where ga.EntityId == entityId &&
                       ga.KeyGroup == keyGroup
                 select ga;
-            var attributes = query.ToCachedList(key);
+            var attributes = _staticCacheManager.Get(key, query.ToList);
 
             return attributes;
         }

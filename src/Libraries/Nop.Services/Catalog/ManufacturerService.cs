@@ -9,7 +9,6 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 
@@ -186,8 +185,10 @@ namespace Nop.Services.Catalog
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
 
-            var result = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)
-                .Select(dmm => dmm.EntityId).ToCachedList(cacheKey);
+            var query = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)
+                .Select(dmm => dmm.EntityId);
+
+            var result = _staticCacheManager.Get(cacheKey, query.ToList);
 
             return result;
         }
@@ -418,7 +419,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
             }
 
-            var productManufacturers = query.ToCachedList(key);
+            var productManufacturers = _staticCacheManager.Get(key, query.ToList);
 
             return productManufacturers;
         }

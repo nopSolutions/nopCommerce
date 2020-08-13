@@ -12,7 +12,6 @@ using Nop.Core.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
@@ -314,7 +313,7 @@ namespace Nop.Services.Localization
                           && l.LanguageId == languageId
                     select l.ResourceValue;
 
-                var lsr = query.ToCachedFirstOrDefault(key);
+                var lsr = _staticCacheManager.Get(key, query.FirstOrDefault);
 
                 if (lsr != null)
                     result = lsr;

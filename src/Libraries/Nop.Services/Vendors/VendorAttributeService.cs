@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Vendors
 {
@@ -98,11 +97,12 @@ namespace Nop.Services.Vendors
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, vendorAttributeId);
 
-            return _vendorAttributeValueRepository.Table
+            var query = _vendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
                 .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
-                .ThenBy(vendorAttributeValue => vendorAttributeValue.Id)
-                .ToCachedList(key);
+                .ThenBy(vendorAttributeValue => vendorAttributeValue.Id);
+
+            return _staticCacheManager.Get(key, query.ToList);
         }
 
         /// <summary>

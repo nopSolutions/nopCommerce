@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Catalog
 {
@@ -172,7 +171,7 @@ namespace Nop.Services.Catalog
                 where pam.ProductId == productId
                 select pam;
 
-            var attributes = query.ToCachedList(allCacheKey) ?? new List<ProductAttributeMapping>();
+            var attributes = _staticCacheManager.Get(allCacheKey, query.ToList) ?? new List<ProductAttributeMapping>();
 
             return attributes;
         }
@@ -231,7 +230,7 @@ namespace Nop.Services.Catalog
                 orderby pav.DisplayOrder, pav.Id
                 where pav.ProductAttributeMappingId == productAttributeMappingId
                 select pav;
-            var productAttributeValues = query.ToCachedList(key);
+            var productAttributeValues = _staticCacheManager.Get(key, query.ToList);
 
             return productAttributeValues;
         }
@@ -291,7 +290,7 @@ namespace Nop.Services.Catalog
                         where ppav.ProductAttributeId == productAttributeId
                         select ppav;
 
-            var values = query.ToCachedList(key);
+            var values = _staticCacheManager.Get(key, query.ToList);
 
             return values;
         }

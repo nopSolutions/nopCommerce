@@ -14,7 +14,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -1668,7 +1667,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.RelatedProductsCacheKey, productId, showHidden));
+            var relatedProducts = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.RelatedProductsCacheKey, productId, showHidden), query.ToList);
 
             return relatedProducts;
         }
@@ -1889,8 +1888,9 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
-            return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
-                .ToCachedList(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId));
+            var query = _tierPriceRepository.Table.Where(tp => tp.ProductId == productId);
+            
+            return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId), query.ToList);
         }
 
         /// <summary>

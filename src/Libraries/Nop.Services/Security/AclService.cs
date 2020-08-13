@@ -7,7 +7,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Security
@@ -153,7 +152,7 @@ namespace Nop.Services.Security
                       ur.EntityName == entityName
                 select ur.CustomerRoleId;
 
-            return query.ToCachedArray(key);
+            return _staticCacheManager.Get(key, query.ToArray);
         }
 
         /// <summary>

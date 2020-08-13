@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
@@ -165,7 +164,7 @@ namespace Nop.Services.Orders
                 orderby cav.DisplayOrder, cav.Id
                 where cav.CheckoutAttributeId == checkoutAttributeId
                 select cav;
-            var checkoutAttributeValues = query.ToCachedList(key);
+            var checkoutAttributeValues = _staticCacheManager.Get(key, query.ToList);
 
             return checkoutAttributeValues;
         }
