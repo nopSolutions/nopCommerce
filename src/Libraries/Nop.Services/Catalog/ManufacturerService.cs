@@ -405,7 +405,6 @@ namespace Nop.Services.Catalog
                 where pm.ProductId == productId &&
                       !m.Deleted &&
                       (showHidden || m.Published)
-                orderby pm.DisplayOrder, pm.Id
                 select pm;
 
             if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -457,6 +456,9 @@ namespace Nop.Services.Catalog
                 }
 
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+            }
+            else {
+                query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
             }
 
             var productManufacturers = query.ToCachedList(key);
