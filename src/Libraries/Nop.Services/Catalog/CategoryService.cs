@@ -184,7 +184,6 @@ namespace Nop.Services.Catalog
             if (!string.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
-            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             if (overridePublished.HasValue)
                 query = query.Where(c => c.Published == overridePublished.Value);
 
@@ -215,6 +214,9 @@ namespace Nop.Services.Catalog
 
                 query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }
+            else {
+                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+            }
 
             var unsortedCategories = query.ToList();
 
@@ -244,7 +246,6 @@ namespace Nop.Services.Catalog
 
             query = query.Where(c => c.ParentCategoryId == parentCategoryId);
             query = query.Where(c => !c.Deleted);
-            query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
             {
@@ -293,6 +294,9 @@ namespace Nop.Services.Catalog
                 }
 
                 query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+            }
+            else {
+                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }
 
             var categories = query.ToCachedList(key);
