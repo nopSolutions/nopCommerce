@@ -159,10 +159,12 @@ namespace Nop.Services.Messages
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
 
             var query = _messageTemplateRepository.Table;
-            query = query.OrderBy(t => t.Name);
 
             if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations)
+            {
+                query = query.OrderBy(t => t.Name);
                 return query.ToCachedList(key);
+            }
 
             //store mapping
             query = from t in query
