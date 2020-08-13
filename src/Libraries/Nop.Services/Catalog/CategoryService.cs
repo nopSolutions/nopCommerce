@@ -557,7 +557,6 @@ namespace Nop.Services.Catalog
                         where pc.CategoryId == categoryId &&
                               !p.Deleted &&
                               (showHidden || p.Published)
-                        orderby pc.DisplayOrder, pc.Id
                         select pc;
 
             if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -609,6 +608,9 @@ namespace Nop.Services.Catalog
                 }
 
                 query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+            }
+            else {
+                query = query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
             }
 
             var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
