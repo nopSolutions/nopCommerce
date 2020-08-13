@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -199,7 +198,6 @@ namespace Nop.Services.Tests.Orders
                 _warehouseRepository,
                 _shippingPluginManager,
                 _stateProvinceService.Object,
-                new TestCacheManager(), 
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);
@@ -237,7 +235,7 @@ namespace Nop.Services.Tests.Orders
 
             _recurringPaymentHistoryRepository = new FakeRepository<RecurringPaymentHistory>();
            
-            _orderService = new OrderService(null, null, null, null, null, null, null, null, _recurringPaymentRepository, _recurringPaymentHistoryRepository, _shipmentService.Object, new NopConfig());
+            _orderService = new OrderService(null, null, null, null, null, null, null, null, _recurringPaymentRepository, _recurringPaymentHistoryRepository, _shipmentService.Object);
             
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
                 _addressService.Object,

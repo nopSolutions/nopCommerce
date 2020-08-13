@@ -38,16 +38,6 @@ namespace Nop.Tests
             entity.Id = _table.Max(e => e.Id) + 1;
         }
        
-        public T GetById(int? id, int? cacheTime = null)
-        {
-            return _table.FirstOrDefault(x => x.Id == Convert.ToInt32(id));
-        }
-
-        public IList<T> GetByIds(IList<int> ids, CacheKey cacheKey = null)
-        {
-            return _table.Where(p => ids.Contains(p.Id)).ToList();
-        }
-
         public void Insert(T entity, bool publishEvent = true)
         {
             SetNewId(entity);
@@ -111,14 +101,18 @@ namespace Nop.Tests
         {
             throw new NotImplementedException();
         }
+        
+        public T GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        {
+            return _table.FirstOrDefault(x => x.Id == Convert.ToInt32(id));
+        }
 
-        /// <summary>
-        /// Get all entity entries
-        /// </summary>
-        /// <param name="func">Function to select entries</param>
-        /// <param name="cacheKey">Cache key; pass null to don't cache</param>
-        /// <returns>Entity entries</returns>
-        public virtual IList<T> GetAll(Func<IQueryable<T>, IQueryable<T>> func = null, CacheKey cacheKey = null)
+        public IList<T> GetByIds(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        {
+            return _table.Where(p => ids.Contains(p.Id)).ToList();
+        }
+
+        public IList<T> GetAll(Func<IQueryable<T>, IQueryable<T>> func = null, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
             var query = _table.AsQueryable();
             if (func != null)

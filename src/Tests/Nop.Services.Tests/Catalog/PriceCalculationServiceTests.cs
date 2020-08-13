@@ -5,7 +5,6 @@ using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -73,7 +72,7 @@ namespace Nop.Services.Tests.Catalog
 
             _customerService = new CustomerService(null, null, null, null,
                 null, _customerCustomerRoleMappingRepository, null, _customerRoleRepository, null, null,
-                new TestCacheManager(), new NopConfig(),  _storeContext.Object, null);
+                new TestCacheManager(), _storeContext.Object, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 

@@ -83,7 +83,6 @@ namespace Nop.Services.Tests.Directory
             _currencyService = new CurrencyService(_currencySettings,
                 _exchangeRatePluginManager,
                 _currencyRepository,
-                new TestCacheManager(), 
                 _storeMappingService.Object);
         }
 

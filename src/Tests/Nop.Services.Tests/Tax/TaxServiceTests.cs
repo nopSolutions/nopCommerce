@@ -100,7 +100,6 @@ namespace Nop.Services.Tests.Tax
                 null,
                 null,
                 new TestCacheManager(),
-                new NopConfig(), 
                 _storeContext.Object,
                 null);
 

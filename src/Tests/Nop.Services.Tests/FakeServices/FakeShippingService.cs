@@ -54,7 +54,6 @@ namespace Nop.Services.Tests.FakeServices
                 warehouseRepository.FakeRepoNullPropagation(),
                 shippingPluginManager ?? new Mock<IShippingPluginManager>().Object,
                 stateProvinceService ?? new Mock<IStateProvinceService>().Object,
-                new TestCacheManager(), 
                 storeContext ?? new Mock<IStoreContext>().Object,
                 shippingSettings ?? new ShippingSettings(),
                 shoppingCartSettings ?? new ShoppingCartSettings())

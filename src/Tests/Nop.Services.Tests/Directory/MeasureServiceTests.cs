@@ -105,7 +105,6 @@ namespace Nop.Services.Tests.Directory
 
             _measureService = new MeasureService(_measureDimensionRepository,
                 _measureWeightRepository,
-                new TestCacheManager(), 
                 _measureSettings);
         }
 

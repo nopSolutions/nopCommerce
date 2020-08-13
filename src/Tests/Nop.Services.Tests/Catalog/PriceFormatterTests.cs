@@ -79,7 +79,6 @@ namespace Nop.Services.Tests.Catalog
             _currencyService = new CurrencyService(_currencySettings,
                 _exchangeRatePluginManager,
                 _currencyRepo,
-                new TestCacheManager(), 
                 _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();

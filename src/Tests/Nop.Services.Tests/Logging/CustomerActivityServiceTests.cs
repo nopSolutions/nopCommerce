@@ -76,7 +76,7 @@ namespace Nop.Services.Tests.Logging
             _activityLogRepository = new FakeRepository<ActivityLog>(new List<ActivityLog> { _activity1, _activity2 });
             _activityLogTypeRepository = new FakeRepository<ActivityLogType>(new List<ActivityLogType> { _activityType1, _activityType2 });
 
-            _customerActivityService = new CustomerActivityService(_activityLogRepository, _activityLogTypeRepository, new TestCacheManager(), _webHelper.Object, _workContext.Object);
+            _customerActivityService = new CustomerActivityService(_activityLogRepository, _activityLogTypeRepository, _webHelper.Object, _workContext.Object);
         }
 
         [Test]
