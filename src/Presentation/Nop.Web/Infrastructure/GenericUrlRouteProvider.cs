@@ -17,7 +17,7 @@ namespace Nop.Web.Infrastructure
         /// <param name="endpointRouteBuilder">Route builder</param>
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            var pattern = GetRouterPattern(endpointRouteBuilder, seoCode: "SeName");
+            var pattern = GetRouterPattern(endpointRouteBuilder, seoCode: "{SeName}");
 
             endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
 
