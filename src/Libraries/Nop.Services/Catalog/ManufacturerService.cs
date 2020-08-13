@@ -148,10 +148,12 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             if (overridePublished.HasValue)
                 query = query.Where(m => m.Published == overridePublished.Value);
-            query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
             if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
+            {
+                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
                 return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+            }
 
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
