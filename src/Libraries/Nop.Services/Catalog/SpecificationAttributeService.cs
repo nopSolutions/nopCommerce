@@ -102,6 +102,7 @@ namespace Nop.Services.Catalog
         {
             var query = from sa in _specificationAttributeRepository.Table
                         where _specificationAttributeOptionRepository.Table.Any(o => o.SpecificationAttributeId == sa.Id)
+                        orderby sa.DisplayOrder, sa.Id
                         select sa;
 
             return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey));
