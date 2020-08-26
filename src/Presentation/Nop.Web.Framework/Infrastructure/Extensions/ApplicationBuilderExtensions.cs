@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 engine.Resolve<ILogger>().Information("Application started");
 
                 var pluginService = engine.Resolve<IPluginService>();
-                
+
                 //install plugins
                 pluginService.InstallPlugins();
 
@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 assembly = Assembly.GetAssembly(typeof(IMigrationManager));
                 migrationManager.ApplyUpMigrations(assembly, true);
 
-                #if DEBUG
+#if DEBUG
 
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
                 versions.Delete(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
 
-                #endif
+#endif
             }
         }
 
@@ -95,9 +95,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopExceptionHandler(this IApplicationBuilder application)
         {
-            var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+            var appSettings = EngineContext.Current.Resolve<AppSettings>();
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
-            var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || webHostEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = appSettings.NopConfig.DisplayFullErrorStack || webHostEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes
@@ -366,7 +366,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.SupportedCultures = cultures;
                 options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
             });
-        }       
+        }
 
         /// <summary>
         /// Set current culture info

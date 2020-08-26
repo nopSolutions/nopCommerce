@@ -70,8 +70,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        /// <param name="appSettings">App settings</param>
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings)
         {
             //file provider
             builder.RegisterType<NopFileProvider>().As<INopFileProvider>().InstancePerLifetimeScope();
@@ -94,7 +94,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
             //redis connection wrapper
-            if (config.RedisEnabled)
+            if (appSettings.NopConfig.RedisEnabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>()
                     .As<ILocker>()
@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.Infrastructure
             }
 
             //static cache manager
-            if (config.RedisEnabled && config.UseRedisForCaching)
+            if (appSettings.NopConfig.RedisEnabled && appSettings.NopConfig.UseRedisForCaching)
             {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
@@ -248,7 +248,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterSource(new SettingsSource());
 
             //picture service
-            if (config.AzureBlobStorageEnabled)
+            if (appSettings.NopConfig.AzureBlobStorageEnabled)
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();

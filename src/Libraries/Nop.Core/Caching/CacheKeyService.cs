@@ -22,15 +22,15 @@ namespace Nop.Core.Caching
 
         #region Fields
 
-        protected readonly NopConfig _nopConfig;
+        protected readonly AppSettings _appSettings;
 
         #endregion
 
         #region Ctor
 
-        protected CacheKeyService(NopConfig nopConfig)
+        protected CacheKeyService(AppSettings appSettings)
         {
-            _nopConfig = nopConfig;
+            _appSettings = appSettings;
         }
 
         #endregion
@@ -108,7 +108,7 @@ namespace Nop.Core.Caching
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _nopConfig.DefaultCacheTime;
+            key.CacheTime = _appSettings.NopConfig.DefaultCacheTime;
 
             return key;
         }
@@ -123,7 +123,7 @@ namespace Nop.Core.Caching
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _nopConfig.ShortTermCacheTime;
+            key.CacheTime = _appSettings.NopConfig.ShortTermCacheTime;
 
             return key;
         }

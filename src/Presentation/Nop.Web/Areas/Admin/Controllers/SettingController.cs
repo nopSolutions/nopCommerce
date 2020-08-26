@@ -55,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
@@ -78,13 +79,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IUploadService _uploadService;
-        private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
-        public SettingController(IAddressService addressService,
+        public SettingController(AppSettings appSettings,
+            IAddressService addressService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
@@ -106,9 +107,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
-            IUploadService uploadService,
-            NopConfig config)
+            IUploadService uploadService)
         {
+            _appSettings = appSettings;
             _addressService = addressService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
@@ -132,7 +133,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _workContext = workContext;
             _uploadService = uploadService;
-            _config = config;
         }
 
         #endregion
@@ -1856,7 +1856,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public IActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
-            if (_config.RedisEnabled && _config.UseRedisForCaching && loadAllLocaleRecordsOnStartup)
+            if (_appSettings.NopConfig.RedisEnabled && _appSettings.NopConfig.UseRedisForCaching && loadAllLocaleRecordsOnStartup)
                 return Json(new
                 {
                     Result = _localizationService.GetResource(

@@ -329,8 +329,8 @@ namespace Nop.Data
         {
             get
             {
-                var nopConfig = EngineContext.Current.Resolve<NopConfig>();
-                return nopConfig.MiniProfilerEnabled;
+                var appSettings = EngineContext.Current.Resolve<AppSettings>();
+                return appSettings.NopConfig.MiniProfilerEnabled;
             }
         }
 

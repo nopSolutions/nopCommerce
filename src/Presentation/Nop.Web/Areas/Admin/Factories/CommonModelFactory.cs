@@ -52,6 +52,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly AppSettings _appSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -86,7 +87,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly NopConfig _nopConfig;
         private readonly NopHttpClient _nopHttpClient;
         private readonly ProxySettings _proxySettings;
 
@@ -95,6 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CommonModelFactory(AdminAreaSettings adminAreaSettings,
+            AppSettings appSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
@@ -129,11 +130,11 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            NopConfig nopConfig,
             NopHttpClient nopHttpClient,
             ProxySettings proxySettings)
         {
             _adminAreaSettings = adminAreaSettings;
+            _appSettings = appSettings;
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
@@ -168,7 +169,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
-            _nopConfig = nopConfig;
             _nopHttpClient = nopHttpClient;
             _proxySettings = proxySettings;
         }
@@ -612,11 +612,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Level = SystemWarningLevel.Warning,
                     DontEncode = true,
-                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names=notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
+                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -679,15 +679,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
-            
+
             model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
-            model.RedisEnabled = _nopConfig.RedisEnabled;
-            model.UseRedisToStoreDataProtectionKeys = _nopConfig.UseRedisToStoreDataProtectionKeys;
-            model.UseRedisForCaching = _nopConfig.UseRedisForCaching;
-            model.UseRedisToStorePluginsInfo = _nopConfig.UseRedisToStorePluginsInfo;
+            model.RedisEnabled = _appSettings.NopConfig.RedisEnabled;
+            model.UseRedisToStoreDataProtectionKeys = _appSettings.NopConfig.UseRedisToStoreDataProtectionKeys;
+            model.UseRedisForCaching = _appSettings.NopConfig.UseRedisForCaching;
+            model.UseRedisToStorePluginsInfo = _appSettings.NopConfig.UseRedisToStorePluginsInfo;
 
-            model.AzureBlobStorageEnabled = _nopConfig.AzureBlobStorageEnabled;
+            model.AzureBlobStorageEnabled = _appSettings.NopConfig.AzureBlobStorageEnabled;
 
             return model;
         }
@@ -812,7 +812,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, ()=>
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
             {
                 return backupFiles.Select(file => new BackupFileModel
                 {

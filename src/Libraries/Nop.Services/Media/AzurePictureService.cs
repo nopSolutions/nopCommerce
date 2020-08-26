@@ -26,19 +26,22 @@ namespace Nop.Services.Media
 
         private static bool _azureBlobStorageAppendContainerName;
         private static bool _isInitialized;
-        private static CloudBlobContainer _container;
         private static string _azureBlobStorageConnectionString;
         private static string _azureBlobStorageContainerName;
         private static string _azureBlobStorageEndPoint;
+        private static CloudBlobContainer _container;
+
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly MediaSettings _mediaSettings;
+
         private readonly object _locker = new object();
 
         #endregion
 
         #region Ctor
 
-        public AzurePictureService(INopDataProvider dataProvider,
+        public AzurePictureService(AppSettings appSettings,
+            INopDataProvider dataProvider,
             IDownloadService downloadService,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
@@ -50,8 +53,7 @@ namespace Nop.Services.Media
             IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            MediaSettings mediaSettings,
-            NopConfig config)
+            MediaSettings mediaSettings)
             : base(dataProvider,
                   downloadService,
                   httpContextAccessor,
@@ -68,25 +70,29 @@ namespace Nop.Services.Media
             _staticCacheManager = staticCacheManager;
             _mediaSettings = mediaSettings;
 
-            OneTimeInit(config);
+            OneTimeInit(appSettings);
         }
 
         #endregion
 
         #region Utilities
 
-        protected void OneTimeInit(NopConfig config)
+        /// <summary>
+        /// Initialize cloud container
+        /// </summary>
+        /// <param name="appSettings">App settings</param>
+        protected void OneTimeInit(AppSettings appSettings)
         {
             if (_isInitialized)
                 return;
 
-            if (string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
+            if (string.IsNullOrEmpty(appSettings.NopConfig.AzureBlobStorageConnectionString))
                 throw new Exception("Azure connection string for BLOB is not specified");
 
-            if (string.IsNullOrEmpty(config.AzureBlobStorageContainerName))
+            if (string.IsNullOrEmpty(appSettings.NopConfig.AzureBlobStorageContainerName))
                 throw new Exception("Azure container name for BLOB is not specified");
 
-            if (string.IsNullOrEmpty(config.AzureBlobStorageEndPoint))
+            if (string.IsNullOrEmpty(appSettings.NopConfig.AzureBlobStorageEndPoint))
                 throw new Exception("Azure end point for BLOB is not specified");
 
             lock (_locker)
@@ -94,10 +100,10 @@ namespace Nop.Services.Media
                 if (_isInitialized)
                     return;
 
-                _azureBlobStorageAppendContainerName = config.AzureBlobStorageAppendContainerName;
-                _azureBlobStorageConnectionString = config.AzureBlobStorageConnectionString;
-                _azureBlobStorageContainerName = config.AzureBlobStorageContainerName.Trim().ToLower();
-                _azureBlobStorageEndPoint = config.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
+                _azureBlobStorageAppendContainerName = appSettings.NopConfig.AzureBlobStorageAppendContainerName;
+                _azureBlobStorageConnectionString = appSettings.NopConfig.AzureBlobStorageConnectionString;
+                _azureBlobStorageContainerName = appSettings.NopConfig.AzureBlobStorageContainerName.Trim().ToLower();
+                _azureBlobStorageEndPoint = appSettings.NopConfig.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
 
                 CreateCloudBlobContainer();
 

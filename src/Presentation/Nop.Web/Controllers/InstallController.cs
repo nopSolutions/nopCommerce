@@ -23,21 +23,21 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly IInstallationLocalizationService _locService;
         private readonly INopFileProvider _fileProvider;
-        private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService,
-            INopFileProvider fileProvider,
-            NopConfig config)
+        public InstallController(AppSettings appSettings,
+            IInstallationLocalizationService locService,
+            INopFileProvider fileProvider)
         {
+            _appSettings = appSettings;
             _locService = locService;
             _fileProvider = fileProvider;
-            _config = config;
         }
 
         #endregion
@@ -55,7 +55,7 @@ namespace Nop.Web.Controllers
                 InstallSampleData = false,
 
                 //fast installation service does not support SQL compact
-                DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
+                DisableSampleDataOption = _appSettings.NopConfig.DisableSampleDataDuringInstallation,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
                 DataProvider = DataProviderType.SqlServer
@@ -110,7 +110,7 @@ namespace Nop.Web.Controllers
                         Text = pt.Value
                     }));
 
-            model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
+            model.DisableSampleDataOption = _appSettings.NopConfig.DisableSampleDataDuringInstallation;
 
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
@@ -187,9 +187,9 @@ namespace Nop.Web.Controllers
                 pluginService.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation))
+                if (!string.IsNullOrEmpty(_appSettings.NopConfig.PluginsIgnoredDuringInstallation))
                 {
-                    pluginsIgnoredDuringInstallation = _config.PluginsIgnoredDuringInstallation
+                    pluginsIgnoredDuringInstallation = _appSettings.NopConfig.PluginsIgnoredDuringInstallation
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 

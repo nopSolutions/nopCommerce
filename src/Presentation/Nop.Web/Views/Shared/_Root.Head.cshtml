@@ -12,7 +12,7 @@
 @inject IPermissionService permissionService
 @inject IWorkContext workContext
 @inject SeoSettings seoSettings
-@inject NopConfig nopConfig
+@inject AppSettings appSettings
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
     Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.countryselect.js");
@@ -38,7 +38,7 @@
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
 
-    var displayMiniProfiler = nopConfig.MiniProfilerEnabled && permissionService.Authorize(StandardPermissionProvider.AccessProfiling);
+    var displayMiniProfiler = AppSettings.NopConfig.MiniProfilerEnabled && permissionService.Authorize(StandardPermissionProvider.AccessProfiling);
 
     //event
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
