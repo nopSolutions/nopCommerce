@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -177,6 +179,47 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
 
             return Redirect(returnUrl);
+        }
+
+        public virtual IActionResult AppSettings()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _settingModelFactory.PrepareAppSettingsModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult AppSettings(AppSettingsModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //create file if not exists
+            var filePath = _fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath);
+            _fileProvider.CreateFile(filePath);
+
+            //check additional configuration parameters
+            var additionalData = JsonConvert.DeserializeObject<AppSettings>(_fileProvider.ReadAllText(filePath, Encoding.UTF8)).AdditionalData;
+
+            var appSettings = _appSettings;
+            appSettings.NopConfig = model.CommonConfigModel.ToConfig(appSettings.NopConfig);
+            appSettings.HostingConfig = model.HostingConfigModel.ToConfig(appSettings.HostingConfig);
+            appSettings.AdditionalData = additionalData;
+
+            //save app settings to the file
+            var text = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
+            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+
+            _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+
+            var returnUrl = Url.Action("AppSettings", "Setting", new { area = AreaNames.Admin });
+            return View("RestartApplication", returnUrl);
         }
 
         public virtual IActionResult Blog()

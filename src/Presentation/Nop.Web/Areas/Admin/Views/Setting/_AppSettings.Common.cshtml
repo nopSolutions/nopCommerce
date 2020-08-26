@@ -1,0 +1,247 @@
+@model AppSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.DisplayFullErrorStack" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.DisplayFullErrorStack" />
+            <span asp-validation-for="CommonConfigModel.DisplayFullErrorStack"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.AzureBlobStorageConnectionString" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.AzureBlobStorageConnectionString" />
+            <span asp-validation-for="CommonConfigModel.AzureBlobStorageConnectionString"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.AzureBlobStorageContainerName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.AzureBlobStorageContainerName" />
+            <span asp-validation-for="CommonConfigModel.AzureBlobStorageContainerName"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.AzureBlobStorageEndPoint" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.AzureBlobStorageEndPoint" />
+            <span asp-validation-for="CommonConfigModel.AzureBlobStorageEndPoint"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.AzureBlobStorageAppendContainerName" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.AzureBlobStorageAppendContainerName" />
+            <span asp-validation-for="CommonConfigModel.AzureBlobStorageAppendContainerName"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseAzureBlobStorageToStoreDataProtectionKeys" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseAzureBlobStorageToStoreDataProtectionKeys" />
+            <span asp-validation-for="CommonConfigModel.UseAzureBlobStorageToStoreDataProtectionKeys"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.AzureBlobStorageContainerNameForDataProtectionKeys" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.AzureBlobStorageContainerNameForDataProtectionKeys" />
+            <span asp-validation-for="CommonConfigModel.AzureBlobStorageContainerNameForDataProtectionKeys"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.AzureKeyVaultIdForDataProtectionKeys" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.AzureKeyVaultIdForDataProtectionKeys" />
+            <span asp-validation-for="CommonConfigModel.AzureKeyVaultIdForDataProtectionKeys"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.RedisEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.RedisEnabled" />
+            <span asp-validation-for="CommonConfigModel.RedisEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.RedisConnectionString" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.RedisConnectionString" />
+            <span asp-validation-for="CommonConfigModel.RedisConnectionString"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.RedisDatabaseId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.RedisDatabaseId" />
+            <span asp-validation-for="CommonConfigModel.RedisDatabaseId"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseRedisToStoreDataProtectionKeys" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseRedisToStoreDataProtectionKeys" />
+            <span asp-validation-for="CommonConfigModel.UseRedisToStoreDataProtectionKeys"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseRedisForCaching" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseRedisForCaching" />
+            <span asp-validation-for="CommonConfigModel.UseRedisForCaching"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.IgnoreRedisTimeoutException" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.IgnoreRedisTimeoutException" />
+            <span asp-validation-for="CommonConfigModel.IgnoreRedisTimeoutException"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseRedisToStorePluginsInfo" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseRedisToStorePluginsInfo" />
+            <span asp-validation-for="CommonConfigModel.UseRedisToStorePluginsInfo"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UserAgentStringsPath" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UserAgentStringsPath" />
+            <span asp-validation-for="CommonConfigModel.UserAgentStringsPath"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath" />
+            <span asp-validation-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.DisableSampleDataDuringInstallation" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.DisableSampleDataDuringInstallation" />
+            <span asp-validation-for="CommonConfigModel.DisableSampleDataDuringInstallation"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.PluginsIgnoredDuringInstallation" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.PluginsIgnoredDuringInstallation" />
+            <span asp-validation-for="CommonConfigModel.PluginsIgnoredDuringInstallation"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.ClearPluginShadowDirectoryOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.ClearPluginShadowDirectoryOnStartup" />
+            <span asp-validation-for="CommonConfigModel.ClearPluginShadowDirectoryOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.CopyLockedPluginAssembilesToSubdirectoriesOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.CopyLockedPluginAssembilesToSubdirectoriesOnStartup" />
+            <span asp-validation-for="CommonConfigModel.CopyLockedPluginAssembilesToSubdirectoriesOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseUnsafeLoadAssembly" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseUnsafeLoadAssembly" />
+            <span asp-validation-for="CommonConfigModel.UseUnsafeLoadAssembly"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UsePluginsShadowCopy" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UsePluginsShadowCopy" />
+            <span asp-validation-for="CommonConfigModel.UsePluginsShadowCopy"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.UseSessionStateTempDataProvider" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.UseSessionStateTempDataProvider" />
+            <span asp-validation-for="CommonConfigModel.UseSessionStateTempDataProvider"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.DefaultCacheTime" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.DefaultCacheTime" />
+            <span asp-validation-for="CommonConfigModel.DefaultCacheTime"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.ShortTermCacheTime" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.ShortTermCacheTime" />
+            <span asp-validation-for="CommonConfigModel.ShortTermCacheTime"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CommonConfigModel.BundledFilesCacheTime" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CommonConfigModel.BundledFilesCacheTime" />
+            <span asp-validation-for="CommonConfigModel.BundledFilesCacheTime"></span>
+        </div>
+    </div>
+</div>

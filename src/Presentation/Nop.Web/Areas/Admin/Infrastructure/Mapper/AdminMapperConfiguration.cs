@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -73,6 +74,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         public AdminMapperConfiguration()
         {
             //create specific maps
+            CreateConfigMaps();
             CreateAffiliatesMaps();
             CreateAuthenticationMaps();
             CreateBlogsMaps();
@@ -116,6 +118,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 //exclude ActiveStoreScopeConfiguration from mapping ISettingsModel
                 if (typeof(ISettingsModel).IsAssignableFrom(mapConfiguration.DestinationType))
                     map.ForMember(nameof(ISettingsModel.ActiveStoreScopeConfiguration), options => options.Ignore());
+
+                //exclude some properties from mapping configuration and models
+                if (typeof(IConfig).IsAssignableFrom(mapConfiguration.DestinationType))
+                    map.ForMember(nameof(IConfig.Name), options => options.Ignore());
 
                 //exclude Locales from mapping ILocalizedModel
                 if (typeof(ILocalizedModel).IsAssignableFrom(mapConfiguration.DestinationType))
@@ -167,6 +173,20 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         #endregion
 
         #region Utilities
+
+        /// <summary>
+        /// Create configuration maps 
+        /// </summary>
+        protected virtual void CreateConfigMaps()
+        {
+            CreateMap<NopConfig, CommonConfigModel>();
+            CreateMap<CommonConfigModel, NopConfig>()
+                .ForMember(entity => entity.AzureBlobStorageEnabled, options => options.Ignore())
+                .ForMember(entity => entity.EncryptDataProtectionKeysWithAzureKeyVault, options => options.Ignore());
+
+            CreateMap<HostingConfig, HostingConfigModel>();
+            CreateMap<HostingConfigModel, HostingConfig>();
+        }
 
         /// <summary>
         /// Create affiliates maps 
