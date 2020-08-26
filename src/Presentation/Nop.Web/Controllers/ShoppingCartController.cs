@@ -1133,7 +1133,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement]
         public virtual IActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -1454,7 +1453,6 @@ namespace Nop.Web.Controllers
 
         #region Wishlist
 
-        [HttpsRequirement]
         public virtual IActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
@@ -1612,7 +1610,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement]
         public virtual IActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
