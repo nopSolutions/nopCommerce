@@ -45,7 +45,7 @@ namespace Nop.Core.Redis
         /// <returns></returns>
         protected string GetConnectionString()
         {
-            return _appSettings.NopConfig.RedisConnectionString;
+            return _appSettings.RedisConfig.ConnectionString;
         }
 
         /// <summary>

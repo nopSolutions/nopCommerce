@@ -57,7 +57,7 @@ namespace Nop.Services.Helpers
                 return Singleton<BrowscapXmlHelper>.Instance;
 
             //no database created
-            if (string.IsNullOrEmpty(_appSettings.NopConfig.UserAgentStringsPath))
+            if (string.IsNullOrEmpty(_appSettings.CommonConfig.UserAgentStringsPath))
                 return null;
 
             //prevent multi loading data
@@ -67,9 +67,9 @@ namespace Nop.Services.Helpers
                 if (Singleton<BrowscapXmlHelper>.Instance != null)
                     return Singleton<BrowscapXmlHelper>.Instance;
 
-                var userAgentStringsPath = _fileProvider.MapPath(_appSettings.NopConfig.UserAgentStringsPath);
-                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_appSettings.NopConfig.CrawlerOnlyUserAgentStringsPath)
-                    ? _fileProvider.MapPath(_appSettings.NopConfig.CrawlerOnlyUserAgentStringsPath)
+                var userAgentStringsPath = _fileProvider.MapPath(_appSettings.CommonConfig.UserAgentStringsPath);
+                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_appSettings.CommonConfig.CrawlerOnlyUserAgentStringsPath)
+                    ? _fileProvider.MapPath(_appSettings.CommonConfig.CrawlerOnlyUserAgentStringsPath)
                     : string.Empty;
 
                 var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, _fileProvider);

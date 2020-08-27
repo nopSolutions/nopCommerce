@@ -682,12 +682,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
-            model.RedisEnabled = _appSettings.NopConfig.RedisEnabled;
-            model.UseRedisToStoreDataProtectionKeys = _appSettings.NopConfig.UseRedisToStoreDataProtectionKeys;
-            model.UseRedisForCaching = _appSettings.NopConfig.UseRedisForCaching;
-            model.UseRedisToStorePluginsInfo = _appSettings.NopConfig.UseRedisToStorePluginsInfo;
+            model.RedisEnabled = _appSettings.RedisConfig.Enabled;
+            model.UseRedisToStoreDataProtectionKeys = _appSettings.RedisConfig.StoreDataProtectionKeys;
+            model.UseRedisForCaching = _appSettings.RedisConfig.UseCaching;
+            model.UseRedisToStorePluginsInfo = _appSettings.RedisConfig.StorePluginsInfo;
 
-            model.AzureBlobStorageEnabled = _appSettings.NopConfig.AzureBlobStorageEnabled;
+            model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
 
             return model;
         }

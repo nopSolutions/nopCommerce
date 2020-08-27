@@ -22,7 +22,7 @@ namespace Nop.Services.Plugins
         public RedisPluginsInfo(AppSettings appSettings, INopFileProvider fileProvider, IRedisConnectionWrapper connectionWrapper)
             : base(fileProvider)
         {
-            _db = connectionWrapper.GetDatabase(appSettings.NopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.Plugin);
+            _db = connectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Plugin);
         }
 
         #endregion

@@ -86,24 +86,24 @@ namespace Nop.Services.Media
             if (_isInitialized)
                 return;
 
-            if (string.IsNullOrEmpty(appSettings.NopConfig.AzureBlobStorageConnectionString))
-                throw new Exception("Azure connection string for BLOB is not specified");
+            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.ConnectionString))
+                throw new Exception("Azure connection string for Blob is not specified");
 
-            if (string.IsNullOrEmpty(appSettings.NopConfig.AzureBlobStorageContainerName))
-                throw new Exception("Azure container name for BLOB is not specified");
+            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.ContainerName))
+                throw new Exception("Azure container name for Blob is not specified");
 
-            if (string.IsNullOrEmpty(appSettings.NopConfig.AzureBlobStorageEndPoint))
-                throw new Exception("Azure end point for BLOB is not specified");
+            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.EndPoint))
+                throw new Exception("Azure end point for Blob is not specified");
 
             lock (_locker)
             {
                 if (_isInitialized)
                     return;
 
-                _azureBlobStorageAppendContainerName = appSettings.NopConfig.AzureBlobStorageAppendContainerName;
-                _azureBlobStorageConnectionString = appSettings.NopConfig.AzureBlobStorageConnectionString;
-                _azureBlobStorageContainerName = appSettings.NopConfig.AzureBlobStorageContainerName.Trim().ToLower();
-                _azureBlobStorageEndPoint = appSettings.NopConfig.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
+                _azureBlobStorageAppendContainerName = appSettings.AzureBlobConfig.AppendContainerName;
+                _azureBlobStorageConnectionString = appSettings.AzureBlobConfig.ConnectionString;
+                _azureBlobStorageContainerName = appSettings.AzureBlobConfig.ContainerName.Trim().ToLower();
+                _azureBlobStorageEndPoint = appSettings.AzureBlobConfig.EndPoint.Trim().ToLower().TrimEnd('/');
 
                 CreateCloudBlobContainer();
 
@@ -112,13 +112,13 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Create cloud blob container
+        /// Create cloud Blob container
         /// </summary>
         protected virtual async void CreateCloudBlobContainer()
         {
             var storageAccount = CloudStorageAccount.Parse(_azureBlobStorageConnectionString);
             if (storageAccount == null)
-                throw new Exception("Azure connection string for BLOB is not working");
+                throw new Exception("Azure connection string for Blob is not working");
 
             //should we do it for each HTTP request?
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -194,7 +194,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual async Task DeletePictureThumbsAsync(Picture picture)
         {
-            //create a string containing the blob name prefix
+            //create a string containing the Blob name prefix
             var prefix = $"{picture.Id:0000000}";
 
             BlobContinuationToken continuationToken = null;

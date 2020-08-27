@@ -55,7 +55,7 @@ namespace Nop.Web.Controllers
                 InstallSampleData = false,
 
                 //fast installation service does not support SQL compact
-                DisableSampleDataOption = _appSettings.NopConfig.DisableSampleDataDuringInstallation,
+                DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
                 DataProvider = DataProviderType.SqlServer
@@ -110,7 +110,7 @@ namespace Nop.Web.Controllers
                         Text = pt.Value
                     }));
 
-            model.DisableSampleDataOption = _appSettings.NopConfig.DisableSampleDataDuringInstallation;
+            model.DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData;
 
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
@@ -187,9 +187,9 @@ namespace Nop.Web.Controllers
                 pluginService.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_appSettings.NopConfig.PluginsIgnoredDuringInstallation))
+                if (!string.IsNullOrEmpty(_appSettings.InstallationConfig.DisabledPlugins))
                 {
-                    pluginsIgnoredDuringInstallation = _appSettings.NopConfig.PluginsIgnoredDuringInstallation
+                    pluginsIgnoredDuringInstallation = _appSettings.InstallationConfig.DisabledPlugins
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 

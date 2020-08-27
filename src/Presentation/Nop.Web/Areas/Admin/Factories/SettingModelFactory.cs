@@ -748,8 +748,13 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             var model = new AppSettingsModel
             {
-                CommonConfigModel = _appSettings.NopConfig.ToConfigModel<CommonConfigModel>(),
-                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>()
+                CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
+                RedisConfigModel = _appSettings.RedisConfig.ToConfigModel<RedisConfigModel>(),
+                AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
             };
 
             return model;

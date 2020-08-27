@@ -1,5 +1,4 @@
 ﻿using Nop.Web.Framework.Models;
-using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
@@ -12,19 +11,32 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public AppSettingsModel()
         {
-            CommonConfigModel = new CommonConfigModel();
+            CacheConfigModel = new CacheConfigModel();
             HostingConfigModel = new HostingConfigModel();
+            RedisConfigModel = new RedisConfigModel();
+            AzureBlobConfigModel = new AzureBlobConfigModel();
+            InstallationConfigModel = new InstallationConfigModel();
+            PluginConfigModel = new PluginConfigModel();
+            CommonConfigModel = new CommonConfigModel();
         }
 
         #endregion
 
         #region Properties
 
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Common")]
-        public CommonConfigModel CommonConfigModel { get; set; }
+        public CacheConfigModel CacheConfigModel { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.AppSettings.Hosting")]
         public HostingConfigModel HostingConfigModel { get; set; }
+
+        public RedisConfigModel RedisConfigModel { get; set; }
+
+        public AzureBlobConfigModel AzureBlobConfigModel { get; set; }
+
+        public InstallationConfigModel InstallationConfigModel { get; set; }
+
+        public PluginConfigModel PluginConfigModel { get; set; }
+
+        public CommonConfigModel CommonConfigModel { get; set; }
 
         #endregion
     }

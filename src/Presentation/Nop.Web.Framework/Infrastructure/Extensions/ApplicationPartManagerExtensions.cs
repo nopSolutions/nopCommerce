@@ -189,9 +189,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             //whether to copy plugins assemblies to the bin directory, if not load assembly from the original file
-            if (!appSettings.NopConfig.UsePluginsShadowCopy)
+            if (!appSettings.PluginConfig.UsePluginsShadowCopy)
             {
-                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, appSettings.NopConfig.UseUnsafeLoadAssembly);
+                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, appSettings.PluginConfig.UseUnsafeLoadAssembly);
 
                 // delete the .deps file
                 if (assemblyFile.EndsWith(".dll"))
@@ -210,12 +210,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             try
             {
                 //and load assembly from the shadow copy
-                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, appSettings.NopConfig.UseUnsafeLoadAssembly);
+                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, appSettings.PluginConfig.UseUnsafeLoadAssembly);
             }
             catch (UnauthorizedAccessException)
             {
                 //suppress exceptions for "locked" assemblies, try load them from another directory
-                if (!appSettings.NopConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                if (!appSettings.PluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
                     !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
                 {
                     throw;
@@ -224,7 +224,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             catch (FileLoadException)
             {
                 //suppress exceptions for "locked" assemblies, try load them from another directory
-                if (!appSettings.NopConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
+                if (!appSettings.PluginConfig.CopyLockedPluginAssembilesToSubdirectoriesOnStartup ||
                     !shadowCopyDirectory.Equals(fileProvider.MapPath(NopPluginDefaults.ShadowCopyPath)))
                 {
                     throw;
@@ -355,14 +355,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="appSettings">App settings</param>
         private static void LoadPluginsInfo(AppSettings appSettings)
         {
-            var useRedisToStorePluginsInfo = appSettings.NopConfig.RedisEnabled && appSettings.NopConfig.UseRedisToStorePluginsInfo;
+            var useRedisToStorePluginsInfo = appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StorePluginsInfo;
 
             //we use the main IRedisConnectionWrapper implementation since the DI isn't initialized yet
             PluginsInfo = useRedisToStorePluginsInfo
                 ? new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings))
                 : new PluginsInfo(_fileProvider);
 
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !appSettings.NopConfig.RedisEnabled)
+            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !appSettings.RedisConfig.Enabled)
                 return;
 
             var redisPluginsInfo = new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings));
@@ -417,7 +417,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var binFiles = _fileProvider.GetFiles(shadowCopyDirectory, "*", false);
 
                     //whether to clear shadow copied files
-                    if (appSettings.NopConfig.ClearPluginShadowDirectoryOnStartup)
+                    if (appSettings.PluginConfig.ClearPluginShadowDirectoryOnStartup)
                     {
                         //skip placeholder files
                         var placeholderFileNames = new List<string> { "placeholder.txt", "index.htm" };

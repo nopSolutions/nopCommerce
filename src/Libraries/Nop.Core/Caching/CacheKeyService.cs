@@ -108,7 +108,7 @@ namespace Nop.Core.Caching
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _appSettings.NopConfig.DefaultCacheTime;
+            key.CacheTime = _appSettings.CacheConfig.DefaultCacheTime;
 
             return key;
         }
@@ -123,7 +123,7 @@ namespace Nop.Core.Caching
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _appSettings.NopConfig.ShortTermCacheTime;
+            key.CacheTime = _appSettings.CacheConfig.ShortTermCacheTime;
 
             return key;
         }

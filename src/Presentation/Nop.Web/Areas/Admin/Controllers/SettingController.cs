@@ -206,8 +206,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var additionalData = JsonConvert.DeserializeObject<AppSettings>(_fileProvider.ReadAllText(filePath, Encoding.UTF8)).AdditionalData;
 
             var appSettings = _appSettings;
-            appSettings.NopConfig = model.CommonConfigModel.ToConfig(appSettings.NopConfig);
+            appSettings.CacheConfig = model.CacheConfigModel.ToConfig(appSettings.CacheConfig);
             appSettings.HostingConfig = model.HostingConfigModel.ToConfig(appSettings.HostingConfig);
+            appSettings.RedisConfig = model.RedisConfigModel.ToConfig(appSettings.RedisConfig);
+            appSettings.AzureBlobConfig = model.AzureBlobConfigModel.ToConfig(appSettings.AzureBlobConfig);
+            appSettings.InstallationConfig = model.InstallationConfigModel.ToConfig(appSettings.InstallationConfig);
+            appSettings.PluginConfig = model.PluginConfigModel.ToConfig(appSettings.PluginConfig);
+            appSettings.CommonConfig = model.CommonConfigModel.ToConfig(appSettings.CommonConfig);
             appSettings.AdditionalData = additionalData;
 
             //save app settings to the file
@@ -1899,7 +1904,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public IActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
-            if (_appSettings.NopConfig.RedisEnabled && _appSettings.NopConfig.UseRedisForCaching && loadAllLocaleRecordsOnStartup)
+            if (_appSettings.RedisConfig.Enabled && _appSettings.RedisConfig.UseCaching && loadAllLocaleRecordsOnStartup)
                 return Json(new
                 {
                     Result = _localizationService.GetResource(

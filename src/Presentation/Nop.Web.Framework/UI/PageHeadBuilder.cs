@@ -384,7 +384,7 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}")
                     {
-                        CacheTime = _appSettings.NopConfig.BundledFilesCacheTime
+                        CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
                     var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => true);
 
@@ -613,7 +613,7 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}")
                     {
-                        CacheTime = _appSettings.NopConfig.BundledFilesCacheTime
+                        CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
                     var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => true);
 

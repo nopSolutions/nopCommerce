@@ -94,7 +94,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
             //redis connection wrapper
-            if (appSettings.NopConfig.RedisEnabled)
+            if (appSettings.RedisConfig.Enabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>()
                     .As<ILocker>()
@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.Infrastructure
             }
 
             //static cache manager
-            if (appSettings.NopConfig.RedisEnabled && appSettings.NopConfig.UseRedisForCaching)
+            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.UseCaching)
             {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
@@ -248,7 +248,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterSource(new SettingsSource());
 
             //picture service
-            if (appSettings.NopConfig.AzureBlobStorageEnabled)
+            if (appSettings.AzureBlobConfig.Enabled)
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();

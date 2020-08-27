@@ -4173,6 +4173,216 @@
   <LocaleResource Name="Admin.Configuration.ACL.Updated">
     <Value>The ACL has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings">
+    <Value>App settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob">
+    <Value>Azure Blob storage configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ConnectionString.Hint">
+    <Value>Specify the connection string for Azure Blob storage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ContainerName">
+    <Value>Container name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.ContainerName.Hint">
+    <Value>Specify the container name for Azure Blob storage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.EndPoint">
+    <Value>Endpoint</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.EndPoint.Hint">
+    <Value>Specify the endpoint for Azure Blob storage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.AppendContainerName">
+    <Value>Append container name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.AppendContainerName.Hint">
+    <Value>Enable this setting to append the endpoint with the container name when constructing the URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys">
+    <Value>Store Data Protection keys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.StoreDataProtectionKeys.Hint">
+    <Value>Enable this setting to store the Data Protection keys in Azure Blob Storage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName">
+    <Value>Container name for Data Protection keys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysContainerName.Hint">
+    <Value>Specify the container name for the Data Protection keys. This should be a private container separate from the Blob container used for media storage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId">
+    <Value>Key vault ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.AzureBlob.DataProtectionKeysVaultId.Hint">
+    <Value>Specify the Azure key vault ID used to encrypt the Data Protection keys.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache">
+    <Value>Cache configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.DefaultCacheTime">
+    <Value>Default cache time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.DefaultCacheTime.Hint">
+    <Value>Set default cache time (in minutes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.ShortTermCacheTime">
+    <Value>Short term cache time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.ShortTermCacheTime.Hint">
+    <Value>Set short term cache time (in minutes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime">
+    <Value>Bundled files cache time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Cache.BundledFilesCacheTime.Hint">
+    <Value>Set bundled files cache time (in minutes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common">
+    <Value>Common configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.DisplayFullErrorStack">
+    <Value>Display full error</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.DisplayFullErrorStack.Hint">
+    <Value>Enable this setting to display the full error in production environment. It's ignored (always enabled) in development environment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.MiniProfilerEnabled">
+    <Value>Enable MiniProfiler</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.MiniProfilerEnabled.Hint">
+    <Value>Enable this setting to display the performance indicator by MiniProfiler. By default, the performance indicator can see only Administrators, to change this behavior set ACL rules in the admin area.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
+    <Value>User agent strings path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath.Hint">
+    <Value>Specify a path to the file with user agent strings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.CrawlerOnlyUserAgentStringsPath">
+    <Value>Crawler user agent strings path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.CrawlerOnlyUserAgentStringsPath.Hint">
+    <Value>Specify a path to the file with crawler only user agent strings. Leave empty to always use full version of user agent strings file.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider">
+    <Value>Use session state for TempData</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint">
+    <Value>Enable this seting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
+    <Value>Hosting configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps">
+    <Value>Use HTTP_CLUSTER_HTTPS</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpClusterHttps.Hint">
+    <Value>Enable this setting if your hosting uses a load balancer. It'll be used to determine whether the current request is HTTPS.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto">
+    <Value>Use HTTP_X_FORWARDED_PROTO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.UseHttpXForwardedProto.Hint">
+    <Value>Enable this setting if you use a reverse proxy server (for example, if you host your site on Linux with Nginx/Apache and SSL).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader">
+    <Value>Forwarded HTTP header</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Hosting.ForwardedHttpHeader.Hint">
+    <Value>Use this setting if your hosting doesn't use 'X-FORWARDED-FOR' header to determine IP address. You can specify a custom HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation">
+    <Value>Installation configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.DisableSampleData">
+    <Value>Disable sample data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.DisableSampleData.Hint">
+    <Value>Enable this setting to disable sample data for installation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.DisabledPlugins">
+    <Value>Disabled plugins</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.DisabledPlugins.Hint">
+    <Value>Specify a list of plugins (comma separated) ignored during installation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin">
+    <Value>Plugin configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup">
+    <Value>Clear plugin shadow directory on startup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.ClearPluginShadowDirectoryOnStartup.Hint">
+    <Value>Enable this setting to clear the plugin shadow directory (/Plugins/bin) on application startup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup">
+    <Value>Copy locked plugins to subdirectories on startup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint">
+    <Value>Enable this seting to copy 'locked' assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly">
+    <Value>Use unsafe load assembly</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly.Hint">
+    <Value>Enable this seting to load an assembly into the load-from context, bypassing some security checks.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy">
+    <Value>Use plugins shadow copy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint">
+    <Value>Enable this seting to copy plugins to the shadow directory (/Plugins/bin) on application startup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis">
+    <Value>Redis configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.Enabled">
+    <Value>Use Redis</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.Enabled.Hint">
+    <Value>Enable this setting to use Redis server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.ConnectionString.Hint">
+    <Value>Specify Redis connection string.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.DatabaseId">
+    <Value>Database ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.DatabaseId.Hint">
+    <Value>Set the specific Redis database. Leave empty to use the different database for each data type (used by default).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.UseCaching">
+    <Value>Use caching</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.UseCaching.Hint">
+    <Value>Enable this setting to use Redis server for caching (instead of default in-memory caching).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StoreDataProtectionKeys">
+    <Value>Store Data Protection keys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StoreDataProtectionKeys.Hint">
+    <Value>Enable this setting to store the Data Protection keys in Redis database.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StorePluginsInfo">
+    <Value>Store plugins info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.StorePluginsInfo.Hint">
+    <Value>Enable this setting to store the plugins info in Redis database (instead of default file in directory).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.IgnoreTimeoutException">
+    <Value>Ignore timeout exception</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Redis.IgnoreTimeoutException.Hint">
+    <Value>Enable this setting to ignore timeout exception (this increases cache stability but may slightly decrease site performance).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries">
     <Value>Countries</Value>
   </LocaleResource>

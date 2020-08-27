@@ -170,7 +170,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //check whether to persist data protection in Redis
             var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
-            if (appSettings.NopConfig.RedisEnabled && appSettings.NopConfig.UseRedisToStoreDataProtectionKeys)
+            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StoreDataProtectionKeys)
             {
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
@@ -179,25 +179,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     //Service provider has not yet been built and we cannot get the required service. 
                     //So we create a new instance of RedisConnectionWrapper() bypassing the DI.
                     var redisConnectionWrapper = new RedisConnectionWrapper(appSettings);
-                    return redisConnectionWrapper.GetDatabase(appSettings.NopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
+                    return redisConnectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
                 }, NopDataProtectionDefaults.RedisDataProtectionKey);
             }
-            else if (appSettings.NopConfig.AzureBlobStorageEnabled && appSettings.NopConfig.UseAzureBlobStorageToStoreDataProtectionKeys)
+            else if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
             {
-                var cloudStorageAccount = CloudStorageAccount.Parse(appSettings.NopConfig.AzureBlobStorageConnectionString);
+                var cloudStorageAccount = CloudStorageAccount.Parse(appSettings.AzureBlobConfig.ConnectionString);
 
                 var client = cloudStorageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference(appSettings.NopConfig.AzureBlobStorageContainerNameForDataProtectionKeys);
+                var container = client.GetContainerReference(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
 
                 var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, NopDataProtectionDefaults.AzureDataProtectionKeyFile);
 
-                if (!appSettings.NopConfig.EncryptDataProtectionKeysWithAzureKeyVault)
+                if (!appSettings.AzureBlobConfig.DataProtectionKeysEncryptWithVault)
                     return;
 
                 var tokenProvider = new AzureServiceTokenProvider();
                 var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
 
-                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, appSettings.NopConfig.AzureKeyVaultIdForDataProtectionKeys);
+                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, appSettings.AzureBlobConfig.DataProtectionKeysVaultId);
             }
             else
             {
@@ -272,7 +272,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             mvcBuilder.AddRazorRuntimeCompilation();
 
             var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
-            if (appSettings.NopConfig.UseSessionStateTempDataProvider)
+            if (appSettings.CommonConfig.UseSessionStateTempDataProvider)
             {
                 //use session-based temp data provider
                 mvcBuilder.AddSessionStateTempDataProvider();
@@ -342,12 +342,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
-            if (appSettings.NopConfig.MiniProfilerEnabled)
+            if (appSettings.CommonConfig.MiniProfilerEnabled)
             {
                 services.AddMiniProfiler(miniProfilerOptions =>
                 {
                     //use memory cache provider for storing each result
-                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.NopConfig.DefaultCacheTime);
+                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.CacheConfig.DefaultCacheTime);
 
                     //determine who can access the MiniProfiler results
                     miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessProfiling);

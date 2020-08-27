@@ -325,14 +325,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
         /// </summary>
-        protected bool MiniProfillerEnabled
-        {
-            get
-            {
-                var appSettings = EngineContext.Current.Resolve<AppSettings>();
-                return appSettings.NopConfig.MiniProfilerEnabled;
-            }
-        }
+        protected bool MiniProfillerEnabled => EngineContext.Current.Resolve<AppSettings>().CommonConfig.MiniProfilerEnabled;
 
         /// <summary>
         /// Database connection string

@@ -179,13 +179,28 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         /// </summary>
         protected virtual void CreateConfigMaps()
         {
-            CreateMap<NopConfig, CommonConfigModel>();
-            CreateMap<CommonConfigModel, NopConfig>()
-                .ForMember(entity => entity.AzureBlobStorageEnabled, options => options.Ignore())
-                .ForMember(entity => entity.EncryptDataProtectionKeysWithAzureKeyVault, options => options.Ignore());
+            CreateMap<CacheConfig, CacheConfigModel>();
+            CreateMap<CacheConfigModel, CacheConfig>();
 
             CreateMap<HostingConfig, HostingConfigModel>();
             CreateMap<HostingConfigModel, HostingConfig>();
+
+            CreateMap<RedisConfig, RedisConfigModel>();
+            CreateMap<RedisConfigModel, RedisConfig>();
+
+            CreateMap<AzureBlobConfig, AzureBlobConfigModel>();
+            CreateMap<AzureBlobConfigModel, AzureBlobConfig>()
+                .ForMember(entity => entity.Enabled, options => options.Ignore())
+                .ForMember(entity => entity.DataProtectionKeysEncryptWithVault, options => options.Ignore());
+
+            CreateMap<InstallationConfig, InstallationConfigModel>();
+            CreateMap<InstallationConfigModel, InstallationConfig>();
+
+            CreateMap<PluginConfig, PluginConfigModel>();
+            CreateMap<PluginConfigModel, PluginConfig>();
+
+            CreateMap<CommonConfig, CommonConfigModel>();
+            CreateMap<CommonConfigModel, CommonConfig>();
         }
 
         /// <summary>
