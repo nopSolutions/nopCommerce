@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
@@ -22,14 +19,13 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class ProductAttributeParserTests : ServiceTest
     {
-        private Mock<IRepository<ProductAttribute>> _productAttributeRepo;
-        private Mock<IRepository<ProductAttributeMapping>> _productAttributeMappingRepo;
-        private Mock<IRepository<ProductAttributeCombination>> _productAttributeCombinationRepo;
-        private Mock<IRepository<ProductAttributeValue>> _productAttributeValueRepo;
-        private Mock<IRepository<PredefinedProductAttributeValue>> _predefinedProductAttributeValueRepo;
+        private FakeRepository<ProductAttribute> _productAttributeRepo;
+        private FakeRepository<ProductAttributeMapping> _productAttributeMappingRepo;
+        private FakeRepository<ProductAttributeCombination> _productAttributeCombinationRepo=new FakeRepository<ProductAttributeCombination>();
+        private FakeRepository<ProductAttributeValue> _productAttributeValueRepo;
+        private FakeRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
-        private Mock<IEventPublisher> _eventPublisher;
         private Mock<IWorkContext> _workContext;
         private Mock<ICurrencyService> _currencyService;
         private ILocalizationService _localizationService;
@@ -155,43 +151,22 @@ namespace Nop.Services.Tests.Catalog
 
             #endregion
 
-            _productAttributeRepo = new Mock<IRepository<ProductAttribute>>();
-            _productAttributeRepo.Setup(x => x.Table).Returns(new List<ProductAttribute> { pa1, pa2, pa3, pa4 }.AsQueryable());
-            _productAttributeRepo.Setup(x => x.GetById(pa1.Id)).Returns(pa1);
-            _productAttributeRepo.Setup(x => x.GetById(pa2.Id)).Returns(pa2);
-            _productAttributeRepo.Setup(x => x.GetById(pa3.Id)).Returns(pa3);
-            _productAttributeRepo.Setup(x => x.GetById(pa4.Id)).Returns(pa4);
+            _productAttributeRepo = new FakeRepository<ProductAttribute>(new List<ProductAttribute> { pa1, pa2, pa3, pa4 });
 
-            _productAttributeMappingRepo = new Mock<IRepository<ProductAttributeMapping>>();
-            _productAttributeMappingRepo.Setup(x => x.Table).Returns(new List<ProductAttributeMapping> { pam1_1, pam2_1, pam3_1, pam4_1 }.AsQueryable());
-            _productAttributeMappingRepo.Setup(x => x.GetById(pam1_1.Id)).Returns(pam1_1);
-            _productAttributeMappingRepo.Setup(x => x.GetById(pam2_1.Id)).Returns(pam2_1);
-            _productAttributeMappingRepo.Setup(x => x.GetById(pam3_1.Id)).Returns(pam3_1);
-            _productAttributeMappingRepo.Setup(x => x.GetById(pam4_1.Id)).Returns(pam4_1);
 
-            _productAttributeCombinationRepo = new Mock<IRepository<ProductAttributeCombination>>();
-            _productAttributeCombinationRepo.Setup(x => x.Table).Returns(new List<ProductAttributeCombination>().AsQueryable());
+            _productAttributeMappingRepo = new FakeRepository<ProductAttributeMapping>(new List<ProductAttributeMapping> { pam1_1, pam2_1, pam3_1, pam4_1 });
+            
+            _productAttributeValueRepo = new FakeRepository<ProductAttributeValue>(new List<ProductAttributeValue> { pav1_1, pav1_2, pav2_1, pav2_2, pav4_1 });
 
-            _productAttributeValueRepo = new Mock<IRepository<ProductAttributeValue>>();
-            _productAttributeValueRepo.Setup(x => x.Table).Returns(new List<ProductAttributeValue> { pav1_1, pav1_2, pav2_1, pav2_2, pav4_1 }.AsQueryable());
-            _productAttributeValueRepo.Setup(x => x.GetById(pav1_1.Id)).Returns(pav1_1);
-            _productAttributeValueRepo.Setup(x => x.GetById(pav1_2.Id)).Returns(pav1_2);
-            _productAttributeValueRepo.Setup(x => x.GetById(pav2_1.Id)).Returns(pav2_1);
-            _productAttributeValueRepo.Setup(x => x.GetById(pav2_2.Id)).Returns(pav2_2);
-            _productAttributeValueRepo.Setup(x => x.GetById(pav4_1.Id)).Returns(pav4_1);
+            _predefinedProductAttributeValueRepo = new FakeRepository<PredefinedProductAttributeValue>();
 
-            _predefinedProductAttributeValueRepo = new Mock<IRepository<PredefinedProductAttributeValue>>();
-
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            _productAttributeService = new ProductAttributeService(new FakeCacheKeyService(), 
-                _eventPublisher.Object,
-                _predefinedProductAttributeValueRepo.Object,
-                _productAttributeRepo.Object,
-                _productAttributeCombinationRepo.Object,
-                _productAttributeMappingRepo.Object,
-                _productAttributeValueRepo.Object);
+            _productAttributeService = new ProductAttributeService(
+                _predefinedProductAttributeValueRepo,
+                _productAttributeRepo,
+                _productAttributeCombinationRepo,
+                _productAttributeMappingRepo,
+                _productAttributeValueRepo,
+                new TestCacheManager());
 
             _priceCalculationService = new Mock<IPriceCalculationService>();
 
@@ -211,7 +186,7 @@ namespace Nop.Services.Tests.Catalog
                 _downloadService.Object,
                 _localizationService,
                 _productAttributeService,
-                _productAttributeValueRepo.Object,
+                _productAttributeValueRepo,
                 _workContext.Object);
 
             _productAttributeFormatter = new ProductAttributeFormatter(_currencyService.Object,

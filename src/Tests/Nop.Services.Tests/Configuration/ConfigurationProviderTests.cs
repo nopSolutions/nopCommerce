@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Configuration
         [SetUp]
         public new void SetUp()
         {
-            _settingService = new ConfigFileSettingService(null, null, null);
+            _settingService = new ConfigFileSettingService(null, null);
         }
 
         [Test]

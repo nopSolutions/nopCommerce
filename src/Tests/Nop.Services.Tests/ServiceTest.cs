@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 using Nop.Services.Tests.Directory;
@@ -23,7 +24,12 @@ namespace Nop.Services.Tests
         [SetUp]
         public virtual void SetUp()
         {
-           
+            Singleton<NopConfig>.Instance = new NopConfig
+            {
+                DefaultCacheTime = 60,
+                ShortTermCacheTime = 3,
+                BundledFilesCacheTime = 120
+            };
         }
 
         public void RunWithTestServiceProvider(Action action)

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
@@ -17,10 +15,9 @@ namespace Nop.Services.Tests.Directory
     [TestFixture]
     public class CurrencyServiceTests : ServiceTest
     {
-        private Mock<IRepository<Currency>> _currencyRepository;
+        private FakeRepository<Currency> _currencyRepository;
         private Mock<IStoreMappingService> _storeMappingService;
         private CurrencySettings _currencySettings;
-        private Mock<IEventPublisher> _eventPublisher;
         private ICurrencyService _currencyService;
         private IExchangeRatePluginManager _exchangeRatePluginManager;
 
@@ -71,11 +68,7 @@ namespace Nop.Services.Tests.Directory
                 UpdatedOnUtc = DateTime.UtcNow,
                 RoundingType = RoundingType.Rounding001
             };
-            _currencyRepository = new Mock<IRepository<Currency>>();
-            _currencyRepository.Setup(x => x.Table).Returns(new List<Currency> { _currencyUSD, _currencyEUR, _currencyRUR }.AsQueryable());
-            _currencyRepository.Setup(x => x.GetById(_currencyUSD.Id)).Returns(_currencyUSD);
-            _currencyRepository.Setup(x => x.GetById(_currencyEUR.Id)).Returns(_currencyEUR);
-            _currencyRepository.Setup(x => x.GetById(_currencyRUR.Id)).Returns(_currencyRUR);
+            _currencyRepository = new FakeRepository<Currency>(new List<Currency> { _currencyUSD, _currencyEUR, _currencyRUR });
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
@@ -85,16 +78,11 @@ namespace Nop.Services.Tests.Directory
                 PrimaryExchangeRateCurrencyId = _currencyEUR.Id
             };
 
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
             var pluginService = new FakePluginService();
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new Mock<ICustomerService>().Object, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
-                new FakeCacheKeyService(),
-                _eventPublisher.Object,
                 _exchangeRatePluginManager,
-                _currencyRepository.Object,
+                _currencyRepository,
                 _storeMappingService.Object);
         }
 

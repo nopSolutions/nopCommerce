@@ -5,13 +5,12 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 using Nop.Data;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -29,7 +28,6 @@ namespace Nop.Services.Tests
         public FakeShoppingCartService(CatalogSettings catalogSettings = null,
             IAclService aclService = null,
             IActionContextAccessor actionContextAccessor = null,  
-            ICacheKeyService cacheKeyService = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICheckoutAttributeService checkoutAttributeService = null,
             ICurrencyService currencyService = null,
@@ -58,14 +56,12 @@ namespace Nop.Services.Tests
             catalogSettings ?? new CatalogSettings(),
                 aclService ?? new Mock<IAclService>().Object,
                 actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,    
-                cacheKeyService ?? new FakeCacheKeyService(),
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,
                 currencyService ?? new Mock<ICurrencyService>().Object,
                 customerService ?? new Mock<ICustomerService>().Object,
                 dateRangeService ?? new Mock<IDateRangeService>().Object,
                 dateTimeHelper ?? new Mock<IDateTimeHelper>().Object,
-                eventPublisher ?? new Mock<IEventPublisher>().Object,
                 genericAttributeService ?? new Mock<IGenericAttributeService>().Object,
                 localizationService ?? new Mock<ILocalizationService>().Object,
                 permissionService ?? new Mock<IPermissionService>().Object,

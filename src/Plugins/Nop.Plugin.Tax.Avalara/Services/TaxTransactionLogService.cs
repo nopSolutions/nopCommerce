@@ -68,9 +68,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>Log item</returns>
         public virtual TaxTransactionLog GetTaxTransactionLogById(int logItemId)
         {
-            if (logItemId == 0)
-                return null;
-
             return _taxTransactionLogRepository.GetById(logItemId);
         }
 
@@ -83,7 +80,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Insert(logItem);
+            _taxTransactionLogRepository.Insert(logItem, false);
         }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Update(logItem);
+            _taxTransactionLogRepository.Update(logItem, false);
         }
 
         /// <summary>
@@ -104,10 +101,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="logItem">Log item</param>
         public virtual void DeleteTaxTransactionLog(TaxTransactionLog logItem)
         {
-            if (logItem == null)
-                throw new ArgumentNullException(nameof(logItem));
-
-            _taxTransactionLogRepository.Delete(logItem);
+            _taxTransactionLogRepository.Delete(logItem, false);
         }
 
         /// <summary>

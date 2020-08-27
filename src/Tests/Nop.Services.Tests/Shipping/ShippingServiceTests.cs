@@ -10,7 +10,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tests.FakeServices;
@@ -29,7 +28,6 @@ namespace Nop.Services.Tests.Shipping
         private IShippingPluginManager _shippingPluginManager;
         private IShippingService _shippingService;
         private IRepository<Product> _productRepository;
-        private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreContext> _storeContext;
         private ShippingSettings _shippingSettings;
 
@@ -39,9 +37,6 @@ namespace Nop.Services.Tests.Shipping
 
         public ShippingServiceTests()
         {
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
             _productRepository = _fakeDataStore.RegRepository(new[] {
                 new Product
                 {
@@ -61,7 +56,7 @@ namespace Nop.Services.Tests.Shipping
                 }
             });
 
-            _productService = new FakeProductService(productRepository: _productRepository, eventPublisher: _eventPublisher.Object);
+            _productService = new FakeProductService(productRepository: _productRepository);
 
             _shippingSettings = new ShippingSettings
             {
@@ -76,8 +71,7 @@ namespace Nop.Services.Tests.Shipping
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(new Store { Id = 1 });
 
-            _shippingService = new FakeShippingService(eventPublisher: _eventPublisher.Object,
-                pickupPluginManager: _pickupPluginManager,
+            _shippingService = new FakeShippingService(pickupPluginManager: _pickupPluginManager,
                 productService: _productService,
                 shippingPluginManager: _shippingPluginManager,
                 storeContext: _storeContext.Object,

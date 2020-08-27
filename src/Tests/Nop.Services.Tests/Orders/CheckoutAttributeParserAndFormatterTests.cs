@@ -3,14 +3,12 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
@@ -24,9 +22,8 @@ namespace Nop.Services.Tests.Orders
     [TestFixture]
     public class CheckoutAttributeParserAndFormatterTests : ServiceTest
     {
-        private Mock<IRepository<CheckoutAttribute>> _checkoutAttributeRepo;
-        private Mock<IRepository<CheckoutAttributeValue>> _checkoutAttributeValueRepo;
-        private Mock<IEventPublisher> _eventPublisher;
+        private FakeRepository<CheckoutAttribute> _checkoutAttributeRepo;
+        private FakeRepository<CheckoutAttributeValue> _checkoutAttributeValueRepo;
         private Mock<IStoreMappingService> _storeMappingService;
         private ICheckoutAttributeService _checkoutAttributeService;
         private ICheckoutAttributeParser _checkoutAttributeParser;
@@ -112,28 +109,16 @@ namespace Nop.Services.Tests.Orders
 
             #endregion
 
-            _checkoutAttributeRepo = new Mock<IRepository<CheckoutAttribute>>();
-            _checkoutAttributeRepo.Setup(x => x.Table).Returns(new List<CheckoutAttribute> { ca1, ca2, ca3 }.AsQueryable());
-            _checkoutAttributeRepo.Setup(x => x.GetById(ca1.Id)).Returns(ca1);
-            _checkoutAttributeRepo.Setup(x => x.GetById(ca2.Id)).Returns(ca2);
-            _checkoutAttributeRepo.Setup(x => x.GetById(ca3.Id)).Returns(ca3);
+            _checkoutAttributeRepo = new FakeRepository<CheckoutAttribute>(new List<CheckoutAttribute> { ca1, ca2, ca3 });
 
-            _checkoutAttributeValueRepo = new Mock<IRepository<CheckoutAttributeValue>>();
-            _checkoutAttributeValueRepo.Setup(x => x.Table).Returns(new List<CheckoutAttributeValue> { cav1_1, cav1_2, cav2_1, cav2_2 }.AsQueryable());
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav1_1.Id)).Returns(cav1_1);
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav1_2.Id)).Returns(cav1_2);
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_1.Id)).Returns(cav2_1);
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_2.Id)).Returns(cav2_2);
+            _checkoutAttributeValueRepo = new FakeRepository<CheckoutAttributeValue>(new List<CheckoutAttributeValue> { cav1_1, cav1_2, cav2_1, cav2_2 });
 
             var staticCacheManager = new TestCacheManager();
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            _checkoutAttributeService = new CheckoutAttributeService(new FakeCacheKeyService(), staticCacheManager, _eventPublisher.Object,
-                _checkoutAttributeRepo.Object, _checkoutAttributeValueRepo.Object, _storeMappingService.Object);
+            _checkoutAttributeService = new CheckoutAttributeService(staticCacheManager,
+                _checkoutAttributeRepo, _checkoutAttributeValueRepo, _storeMappingService.Object);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 

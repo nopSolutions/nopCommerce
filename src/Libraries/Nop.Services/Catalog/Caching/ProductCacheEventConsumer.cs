@@ -1,6 +1,7 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
-using Nop.Services.Orders;
 
 namespace Nop.Services.Catalog.Caching
 {
@@ -15,16 +16,10 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Product entity)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductManufacturersByProductPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-
-            Remove(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.ProductsByIdsPrefixCacheKey);
-
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
-
-            RemoveByPrefix(NopOrderDefaults.ShoppingCartPrefixCacheKey);
+            RemoveByPrefix(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);
+            Remove(NopCatalogDefaults.ProductsHomepageCacheKey);
+            RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity);
+            RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
         }
     }
 }
