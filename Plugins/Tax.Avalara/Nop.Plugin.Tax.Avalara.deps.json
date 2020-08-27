@@ -6,7 +6,7 @@
   "compilationOptions": {
     "defines": [
       "TRACE",
-      "DEBUG",
+      "RELEASE",
       "NETCOREAPP",
       "NETCOREAPP3_1"
     ],
@@ -14,7 +14,7 @@
     "platform": "",
     "allowUnsafe": false,
     "warningsAsErrors": false,
-    "optimize": false,
+    "optimize": true,
     "keyFile": "",
     "emitEntryPoint": false,
     "xmlDoc": false,
@@ -3662,6 +3662,7 @@
           "FluentMigrator.Runner": "3.2.6",
           "MySql.Data": "8.0.20",
           "Nop.Core": "4.3.0",
+          "System.Net.NameResolution": "4.3.0",
           "linq2db": "2.9.8"
         },
         "runtime": {
