@@ -13,7 +13,7 @@ namespace Nop.Web
             Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
-                    .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, false, true))
+                    .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true))
                     .UseStartup<Startup>())
                 .Build()
                 .Run();

@@ -28,6 +28,7 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
@@ -57,17 +58,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            //add configuration parameters
-            var appSettings = new AppSettings();
-            configuration.Bind(appSettings);
-            services.AddSingleton(appSettings);
-            Singleton<AppSettings>.Instance = appSettings;
+            //create default file provider
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //create default file provider
-            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
+            //add configuration parameters
+            var appSettings = new AppSettings();
+            configuration.Bind(appSettings);
+            services.AddSingleton(appSettings);
+            AppSettingsHelper.SaveAppSettings(appSettings);
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
