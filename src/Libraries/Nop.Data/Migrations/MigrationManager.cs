@@ -32,7 +32,7 @@ namespace Nop.Data.Migrations
         private readonly IMigrationRunnerConventions _migrationRunnerConventions;
         private readonly IMigrationContext _migrationContext;
         private readonly ITypeFinder _typeFinder;
-        private readonly IVersionLoader _versionLoader;
+        private readonly Lazy<IVersionLoader> _versionLoader;
 
         #endregion
 
@@ -43,9 +43,10 @@ namespace Nop.Data.Migrations
             IMigrationRunner migrationRunner,
             IMigrationRunnerConventions migrationRunnerConventions,
             IMigrationContext migrationContext,
-            ITypeFinder typeFinder,
-            IVersionLoader versionLoader)
+            ITypeFinder typeFinder)
         {
+            _versionLoader = new Lazy<IVersionLoader>(() => EngineContext.Current.Resolve<IVersionLoader>());
+            
             _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
             {
                 [typeof(int)] = c => c.AsInt32(),
@@ -62,7 +63,6 @@ namespace Nop.Data.Migrations
             _migrationRunnerConventions = migrationRunnerConventions;
             _migrationContext = migrationContext;
             _typeFinder = typeFinder;
-            _versionLoader = versionLoader;
         }
 
         #endregion
@@ -198,7 +198,7 @@ namespace Nop.Data.Migrations
             foreach (var migrationInfo in migrations)
             {
                 _migrationRunner.Down(migrationInfo.Migration);
-                _versionLoader.DeleteVersion(migrationInfo.Version);
+                _versionLoader.Value.DeleteVersion(migrationInfo.Version);
             }
         }
 
