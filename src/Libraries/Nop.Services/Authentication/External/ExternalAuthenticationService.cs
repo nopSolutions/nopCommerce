@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -307,7 +306,7 @@ namespace Nop.Services.Authentication.External
                 ProviderSystemName = parameters.ProviderSystemName
             };
 
-            _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord);
+            _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord, false);
         }
 
         /// <summary>
@@ -335,10 +334,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result</returns>
         public virtual ExternalAuthenticationRecord GetExternalAuthenticationRecordById(int externalAuthenticationRecordId)
         {
-            if (externalAuthenticationRecordId == 0)
-                return null;
-
-            return _externalAuthenticationRecordRepository.ToCachedGetById(externalAuthenticationRecordId);
+            return _externalAuthenticationRecordRepository.GetById(externalAuthenticationRecordId, cache => default);
         }
 
         /// <summary>
@@ -369,7 +365,7 @@ namespace Nop.Services.Authentication.External
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
 
             if (associationRecord != null)
-                _externalAuthenticationRecordRepository.Delete(associationRecord);
+                _externalAuthenticationRecordRepository.Delete(associationRecord, false);
         }
 
         /// <summary>
@@ -381,7 +377,7 @@ namespace Nop.Services.Authentication.External
             if (externalAuthenticationRecord == null)
                 throw new ArgumentNullException(nameof(externalAuthenticationRecord));
 
-            _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord);
+            _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord, false);
         }
 
         #endregion

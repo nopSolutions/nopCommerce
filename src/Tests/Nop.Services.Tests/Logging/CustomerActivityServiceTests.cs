@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Events;
 using Nop.Services.Logging;
 using Nop.Tests;
 using NUnit.Framework;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Logging
 {
@@ -17,8 +15,8 @@ namespace Nop.Services.Tests.Logging
     public class CustomerActivityServiceTests : ServiceTest
     {
         private Mock<IEventPublisher> _eventPublisher;
-        private Mock<IRepository<ActivityLog>> _activityLogRepository;
-        private Mock<IRepository<ActivityLogType>> _activityLogTypeRepository;
+        private FakeRepository<ActivityLog> _activityLogRepository;
+        private FakeRepository<ActivityLogType> _activityLogTypeRepository;
         private Mock<IWorkContext> _workContext;
         private ICustomerActivityService _customerActivityService;
         private ActivityLogType _activityType1, _activityType2;
@@ -75,11 +73,10 @@ namespace Nop.Services.Tests.Logging
 
             _workContext = new Mock<IWorkContext>();
             _webHelper = new Mock<IWebHelper>();
-            _activityLogRepository = new Mock<IRepository<ActivityLog>>();
-            _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
-            _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(new FakeCacheKeyService(), new Mock<IEventPublisher>().Object, _activityLogRepository.Object, _activityLogTypeRepository.Object, _webHelper.Object, _workContext.Object);
+            _activityLogRepository = new FakeRepository<ActivityLog>(new List<ActivityLog> { _activity1, _activity2 });
+            _activityLogTypeRepository = new FakeRepository<ActivityLogType>(new List<ActivityLogType> { _activityType1, _activityType2 });
+
+            _customerActivityService = new CustomerActivityService(_activityLogRepository, _activityLogTypeRepository, _webHelper.Object, _workContext.Object);
         }
 
         [Test]

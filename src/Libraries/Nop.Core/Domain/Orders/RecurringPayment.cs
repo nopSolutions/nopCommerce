@@ -1,12 +1,13 @@
 ﻿using System;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents a recurring payment
     /// </summary>
-    public partial class RecurringPayment : BaseEntity
+    public partial class RecurringPayment : BaseEntity, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the cycle length

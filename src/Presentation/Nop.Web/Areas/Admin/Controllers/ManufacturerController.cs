@@ -423,7 +423,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var manufacturers = _manufacturerService.GetManufacturersByIds(selectedIds.ToArray());
+                var manufacturers = _manufacturerService.GetManufacturersByIds(selectedIds.ToArray()).ToList();
                 _manufacturerService.DeleteManufacturers(manufacturers);
 
                 manufacturers.ForEach(manufacturer => 

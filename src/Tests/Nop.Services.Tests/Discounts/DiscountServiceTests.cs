@@ -4,15 +4,12 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Data;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Tests;
 using NUnit.Framework;
@@ -22,20 +19,17 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        private readonly Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
+
         private readonly Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
+        private FakeRepository<Discount> _discountRepo;
         private readonly Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
         private readonly Mock<ICustomerService> _customerService = new Mock<ICustomerService>();
         private readonly Mock<IProductService> _productService = new Mock<IProductService>();
-        private readonly Mock<IRepository<Category>> _categoryRepo = new Mock<IRepository<Category>>();
-        private readonly Mock<IRepository<Discount>> _discountRepo = new Mock<IRepository<Discount>>();
-        private readonly Mock<IRepository<DiscountRequirement>> _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
-        private readonly Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-        private readonly Mock<IRepository<Manufacturer>> _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
-        private readonly Mock<IRepository<Order>> _orderRepo = new Mock<IRepository<Order>>();
-        private readonly Mock<IRepository<Product>> _productRepo = new Mock<IRepository<Product>>();
+        private readonly FakeRepository<DiscountRequirement> _discountRequirementRepo = new FakeRepository<DiscountRequirement>();
+        private readonly FakeRepository<DiscountUsageHistory> _discountUsageHistoryRepo = new FakeRepository<DiscountUsageHistory>();
+        private readonly FakeRepository<Order> _orderRepo = new FakeRepository<Order>();
 
         [SetUp]
         public new void SetUp()
@@ -65,30 +59,22 @@ namespace Nop.Services.Tests.Discounts
                 LimitationTimes = 3
             };
 
-            _discountRepo.Setup(x => x.Table).Returns(new List<Discount> { discount1, discount2 }.AsQueryable());
-
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-            _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
-            _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
-            _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
+            _discountRepo = new FakeRepository<Discount>(new List<Discount> { discount1, discount2 });
 
             var staticCacheManager = new TestCacheManager();
-            _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
-
+            
             var pluginService = new FakePluginService();
 
             _discountPluginManager = new DiscountPluginManager(new Mock<ICustomerService>().Object, pluginService);
             _discountService = new DiscountService(
-                new FakeCacheKeyService(),
                 _customerService.Object,
                 _discountPluginManager,
-                _eventPublisher.Object,
                 _localizationService.Object,
                 _productService.Object,
-                _discountRepo.Object,
-                _discountRequirementRepo.Object,
-                _discountUsageHistoryRepo.Object,
-                _orderRepo.Object,
+                _discountRepo.GetRepository(),
+                _discountRequirementRepo,
+                _discountUsageHistoryRepo,
+                _orderRepo,
                 staticCacheManager,
                 _storeContext.Object);
         }
@@ -269,7 +255,7 @@ namespace Nop.Services.Tests.Discounts
 
         static DiscountExtensions()
         {
-            _discountService = new DiscountService(new FakeCacheKeyService(), null, null, null,
+            _discountService = new DiscountService(null, null,
                 null, null, null, null, null, null, null, null);
         }
 

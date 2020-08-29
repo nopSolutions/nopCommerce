@@ -13,7 +13,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -33,12 +32,12 @@ namespace Nop.Tests
             GenericAttributeService = new Mock<IGenericAttributeService>();
             WorkContext = new Mock<IWorkContext>();
 
-            DiscountCategoryMappingRepository = new Mock<IRepository<DiscountCategoryMapping>>();
-            DiscountManufacturerMappingRepository = new Mock<IRepository<DiscountManufacturerMapping>>();
-            DiscountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
+            DiscountCategoryMappingRepository = new FakeRepository<DiscountCategoryMapping>();
+            DiscountManufacturerMappingRepository = new FakeRepository<DiscountManufacturerMapping>();
+            DiscountProductMappingRepository = new FakeRepository<DiscountProductMapping>();
 
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(),
-                new Mock<ICacheKeyService>().Object, new Mock<ICategoryService>().Object,
+                new Mock<ICategoryService>().Object,
                 new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object,
                 new Mock<IDiscountService>().Object, new Mock<IManufacturerService>().Object,
                 new Mock<IProductAttributeParser>().Object, new Mock<IProductService>().Object,
@@ -70,9 +69,9 @@ namespace Nop.Tests
         public IPriceCalculationService PriceCalculationService { get; }
         public Mock<ICurrencyService> CurrencyService { get; }
 
-        public Mock<IRepository<DiscountCategoryMapping>> DiscountCategoryMappingRepository { get; }
-        public Mock<IRepository<DiscountManufacturerMapping>> DiscountManufacturerMappingRepository { get; }
-        public Mock<IRepository<DiscountProductMapping>> DiscountProductMappingRepository { get; }
+        public FakeRepository<DiscountCategoryMapping> DiscountCategoryMappingRepository { get; }
+        public FakeRepository<DiscountManufacturerMapping> DiscountManufacturerMappingRepository { get; }
+        public FakeRepository<DiscountProductMapping> DiscountProductMappingRepository { get; }
 
         public virtual object GetService(Type serviceType)
         {
@@ -107,16 +106,13 @@ namespace Nop.Tests
                 return new TestCacheManager();
 
             if (serviceType == typeof(IRepository<DiscountCategoryMapping>))
-                return DiscountCategoryMappingRepository.Object;
+                return DiscountCategoryMappingRepository;
 
             if (serviceType == typeof(IRepository<DiscountManufacturerMapping>))
-                return DiscountManufacturerMappingRepository.Object;
+                return DiscountManufacturerMappingRepository;
 
             if (serviceType == typeof(IRepository<DiscountProductMapping>))
-                return DiscountProductMappingRepository.Object;
-
-            if (serviceType == typeof(ICacheKeyService))
-                return new FakeCacheKeyService();
+                return DiscountProductMappingRepository;
 
             if (serviceType == typeof(ICustomerService))
                 return new Mock<ICustomerService>().Object;

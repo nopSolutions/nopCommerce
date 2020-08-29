@@ -14,7 +14,7 @@ namespace Nop.Services.Blogs.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(BlogComment entity)
         {
-            RemoveByPrefix(string.Format(NopBlogsDefaults.BlogCommentsNumberPrefixCacheKey, entity.BlogPostId));
+            RemoveByPrefix(NopBlogsDefaults.BlogCommentsNumberPrefix, entity.BlogPostId);
         }
     }
 }

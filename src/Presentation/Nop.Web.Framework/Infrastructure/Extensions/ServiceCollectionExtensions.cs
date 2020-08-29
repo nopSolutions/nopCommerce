@@ -59,6 +59,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //add NopConfig configuration parameters
             var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            Singleton<NopConfig>.Instance = nopConfig;
 
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
@@ -180,7 +181,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
                 {
-                    var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    //For some reason, data protection services are registered earlier. This configuration is called even before the request queue starts. 
+                    //Service provider has not yet been built and we cannot get the required service. 
+                    //So we create a new instance of RedisConnectionWrapper() bypassing the DI.
+                    var redisConnectionWrapper = new RedisConnectionWrapper(nopConfig);
                     return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
                 }, NopDataProtectionDefaults.RedisDataProtectionKey);
             }

@@ -17,7 +17,7 @@ namespace Nop.Services.Blogs
         /// {1} : store ID
         /// {2} : are only approved comments?
         /// </remarks>
-        public static CacheKey BlogCommentsNumberCacheKey => new CacheKey("Nop.blog.comments.number-{0}-{1}-{2}", BlogCommentsNumberPrefixCacheKey);
+        public static CacheKey BlogCommentsNumberCacheKey => new CacheKey("Nop.blogcomment.number.{0}-{1}-{2}", BlogCommentsNumberPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -25,7 +25,7 @@ namespace Nop.Services.Blogs
         /// <remarks>
         /// {0} : blog post ID
         /// </remarks>
-        public static string BlogCommentsNumberPrefixCacheKey => "Nop.blog.comments.number-{0}";
+        public static string BlogCommentsNumberPrefix => "Nop.blogcomment.number.{0}";
 
         /// <summary>
         /// Key for blog tag list model
@@ -35,12 +35,12 @@ namespace Nop.Services.Blogs
         /// {1} : current store ID
         /// {2} : show hidden?
         /// </remarks>
-        public static CacheKey BlogTagsModelCacheKey => new CacheKey("Nop.blog.tags-{0}-{1}-{2}", BlogTagsPrefixCacheKey);
+        public static CacheKey BlogTagsCacheKey => new CacheKey("Nop.blogpost.tags.{0}-{1}-{2}", BlogTagsPrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string BlogTagsPrefixCacheKey => "Nop.blog.tags";
+        public static string BlogTagsPrefix => "Nop.blogpost.tags.";
 
         #endregion
     }

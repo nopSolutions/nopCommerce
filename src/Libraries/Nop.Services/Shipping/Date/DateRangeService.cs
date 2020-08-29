@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Shipping.Date
 {
@@ -16,8 +12,6 @@ namespace Nop.Services.Shipping.Date
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
 
@@ -25,13 +19,9 @@ namespace Nop.Services.Shipping.Date
 
         #region Ctor
 
-        public DateRangeService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<DeliveryDate> deliveryDateRepository,
+        public DateRangeService(IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _deliveryDateRepository = deliveryDateRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
         }
@@ -49,10 +39,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Delivery date</returns>
         public virtual DeliveryDate GetDeliveryDateById(int deliveryDateId)
         {
-            if (deliveryDateId == 0)
-                return null;
-
-            return _deliveryDateRepository.ToCachedGetById(deliveryDateId);
+            return _deliveryDateRepository.GetById(deliveryDateId, cache => default);
         }
 
         /// <summary>
@@ -61,10 +48,12 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Delivery dates</returns>
         public virtual IList<DeliveryDate> GetAllDeliveryDates()
         {
-            var query = from dd in _deliveryDateRepository.Table
-                        orderby dd.DisplayOrder, dd.Id
-                        select dd;
-            var deliveryDates = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.DeliveryDatesAllCacheKey));
+            var deliveryDates = _deliveryDateRepository.GetAll(query =>
+            {
+                return from dd in query
+                    orderby dd.DisplayOrder, dd.Id
+                    select dd;
+            }, cache => default);
 
             return deliveryDates;
         }
@@ -75,13 +64,7 @@ namespace Nop.Services.Shipping.Date
         /// <param name="deliveryDate">Delivery date</param>
         public virtual void InsertDeliveryDate(DeliveryDate deliveryDate)
         {
-            if (deliveryDate == null)
-                throw new ArgumentNullException(nameof(deliveryDate));
-
             _deliveryDateRepository.Insert(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityInserted(deliveryDate);
         }
 
         /// <summary>
@@ -90,13 +73,7 @@ namespace Nop.Services.Shipping.Date
         /// <param name="deliveryDate">Delivery date</param>
         public virtual void UpdateDeliveryDate(DeliveryDate deliveryDate)
         {
-            if (deliveryDate == null)
-                throw new ArgumentNullException(nameof(deliveryDate));
-
             _deliveryDateRepository.Update(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(deliveryDate);
         }
 
         /// <summary>
@@ -105,13 +82,7 @@ namespace Nop.Services.Shipping.Date
         /// <param name="deliveryDate">The delivery date</param>
         public virtual void DeleteDeliveryDate(DeliveryDate deliveryDate)
         {
-            if (deliveryDate == null)
-                throw new ArgumentNullException(nameof(deliveryDate));
-
             _deliveryDateRepository.Delete(deliveryDate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(deliveryDate);
         }
 
         #endregion
@@ -125,7 +96,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Product availability range</returns>
         public virtual ProductAvailabilityRange GetProductAvailabilityRangeById(int productAvailabilityRangeId)
         {
-            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.ToCachedGetById(productAvailabilityRangeId) : null;
+            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.GetById(productAvailabilityRangeId, cache => default) : null;
         }
 
         /// <summary>
@@ -134,11 +105,12 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Product availability ranges</returns>
         public virtual IList<ProductAvailabilityRange> GetAllProductAvailabilityRanges()
         {
-            var query = from par in _productAvailabilityRangeRepository.Table
-                        orderby par.DisplayOrder, par.Id
-                        select par;
-
-            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.ProductAvailabilityAllCacheKey));
+            return _productAvailabilityRangeRepository.GetAll(query =>
+            {
+                return from par in query
+                    orderby par.DisplayOrder, par.Id
+                    select par;
+            }, cache => default);
         }
 
         /// <summary>
@@ -147,13 +119,7 @@ namespace Nop.Services.Shipping.Date
         /// <param name="productAvailabilityRange">Product availability range</param>
         public virtual void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
         {
-            if (productAvailabilityRange == null)
-                throw new ArgumentNullException(nameof(productAvailabilityRange));
-
             _productAvailabilityRangeRepository.Insert(productAvailabilityRange);
-
-            //event notification
-            _eventPublisher.EntityInserted(productAvailabilityRange);
         }
 
         /// <summary>
@@ -162,13 +128,7 @@ namespace Nop.Services.Shipping.Date
         /// <param name="productAvailabilityRange">Product availability range</param>
         public virtual void UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
         {
-            if (productAvailabilityRange == null)
-                throw new ArgumentNullException(nameof(productAvailabilityRange));
-
             _productAvailabilityRangeRepository.Update(productAvailabilityRange);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productAvailabilityRange);
         }
 
         /// <summary>
@@ -177,13 +137,7 @@ namespace Nop.Services.Shipping.Date
         /// <param name="productAvailabilityRange">Product availability range</param>
         public virtual void DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
         {
-            if (productAvailabilityRange == null)
-                throw new ArgumentNullException(nameof(productAvailabilityRange));
-
             _productAvailabilityRangeRepository.Delete(productAvailabilityRange);
-
-            //event notification
-            _eventPublisher.EntityDeleted(productAvailabilityRange);
         }
 
         #endregion

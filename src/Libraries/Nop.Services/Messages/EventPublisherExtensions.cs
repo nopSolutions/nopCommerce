@@ -1,6 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Messages;
-using Nop.Services.Events;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {

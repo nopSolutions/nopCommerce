@@ -208,7 +208,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
         /// <returns>Categories</returns>
-        List<Category> GetCategoriesByIds(int[] categoryIds);
+        IList<Category> GetCategoriesByIds(int[] categoryIds);
 
         /// <summary>
         /// Sort categories for tree representation

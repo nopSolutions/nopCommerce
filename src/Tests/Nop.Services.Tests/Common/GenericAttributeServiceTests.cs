@@ -1,6 +1,8 @@
 ﻿using System;
 using Moq;
+using Nop.Core.Events;
 using Nop.Services.Common;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Common
@@ -9,18 +11,17 @@ namespace Nop.Services.Tests.Common
     public class GenericAttributeServiceTests
     {
         private IGenericAttributeService _genericAttributeService;
-        private Mock<Events.IEventPublisher> _eventPublisher;
+        private Mock<IEventPublisher> _eventPublisher;
         private Mock<Data.IRepository<Core.Domain.Common.GenericAttribute>> _repository;
 
         [SetUp]
         public void SetUp()
         {
-            _eventPublisher = new Mock<Events.IEventPublisher>();
+            _eventPublisher = new Mock<IEventPublisher>();
             _repository = new Mock<Data.IRepository<Core.Domain.Common.GenericAttribute>>();
 
-            _genericAttributeService = new GenericAttributeService(
-                _eventPublisher.Object,
-                _repository.Object
+            _genericAttributeService = new GenericAttributeService(_repository.Object,
+                new TestCacheManager()
             );
         }
 
