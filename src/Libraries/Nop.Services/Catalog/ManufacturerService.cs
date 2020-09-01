@@ -128,6 +128,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(m => !m.Deleted);
                 if (overridePublished.HasValue)
                     query = query.Where(m => m.Published == overridePublished.Value);
+
                 query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
                 if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) &&
@@ -163,9 +164,7 @@ namespace Nop.Services.Catalog
                         select m;
                 }
 
-                query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
-
-                return query;
+                return query.Distinct();
             }, pageIndex, pageSize);
         }
 

@@ -143,7 +143,7 @@ namespace Nop.Services.Messages
                     where !t.LimitedToStores || storeId == sm.StoreId
                     select t;
 
-                query = query.Distinct().OrderBy(t => t.Name);
+                query = query.Distinct();
 
                 return query;
             }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));

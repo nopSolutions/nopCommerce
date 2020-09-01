@@ -132,8 +132,6 @@ namespace Nop.Services.Topics
         {
             return _topicRepository.GetAll(query =>
             {
-                query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
-
                 if (!showHidden)
                     query = query.Where(t => t.Published);
 
@@ -170,10 +168,10 @@ namespace Nop.Services.Topics
                             select c;
                     }
 
-                    query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
+                    query = query.Distinct();
                 }
 
-                return query;
+                return query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
             }, cache =>
             {
                 return ignorAcl
