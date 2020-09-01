@@ -21,18 +21,7 @@
     @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
         <div class="customer-blocks">
-            @if (Model.RegistrationType == UserRegistrationType.Disabled)
-            {
-                <div class="new-wrapper">
-                    <div class="title">
-                        @T("Account.Register")
-                    </div>
-                    <div class="text">
-                        @T("Account.Register.Result.Disabled")
-                    </div>
-                </div>
-            }
-            else if (Model.CheckoutAsGuest)
+            @if (Model.CheckoutAsGuest)
             {
                 <div class="new-wrapper checkout-as-guest-or-register-block">
                     <div class="title">
