@@ -282,7 +282,7 @@ namespace Nop.Services.Catalog
             var categories = _categoryRepository.GetAll(query =>
             {
                 return from c in query
-                       orderby c.DisplayOrder, c.Id
+                    orderby c.DisplayOrder, c.Id
                     where c.Published &&
                           !c.Deleted &&
                           c.ShowOnHomepage
@@ -547,7 +547,7 @@ namespace Nop.Services.Catalog
                             select pc;
                 }
 
-                query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+                query = query.Distinct();
             }
 
             var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);

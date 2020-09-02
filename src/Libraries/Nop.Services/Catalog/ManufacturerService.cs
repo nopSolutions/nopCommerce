@@ -336,7 +336,7 @@ namespace Nop.Services.Catalog
                         select pm;
                 }
 
-                query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                query = query.Distinct();
             }
 
             var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -415,7 +415,7 @@ namespace Nop.Services.Catalog
                         select pm;
                 }
 
-                query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                query = query.Distinct();
             }
 
             var productManufacturers = _staticCacheManager.Get(key, query.ToList);
