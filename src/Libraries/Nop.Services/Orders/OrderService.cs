@@ -218,11 +218,15 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
 
             if (vendorId > 0)
+            {
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     join p in _productRepository.Table on oi.ProductId equals p.Id
                     where p.VendorId == vendorId
                     select o;
+
+                query = query.Distinct();
+            }
 
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
