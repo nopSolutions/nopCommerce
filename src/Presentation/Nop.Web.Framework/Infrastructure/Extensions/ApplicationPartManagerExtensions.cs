@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,28 +35,22 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
         static ApplicationPartManagerExtensions()
         {
-            //we use the default file provider, since the DI isn't initialized yet
-            _fileProvider = CommonHelper.DefaultFileProvider;
-
             _baseAppLibraries = new List<string>();
 
             //get all libraries from /bin/{version}/ directory
-            _baseAppLibraries.AddRange(_fileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")
-                .Select(fileName => _fileProvider.GetFileName(fileName)));
+            _baseAppLibraries.AddRange(CommonHelper.DefaultFileProvider.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll"));
 
             //get all libraries from base site directory
             if (!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
             {
-                _baseAppLibraries.AddRange(_fileProvider.GetFiles(Environment.CurrentDirectory, "*.dll")
-                    .Select(fileName => _fileProvider.GetFileName(fileName)));
+                _baseAppLibraries.AddRange(CommonHelper.DefaultFileProvider.GetFiles(Environment.CurrentDirectory, "*.dll"));
             }
 
             //get all libraries from refs directory
-            var refsPathName = _fileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
-            if (_fileProvider.DirectoryExists(refsPathName))
+            var refsPathName = CommonHelper.DefaultFileProvider.Combine(Environment.CurrentDirectory, NopPluginDefaults.RefsPathName);
+            if (CommonHelper.DefaultFileProvider.DirectoryExists(refsPathName))
             {
-                _baseAppLibraries.AddRange(_fileProvider.GetFiles(refsPathName, "*.dll")
-                    .Select(fileName => _fileProvider.GetFileName(fileName)));
+                _baseAppLibraries.AddRange(CommonHelper.DefaultFileProvider.GetFiles(refsPathName, "*.dll"));
             }
         }
 
@@ -139,14 +134,20 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="assemblyFile">Path to the assembly file</param>
         /// <param name="useUnsafeLoadAssembly">Indicating whether to load an assembly into the load-from context, bypassing some security checks</param>
         /// <returns>Assembly</returns>
-        private static Assembly AddApplicationParts(ApplicationPartManager applicationPartManager, string assemblyFile, bool useUnsafeLoadAssembly)
+        private static Assembly AddApplicationParts(ApplicationPartManager applicationPartManager, string assemblyFile, bool useUnsafeLoadAssembly, NopPluginAssemblyContext nopPluginAssemblyContext = null)
         {
             //try to load a assembly
             Assembly assembly;
 
             try
             {
-                assembly = Assembly.LoadFrom(assemblyFile);
+                if (nopPluginAssemblyContext != null)
+                {
+                    nopPluginAssemblyContext.BasePath = Path.GetDirectoryName(assemblyFile);
+                    assembly = nopPluginAssemblyContext.LoadFromAssemblyPath(assemblyFile);
+                }
+                else
+                    assembly = Assembly.LoadFrom(assemblyFile);
             }
             catch (FileLoadException)
             {
@@ -180,7 +181,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="fileProvider">Nop file provider</param>
         /// <returns>Assembly</returns>
         private static Assembly PerformFileDeploy(this ApplicationPartManager applicationPartManager,
-            string assemblyFile, string shadowCopyDirectory, NopConfig config, INopFileProvider fileProvider)
+            string assemblyFile, string shadowCopyDirectory, NopConfig config, INopFileProvider fileProvider,
+            NopPluginAssemblyContext nopPluginAssemblyContext = null)
         {
             //ensure for proper directory structure
             if (string.IsNullOrEmpty(assemblyFile) || string.IsNullOrEmpty(fileProvider.GetParentDirectory(assemblyFile)))
@@ -191,7 +193,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //whether to copy plugins assemblies to the bin directory, if not load assembly from the original file
             if (!config.UsePluginsShadowCopy)
             {
-                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, config.UseUnsafeLoadAssembly);
+                var assembly = AddApplicationParts(applicationPartManager, assemblyFile, config.UseUnsafeLoadAssembly, nopPluginAssemblyContext);
 
                 // delete the .deps file
                 if (assemblyFile.EndsWith(".dll"))
@@ -210,7 +212,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             try
             {
                 //and load assembly from the shadow copy
-                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, config.UseUnsafeLoadAssembly);
+                shadowCopiedAssembly = AddApplicationParts(applicationPartManager, shadowCopiedFile, config.UseUnsafeLoadAssembly, nopPluginAssemblyContext);
             }
             catch (UnauthorizedAccessException)
             {
@@ -287,41 +289,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //ignore already loaded libraries
             //(we do it because not all libraries are loaded immediately after application start)
-            var fileName = _fileProvider.GetFileName(filePath);
-            if (_baseAppLibraries.Any(library => library.Equals(fileName, StringComparison.InvariantCultureIgnoreCase)))
+            var fileName = CommonHelper.DefaultFileProvider.GetFileName(filePath);
+            var fileVersion = FileVersionInfo.GetVersionInfo(filePath).FileVersion;
+
+            if (_baseAppLibraries.Any(library => CommonHelper.DefaultFileProvider.GetFileName(library).Equals(fileName, StringComparison.InvariantCultureIgnoreCase) && FileVersionInfo.GetVersionInfo(library).FileVersion.Equals(fileVersion)))
                 return true;
-
-            try
-            {
-                //get filename without extension
-                var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(filePath);
-                if (string.IsNullOrEmpty(fileNameWithoutExtension))
-                    throw new Exception($"Cannot get file extension for {fileName}");
-
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    //compare assemblies by filenames
-                    var assemblyName = assembly.FullName.Split(',').FirstOrDefault();
-                    if (!fileNameWithoutExtension.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
-                        continue;
-
-                    //loaded assembly not found
-                    if (!_loadedAssemblies.ContainsKey(assemblyName))
-                    {
-                        //add it to the list to find collisions later
-                        _loadedAssemblies.Add(assemblyName, new PluginLoadedAssemblyInfo(assemblyName, assembly.FullName));
-                    }
-
-                    //set assembly name and plugin name for further using
-                    _loadedAssemblies[assemblyName].References.Add((pluginName, AssemblyName.GetAssemblyName(filePath).FullName));
-
-                    return true;
-                }
-            }
-            catch
-            {
-                // ignored
-            }
 
             //nothing found
             return false;
@@ -529,8 +501,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             //whether plugin need to be deployed
                             if (needToDeploy)
                             {
+                                //create a seperate assembly context for each plugin
+                                var nopPluginAssemblyContext = new NopPluginAssemblyContext();
+
                                 //try to deploy main plugin assembly 
-                                pluginDescriptor.ReferencedAssembly = applicationPartManager.PerformFileDeploy(mainPluginFile, shadowCopyDirectory, config, _fileProvider);
+                                pluginDescriptor.ReferencedAssembly = applicationPartManager.PerformFileDeploy(mainPluginFile, shadowCopyDirectory, config, _fileProvider,
+                                    nopPluginAssemblyContext);
 
                                 //and then deploy all other referenced assemblies
                                 var filesToDeploy = pluginFiles.Where(file =>
@@ -538,7 +514,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                     !IsAlreadyLoaded(file, pluginName)).ToList();
                                 foreach (var file in filesToDeploy)
                                 {
-                                    applicationPartManager.PerformFileDeploy(file, shadowCopyDirectory, config, _fileProvider);
+                                    applicationPartManager.PerformFileDeploy(file, shadowCopyDirectory, config, _fileProvider, nopPluginAssemblyContext);
                                 }
 
                                 //determine a plugin type (only one plugin per assembly is allowed)
