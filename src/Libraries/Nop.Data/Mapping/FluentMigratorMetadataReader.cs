@@ -123,8 +123,8 @@ namespace Nop.Data.Mapping
 
         #region Properties
 
-        protected static ConcurrentDictionary<(Type, MemberInfo), Attribute> Types => new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
-        protected static ConcurrentDictionary<Type, CreateTableExpression> Expressions => new ConcurrentDictionary<Type, CreateTableExpression>();
+        protected static ConcurrentDictionary<(Type, MemberInfo), Attribute> Types { get; } = new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
+        protected static ConcurrentDictionary<Type, CreateTableExpression> Expressions { get; } = new ConcurrentDictionary<Type, CreateTableExpression>();
 
         #endregion
     }
