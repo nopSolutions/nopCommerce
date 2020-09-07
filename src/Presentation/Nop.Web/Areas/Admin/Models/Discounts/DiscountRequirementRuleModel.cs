@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
 
         public string ConfigurationUrl { get; set; }
 
-        public int InteractionTypeId { get; set; }
+        public string InteractionType { get; set; }
 
         public int? ParentId { get; set; }
 
