@@ -64,7 +64,7 @@ namespace Nop.Services.Vendors
         }
 
         /// <summary>
-        /// Gets a vendors by product identifiers
+        /// Gets vendors by product identifiers
         /// </summary>
         /// <param name="productIds">Array of product identifiers</param>
         /// <returns>Vendors</returns>
@@ -76,8 +76,7 @@ namespace Nop.Services.Vendors
             return (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where productIds.Contains(p.Id) && !v.Deleted && v.Active
-                    group v by p.Id into v
-                    select v.First()).ToList();
+                    select v).Distinct().ToList();
         }
 
         /// <summary>
