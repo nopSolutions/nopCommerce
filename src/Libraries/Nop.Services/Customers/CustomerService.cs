@@ -122,7 +122,7 @@ namespace Nop.Services.Customers
                 if (customerRoleIds != null && customerRoleIds.Length > 0)
                 {
                     query = query.Join(_customerCustomerRoleMappingRepository.Table, x => x.Id, y => y.CustomerId,
-                            (x, y) => new {Customer = x, Mapping = y})
+                            (x, y) => new { Customer = x, Mapping = y })
                         .Where(z => customerRoleIds.Contains(z.Mapping.CustomerRoleId))
                         .Select(z => z.Customer)
                         .Distinct();
@@ -136,7 +136,7 @@ namespace Nop.Services.Customers
                 {
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.FirstNameAttribute &&
                                     z.Attribute.Value.Contains(firstName))
@@ -147,7 +147,7 @@ namespace Nop.Services.Customers
                 {
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.LastNameAttribute &&
                                     z.Attribute.Value.Contains(lastName))
@@ -167,7 +167,7 @@ namespace Nop.Services.Customers
                     //dateOfBirthStr.Length = 5
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                                     z.Attribute.Value.Substring(5, 5) == dateOfBirthStr)
@@ -182,7 +182,7 @@ namespace Nop.Services.Customers
                     //dateOfBirthStr.Length = 2
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                                     z.Attribute.Value.Substring(8, 2) == dateOfBirthStr)
@@ -194,7 +194,7 @@ namespace Nop.Services.Customers
                     var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.DateOfBirthAttribute &&
                                     z.Attribute.Value.Contains(dateOfBirthStr))
@@ -206,7 +206,7 @@ namespace Nop.Services.Customers
                 {
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.CompanyAttribute &&
                                     z.Attribute.Value.Contains(company))
@@ -218,7 +218,7 @@ namespace Nop.Services.Customers
                 {
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.PhoneAttribute &&
                                     z.Attribute.Value.Contains(phone))
@@ -230,7 +230,7 @@ namespace Nop.Services.Customers
                 {
                     query = query
                         .Join(_gaRepository.Table, x => x.Id, y => y.EntityId,
-                            (x, y) => new {Customer = x, Attribute = y})
+                            (x, y) => new { Customer = x, Attribute = y })
                         .Where(z => z.Attribute.KeyGroup == nameof(Customer) &&
                                     z.Attribute.Key == NopCustomerDefaults.ZipPostalCodeAttribute &&
                                     z.Attribute.Value.Contains(zipPostalCode))
@@ -437,11 +437,13 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, systemName);
+
             var query = from c in _customerRepository.Table
                         orderby c.Id
                         where c.SystemName == systemName
                         select c;
-            var customer = query.FirstOrDefault();
+            var customer = _staticCacheManager.Get(key, query.FirstOrDefault);
             return customer;
         }
 
@@ -453,7 +455,7 @@ namespace Nop.Services.Customers
         {
             var backgroundTaskUser = GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
 
-            if(backgroundTaskUser is null)
+            if (backgroundTaskUser is null)
             {
                 //If for any reason the system user isn't in the database, then we add it
                 backgroundTaskUser = new Customer
@@ -468,12 +470,12 @@ namespace Nop.Services.Customers
                     LastActivityDateUtc = DateTime.UtcNow,
                     RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
-                
+
                 InsertCustomer(backgroundTaskUser);
 
                 var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
-                if(guestRole is null)
+                if (guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
                 AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
@@ -490,7 +492,7 @@ namespace Nop.Services.Customers
         {
             var searchEngineUser = GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
 
-            if(searchEngineUser is null)
+            if (searchEngineUser is null)
             {
                 //If for any reason the system user isn't in the database, then we add it
                 searchEngineUser = new Customer
@@ -505,12 +507,12 @@ namespace Nop.Services.Customers
                     LastActivityDateUtc = DateTime.UtcNow,
                     RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
-                
+
                 InsertCustomer(searchEngineUser);
 
                 var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
-                if(guestRole is null)
+                if (guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
                 AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
@@ -1029,7 +1031,7 @@ namespace Nop.Services.Customers
 
             var mapping = _customerCustomerRoleMappingRepository.Table.SingleOrDefault(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
 
-            if (mapping != null) 
+            if (mapping != null)
                 _customerCustomerRoleMappingRepository.Delete(mapping);
         }
 
@@ -1092,7 +1094,7 @@ namespace Nop.Services.Customers
 
             var query = from cr in _customerRoleRepository.Table
                         join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                        where crm.CustomerId == customer.Id && 
+                        where crm.CustomerId == customer.Id &&
                         (showHidden || cr.Active)
                         select cr.Id;
 
@@ -1366,7 +1368,7 @@ namespace Nop.Services.Customers
                 return false;
 
             var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, customer);
-            
+
             //get current password usage time
             var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
             {
