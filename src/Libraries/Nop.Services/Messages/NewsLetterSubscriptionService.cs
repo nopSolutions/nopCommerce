@@ -87,14 +87,14 @@ namespace Nop.Services.Messages
             //Persist
             _subscriptionRepository.Insert(newsLetterSubscription);
 
+            //Publish event
+            _eventPublisher.EntityInserted(newsLetterSubscription);
+
             //Publish the subscription event 
             if (newsLetterSubscription.Active)
             {
                 PublishSubscriptionEvent(newsLetterSubscription, true, publishSubscriptionEvents);
             }
-
-            //Publish event
-            _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -117,6 +117,9 @@ namespace Nop.Services.Messages
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
+            
+            //Publish event
+            _eventPublisher.EntityUpdated(newsLetterSubscription);
 
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
@@ -138,9 +141,6 @@ namespace Nop.Services.Messages
                 //If the previous entry was true, but this one is false
                 PublishSubscriptionEvent(originalSubscription, false, publishSubscriptionEvents);
             }
-
-            //Publish event
-            _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
         /// <summary>
@@ -153,12 +153,12 @@ namespace Nop.Services.Messages
             if (newsLetterSubscription == null) throw new ArgumentNullException(nameof(newsLetterSubscription));
 
             _subscriptionRepository.Delete(newsLetterSubscription);
+            
+            //event notification
+            _eventPublisher.EntityDeleted(newsLetterSubscription);
 
             //Publish the unsubscribe event 
             PublishSubscriptionEvent(newsLetterSubscription, false, publishSubscriptionEvents);
-
-            //event notification
-            _eventPublisher.EntityDeleted(newsLetterSubscription);
         }
 
         /// <summary>
