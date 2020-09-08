@@ -55,7 +55,7 @@ namespace Nop.Services.Tests.Payments
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return decimal.Zero;
+            return AdditionalHandlingFee;
         }
 
         /// <summary>
@@ -161,7 +161,6 @@ namespace Nop.Services.Tests.Payments
             return null;
         }
 
-
         #endregion
 
         #region Properties
@@ -169,22 +168,22 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture => false;
+        public bool SupportCapture => TestSupportCapture;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund => false;
+        public bool SupportPartiallyRefund => TestSupportPartiallyRefund;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund => false;
+        public bool SupportRefund => TestSupportRefund;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid => false;
+        public bool SupportVoid => TestSupportVoid;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
@@ -211,6 +210,20 @@ namespace Nop.Services.Tests.Payments
         /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
         /// </remarks>
         public string PaymentMethodDescription => string.Empty;
+
+        #endregion
+
+        #region Test data
+
+        public static bool TestSupportCapture { get; set; } = false;
+
+        public static bool TestSupportRefund { get; set; } = false;
+
+        public static bool TestSupportPartiallyRefund { get; set; } = false;
+
+        public static bool TestSupportVoid { get; set; } = false;
+
+        public static decimal AdditionalHandlingFee { get; set; } = decimal.Zero;
 
         #endregion
     }

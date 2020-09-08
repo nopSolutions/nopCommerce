@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Tests;
 using Nop.Web.Models.Boards;
 using Nop.Web.Validators.Boards;
 using NUnit.Framework;
@@ -6,30 +7,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Boards
 {
     [TestFixture]
-    public class EditForumPostValidatorTests : BaseValidatorTests
+    public class EditForumPostValidatorTests : BaseNopTest
     {
         private EditForumPostValidator _validator;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _validator = new EditForumPostValidator(_localizationService);
+            _validator = GetService<EditForumPostValidator>();
         }
         
         [Test]
-        public void Should_have_error_when_text_is_null_or_empty()
+        public void ShouldHaveErrorWhenTextIsNullOrEmpty()
         {
             var model = new EditForumPostModel
             {
                 Text = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Text, model);
-            model.Text = "";
+            model.Text = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Text, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_text_is_specified()
+        public void ShouldNotHaveErrorWhenTextIsSpecified()
         {
             var model = new EditForumPostModel
             {

@@ -7,7 +7,7 @@ namespace Nop.Core.Tests
     public class CommonHelperTests
     {
         [Test]
-        public void Can_get_typed_value()
+        public void CanGetTypedValue()
         {
             CommonHelper.To<int>("1000").Should().BeOfType(typeof(int));
             CommonHelper.To<int>("1000").Should().Be(1000);

@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Tests;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Validators.Catalog;
 using NUnit.Framework;
@@ -6,30 +7,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
 {
     [TestFixture]
-    public class ProductEmailAFriendValidatorTests : BaseValidatorTests
+    public class ProductEmailAFriendValidatorTests : BaseNopTest
     {
         private ProductEmailAFriendValidator _validator;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _validator = new ProductEmailAFriendValidator(_localizationService);
+            _validator = GetService<ProductEmailAFriendValidator>();
         }
         
         [Test]
-        public void Should_have_error_when_friendEmail_is_null_or_empty()
+        public void ShouldHaveErrorWhenFriendEmailIsNullOrEmpty()
         {
             var model = new ProductEmailAFriendModel
             {
                 FriendEmail = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
-            model.FriendEmail = "";
+            model.FriendEmail = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
         }
 
         [Test]
-        public void Should_have_error_when_friendEmail_is_wrong_format()
+        public void ShouldHaveErrorWhenFriendEmailIsWrongFormat()
         {
             var model = new ProductEmailAFriendModel
             {
@@ -39,7 +40,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
         }
 
         [Test]
-        public void Should_not_have_error_when_friendEmail_is_correct_format()
+        public void PublicVoidShouldNotHaveErrorWhenFriendEmailIsCorrectFormat()
         {
             var model = new ProductEmailAFriendModel
             {
@@ -49,19 +50,19 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
         }
 
         [Test]
-        public void Should_have_error_when_yourEmailAddress_is_null_or_empty()
+        public void ShouldHaveErrorWhenYourEmailAddressIsNullOrEmpty()
         {
             var model = new ProductEmailAFriendModel
             {
                 YourEmailAddress = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
-            model.YourEmailAddress = "";
+            model.YourEmailAddress = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
         }
 
         [Test]
-        public void Should_have_error_when_yourEmailAddress_is_wrong_format()
+        public void ShouldHaveErrorWhenYourEmailAddressIsWrongFormat()
         {
             var model = new ProductEmailAFriendModel
             {
@@ -71,7 +72,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
         }
 
         [Test]
-        public void Should_not_have_error_when_yourEmailAddress_is_correct_format()
+        public void ShouldNotHaveErrorWhenYourEmailAddressIsCorrectFormat()
         {
             var model = new ProductEmailAFriendModel
             {

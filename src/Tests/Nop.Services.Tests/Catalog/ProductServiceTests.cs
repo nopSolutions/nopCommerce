@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
-using Moq;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Localization;
-using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Catalog
@@ -19,155 +12,49 @@ namespace Nop.Services.Tests.Catalog
         #region Fields
 
         private IProductService _productService;
-        private Mock<IRepository<Product>> _productRepository;
-        private Mock<IRepository<ProductWarehouseInventory>> _productWarehouseInventoryRepository;
-
-        private Product _productNotUseMultipleWarehouses = new Product
-        {
-            Id = 1,
-            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            UseMultipleWarehouses = false,
-            StockQuantity = 6,
-        };
-
-        private Product _productUseMultipleWarehousesWithReserved = new Product
-        {
-            Id = 2,
-            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            UseMultipleWarehouses = true,
-            StockQuantity = 6,
-        };
-
-        private Product _productUseMultipleWarehousesWithoutReserved = new Product
-        {
-            Id = 3,
-            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            UseMultipleWarehouses = true,
-            StockQuantity = 6,
-        };
-
-        private Product _productUseMultipleWarehousesWithWarehouseSpecified = new Product
-        {
-            Id = 4,
-            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            UseMultipleWarehouses = true,
-            StockQuantity = 6,
-        };
-
+        
         #endregion
 
         #region SetUp
 
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
-            _productRepository = new Mock<IRepository<Product>>();
-            _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
+            _productService = GetService<IProductService>();
 
-            _productWarehouseInventoryRepository = new Mock<IRepository<ProductWarehouseInventory>>();
-            _productWarehouseInventoryRepository.Setup(x => x.Table).Returns(GetMockProductWarehouseInventoryRecords);
+            var product = _productService.GetProductById(1);
+            product.ManageInventoryMethod = ManageInventoryMethod.ManageStock;
+            product.UseMultipleWarehouses = true;
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(),  null,
-                null, null, null, null, null, null, null, null, null, null, _productRepository.Object, null, null, null, null, null, null, _productWarehouseInventoryRepository.Object, null, null, null, null, null, null,
-                null, null, null, null, new LocalizationSettings());
+            _productService.UpdateProduct(product);
+
+            _productService.InsertProductWarehouseInventory(new ProductWarehouseInventory
+            {
+                ProductId = product.Id,
+                WarehouseId = 1,
+                StockQuantity = 8,
+                ReservedQuantity = 5
+            });
+
+            _productService.InsertProductWarehouseInventory(new ProductWarehouseInventory
+            {
+                ProductId = product.Id,
+                WarehouseId = 2,
+                StockQuantity = 5
+            });
         }
 
-        #endregion
-
-        #region Utilities
-
-        private IQueryable<Product> GetMockProducts()
+        [TearDown]
+        public void TearDown()
         {
-            return new List<Product>
-            {
-                _productNotUseMultipleWarehouses,
-                _productUseMultipleWarehousesWithReserved,
-                _productUseMultipleWarehousesWithoutReserved,
-                _productUseMultipleWarehousesWithWarehouseSpecified
-            }.AsQueryable();
-        }
+            var product = _productService.GetProductById(1);
+            foreach (var productWarehouseInventory in _productService.GetAllProductWarehouseInventoryRecords(1)) 
+                _productService.DeleteProductWarehouseInventory(productWarehouseInventory);
 
-        private IQueryable<ProductWarehouseInventory> GetMockProductWarehouseInventoryRecords()
-        {
-            return new List<ProductWarehouseInventory>
-            {
-                new ProductWarehouseInventory
-                {
-                    ProductId = 1,
-                    WarehouseId = 1,
-                    StockQuantity = 7,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 1,
-                    WarehouseId = 2,
-                    StockQuantity = 8,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 1,
-                    WarehouseId = 3,
-                    StockQuantity = -2,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 2,
-                    WarehouseId = 1,
-                    StockQuantity = 7,
-                    ReservedQuantity = 4,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 2,
-                    WarehouseId = 2,
-                    StockQuantity = 8,
-                    ReservedQuantity = 1,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 2,
-                    WarehouseId = 3,
-                    StockQuantity = -2,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 3,
-                    WarehouseId = 1,
-                    StockQuantity = 7,
-                    ReservedQuantity = 4,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 3,
-                    WarehouseId = 2,
-                    StockQuantity = 8,
-                    ReservedQuantity = 1,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 3,
-                    WarehouseId = 3,
-                    StockQuantity = -2,
-                },
-                new ProductWarehouseInventory
-                {
-                    ProductId = 4,
-                    WarehouseId = 1,
-                    StockQuantity = 7,
-                    ReservedQuantity = 4,
-                },
-                new ProductWarehouseInventory
-                {
-                    WarehouseId = 2,
-                    StockQuantity = 8,
-                    ReservedQuantity = 1,
-                },
-                new ProductWarehouseInventory
-                {
-                    WarehouseId = 3,
-                    StockQuantity = -2,
-                }
-            }.AsQueryable();
+            product.ManageInventoryMethod = ManageInventoryMethod.DontManageStock;
+            product.UseMultipleWarehouses = false;
+
+            _productService.UpdateProduct(product);
         }
 
         #endregion
@@ -175,7 +62,7 @@ namespace Nop.Services.Tests.Catalog
         #region Tests
 
         [Test]
-        public void Can_parse_required_product_ids()
+        public void CanParseRequiredProductIds()
         {
             var product = new Product
             {
@@ -190,7 +77,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_be_available_when_startdate_is_not_set()
+        public void ShouldBeAvailableWhenStartDateIsNotSet()
         {
             var product = new Product
             {
@@ -201,7 +88,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_be_available_when_startdate_is_less_than_somedate()
+        public void ShouldBeAvailableWhenStartDateIsLessThanSomeDate()
         {
             var product = new Product
             {
@@ -212,7 +99,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_not_be_available_when_startdate_is_greater_than_somedate()
+        public void ShouldNotBeAvailableWhenStartDateIsGreaterThanSomeDate()
         {
             var product = new Product
             {
@@ -223,7 +110,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_be_available_when_enddate_is_not_set()
+        public void ShouldBeAvailableWhenEndDateIsNotSet()
         {
             var product = new Product
             {
@@ -234,7 +121,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_be_available_when_enddate_is_greater_than_somedate()
+        public void ShouldBeAvailableWhenEndDateIsGreaterThanSomeDate()
         {
             var product = new Product
             {
@@ -245,7 +132,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_not_be_available_when_enddate_is_less_than_somedate()
+        public void ShouldNotBeAvailableWhenEndDateIsLessThanSomeDate()
         {
             var product = new Product
             {
@@ -256,7 +143,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_be_available_when_current_date_is_in_range()
+        public void ShouldBeAvailableWhenCurrentDateIsInRange()
         {
             var product = new Product
             {
@@ -268,7 +155,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Should_not_be_available_when_current_date_is_not_in_range()
+        public void ShouldNotBeAvailableWhenCurrentDateIsNotInRange()
         {
             var product = new Product
             {
@@ -280,7 +167,7 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_parse_allowed_quantities()
+        public void CanParseAllowedQuantities()
         {
             var product = new Product
             {
@@ -296,44 +183,44 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_calculate_total_quantity_when_we_do_not_use_multiple_warehouses()
+        public void CanCalculateTotalQuantityWhenWeDoNotUseMultipleWarehouses()
         {
-            var result = _productService.GetTotalStockQuantity(_productNotUseMultipleWarehouses, true);
+            var result = _productService.GetTotalStockQuantity(new Product { StockQuantity = 6, ManageInventoryMethod = ManageInventoryMethod.ManageStock });
             result.Should().Be(6);
         }
 
         [Test]
-        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_reserved()
+        public void PublicVoidCanCalculateTotalQuantityWhenWeDoUseMultipleWarehousesWithReserved()
         {
-            var result = _productService.GetTotalStockQuantity(_productUseMultipleWarehousesWithReserved, true);
+            var result = _productService.GetTotalStockQuantity(_productService.GetProductById(1));
             result.Should().Be(8);
         }
 
         [Test]
-        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_without_reserved()
+        public void CanCalculateTotalQuantityWhenWeDoUseMultipleWarehousesWithoutReserved()
         {
-            var result = _productService.GetTotalStockQuantity(_productUseMultipleWarehousesWithoutReserved, false);
+            var result = _productService.GetTotalStockQuantity(_productService.GetProductById(1), false);
             result.Should().Be(13);
         }
 
         [Test]
-        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_warehouse_specified()
+        public void CanCalculateTotalQuantityWhenWeDoUseMultipleWarehousesWithWarehouseSpecified()
         {
-            var result = _productService.GetTotalStockQuantity(_productUseMultipleWarehousesWithWarehouseSpecified, true, 1);
+            var result = _productService.GetTotalStockQuantity(_productService.GetProductById(1), true, 1);
             result.Should().Be(3);
         }
 
         [Test]
-        public void Can_calculate_rental_periods_for_days()
+        public void CanCalculateRentalPeriodsForDays()
         {
             var product = new Product
             {
                 IsRental = true,
-                RentalPricePeriod = RentalPricePeriod.Days
+                RentalPricePeriod = RentalPricePeriod.Days,
+                //rental period length = 1 day
+                RentalPriceLength = 1
             };
 
-            //rental period length = 1 day
-            product.RentalPriceLength = 1;
             //the same date
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).Should().Be(1);
             //1 day
@@ -356,16 +243,16 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_calculate_rental_periods_for_weeks()
+        public void CanCalculateRentalPeriodsForWeeks()
         {
             var product = new Product
             {
                 IsRental = true,
-                RentalPricePeriod = RentalPricePeriod.Weeks
+                RentalPricePeriod = RentalPricePeriod.Weeks,
+                //rental period length = 1 week
+                RentalPriceLength = 1
             };
 
-            //rental period length = 1 week
-            product.RentalPriceLength = 1;
             //the same date
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).Should().Be(1);
             //several days but less than a week
@@ -396,16 +283,16 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_calculate_rental_periods_for_months()
+        public void CanCalculateRentalPeriodsForMonths()
         {
             var product = new Product
             {
                 IsRental = true,
-                RentalPricePeriod = RentalPricePeriod.Months
+                RentalPricePeriod = RentalPricePeriod.Months,
+                //rental period length = 1 month
+                RentalPriceLength = 1
             };
 
-            //rental period length = 1 month
-            product.RentalPriceLength = 1;
             //the same date
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).Should().Be(1);
             //several days but less than a month
@@ -450,16 +337,16 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_calculate_rental_periods_for_years()
+        public void CanCalculateRentalPeriodsForYears()
         {
             var product = new Product
             {
                 IsRental = true,
-                RentalPricePeriod = RentalPricePeriod.Years
+                RentalPricePeriod = RentalPricePeriod.Years,
+                //rental period length = 1 years
+                RentalPriceLength = 1
             };
 
-            //rental period length = 1 years
-            product.RentalPriceLength = 1;
             //the same date
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).Should().Be(1);
             //several days but less than a year

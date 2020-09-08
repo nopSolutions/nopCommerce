@@ -1,9 +1,7 @@
-﻿using Moq;
-using Nop.Data;
-using Nop.Core.Domain.Customers;
+﻿using System;
+using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using NUnit.Framework;
@@ -13,22 +11,12 @@ namespace Nop.Services.Tests.Messages
     [TestFixture]
     public class NewsLetterSubscriptionServiceTests : ServiceTest
     {
-        private Mock<IEventPublisher> _eventPublisher;
-        private Mock<INopDataProvider> _dataProvider;
-        private Mock<IRepository<NewsLetterSubscription>> _newsLetterSubscriptionRepository;
-        private Mock<IRepository<Customer>> _customerRepository;
-        private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
-        private Mock<ICustomerService> _customerService;
+        private INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
-            _dataProvider=new Mock<INopDataProvider>();
-            _eventPublisher = new Mock<IEventPublisher>();
-            _newsLetterSubscriptionRepository = new Mock<IRepository<NewsLetterSubscription>>();
-            _customerRepository = new Mock<IRepository<Customer>>();
-            _customerCustomerRoleMappingRepository = new Mock<IRepository<CustomerCustomerRoleMapping>>();
-            _customerService = new Mock<ICustomerService>();
+            _newsLetterSubscriptionService = GetService<INewsLetterSubscriptionService>();
         }
 
         /// <summary>
@@ -37,13 +25,14 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyActiveInsertTriggersSubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
-                _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
-
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
-            service.InsertNewsLetterSubscription(subscription);
+            _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
 
-            _eventPublisher.Verify(x => x.Publish(new EmailSubscribedEvent(subscription)));
+            var eventType = NewsLetterSubscriptionConsumer.LastEventType;
+
+            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
+
+            eventType.Should().Be(typeof(EmailSubscribedEvent));
         }
 
         /// <summary>
@@ -52,13 +41,11 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyDeleteTriggersUnsubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
-                _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
-
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
-            service.DeleteNewsLetterSubscription(subscription);
+            _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
+            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            _eventPublisher.Verify(x => x.Publish(new EmailUnsubscribedEvent(subscription)));
+            NewsLetterSubscriptionConsumer.LastEventType.Should().Be(typeof(EmailUnsubscribedEvent));
         }
         
         /// <summary>
@@ -67,14 +54,35 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyInsertEventIsFired()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
-                _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
+            var subscription = new NewsLetterSubscription { Email = "test@test.com" };
 
-            var subscription = new NewsLetterSubscription {Email = "test@test.com"};
+            _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
 
-            service.InsertNewsLetterSubscription(subscription);
+            var eventType = NewsLetterSubscriptionConsumer.LastEventType;
 
-            _eventPublisher.Verify(x => x.Publish(It.IsAny<EntityInsertedEvent<NewsLetterSubscription>>()));
+            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
+
+            eventType.Should().Be(typeof(EntityInsertedEvent<NewsLetterSubscription>));
+        }
+
+        public class NewsLetterSubscriptionConsumer : IConsumer<EmailSubscribedEvent>, IConsumer<EmailUnsubscribedEvent>, IConsumer<EntityInsertedEvent<NewsLetterSubscription>>
+        {
+            public static Type LastEventType { get; set; }
+
+            public void HandleEvent(EmailSubscribedEvent eventMessage)
+            {
+                LastEventType = typeof(EmailSubscribedEvent);
+            }
+
+            public void HandleEvent(EmailUnsubscribedEvent eventMessage)
+            {
+                LastEventType = typeof(EmailUnsubscribedEvent);
+            }
+
+            public void HandleEvent(EntityInsertedEvent<NewsLetterSubscription> eventMessage)
+            {
+                LastEventType = typeof(EntityInsertedEvent<NewsLetterSubscription>);
+            }
         }
     }
 }

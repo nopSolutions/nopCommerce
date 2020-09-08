@@ -1,11 +1,6 @@
 ﻿﻿using FluentAssertions;
 using Nop.Core.Domain.Orders;
-﻿using System.Collections.Generic;
-using System.Linq;
-using Moq;
-using Nop.Data;
-using Nop.Services.Events;
-using Nop.Services.Orders;
+ using Nop.Services.Orders;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Orders
@@ -13,133 +8,72 @@ namespace Nop.Services.Tests.Orders
     [TestFixture]
     public class GiftCardServiceTests : ServiceTest
     {
-        private Mock<IRepository<GiftCard>> _giftCardRepository;
-        private Mock<IRepository<GiftCardUsageHistory>> _giftCardUsageHistoryRepository;
-        private Mock<IRepository<OrderItem>> _orderItemRepository;
-        private Mock<IEventPublisher> _eventPublisher;
         private IGiftCardService _giftCardService;
+        private GiftCard _giftCard1;
+        private GiftCard _giftCard2;
 
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
-            _eventPublisher = new Mock<IEventPublisher>();
+            _giftCardService = GetService<IGiftCardService>();
 
-            _giftCardRepository = new Mock<IRepository<GiftCard>>();
+            _giftCard1 = new GiftCard {Amount = 100, IsGiftCardActivated = true};
+            _giftCard2 = new GiftCard { Amount = 100 };
 
-            var giftCardStore = new List<GiftCard>();
+            _giftCardService.InsertGiftCard(_giftCard1);
+            _giftCardService.InsertGiftCard(_giftCard2);
+        }
 
-            _giftCardRepository.Setup(r => r.Insert(It.IsAny<GiftCard>())).Callback((GiftCard gc) => giftCardStore.Add(gc));
-            _giftCardRepository.Setup(r => r.Table).Returns(giftCardStore.AsQueryable());
-
-            _giftCardRepository.Setup(r => r.GetById(It.IsAny<int>())).Returns((int id) => _giftCardRepository.Object.Table.FirstOrDefault(x => x.Id == id));
-
-            _giftCardRepository.Object.Insert(
-                new GiftCard
-                {
-                    Id = 1,
-                    Amount = 100,
-                    IsGiftCardActivated = true
-                });
-
-            _giftCardRepository.Object.Insert(
-                new GiftCard
-                {
-                    Id = 2,
-                    Amount = 100
-                });
-
-            _giftCardUsageHistoryRepository = new Mock<IRepository<GiftCardUsageHistory>>();
-
-            var giftCardUsageHistoryStore = new List<GiftCardUsageHistory>();
-
-            _giftCardUsageHistoryRepository.Setup(r => r.Insert(It.IsAny<GiftCardUsageHistory>())).Callback((GiftCardUsageHistory gcuh) => giftCardUsageHistoryStore.Add(gcuh));
-            _giftCardUsageHistoryRepository.Setup(r => r.Table).Returns(giftCardUsageHistoryStore.AsQueryable());
-
-            _orderItemRepository = new Mock<IRepository<OrderItem>>();
-
-            _giftCardService = new GiftCardService(null, _eventPublisher.Object, _giftCardRepository.Object, _giftCardUsageHistoryRepository.Object, _orderItemRepository.Object);
+        [TearDown]
+        public void TearDown()
+        {
+            _giftCardService.DeleteGiftCard(_giftCard1);
+            _giftCardService.DeleteGiftCard(_giftCard2);
         }
 
         [Test]
-        public void Can_validate_giftCard()
+        public void CanValidateGiftCard()
         {
-            RunWithTestServiceProvider(()=>{
-            var gc = _giftCardService.GetGiftCardById(1);
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 30});
 
             _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 30
-                });
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 20});
 
             _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 20
-                });
-
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 5
-                });
-
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 5});
 
             //valid
-            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeTrue();
 
             //mark as not active
-            gc.IsGiftCardActivated = false;
-            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
+            _giftCard1.IsGiftCardActivated = false;
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeFalse();
 
             //again active
-            gc.IsGiftCardActivated = true;
-            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
+            _giftCard1.IsGiftCardActivated = true;
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeTrue();
 
             //add usage history record
             _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 1000
-                });
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 1000});
 
-            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
-            });
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeFalse();
         }
 
         [Test]
-        public void Can_calculate_giftCard_remainingAmount()
+        public void CanCalculateGiftCardRemainingAmount()
         {
-            RunWithTestServiceProvider(()=>{
-            var gc = _giftCardService.GetGiftCardById(2);
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 30});
 
             _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 30
-                });
+                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 20});
 
             _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 20
-                });
+                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 5});
 
-            _giftCardService.InsertGiftCardUsageHistory(
-                new GiftCardUsageHistory
-                {
-                    GiftCardId = gc.Id,
-                    UsedValue = 5
-                });
-
-            _giftCardService.GetGiftCardRemainingAmount(gc).Should().Be(45);
-            });
+            _giftCardService.GetGiftCardRemainingAmount(_giftCard2).Should().Be(45);
         }
     }
 }
