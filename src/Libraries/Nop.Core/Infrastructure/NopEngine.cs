@@ -24,16 +24,7 @@ namespace Nop.Core.Infrastructure
         private ITypeFinder _typeFinder;
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        private IServiceProvider _serviceProvider { get; set; }
-
-        #endregion
-
+        
         #region Utilities
 
         /// <summary>
@@ -180,7 +171,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
-            _serviceProvider = application.ApplicationServices;
+            ServiceProvider = application.ApplicationServices;
 
             //find startup configurations provided by other assemblies
             var typeFinder = Resolve<ITypeFinder>();
@@ -269,7 +260,11 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Service provider
         /// </summary>
-        public virtual IServiceProvider ServiceProvider => _serviceProvider;
+        public virtual IServiceProvider ServiceProvider
+        {
+            get;
+            protected set;
+        }
 
         #endregion
     }
