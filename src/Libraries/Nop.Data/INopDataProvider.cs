@@ -145,9 +145,9 @@ namespace Nop.Data
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        void SetTableIdent<T>(int ident) where T : BaseEntity;
+        void SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity;
 
         /// <summary>
         /// Returns mapped entity descriptor
