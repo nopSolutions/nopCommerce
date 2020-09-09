@@ -133,8 +133,8 @@ namespace Nop.Web.Framework.Security.Captcha
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var twoLetterIsoCode = workContext.WorkingLanguage != null
-                    ? languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage).ToLower()
+                var twoLetterIsoCode = workContext.GetWorkingLanguage().Result != null
+                    ? languageService.GetTwoLetterIsoLanguageName(workContext.GetWorkingLanguage().Result).ToLower()
                     : string.Empty;
 
                 language = supportedLanguageCodes.Contains(twoLetterIsoCode) ? twoLetterIsoCode : language;

@@ -68,21 +68,21 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// Set the affiliate identifier of current customer
             /// </summary>
             /// <param name="affiliate">Affiliate</param>
-            protected void SetCustomerAffiliateId(Affiliate affiliate)
+            protected virtual void SetCustomerAffiliateId(Affiliate affiliate)
             {
                 if (affiliate == null || affiliate.Deleted || !affiliate.Active)
                     return;
 
-                if (affiliate.Id == _workContext.CurrentCustomer.AffiliateId)
+                if (affiliate.Id == _workContext.GetCurrentCustomer().Result.AffiliateId)
                     return;
 
                 //ignore search engines
-                if (_workContext.CurrentCustomer.IsSearchEngineAccount())
+                if (_workContext.GetCurrentCustomer().Result.IsSearchEngineAccount())
                     return;
 
                 //update affiliate identifier
-                _workContext.CurrentCustomer.AffiliateId = affiliate.Id;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                _workContext.GetCurrentCustomer().Result.AffiliateId = affiliate.Id;
+                _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result).Wait();
             }
 
             #endregion
@@ -109,9 +109,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //try to find by ID
                 var affiliateIds = request.Query[AFFILIATE_ID_QUERY_PARAMETER_NAME];
                 if (affiliateIds.Any() && int.TryParse(affiliateIds.FirstOrDefault(), out int affiliateId)
-                    && affiliateId > 0 && affiliateId != _workContext.CurrentCustomer.AffiliateId)
+                    && affiliateId > 0 && affiliateId != _workContext.GetCurrentCustomer().Result.AffiliateId)
                 {
-                    SetCustomerAffiliateId(_affiliateService.GetAffiliateById(affiliateId));
+                    SetCustomerAffiliateId(_affiliateService.GetAffiliateById(affiliateId).Result);
                     return;
                 }
 
@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     var affiliateName = affiliateNames.FirstOrDefault();
                     if (!string.IsNullOrEmpty(affiliateName))
-                        SetCustomerAffiliateId(_affiliateService.GetAffiliateByFriendlyUrlName(affiliateName));
+                        SetCustomerAffiliateId(_affiliateService.GetAffiliateByFriendlyUrlName(affiliateName).Result);
                 }
             }
 

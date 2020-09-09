@@ -87,7 +87,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
-                var currentCustomer = _workContext.CurrentCustomer;
+                var currentCustomer = _workContext.GetCurrentCustomer().Result;
 
                 //ignore search engines
                 if (currentCustomer.IsSearchEngineAccount())
@@ -100,7 +100,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //get validated discounts with passed coupon codes
                 var discounts = couponCodes
-                    .SelectMany(couponCode => _discountService.GetAllDiscounts(couponCode: couponCode))
+                    .SelectMany(couponCode => _discountService.GetAllDiscounts(couponCode: couponCode).Result)
                     .Distinct()
                     .ToList();
 
@@ -108,7 +108,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 foreach (var discount in discounts)
                 {
-                    if (!_discountService.ValidateDiscount(discount, currentCustomer, couponCodes.ToArray()).IsValid)
+                    if (!_discountService.ValidateDiscount(discount, currentCustomer, couponCodes.ToArray()).Result.IsValid)
                         continue;
                     
                     //apply discount coupon codes to customer
@@ -120,7 +120,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 foreach (var validCouponCode in validCouponCodes.Distinct())
                 {
                     _notificationService.SuccessNotification(
-                        string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Activated"),
+                        string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Activated").Result,
                             validCouponCode));
                 }
 
@@ -129,7 +129,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     validCouponCodes.Distinct()))
                 {
                     _notificationService.WarningNotification(
-                        string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Invalid"),
+                        string.Format(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Invalid").Result,
                             invalidCouponCode));
                 }
 

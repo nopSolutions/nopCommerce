@@ -104,7 +104,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
                     return;
                 //ignore AJAX requests
-                if (_webHelper.IsAjaxRequest(filterContext.HttpContext.Request))
+                if (_webHelper.IsAjaxRequest(filterContext.HttpContext.Request).Result)
                     return;
 
                 if (!DataSettingsManager.DatabaseIsInstalled)

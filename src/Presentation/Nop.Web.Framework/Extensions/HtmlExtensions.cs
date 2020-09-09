@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,7 +35,7 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="ignoreIfSeveralStores">A value indicating whether to ignore localization if we have multiple stores</param>
         /// <param name="cssClass">CSS class for localizedTemplate</param>
         /// <returns></returns>
-        public static IHtmlContent LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
+        public static async Task<IHtmlContent> LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
             Func<T, HelperResult> standardTemplate,
@@ -46,7 +47,7 @@ namespace Nop.Web.Framework.Extensions
             if (ignoreIfSeveralStores)
             {
                 var storeService = EngineContext.Current.Resolve<IStoreService>();
-                if (storeService.GetAllStores().Count >= 2)
+                if ((await storeService.GetAllStores()).Count >= 2)
                 {
                     localizationSupported = false;
                 }
@@ -71,7 +72,7 @@ namespace Nop.Web.Framework.Extensions
                 //default tab
                 var standardTabName = $"{name}-standard-tab";
                 var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
-                tabStrip.AppendLine(string.Format("<li{0}>", standardTabSelected ? " class=\"active\"" : null));
+                tabStrip.AppendLine($"<li{(standardTabSelected ? " class=\"active\"" : null)}>");
                 tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
 
@@ -81,12 +82,12 @@ namespace Nop.Web.Framework.Extensions
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
-                    var language = languageService.GetLanguageById(locale.LanguageId);
+                    var language = await languageService.GetLanguageById(locale.LanguageId);
                     if (language == null)
                         throw new Exception("Language cannot be loaded");
 
                     var localizedTabName = $"{name}-{language.Id}-tab";
-                    tabStrip.AppendLine(string.Format("<li{0}>", localizedTabName == tabNameToSelect ? " class=\"active\"" : null));
+                    tabStrip.AppendLine($"<li{(localizedTabName == tabNameToSelect ? " class=\"active\"" : null)}>");
                     var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
                     tabStrip.AppendLine($"<a data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"tab\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
@@ -103,7 +104,7 @@ namespace Nop.Web.Framework.Extensions
                 for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                 {
                     //languages
-                    var language = languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
+                    var language = await languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
                     if (language == null)
                         throw new Exception("Language cannot be loaded");
 

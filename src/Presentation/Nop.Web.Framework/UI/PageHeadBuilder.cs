@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -122,7 +123,7 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls).Result;
 
             return hash;
         }
@@ -390,7 +391,7 @@ namespace Nop.Web.Framework.UI
                     {
                         CacheTime = _cachingSettings.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => true);
+                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
 
                     if (shouldRebuild)
                     {
@@ -619,7 +620,7 @@ namespace Nop.Web.Framework.UI
                     {
                         CacheTime = _cachingSettings.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => true);
+                    var shouldRebuild = _staticCacheManager.Get(_cacheKeyService.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
 
                     if (shouldRebuild)
                     {

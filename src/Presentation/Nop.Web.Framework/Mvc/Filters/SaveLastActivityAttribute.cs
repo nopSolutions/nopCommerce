@@ -75,10 +75,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //update last activity date
-                if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
+                if (_workContext.GetCurrentCustomer().Result.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
                 {
-                    _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    _workContext.GetCurrentCustomer().Result.LastActivityDateUtc = DateTime.UtcNow;
+                    _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result);
                 }
             }
 

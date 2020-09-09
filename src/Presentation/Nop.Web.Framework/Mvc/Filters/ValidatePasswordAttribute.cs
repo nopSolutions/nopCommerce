@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     //check password expiration
-                    if (_customerService.PasswordIsExpired(_workContext.CurrentCustomer))
+                    if (_customerService.PasswordIsExpired(_workContext.GetCurrentCustomer().Result).Result)
                     {
                         //redirect to ChangePassword page if expires
                         var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("CustomerChangePassword");

@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //whether current IP is allowed
-                var currentIp = _webHelper.GetCurrentIpAddress();
+                var currentIp = _webHelper.GetCurrentIpAddress().Result;
                 if (ipAddresses.Any(ip => ip.Equals(currentIp, StringComparison.InvariantCultureIgnoreCase)))
                     return;
 

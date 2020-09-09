@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         if (DataSettingsManager.DatabaseIsInstalled)
                         {
                             //get current customer
-                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomer().Result;
 
                             //log error
                             EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
@@ -153,7 +153,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
                 {
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    if (!webHelper.IsStaticResource())
+                    if (!await webHelper.IsStaticResource())
                     {
                         //get original path and query
                         var originalPath = context.HttpContext.Request.Path;
@@ -168,8 +168,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                 var logger = EngineContext.Current.Resolve<ILogger>();
                                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
 
-                                logger.Error($"Error 404. The requested page ({originalPath}) was not found",
-                                    customer: workContext.CurrentCustomer);
+                                await logger.Error($"Error 404. The requested page ({originalPath}) was not found",
+                                    customer: workContext.GetCurrentCustomer().Result);
                             }
                         }
 
@@ -206,7 +206,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
+                    logger.Error("Error 400. Bad request", null, customer: workContext.GetCurrentCustomer().Result);
                 }
 
                 return Task.CompletedTask;
@@ -360,7 +360,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     return;
 
                 //prepare supported cultures
-                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages().Result
                     .OrderBy(language => language.DisplayOrder)
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;

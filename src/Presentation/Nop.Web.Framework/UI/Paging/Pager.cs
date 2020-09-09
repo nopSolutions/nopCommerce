@@ -327,7 +327,7 @@ namespace Nop.Web.Framework.UI.Paging
             if (showTotalSummary && (model.TotalPages > 0))
             {
                 links.Append("<li class=\"total-summary\">");
-                links.Append(string.Format(localizationService.GetResource("Pager.CurrentPage"), model.PageIndex + 1, model.TotalPages, model.TotalItems));
+                links.Append(string.Format(localizationService.GetResource("Pager.CurrentPage").Result, model.PageIndex + 1, model.TotalPages, model.TotalItems));
                 links.Append("</li>");
             }
             if (showPagerItems && (model.TotalPages > 1))
@@ -337,7 +337,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //first page
                     if ((model.PageIndex >= 3) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), firstPageCssClass));
+                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First").Result, firstPageCssClass));
                     }
                 }
                 if (showPrevious)
@@ -345,7 +345,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //previous page
                     if (model.PageIndex > 0)
                     {
-                        links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous"), previousPageCssClass));
+                        links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous").Result, previousPageCssClass));
                     }
                 }
                 if (showIndividualPages)
@@ -370,7 +370,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //next page
                     if ((model.PageIndex + 1) < model.TotalPages)
                     {
-                        links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next"), nextPageCssClass));
+                        links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next").Result, nextPageCssClass));
                     }
                 }
                 if (showLast)
@@ -378,7 +378,7 @@ namespace Nop.Web.Framework.UI.Paging
                     //last page
                     if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last"), lastPageCssClass));
+                        links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last").Result, lastPageCssClass));
                     }
                 }
             }
@@ -508,16 +508,16 @@ namespace Nop.Web.Framework.UI.Paging
             }
 
 		    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-		    var url = webHelper.GetThisPageUrl(false);
+		    var url = webHelper.GetThisPageUrl(false).Result;
 		    foreach (var routeValue in routeValues)
 		    {
-		        url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
+		        url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString()).Result;
 		    }
             if (renderEmptyParameters && parametersWithEmptyValues.Any())
             {
                 foreach (var key in parametersWithEmptyValues)
                 {
-                    url = webHelper.ModifyQueryString(url, key);
+                    url = webHelper.ModifyQueryString(url, key).Result;
                 }
             }
 			return url;

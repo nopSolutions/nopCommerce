@@ -57,15 +57,15 @@ namespace Nop.Web.Framework.Mvc.Filters
             protected void RedirectRequest(AuthorizationFilterContext filterContext, bool useSsl)
             {
                 //whether current connection is secured
-                var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
+                var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured().Result;
 
                 //page should be secured, so redirect (permanent) to HTTPS version of page
                 if (useSsl && !currentConnectionSecured)
-                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), true);
+                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true).Result, true);
 
                 //page shouldn't be secured, so redirect (permanent) to HTTP version of page
                 if (!useSsl && currentConnectionSecured)
-                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, false), true);
+                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, false).Result, true);
             }
 
             #endregion
@@ -91,7 +91,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
-                RedirectRequest(filterContext, _storeContext.CurrentStore.SslEnabled);
+                RedirectRequest(filterContext, _storeContext.GetCurrentStore().Result.SslEnabled);
             }
 
             #endregion

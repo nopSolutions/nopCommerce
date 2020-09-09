@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using FluentValidation;
 using LinqToDB;
 using LinqToDB.Mapping;
@@ -121,10 +122,19 @@ namespace Nop.Web.Framework.Validators
             foreach (var expression in maxValueExpressions)
             {
                 RuleFor(expression.Expression).IsDecimal(expression.MaxValue)
-                    .WithMessage(string.Format(localizationService.GetResource("Nop.Web.Framework.Validators.MaxDecimal"), expression.MaxValue - 1));
+                    .WithMessage(string.Format(localizationService.GetResource("Nop.Web.Framework.Validators.MaxDecimal").Result, expression.MaxValue - 1));
             }
         }
 
         #endregion
+    }
+
+    public static class RuleBuilderOptionsExtension
+    {
+        public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(
+            this IRuleBuilderOptions<T, TProperty> rule, Task<string> errorMessage)
+        {
+            return rule.WithMessage(errorMessage.Result);
+        }
     }
 }

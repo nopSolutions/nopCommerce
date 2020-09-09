@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core;
 using Nop.Core.ComponentModel;
@@ -246,7 +247,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="directoryName">Plugin directory name</param>
         /// <returns>Original and parsed description files</returns>
-        private static IList<(string DescriptionFile, PluginDescriptor PluginDescriptor)> GetDescriptionFilesAndDescriptors(string directoryName)
+        private static async Task<IList<(string DescriptionFile, PluginDescriptor PluginDescriptor)>> GetDescriptionFilesAndDescriptors(string directoryName)
         {
             if (string.IsNullOrEmpty(directoryName))
                 throw new ArgumentNullException(nameof(directoryName));
@@ -264,7 +265,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     continue;
 
                 //load plugin descriptor from the file
-                var text = _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
+                var text = await _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
                 var pluginDescriptor = PluginDescriptor.GetPluginDescriptorFromText(text);
 
                 result.Add((descriptionFile, pluginDescriptor));
@@ -300,7 +301,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    //compare assemblies by filenames
+                    //compare assemblies by file names
                     var assemblyName = assembly.FullName.Split(',').FirstOrDefault();
                     if (!fileNameWithoutExtension.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
                         continue;
@@ -353,7 +354,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Load plugins info (names of already installed, going to be installed, going to be uninstalled and going to be deleted plugins)
         /// </summary>
         /// <param name="config"></param>
-        private static void LoadPluginsInfo(NopConfig config)
+        private static async Task LoadPluginsInfo(NopConfig config)
         {
             var useRedisToStorePluginsInfo = config.RedisEnabled && config.UseRedisToStorePluginsInfo;
 
@@ -362,21 +363,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config)
                 : new PluginsInfo(_fileProvider);
 
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled)
+            if (await PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled)
                 return;
 
             var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
 
-            if (!redisPluginsInfo.LoadPluginInfo())
+            if (!await redisPluginsInfo.LoadPluginInfo())
                 return;
 
             //copy plugins info data from redis 
             PluginsInfo.CopyFrom(redisPluginsInfo);
-            PluginsInfo.Save();
+            await PluginsInfo.Save();
 
             //clear redis plugins info data
             redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
-            redisPluginsInfo.Save();
+            await redisPluginsInfo.Save();
         }
 
         #endregion
@@ -388,7 +389,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="applicationPartManager">Application part manager</param>
         /// <param name="config">Config</param>
-        public static void InitializePlugins(this ApplicationPartManager applicationPartManager, NopConfig config)
+        public static async Task InitializePlugins(this ApplicationPartManager applicationPartManager, NopConfig config)
         {
             if (applicationPartManager == null)
                 throw new ArgumentNullException(nameof(applicationPartManager));
@@ -396,7 +397,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
 
-            LoadPluginsInfo(config);
+            await LoadPluginsInfo(config);
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))
@@ -458,7 +459,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     }
 
                     //load plugin descriptors from the plugin directory
-                    foreach (var item in GetDescriptionFilesAndDescriptors(pluginsDirectory))
+                    foreach (var item in GetDescriptionFilesAndDescriptors(pluginsDirectory).Result)
                     {
                         var descriptionFile = item.DescriptionFile;
                         var pluginDescriptor = item.PluginDescriptor;

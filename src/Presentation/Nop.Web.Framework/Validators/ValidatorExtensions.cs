@@ -77,12 +77,12 @@ namespace Nop.Web.Framework.Validators
             regExp += customerSettings.PasswordRequireNonAlphanumeric ? "(?=.*?[#?!@$%^&*-])" : "";
             regExp += $".{{{customerSettings.PasswordMinLength},}}$";
 
-            var message = string.Format(localizationService.GetResource("Validation.Password.Rule"),
-                string.Format(localizationService.GetResource("Validation.Password.LengthValidation"), customerSettings.PasswordMinLength),
-                customerSettings.PasswordRequireUppercase ? localizationService.GetResource("Validation.Password.RequireUppercase") : "",
-                customerSettings.PasswordRequireLowercase ? localizationService.GetResource("Validation.Password.RequireLowercase") : "",
-                customerSettings.PasswordRequireDigit ? localizationService.GetResource("Validation.Password.RequireDigit") : "",
-                customerSettings.PasswordRequireNonAlphanumeric ? localizationService.GetResource("Validation.Password.RequireNonAlphanumeric") : "");
+            var message = string.Format(localizationService.GetResource("Validation.Password.Rule").Result,
+                string.Format(localizationService.GetResource("Validation.Password.LengthValidation").Result, customerSettings.PasswordMinLength),
+                customerSettings.PasswordRequireUppercase ? localizationService.GetResource("Validation.Password.RequireUppercase").Result : "",
+                customerSettings.PasswordRequireLowercase ? localizationService.GetResource("Validation.Password.RequireLowercase").Result : "",
+                customerSettings.PasswordRequireDigit ? localizationService.GetResource("Validation.Password.RequireDigit").Result : "",
+                customerSettings.PasswordRequireNonAlphanumeric ? localizationService.GetResource("Validation.Password.RequireNonAlphanumeric").Result : "");
 
             var options = ruleBuilder
                 .NotEmpty().WithMessage(localizationService.GetResource("Validation.Password.IsNotEmpty"))

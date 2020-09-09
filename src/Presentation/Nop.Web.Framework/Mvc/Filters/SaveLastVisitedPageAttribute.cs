@@ -82,17 +82,16 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get current page
-                var pageUrl = _webHelper.GetThisPageUrl(true);
+                var pageUrl = _webHelper.GetThisPageUrl(true).Result;
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
 
                 //get previous last page
-                var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute);
+                var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.GetCurrentCustomer().Result, NopCustomerDefaults.LastVisitedPageAttribute).Result;
 
                 //save new one if don't match
                 if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl);
-
+                    _genericAttributeService.SaveAttribute(_workContext.GetCurrentCustomer().Result, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl).Wait();
             }
 
             /// <summary>

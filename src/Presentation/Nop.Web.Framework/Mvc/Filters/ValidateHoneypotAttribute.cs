@@ -84,7 +84,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     _logger.Warning("A bot detected. Honeypot.");
 
                     //and redirect to the original page
-                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true));
+                    filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true).Result);
                 }
             }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -166,7 +167,7 @@ namespace Nop.Web.Framework.Controllers
         {
             return Json(new
             {
-                error = error
+                error
             });
         }
 
@@ -203,10 +204,10 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
-            AddLocales(languageService, locales, null);
+            await AddLocales(languageService, locales, null);
         }
 
         /// <summary>
@@ -216,10 +217,10 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
-            foreach (var language in languageService.GetAllLanguages(true))
+            foreach (var language in await languageService.GetAllLanguages(true))
             {
                 var locale = Activator.CreateInstance<TLocalizedModelLocal>();
                 locale.LanguageId = language.Id;
@@ -267,21 +268,21 @@ namespace Nop.Web.Framework.Controllers
         /// </summary>
         /// <param name="panelName">Panel name to save</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
-        public virtual void SaveSelectedPanelName(string tabName, bool persistForTheNextRequest = true)
+        public virtual void SaveSelectedPanelName(string panelName, bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
             //"GetSelectedPanelName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
-            if (string.IsNullOrEmpty(tabName))
-                throw new ArgumentNullException(nameof(tabName));
+            if (string.IsNullOrEmpty(panelName))
+                throw new ArgumentNullException(nameof(panelName));
 
             const string dataKey = "nop.selected-panel-name";
             if (persistForTheNextRequest)
             {
-                TempData[dataKey] = tabName;
+                TempData[dataKey] = panelName;
             }
             else
             {
-                ViewData[dataKey] = tabName;
+                ViewData[dataKey] = panelName;
             }
         }
 
@@ -358,7 +359,7 @@ namespace Nop.Web.Framework.Controllers
                 draw = model.Draw,
                 recordsTotal = model.RecordsTotal,
                 recordsFiltered = model.RecordsFiltered,
-                Data = model.Data
+                model.Data
             });
         }
 

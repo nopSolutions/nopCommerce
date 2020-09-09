@@ -38,23 +38,23 @@ namespace Nop.Web.Framework.Globalization
         /// </summary>
         /// <param name="webHelper">Web helper</param>
         /// <param name="workContext">Work context</param>
-        protected void SetWorkingCulture(IWebHelper webHelper, IWorkContext workContext)
+        protected async Task SetWorkingCulture(IWebHelper webHelper, IWorkContext workContext)
         {
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            if (webHelper.IsStaticResource())
+            if (await webHelper.IsStaticResource())
                 return;
 
             var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";
-            if (webHelper.GetThisPageUrl(false).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
+            if ((await webHelper.GetThisPageUrl(false)).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 //set work context to admin mode
                 workContext.IsAdmin = true;
             }
             
             //set working language culture
-            var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+            var culture = new CultureInfo((await workContext.GetWorkingLanguage()).LanguageCulture);
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
         }
@@ -70,13 +70,13 @@ namespace Nop.Web.Framework.Globalization
         /// <param name="webHelper">Web helper</param>
         /// <param name="workContext">Work context</param>
         /// <returns>Task</returns>
-        public Task Invoke(HttpContext context, IWebHelper webHelper, IWorkContext workContext)
+        public async Task Invoke(HttpContext context, IWebHelper webHelper, IWorkContext workContext)
         {
             //set culture
-            SetWorkingCulture(webHelper, workContext);
+            await SetWorkingCulture(webHelper, workContext);
 
             //call the next middleware in the request pipeline
-            return _next(context);
+            await _next(context);
         }
         
         #endregion
