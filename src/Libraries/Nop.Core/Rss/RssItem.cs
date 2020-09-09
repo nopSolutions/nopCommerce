@@ -73,7 +73,7 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Title
         /// </summary>
-        public XElement Title { get; private set; }
+        public XElement Title { get; }
 
         /// <summary>
         /// Get title text
@@ -83,17 +83,17 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Content
         /// </summary>
-        public XElement Content { get; private set; }
+        public XElement Content { get; }
 
         /// <summary>
         /// Get content text
         /// </summary>
-        public string ContentText => XmlHelper.XmlDecode(Content?.Value ?? string.Empty);
+        public string ContentText => XmlHelper.XmlDecode(Content?.Value ?? string.Empty).Result;
 
         /// <summary>
         /// Link
         /// </summary>
-        public XElement Link { get; private set; }
+        public XElement Link { get; }
 
         /// <summary>
         /// Get URL
@@ -103,12 +103,12 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Unique identifier
         /// </summary>
-        public XElement Id { get; private set; }
+        public XElement Id { get; }
 
         /// <summary>
         /// Last build date
         /// </summary>
-        public XElement PubDate { get; private set; }
+        public XElement PubDate { get; }
 
         /// <summary>
         /// Publish date

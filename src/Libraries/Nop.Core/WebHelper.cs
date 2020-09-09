@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -29,7 +30,6 @@ namespace Nop.Core
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly INopFileProvider _fileProvider;
         private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
@@ -40,14 +40,12 @@ namespace Nop.Core
             IActionContextAccessor actionContextAccessor,
             IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider,
             IUrlHelperFactory urlHelperFactory)
         {
             _hostingConfig = hostingConfig;
             _actionContextAccessor = actionContextAccessor;
             _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;
-            _fileProvider = fileProvider;
             _urlHelperFactory = urlHelperFactory;
         }
 
@@ -59,22 +57,22 @@ namespace Nop.Core
         /// Check whether current HTTP request is available
         /// </summary>
         /// <returns>True if available; otherwise false</returns>
-        protected virtual bool IsRequestAvailable()
+        protected virtual Task<bool> IsRequestAvailable()
         {
             if (_httpContextAccessor?.HttpContext == null)
-                return false;
+                return Task.FromResult(false);
 
             try
             {
                 if (_httpContextAccessor.HttpContext.Request == null)
-                    return false;
+                    return Task.FromResult(false);
             }
             catch (Exception)
             {
-                return false;
+                return Task.FromResult(false);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -82,9 +80,11 @@ namespace Nop.Core
         /// </summary>
         /// <param name="address">IP address</param>
         /// <returns>Result</returns>
-        protected virtual bool IsIpAddressSet(IPAddress address)
+        protected virtual Task<bool> IsIpAddressSet(IPAddress address)
         {
-            return address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
+            var rez =  address != null && address.ToString() != IPAddress.IPv6Loopback.ToString();
+
+            return Task.FromResult(rez);
         }
 
         #endregion
@@ -95,9 +95,9 @@ namespace Nop.Core
         /// Get URL referrer if exists
         /// </summary>
         /// <returns>URL referrer</returns>
-        public virtual string GetUrlReferrer()
+        public virtual async Task<string> GetUrlReferrer()
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return string.Empty;
 
             //URL referrer is null in some case (for example, in IE 8)
@@ -108,9 +108,9 @@ namespace Nop.Core
         /// Get IP address from HTTP context
         /// </summary>
         /// <returns>String of IP address</returns>
-        public virtual string GetCurrentIpAddress()
+        public virtual async Task<string> GetCurrentIpAddress()
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return string.Empty;
 
             var result = string.Empty;
@@ -165,13 +165,13 @@ namespace Nop.Core
         /// <param name="useSsl">Value indicating whether to get SSL secured page URL. Pass null to determine automatically</param>
         /// <param name="lowercaseUrl">Value indicating whether to lowercase URL</param>
         /// <returns>Page URL</returns>
-        public virtual string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = false)
+        public virtual async Task<string> GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = false)
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return string.Empty;
 
             //get store location
-            var storeLocation = GetStoreLocation(useSsl ?? IsCurrentConnectionSecured());
+            var storeLocation = await GetStoreLocation(useSsl ?? await IsCurrentConnectionSecured());
 
             //add local path to the URL
             var pageUrl = $"{storeLocation.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.Path}";
@@ -191,9 +191,9 @@ namespace Nop.Core
         /// Gets a value indicating whether current connection is secured
         /// </summary>
         /// <returns>True if it's secured, otherwise false</returns>
-        public virtual bool IsCurrentConnectionSecured()
+        public virtual async Task<bool> IsCurrentConnectionSecured()
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return false;
 
             //check whether hosting uses a load balancer
@@ -213,9 +213,9 @@ namespace Nop.Core
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL</param>
         /// <returns>Store host location</returns>
-        public virtual string GetStoreHost(bool useSsl)
+        public virtual async Task<string> GetStoreHost(bool useSsl)
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return string.Empty;
 
             //try to get host from the request HOST header
@@ -237,23 +237,23 @@ namespace Nop.Core
         /// </summary>
         /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
         /// <returns>Store location</returns>
-        public virtual string GetStoreLocation(bool? useSsl = null)
+        public virtual async Task<string> GetStoreLocation(bool? useSsl = null)
         {
             var storeLocation = string.Empty;
 
             //get store host
-            var storeHost = GetStoreHost(useSsl ?? IsCurrentConnectionSecured());
+            var storeHost = await GetStoreHost(useSsl ?? await IsCurrentConnectionSecured());
             if (!string.IsNullOrEmpty(storeHost))
             {
                 //add application path base if exists
-                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+                storeLocation = await IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
             }
 
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
             if (string.IsNullOrEmpty(storeHost))
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
-                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
+                storeLocation = (await EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore())?.Url
                     ?? throw new Exception("Current store cannot be loaded");
             }
 
@@ -267,9 +267,9 @@ namespace Nop.Core
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
         /// </summary>
         /// <returns>True if the request targets a static resource file.</returns>
-        public virtual bool IsStaticResource()
+        public virtual async Task<bool> IsStaticResource()
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return false;
 
             string path = _httpContextAccessor.HttpContext.Request.Path;
@@ -288,7 +288,7 @@ namespace Nop.Core
         /// <param name="key">Query parameter key to add</param>
         /// <param name="values">Query parameter values to add</param>
         /// <returns>New URL with passed query parameter</returns>
-        public virtual string ModifyQueryString(string url, string key, params string[] values)
+        public virtual async Task<string> ModifyQueryString(string url, string key, params string[] values)
         {
             if (string.IsNullOrEmpty(url))
                 return string.Empty;
@@ -304,7 +304,7 @@ namespace Nop.Core
             if (isLocalUrl)
             {
                 var pathBase = _httpContextAccessor.HttpContext.Request.PathBase;
-                uriStr = $"{GetStoreLocation().TrimEnd('/')}{(url.StartsWith(pathBase) ? url.Replace(pathBase, "") : url)}";
+                uriStr = $"{(await GetStoreLocation()).TrimEnd('/')}{(url.StartsWith(pathBase) ? url.Replace(pathBase, "") : url)}";
             }
 
             var uri = new Uri(uriStr, UriKind.Absolute);
@@ -336,7 +336,7 @@ namespace Nop.Core
         /// <param name="key">Query parameter key to remove</param>
         /// <param name="value">Query parameter value to remove; pass null to remove all query parameters with the specified key</param>
         /// <returns>New URL without passed query parameter</returns>
-        public virtual string RemoveQueryString(string url, string key, string value = null)
+        public virtual async Task<string> RemoveQueryString(string url, string key, string value = null)
         {
             if (string.IsNullOrEmpty(url))
                 return string.Empty;
@@ -347,7 +347,7 @@ namespace Nop.Core
             //prepare URI object
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var isLocalUrl = urlHelper.IsLocalUrl(url);
-            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+            var uri = new Uri(isLocalUrl ? $"{(await GetStoreLocation()).TrimEnd('/')}{url}" : url, UriKind.Absolute);
 
             //get current query parameters
             var queryParameters = QueryHelpers.ParseQuery(uri.Query)
@@ -380,9 +380,9 @@ namespace Nop.Core
         /// <typeparam name="T">Returned value type</typeparam>
         /// <param name="name">Query parameter name</param>
         /// <returns>Query string value</returns>
-        public virtual T QueryString<T>(string name)
+        public virtual async Task<T> QueryString<T>(string name)
         {
-            if (!IsRequestAvailable())
+            if (!await IsRequestAvailable())
                 return default;
 
             if (StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query[name]))
@@ -394,9 +394,11 @@ namespace Nop.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
-        public virtual void RestartAppDomain()
+        public virtual Task RestartAppDomain()
         {
             _hostApplicationLifetime.StopApplication();
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -409,6 +411,7 @@ namespace Nop.Core
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
+                
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
@@ -432,21 +435,21 @@ namespace Nop.Core
         /// <summary>
         /// Gets current HTTP request protocol
         /// </summary>
-        public virtual string CurrentRequestProtocol => IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        public virtual string CurrentRequestProtocol => IsCurrentConnectionSecured().Result ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
 
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.
         /// </summary>
         /// <param name="req">HTTP request</param>
         /// <returns>True, if HTTP request URI references to the local host</returns>
-        public virtual bool IsLocalRequest(HttpRequest req)
+        public virtual async Task<bool> IsLocalRequest(HttpRequest req)
         {
             //source: https://stackoverflow.com/a/41242493/7860424
             var connection = req.HttpContext.Connection;
-            if (IsIpAddressSet(connection.RemoteIpAddress))
+            if (await IsIpAddressSet(connection.RemoteIpAddress))
             {
                 //We have a remote address set up
-                return IsIpAddressSet(connection.LocalIpAddress)
+                return await IsIpAddressSet(connection.LocalIpAddress)
                     //Is local is same as remote, then we are local
                     ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress)
                     //else we are remote if the remote IP address is not a loopback address
@@ -461,7 +464,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="request">HTTP request</param>
         /// <returns>Raw URL</returns>
-        public virtual string GetRawUrl(HttpRequest request)
+        public virtual Task<string> GetRawUrl(HttpRequest request)
         {
             //first try to get the raw target from request feature
             //note: value has not been UrlDecoded
@@ -471,7 +474,7 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(rawUrl))
                 rawUrl = $"{request.PathBase}{request.Path}{request.QueryString}";
 
-            return rawUrl;
+            return Task.FromResult(rawUrl);
         }
 
         /// <summary>
@@ -479,15 +482,15 @@ namespace Nop.Core
         /// </summary>
         /// <param name="request">HTTP request</param>
         /// <returns>Result</returns>
-        public virtual bool IsAjaxRequest(HttpRequest request)
+        public virtual Task<bool> IsAjaxRequest(HttpRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
             if (request.Headers == null)
-                return false;
+                return Task.FromResult(false);
 
-            return request.Headers["X-Requested-With"] == "XMLHttpRequest";
+            return Task.FromResult(request.Headers["X-Requested-With"] == "XMLHttpRequest");
         }
 
         #endregion

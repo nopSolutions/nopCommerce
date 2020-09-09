@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 
 namespace Nop.Core.Infrastructure
@@ -277,7 +278,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="filePath">The file for reading</param>
         /// <returns>A byte array containing the contents of the file</returns>
-        byte[] ReadAllBytes(string filePath);
+        Task<byte[]> ReadAllBytes(string filePath);
 
         /// <summary>
         /// Opens a file, reads all lines of the file with the specified encoding, and then closes the file.
@@ -285,8 +286,9 @@ namespace Nop.Core.Infrastructure
         /// <param name="path">The file to open for reading</param>
         /// <param name="encoding">The encoding applied to the contents of the file</param>
         /// <returns>A string containing all lines of the file</returns>
-        string ReadAllText(string path, Encoding encoding);
+        Task<string> ReadAllText(string path, Encoding encoding);
 
+        //TODO: Delete unused method
         /// <summary>
         /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
         /// </summary>
@@ -302,7 +304,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="filePath">The file to write to</param>
         /// <param name="bytes">The bytes to write to the file</param>
-        void WriteAllBytes(string filePath, byte[] bytes);
+        Task WriteAllBytes(string filePath, byte[] bytes);
 
         /// <summary>
         /// Creates a new file, writes the specified string to the file using the specified encoding,
@@ -311,6 +313,6 @@ namespace Nop.Core.Infrastructure
         /// <param name="path">The file to write to</param>
         /// <param name="contents">The string to write to the file</param>
         /// <param name="encoding">The encoding to apply to the string</param>
-        void WriteAllText(string path, string contents, Encoding encoding);
+        Task WriteAllText(string path, string contents, Encoding encoding);
     }
 }
