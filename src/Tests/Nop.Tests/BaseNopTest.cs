@@ -99,8 +99,8 @@ namespace Nop.Tests
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);
 
-            var rootPath = new DirectoryInfo($@"{Directory.GetCurrentDirectory()}\..\..\..\..\..\Presentation\Nop.Web").FullName;
-            
+            var rootPath = new DirectoryInfo($@"{Directory.GetCurrentDirectory().Split("bin")[0]}{Path.Combine(@"\..\..\Presentation\Nop.Web".Split('\\', '/').ToArray())}").FullName;
+
             //Presentation\Nop.Web\wwwroot
             var webHostEnvironment = new Mock<IWebHostEnvironment>();
             webHostEnvironment.Setup(p => p.WebRootPath).Returns(Path.Combine(rootPath, "wwwroot"));
