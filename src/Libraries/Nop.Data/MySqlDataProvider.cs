@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -32,8 +33,7 @@ namespace Nop.Data
         /// <summary>
         /// Configures the data context
         /// </summary>
-        /// <param name="dataContext">Data context to configure</param>
-        private void ConfigureDataContext(IDataContext dataContext)
+        private void ConfigureDataContext()
         {
             AdditionalSchema.SetDataType(
                 typeof(Guid),
@@ -81,13 +81,13 @@ namespace Nop.Data
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        protected async Task ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
         {
             filePath = fileProvider.MapPath(filePath);
             if (!fileProvider.FileExists(filePath))
                 return;
 
-            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
+            await ExecuteSqlScript(await fileProvider.ReadAllText(filePath, Encoding.Default));
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Nop.Data
         {
             var dataContext = CreateDataConnection(LinqToDbDataProvider);
 
-            ConfigureDataContext(dataContext);
+            ConfigureDataContext();
 
             return dataContext;
         }
@@ -196,12 +196,12 @@ namespace Nop.Data
         /// Execute commands from the SQL script
         /// </summary>
         /// <param name="sql">SQL script</param>
-        public void ExecuteSqlScript(string sql)
+        public async Task ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             foreach (var command in sqlCommands)
-                currentConnection.Execute(command);
+                await currentConnection.ExecuteAsync(command);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Nop.Data
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
+            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath).Wait();
         }
 
         /// <summary>
@@ -224,42 +224,40 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            using (var currentConnection = CreateDataConnection())
+            using var currentConnection = CreateDataConnection();
+            var tableName = currentConnection.GetTable<T>().TableName;
+            var databaseName = currentConnection.Connection.Database;
+
+            //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
+            //with DataContext we could be used KeepConnectionAlive option
+            using var dbConnection = (DbConnection)CreateDbConnection();
+
+            dbConnection.StateChange += (sender, e) =>
             {
-                var tableName = currentConnection.GetTable<T>().TableName;
-                var databaseName = currentConnection.Connection.Database;
-
-                //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
-                //with DataContext we could be used KeepConnectionAlive option
-                using var dbConnerction = (DbConnection)CreateDbConnection();
-
-                dbConnerction.StateChange += (sender, e) =>
+                try
                 {
-                    try
-                    {
-                        if (e.CurrentState != ConnectionState.Open)
-                            return;
+                    if (e.CurrentState != ConnectionState.Open)
+                        return;
 
-                        var connection = (IDbConnection)sender;
-                        using var command = connection.CreateCommand();
-                        command.Connection = connection;
-                        command.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
-                        command.ExecuteNonQuery();
-                    }
-                    //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
-                    catch (MySqlException ex) when (ex.Number == 1193)
-                    {
-                        //ignore
-                    }
-                };
+                    var connection = (IDbConnection)sender;
+                    using var internalCommand = connection.CreateCommand();
+                    internalCommand.Connection = connection;
+                    internalCommand.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
+                    internalCommand.ExecuteNonQuery();
+                }
+                //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
+                catch (MySqlException ex) when (ex.Number == 1193)
+                {
+                    //ignore
+                }
+            };
 
-                using var command = dbConnerction.CreateCommand();
-                command.Connection = dbConnerction;
-                command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
-                dbConnerction.Open();
+            using var command = dbConnection.CreateCommand();
+            command.Connection = dbConnection;
+            command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
+            dbConnection.Open();
 
-                return Convert.ToInt32(command.ExecuteScalar() ?? 1);
-            }
+            return Convert.ToInt32(command.ExecuteScalar() ?? 1);
         }
 
         /// <summary>
@@ -267,22 +265,22 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
+        public virtual async Task SetTableIdent<T>(int ident) where T : BaseEntity
         {
             var currentIdent = GetTableIdent<T>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             var tableName = currentConnection.GetTable<T>().TableName;
 
-            currentConnection.Execute($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
+            await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }
 
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual void BackupDatabase(string fileName)
+        public virtual Task BackupDatabase(string fileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -291,7 +289,7 @@ namespace Nop.Data
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        public virtual Task RestoreDatabase(string backupFileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -299,15 +297,13 @@ namespace Nop.Data
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual void ReIndexTables()
+        public virtual async Task ReIndexTables()
         {
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
-            if (tables.Count > 0)
-            {
-                currentConnection.Execute($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
-            }
+            if (tables.Count > 0) 
+                await currentConnection.ExecuteAsync($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
         }
 
         /// <summary>

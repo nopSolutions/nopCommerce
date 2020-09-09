@@ -16,7 +16,7 @@ namespace Nop.Data.Migrations
 
         public NopProcessorAccessor(IEnumerable<IMigrationProcessor> processors)
         {
-            var dataSettings = DataSettingsManager.LoadSettings();
+            var dataSettings = DataSettingsManager.LoadSettings().Result;
 
             var procs = processors.ToList();
             if (procs.Count == 0)

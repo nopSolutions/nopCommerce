@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Transactions;
 using LinqToDB;
 using LinqToDB.Data;
@@ -38,34 +39,34 @@ namespace Nop.Data
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
-        public virtual TEntity GetById(object id)
+        public virtual Task<TEntity> GetById(object id)
         {
-            return Entities.FirstOrDefault(e => e.Id == Convert.ToInt32(id));
+            return Task.FromResult(Entities.FirstOrDefault(e => e.Id == Convert.ToInt32(id)));
         }
 
         /// <summary>
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public virtual void Insert(TEntity entity)
+        public virtual async Task Insert(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _dataProvider.InsertEntity(entity);
+            await _dataProvider.InsertEntity(entity);
         }
 
         /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        public virtual void Insert(IEnumerable<TEntity> entities)
+        public virtual async Task Insert(IEnumerable<TEntity> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             using var transaction = new TransactionScope();
-            _dataProvider.BulkInsertEntities(entities);
+            await _dataProvider.BulkInsertEntities(entities);
             transaction.Complete();
         }
 
@@ -75,73 +76,71 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Copy of the passed entity</returns>
-        public virtual TEntity LoadOriginalCopy(TEntity entity)
+        public virtual Task<TEntity> LoadOriginalCopy(TEntity entity)
         {
-            return _dataProvider.GetTable<TEntity>()
-                .FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
+            return Task.FromResult(_dataProvider.GetTable<TEntity>()
+                .FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id)));
         }
 
         /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public virtual void Update(TEntity entity)
+        public virtual async Task Update(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _dataProvider.UpdateEntity(entity);
+            await _dataProvider.UpdateEntity(entity);
         }
 
         /// <summary>
         /// Update entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        public virtual void Update(IEnumerable<TEntity> entities)
+        public virtual async Task Update(IEnumerable<TEntity> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            foreach (var entity in entities)
-            {
-                Update(entity);
-            }
+            foreach (var entity in entities) 
+                await Update(entity);
         }
 
         /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public virtual void Delete(TEntity entity)
+        public virtual async Task Delete(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _dataProvider.DeleteEntity(entity);
+            await _dataProvider.DeleteEntity(entity);
         }
 
         /// <summary>
         /// Delete entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        public virtual void Delete(IEnumerable<TEntity> entities)
+        public virtual async Task Delete(IEnumerable<TEntity> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            _dataProvider.BulkDeleteEntities(entities.ToList());
+            await _dataProvider.BulkDeleteEntities(entities.ToList());
         }
 
         /// <summary>
         /// Delete entities
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
-        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task Delete(Expression<Func<TEntity, bool>> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            _dataProvider.BulkDeleteEntities(predicate);
+            await _dataProvider.BulkDeleteEntities(predicate);
         }
 
         /// <summary>
@@ -151,18 +150,18 @@ namespace Nop.Data
         /// <param name="storeProcedureName">Store procedure name</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Collection of query result records</returns>
-        public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
+        public virtual async Task<IList<TEntity>> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
         {
-            return _dataProvider.QueryProc<TEntity>(storeProcedureName, dataParameters?.ToArray());
+            return await _dataProvider.QueryProc<TEntity>(storeProcedureName, dataParameters?.ToArray());
         }
 
         /// <summary>
         /// Truncates database table
         /// </summary>
         /// <param name="resetIdentity">Performs reset identity column</param>
-        public virtual void Truncate(bool resetIdentity = false)
+        public virtual async Task Truncate(bool resetIdentity = false)
         {
-            _dataProvider.GetTable<TEntity>().Truncate(resetIdentity);
+            await _dataProvider.GetTable<TEntity>().TruncateAsync(resetIdentity);
         }
 
         #endregion

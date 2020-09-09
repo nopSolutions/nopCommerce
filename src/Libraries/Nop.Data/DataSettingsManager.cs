@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -27,7 +28,7 @@ namespace Nop.Data
         /// <param name="reloadSettings">Whether to reload data, if they already loaded</param>
         /// <param name="fileProvider">File provider</param>
         /// <returns>Data settings</returns>
-        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false, INopFileProvider fileProvider = null)
+        public static async Task<DataSettings> LoadSettings(string filePath = null, bool reloadSettings = false, INopFileProvider fileProvider = null)
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
@@ -45,7 +46,7 @@ namespace Nop.Data
 
                 //get data settings from the old txt file
                 var dataSettings = new DataSettings();
-                using (var reader = new StringReader(fileProvider.ReadAllText(filePath, Encoding.UTF8)))
+                using (var reader = new StringReader(await fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                 {
                     string settingsLine;
                     while ((settingsLine = reader.ReadLine()) != null)
@@ -77,7 +78,7 @@ namespace Nop.Data
                 }
 
                 //save data settings to the new file
-                SaveSettings(dataSettings, fileProvider);
+                await SaveSettings(dataSettings, fileProvider);
 
                 //and delete the old one
                 fileProvider.DeleteFile(filePath);
@@ -86,7 +87,7 @@ namespace Nop.Data
                 return Singleton<DataSettings>.Instance;
             }
 
-            var text = fileProvider.ReadAllText(filePath, Encoding.UTF8);
+            var text = await fileProvider.ReadAllText(filePath, Encoding.UTF8);
             if (string.IsNullOrEmpty(text))
                 return new DataSettings();
 
@@ -101,7 +102,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="settings">Data settings</param>
         /// <param name="fileProvider">File provider</param>
-        public static void SaveSettings(DataSettings settings, INopFileProvider fileProvider = null)
+        public static async Task SaveSettings(DataSettings settings, INopFileProvider fileProvider = null)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
@@ -113,7 +114,7 @@ namespace Nop.Data
 
             //save data settings to the file
             var text = JsonConvert.SerializeObject(Singleton<DataSettings>.Instance, Formatting.Indented);
-            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            await fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
         }
 
         /// <summary>
@@ -136,7 +137,7 @@ namespace Nop.Data
             get
             {
                 if (!_databaseIsInstalled.HasValue)
-                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.ConnectionString);
+                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true).Result?.ConnectionString);
 
                 return _databaseIsInstalled.Value;
             }
@@ -148,7 +149,7 @@ namespace Nop.Data
         /// <value>
         /// Number of seconds. Negative timeout value means that a default timeout will be used. 0 timeout value corresponds to infinite timeout.
         /// </value>
-        public static int SQLCommandTimeout => LoadSettings()?.SQLCommandTimeout ?? -1;
+        public static int SQLCommandTimeout => LoadSettings().Result?.SQLCommandTimeout ?? -1;
 
         #endregion
     }

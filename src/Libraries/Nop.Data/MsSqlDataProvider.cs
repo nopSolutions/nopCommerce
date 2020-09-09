@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -63,9 +64,9 @@ namespace Nop.Data
             return commands;
         }
 
-        protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected virtual async Task<SqlConnectionStringBuilder> GetConnectionStringBuilder()
         {
-            var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
+            var connectionString = (await DataSettingsManager.LoadSettings()).ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
         }
@@ -97,7 +98,7 @@ namespace Nop.Data
             if (DatabaseExists())
                 return;
 
-            var builder = GetConnectionStringBuilder();
+            var builder = GetConnectionStringBuilder().Result;
 
             //gets database name
             var databaseName = builder.InitialCatalog;
@@ -145,7 +146,7 @@ namespace Nop.Data
         {
             try
             {
-                using (var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString))
+                using (var connection = new SqlConnection(GetConnectionStringBuilder().Result.ConnectionString))
                 {
                     //just try to connect
                     connection.Open();
@@ -164,26 +165,26 @@ namespace Nop.Data
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        protected async Task ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
         {
             filePath = fileProvider.MapPath(filePath);
             if (!fileProvider.FileExists(filePath))
                 return;
 
-            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
+            await ExecuteSqlScript(await fileProvider.ReadAllText(filePath, Encoding.Default));
         }
 
         /// <summary>
         /// Execute commands from the SQL script
         /// </summary>
         /// <param name="sql">SQL script</param>
-        public void ExecuteSqlScript(string sql)
+        public async Task ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
 
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             foreach (var command in sqlCommands)
-                currentConnection.Execute(command);
+                await currentConnection.ExecuteAsync(command);
         }
 
         /// <summary>
@@ -196,7 +197,7 @@ namespace Nop.Data
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
+            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath).Wait();
         }
 
         /// <summary>
@@ -220,35 +221,35 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
+        public virtual async Task SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             var currentIdent = GetTableIdent<T>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
             var tableName = currentConnection.GetTable<T>().TableName;
 
-            currentConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+            await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
 
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual void BackupDatabase(string fileName)
+        public virtual async Task BackupDatabase(string fileName)
         {
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        public virtual async Task RestoreDatabase(string backupFileName)
         {
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             var commandText = string.Format(
                 "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
                 "ALTER DATABASE [{0}] SET OFFLINE WITH ROLLBACK IMMEDIATE\n" +
@@ -266,15 +267,15 @@ namespace Nop.Data
                 currentConnection.Connection.Database,
                 backupFileName);
 
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual void ReIndexTables()
+        public virtual async Task ReIndexTables()
         {
-            using var currentConnection = CreateDataConnection();
+            await using var currentConnection = CreateDataConnection();
             var commandText = $@"
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR
@@ -291,7 +292,7 @@ namespace Nop.Data
                     CLOSE cur_reindex
                     DEALLOCATE cur_reindex";
 
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
