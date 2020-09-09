@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -67,17 +69,17 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="productTagId">Product tag identifier</param>
-        public virtual void DeleteProductProductTagMapping(int productId, int productTagId)
+        public virtual async Task DeleteProductProductTagMapping(int productId, int productTagId)
         {
-            var mappitngRecord = _productProductTagMappingRepository.Table.FirstOrDefault(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
+            var mappingRecord = await _productProductTagMappingRepository.Table.FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
 
-            if (mappitngRecord is null)
-                throw new Exception("Mppaing record not found");
+            if (mappingRecord is null)
+                throw new Exception("Mapping record not found");
 
-            _productProductTagMappingRepository.Delete(mappitngRecord);
+            await _productProductTagMappingRepository.Delete(mappingRecord);
 
             //event notification
-            _eventPublisher.EntityDeleted(mappitngRecord);
+            await _eventPublisher.EntityDeleted(mappingRecord);
         }
 
         /// <summary>
@@ -86,30 +88,30 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
+        private async Task<Dictionary<int, int>> GetProductCount(int storeId, bool showHidden)
         {
             var allowedCustomerRolesIds = string.Empty;
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
                 //pass customer role identifiers as comma-delimited string
-                allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
             }
 
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), 
                 showHidden);
            
-            return _staticCacheManager.Get(key, () =>
+            return await _staticCacheManager.Get(key, async () =>
             {
                 //prepare input parameters
                 var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", storeId);
                 var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
 
                 //invoke stored procedure
-                return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
+                return (await _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
                         pStoreId,
-                        pAllowedCustomerRoleIds)
+                        pAllowedCustomerRoleIds))
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
@@ -122,30 +124,28 @@ namespace Nop.Services.Catalog
         /// Delete a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void DeleteProductTag(ProductTag productTag)
+        public virtual async Task DeleteProductTag(ProductTag productTag)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
 
-            _productTagRepository.Delete(productTag);
+            await _productTagRepository.Delete(productTag);
             
             //event notification
-            _eventPublisher.EntityDeleted(productTag);
+            await _eventPublisher.EntityDeleted(productTag);
         }
 
         /// <summary>
         /// Delete product tags
         /// </summary>
         /// <param name="productTags">Product tags</param>
-        public virtual void DeleteProductTags(IList<ProductTag> productTags)
+        public virtual async Task DeleteProductTags(IList<ProductTag> productTags)
         {
             if (productTags == null)
                 throw new ArgumentNullException(nameof(productTags));
 
-            foreach (var productTag in productTags)
-            {
-                DeleteProductTag(productTag);
-            }
+            foreach (var productTag in productTags) 
+                await DeleteProductTag(productTag);
         }
 
         /// <summary>
@@ -153,17 +153,15 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="tagName">Tag name</param>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetAllProductTags(string tagName = null)
+        public virtual async Task<IList<ProductTag>> GetAllProductTags(string tagName = null)
         {
             var query = _productTagRepository.Table;
             
-            var allProductTags = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllCacheKey));
+            var allProductTags = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllCacheKey));
 
-            if(!string.IsNullOrEmpty(tagName))
-            {
+            if(!string.IsNullOrEmpty(tagName)) 
                 allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();
-            }
-            
+
             return allProductTags;
         }
 
@@ -172,7 +170,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
+        public virtual async Task<IList<ProductTag>> GetAllProductTagsByProductId(int productId)
         {
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllByProductIdCacheKey, productId);
 
@@ -182,7 +180,7 @@ namespace Nop.Services.Catalog
                 orderby pt.Id
                 select pt;
 
-            var productTags = query.ToCachedList(key);
+            var productTags = await query.ToCachedList(key);
 
             return productTags;
         }
@@ -192,12 +190,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductTagById(int productTagId)
+        public virtual async Task<ProductTag> GetProductTagById(int productTagId)
         {
             if (productTagId == 0)
                 return null;
 
-            return _productTagRepository.ToCachedGetById(productTagId);
+            return await _productTagRepository.ToCachedGetById(productTagId);
         }
 
         /// <summary>
@@ -205,7 +203,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagIds">Product tags identifiers</param>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetProductTagsByIds(int[] productTagIds)
+        public virtual async Task<IList<ProductTag>> GetProductTagsByIds(int[] productTagIds)
         {
             if (productTagIds == null || productTagIds.Length == 0)
                 return new List<ProductTag>();
@@ -214,7 +212,7 @@ namespace Nop.Services.Catalog
                         where productTagIds.Contains(p.Id)
                         select p;
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -222,13 +220,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="name">Product tag name</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductTagByName(string name)
+        public virtual async Task<ProductTag> GetProductTagByName(string name)
         {
             var query = from pt in _productTagRepository.Table
                         where pt.Name == name
                         select pt;
 
-            var productTag = query.FirstOrDefault();
+            var productTag = await query.FirstOrDefaultAsync();
             return productTag;
         }
 
@@ -236,30 +234,30 @@ namespace Nop.Services.Catalog
         /// Inserts a product-product tag mapping
         /// </summary>
         /// <param name="tagMapping">Product-product tag mapping</param>
-        public virtual void InsertProductProductTagMapping(ProductProductTagMapping tagMapping)
+        public virtual async Task InsertProductProductTagMapping(ProductProductTagMapping tagMapping)
         {
             if (tagMapping is null)
                 throw new ArgumentNullException(nameof(tagMapping));
 
-            _productProductTagMappingRepository.Insert(tagMapping);
+            await _productProductTagMappingRepository.Insert(tagMapping);
 
             //event notification
-            _eventPublisher.EntityInserted(tagMapping);
+            await _eventPublisher.EntityInserted(tagMapping);
         }
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void InsertProductTag(ProductTag productTag)
+        public virtual async Task InsertProductTag(ProductTag productTag)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
 
-            _productTagRepository.Insert(productTag);
+            await _productTagRepository.Insert(productTag);
             
             //event notification
-            _eventPublisher.EntityInserted(productTag);
+            await _eventPublisher.EntityInserted(productTag);
         }
 
         /// <summary>
@@ -268,30 +266,30 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Result</returns>
-        public virtual bool ProductTagExists(Product product, int productTagId)
+        public virtual async Task<bool> ProductTagExists(Product product, int productTagId)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            return _productProductTagMappingRepository.Table.Any(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
+            return await _productProductTagMappingRepository.Table.AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
         }
 
         /// <summary>
         /// Updates the product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void UpdateProductTag(ProductTag productTag)
+        public virtual async Task UpdateProductTag(ProductTag productTag)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
 
-            _productTagRepository.Update(productTag);
+            await _productTagRepository.Update(productTag);
 
-            var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
-            _urlRecordService.SaveSlug(productTag, seName, 0);
+            var seName = await _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
+            await _urlRecordService.SaveSlug(productTag, seName, 0);
             
             //event notification
-            _eventPublisher.EntityUpdated(productTag);
+            await _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>
@@ -301,9 +299,9 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Number of products</returns>
-        public virtual int GetProductCount(int productTagId, int storeId, bool showHidden = false)
+        public virtual async Task<int> GetProductCount(int productTagId, int storeId, bool showHidden = false)
         {
-            var dictionary = GetProductCount(storeId, showHidden);
+            var dictionary = await GetProductCount(storeId, showHidden);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
 
@@ -315,13 +313,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product for update</param>
         /// <param name="productTags">Product tags</param>
-        public virtual void UpdateProductTags(Product product, string[] productTags)
+        public virtual async Task UpdateProductTags(Product product, string[] productTags)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             //product tags
-            var existingProductTags = GetAllProductTagsByProductId(product.Id);
+            var existingProductTags = await GetAllProductTagsByProductId(product.Id);
             var productTagsToRemove = new List<ProductTag>();
             foreach (var existingProductTag in existingProductTags)
             {
@@ -335,21 +333,17 @@ namespace Nop.Services.Catalog
                     break;
                 }
 
-                if (!found)
-                {
+                if (!found) 
                     productTagsToRemove.Add(existingProductTag);
-                }
             }
 
-            foreach (var productTag in productTagsToRemove)
-            {
-                DeleteProductProductTagMapping(product.Id, productTag.Id);
-            }
+            foreach (var productTag in productTagsToRemove) 
+                await DeleteProductProductTagMapping(product.Id, productTag.Id);
 
             foreach (var productTagName in productTags)
             {
                 ProductTag productTag;
-                var productTag2 = GetProductTagByName(productTagName);
+                var productTag2 = await GetProductTagByName(productTagName);
                 if (productTag2 == null)
                 {
                     //add new product tag
@@ -357,29 +351,25 @@ namespace Nop.Services.Catalog
                     {
                         Name = productTagName
                     };
-                    InsertProductTag(productTag);
+                    await InsertProductTag(productTag);
                 }
                 else
-                {
                     productTag = productTag2;
-                }
 
-                if (!ProductTagExists(product, productTag.Id))
-                {
-                    InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
-                }
+                if (!await ProductTagExists(product, productTag.Id)) 
+                    await InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
 
-                var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
-                _urlRecordService.SaveSlug(productTag, seName, 0);
+                var seName = await _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
+                await _urlRecordService.SaveSlug(productTag, seName, 0);
             }
 
             //cache
-            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
         }
 
         #endregion
 
-        #region MyRegion
+        #region Nested class
 
         protected partial class ProductTagWithCount
         {

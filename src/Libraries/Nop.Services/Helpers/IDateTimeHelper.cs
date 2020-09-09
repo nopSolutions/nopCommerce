@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Helpers
@@ -82,7 +83,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
-        TimeZoneInfo GetCustomerTimeZone(Customer customer);
+        Task<TimeZoneInfo> GetCustomerTimeZone(Customer customer);
 
         /// <summary>
         /// Gets or sets a default store time zone

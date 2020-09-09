@@ -64,10 +64,8 @@ namespace Nop.Services.Tasks
             }
 
             if (instance == null)
-            {
                 //not resolved
                 instance = EngineContext.Current.ResolveUnregistered(type);
-            }
 
             var task = instance as IScheduleTask;
             if (task == null)
@@ -115,7 +113,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         /// <param name="throwException">A value indicating whether exception should be thrown if some error happens</param>
         /// <param name="ensureRunOncePerPeriod">A value indicating whether we should ensure this task is run once per run period</param>
-        public void Execute(bool throwException = false, bool ensureRunOncePerPeriod = true)
+        public async System.Threading.Tasks.Task Execute(bool throwException = false, bool ensureRunOncePerPeriod = true)
         {
             if (ScheduleTask == null || !Enabled)
                 return;
@@ -147,18 +145,18 @@ namespace Nop.Services.Tasks
                 var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-                var scheduleTaskUrl = $"{storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+                var scheduleTaskUrl = $"{(await storeContext.GetCurrentStore()).Url}{NopTaskDefaults.ScheduleTaskPath}";
 
                 ScheduleTask.Enabled = !ScheduleTask.StopOnError;
                 ScheduleTask.LastEndUtc = DateTime.UtcNow;
-                scheduleTaskService.UpdateTask(ScheduleTask);
+                await scheduleTaskService.UpdateTask(ScheduleTask);
 
-                var message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), ScheduleTask.Name,
-                    exc.Message, ScheduleTask.Type, storeContext.CurrentStore.Name, scheduleTaskUrl);
+                var message = string.Format(await localizationService.GetResource("ScheduleTasks.Error"), ScheduleTask.Name,
+                    exc.Message, ScheduleTask.Type, (await storeContext.GetCurrentStore()).Name, scheduleTaskUrl);
 
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                logger.Error(message, exc);
+                await logger.Error(message, exc);
                 if (throwException)
                     throw;
             }
@@ -183,7 +181,7 @@ namespace Nop.Services.Tasks
                 if (!_enabled.HasValue)
                     _enabled = ScheduleTask?.Enabled;
 
-                    return _enabled.HasValue && _enabled.Value;
+                return _enabled.HasValue && _enabled.Value;
             }
 
             set => _enabled = value;

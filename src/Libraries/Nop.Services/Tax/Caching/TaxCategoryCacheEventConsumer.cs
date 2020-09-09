@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Tax;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Tax.Caching
 {
@@ -12,9 +13,9 @@ namespace Nop.Services.Tax.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(TaxCategory entity)
+        protected override async Task ClearCache(TaxCategory entity)
         {
-            Remove(NopTaxDefaults.TaxCategoriesAllCacheKey);
+            await Remove(NopTaxDefaults.TaxCategoriesAllCacheKey);
         }
     }
 }

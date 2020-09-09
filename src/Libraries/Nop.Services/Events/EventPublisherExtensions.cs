@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Threading.Tasks;
+using Nop.Core;
 using Nop.Core.Events;
 
 namespace Nop.Services.Events
@@ -14,9 +15,9 @@ namespace Nop.Services.Events
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="entity">Entity</param>
-        public static void EntityInserted<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
+        public static async Task EntityInserted<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
         {
-            eventPublisher.Publish(new EntityInsertedEvent<T>(entity));
+            await eventPublisher.Publish(new EntityInsertedEvent<T>(entity));
         }
 
         /// <summary>
@@ -25,9 +26,9 @@ namespace Nop.Services.Events
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="entity">Entity</param>
-        public static void EntityUpdated<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
+        public static async Task EntityUpdated<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
         {
-            eventPublisher.Publish(new EntityUpdatedEvent<T>(entity));
+            await eventPublisher.Publish(new EntityUpdatedEvent<T>(entity));
         }
 
         /// <summary>
@@ -36,9 +37,9 @@ namespace Nop.Services.Events
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="entity">Entity</param>
-        public static void EntityDeleted<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
+        public static async Task EntityDeleted<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
         {
-            eventPublisher.Publish(new EntityDeletedEvent<T>(entity));
+            await eventPublisher.Publish(new EntityDeletedEvent<T>(entity));
         }
     }
 }

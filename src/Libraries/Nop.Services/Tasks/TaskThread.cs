@@ -26,7 +26,7 @@ namespace Nop.Services.Tasks
 
         private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
-        private bool _disposed = false;
+        private bool _disposed;
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore().Result.Url}{NopTaskDefaults.ScheduleTaskPath}";
             _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
         }
 
@@ -48,7 +48,7 @@ namespace Nop.Services.Tasks
 
         #region Utilities
 
-        private void Run()
+        private async System.Threading.Tasks.Task Run()
         {
             if (Seconds <= 0)
                 return;
@@ -80,12 +80,12 @@ namespace Nop.Services.Tasks
                     var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
                     var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
 
-                    var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
+                    var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
 
-                    message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
-                        message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
+                    message = string.Format(await localizationService.GetResource("ScheduleTasks.Error"), taskName,
+                        message, taskType, (await storeContext.GetCurrentStore()).Name, _scheduleTaskUrl);
 
-                    logger.Error(message, ex);
+                    await logger.Error(message, ex);
                 }
                 finally
                 {
@@ -105,7 +105,7 @@ namespace Nop.Services.Tasks
             try
             {
                 _timer.Change(-1, -1);
-                Run();
+                Run().Wait();
 
                 if (RunOnlyOnce)
                     Dispose();
@@ -138,12 +138,8 @@ namespace Nop.Services.Tasks
                 return;
 
             if (disposing)
-            {
                 lock (this)
-                {
                     _timer?.Dispose();
-                }
-            }
 
             _disposed = true;
         }

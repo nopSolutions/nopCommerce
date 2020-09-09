@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 
@@ -16,9 +18,9 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="query">Elements of source to put on cache</param>
         /// <param name="cacheKey">Cache key</param>
         /// <returns>Cached list</returns>
-        public static IList<T> ToCachedList<T>(this IQueryable<T> query, CacheKey cacheKey)
+        public static async Task<IList<T>> ToCachedList<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
-            return cacheKey == null ? query.ToList() : CacheManager.Get(cacheKey, query.ToList);
+            return cacheKey == null ? await query.ToListAsync() : await CacheManager.Get(cacheKey, () => query.ToListAsync());
         }
 
         /// <summary>
@@ -28,9 +30,9 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="query">Elements of source to put on cache</param>
         /// <param name="cacheKey">Cache key</param>
         /// <returns>Cached array</returns>
-        public static T[] ToCachedArray<T>(this IQueryable<T> query, CacheKey cacheKey)
+        public static async Task<T[]> ToCachedArray<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
-            return cacheKey == null ? query.ToArray() : CacheManager.Get(cacheKey, query.ToArray);
+            return cacheKey == null ? await query.ToArrayAsync() : await CacheManager.Get(cacheKey, () => query.ToArrayAsync());
         }
 
         /// <summary>
@@ -40,11 +42,11 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="query">Elements of source to put on cache</param>
         /// <param name="cacheKey">Cache key</param>
         /// <returns>Cached first element or default value</returns>
-        public static T ToCachedFirstOrDefault<T>(this IQueryable<T> query, CacheKey cacheKey)
+        public static async Task<T> ToCachedFirstOrDefault<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
             return cacheKey == null
-                ? query.FirstOrDefault()
-                : CacheManager.Get(cacheKey, query.FirstOrDefault);
+                ? await query.FirstOrDefaultAsync()
+                : await CacheManager.Get(cacheKey, () => query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -55,11 +57,11 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="query">Elements of source to put on cache</param>
         /// <param name="cacheKey">Cache key</param>
         /// <returns>Cached single element</returns>
-        public static T ToCachedSingle<T>(this IQueryable<T> query, CacheKey cacheKey)
+        public static async Task<T> ToCachedSingle<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
             return cacheKey == null
-                ? query.Single()
-                : CacheManager.Get(cacheKey, query.Single);
+                ? await query.SingleAsync()
+                : await CacheManager.Get(cacheKey, () => query.SingleAsync());
         }
 
         /// <summary>
@@ -69,11 +71,11 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="query">Elements of source to put on cache</param>
         /// <param name="cacheKey">Cache key</param>
         /// <returns>Cached value which determines whether a sequence contains any elements</returns>
-        public static bool ToCachedAny<T>(this IQueryable<T> query, CacheKey cacheKey)
+        public static async Task<bool> ToCachedAny<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
             return cacheKey == null
-                ? query.Any()
-                : CacheManager.Get(cacheKey, query.Any);
+                ? await query.AnyAsync()
+                : await CacheManager.Get(cacheKey, () => query.AnyAsync());
         }
 
         /// <summary>
@@ -83,11 +85,11 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="query">Elements of source to put on cache</param>
         /// <param name="cacheKey">Cache key</param>
         /// <returns>Cached number of elements</returns>
-        public static int ToCachedCount<T>(this IQueryable<T> query, CacheKey cacheKey)
+        public static async Task<int> ToCachedCount<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
             return cacheKey == null
-                ? query.Count()
-                : CacheManager.Get(cacheKey, query.Count);
+                ? await query.CountAsync()
+                : await CacheManager.Get(cacheKey, () => query.CountAsync());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -15,77 +16,77 @@ namespace Nop.Services.Forums
         /// Deletes a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        void DeleteForumGroup(ForumGroup forumGroup);
+        Task DeleteForumGroup(ForumGroup forumGroup);
 
         /// <summary>
         /// Gets a forum group
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forum group</returns>
-        ForumGroup GetForumGroupById(int forumGroupId);
+        Task<ForumGroup> GetForumGroupById(int forumGroupId);
 
         /// <summary>
         /// Gets all forum groups
         /// </summary>
         /// <returns>Forum groups</returns>
-        IList<ForumGroup> GetAllForumGroups();
+        Task<IList<ForumGroup>> GetAllForumGroups();
 
         /// <summary>
         /// Inserts a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        void InsertForumGroup(ForumGroup forumGroup);
+        Task InsertForumGroup(ForumGroup forumGroup);
 
         /// <summary>
         /// Updates the forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        void UpdateForumGroup(ForumGroup forumGroup);
+        Task UpdateForumGroup(ForumGroup forumGroup);
 
         /// <summary>
         /// Deletes a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        void DeleteForum(Forum forum);
+        Task DeleteForum(Forum forum);
 
         /// <summary>
         /// Gets a forum
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>Forum</returns>
-        Forum GetForumById(int forumId);
+        Task<Forum> GetForumById(int forumId);
 
         /// <summary>
         /// Gets forums by group identifier
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forums</returns>
-        IList<Forum> GetAllForumsByGroupId(int forumGroupId);
+        Task<IList<Forum>> GetAllForumsByGroupId(int forumGroupId);
 
         /// <summary>
         /// Inserts a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        void InsertForum(Forum forum);
+        Task InsertForum(Forum forum);
 
         /// <summary>
         /// Updates the forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        void UpdateForum(Forum forum);
+        Task UpdateForum(Forum forum);
 
         /// <summary>
         /// Deletes a forum topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        void DeleteTopic(ForumTopic forumTopic);
+        Task DeleteTopic(ForumTopic forumTopic);
 
         /// <summary>
         /// Gets a forum topic
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <returns>Forum Topic</returns>
-        ForumTopic GetTopicById(int forumTopicId);
+        Task<ForumTopic> GetTopicById(int forumTopicId);
 
         /// <summary>
         /// Gets a forum topic
@@ -93,7 +94,7 @@ namespace Nop.Services.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
         /// <returns>Forum Topic</returns>
-        ForumTopic GetTopicById(int forumTopicId, bool increaseViews);
+        Task<ForumTopic> GetTopicById(int forumTopicId, bool increaseViews);
 
         /// <summary>
         /// Gets all forum topics
@@ -106,7 +107,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IPagedList<ForumTopic> GetAllTopics(int forumId = 0,
+        Task<IPagedList<ForumTopic>> GetAllTopics(int forumId = 0,
             int customerId = 0, string keywords = "", ForumSearchType searchType = ForumSearchType.All,
             int limitDays = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -117,7 +118,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IPagedList<ForumTopic> GetActiveTopics(int forumId = 0,
+        Task<IPagedList<ForumTopic>> GetActiveTopics(int forumId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -125,13 +126,13 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        void InsertTopic(ForumTopic forumTopic, bool sendNotifications);
+        Task InsertTopic(ForumTopic forumTopic, bool sendNotifications);
 
         /// <summary>
         /// Updates the forum topic
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
-        void UpdateTopic(ForumTopic forumTopic);
+        Task UpdateTopic(ForumTopic forumTopic);
 
         /// <summary>
         /// Moves the forum topic
@@ -139,20 +140,20 @@ namespace Nop.Services.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="newForumId">New forum identifier</param>
         /// <returns>Moved forum topic</returns>
-        ForumTopic MoveTopic(int forumTopicId, int newForumId);
+        Task<ForumTopic> MoveTopic(int forumTopicId, int newForumId);
 
         /// <summary>
         /// Deletes a forum post
         /// </summary>
         /// <param name="forumPost">Forum post</param>
-        void DeletePost(ForumPost forumPost);
+        Task DeletePost(ForumPost forumPost);
 
         /// <summary>
         /// Gets a forum post
         /// </summary>
         /// <param name="forumPostId">The forum post identifier</param>
         /// <returns>Forum Post</returns>
-        ForumPost GetPostById(int forumPostId);
+        Task<ForumPost> GetPostById(int forumPostId);
 
         /// <summary>
         /// Gets all forum posts
@@ -163,7 +164,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0,
+        Task<IPagedList<ForumPost>> GetAllPosts(int forumTopicId = 0,
             int customerId = 0, string keywords = "",
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -177,7 +178,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0, int customerId = 0,
+        Task<IPagedList<ForumPost>> GetAllPosts(int forumTopicId = 0, int customerId = 0,
             string keywords = "", bool ascSort = false,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -186,26 +187,26 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        void InsertPost(ForumPost forumPost, bool sendNotifications);
+        Task InsertPost(ForumPost forumPost, bool sendNotifications);
 
         /// <summary>
         /// Updates the forum post
         /// </summary>
         /// <param name="forumPost">Forum post</param>
-        void UpdatePost(ForumPost forumPost);
+        Task UpdatePost(ForumPost forumPost);
 
         /// <summary>
         /// Deletes a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        void DeletePrivateMessage(PrivateMessage privateMessage);
+        Task DeletePrivateMessage(PrivateMessage privateMessage);
 
         /// <summary>
         /// Gets a private message
         /// </summary>
         /// <param name="privateMessageId">The private message identifier</param>
         /// <returns>Private message</returns>
-        PrivateMessage GetPrivateMessageById(int privateMessageId);
+        Task<PrivateMessage> GetPrivateMessageById(int privateMessageId);
 
         /// <summary>
         /// Gets private messages
@@ -220,7 +221,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        IPagedList<PrivateMessage> GetAllPrivateMessages(int storeId, int fromCustomerId,
+        Task<IPagedList<PrivateMessage>> GetAllPrivateMessages(int storeId, int fromCustomerId,
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -228,26 +229,26 @@ namespace Nop.Services.Forums
         /// Inserts a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        void InsertPrivateMessage(PrivateMessage privateMessage);
+        Task InsertPrivateMessage(PrivateMessage privateMessage);
 
         /// <summary>
         /// Updates the private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        void UpdatePrivateMessage(PrivateMessage privateMessage);
+        Task UpdatePrivateMessage(PrivateMessage privateMessage);
 
         /// <summary>
         /// Deletes a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        void DeleteSubscription(ForumSubscription forumSubscription);
+        Task DeleteSubscription(ForumSubscription forumSubscription);
 
         /// <summary>
         /// Gets a forum subscription
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
         /// <returns>Forum subscription</returns>
-        ForumSubscription GetSubscriptionById(int forumSubscriptionId);
+        Task<ForumSubscription> GetSubscriptionById(int forumSubscriptionId);
 
         /// <summary>
         /// Gets forum subscriptions
@@ -258,20 +259,20 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        IPagedList<ForumSubscription> GetAllSubscriptions(int customerId = 0, int forumId = 0,
+        Task<IPagedList<ForumSubscription>> GetAllSubscriptions(int customerId = 0, int forumId = 0,
             int topicId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        void InsertSubscription(ForumSubscription forumSubscription);
+        Task InsertSubscription(ForumSubscription forumSubscription);
 
         /// <summary>
         /// Updates the forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        void UpdateSubscription(ForumSubscription forumSubscription);
+        Task UpdateSubscription(ForumSubscription forumSubscription);
 
         /// <summary>
         /// Check whether customer is allowed to create new topics
@@ -279,7 +280,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="forum">Forum</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToCreateTopic(Customer customer, Forum forum);
+        Task<bool> IsCustomerAllowedToCreateTopic(Customer customer, Forum forum);
 
         /// <summary>
         /// Check whether customer is allowed to edit topic
@@ -287,7 +288,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToEditTopic(Customer customer, ForumTopic topic);
+        Task<bool> IsCustomerAllowedToEditTopic(Customer customer, ForumTopic topic);
 
         /// <summary>
         /// Check whether customer is allowed to move topic
@@ -295,7 +296,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToMoveTopic(Customer customer, ForumTopic topic);
+        Task<bool> IsCustomerAllowedToMoveTopic(Customer customer, ForumTopic topic);
 
         /// <summary>
         /// Check whether customer is allowed to delete topic
@@ -303,7 +304,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToDeleteTopic(Customer customer, ForumTopic topic);
+        Task<bool> IsCustomerAllowedToDeleteTopic(Customer customer, ForumTopic topic);
 
         /// <summary>
         /// Check whether customer is allowed to create new post
@@ -311,7 +312,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="topic">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToCreatePost(Customer customer, ForumTopic topic);
+        Task<bool> IsCustomerAllowedToCreatePost(Customer customer, ForumTopic topic);
 
         /// <summary>
         /// Check whether customer is allowed to edit post
@@ -319,7 +320,7 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToEditPost(Customer customer, ForumPost post);
+        Task<bool> IsCustomerAllowedToEditPost(Customer customer, ForumPost post);
 
         /// <summary>
         /// Check whether customer is allowed to delete post
@@ -327,21 +328,21 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="post">Topic</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToDeletePost(Customer customer, ForumPost post);
+        Task<bool> IsCustomerAllowedToDeletePost(Customer customer, ForumPost post);
 
         /// <summary>
         /// Check whether customer is allowed to set topic priority
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToSetTopicPriority(Customer customer);
+        Task<bool> IsCustomerAllowedToSetTopicPriority(Customer customer);
 
         /// <summary>
         /// Check whether customer is allowed to watch topics
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>True if allowed, otherwise false</returns>
-        bool IsCustomerAllowedToSubscribe(Customer customer);
+        Task<bool> IsCustomerAllowedToSubscribe(Customer customer);
 
         /// <summary>
         /// Calculates topic page index by post identifier
@@ -350,7 +351,7 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
-        int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId);
+        Task<int> CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId);
 
         /// <summary>
         /// Get a post vote 
@@ -358,7 +359,7 @@ namespace Nop.Services.Forums
         /// <param name="postId">Post identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Post vote</returns>
-        ForumPostVote GetPostVote(int postId, Customer customer);
+        Task<ForumPostVote> GetPostVote(int postId, Customer customer);
 
         /// <summary>
         /// Get post vote made since the parameter date
@@ -366,25 +367,25 @@ namespace Nop.Services.Forums
         /// <param name="customer">Customer</param>
         /// <param name="сreatedFromUtc">Date</param>
         /// <returns>Post votes count</returns>
-        int GetNumberOfPostVotes(Customer customer, DateTime сreatedFromUtc);
+        Task<int> GetNumberOfPostVotes(Customer customer, DateTime сreatedFromUtc);
 
         /// <summary>
         /// Insert a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        void InsertPostVote(ForumPostVote postVote);
+        Task InsertPostVote(ForumPostVote postVote);
 
         /// <summary>
         /// Update a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        void UpdatePostVote(ForumPostVote postVote);
+        Task UpdatePostVote(ForumPostVote postVote);
 
         /// <summary>
         /// Delete a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        void DeletePostVote(ForumPostVote postVote);
+        Task DeletePostVote(ForumPostVote postVote);
 
         /// <summary>
         /// Formats the forum post text
@@ -419,48 +420,48 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <returns>Forum topic</returns>
-        ForumTopic GetLastTopic(Forum forum);
+        Task<ForumTopic> GetLastTopic(Forum forum);
 
         /// <summary>
         /// Get forum last post
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <returns>Forum topic</returns>
-        ForumPost GetLastPost(Forum forum);
+        Task<ForumPost> GetLastPost(Forum forum);
 
         /// <summary>
         /// Get first post
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>Forum post</returns>
-        ForumPost GetFirstPost(ForumTopic forumTopic);
+        Task<ForumPost> GetFirstPost(ForumTopic forumTopic);
 
         /// <summary>
         /// Get last post
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <returns>Forum post</returns>
-        ForumPost GetLastPost(ForumTopic forumTopic);
+        Task<ForumPost> GetLastPost(ForumTopic forumTopic);
 
         /// <summary>
         /// Gets ForumGroup SE (search engine) name
         /// </summary>
         /// <param name="forumGroup">ForumGroup</param>
         /// <returns>ForumGroup SE (search engine) name</returns>
-        string GetForumGroupSeName(ForumGroup forumGroup);
+        Task<string> GetForumGroupSeName(ForumGroup forumGroup);
 
         /// <summary>
         /// Gets Forum SE (search engine) name
         /// </summary>
         /// <param name="forum">Forum</param>
         /// <returns>Forum SE (search engine) name</returns>
-        string GetForumSeName(Forum forum);
+        Task<string> GetForumSeName(Forum forum);
 
         /// <summary>
         /// Gets ForumTopic SE (search engine) name
         /// </summary>
         /// <param name="forumTopic">ForumTopic</param>
         /// <returns>ForumTopic SE (search engine) name</returns>
-        string GetTopicSeName(ForumTopic forumTopic);
+        Task<string> GetTopicSeName(ForumTopic forumTopic);
     }
 }

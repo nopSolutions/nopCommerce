@@ -213,7 +213,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Nop.Services.Media
             {
                 var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
 
-                return await _staticCacheManager.GetAsync(key, async () =>
+                return await _staticCacheManager.Get(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
                     var blockBlob = _container.GetBlockBlobReference(thumbFileName);
@@ -264,7 +264,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         #endregion

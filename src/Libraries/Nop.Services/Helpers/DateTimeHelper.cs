@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
@@ -158,7 +159,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
-        public virtual TimeZoneInfo GetCustomerTimeZone(Customer customer)
+        public virtual async Task<TimeZoneInfo> GetCustomerTimeZone(Customer customer)
         {
             if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
                 return DefaultStoreTimeZone;
@@ -167,7 +168,7 @@ namespace Nop.Services.Helpers
 
             var timeZoneId = string.Empty;
             if (customer != null)
-                timeZoneId = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+                timeZoneId = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
 
             try
             {
@@ -212,7 +213,7 @@ namespace Nop.Services.Helpers
                 }
 
                 _dateTimeSettings.DefaultStoreTimeZoneId = defaultTimeZoneId;
-                _settingService.SaveSetting(_dateTimeSettings);
+                _settingService.SaveSetting(_dateTimeSettings).Wait();
             }
         }
 
@@ -221,7 +222,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         public virtual TimeZoneInfo CurrentTimeZone
         {
-            get => GetCustomerTimeZone(_workContext.CurrentCustomer);
+            get => GetCustomerTimeZone(_workContext.GetCurrentCustomer().Result).Result;
             set
             {
                 if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
@@ -233,8 +234,8 @@ namespace Nop.Services.Helpers
                     timeZoneId = value.Id;
                 }
 
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId);
+                _genericAttributeService.SaveAttribute(_workContext.GetCurrentCustomer().Result,
+                    NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId).Wait();
             }
         }
 

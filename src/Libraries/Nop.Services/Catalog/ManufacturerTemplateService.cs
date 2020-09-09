@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Caching;
@@ -41,28 +42,28 @@ namespace Nop.Services.Catalog
         /// Delete manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public virtual async Task DeleteManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException(nameof(manufacturerTemplate));
 
-            _manufacturerTemplateRepository.Delete(manufacturerTemplate);
+            await _manufacturerTemplateRepository.Delete(manufacturerTemplate);
 
             //event notification
-            _eventPublisher.EntityDeleted(manufacturerTemplate);
+            await _eventPublisher.EntityDeleted(manufacturerTemplate);
         }
 
         /// <summary>
         /// Gets all manufacturer templates
         /// </summary>
         /// <returns>Manufacturer templates</returns>
-        public virtual IList<ManufacturerTemplate> GetAllManufacturerTemplates()
+        public virtual async Task<IList<ManufacturerTemplate>> GetAllManufacturerTemplates()
         {
             var query = from pt in _manufacturerTemplateRepository.Table
                         orderby pt.DisplayOrder, pt.Id
                         select pt;
 
-            var templates = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerTemplatesAllCacheKey));
+            var templates = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerTemplatesAllCacheKey));
 
             return templates;
         }
@@ -72,42 +73,42 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerTemplateId">Manufacturer template identifier</param>
         /// <returns>Manufacturer template</returns>
-        public virtual ManufacturerTemplate GetManufacturerTemplateById(int manufacturerTemplateId)
+        public virtual async Task<ManufacturerTemplate> GetManufacturerTemplateById(int manufacturerTemplateId)
         {
             if (manufacturerTemplateId == 0)
                 return null;
 
-            return _manufacturerTemplateRepository.ToCachedGetById(manufacturerTemplateId);
+            return await _manufacturerTemplateRepository.ToCachedGetById(manufacturerTemplateId);
         }
 
         /// <summary>
         /// Inserts manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public virtual async Task InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException(nameof(manufacturerTemplate));
 
-            _manufacturerTemplateRepository.Insert(manufacturerTemplate);
+            await _manufacturerTemplateRepository.Insert(manufacturerTemplate);
 
             //event notification
-            _eventPublisher.EntityInserted(manufacturerTemplate);
+            await _eventPublisher.EntityInserted(manufacturerTemplate);
         }
 
         /// <summary>
         /// Updates the manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        public virtual async Task UpdateManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException(nameof(manufacturerTemplate));
 
-            _manufacturerTemplateRepository.Update(manufacturerTemplate);
+            await _manufacturerTemplateRepository.Update(manufacturerTemplate);
 
             //event notification
-            _eventPublisher.EntityUpdated(manufacturerTemplate);
+            await _eventPublisher.EntityUpdated(manufacturerTemplate);
         }
 
         #endregion

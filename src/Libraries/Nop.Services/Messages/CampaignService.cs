@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
@@ -57,45 +59,45 @@ namespace Nop.Services.Messages
         /// Inserts a campaign
         /// </summary>
         /// <param name="campaign">Campaign</param>        
-        public virtual void InsertCampaign(Campaign campaign)
+        public virtual async Task InsertCampaign(Campaign campaign)
         {
             if (campaign == null)
                 throw new ArgumentNullException(nameof(campaign));
 
-            _campaignRepository.Insert(campaign);
+            await _campaignRepository.Insert(campaign);
 
             //event notification
-            _eventPublisher.EntityInserted(campaign);
+            await _eventPublisher.EntityInserted(campaign);
         }
 
         /// <summary>
         /// Updates a campaign
         /// </summary>
         /// <param name="campaign">Campaign</param>
-        public virtual void UpdateCampaign(Campaign campaign)
+        public virtual async Task UpdateCampaign(Campaign campaign)
         {
             if (campaign == null)
                 throw new ArgumentNullException(nameof(campaign));
 
-            _campaignRepository.Update(campaign);
+            await _campaignRepository.Update(campaign);
 
             //event notification
-            _eventPublisher.EntityUpdated(campaign);
+            await _eventPublisher.EntityUpdated(campaign);
         }
 
         /// <summary>
         /// Deleted a queued email
         /// </summary>
         /// <param name="campaign">Campaign</param>
-        public virtual void DeleteCampaign(Campaign campaign)
+        public virtual async Task DeleteCampaign(Campaign campaign)
         {
             if (campaign == null)
                 throw new ArgumentNullException(nameof(campaign));
 
-            _campaignRepository.Delete(campaign);
+            await _campaignRepository.Delete(campaign);
 
             //event notification
-            _eventPublisher.EntityDeleted(campaign);
+            await _eventPublisher.EntityDeleted(campaign);
         }
 
         /// <summary>
@@ -103,12 +105,12 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
         /// <returns>Campaign</returns>
-        public virtual Campaign GetCampaignById(int campaignId)
+        public virtual async Task<Campaign> GetCampaignById(int campaignId)
         {
             if (campaignId == 0)
                 return null;
 
-            return _campaignRepository.ToCachedGetById(campaignId);
+            return await _campaignRepository.ToCachedGetById(campaignId);
         }
 
         /// <summary>
@@ -116,18 +118,16 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Campaigns</returns>
-        public virtual IList<Campaign> GetAllCampaigns(int storeId = 0)
+        public virtual async Task<IList<Campaign>> GetAllCampaigns(int storeId = 0)
         {
             var query = _campaignRepository.Table;
 
-            if (storeId > 0)
-            {
+            if (storeId > 0) 
                 query = query.Where(c => c.StoreId == storeId);
-            }
 
             query = query.OrderBy(c => c.CreatedOnUtc);
 
-            var campaigns = query.ToList();
+            var campaigns = await query.ToListAsync();
 
             return campaigns;
         }
@@ -139,7 +139,7 @@ namespace Nop.Services.Messages
         /// <param name="emailAccount">Email account</param>
         /// <param name="subscriptions">Subscriptions</param>
         /// <returns>Total emails sent</returns>
-        public virtual int SendCampaign(Campaign campaign, EmailAccount emailAccount,
+        public virtual async Task<int> SendCampaign(Campaign campaign, EmailAccount emailAccount,
             IEnumerable<NewsLetterSubscription> subscriptions)
         {
             if (campaign == null)
@@ -152,16 +152,16 @@ namespace Nop.Services.Messages
 
             foreach (var subscription in subscriptions)
             {
-                var customer = _customerService.GetCustomerByEmail(subscription.Email);
+                var customer = await _customerService.GetCustomerByEmail(subscription.Email);
                 //ignore deleted or inactive customers when sending newsletter campaigns
                 if (customer != null && (!customer.Active || customer.Deleted))
                     continue;
 
                 var tokens = new List<Token>();
-                _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
-                _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
+                await _messageTokenProvider.AddStoreTokens(tokens, await _storeContext.GetCurrentStore(), emailAccount);
+                await _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
                 if (customer != null)
-                    _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                    await _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
                 var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
                 var body = _tokenizer.Replace(campaign.Body, tokens, true);
@@ -178,7 +178,7 @@ namespace Nop.Services.Messages
                     EmailAccountId = emailAccount.Id,
                     DontSendBeforeDateUtc = campaign.DontSendBeforeDateUtc
                 };
-                _queuedEmailService.InsertQueuedEmail(email);
+                await _queuedEmailService.InsertQueuedEmail(email);
                 totalEmailsSent++;
             }
 
@@ -191,7 +191,7 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>
         /// <param name="emailAccount">Email account</param>
         /// <param name="email">Email</param>
-        public virtual void SendCampaign(Campaign campaign, EmailAccount emailAccount, string email)
+        public virtual async Task SendCampaign(Campaign campaign, EmailAccount emailAccount, string email)
         {
             if (campaign == null)
                 throw new ArgumentNullException(nameof(campaign));
@@ -200,15 +200,15 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(emailAccount));
 
             var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
-            var customer = _customerService.GetCustomerByEmail(email);
+            await _messageTokenProvider.AddStoreTokens(tokens, await _storeContext.GetCurrentStore(), emailAccount);
+            var customer = await _customerService.GetCustomerByEmail(email);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                await _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
             var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
-            _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
+            await _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }
 
         #endregion

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -83,12 +85,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderById(int orderId)
+        public virtual async Task<Order> GetOrderById(int orderId)
         {
             if (orderId == 0)
                 return null;
 
-            return _orderRepository.ToCachedGetById(orderId, _cachingSettings.ShortTermCacheTime);
+            return await _orderRepository.ToCachedGetById(orderId, _cachingSettings.ShortTermCacheTime);
         }
 
         /// <summary>
@@ -96,12 +98,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customOrderNumber">The custom order number</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderByCustomOrderNumber(string customOrderNumber)
+        public virtual async Task<Order> GetOrderByCustomOrderNumber(string customOrderNumber)
         {
             if (string.IsNullOrEmpty(customOrderNumber))
                 return null;
 
-            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+            return await _orderRepository.Table.FirstOrDefaultAsync(o => o.CustomOrderNumber == customOrderNumber);
         }
 
         /// <summary>
@@ -109,15 +111,15 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItemId">The order item identifier</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderByOrderItem(int orderItemId)
+        public virtual async Task<Order> GetOrderByOrderItem(int orderItemId)
         {
             if (orderItemId == 0)
                 return null;
 
-            return (from o in _orderRepository.Table
+            return await (from o in _orderRepository.Table
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.Id == orderItemId
-                    select o).FirstOrDefault();
+                    select o).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -125,7 +127,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
         /// <returns>Order</returns>
-        public virtual IList<Order> GetOrdersByIds(int[] orderIds)
+        public virtual async Task<IList<Order>> GetOrdersByIds(int[] orderIds)
         {
             if (orderIds == null || orderIds.Length == 0)
                 return new List<Order>();
@@ -133,7 +135,7 @@ namespace Nop.Services.Orders
             var query = from o in _orderRepository.Table
                         where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
-            var orders = query.ToList();
+            var orders = await query.ToListAsync();
             //sort by passed identifiers
             var sortedOrders = new List<Order>();
             foreach (var id in orderIds)
@@ -151,7 +153,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderByGuid(Guid orderGuid)
+        public virtual async Task<Order> GetOrderByGuid(Guid orderGuid)
         {
             if (orderGuid == Guid.Empty)
                 return null;
@@ -159,7 +161,8 @@ namespace Nop.Services.Orders
             var query = from o in _orderRepository.Table
                         where o.OrderGuid == orderGuid
                         select o;
-            var order = query.FirstOrDefault();
+            var order = await query.FirstOrDefaultAsync();
+
             return order;
         }
 
@@ -167,16 +170,16 @@ namespace Nop.Services.Orders
         /// Deletes an order
         /// </summary>
         /// <param name="order">The order</param>
-        public virtual void DeleteOrder(Order order)
+        public virtual async Task DeleteOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
             order.Deleted = true;
-            UpdateOrder(order);
+            await UpdateOrder(order);
 
             //event notification
-            _eventPublisher.EntityDeleted(order);
+            await _eventPublisher.EntityDeleted(order);
         }
 
         /// <summary>
@@ -203,7 +206,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Orders</returns>
-        public virtual IPagedList<Order> SearchOrders(int storeId = 0,
+        public virtual Task<IPagedList<Order>> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
             int billingCountryId = 0, string paymentMethodSystemName = null,
@@ -288,37 +291,37 @@ namespace Nop.Services.Orders
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
             //database layer paging
-            return new PagedList<Order>(query, pageIndex, pageSize, getOnlyTotalCount);
+            return Task.FromResult<IPagedList<Order>>(new PagedList<Order>(query, pageIndex, pageSize, getOnlyTotalCount));
         }
 
         /// <summary>
         /// Inserts an order
         /// </summary>
         /// <param name="order">Order</param>
-        public virtual void InsertOrder(Order order)
+        public virtual async Task InsertOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            _orderRepository.Insert(order);
+            await _orderRepository.Insert(order);
 
             //event notification
-            _eventPublisher.EntityInserted(order);
+            await _eventPublisher.EntityInserted(order);
         }
 
         /// <summary>
         /// Updates the order
         /// </summary>
         /// <param name="order">The order</param>
-        public virtual void UpdateOrder(Order order)
+        public virtual async Task UpdateOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            _orderRepository.Update(order);
+            await _orderRepository.Update(order);
 
             //event notification
-            _eventPublisher.EntityUpdated(order);
+            await _eventPublisher.EntityUpdated(order);
         }
 
         /// <summary>
@@ -327,7 +330,7 @@ namespace Nop.Services.Orders
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId,
+        public virtual async Task<Order> GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId,
             string paymentMethodSystemName)
         {
             var query = _orderRepository.Table;
@@ -338,7 +341,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
             query = query.OrderByDescending(o => o.CreatedOnUtc);
-            var order = query.FirstOrDefault();
+            var order = await query.FirstOrDefaultAsync();
+
             return order;
         }
 
@@ -389,14 +393,14 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether an order has items to be added to a shipment</returns>
-        public virtual bool HasItemsToAddToShipment(Order order)
+        public virtual async Task<bool> HasItemsToAddToShipment(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
+            foreach (var orderItem in await GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
-                var totalNumberOfItemsCanBeAddedToShipment = GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
+                var totalNumberOfItemsCanBeAddedToShipment = await GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
                 if (totalNumberOfItemsCanBeAddedToShipment <= 0)
                     continue;
 
@@ -412,14 +416,14 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether an order has items to ship</returns>
-        public virtual bool HasItemsToShip(Order order)
+        public virtual async Task<bool> HasItemsToShip(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
+            foreach (var orderItem in await GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
-                var totalNumberOfNotYetShippedItems = GetTotalNumberOfNotYetShippedItems(orderItem);
+                var totalNumberOfNotYetShippedItems = await GetTotalNumberOfNotYetShippedItems(orderItem);
                 if (totalNumberOfNotYetShippedItems <= 0)
                     continue;
 
@@ -435,15 +439,15 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether an order has items to deliver</returns>
-        public virtual bool HasItemsToDeliver(Order order)
+        public virtual async Task<bool> HasItemsToDeliver(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
+            foreach (var orderItem in await GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
-                var totalNumberOfShippedItems = GetTotalNumberOfShippedItems(orderItem);
-                var totalNumberOfDeliveredItems = GetTotalNumberOfDeliveredItems(orderItem);
+                var totalNumberOfShippedItems = await GetTotalNumberOfShippedItems(orderItem);
+                var totalNumberOfDeliveredItems = await GetTotalNumberOfDeliveredItems(orderItem);
                 if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
                     continue;
 
@@ -463,12 +467,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
         /// <returns>Order item</returns>
-        public virtual OrderItem GetOrderItemById(int orderItemId)
+        public virtual async Task<OrderItem> GetOrderItemById(int orderItemId)
         {
             if (orderItemId == 0)
                 return null;
 
-            return _orderItemRepository.ToCachedGetById(orderItemId, _cachingSettings.ShortTermCacheTime);
+            return await _orderItemRepository.ToCachedGetById(orderItemId, _cachingSettings.ShortTermCacheTime);
         }
 
         /// <summary>
@@ -476,15 +480,15 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
         /// <returns>Product</returns>
-        public virtual Product GetProductByOrderItemId(int orderItemId)
+        public virtual async Task<Product> GetProductByOrderItemId(int orderItemId)
         {
             if (orderItemId == 0)
                 return null;
 
-            return (from p in _productRepository.Table
+            return await (from p in _productRepository.Table
                     join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
                     where oi.Id == orderItemId
-                    select p).SingleOrDefault();
+                    select p).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -495,19 +499,19 @@ namespace Nop.Services.Orders
         /// <param name="isShipEnabled">Value indicating whether the entity is ship enabled; pass null to ignore</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
         /// <returns>Result</returns>
-        public virtual IList<OrderItem> GetOrderItems(int orderId, bool? isNotReturnable = null, bool? isShipEnabled = null, int vendorId = 0)
+        public virtual async Task<IList<OrderItem>> GetOrderItems(int orderId, bool? isNotReturnable = null, bool? isShipEnabled = null, int vendorId = 0)
         {
             if (orderId == 0)
                 return new List<OrderItem>();
 
-            return (from oi in _orderItemRepository.Table
+            return await (from oi in _orderItemRepository.Table
                     join p in _productRepository.Table on oi.ProductId equals p.Id
                     where
                     oi.OrderId == orderId &&
                     (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
                     (!isNotReturnable.HasValue || (p.NotReturnable == isNotReturnable)) &&
                     (vendorId <= 0 || (p.VendorId == vendorId))
-                    select oi).ToList();
+                    select oi).ToListAsync();
         }
 
         /// <summary>
@@ -515,7 +519,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItemGuid">Order identifier</param>
         /// <returns>Order item</returns>
-        public virtual OrderItem GetOrderItemByGuid(Guid orderItemGuid)
+        public virtual async Task<OrderItem> GetOrderItemByGuid(Guid orderItemGuid)
         {
             if (orderItemGuid == Guid.Empty)
                 return null;
@@ -523,7 +527,7 @@ namespace Nop.Services.Orders
             var query = from orderItem in _orderItemRepository.Table
                         where orderItem.OrderItemGuid == orderItemGuid
                         select orderItem;
-            var item = query.FirstOrDefault();
+            var item = await query.FirstOrDefaultAsync();
             return item;
         }
 
@@ -532,7 +536,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier; null to load all records</param>
         /// <returns>Order items</returns>
-        public virtual IList<OrderItem> GetDownloadableOrderItems(int customerId)
+        public virtual async Task<IList<OrderItem>> GetDownloadableOrderItems(int customerId)
         {
             if (customerId == 0)
                 throw new ArgumentOutOfRangeException(nameof(customerId));
@@ -546,7 +550,7 @@ namespace Nop.Services.Orders
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;
 
-            var orderItems = query.ToList();
+            var orderItems = await query.ToListAsync();
             return orderItems;
         }
 
@@ -554,15 +558,15 @@ namespace Nop.Services.Orders
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>
-        public virtual void DeleteOrderItem(OrderItem orderItem)
+        public virtual async Task DeleteOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            _orderItemRepository.Delete(orderItem);
+            await _orderItemRepository.Delete(orderItem);
 
             //event notification
-            _eventPublisher.EntityDeleted(orderItem);
+            await _eventPublisher.EntityDeleted(orderItem);
         }
 
         /// <summary>
@@ -570,18 +574,18 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Total number of items in all shipments</returns>
-        public virtual int GetTotalNumberOfItemsInAllShipment(OrderItem orderItem)
+        public virtual async Task<int> GetTotalNumberOfItemsInAllShipment(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
             var totalInShipments = 0;
-            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
+            var shipments = await _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
 
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
-                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
+                var si = (await _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -597,12 +601,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Total number of already delivered items which can be added to new shipments</returns>
-        public virtual int GetTotalNumberOfItemsCanBeAddedToShipment(OrderItem orderItem)
+        public virtual async Task<int> GetTotalNumberOfItemsCanBeAddedToShipment(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            var totalInShipments = GetTotalNumberOfItemsInAllShipment(orderItem);
+            var totalInShipments = await GetTotalNumberOfItemsInAllShipment(orderItem);
 
             var qtyOrdered = orderItem.Quantity;
             var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
@@ -617,13 +621,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
-        public virtual int GetTotalNumberOfNotYetShippedItems(OrderItem orderItem)
+        public virtual async Task<int> GetTotalNumberOfNotYetShippedItems(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
+            var shipments = await _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -631,7 +635,7 @@ namespace Nop.Services.Orders
                     //already shipped
                     continue;
 
-                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
+                var si = (await _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -647,13 +651,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Total number of already shipped items</returns>
-        public virtual int GetTotalNumberOfShippedItems(OrderItem orderItem)
+        public virtual async Task<int> GetTotalNumberOfShippedItems(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
+            var shipments = await _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -661,7 +665,7 @@ namespace Nop.Services.Orders
                     //not shipped yet
                     continue;
 
-                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
+                var si = (await _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -677,13 +681,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item</param>
         /// <returns>Total number of already delivered items</returns>
-        public virtual int GetTotalNumberOfDeliveredItems(OrderItem orderItem)
+        public virtual async Task<int> GetTotalNumberOfDeliveredItems(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
+            var shipments = await _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
 
             for (var i = 0; i < shipments.Count; i++)
             {
@@ -692,7 +696,7 @@ namespace Nop.Services.Orders
                     //not delivered yet
                     continue;
 
-                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
+                var si = (await _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -708,12 +712,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item to check</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        public virtual bool IsDownloadAllowed(OrderItem orderItem)
+        public virtual async Task<bool> IsDownloadAllowed(OrderItem orderItem)
         {
             if (orderItem is null)
                 return false;
 
-            var order = GetOrderById(orderItem.OrderId);
+            var order = await GetOrderById(orderItem.OrderId);
             if (order == null || order.Deleted)
                 return false;
 
@@ -721,7 +725,7 @@ namespace Nop.Services.Orders
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var product = _productService.GetProductById(orderItem.ProductId);
+            var product = await _productService.GetProductById(orderItem.ProductId);
 
             if (product == null || !product.IsDownload)
                 return false;
@@ -777,12 +781,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">Order item to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public virtual bool IsLicenseDownloadAllowed(OrderItem orderItem)
+        public virtual async Task<bool> IsLicenseDownloadAllowed(OrderItem orderItem)
         {
             if (orderItem == null)
                 return false;
 
-            return IsDownloadAllowed(orderItem) &&
+            return await IsDownloadAllowed(orderItem) &&
                 orderItem.LicenseDownloadId.HasValue &&
                 orderItem.LicenseDownloadId > 0;
         }
@@ -791,30 +795,30 @@ namespace Nop.Services.Orders
         /// Inserts a order item
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        public virtual void InsertOrderItem(OrderItem orderItem)
+        public virtual async Task InsertOrderItem(OrderItem orderItem)
         {
             if (orderItem is null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            _orderItemRepository.Insert(orderItem);
+            await _orderItemRepository.Insert(orderItem);
 
             //event notification
-            _eventPublisher.EntityInserted(orderItem);
+            await _eventPublisher.EntityInserted(orderItem);
         }
 
         /// <summary>
         /// Updates a order item
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        public virtual void UpdateOrderItem(OrderItem orderItem)
+        public virtual async Task UpdateOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            _orderItemRepository.Update(orderItem);
+            await _orderItemRepository.Update(orderItem);
 
             //event notification
-            _eventPublisher.EntityUpdated(orderItem);
+            await _eventPublisher.EntityUpdated(orderItem);
         }
 
         #endregion
@@ -826,12 +830,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderNoteId">The order note identifier</param>
         /// <returns>Order note</returns>
-        public virtual OrderNote GetOrderNoteById(int orderNoteId)
+        public virtual async Task<OrderNote> GetOrderNoteById(int orderNoteId)
         {
             if (orderNoteId == 0)
                 return null;
 
-            return _orderNoteRepository.GetById(orderNoteId);
+            return await _orderNoteRepository.GetById(orderNoteId);
         }
 
         /// <summary>
@@ -840,7 +844,7 @@ namespace Nop.Services.Orders
         /// <param name="orderId">Order identifier</param>
         /// <param name="displayToCustomer">Value indicating whether a customer can see a note; pass null to ignore</param>
         /// <returns>Result</returns>
-        public virtual IList<OrderNote> GetOrderNotesByOrderId(int orderId, bool? displayToCustomer = null)
+        public virtual async Task<IList<OrderNote>> GetOrderNotesByOrderId(int orderId, bool? displayToCustomer = null)
         {
             if (orderId == 0)
                 return new List<OrderNote>();
@@ -852,22 +856,22 @@ namespace Nop.Services.Orders
                 query = query.Where(on => on.DisplayToCustomer == displayToCustomer);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
         /// Deletes an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        public virtual void DeleteOrderNote(OrderNote orderNote)
+        public virtual async Task DeleteOrderNote(OrderNote orderNote)
         {
             if (orderNote == null)
                 throw new ArgumentNullException(nameof(orderNote));
 
-            _orderNoteRepository.Delete(orderNote);
+            await _orderNoteRepository.Delete(orderNote);
 
             //event notification
-            _eventPublisher.EntityDeleted(orderNote);
+            await _eventPublisher.EntityDeleted(orderNote);
         }
 
         /// <summary>
@@ -894,15 +898,15 @@ namespace Nop.Services.Orders
         /// Inserts an order note
         /// </summary>
         /// <param name="orderNote">The order note</param>
-        public virtual void InsertOrderNote(OrderNote orderNote)
+        public virtual async Task InsertOrderNote(OrderNote orderNote)
         {
             if (orderNote is null)
                 throw new ArgumentNullException(nameof(orderNote));
 
-            _orderNoteRepository.Insert(orderNote);
+            await _orderNoteRepository.Insert(orderNote);
 
             //event notification
-            _eventPublisher.EntityInserted(orderNote);
+            await _eventPublisher.EntityInserted(orderNote);
         }
 
         #endregion
@@ -913,16 +917,16 @@ namespace Nop.Services.Orders
         /// Deletes a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public virtual void DeleteRecurringPayment(RecurringPayment recurringPayment)
+        public virtual async Task DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
             recurringPayment.Deleted = true;
-            UpdateRecurringPayment(recurringPayment);
+            await UpdateRecurringPayment(recurringPayment);
 
             //event notification
-            _eventPublisher.EntityDeleted(recurringPayment);
+            await _eventPublisher.EntityDeleted(recurringPayment);
         }
 
         /// <summary>
@@ -930,42 +934,42 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
         /// <returns>Recurring payment</returns>
-        public virtual RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
+        public virtual async Task<RecurringPayment> GetRecurringPaymentById(int recurringPaymentId)
         {
             if (recurringPaymentId == 0)
                 return null;
 
-            return _recurringPaymentRepository.ToCachedGetById(recurringPaymentId);
+            return await _recurringPaymentRepository.ToCachedGetById(recurringPaymentId);
         }
 
         /// <summary>
         /// Inserts a recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public virtual void InsertRecurringPayment(RecurringPayment recurringPayment)
+        public virtual async Task InsertRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            _recurringPaymentRepository.Insert(recurringPayment);
+            await _recurringPaymentRepository.Insert(recurringPayment);
 
             //event notification
-            _eventPublisher.EntityInserted(recurringPayment);
+            await _eventPublisher.EntityInserted(recurringPayment);
         }
 
         /// <summary>
         /// Updates the recurring payment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public virtual void UpdateRecurringPayment(RecurringPayment recurringPayment)
+        public virtual async Task UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            _recurringPaymentRepository.Update(recurringPayment);
+            await _recurringPaymentRepository.Update(recurringPayment);
 
             //event notification
-            _eventPublisher.EntityUpdated(recurringPayment);
+            await _eventPublisher.EntityUpdated(recurringPayment);
         }
 
         /// <summary>
@@ -979,7 +983,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payments</returns>
-        public virtual IPagedList<RecurringPayment> SearchRecurringPayments(int storeId = 0,
+        public virtual Task<IPagedList<RecurringPayment>> SearchRecurringPayments(int storeId = 0,
             int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -1008,7 +1012,8 @@ namespace Nop.Services.Orders
                          select rp;
 
             var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
-            return recurringPayments;
+            
+            return Task.FromResult<IPagedList<RecurringPayment>>(recurringPayments);
         }
 
         #endregion
@@ -1020,27 +1025,27 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPayment">The recurring payment</param>
         /// <returns>Result</returns>
-        public virtual IList<RecurringPaymentHistory> GetRecurringPaymentHistory(RecurringPayment recurringPayment)
+        public virtual async Task<IList<RecurringPaymentHistory>> GetRecurringPaymentHistory(RecurringPayment recurringPayment)
         {
             if (recurringPayment is null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            return _recurringPaymentHistoryRepository.Table.Where(rph => rph.RecurringPaymentId == recurringPayment.Id).ToList();
+            return await _recurringPaymentHistoryRepository.Table.Where(rph => rph.RecurringPaymentId == recurringPayment.Id).ToListAsync();
         }
 
         /// <summary>
         /// Inserts a recurring payment history entry
         /// </summary>
         /// <param name="recurringPaymentHistory">Recurring payment history entry</param>
-        public virtual void InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
+        public virtual async Task InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
         {
             if (recurringPaymentHistory == null)
                 throw new ArgumentNullException(nameof(recurringPaymentHistory));
 
-            _recurringPaymentHistoryRepository.Insert(recurringPaymentHistory);
+            await _recurringPaymentHistoryRepository.Insert(recurringPaymentHistory);
 
             //event notification
-            _eventPublisher.EntityInserted(recurringPaymentHistory);
+            await _eventPublisher.EntityInserted(recurringPaymentHistory);
         }
 
         #endregion

@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Forums;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Forums.Caching
 {
@@ -12,11 +13,11 @@ namespace Nop.Services.Forums.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(ForumGroup entity)
+        protected override async Task ClearCache(ForumGroup entity)
         {
-            Remove(NopForumDefaults.ForumGroupAllCacheKey);
+            await Remove(NopForumDefaults.ForumGroupAllCacheKey);
             var cacheKey = _cacheKeyService.PrepareKey(NopForumDefaults.ForumAllByForumGroupIdCacheKey, entity);
-            Remove(cacheKey);
+            await Remove(cacheKey);
         }
     }
 }

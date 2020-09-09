@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 
@@ -17,7 +18,7 @@ namespace Nop.Services.Events
         /// </summary>
         /// <typeparam name="TEvent">Type of event</typeparam>
         /// <param name="event">Event object</param>
-        public virtual void Publish<TEvent>(TEvent @event)
+        public virtual async Task Publish<TEvent>(TEvent @event)
         {
             //get all event consumers
             var consumers = EngineContext.Current.ResolveAll<IConsumer<TEvent>>().ToList();
@@ -27,7 +28,7 @@ namespace Nop.Services.Events
                 try
                 {
                     //try to handle published event
-                    consumer.HandleEvent(@event);
+                    await consumer.HandleEvent(@event);
                 }
                 catch (Exception exception)
                 {

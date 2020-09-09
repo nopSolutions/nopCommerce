@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Security;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Security.Caching
 {
@@ -12,10 +13,10 @@ namespace Nop.Services.Security.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(AclRecord entity)
+        protected override async Task ClearCache(AclRecord entity)
         {
             var cacheKey = _cacheKeyService.PrepareKey(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entity.EntityId, entity.EntityName);
-            Remove(cacheKey);
+            await Remove(cacheKey);
         }
     }
 }

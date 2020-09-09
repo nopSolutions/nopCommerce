@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Caching.Extensions;
@@ -37,32 +39,32 @@ namespace Nop.Services.Stores
         /// Deletes a store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void DeleteStore(Store store)
+        public virtual async Task DeleteStore(Store store)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            var allStores = GetAllStores();
+            var allStores = await GetAllStores();
             if (allStores.Count == 1)
                 throw new Exception("You cannot delete the only configured store");
 
-            _storeRepository.Delete(store);
+            await _storeRepository.Delete(store);
 
             //event notification
-            _eventPublisher.EntityDeleted(store);
+            await _eventPublisher.EntityDeleted(store);
         }
 
         /// <summary>
         /// Gets all stores
         /// </summary>
         /// <returns>Stores</returns>
-        public virtual IList<Store> GetAllStores()
+        public virtual async Task<IList<Store>> GetAllStores()
         {
             var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
 
             //we can not use ICacheKeyService because it'll cause circular references.
             //that's why we use the default cache time
-            var result = query.ToCachedList(NopStoreDefaults.StoresAllCacheKey);
+            var result = await query.ToCachedList(NopStoreDefaults.StoresAllCacheKey);
 
             return result;
         }
@@ -72,12 +74,12 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Store</returns>
-        public virtual Store GetStoreById(int storeId)
+        public virtual async Task<Store> GetStoreById(int storeId)
         {
             if (storeId == 0)
                 return null;
 
-            var store = _storeRepository.ToCachedGetById(storeId);
+            var store = await _storeRepository.ToCachedGetById(storeId);
 
             return store;
         }
@@ -86,30 +88,30 @@ namespace Nop.Services.Stores
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void InsertStore(Store store)
+        public virtual async Task InsertStore(Store store)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            _storeRepository.Insert(store);
+            await _storeRepository.Insert(store);
 
             //event notification
-            _eventPublisher.EntityInserted(store);
+            await _eventPublisher.EntityInserted(store);
         }
 
         /// <summary>
         /// Updates the store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void UpdateStore(Store store)
+        public virtual async Task UpdateStore(Store store)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
             
-            _storeRepository.Update(store);
+            await _storeRepository.Update(store);
 
             //event notification
-            _eventPublisher.EntityUpdated(store);
+            await _eventPublisher.EntityUpdated(store);
         }
 
         /// <summary>
@@ -161,7 +163,7 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
         /// <returns>List of names and/or IDs not existing stores</returns>
-        public string[] GetNotExistingStores(string[] storeIdsNames)
+        public async Task<string[]> GetNotExistingStores(string[] storeIdsNames)
         {
             if (storeIdsNames == null)
                 throw new ArgumentNullException(nameof(storeIdsNames));
@@ -169,7 +171,7 @@ namespace Nop.Services.Stores
             var query = _storeRepository.Table;
             var queryFilter = storeIdsNames.Distinct().ToArray();
             //filtering by name
-            var filter = query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToList();
+            var filter = await query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
@@ -177,7 +179,7 @@ namespace Nop.Services.Stores
                 return queryFilter.ToArray();
 
             //filtering by IDs
-            filter = query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToList();
+            filter = await query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             return queryFilter.ToArray();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -62,15 +64,15 @@ namespace Nop.Services.Directory
         /// Deletes a country
         /// </summary>
         /// <param name="country">Country</param>
-        public virtual void DeleteCountry(Country country)
+        public virtual async Task DeleteCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException(nameof(country));
 
-            _countryRepository.Delete(country);
+            await _countryRepository.Delete(country);
 
             //event notification
-            _eventPublisher.EntityDeleted(country);
+            await _eventPublisher.EntityDeleted(country);
         }
 
         /// <summary>
@@ -79,11 +81,11 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
+        public virtual async Task<IList<Country>> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
 
-            return _staticCacheManager.Get(key, () =>
+            return await _staticCacheManager.Get(key, async () =>
             {
                 var query = _countryRepository.Table;
                 if (!showHidden)
@@ -93,7 +95,7 @@ namespace Nop.Services.Directory
                 if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
+                    var currentStoreId = (await _storeContext.GetCurrentStore()).Id;
                     query = from c in query
                             join sc in _storeMappingRepository.Table
                             on new { c1 = c.Id, c2 = nameof(Country) } equals new { c1 = sc.EntityId, c2 = sc.EntityName } into c_sc
@@ -104,7 +106,7 @@ namespace Nop.Services.Directory
                     query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 }
 
-                var countries = query.ToList();
+                var countries = await query.ToListAsync();
 
                 if (languageId > 0)
                 {
@@ -125,9 +127,9 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountriesForBilling(int languageId = 0, bool showHidden = false)
+        public virtual async Task<IList<Country>> GetAllCountriesForBilling(int languageId = 0, bool showHidden = false)
         {
-            return GetAllCountries(languageId, showHidden).Where(c => c.AllowsBilling).ToList();
+            return (await GetAllCountries(languageId, showHidden)).Where(c => c.AllowsBilling).ToList();
         }
 
         /// <summary>
@@ -136,9 +138,9 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false)
+        public virtual async Task<IList<Country>> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false)
         {
-            return GetAllCountries(languageId, showHidden).Where(c => c.AllowsShipping).ToList();
+            return (await GetAllCountries(languageId, showHidden)).Where(c => c.AllowsShipping).ToList();
         }
 
         /// <summary>
@@ -146,9 +148,9 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="address">Address</param>
         /// <returns>Country</returns>
-        public virtual Country GetCountryByAddress(Address address)
+        public virtual async Task<Country> GetCountryByAddress(Address address)
         {
-            return GetCountryById(address?.CountryId ?? 0);
+            return await GetCountryById(address?.CountryId ?? 0);
         }
 
         /// <summary>
@@ -156,12 +158,12 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        public virtual Country GetCountryById(int countryId)
+        public virtual async Task<Country> GetCountryById(int countryId)
         {
             if (countryId == 0)
                 return null;
             
-            return _countryRepository.ToCachedGetById(countryId);
+            return await _countryRepository.ToCachedGetById(countryId);
         }
 
         /// <summary>
@@ -169,7 +171,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="countryIds">Country identifiers</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetCountriesByIds(int[] countryIds)
+        public virtual async Task<IList<Country>> GetCountriesByIds(int[] countryIds)
         {
             if (countryIds == null || countryIds.Length == 0)
                 return new List<Country>();
@@ -177,7 +179,7 @@ namespace Nop.Services.Directory
             var query = from c in _countryRepository.Table
                         where countryIds.Contains(c.Id)
                         select c;
-            var countries = query.ToList();
+            var countries = await query.ToListAsync();
             //sort by passed identifiers
             var sortedCountries = new List<Country>();
             foreach (var id in countryIds)
@@ -195,7 +197,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>
         /// <returns>Country</returns>
-        public virtual Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
+        public virtual async Task<Country> GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
@@ -206,7 +208,7 @@ namespace Nop.Services.Directory
                 where c.TwoLetterIsoCode == twoLetterIsoCode
                 select c;
 
-            return query.ToCachedFirstOrDefault(key);
+            return await query.ToCachedFirstOrDefault(key);
         }
 
         /// <summary>
@@ -214,7 +216,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="threeLetterIsoCode">Country three letter ISO code</param>
         /// <returns>Country</returns>
-        public virtual Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
+        public virtual async Task<Country> GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
@@ -225,37 +227,37 @@ namespace Nop.Services.Directory
                 where c.ThreeLetterIsoCode == threeLetterIsoCode
                 select c;
 
-            return query.ToCachedFirstOrDefault(key);
+            return await query.ToCachedFirstOrDefault(key);
         }
 
         /// <summary>
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
-        public virtual void InsertCountry(Country country)
+        public virtual async Task InsertCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException(nameof(country));
 
-            _countryRepository.Insert(country);
+            await _countryRepository.Insert(country);
 
             //event notification
-            _eventPublisher.EntityInserted(country);
+            await _eventPublisher.EntityInserted(country);
         }
 
         /// <summary>
         /// Updates the country
         /// </summary>
         /// <param name="country">Country</param>
-        public virtual void UpdateCountry(Country country)
+        public virtual async Task UpdateCountry(Country country)
         {
             if (country == null)
                 throw new ArgumentNullException(nameof(country));
 
-            _countryRepository.Update(country);
+            await _countryRepository.Update(country);
 
             //event notification
-            _eventPublisher.EntityUpdated(country);
+            await _eventPublisher.EntityUpdated(country);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -17,18 +18,18 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        IList<Product> GetComparedProducts();
+        Task<IList<Product>> GetComparedProducts();
 
         /// <summary>
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        void RemoveProductFromCompareList(int productId);
+        Task RemoveProductFromCompareList(int productId);
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        void AddProductToCompareList(int productId);
+        Task AddProductToCompareList(int productId);
     }
 }

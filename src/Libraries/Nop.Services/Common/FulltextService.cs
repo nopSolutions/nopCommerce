@@ -1,4 +1,5 @@
-﻿using Nop.Data;
+﻿using System.Threading.Tasks;
+using Nop.Data;
 
 namespace Nop.Services.Common
 {
@@ -9,7 +10,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private INopDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
 
         #endregion
 
@@ -28,25 +29,25 @@ namespace Nop.Services.Common
         /// Gets value indicating whether Full-Text is supported
         /// </summary>
         /// <returns>Result</returns>
-        public virtual bool IsFullTextSupported()
+        public virtual async Task<bool> IsFullTextSupported()
         {
-            return _dataProvider.ExecuteStoredProcedure<bool>("FullText_IsSupported");
+            return await _dataProvider.ExecuteStoredProcedure<bool>("FullText_IsSupported");
         }
 
         /// <summary>
         /// Enable Full-Text support
         /// </summary>
-        public virtual void EnableFullText()
+        public virtual async Task EnableFullText()
         {
-            _dataProvider.ExecuteStoredProcedure("FullText_Enable");
+            await _dataProvider.ExecuteStoredProcedure("FullText_Enable");
         }
 
         /// <summary>
         /// Disable Full-Text support
         /// </summary>
-        public virtual void DisableFullText()
+        public virtual async Task DisableFullText()
         {
-            _dataProvider.ExecuteStoredProcedure("FullText_Disable");
+            await _dataProvider.ExecuteStoredProcedure("FullText_Disable");
         }
 
         #endregion

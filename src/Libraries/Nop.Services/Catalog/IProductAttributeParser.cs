@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 
@@ -17,7 +18,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected product attribute mappings</returns>
-        IList<ProductAttributeMapping> ParseProductAttributeMappings(string attributesXml);
+        Task<IList<ProductAttributeMapping>> ParseProductAttributeMappings(string attributesXml);
 
         /// <summary>
         /// Get product attribute values
@@ -25,7 +26,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
         /// <returns>Product attribute values</returns>
-        IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml, int productAttributeMappingId = 0);
+        Task<IList<ProductAttributeValue>> ParseProductAttributeValues(string attributesXml, int productAttributeMappingId = 0);
 
         /// <summary>
         /// Gets selected product attribute values
@@ -61,7 +62,7 @@ namespace Nop.Services.Catalog
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreQuantity">A value indicating whether we should ignore the quantity of attribute value entered by the customer</param>
         /// <returns>Result</returns>
-        bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true);
+        Task<bool> AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true);
 
         /// <summary>
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
@@ -69,7 +70,7 @@ namespace Nop.Services.Catalog
         /// <param name="pam">Product attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml);
+        Task<bool?> IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml);
 
         /// <summary>
         /// Finds a product attribute combination by attributes stored in XML 
@@ -78,7 +79,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Found product attribute combination</returns>
-        ProductAttributeCombination FindProductAttributeCombination(Product product,
+        Task<ProductAttributeCombination> FindProductAttributeCombination(Product product,
             string attributesXml, bool ignoreNonCombinableAttributes = true);
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace Nop.Services.Catalog
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
         /// <returns>Attribute combinations in XML format</returns>
-        IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
+        Task<IList<string>> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
 
         /// <summary>
         /// Parse a customer entered price of the product
@@ -96,7 +97,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
         /// <returns>Customer entered price of the product</returns>
-        decimal ParseCustomerEnteredPrice(Product product, IFormCollection form);
+        Task<decimal> ParseCustomerEnteredPrice(Product product, IFormCollection form);
 
         /// <summary>
         /// Parse a entered quantity of the product
@@ -122,7 +123,7 @@ namespace Nop.Services.Catalog
         /// <param name="form">Form values</param>
         /// <param name="errors">Errors</param>
         /// <returns>Attributes in XML format</returns>
-        string ParseProductAttributes(Product product, IFormCollection form, List<string> errors);
+        Task<string> ParseProductAttributes(Product product, IFormCollection form, List<string> errors);
 
         #endregion
 

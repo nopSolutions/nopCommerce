@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping.Date
@@ -14,32 +15,32 @@ namespace Nop.Services.Shipping.Date
         /// Delete a delivery date
         /// </summary>
         /// <param name="deliveryDate">The delivery date</param>
-        void DeleteDeliveryDate(DeliveryDate deliveryDate);
+        Task DeleteDeliveryDate(DeliveryDate deliveryDate);
 
         /// <summary>
         /// Get a delivery date
         /// </summary>
         /// <param name="deliveryDateId">The delivery date identifier</param>
         /// <returns>Delivery date</returns>
-        DeliveryDate GetDeliveryDateById(int deliveryDateId);
+        Task<DeliveryDate> GetDeliveryDateById(int deliveryDateId);
 
         /// <summary>
         /// Get all delivery dates
         /// </summary>
         /// <returns>Delivery dates</returns>
-        IList<DeliveryDate> GetAllDeliveryDates();
+        Task<IList<DeliveryDate>> GetAllDeliveryDates();
 
         /// <summary>
         /// Insert a delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        void InsertDeliveryDate(DeliveryDate deliveryDate);
+        Task InsertDeliveryDate(DeliveryDate deliveryDate);
 
         /// <summary>
         /// Update the delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        void UpdateDeliveryDate(DeliveryDate deliveryDate);
+        Task UpdateDeliveryDate(DeliveryDate deliveryDate);
 
         #endregion
 
@@ -50,31 +51,31 @@ namespace Nop.Services.Shipping.Date
         /// </summary>
         /// <param name="productAvailabilityRangeId">The product availability range identifier</param>
         /// <returns>Product availability range</returns>
-        ProductAvailabilityRange GetProductAvailabilityRangeById(int productAvailabilityRangeId);
+        Task<ProductAvailabilityRange> GetProductAvailabilityRangeById(int productAvailabilityRangeId);
 
         /// <summary>
         /// Get all product availability ranges
         /// </summary>
         /// <returns>Product availability ranges</returns>
-        IList<ProductAvailabilityRange> GetAllProductAvailabilityRanges();
+        Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRanges();
 
         /// <summary>
         /// Insert the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        Task InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
 
         /// <summary>
         /// Update the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        void UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        Task UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
 
         /// <summary>
         /// Delete the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        void DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        Task DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
 
         #endregion
     }

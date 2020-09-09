@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Customers.Caching
@@ -12,10 +13,10 @@ namespace Nop.Services.Customers.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(CustomerRole entity)
+        protected override async Task ClearCache(CustomerRole entity)
         {
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerRolesPrefixCacheKey);
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefixCacheKey);
+            await RemoveByPrefix(NopCustomerServicesDefaults.CustomerRolesPrefixCacheKey);
+            await RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefixCacheKey);
         }
     }
 }

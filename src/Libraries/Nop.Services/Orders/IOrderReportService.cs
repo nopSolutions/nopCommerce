@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -23,7 +24,7 @@ namespace Nop.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        IList<OrderByCountryReportLine> GetCountryReport(int storeId = 0, OrderStatus? os = null,
+        Task<IList<OrderByCountryReportLine>> GetCountryReport(int storeId = 0, OrderStatus? os = null,
             PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null);
 
@@ -47,19 +48,19 @@ namespace Nop.Services.Orders
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0, int vendorId = 0, int productId = 0,
+        Task<OrderAverageReportLine> GetOrderAverageReportLine(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null);
-        
+
         /// <summary>
         /// Get order average report
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os);
+        Task<OrderAverageReportLineSummary> OrderAverageReport(int storeId, OrderStatus os);
 
         /// <summary>
         /// Get best sellers report
@@ -79,7 +80,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        IPagedList<BestsellersReportLine> BestSellersReport(
+        Task<IPagedList<BestsellersReportLine>> BestSellersReport(
             int categoryId = 0, int manufacturerId = 0, 
             int storeId = 0, int vendorId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
@@ -98,7 +99,7 @@ namespace Nop.Services.Orders
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
+        Task<int[]> GetAlsoPurchasedProductsIds(int storeId, int productId,
             int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false);
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        IPagedList<Product> ProductsNeverSold(int vendorId = 0, int storeId = 0,
+        Task<IPagedList<Product>> ProductsNeverSold(int vendorId = 0, int storeId = 0,
             int categoryId = 0, int manufacturerId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
@@ -139,7 +140,7 @@ namespace Nop.Services.Orders
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        decimal ProfitReport(int storeId = 0, int vendorId = 0, int productId = 0,
+        Task<decimal> ProfitReport(int storeId = 0, int vendorId = 0, int productId = 0,
             int warehouseId = 0, int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,

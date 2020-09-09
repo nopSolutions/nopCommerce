@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Stores;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Stores.Caching
 {
@@ -12,18 +13,18 @@ namespace Nop.Services.Stores.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(StoreMapping entity)
+        protected override async Task ClearCache(StoreMapping entity)
         {
             var entityId = entity.EntityId;
             var entityName = entity.EntityName;
 
             var key = _cacheKeyService.PrepareKey(NopStoreDefaults.StoreMappingsByEntityIdNameCacheKey, entityId, entityName);
 
-            Remove(key);
+            await Remove(key);
 
             key = _cacheKeyService.PrepareKey(NopStoreDefaults.StoreMappingIdsByEntityIdNameCacheKey, entityId, entityName);
             
-            Remove(key);
+            await Remove(key);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Events
+﻿using System.Threading.Tasks;
+
+namespace Nop.Services.Events
 {
     /// <summary>
     /// Represents an event publisher
@@ -10,6 +12,6 @@
         /// </summary>
         /// <typeparam name="TEvent">Type of event</typeparam>
         /// <param name="event">Event object</param>
-        void Publish<TEvent>(TEvent @event);
+        Task Publish<TEvent>(TEvent @event);
     }
 }

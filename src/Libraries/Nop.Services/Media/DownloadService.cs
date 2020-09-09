@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
@@ -15,16 +17,16 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPubisher;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Download> _downloadRepository;
         #endregion
 
         #region Ctor
 
-        public DownloadService(IEventPublisher eventPubisher,
+        public DownloadService(IEventPublisher eventPublisher,
             IRepository<Download> downloadRepository)
         {
-            _eventPubisher = eventPubisher;
+            _eventPublisher = eventPublisher;
             _downloadRepository = downloadRepository;
         }
 
@@ -37,12 +39,12 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        public virtual Download GetDownloadById(int downloadId)
+        public virtual async Task<Download> GetDownloadById(int downloadId)
         {
             if (downloadId == 0)
                 return null;
 
-            return _downloadRepository.GetById(downloadId);
+            return await _downloadRepository.GetById(downloadId);
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadGuid">Download GUID</param>
         /// <returns>Download</returns>
-        public virtual Download GetDownloadByGuid(Guid downloadGuid)
+        public virtual async Task<Download> GetDownloadByGuid(Guid downloadGuid)
         {
             if (downloadGuid == Guid.Empty)
                 return null;
@@ -59,52 +61,52 @@ namespace Nop.Services.Media
                         where o.DownloadGuid == downloadGuid
                         select o;
 
-            return query.FirstOrDefault();
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>
         /// Deletes a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual void DeleteDownload(Download download)
+        public virtual async Task DeleteDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException(nameof(download));
 
-            _downloadRepository.Delete(download);
+            await _downloadRepository.Delete(download);
 
             //event notification
-            _eventPubisher.EntityDeleted(download);
+            await _eventPublisher.EntityDeleted(download);
         }
 
         /// <summary>
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual void InsertDownload(Download download)
+        public virtual async Task InsertDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException(nameof(download));
 
-            _downloadRepository.Insert(download);
+            await _downloadRepository.Insert(download);
 
             //event notification
-            _eventPubisher.EntityInserted(download);
+            await _eventPublisher.EntityInserted(download);
         }
 
         /// <summary>
         /// Updates the download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual void UpdateDownload(Download download)
+        public virtual async Task UpdateDownload(Download download)
         {
             if (download == null)
                 throw new ArgumentNullException(nameof(download));
 
-            _downloadRepository.Update(download);
+            await _downloadRepository.Update(download);
 
             //event notification
-            _eventPubisher.EntityUpdated(download);
+            await _eventPublisher.EntityUpdated(download);
         }
 
         /// <summary>
@@ -112,12 +114,13 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="file">File</param>
         /// <returns>Download binary array</returns>
-        public virtual byte[] GetDownloadBits(IFormFile file)
+        public virtual async Task<byte[]> GetDownloadBits(IFormFile file)
         {
-            using var fileStream = file.OpenReadStream();
-            using var ms = new MemoryStream();
-            fileStream.CopyTo(ms);
+            await using var fileStream = file.OpenReadStream();
+            await using var ms = new MemoryStream();
+            await fileStream.CopyToAsync(ms);
             var fileBytes = ms.ToArray();
+
             return fileBytes;
         }
 

@@ -31,7 +31,7 @@ namespace Nop.Services
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
                          where valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))
-                         select new { ID = Convert.ToInt32(enumValue), Name = useLocalization ? localizationService.GetLocalizedEnum(enumValue) : CommonHelper.ConvertEnum(enumValue.ToString()) };
+                         select new { ID = Convert.ToInt32(enumValue), Name = useLocalization ? localizationService.GetLocalizedEnum(enumValue).Result : CommonHelper.ConvertEnum(enumValue.ToString()) };
             object selectedValue = null;
             if (markCurrentAsSelected)
                 selectedValue = Convert.ToInt32(enumObj);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -54,7 +55,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        public virtual IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
+        public virtual Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReport(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364)
         {
@@ -95,13 +96,13 @@ namespace Nop.Services.Customers
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
-            return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
+            return Task.FromResult((IPagedList<BestCustomerReportLine>)new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
             {
                 CustomerId = x.CustomerId,
                 OrderTotal = x.OrderTotal,
                 OrderCount = x.OrderCount
             }),
-                tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
+                tmp.PageIndex, tmp.PageSize, tmp.TotalCount));
         }
 
         /// <summary>
@@ -109,17 +110,17 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        public virtual int GetRegisteredCustomersReport(int days)
+        public virtual async Task<int> GetRegisteredCustomersReport(int days)
         {
             var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
-            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)
                 return 0;
 
-            return _customerService.GetAllCustomers(
-                createdFromUtc: date,
-                customerRoleIds: new int[] { registeredCustomerRole.Id }).Count();
+            return (await _customerService.GetAllCustomers(
+                date,
+                customerRoleIds: new[] { registeredCustomerRole.Id })).Count;
         }
 
         #endregion

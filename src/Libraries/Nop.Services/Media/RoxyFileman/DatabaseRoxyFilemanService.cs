@@ -59,11 +59,11 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="parentDirectoryPath">Path to the parent directory</param>
         /// <returns>Array of the paths to the directories</returns>
-        protected override ArrayList GetDirectories(string parentDirectoryPath)
+        protected override async Task<ArrayList> GetDirectories(string parentDirectoryPath)
         {
-            CreateDirectory(parentDirectoryPath);
+            await CreateDirectory(parentDirectoryPath);
 
-            return base.GetDirectories(parentDirectoryPath);
+            return await base.GetDirectories(parentDirectoryPath);
         }
 
         /// <summary>
@@ -71,12 +71,12 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="filePath">File path</param>
         /// <returns>Exist picture from database or null</returns>
-        protected virtual Picture GetPictureByFile(string filePath)
+        protected virtual async Task<Picture> GetPictureByFile(string filePath)
         {
             var sourceVirtualPath = _fileProvider.GetVirtualPath(_fileProvider.GetDirectoryName(filePath));
             var fileName = _fileProvider.GetFileNameWithoutExtension(filePath);
 
-            var picture = _pictureService.GetPictures(sourceVirtualPath.TrimEnd('/'))
+            var picture = (await _pictureService.GetPictures(sourceVirtualPath.TrimEnd('/')))
                        .FirstOrDefault(p => fileName.Contains(p.SeoFilename));
 
             return picture;
@@ -86,19 +86,17 @@ namespace Nop.Services.Media.RoxyFileman
         /// Create the passed directory
         /// </summary>
         /// <param name="directoryPath">Path to the parent directory</param>
-        protected virtual void CreateDirectory(string directoryPath)
+        protected virtual async Task CreateDirectory(string directoryPath)
         {
             _fileProvider.CreateDirectory(directoryPath);
             var virtualPath = _fileProvider.GetVirtualPath(directoryPath).TrimEnd('/');
-            var directoryNames = _pictureService.GetPictures($"{virtualPath}/")
+            var directoryNames = (await _pictureService.GetPictures($"{virtualPath}/"))
                 .Where(picture => picture.VirtualPath != virtualPath)
                 .Select(picture => _fileProvider.GetAbsolutePath(picture.VirtualPath.TrimStart('~').Split('/')))
                 .Distinct();
 
-            foreach (var directory in directoryNames)
-            {
-                CreateDirectory(directory);
-            }
+            foreach (var directory in directoryNames) 
+                await CreateDirectory(directory);
         }
 
         /// <summary>
@@ -107,12 +105,12 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="directoryPath">Path to the files directory</param>
         /// <param name="type">Type of the files</param>
         /// <returns>List of paths to the files</returns>
-        protected override List<string> GetFiles(string directoryPath, string type)
+        protected override async Task<List<string>> GetFiles(string directoryPath, string type)
         {
             //store files on disk if needed
-            FlushImagesOnDisk(directoryPath);
+            await FlushImagesOnDisk(directoryPath);
 
-            return base.GetFiles(directoryPath, type);
+            return await base.GetFiles(directoryPath, type);
         }
 
         /// <summary>
@@ -120,9 +118,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="sourcePath">Path to the source directory</param>
         /// <param name="destinationPath">Path to the destination directory</param>
-        protected override void CopyDirectory(string sourcePath, string destinationPath)
+        protected override async Task CopyDirectory(string sourcePath, string destinationPath)
         {
-            var pictures = _pictureService.GetPictures($"{_fileProvider.GetVirtualPath(sourcePath).TrimEnd('/')}/");
+            var pictures = await _pictureService.GetPictures($"{_fileProvider.GetVirtualPath(sourcePath).TrimEnd('/')}/");
             var baseDestinationPathVirtualPath = _fileProvider.GetVirtualPath(destinationPath);
 
             foreach (var picture in pictures)
@@ -130,7 +128,7 @@ namespace Nop.Services.Media.RoxyFileman
                 var destinationPathVirtualPath =
                     $"{baseDestinationPathVirtualPath.TrimEnd('/')}{picture.VirtualPath.Replace(_fileProvider.GetVirtualPath(sourcePath), "")}";
 
-                _pictureService.InsertPicture(new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id), _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty, destinationPathVirtualPath);
+                await _pictureService.InsertPicture(new RoxyFilemanFormFile(picture, await _pictureService.GetPictureBinaryByPictureId(picture.Id), _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty, destinationPathVirtualPath);
             }
         }
 
@@ -236,12 +234,12 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
-        protected virtual void SavePictureByVirtualPath(Picture picture, int targetSize = 0)
+        protected virtual async Task SavePictureByVirtualPath(Picture picture, int targetSize = 0)
         {
             if (string.IsNullOrEmpty(picture?.VirtualPath) || string.IsNullOrEmpty(picture.SeoFilename))
                 return;
 
-            var pictureBinary = _pictureService.LoadPictureBinary(picture);
+            var pictureBinary = await _pictureService.LoadPictureBinary(picture);
 
             if (pictureBinary == null || pictureBinary.Length == 0)
                 return;
@@ -263,7 +261,7 @@ namespace Nop.Services.Media.RoxyFileman
                 _fileProvider.DeleteFile(thumbFilePath);
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
-                _pictureService.UpdatePicture(picture.Id,
+                await _pictureService.UpdatePicture(picture.Id,
                     pictureBinary,
                     picture.MimeType,
                     picture.SeoFilename,
@@ -306,7 +304,7 @@ namespace Nop.Services.Media.RoxyFileman
                 }
 
                 //save
-                _fileProvider.WriteAllBytes(thumbFilePath, pictureBinaryResized);
+                await _fileProvider.WriteAllBytes(thumbFilePath, pictureBinaryResized);
             }
 
             mutex.ReleaseMutex();
@@ -318,15 +316,15 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="picture">Image to store on disk</param>
         /// <param name="maxWidth">Max image width</param>
         /// <param name="maxHeight">Max image height</param>
-        protected virtual void FlushImages(Picture picture, int maxWidth, int maxHeight)
+        protected virtual async Task FlushImages(Picture picture, int maxWidth, int maxHeight)
         {
-            var image = Image.Load(_pictureService.GetPictureBinaryByPictureId(picture.Id).BinaryData);
+            var image = Image.Load((await _pictureService.GetPictureBinaryByPictureId(picture.Id)).BinaryData);
 
             maxWidth = image.Width > maxWidth ? maxWidth : 0;
             maxHeight = image.Height > maxHeight ? maxHeight : 0;
 
             //save picture to folder if its not exists
-            SavePictureByVirtualPath(picture, maxWidth > maxHeight ? maxWidth : maxHeight);
+            await SavePictureByVirtualPath(picture, maxWidth > maxHeight ? maxWidth : maxHeight);
         }
 
         #endregion
@@ -338,9 +336,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <summary>
         /// Initial service configuration
         /// </summary>
-        public override void Configure()
+        public override async Task Configure()
         {
-            base.Configure();
+            await base.Configure();
 
             foreach (var filePath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.Split('/')), topDirectoryOnly: false))
             {
@@ -355,8 +353,8 @@ namespace Nop.Services.Media.RoxyFileman
                     SeoFilename = uniqueFileName
                 };
 
-                _pictureService.InsertPicture(
-                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
+                await _pictureService.InsertPicture(
+                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = await _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
                     string.Empty, _fileProvider.GetVirtualPath(filePath));
             }
         }
@@ -375,7 +373,7 @@ namespace Nop.Services.Media.RoxyFileman
         {
             await base.MoveDirectoryAsync(sourcePath, destinationPath);
 
-            var pictures = _pictureService.GetPictures($"{_fileProvider.GetVirtualPath(sourcePath).TrimEnd('/')}/");
+            var pictures = await _pictureService.GetPictures($"{_fileProvider.GetVirtualPath(sourcePath).TrimEnd('/')}/");
             var baseDestinationPathVirtualPath = _fileProvider.GetVirtualPath(destinationPath);
 
             foreach (var picture in pictures)
@@ -385,7 +383,7 @@ namespace Nop.Services.Media.RoxyFileman
 
                 picture.VirtualPath = destinationPathVirtualPath;
 
-                _pictureService.UpdatePicture(picture);
+                await _pictureService.UpdatePicture(picture);
             }
         }
 
@@ -398,7 +396,7 @@ namespace Nop.Services.Media.RoxyFileman
         public override async Task RenameDirectoryAsync(string sourcePath, string newName)
         {
             var sourceVirtualPath = _fileProvider.GetVirtualPath(sourcePath).TrimEnd('/');
-            var pictures = _pictureService.GetPictures($"{sourceVirtualPath}/");
+            var pictures = await _pictureService.GetPictures($"{sourceVirtualPath}/");
 
             var destinationPath =
                 $"{_fileProvider.GetVirtualPath(_fileProvider.GetParentDirectory(_fileProvider.GetAbsolutePath(sourcePath.Split('/')))).TrimEnd('/')}/{newName}";
@@ -407,7 +405,7 @@ namespace Nop.Services.Media.RoxyFileman
             {
                 picture.VirtualPath = destinationPath;
 
-                _pictureService.UpdatePicture(picture);
+                await _pictureService.UpdatePicture(picture);
             }
 
             await base.RenameDirectoryAsync(sourcePath, newName);
@@ -426,13 +424,13 @@ namespace Nop.Services.Media.RoxyFileman
         public override async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
-            var picture = GetPictureByFile(filePath);
+            var picture = await GetPictureByFile(filePath);
 
             if (picture == null)
-                throw new Exception(GetLanguageResource("E_CopyFile"));
+                throw new Exception(await GetLanguageResource("E_CopyFile"));
 
-            _pictureService.InsertPicture(
-                new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id), _fileProvider.GetFileExtension(filePath)),
+            await _pictureService.InsertPicture(
+                new RoxyFilemanFormFile(picture, await _pictureService.GetPictureBinaryByPictureId(picture.Id), _fileProvider.GetFileExtension(filePath)),
                 string.Empty, _fileProvider.GetVirtualPath(destinationPath));
 
             await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
@@ -446,12 +444,12 @@ namespace Nop.Services.Media.RoxyFileman
         public override async Task DeleteFileAsync(string sourcePath)
         {
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
-            var picture = GetPictureByFile(filePath);
+            var picture = await GetPictureByFile(filePath);
 
             if (picture == null)
-                throw new Exception(GetLanguageResource("E_DeletеFile"));
+                throw new Exception(await GetLanguageResource("E_DeletеFile"));
 
-            _pictureService.DeletePicture(picture);
+            await _pictureService.DeletePicture(picture);
 
             await base.DeleteFileAsync(sourcePath);
         }
@@ -467,13 +465,13 @@ namespace Nop.Services.Media.RoxyFileman
             await base.MoveFileAsync(sourcePath, destinationPath);
 
             var filePath = _fileProvider.GetAbsolutePath(sourcePath.Split('/'));
-            var picture = GetPictureByFile(filePath);
+            var picture = await GetPictureByFile(filePath);
 
             if (picture == null)
-                throw new Exception(GetLanguageResource("E_MoveFile"));
+                throw new Exception(await GetLanguageResource("E_MoveFile"));
 
             picture.VirtualPath = _fileProvider.GetVirtualPath(_fileProvider.GetVirtualPath(_fileProvider.GetDirectoryName(destinationPath)));
-            _pictureService.UpdatePicture(picture);
+            await _pictureService.UpdatePicture(picture);
         }
 
         /// <summary>
@@ -485,14 +483,14 @@ namespace Nop.Services.Media.RoxyFileman
         public override async Task RenameFileAsync(string sourcePath, string newName)
         {
             var filePath = _fileProvider.GetAbsolutePath(_fileProvider.GetVirtualPath(sourcePath));
-            var picture = GetPictureByFile(filePath);
+            var picture = await GetPictureByFile(filePath);
 
             if (picture == null)
-                throw new Exception(GetLanguageResource("E_RenameFile"));
+                throw new Exception(await GetLanguageResource("E_RenameFile"));
 
             picture.SeoFilename = _fileProvider.GetFileNameWithoutExtension(newName);
 
-            _pictureService.UpdatePicture(picture);
+            await _pictureService.UpdatePicture(picture);
 
             await base.DeleteFileAsync(sourcePath);
         }
@@ -509,15 +507,15 @@ namespace Nop.Services.Media.RoxyFileman
             var hasErrors = false;
             try
             {
-                var fullPath = GetFullPath(GetVirtualPath(directoryPath));
+                var fullPath = GetFullPath(await GetVirtualPath(directoryPath));
 
-                if (!IsPathAllowed(fullPath))
-                    throw new Exception(GetLanguageResource("E_UploadNotAll"));
+                if (!await IsPathAllowed(fullPath))
+                    throw new Exception(await GetLanguageResource("E_UploadNotAll"));
 
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
                 {
                     var fileName = formFile.FileName;
-                    if (CanHandleFile(fileName))
+                    if (await CanHandleFile(fileName))
                     {
                         var uniqueFileName = GetUniqueFileName(fullPath, _fileProvider.GetFileName(fileName));
                         var destinationFile = _fileProvider.Combine(fullPath, uniqueFileName);
@@ -526,18 +524,18 @@ namespace Nop.Services.Media.RoxyFileman
                         //In this case, it is not relevant. The input is not supplied by user.
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                         {
-                            using var stream = new FileStream(destinationFile, FileMode.OpenOrCreate);
+                            await using var stream = new FileStream(destinationFile, FileMode.OpenOrCreate);
                             formFile.CopyTo(stream);
                         }
                         else
                         {
-                            _pictureService.InsertPicture(formFile, virtualPath: GetVirtualPath(directoryPath));
+                            await _pictureService.InsertPicture(formFile, virtualPath: await GetVirtualPath(directoryPath));
                         }
                     }
                     else
                     {
                         hasErrors = true;
-                        result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));
+                        result = GetErrorResponse(await GetLanguageResource("E_UploadNotAll"));
                     }
                 }
             }
@@ -549,7 +547,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (IsAjaxRequest())
             {
                 if (hasErrors)
-                    result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));
+                    result = GetErrorResponse(await GetLanguageResource("E_UploadNotAll"));
 
                 await GetHttpContext().Response.WriteAsync(result);
             }
@@ -565,20 +563,20 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush all images on disk
         /// </summary>
         /// <param name="removeOriginal">Specifies whether to delete original images</param>
-        public override void FlushAllImagesOnDisk(bool removeOriginal = true)
+        public override async Task FlushAllImagesOnDisk(bool removeOriginal = true)
         {
-            base.FlushAllImagesOnDisk(removeOriginal);
+            await base.FlushAllImagesOnDisk(removeOriginal);
 
             var pageIndex = 0;
             const int pageSize = 400;
-            int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out var width);
-            int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out var height);
+            int.TryParse(await GetSetting("MAX_IMAGE_WIDTH"), out var width);
+            int.TryParse(await GetSetting("MAX_IMAGE_HEIGHT"), out var height);
 
             try
             {
                 while (true)
                 {
-                    var pictures = _pictureService.GetPictures($"~{NopRoxyFilemanDefaults.DefaultRootDirectory}/",
+                    var pictures = await _pictureService.GetPictures($"~{NopRoxyFilemanDefaults.DefaultRootDirectory}/",
                         pageIndex, pageSize);
                     pageIndex++;
 
@@ -586,13 +584,11 @@ namespace Nop.Services.Media.RoxyFileman
                     if (!pictures.Any())
                         break;
 
-                    foreach (var picture in pictures)
-                    {
-                        FlushImages(picture, width, height);
-                    }
+                    foreach (var picture in pictures) 
+                        await FlushImages(picture, width, height);
 
                     if (removeOriginal)
-                        _pictureRepository.Delete(pictures);
+                        await _pictureRepository.Delete(pictures);
                 }
             }
             catch
@@ -605,16 +601,16 @@ namespace Nop.Services.Media.RoxyFileman
         /// Flush images on disk
         /// </summary>
         /// <param name="directoryPath">Directory path to flush images</param>
-        public override void FlushImagesOnDisk(string directoryPath)
+        public override async Task FlushImagesOnDisk(string directoryPath)
         {
-            base.FlushImagesOnDisk(directoryPath);
+            await base.FlushImagesOnDisk(directoryPath);
 
-            foreach (var picture in _pictureService.GetPictures(_fileProvider.GetVirtualPath(directoryPath)))
+            foreach (var picture in await _pictureService.GetPictures(_fileProvider.GetVirtualPath(directoryPath)))
             {
-                int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out var width);
-                int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out var height);
+                int.TryParse(await GetSetting("MAX_IMAGE_WIDTH"), out var width);
+                int.TryParse(await GetSetting("MAX_IMAGE_HEIGHT"), out var height);
 
-                FlushImages(picture, width, height);
+                await FlushImages(picture, width, height);
             }
         }
 

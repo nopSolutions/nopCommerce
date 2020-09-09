@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Topics;
 
 namespace Nop.Services.Topics
@@ -12,14 +13,14 @@ namespace Nop.Services.Topics
         /// Deletes a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        void DeleteTopic(Topic topic);
+        Task DeleteTopic(Topic topic);
 
         /// <summary>
         /// Gets a topic
         /// </summary>
         /// <param name="topicId">The topic identifier</param>
         /// <returns>Topic</returns>
-        Topic GetTopicById(int topicId);
+        Task<Topic> GetTopicById(int topicId);
 
         /// <summary>
         /// Gets a topic
@@ -28,7 +29,7 @@ namespace Nop.Services.Topics
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Topic</returns>
-        Topic GetTopicBySystemName(string systemName, int storeId = 0, bool showHidden = false);
+        Task<Topic> GetTopicBySystemName(string systemName, int storeId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets all topics
@@ -38,7 +39,7 @@ namespace Nop.Services.Topics
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
+        Task<IList<Topic>> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
 
         /// <summary>
         /// Gets all topics
@@ -49,18 +50,18 @@ namespace Nop.Services.Topics
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
         /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopics(int storeId, string keywords, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
+        Task<IList<Topic>> GetAllTopics(int storeId, string keywords, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
 
         /// <summary>
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        void InsertTopic(Topic topic);
+        Task InsertTopic(Topic topic);
 
         /// <summary>
         /// Updates the topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        void UpdateTopic(Topic topic);
+        Task UpdateTopic(Topic topic);
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
@@ -57,29 +59,27 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual void DeleteLanguage(Language language)
+        public virtual async Task DeleteLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
             
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
-            {
-                foreach (var activeLanguage in GetAllLanguages())
+                foreach (var activeLanguage in await GetAllLanguages())
                 {
                     if (activeLanguage.Id == language.Id) 
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
-                    _settingService.SaveSetting(_localizationSettings);
+                    await _settingService.SaveSetting(_localizationSettings);
                     break;
                 }
-            }
 
-            _languageRepository.Delete(language);
+            await _languageRepository.Delete(language);
             
             //event notification
-            _eventPublisher.EntityDeleted(language);
+            await _eventPublisher.EntityDeleted(language);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Nop.Services.Localization
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Languages</returns>
-        public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
+        public virtual async Task<IList<Language>> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
             var query = _languageRepository.Table;
             if (!showHidden) query = query.Where(l => l.Published);
@@ -97,17 +97,15 @@ namespace Nop.Services.Localization
             //cacheable copy
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
             
-            var languages = _staticCacheManager.Get(key, () =>
+            var languages = await _staticCacheManager.Get(key, async () =>
             {
-                var allLanguages = query.ToList();
+                var allLanguages = await query.ToListAsync();
 
                 //store mapping
                 if (storeId > 0)
-                {
                     allLanguages = allLanguages
-                        .Where(l => _storeMappingService.Authorize(l, storeId))
+                        .Where(l => _storeMappingService.Authorize(l, storeId).Result)
                         .ToList();
-                }
 
                 return allLanguages;
             });
@@ -120,43 +118,43 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        public virtual Language GetLanguageById(int languageId)
+        public virtual async Task<Language> GetLanguageById(int languageId)
         {
             if (languageId == 0)
                 return null;
 
-            return _languageRepository.ToCachedGetById(languageId);
+            return await _languageRepository.ToCachedGetById(languageId);
         }
 
         /// <summary>
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual void InsertLanguage(Language language)
+        public virtual async Task InsertLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
-            _languageRepository.Insert(language);
+            await _languageRepository.Insert(language);
 
             //event notification
-            _eventPublisher.EntityInserted(language);
+            await _eventPublisher.EntityInserted(language);
         }
 
         /// <summary>
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual void UpdateLanguage(Language language)
+        public virtual async Task UpdateLanguage(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
             //update language
-            _languageRepository.Update(language);
+            await _languageRepository.Update(language);
 
             //event notification
-            _eventPublisher.EntityUpdated(language);
+            await _eventPublisher.EntityUpdated(language);
         }
 
         /// <summary>

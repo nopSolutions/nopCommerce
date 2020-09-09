@@ -1,3 +1,5 @@
+﻿using System.Threading.Tasks;
+
 namespace Nop.Services.Common
 {
     /// <summary>
@@ -9,16 +11,16 @@ namespace Nop.Services.Common
         /// Gets value indicating whether Full-Text is supported
         /// </summary>
         /// <returns>Result</returns>
-        bool IsFullTextSupported();
+        Task<bool> IsFullTextSupported();
 
         /// <summary>
         /// Enable Full-Text support
         /// </summary>
-        void EnableFullText();
+        Task EnableFullText();
 
         /// <summary>
         /// Disable Full-Text support
         /// </summary>
-        void DisableFullText();
+        Task DisableFullText();
     }
 }

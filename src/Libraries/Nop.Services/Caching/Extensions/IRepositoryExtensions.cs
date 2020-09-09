@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Threading.Tasks;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -15,7 +16,7 @@ namespace Nop.Services.Caching.Extensions
         /// <param name="id">Entity identifier</param>
         /// <param name="cacheTime">Cache time in minutes; set null to use default time</param>
         /// <returns>Cached entity</returns>
-        public static TEntity ToCachedGetById<TEntity>(this IRepository<TEntity> repository, object id, int? cacheTime=null) where TEntity : BaseEntity
+        public static async Task<TEntity> ToCachedGetById<TEntity>(this IRepository<TEntity> repository, object id, int? cacheTime=null) where TEntity : BaseEntity
         {
             var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
@@ -29,7 +30,7 @@ namespace Nop.Services.Caching.Extensions
                 cacheKey = cacheKeyService.PrepareKeyForDefaultCache(cacheKey);
             }
 
-            return staticCacheManager.Get(cacheKey, () => repository.GetById(id));
+            return await staticCacheManager.Get(cacheKey, () => repository.GetById(id));
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -48,15 +50,15 @@ namespace Nop.Services.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void DeleteGiftCard(GiftCard giftCard)
+        public virtual async Task DeleteGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            _giftCardRepository.Delete(giftCard);
+            await _giftCardRepository.Delete(giftCard);
 
             //event notification
-            _eventPublisher.EntityDeleted(giftCard);
+            await _eventPublisher.EntityDeleted(giftCard);
         }
 
         /// <summary>
@@ -64,12 +66,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        public virtual GiftCard GetGiftCardById(int giftCardId)
+        public virtual async Task<GiftCard> GetGiftCardById(int giftCardId)
         {
             if (giftCardId == 0)
                 return null;
 
-            return _giftCardRepository.ToCachedGetById(giftCardId);
+            return await _giftCardRepository.ToCachedGetById(giftCardId);
         }
 
         /// <summary>
@@ -85,7 +87,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
+        public virtual Task<IPagedList<GiftCard>> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -121,37 +123,37 @@ namespace Nop.Services.Orders
 
             var giftCards = new PagedList<GiftCard>(query, pageIndex, pageSize);
 
-            return giftCards;
+            return Task.FromResult<IPagedList<GiftCard>>(giftCards);
         }
 
         /// <summary>
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void InsertGiftCard(GiftCard giftCard)
+        public virtual async Task InsertGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            _giftCardRepository.Insert(giftCard);
+            await _giftCardRepository.Insert(giftCard);
 
             //event notification
-            _eventPublisher.EntityInserted(giftCard);
+            await _eventPublisher.EntityInserted(giftCard);
         }
 
         /// <summary>
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void UpdateGiftCard(GiftCard giftCard)
+        public virtual async Task UpdateGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            _giftCardRepository.Update(giftCard);
+            await _giftCardRepository.Update(giftCard);
 
             //event notification
-            _eventPublisher.EntityUpdated(giftCard);
+            await _eventPublisher.EntityUpdated(giftCard);
         }
 
         /// <summary>
@@ -159,7 +161,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
         /// <returns>Gift card entries</returns>
-        public virtual IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId)
+        public virtual async Task<IList<GiftCard>> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId)
         {
             if (purchasedWithOrderItemId == 0)
                 return new List<GiftCard>();
@@ -168,7 +170,8 @@ namespace Nop.Services.Orders
             query = query.Where(gc => gc.PurchasedWithOrderItemId.HasValue && gc.PurchasedWithOrderItemId.Value == purchasedWithOrderItemId);
             query = query.OrderBy(gc => gc.Id);
 
-            var giftCards = query.ToList();
+            var giftCards = await query.ToListAsync();
+
             return giftCards;
         }
 
@@ -177,21 +180,19 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Active gift cards</returns>
-        public virtual IList<GiftCard> GetActiveGiftCardsAppliedByCustomer(Customer customer)
+        public virtual async Task<IList<GiftCard>> GetActiveGiftCardsAppliedByCustomer(Customer customer)
         {
             var result = new List<GiftCard>();
             if (customer == null)
                 return result;
 
-            var couponCodes = _customerService.ParseAppliedGiftCardCouponCodes(customer);
+            var couponCodes = await _customerService.ParseAppliedGiftCardCouponCodes(customer);
             foreach (var couponCode in couponCodes)
             {
-                var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
+                var giftCards = await GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
-                {
-                    if (IsGiftCardValid(gc))
+                    if (await IsGiftCardValid(gc))
                         result.Add(gc);
-                }
             }
 
             return result;
@@ -214,21 +215,21 @@ namespace Nop.Services.Orders
         /// Delete gift card usage history
         /// </summary>
         /// <param name="order">Order</param>
-        public virtual void DeleteGiftCardUsageHistory(Order order)
+        public virtual async Task DeleteGiftCardUsageHistory(Order order)
         {
-            var giftCardUsageHistory = GetGiftCardUsageHistory(order);
+            var giftCardUsageHistory = await GetGiftCardUsageHistory(order);
 
-            _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
+            await _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
 
             var query = _giftCardRepository.Table;
 
             var giftCardIds = giftCardUsageHistory.Select(gcuh => gcuh.GiftCardId).ToArray();
-            var giftCards = query.Where(bp => giftCardIds.Contains(bp.Id)).ToList();
+            var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
             foreach (var giftCard in giftCards)
             {
-                _eventPublisher.EntityUpdated(giftCard);
+                await _eventPublisher.EntityUpdated(giftCard);
             }
         }
 
@@ -236,14 +237,14 @@ namespace Nop.Services.Orders
         /// Gets a gift card remaining amount
         /// </summary>
         /// <returns>Gift card remaining amount</returns>
-        public virtual decimal GetGiftCardRemainingAmount(GiftCard giftCard)
+        public virtual async Task<decimal> GetGiftCardRemainingAmount(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
             var result = giftCard.Amount;
 
-            foreach (var gcuh in GetGiftCardUsageHistory(giftCard))
+            foreach (var gcuh in await GetGiftCardUsageHistory(giftCard))
                 result -= gcuh.UsedValue;
 
             if (result < decimal.Zero)
@@ -257,12 +258,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Result</returns>
-        public virtual IList<GiftCardUsageHistory> GetGiftCardUsageHistory(GiftCard giftCard)
+        public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistory(GiftCard giftCard)
         {
             if (giftCard is null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            return _giftCardUsageHistoryRepository.Table.Where(gcuh => gcuh.GiftCardId == giftCard.Id).ToList();
+            return await _giftCardUsageHistoryRepository.Table.Where(gcuh => gcuh.GiftCardId == giftCard.Id).ToListAsync();
         }
 
         /// <summary>
@@ -270,27 +271,27 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public virtual IList<GiftCardUsageHistory> GetGiftCardUsageHistory(Order order)
+        public virtual async Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistory(Order order)
         {
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
 
-            return _giftCardUsageHistoryRepository.Table.Where(gcuh => gcuh.UsedWithOrderId == order.Id).ToList();
+            return await _giftCardUsageHistoryRepository.Table.Where(gcuh => gcuh.UsedWithOrderId == order.Id).ToListAsync();
         }
 
         /// <summary>
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        public virtual void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
+        public virtual async Task InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
         {
             if (giftCardUsageHistory is null)
                 throw new ArgumentNullException(nameof(giftCardUsageHistory));
 
-            _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);
+            await _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);
 
             //event notification
-            _eventPublisher.EntityInserted(giftCardUsageHistory);
+            await _eventPublisher.EntityInserted(giftCardUsageHistory);
         }
 
         /// <summary>
@@ -298,7 +299,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Result</returns>
-        public virtual bool IsGiftCardValid(GiftCard giftCard)
+        public virtual async Task<bool> IsGiftCardValid(GiftCard giftCard)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
@@ -306,7 +307,7 @@ namespace Nop.Services.Orders
             if (!giftCard.IsGiftCardActivated)
                 return false;
 
-            var remainingAmount = GetGiftCardRemainingAmount(giftCard);
+            var remainingAmount = await GetGiftCardRemainingAmount(giftCard);
             if (remainingAmount > decimal.Zero)
                 return true;
 

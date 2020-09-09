@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -91,15 +93,15 @@ namespace Nop.Services.Authentication.External
         /// <param name="currentLoggedInUser">Current logged-in user</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult AuthenticateExistingUser(Customer associatedUser, Customer currentLoggedInUser, string returnUrl)
+        protected virtual async Task<IActionResult> AuthenticateExistingUser(Customer associatedUser, Customer currentLoggedInUser, string returnUrl)
         {
             //log in guest user
             if (currentLoggedInUser == null)
-                return LoginUser(associatedUser, returnUrl);
+                return await LoginUser(associatedUser, returnUrl);
 
             //account is already assigned to another user
             if (currentLoggedInUser.Id != associatedUser.Id)
-                return ErrorAuthentication(new[] { _localizationService.GetResource("Account.AssociatedExternalAuth.AccountAlreadyAssigned") }, returnUrl);
+                return ErrorAuthentication(new[] { await _localizationService.GetResource("Account.AssociatedExternalAuth.AccountAlreadyAssigned") }, returnUrl);
 
             //or the user try to log in as himself. bit weird
             return SuccessfulAuthentication(returnUrl);
@@ -112,18 +114,19 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">Authentication parameters received from external authentication method</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult AuthenticateNewUser(Customer currentLoggedInUser, ExternalAuthenticationParameters parameters, string returnUrl)
+        protected virtual async Task<IActionResult> AuthenticateNewUser(Customer currentLoggedInUser, ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //associate external account with logged-in user
             if (currentLoggedInUser != null)
             {
-                AssociateExternalAccountWithUser(currentLoggedInUser, parameters);
+                await AssociateExternalAccountWithUser(currentLoggedInUser, parameters);
+
                 return SuccessfulAuthentication(returnUrl);
             }
 
             //or try to register new user
             if (_customerSettings.UserRegistrationType != UserRegistrationType.Disabled)
-                return RegisterNewUser(parameters, returnUrl);
+                return await RegisterNewUser(parameters, returnUrl);
 
             //registration is disabled
             return ErrorAuthentication(new[] { "Registration is disabled" }, returnUrl);
@@ -135,12 +138,12 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">Authentication parameters received from external authentication method</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
+        protected virtual async Task<IActionResult> RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //check whether the specified email has been already registered
             if (_customerService.GetCustomerByEmail(parameters.Email) != null)
             {
-                var alreadyExistsError = string.Format(_localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"),
+                var alreadyExistsError = string.Format(await _localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"),
                     !string.IsNullOrEmpty(parameters.ExternalDisplayIdentifier) ? parameters.ExternalDisplayIdentifier : parameters.ExternalIdentifier);
                 return ErrorAuthentication(new[] { alreadyExistsError }, returnUrl);
             }
@@ -150,36 +153,36 @@ namespace Nop.Services.Authentication.External
                 (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);
 
             //create registration request
-            var registrationRequest = new CustomerRegistrationRequest(_workContext.CurrentCustomer,
+            var registrationRequest = new CustomerRegistrationRequest(await _workContext.GetCurrentCustomer(),
                 parameters.Email, parameters.Email,
                 CommonHelper.GenerateRandomDigitCode(20),
                 PasswordFormat.Hashed,
-                _storeContext.CurrentStore.Id,
+                (await _storeContext.GetCurrentStore()).Id,
                 registrationIsApproved);
 
             //whether registration request has been completed successfully
-            var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
+            var registrationResult = await _customerRegistrationService.RegisterCustomer(registrationRequest);
             if (!registrationResult.Success)
                 return ErrorAuthentication(registrationResult.Errors, returnUrl);
 
             //allow to save other customer values by consuming this event
-            _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
+            await _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(await _workContext.GetCurrentCustomer(), parameters));
 
             //raise customer registered event
-            _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
+            await _eventPublisher.Publish(new CustomerRegisteredEvent(await _workContext.GetCurrentCustomer()));
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
-                _workflowMessageService.SendCustomerRegisteredNotificationMessage(_workContext.CurrentCustomer, _localizationSettings.DefaultAdminLanguageId);
+                await _workflowMessageService.SendCustomerRegisteredNotificationMessage(await _workContext.GetCurrentCustomer(), _localizationSettings.DefaultAdminLanguageId);
 
             //associate external account with registered user
-            AssociateExternalAccountWithUser(_workContext.CurrentCustomer, parameters);
+            await AssociateExternalAccountWithUser(await _workContext.GetCurrentCustomer(), parameters);
 
             //authenticate
             if (registrationIsApproved)
             {
-                _authenticationService.SignIn(_workContext.CurrentCustomer, false);
-                _workflowMessageService.SendCustomerWelcomeMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                _authenticationService.SignIn(await _workContext.GetCurrentCustomer(), false);
+                await _workflowMessageService.SendCustomerWelcomeMessage(await _workContext.GetCurrentCustomer(), (await _workContext.GetWorkingLanguage()).Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
             }
@@ -188,8 +191,8 @@ namespace Nop.Services.Authentication.External
             if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
             {
                 //email validation message
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                _workflowMessageService.SendCustomerEmailValidationMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id);
+                await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
+                await _workflowMessageService.SendCustomerEmailValidationMessage(await _workContext.GetCurrentCustomer(), (await _workContext.GetWorkingLanguage()).Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
             }
@@ -207,20 +210,20 @@ namespace Nop.Services.Authentication.External
         /// <param name="user">User to login</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult LoginUser(Customer user, string returnUrl)
+        protected virtual async Task<IActionResult> LoginUser(Customer user, string returnUrl)
         {
             //migrate shopping cart
-            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, user, true);
+            await _shoppingCartService.MigrateShoppingCart(await _workContext.GetCurrentCustomer(), user, true);
 
             //authenticate
             _authenticationService.SignIn(user, false);
 
             //raise event       
-            _eventPublisher.Publish(new CustomerLoggedinEvent(user));
+            await _eventPublisher.Publish(new CustomerLoggedinEvent(user));
 
             //activity log
-            _customerActivityService.InsertActivity(user, "PublicStore.Login",
-                _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
+            await _customerActivityService.InsertActivity(user, "PublicStore.Login",
+                await _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
 
             return SuccessfulAuthentication(returnUrl);
         }
@@ -265,24 +268,24 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">External authentication parameters</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        public virtual IActionResult Authenticate(ExternalAuthenticationParameters parameters, string returnUrl = null)
+        public virtual async Task<IActionResult> Authenticate(ExternalAuthenticationParameters parameters, string returnUrl = null)
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            if (!_authenticationPluginManager.IsPluginActive(parameters.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id))
+            if (!_authenticationPluginManager.IsPluginActive(parameters.ProviderSystemName, await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id))
                 return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
-            var currentLoggedInUser = _customerService.IsRegistered(_workContext.CurrentCustomer) ? _workContext.CurrentCustomer : null;
+            var currentLoggedInUser = await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()) ? await _workContext.GetCurrentCustomer() : null;
 
             //authenticate associated user if already exists
-            var associatedUser = GetUserByExternalAuthenticationParameters(parameters);
+            var associatedUser = await GetUserByExternalAuthenticationParameters(parameters);
             if (associatedUser != null)
-                return AuthenticateExistingUser(associatedUser, currentLoggedInUser, returnUrl);
+                return await AuthenticateExistingUser(associatedUser, currentLoggedInUser, returnUrl);
 
             //or associate and authenticate new user
-            return AuthenticateNewUser(currentLoggedInUser, parameters, returnUrl);
+            return await AuthenticateNewUser(currentLoggedInUser, parameters, returnUrl);
         }
 
         #endregion
@@ -292,7 +295,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="parameters">External authentication parameters</param>
-        public virtual void AssociateExternalAccountWithUser(Customer customer, ExternalAuthenticationParameters parameters)
+        public virtual async Task AssociateExternalAccountWithUser(Customer customer, ExternalAuthenticationParameters parameters)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -307,7 +310,7 @@ namespace Nop.Services.Authentication.External
                 ProviderSystemName = parameters.ProviderSystemName
             };
 
-            _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord);
+            await _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord);
         }
 
         /// <summary>
@@ -315,7 +318,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
         /// <returns>Customer</returns>
-        public virtual Customer GetUserByExternalAuthenticationParameters(ExternalAuthenticationParameters parameters)
+        public virtual async Task<Customer> GetUserByExternalAuthenticationParameters(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
@@ -325,7 +328,7 @@ namespace Nop.Services.Authentication.External
             if (associationRecord == null)
                 return null;
 
-            return _customerService.GetCustomerById(associationRecord.CustomerId);
+            return await _customerService.GetCustomerById(associationRecord.CustomerId);
         }
 
         /// <summary>
@@ -333,12 +336,12 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="externalAuthenticationRecordId">External authentication record identifier</param>
         /// <returns>Result</returns>
-        public virtual ExternalAuthenticationRecord GetExternalAuthenticationRecordById(int externalAuthenticationRecordId)
+        public virtual async Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordById(int externalAuthenticationRecordId)
         {
             if (externalAuthenticationRecordId == 0)
                 return null;
 
-            return _externalAuthenticationRecordRepository.ToCachedGetById(externalAuthenticationRecordId);
+            return await _externalAuthenticationRecordRepository.ToCachedGetById(externalAuthenticationRecordId);
         }
 
         /// <summary>
@@ -346,42 +349,42 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        public virtual IList<ExternalAuthenticationRecord> GetCustomerExternalAuthenticationRecords(Customer customer)
+        public virtual async Task<IList<ExternalAuthenticationRecord>> GetCustomerExternalAuthenticationRecords(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             var associationRecords = _externalAuthenticationRecordRepository.Table.Where(ear => ear.CustomerId == customer.Id);
 
-            return associationRecords.ToList();
+            return await associationRecords.ToListAsync();
         }
 
         /// <summary>
         /// Remove the association
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
-        public virtual void RemoveAssociation(ExternalAuthenticationParameters parameters)
+        public virtual async Task RemoveAssociation(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
+            var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
 
             if (associationRecord != null)
-                _externalAuthenticationRecordRepository.Delete(associationRecord);
+                await _externalAuthenticationRecordRepository.Delete(associationRecord);
         }
 
         /// <summary>
         /// Delete the external authentication record
         /// </summary>
         /// <param name="externalAuthenticationRecord">External authentication record</param>
-        public virtual void DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
+        public virtual async Task DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
         {
             if (externalAuthenticationRecord == null)
                 throw new ArgumentNullException(nameof(externalAuthenticationRecord));
 
-            _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord);
+            await _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord);
         }
 
         #endregion

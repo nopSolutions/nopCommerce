@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Caching;
@@ -41,28 +42,28 @@ namespace Nop.Services.Catalog
         /// Delete product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public virtual void DeleteProductTemplate(ProductTemplate productTemplate)
+        public virtual async Task DeleteProductTemplate(ProductTemplate productTemplate)
         {
             if (productTemplate == null)
                 throw new ArgumentNullException(nameof(productTemplate));
 
-            _productTemplateRepository.Delete(productTemplate);
+            await _productTemplateRepository.Delete(productTemplate);
 
             //event notification
-            _eventPublisher.EntityDeleted(productTemplate);
+            await _eventPublisher.EntityDeleted(productTemplate);
         }
 
         /// <summary>
         /// Gets all product templates
         /// </summary>
         /// <returns>Product templates</returns>
-        public virtual IList<ProductTemplate> GetAllProductTemplates()
+        public virtual async Task<IList<ProductTemplate>> GetAllProductTemplates()
         {
             var query = from pt in _productTemplateRepository.Table
                         orderby pt.DisplayOrder, pt.Id
                         select pt;
 
-            var templates = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTemplatesAllCacheKey));
+            var templates = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTemplatesAllCacheKey));
 
             return templates;
         }
@@ -72,42 +73,42 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
         /// <returns>Product template</returns>
-        public virtual ProductTemplate GetProductTemplateById(int productTemplateId)
+        public virtual async Task<ProductTemplate> GetProductTemplateById(int productTemplateId)
         {
             if (productTemplateId == 0)
                 return null;
 
-            return _productTemplateRepository.ToCachedGetById(productTemplateId);
+            return await _productTemplateRepository.ToCachedGetById(productTemplateId);
         }
 
         /// <summary>
         /// Inserts product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public virtual void InsertProductTemplate(ProductTemplate productTemplate)
+        public virtual async Task InsertProductTemplate(ProductTemplate productTemplate)
         {
             if (productTemplate == null)
                 throw new ArgumentNullException(nameof(productTemplate));
 
-            _productTemplateRepository.Insert(productTemplate);
+            await _productTemplateRepository.Insert(productTemplate);
 
             //event notification
-            _eventPublisher.EntityInserted(productTemplate);
+            await _eventPublisher.EntityInserted(productTemplate);
         }
 
         /// <summary>
         /// Updates the product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public virtual void UpdateProductTemplate(ProductTemplate productTemplate)
+        public virtual async Task UpdateProductTemplate(ProductTemplate productTemplate)
         {
             if (productTemplate == null)
                 throw new ArgumentNullException(nameof(productTemplate));
 
-            _productTemplateRepository.Update(productTemplate);
+            await _productTemplateRepository.Update(productTemplate);
 
             //event notification
-            _eventPublisher.EntityUpdated(productTemplate);
+            await _eventPublisher.EntityUpdated(productTemplate);
         }
 
         #endregion

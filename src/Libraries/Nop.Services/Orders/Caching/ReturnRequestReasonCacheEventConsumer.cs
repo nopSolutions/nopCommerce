@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Orders.Caching
 {
@@ -8,9 +9,9 @@ namespace Nop.Services.Orders.Caching
     /// </summary>
     public partial class ReturnRequestReasonCacheEventConsumer : CacheEventConsumer<ReturnRequestReason>
     {
-        protected override void ClearCache(ReturnRequestReason entity)
+        protected override async Task ClearCache(ReturnRequestReason entity)
         {
-            Remove(NopOrderDefaults.ReturnRequestReasonAllCacheKey);
+            await Remove(NopOrderDefaults.ReturnRequestReasonAllCacheKey);
         }
     }
 }

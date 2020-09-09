@@ -41,7 +41,7 @@ namespace Nop.Services.Tasks
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
             
             var scheduleTasks = taskService
-                .GetAllTasks()
+                .GetAllTasks().Result
                 .OrderBy(x => x.Seconds)
                 .ToList();
             

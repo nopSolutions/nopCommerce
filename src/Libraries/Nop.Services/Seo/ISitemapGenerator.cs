@@ -1,4 +1,5 @@
-using System.IO;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Seo
 {
@@ -13,7 +14,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        string Generate(int? id);
+        Task<string> Generate(int? id);
 
         /// <summary>
         /// This will build an XML sitemap for better index with search engines.
@@ -21,6 +22,6 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        void Generate(Stream stream, int? id);
+        Task Generate(Stream stream, int? id);
     }
 }

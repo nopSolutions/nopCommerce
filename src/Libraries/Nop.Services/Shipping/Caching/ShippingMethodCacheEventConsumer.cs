@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Shipping;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Shipping.Caching
 {
@@ -8,9 +9,9 @@ namespace Nop.Services.Shipping.Caching
     /// </summary>
     public partial class ShippingMethodCacheEventConsumer : CacheEventConsumer<ShippingMethod>
     {
-        protected override void ClearCache(ShippingMethod entity)
+        protected override async Task ClearCache(ShippingMethod entity)
         {
-            RemoveByPrefix(NopShippingDefaults.ShippingMethodsAllPrefixCacheKey);
+            await RemoveByPrefix(NopShippingDefaults.ShippingMethodsAllPrefixCacheKey);
         }
     }
 }

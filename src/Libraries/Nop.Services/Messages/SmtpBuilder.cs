@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Nop.Core;
@@ -38,11 +39,11 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="emailAccount">Email account to use. If null, then would be used EmailAccount by default</param>
         /// <returns>An SMTP client that can be used to send email messages</returns>
-        public virtual SmtpClient Build(EmailAccount emailAccount = null)
+        public virtual async Task<SmtpClient> Build(EmailAccount emailAccount = null)
         {
             if (emailAccount is null)
             {
-                emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)
+                emailAccount = await _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)
                 ?? throw new NopException("Email account could not be loaded");
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -15,14 +16,14 @@ namespace Nop.Services.Orders
         /// Deletes a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void DeleteGiftCard(GiftCard giftCard);
+        Task DeleteGiftCard(GiftCard giftCard);
 
         /// <summary>
         /// Gets a gift card
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        GiftCard GetGiftCardById(int giftCardId);
+        Task<GiftCard> GetGiftCardById(int giftCardId);
 
         /// <summary>
         /// Gets all gift cards
@@ -37,7 +38,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
+        Task<IPagedList<GiftCard>> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -47,27 +48,27 @@ namespace Nop.Services.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void InsertGiftCard(GiftCard giftCard);
+        Task InsertGiftCard(GiftCard giftCard);
 
         /// <summary>
         /// Updates the gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void UpdateGiftCard(GiftCard giftCard);
+        Task UpdateGiftCard(GiftCard giftCard);
 
         /// <summary>
         /// Gets gift cards by 'PurchasedWithOrderItemId'
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
         /// <returns>Gift card entries</returns>
-        IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId);
+        Task<IList<GiftCard>> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId);
 
         /// <summary>
         /// Get active gift cards that are applied by a customer
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Active gift cards</returns>
-        IList<GiftCard> GetActiveGiftCardsAppliedByCustomer(Customer customer);
+        Task<IList<GiftCard>> GetActiveGiftCardsAppliedByCustomer(Customer customer);
 
         /// <summary>
         /// Generate new gift card code
@@ -79,40 +80,40 @@ namespace Nop.Services.Orders
         /// Delete gift card usage history
         /// </summary>
         /// <param name="order">Order</param>
-        void DeleteGiftCardUsageHistory(Order order);
+        Task DeleteGiftCardUsageHistory(Order order);
 
         /// <summary>
         /// Gets a gift card remaining amount
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card remaining amount</returns>
-        decimal GetGiftCardRemainingAmount(GiftCard giftCard);
+        Task<decimal> GetGiftCardRemainingAmount(GiftCard giftCard);
 
         /// <summary>
         /// Gets a gift card usage history entries
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Result</returns>
-        IList<GiftCardUsageHistory> GetGiftCardUsageHistory(GiftCard giftCard);
+        Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistory(GiftCard giftCard);
 
         /// <summary>
         /// Gets a gift card usage history entries
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        IList<GiftCardUsageHistory> GetGiftCardUsageHistory(Order order);
+        Task<IList<GiftCardUsageHistory>> GetGiftCardUsageHistory(Order order);
 
         /// <summary>
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory);
+        Task InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory);
 
         /// <summary>
         /// Is gift card valid
         /// </summary>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Result</returns>
-        bool IsGiftCardValid(GiftCard giftCard);
+        Task<bool> IsGiftCardValid(GiftCard giftCard);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
@@ -57,15 +59,15 @@ namespace Nop.Services.Common
         /// Deletes an address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void DeleteAddress(Address address)
+        public virtual async Task DeleteAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
-            _addressRepository.Delete(address);
+            await _addressRepository.Delete(address);
             
             //event notification
-            _eventPublisher.EntityDeleted(address);
+            await _eventPublisher.EntityDeleted(address);
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByCountryId(int countryId)
+        public virtual async Task<int> GetAddressTotalByCountryId(int countryId)
         {
             if (countryId == 0)
                 return 0;
@@ -82,7 +84,7 @@ namespace Nop.Services.Common
                         where a.CountryId == countryId
                         select a;
 
-            return query.Count();
+            return await query.CountAsync();
         }
 
         /// <summary>
@@ -90,7 +92,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByStateProvinceId(int stateProvinceId)
+        public virtual async Task<int> GetAddressTotalByStateProvinceId(int stateProvinceId)
         {
             if (stateProvinceId == 0)
                 return 0;
@@ -99,7 +101,7 @@ namespace Nop.Services.Common
                         where a.StateProvinceId == stateProvinceId
                         select a;
 
-            return query.Count();
+            return await query.CountAsync();
         }
 
         /// <summary>
@@ -107,19 +109,19 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        public virtual Address GetAddressById(int addressId)
+        public virtual async Task<Address> GetAddressById(int addressId)
         {
             if (addressId == 0)
                 return null;
             
-            return _addressRepository.ToCachedGetById(addressId, _cachingSettings.ShortTermCacheTime);
+            return await _addressRepository.ToCachedGetById(addressId, _cachingSettings.ShortTermCacheTime);
         }
 
         /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void InsertAddress(Address address)
+        public virtual async Task InsertAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -132,17 +134,17 @@ namespace Nop.Services.Common
             if (address.StateProvinceId == 0)
                 address.StateProvinceId = null;
 
-            _addressRepository.Insert(address);
+            await _addressRepository.Insert(address);
             
             //event notification
-            _eventPublisher.EntityInserted(address);
+            await _eventPublisher.EntityInserted(address);
         }
 
         /// <summary>
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void UpdateAddress(Address address)
+        public virtual async Task UpdateAddress(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -153,10 +155,10 @@ namespace Nop.Services.Common
             if (address.StateProvinceId == 0)
                 address.StateProvinceId = null;
 
-            _addressRepository.Update(address);
+            await _addressRepository.Update(address);
             
             //event notification
-            _eventPublisher.EntityUpdated(address);
+            await _eventPublisher.EntityUpdated(address);
         }
 
         /// <summary>
@@ -164,7 +166,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
-        public virtual bool IsAddressValid(Address address)
+        public virtual async Task<bool> IsAddressValid(Address address)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -200,13 +202,13 @@ namespace Nop.Services.Common
 
             if (_addressSettings.CountryEnabled)
             {
-                var country = _countryService.GetCountryByAddress(address);
+                var country = await _countryService.GetCountryByAddress(address);
                 if (country == null)
                     return false;
 
                 if (_addressSettings.StateProvinceEnabled)
                 {
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
+                    var states = await _stateProvinceService.GetStateProvincesByCountryId(country.Id);
                     if (states.Any())
                     {
                         if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
@@ -239,7 +241,7 @@ namespace Nop.Services.Common
                 string.IsNullOrWhiteSpace(address.FaxNumber))
                 return false;
 
-            var requiredAttributes = _addressAttributeService.GetAllAddressAttributes().Where(x => x.IsRequired);
+            var requiredAttributes = (await _addressAttributeService.GetAllAddressAttributes()).Where(x => x.IsRequired);
 
             foreach (var requiredAttribute in requiredAttributes)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
 using Nop.Services.Caching;
@@ -46,9 +47,9 @@ namespace Nop.Services.Vendors
         /// Gets all vendor attributes
         /// </summary>
         /// <returns>Vendor attributes</returns>
-        public virtual IList<VendorAttribute> GetAllVendorAttributes()
+        public virtual async Task<IList<VendorAttribute>> GetAllVendorAttributes()
         {
-            return _vendorAttributeRepository.Table
+            return await _vendorAttributeRepository.Table
                 .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
                 .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
         }
@@ -58,57 +59,57 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeId">Vendor attribute identifier</param>
         /// <returns>Vendor attribute</returns>
-        public virtual VendorAttribute GetVendorAttributeById(int vendorAttributeId)
+        public virtual async Task<VendorAttribute> GetVendorAttributeById(int vendorAttributeId)
         {
             if (vendorAttributeId == 0)
                 return null;
 
-            return _vendorAttributeRepository.ToCachedGetById(vendorAttributeId);
+            return await _vendorAttributeRepository.ToCachedGetById(vendorAttributeId);
         }
 
         /// <summary>
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void InsertVendorAttribute(VendorAttribute vendorAttribute)
+        public virtual async Task InsertVendorAttribute(VendorAttribute vendorAttribute)
         {
             if (vendorAttribute == null)
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
-            _vendorAttributeRepository.Insert(vendorAttribute);
+            await _vendorAttributeRepository.Insert(vendorAttribute);
 
             //event notification
-            _eventPublisher.EntityInserted(vendorAttribute);
+            await _eventPublisher.EntityInserted(vendorAttribute);
         }
 
         /// <summary>
         /// Updates a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void UpdateVendorAttribute(VendorAttribute vendorAttribute)
+        public virtual async Task UpdateVendorAttribute(VendorAttribute vendorAttribute)
         {
             if (vendorAttribute == null)
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
-            _vendorAttributeRepository.Update(vendorAttribute);
+            await _vendorAttributeRepository.Update(vendorAttribute);
 
             //event notification
-            _eventPublisher.EntityUpdated(vendorAttribute);
+            await _eventPublisher.EntityUpdated(vendorAttribute);
         }
 
         /// <summary>
         /// Deletes a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void DeleteVendorAttribute(VendorAttribute vendorAttribute)
+        public virtual async Task DeleteVendorAttribute(VendorAttribute vendorAttribute)
         {
             if (vendorAttribute == null)
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
-            _vendorAttributeRepository.Delete(vendorAttribute);
+            await _vendorAttributeRepository.Delete(vendorAttribute);
 
             //event notification
-            _eventPublisher.EntityDeleted(vendorAttribute);
+            await _eventPublisher.EntityDeleted(vendorAttribute);
         }
 
         #endregion
@@ -120,11 +121,11 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeId">The vendor attribute identifier</param>
         /// <returns>Vendor attribute values</returns>
-        public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
+        public virtual async Task<IList<VendorAttributeValue>> GetVendorAttributeValues(int vendorAttributeId)
         {
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
 
-            return _vendorAttributeValueRepository.Table
+            return await _vendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
                 .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
                 .ThenBy(vendorAttributeValue => vendorAttributeValue.Id)
@@ -136,57 +137,57 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorAttributeValueId">Vendor attribute value identifier</param>
         /// <returns>Vendor attribute value</returns>
-        public virtual VendorAttributeValue GetVendorAttributeValueById(int vendorAttributeValueId)
+        public virtual async Task<VendorAttributeValue> GetVendorAttributeValueById(int vendorAttributeValueId)
         {
             if (vendorAttributeValueId == 0)
                 return null;
 
-            return _vendorAttributeValueRepository.ToCachedGetById(vendorAttributeValueId);
+            return await _vendorAttributeValueRepository.ToCachedGetById(vendorAttributeValueId);
         }
 
         /// <summary>
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        public virtual async Task InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
         {
             if (vendorAttributeValue == null)
                 throw new ArgumentNullException(nameof(vendorAttributeValue));
 
-            _vendorAttributeValueRepository.Insert(vendorAttributeValue);
+            await _vendorAttributeValueRepository.Insert(vendorAttributeValue);
 
             //event notification
-            _eventPublisher.EntityInserted(vendorAttributeValue);
+            await _eventPublisher.EntityInserted(vendorAttributeValue);
         }
 
         /// <summary>
         /// Updates the vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void UpdateVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        public virtual async Task UpdateVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
         {
             if (vendorAttributeValue == null)
                 throw new ArgumentNullException(nameof(vendorAttributeValue));
 
-            _vendorAttributeValueRepository.Update(vendorAttributeValue);
+            await _vendorAttributeValueRepository.Update(vendorAttributeValue);
 
             //event notification
-            _eventPublisher.EntityUpdated(vendorAttributeValue);
+            await _eventPublisher.EntityUpdated(vendorAttributeValue);
         }
 
         /// <summary>
         /// Deletes a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void DeleteVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        public virtual async Task DeleteVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
         {
             if (vendorAttributeValue == null)
                 throw new ArgumentNullException(nameof(vendorAttributeValue));
 
-            _vendorAttributeValueRepository.Delete(vendorAttributeValue);
+            await _vendorAttributeValueRepository.Delete(vendorAttributeValue);
 
             //event notification
-            _eventPublisher.EntityDeleted(vendorAttributeValue);
+            await _eventPublisher.EntityDeleted(vendorAttributeValue);
         }
 
         #endregion

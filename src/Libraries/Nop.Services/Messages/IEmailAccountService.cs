@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
@@ -12,31 +13,31 @@ namespace Nop.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        void InsertEmailAccount(EmailAccount emailAccount);
+        Task InsertEmailAccount(EmailAccount emailAccount);
 
         /// <summary>
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        void UpdateEmailAccount(EmailAccount emailAccount);
+        Task UpdateEmailAccount(EmailAccount emailAccount);
 
         /// <summary>
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        void DeleteEmailAccount(EmailAccount emailAccount);
+        Task DeleteEmailAccount(EmailAccount emailAccount);
 
         /// <summary>
         /// Gets an email account by identifier
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        EmailAccount GetEmailAccountById(int emailAccountId);
+        Task<EmailAccount> GetEmailAccountById(int emailAccountId);
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
         /// <returns>Email accounts list</returns>
-        IList<EmailAccount> GetAllEmailAccounts();
+        Task<IList<EmailAccount>> GetAllEmailAccounts();
     }
 }

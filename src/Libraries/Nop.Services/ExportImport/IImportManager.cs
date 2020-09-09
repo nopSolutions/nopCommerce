@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace Nop.Services.ExportImport
 {
@@ -11,32 +12,32 @@ namespace Nop.Services.ExportImport
         /// Import products from XLSX file
         /// </summary>
         /// <param name="stream">Stream</param>
-        void ImportProductsFromXlsx(Stream stream);
+        Task ImportProductsFromXlsx(Stream stream);
 
         /// <summary>
         /// Import newsletter subscribers from TXT file
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <returns>Number of imported subscribers</returns>
-        int ImportNewsletterSubscribersFromTxt(Stream stream);
+        Task<int> ImportNewsletterSubscribersFromTxt(Stream stream);
 
         /// <summary>
         /// Import states from TXT file
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <returns>Number of imported states</returns>
-        int ImportStatesFromTxt(Stream stream);
+        Task<int> ImportStatesFromTxt(Stream stream);
 
         /// <summary>
         /// Import manufacturers from XLSX file
         /// </summary>
         /// <param name="stream">Stream</param>
-        void ImportManufacturersFromXlsx(Stream stream);
+        Task ImportManufacturersFromXlsx(Stream stream);
 
         /// <summary>
         /// Import categories from XLSX file
         /// </summary>
         /// <param name="stream">Stream</param>
-        void ImportCategoriesFromXlsx(Stream stream);
+        Task ImportCategoriesFromXlsx(Stream stream);
     }
 }

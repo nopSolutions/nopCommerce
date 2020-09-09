@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.News;
 
@@ -16,21 +17,21 @@ namespace Nop.Services.News
         /// Deletes a news
         /// </summary>
         /// <param name="newsItem">News item</param>
-        void DeleteNews(NewsItem newsItem);
+        Task DeleteNews(NewsItem newsItem);
 
         /// <summary>
         /// Gets a news
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        NewsItem GetNewsById(int newsId);
+        Task<NewsItem> GetNewsById(int newsId);
 
         /// <summary>
         /// Gets news
         /// </summary>
         /// <param name="newsIds">The news identifiers</param>
         /// <returns>News</returns>
-        IList<NewsItem> GetNewsByIds(int[] newsIds);
+        Task<IList<NewsItem>> GetNewsByIds(int[] newsIds);
 
         /// <summary>
         /// Gets all news
@@ -42,20 +43,20 @@ namespace Nop.Services.News
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="title">Filter by news item title</param>
         /// <returns>News items</returns>
-        IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
+        Task<IPagedList<NewsItem>> GetAllNews(int languageId = 0, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null);
 
         /// <summary>
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        void InsertNews(NewsItem news);
+        Task InsertNews(NewsItem news);
 
         /// <summary>
         /// Updates the news item
         /// </summary>
         /// <param name="news">News item</param>
-        void UpdateNews(NewsItem news);
+        Task UpdateNews(NewsItem news);
 
         /// <summary>
         /// Get a value indicating whether a news item is available now (availability dates)
@@ -80,7 +81,7 @@ namespace Nop.Services.News
         /// <param name="toUtc">Item creation to; null to load all records</param>
         /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
+        Task<IList<NewsComment>> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null);
 
         /// <summary>
@@ -88,14 +89,14 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsCommentId">News comment identifier</param>
         /// <returns>News comment</returns>
-        NewsComment GetNewsCommentById(int newsCommentId);
+        Task<NewsComment> GetNewsCommentById(int newsCommentId);
 
         /// <summary>
         /// Get news comments by identifiers
         /// </summary>
         /// <param name="commentIds">News comment identifiers</param>
         /// <returns>News comments</returns>
-        IList<NewsComment> GetNewsCommentsByIds(int[] commentIds);
+        Task<IList<NewsComment>> GetNewsCommentsByIds(int[] commentIds);
 
         /// <summary>
         /// Get the count of news comments
@@ -104,31 +105,31 @@ namespace Nop.Services.News
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of news comments</returns>
-        int GetNewsCommentsCount(NewsItem newsItem, int storeId = 0, bool? isApproved = null);
+        Task<int> GetNewsCommentsCount(NewsItem newsItem, int storeId = 0, bool? isApproved = null);
 
         /// <summary>
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>
-        void DeleteNewsComment(NewsComment newsComment);
+        Task DeleteNewsComment(NewsComment newsComment);
 
         /// <summary>
         /// Deletes a news comments
         /// </summary>
         /// <param name="newsComments">News comments</param>
-        void DeleteNewsComments(IList<NewsComment> newsComments);
+        Task DeleteNewsComments(IList<NewsComment> newsComments);
 
         /// <summary>
         /// Inserts a news comment
         /// </summary>
         /// <param name="comment">News comment</param>
-        void InsertNewsComment(NewsComment comment);
+        Task InsertNewsComment(NewsComment comment);
 
         /// <summary>
         /// Update a news comment
         /// </summary>
         /// <param name="comment">News comment</param>
-        void UpdateNewsComment(NewsComment comment);
+        Task UpdateNewsComment(NewsComment comment);
 
         #endregion
     }

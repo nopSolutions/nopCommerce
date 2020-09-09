@@ -41,7 +41,7 @@ namespace Nop.Services.Common
             {
                 //keep alive page requested (we ignore it to prevent creating a guest customer records)
                 var keepAliveUrl = $"{webHelper.GetStoreLocation()}{NopCommonDefaults.KeepAlivePath}";
-                if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
+                if ((await webHelper.GetThisPageUrl(false)).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                     return;
             }
 

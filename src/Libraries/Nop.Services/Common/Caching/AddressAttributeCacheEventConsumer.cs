@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Common;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Common;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Common.Caching
@@ -12,12 +13,12 @@ namespace Nop.Services.Common.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(AddressAttribute entity)
+        protected override async Task ClearCache(AddressAttribute entity)
         {
-            Remove(NopCommonDefaults.AddressAttributesAllCacheKey);
+            await Remove(NopCommonDefaults.AddressAttributesAllCacheKey);
 
             var cacheKey = _cacheKeyService.PrepareKey(NopCommonDefaults.AddressAttributeValuesAllCacheKey, entity);
-            Remove(cacheKey);
+            await Remove(cacheKey);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Messages;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Messages.Caching
 {
@@ -12,9 +13,9 @@ namespace Nop.Services.Messages.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(EmailAccount entity)
+        protected override async Task ClearCache(EmailAccount entity)
         {
-            Remove(NopMessageDefaults.EmailAccountsAllCacheKey);
+            await Remove(NopMessageDefaults.EmailAccountsAllCacheKey);
         }
     }
 }

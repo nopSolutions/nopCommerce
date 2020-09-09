@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Orders.Caching
 {
@@ -12,9 +13,9 @@ namespace Nop.Services.Orders.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(ReturnRequestAction entity)
+        protected override async Task ClearCache(ReturnRequestAction entity)
         {
-            Remove(NopOrderDefaults.ReturnRequestActionAllCacheKey);
+            await Remove(NopOrderDefaults.ReturnRequestActionAllCacheKey);
         }
     }
 }

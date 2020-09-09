@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System.Threading.Tasks;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
@@ -24,69 +25,70 @@ namespace Nop.Services.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected virtual void ClearCache(TEntity entity, EntityEventType entityEventType)
+        protected virtual async Task ClearCache(TEntity entity, EntityEventType entityEventType)
         {
-            ClearCache(entity);
+            await ClearCache(entity);
         }
 
         /// <summary>
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected virtual void ClearCache(TEntity entity)
+        protected virtual Task ClearCache(TEntity entity)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefixCacheKey">String key prefix</param>
-        protected virtual void RemoveByPrefix(string prefixCacheKey)
+        protected virtual async Task RemoveByPrefix(string prefixCacheKey)
         {
-            _staticCacheManager.RemoveByPrefix(prefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(prefixCacheKey);
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="cacheKey">Key of cached item</param>
-        protected virtual void Remove(CacheKey cacheKey)
+        protected virtual async Task Remove(CacheKey cacheKey)
         {
-            _staticCacheManager.Remove(cacheKey);
+            await _staticCacheManager.Remove(cacheKey);
         }
 
         /// <summary>
         /// Handle entity inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public virtual void HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
+        public virtual async Task HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
         {
             var entity = eventMessage.Entity;
-            ClearCache(entity, EntityEventType.Insert);
+            await ClearCache(entity, EntityEventType.Insert);
         }
 
         /// <summary>
         /// Handle entity updated event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public virtual void HandleEvent(EntityUpdatedEvent<TEntity> eventMessage)
+        public virtual async Task HandleEvent(EntityUpdatedEvent<TEntity> eventMessage)
         {
             var entity = eventMessage.Entity;
 
-            _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
-            ClearCache(eventMessage.Entity, EntityEventType.Update);
+            await _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
+            await ClearCache(eventMessage.Entity, EntityEventType.Update);
         }
 
         /// <summary>
         /// Handle entity deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public virtual void HandleEvent(EntityDeletedEvent<TEntity> eventMessage)
+        public virtual async Task HandleEvent(EntityDeletedEvent<TEntity> eventMessage)
         {
             var entity = eventMessage.Entity;
 
-            _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
-            ClearCache(eventMessage.Entity, EntityEventType.Delete);
+            await _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
+            await ClearCache(eventMessage.Entity, EntityEventType.Delete);
         }
 
         protected enum EntityEventType

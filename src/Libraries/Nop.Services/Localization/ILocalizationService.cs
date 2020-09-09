@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Localization;
@@ -19,21 +20,21 @@ namespace Nop.Services.Localization
         /// Deletes a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void DeleteLocaleStringResource(LocaleStringResource localeStringResource);
+        Task DeleteLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Gets a locale string resource
         /// </summary>
         /// <param name="localeStringResourceId">Locale string resource identifier</param>
         /// <returns>Locale string resource</returns>
-        LocaleStringResource GetLocaleStringResourceById(int localeStringResourceId);
+        Task<LocaleStringResource> GetLocaleStringResourceById(int localeStringResourceId);
 
         /// <summary>
         /// Gets a locale string resource
         /// </summary>
         /// <param name="resourceName">A string representing a resource name</param>
         /// <returns>Locale string resource</returns>
-        LocaleStringResource GetLocaleStringResourceByName(string resourceName);
+        Task<LocaleStringResource> GetLocaleStringResourceByName(string resourceName);
 
         /// <summary>
         /// Gets a locale string resource
@@ -42,20 +43,20 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <returns>Locale string resource</returns>
-        LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
+        Task<LocaleStringResource> GetLocaleStringResourceByName(string resourceName, int languageId,
             bool logIfNotFound = true);
 
         /// <summary>
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void InsertLocaleStringResource(LocaleStringResource localeStringResource);
+        Task InsertLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Updates the locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void UpdateLocaleStringResource(LocaleStringResource localeStringResource);
+        Task UpdateLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
         /// Gets all locale string resources by language identifier
@@ -63,14 +64,14 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="loadPublicLocales">A value indicating whether to load data for the public store only (if "false", then for admin area only. If null, then load all locales. We use it for performance optimization of the site startup</param>
         /// <returns>Locale string resources</returns>
-        Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId, bool? loadPublicLocales);
+        Task<Dictionary<string, KeyValuePair<int, string>>> GetAllResourceValues(int languageId, bool? loadPublicLocales);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>
         /// <returns>A string representing the requested resource string.</returns>
-        string GetResource(string resourceKey);
+        Task<string> GetResource(string resourceKey);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
@@ -81,7 +82,7 @@ namespace Nop.Services.Localization
         /// <param name="defaultValue">Default value</param>
         /// <param name="returnEmptyIfNotFound">A value indicating whether an empty string will be returned if a resource is not found and default value is set to empty string</param>
         /// <returns>A string representing the requested resource string.</returns>
-        string GetResource(string resourceKey, int languageId,
+        Task<string> GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false);
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
-        string ExportResourcesToXml(Language language);
+        Task<string> ExportResourcesToXml(Language language);
 
         /// <summary>
         /// Import language resources from XML file
@@ -97,7 +98,7 @@ namespace Nop.Services.Localization
         /// <param name="language">Language</param>
         /// <param name="xmlStreamReader">Stream reader of XML file</param>
         /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
-        void ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true);
+        Task ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true);
 
         /// <summary>
         /// Get localized property of an entity
@@ -110,7 +111,7 @@ namespace Nop.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        TPropType GetLocalized<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
+        Task<TPropType> GetLocalized<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
             int? languageId = null, bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where TEntity : BaseEntity, ILocalizedEntity;
 
@@ -125,7 +126,7 @@ namespace Nop.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        string GetLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
+        Task<string> GetLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
             int languageId, int storeId, bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where TSettings : ISettings, new();
 
@@ -138,7 +139,7 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="value">Localized value</param>
         /// <returns>Localized property</returns>
-        void SaveLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
+        Task SaveLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
             int languageId, string value) where TSettings : ISettings, new();
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace Nop.Services.Localization
         /// <param name="enumValue">Enum value</param>
         /// <param name="languageId">Language identifier; pass null to use the current working language</param>
         /// <returns>Localized value</returns>
-        string GetLocalizedEnum<TEnum>(TEnum enumValue, int? languageId = null) where TEnum : struct;
+        Task<string> GetLocalizedEnum<TEnum>(TEnum enumValue, int? languageId = null) where TEnum : struct;
 
         /// <summary>
         /// Get localized value of enum
@@ -157,19 +158,19 @@ namespace Nop.Services.Localization
         /// <param name="permissionRecord">Permission record</param>
         /// <param name="languageId">Language identifier; pass null to use the current working language</param>
         /// <returns>Localized value</returns>
-        string GetLocalizedPermissionName(PermissionRecord permissionRecord, int? languageId = null);
+        Task<string> GetLocalizedPermissionName(PermissionRecord permissionRecord, int? languageId = null);
 
         /// <summary>
         /// Save localized name of a permission
         /// </summary>
         /// <param name="permissionRecord">Permission record</param>
-        void SaveLocalizedPermissionName(PermissionRecord permissionRecord);
+        Task SaveLocalizedPermissionName(PermissionRecord permissionRecord);
 
         /// <summary>
         /// Delete a localized name of a permission
         /// </summary>
         /// <param name="permissionRecord">Permission record</param>
-        void DeleteLocalizedPermissionName(PermissionRecord permissionRecord);
+        Task DeleteLocalizedPermissionName(PermissionRecord permissionRecord);
 
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
@@ -177,34 +178,34 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        void AddOrUpdateLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
+        Task AddOrUpdateLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
 
         /// <summary>
         /// Add locale resources
         /// </summary>
         /// <param name="resources">Resource name-value pairs</param>
         /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
-        void AddLocaleResource(IDictionary<string, string> resources, int? languageId = null);
+        Task AddLocaleResource(IDictionary<string, string> resources, int? languageId = null);
 
         /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
-        void DeleteLocaleResource(string resourceName);
+        Task DeleteLocaleResource(string resourceName);
 
         /// <summary>
         /// Delete locale resources
         /// </summary>
         /// <param name="resourceNames">Resource names</param>
         /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
-        void DeleteLocaleResources(IList<string> resourceNames, int? languageId = null);
+        Task DeleteLocaleResources(IList<string> resourceNames, int? languageId = null);
 
         /// <summary>
         /// Delete locale resources by the passed name prefix
         /// </summary>
         /// <param name="resourceNamePrefix">Resource name prefix</param>
         /// <param name="languageId">Language identifier; pass null to delete resources by prefix from all languages</param>
-        void DeleteLocaleResources(string resourceNamePrefix, int? languageId = null);
+        Task DeleteLocaleResources(string resourceNamePrefix, int? languageId = null);
 
         /// <summary>
         /// Get localized friendly name of a plugin
@@ -214,7 +215,7 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <returns>Localized value</returns>
-        string GetLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, bool returnDefaultValue = true)
+        Task<string> GetLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, bool returnDefaultValue = true)
             where TPlugin : IPlugin;
 
         /// <summary>
@@ -224,7 +225,7 @@ namespace Nop.Services.Localization
         /// <param name="plugin">Plugin</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        void SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName)
+        Task SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName)
             where TPlugin : IPlugin;
     }
 }

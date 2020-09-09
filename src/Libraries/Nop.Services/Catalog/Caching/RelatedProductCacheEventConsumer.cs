@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Catalog.Caching
@@ -12,10 +13,10 @@ namespace Nop.Services.Catalog.Caching
         /// entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(RelatedProduct entity)
+        protected override async Task ClearCache(RelatedProduct entity)
         {
             var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductsRelatedPrefixCacheKey, entity.ProductId1);
-            RemoveByPrefix(prefix);
+            await RemoveByPrefix(prefix);
         }
     }
 }

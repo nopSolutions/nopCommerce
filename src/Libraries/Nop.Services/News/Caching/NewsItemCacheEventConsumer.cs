@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.News;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.News.Caching
 {
@@ -12,11 +13,11 @@ namespace Nop.Services.News.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(NewsItem entity)
+        protected override async Task ClearCache(NewsItem entity)
         {
             var prefix = _cacheKeyService.PrepareKeyPrefix(NopNewsDefaults.NewsCommentsNumberPrefixCacheKey, entity);
 
-            RemoveByPrefix(prefix);
+            await RemoveByPrefix(prefix);
         }
     }
 }

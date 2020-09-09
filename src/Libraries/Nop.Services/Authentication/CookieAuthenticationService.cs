@@ -109,7 +109,7 @@ namespace Nop.Services.Authentication
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
-                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value).Result;
             }
             else
             {
@@ -117,11 +117,11 @@ namespace Nop.Services.Authentication
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
-                    customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                    customer = _customerService.GetCustomerByEmail(emailClaim.Value).Result;
             }
 
             //whether the found customer is available
-            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !_customerService.IsRegistered(customer))
+            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !_customerService.IsRegistered(customer).Result)
                 return null;
 
             //cache authenticated customer

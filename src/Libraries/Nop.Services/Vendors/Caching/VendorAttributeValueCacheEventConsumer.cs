@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Vendors;
 using Nop.Services.Caching;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Vendors.Caching
 {
@@ -12,11 +13,11 @@ namespace Nop.Services.Vendors.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(VendorAttributeValue entity)
+        protected override async Task ClearCache(VendorAttributeValue entity)
         {
             var cacheKey = _cacheKeyService.PrepareKey(NopVendorDefaults.VendorAttributeValuesAllCacheKey, entity.VendorAttributeId);
 
-            Remove(cacheKey);
+            await Remove(cacheKey);
         }
     }
 }

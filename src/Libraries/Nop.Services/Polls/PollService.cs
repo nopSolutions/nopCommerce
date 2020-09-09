@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Polls;
@@ -52,12 +54,12 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollById(int pollId)
+        public virtual async Task<Poll> GetPollById(int pollId)
         {
             if (pollId == 0)
                 return null;
 
-            return _pollRepository.ToCachedGetById(pollId);
+            return await _pollRepository.ToCachedGetById(pollId);
         }
 
         /// <summary>
@@ -71,7 +73,7 @@ namespace Nop.Services.Polls
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
-        public virtual IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
+        public virtual Task<IPagedList<Poll>> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
             bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -123,52 +125,52 @@ namespace Nop.Services.Polls
             query = query.OrderBy(poll => poll.DisplayOrder).ThenBy(poll => poll.Id);
 
             //return paged list of polls
-            return new PagedList<Poll>(query, pageIndex, pageSize);
+            return Task.FromResult<IPagedList<Poll>>(new PagedList<Poll>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Deletes a poll
         /// </summary>
         /// <param name="poll">The poll</param>
-        public virtual void DeletePoll(Poll poll)
+        public virtual async Task DeletePoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException(nameof(poll));
 
-            _pollRepository.Delete(poll);
+            await _pollRepository.Delete(poll);
 
             //event notification
-            _eventPublisher.EntityDeleted(poll);
+            await _eventPublisher.EntityDeleted(poll);
         }
 
         /// <summary>
         /// Inserts a poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual void InsertPoll(Poll poll)
+        public virtual async Task InsertPoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException(nameof(poll));
 
-            _pollRepository.Insert(poll);
+            await _pollRepository.Insert(poll);
 
             //event notification
-            _eventPublisher.EntityInserted(poll);
+            await _eventPublisher.EntityInserted(poll);
         }
 
         /// <summary>
         /// Updates the poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual void UpdatePoll(Poll poll)
+        public virtual async Task UpdatePoll(Poll poll)
         {
             if (poll == null)
                 throw new ArgumentNullException(nameof(poll));
 
-            _pollRepository.Update(poll);
+            await _pollRepository.Update(poll);
 
             //event notification
-            _eventPublisher.EntityUpdated(poll);
+            await _eventPublisher.EntityUpdated(poll);
         }
 
         /// <summary>
@@ -176,27 +178,27 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="pollAnswerId">Poll answer identifier</param>
         /// <returns>Poll answer</returns>
-        public virtual PollAnswer GetPollAnswerById(int pollAnswerId)
+        public virtual async Task<PollAnswer> GetPollAnswerById(int pollAnswerId)
         {
             if (pollAnswerId == 0)
                 return null;
 
-            return _pollAnswerRepository.ToCachedGetById(pollAnswerId);
+            return await _pollAnswerRepository.ToCachedGetById(pollAnswerId);
         }
 
         /// <summary>
         /// Deletes a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual void DeletePollAnswer(PollAnswer pollAnswer)
+        public virtual async Task DeletePollAnswer(PollAnswer pollAnswer)
         {
             if (pollAnswer == null)
                 throw new ArgumentNullException(nameof(pollAnswer));
 
-            _pollAnswerRepository.Delete(pollAnswer);
+            await _pollAnswerRepository.Delete(pollAnswer);
 
             //event notification
-            _eventPublisher.EntityDeleted(pollAnswer);
+            await _eventPublisher.EntityDeleted(pollAnswer);
         }
 
         /// <summary>
@@ -206,7 +208,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public virtual IPagedList<PollAnswer> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual Task<IPagedList<PollAnswer>> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollAnswerRepository.Table.Where(pa => pa.PollId == pollId);
 
@@ -214,37 +216,37 @@ namespace Nop.Services.Polls
             query = query.OrderBy(pa => pa.DisplayOrder).ThenBy(pa => pa.Id);
 
             //return paged list of polls
-            return new PagedList<PollAnswer>(query, pageIndex, pageSize);
+            return Task.FromResult<IPagedList<PollAnswer>>(new PagedList<PollAnswer>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Inserts a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual void InsertPollAnswer(PollAnswer pollAnswer)
+        public virtual async Task InsertPollAnswer(PollAnswer pollAnswer)
         {
             if (pollAnswer == null)
                 throw new ArgumentNullException(nameof(pollAnswer));
 
-            _pollAnswerRepository.Insert(pollAnswer);
+            await _pollAnswerRepository.Insert(pollAnswer);
 
             //event notification
-            _eventPublisher.EntityInserted(pollAnswer);
+            await _eventPublisher.EntityInserted(pollAnswer);
         }
 
         /// <summary>
         /// Updates the poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual void UpdatePollAnswer(PollAnswer pollAnswer)
+        public virtual async Task UpdatePollAnswer(PollAnswer pollAnswer)
         {
             if (pollAnswer == null)
                 throw new ArgumentNullException(nameof(pollAnswer));
 
-            _pollAnswerRepository.Update(pollAnswer);
+            await _pollAnswerRepository.Update(pollAnswer);
 
             //event notification
-            _eventPublisher.EntityUpdated(pollAnswer);
+            await _eventPublisher.EntityUpdated(pollAnswer);
         }
 
         /// <summary>
@@ -253,15 +255,15 @@ namespace Nop.Services.Polls
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
-        public virtual bool AlreadyVoted(int pollId, int customerId)
+        public virtual async Task<bool> AlreadyVoted(int pollId, int customerId)
         {
             if (pollId == 0 || customerId == 0)
                 return false;
 
-            var result = (from pa in _pollAnswerRepository.Table
+            var result = await (from pa in _pollAnswerRepository.Table
                           join pvr in _pollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
                           where pa.PollId == pollId && pvr.CustomerId == customerId
-                          select pvr).Any();
+                          select pvr).AnyAsync();
             return result;
         }
 
@@ -269,15 +271,15 @@ namespace Nop.Services.Polls
         /// Inserts a poll voting record
         /// </summary>
         /// <param name="pollVotingRecord">Voting record</param>
-        public virtual void InsertPollVotingRecord(PollVotingRecord pollVotingRecord)
+        public virtual async Task InsertPollVotingRecord(PollVotingRecord pollVotingRecord)
         {
             if (pollVotingRecord == null)
                 throw new ArgumentNullException(nameof(pollVotingRecord));
 
-            _pollVotingRecordRepository.Insert(pollVotingRecord);
+            await _pollVotingRecordRepository.Insert(pollVotingRecord);
 
             //event notification
-            _eventPublisher.EntityInserted(pollVotingRecord);
+            await _eventPublisher.EntityInserted(pollVotingRecord);
         }
 
         /// <summary>
@@ -287,12 +289,12 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public virtual IPagedList<PollVotingRecord> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual Task<IPagedList<PollVotingRecord>> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollVotingRecordRepository.Table.Where(pa => pa.PollAnswerId == pollAnswerId);
 
             //return paged list of poll voting records
-            return new PagedList<PollVotingRecord>(query, pageIndex, pageSize);
+            return Task.FromResult<IPagedList<PollVotingRecord>>(new PagedList<PollVotingRecord>(query, pageIndex, pageSize));
         }
 
         #endregion

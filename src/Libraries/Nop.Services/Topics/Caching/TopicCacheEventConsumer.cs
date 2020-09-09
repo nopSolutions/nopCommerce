@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Topics;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Topics;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Topics.Caching
@@ -12,11 +13,11 @@ namespace Nop.Services.Topics.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Topic entity)
+        protected override async Task ClearCache(Topic entity)
         {
-            RemoveByPrefix(NopTopicDefaults.TopicsAllPrefixCacheKey);
+            await RemoveByPrefix(NopTopicDefaults.TopicsAllPrefixCacheKey);
             var prefix = _cacheKeyService.PrepareKeyPrefix(NopTopicDefaults.TopicBySystemNamePrefixCacheKey, entity.SystemName);
-            RemoveByPrefix(prefix);
+            await RemoveByPrefix(prefix);
         }
     }
 }

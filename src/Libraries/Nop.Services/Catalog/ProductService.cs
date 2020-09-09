@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -170,7 +172,7 @@ namespace Nop.Services.Catalog
             {
                 //manage stock by attribute combinations
                 //let's find appropriate record
-                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml).Result;
                 if (combination != null)
                 {
                     sku = combination.Sku;
@@ -193,14 +195,14 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Message</returns>
-        protected virtual string GeStockMessage(Product product, string attributesXml)
+        protected virtual async Task<string> GeStockMessage(Product product, string attributesXml)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
             string stockMessage;
 
-            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            var combination = await _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
             if (combination != null)
             {
                 //combination exists
@@ -210,23 +212,23 @@ namespace Nop.Services.Catalog
                     stockMessage = product.DisplayStockQuantity
                         ?
                         //display "in stock" with stock quantity
-                        string.Format(_localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity)
+                        string.Format(await _localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity)
                         :
                         //display "in stock" without stock quantity
-                        _localizationService.GetResource("Products.Availability.InStock");
+                        await _localizationService.GetResource("Products.Availability.InStock");
                 }
                 else if (combination.AllowOutOfStockOrders)
                 {
-                    stockMessage = _localizationService.GetResource("Products.Availability.InStock");
+                    stockMessage = await _localizationService.GetResource("Products.Availability.InStock");
                 }
                 else
                 {
-                    var productAvailabilityRange =
+                    var productAvailabilityRange = await 
                         _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                     stockMessage = productAvailabilityRange == null
-                        ? _localizationService.GetResource("Products.Availability.OutOfStock")
-                        : string.Format(_localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                        ? await _localizationService.GetResource("Products.Availability.OutOfStock")
+                        : string.Format(await _localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                            await _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                 }
             }
             else
@@ -234,17 +236,17 @@ namespace Nop.Services.Catalog
                 //no combination configured
                 if (product.AllowAddingOnlyExistingAttributeCombinations)
                 {
-                    var productAvailabilityRange =
+                    var productAvailabilityRange = await 
                         _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                     stockMessage = productAvailabilityRange == null
-                        ? _localizationService.GetResource("Products.Availability.OutOfStock")
-                        : string.Format(_localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                            _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                        ? await _localizationService.GetResource("Products.Availability.OutOfStock")
+                        : string.Format(await _localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                            await _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                 }
                 else
                 {
-                    stockMessage = !_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                        .Any(pam => pam.IsRequired) ? _localizationService.GetResource("Products.Availability.InStock") : _localizationService.GetResource("Products.Availability.SelectRequiredAttributes");
+                    stockMessage = !(await _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
+                        .Any(pam => pam.IsRequired) ? await _localizationService.GetResource("Products.Availability.InStock") : await _localizationService.GetResource("Products.Availability.SelectRequiredAttributes");
                 }
             }
 
@@ -257,42 +259,42 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="stockMessage">Message</param>
         /// <returns>Message</returns>
-        protected virtual string GetStockMessage(Product product, string stockMessage)
+        protected virtual async Task<string> GetStockMessage(Product product, string stockMessage)
         {
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
-            var stockQuantity = GetTotalStockQuantity(product);
+            var stockQuantity = await GetTotalStockQuantity(product);
             if (stockQuantity > 0)
             {
                 stockMessage = product.DisplayStockQuantity
                     ?
                     //display "in stock" with stock quantity
-                    string.Format(_localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity)
+                    string.Format(await _localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity)
                     :
                     //display "in stock" without stock quantity
-                    _localizationService.GetResource("Products.Availability.InStock");
+                    await _localizationService.GetResource("Products.Availability.InStock");
             }
             else
             {
                 //out of stock
-                var productAvailabilityRange = _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                var productAvailabilityRange = await _dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                 switch (product.BackorderMode)
                 {
                     case BackorderMode.NoBackorders:
                         stockMessage = productAvailabilityRange == null
-                            ? _localizationService.GetResource("Products.Availability.OutOfStock")
-                            : string.Format(_localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                                _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                            ? await _localizationService.GetResource("Products.Availability.OutOfStock")
+                            : string.Format(await _localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                await _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                         break;
                     case BackorderMode.AllowQtyBelow0:
-                        stockMessage = _localizationService.GetResource("Products.Availability.InStock");
+                        stockMessage = await _localizationService.GetResource("Products.Availability.InStock");
                         break;
                     case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
                         stockMessage = productAvailabilityRange == null
-                            ? _localizationService.GetResource("Products.Availability.Backordering")
-                            : string.Format(_localizationService.GetResource("Products.Availability.BackorderingWithDate"),
-                                _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
+                            ? await _localizationService.GetResource("Products.Availability.Backordering")
+                            : string.Format(await _localizationService.GetResource("Products.Availability.BackorderingWithDate"),
+                                await _localizationService.GetLocalized(productAvailabilityRange, range => range.Name));
                         break;
                 }
             }
@@ -310,48 +312,43 @@ namespace Nop.Services.Catalog
         /// Delete a product
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void DeleteProduct(Product product)
+        public virtual async Task DeleteProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             product.Deleted = true;
             //delete product
-            UpdateProduct(product);
+            await UpdateProduct(product);
 
             //event notification
-            _eventPublisher.EntityDeleted(product);
+            await _eventPublisher.EntityDeleted(product);
         }
 
         /// <summary>
         /// Delete products
         /// </summary>
         /// <param name="products">Products</param>
-        public virtual void DeleteProducts(IList<Product> products)
+        public virtual async Task DeleteProducts(IList<Product> products)
         {
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
 
-            foreach (var product in products)
-            {
-                product.Deleted = true;
-            }
+            foreach (var product in products) product.Deleted = true;
 
             //delete product
-            UpdateProducts(products);
+            await UpdateProducts(products);
 
+            //event notification
             foreach (var product in products)
-            {
-                //event notification
-                _eventPublisher.EntityDeleted(product);
-            }
+                await _eventPublisher.EntityDeleted(product);
         }
 
         /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetAllProductsDisplayedOnHomepage()
+        public virtual async Task<IList<Product>> GetAllProductsDisplayedOnHomepage()
         {
             var query = from p in _productRepository.Table
                         orderby p.DisplayOrder, p.Id
@@ -360,7 +357,7 @@ namespace Nop.Services.Catalog
                         p.ShowOnHomepage
                         select p;
 
-            var products = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
+            var products = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
 
             return products;
         }
@@ -370,12 +367,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
-        public virtual Product GetProductById(int productId)
+        public virtual async Task<Product> GetProductById(int productId)
         {
             if (productId == 0)
                 return null;
 
-            return _productRepository.ToCachedGetById(productId);
+            return await _productRepository.ToCachedGetById(productId);
         }
 
         /// <summary>
@@ -383,7 +380,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetProductsByIds(int[] productIds)
+        public virtual async Task<IList<Product>> GetProductsByIds(int[] productIds)
         {
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
@@ -394,7 +391,7 @@ namespace Nop.Services.Catalog
                         where productIds.Contains(p.Id) && !p.Deleted
                         select p;
 
-            var products = query.ToCachedList(key);
+            var products = await query.ToCachedList(key);
 
             //sort by passed identifiers
             var sortedProducts = new List<Product>();
@@ -412,51 +409,49 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void InsertProduct(Product product)
+        public virtual async Task InsertProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             //insert
-            _productRepository.Insert(product);
+            await _productRepository.Insert(product);
 
             //event notification
-            _eventPublisher.EntityInserted(product);
+            await _eventPublisher.EntityInserted(product);
         }
 
         /// <summary>
         /// Updates the product
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void UpdateProduct(Product product)
+        public virtual async Task UpdateProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             //update
-            _productRepository.Update(product);
+            await _productRepository.Update(product);
 
             //event notification
-            _eventPublisher.EntityUpdated(product);
+            await _eventPublisher.EntityUpdated(product);
         }
 
         /// <summary>
         /// Update products
         /// </summary>
         /// <param name="products">Products</param>
-        public virtual void UpdateProducts(IList<Product> products)
+        public virtual async Task UpdateProducts(IList<Product> products)
         {
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
 
             //update
-            _productRepository.Update(products);
+            await _productRepository.Update(products);
 
             //event notification
-            foreach (var product in products)
-            {
-                _eventPublisher.EntityUpdated(product);
-            }
+            foreach (var product in products) 
+                await _eventPublisher.EntityUpdated(product);
         }
 
         /// <summary>
@@ -465,7 +460,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Number of products</returns>
-        public virtual int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0)
+        public virtual async Task<int> GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0)
         {
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(0))
@@ -488,7 +483,7 @@ namespace Nop.Services.Catalog
             if (!_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
-                allowedCustomerRolesIds.AddRange(_customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                allowedCustomerRolesIds.AddRange(await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
 
                 query = from p in query
                         join acl in _aclRepository.Table
@@ -498,9 +493,7 @@ namespace Nop.Services.Catalog
                         select p;
             }
             else
-            {
                 allowedCustomerRolesIds.Add(0);
-            }
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
@@ -516,7 +509,7 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
-            var result = _staticCacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());
+            var result = await _staticCacheManager.Get(cacheKey, async () => await query.Select(p => p.Id).Distinct().CountAsync());
 
             return result;
         }
@@ -553,7 +546,7 @@ namespace Nop.Services.Catalog
         /// false - load only "Unpublished" products
         /// </param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> SearchProducts(
+        public virtual async Task<IPagedList<Product>> SearchProducts(
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
@@ -579,19 +572,20 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            return SearchProducts(out var _, false,
+            var rez = await SearchProducts(false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchManufacturerPartNumber, searchSku,
                 searchProductTags, languageId, filteredSpecs,
                 orderBy, showHidden, overridePublished);
+
+            return rez.Item1;
         }
 
         /// <summary>
         /// Search products
         /// </summary>
-        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
@@ -622,8 +616,7 @@ namespace Nop.Services.Catalog
         /// false - load only "Unpublished" products
         /// </param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> SearchProducts(
-            out IList<int> filterableSpecificationAttributeOptionIds,
+        public virtual async Task<(IPagedList<Product>, IList<int>)> SearchProducts(
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -650,7 +643,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            filterableSpecificationAttributeOptionIds = new List<int>();
+            var filterableSpecificationAttributeOptionIds = new List<int>();
 
             //search by keyword
             var searchLocalizedValue = false;
@@ -663,7 +656,7 @@ namespace Nop.Services.Catalog
                 else
                 {
                     //ensure that we have at least two published languages
-                    var totalPublishedLanguages = _languageService.GetAllLanguages().Count;
+                    var totalPublishedLanguages = (await _languageService.GetAllLanguages()).Count;
                     searchLocalizedValue = totalPublishedLanguages >= 2;
                 }
             }
@@ -673,7 +666,7 @@ namespace Nop.Services.Catalog
                 categoryIds.Remove(0);
 
             //Access control list. Allowed customer roles
-            var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+            var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
 
             //pass category identifiers as comma-delimited string
             var commaSeparatedCategoryIds = categoryIds == null ? string.Empty : string.Join(",", categoryIds);
@@ -729,7 +722,7 @@ namespace Nop.Services.Catalog
             var pTotalRecords = SqlParameterHelper.GetOutputInt32Parameter("TotalRecords");
 
             //invoke stored procedure
-            var products = _productRepository.EntityFromSql("ProductLoadAllPaged",
+            var products = (await _productRepository.EntityFromSql("ProductLoadAllPaged",
                 pCategoryIds,
                 pManufacturerId,
                 pStoreId,
@@ -759,7 +752,7 @@ namespace Nop.Services.Catalog
                 pOverridePublished,
                 pLoadFilterableSpecificationAttributeOptionIds,
                 pFilterableSpecificationAttributeOptionIds,
-                pTotalRecords).ToList();
+                pTotalRecords)).ToList();
 
             //get filterable specification attribute option identifier
             var filterableSpecificationAttributeOptionIdsStr =
@@ -778,7 +771,7 @@ namespace Nop.Services.Catalog
             //return products
             var totalRecords = pTotalRecords.Value != DBNull.Value ? Convert.ToInt32(pTotalRecords.Value) : 0;
 
-            return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
+            return (new PagedList<Product>(products, pageIndex, pageSize, totalRecords), filterableSpecificationAttributeOptionIds);
         }
 
         /// <summary>
@@ -788,7 +781,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> GetProductsByProductAtributeId(int productAttributeId,
+        public virtual Task<IPagedList<Product>> GetProductsByProductAtributeId(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productRepository.Table
@@ -799,7 +792,7 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            return new PagedList<Product>(query, pageIndex, pageSize);
+            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(query, pageIndex, pageSize));
         }
 
         /// <summary>
@@ -810,7 +803,7 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetAssociatedProducts(int parentGroupedProductId,
+        public virtual async Task<IList<Product>> GetAssociatedProducts(int parentGroupedProductId,
             int storeId = 0, int vendorId = 0, bool showHidden = false)
         {
             var query = _productRepository.Table;
@@ -833,19 +826,15 @@ namespace Nop.Services.Catalog
             query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
-            var products = query.ToList();
+            var products = await query.ToListAsync();
 
             //ACL mapping
-            if (!showHidden)
-            {
-                products = products.Where(x => _aclService.Authorize(x)).ToList();
-            }
+            if (!showHidden) 
+                products = products.Where(x => _aclService.Authorize(x).Result).ToList();
 
             //Store mapping
-            if (!showHidden && storeId > 0)
-            {
-                products = products.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
-            }
+            if (!showHidden && storeId > 0) 
+                products = products.Where(x => _storeMappingService.Authorize(x, storeId).Result).ToList();
 
             return products;
         }
@@ -854,7 +843,7 @@ namespace Nop.Services.Catalog
         /// Update product review totals
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void UpdateProductReviewTotals(Product product)
+        public virtual async Task UpdateProductReviewTotals(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -864,9 +853,8 @@ namespace Nop.Services.Catalog
             var approvedTotalReviews = 0;
             var notApprovedTotalReviews = 0;
 
-            var reviews = _productReviewRepository.Table.Where(r => r.ProductId == product.Id);
+            var reviews = await _productReviewRepository.Table.Where(r => r.ProductId == product.Id).ToListAsync();
             foreach (var pr in reviews)
-            {
                 if (pr.IsApproved)
                 {
                     approvedRatingSum += pr.Rating;
@@ -877,13 +865,12 @@ namespace Nop.Services.Catalog
                     notApprovedRatingSum += pr.Rating;
                     notApprovedTotalReviews++;
                 }
-            }
 
             product.ApprovedRatingSum = approvedRatingSum;
             product.NotApprovedRatingSum = notApprovedRatingSum;
             product.ApprovedTotalReviews = approvedTotalReviews;
             product.NotApprovedTotalReviews = notApprovedTotalReviews;
-            UpdateProduct(product);
+            await UpdateProduct(product);
         }
 
         /// <summary>
@@ -895,7 +882,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
+        public virtual Task<IPagedList<Product>> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _productRepository.Table;
@@ -924,7 +911,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderBy(product => product.MinStockQuantity).ThenBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
-            return new PagedList<Product>(query, pageIndex, pageSize, getOnlyTotalCount);
+            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(query, pageIndex, pageSize, getOnlyTotalCount));
         }
 
         /// <summary>
@@ -936,7 +923,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Product combinations</returns>
-        public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
+        public virtual Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var combinations = from pac in _productAttributeCombinationRepository.Table
@@ -957,7 +944,7 @@ namespace Nop.Services.Catalog
                 orderby pac.ProductId, pac.Id
                 select pac;
 
-            return new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount);
+            return Task.FromResult((IPagedList<ProductAttributeCombination>)new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount));
         }
 
         /// <summary>
@@ -965,7 +952,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="sku">SKU</param>
         /// <returns>Product</returns>
-        public virtual Product GetProductBySku(string sku)
+        public virtual async Task<Product> GetProductBySku(string sku)
         {
             if (string.IsNullOrEmpty(sku))
                 return null;
@@ -977,7 +964,7 @@ namespace Nop.Services.Catalog
                         where !p.Deleted &&
                         p.Sku == sku
                         select p;
-            var product = query.FirstOrDefault();
+            var product = await query.FirstOrDefaultAsync();
 
             return product;
         }
@@ -988,7 +975,7 @@ namespace Nop.Services.Catalog
         /// <param name="skuArray">SKU array</param>
         /// <param name="vendorId">Vendor ID; 0 to load all records</param>
         /// <returns>Products</returns>
-        public IList<Product> GetProductsBySku(string[] skuArray, int vendorId = 0)
+        public async Task<IList<Product>> GetProductsBySku(string[] skuArray, int vendorId = 0)
         {
             if (skuArray == null)
                 throw new ArgumentNullException(nameof(skuArray));
@@ -999,33 +986,33 @@ namespace Nop.Services.Catalog
             if (vendorId != 0)
                 query = query.Where(p => p.VendorId == vendorId);
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void UpdateHasTierPricesProperty(Product product)
+        public virtual async Task UpdateHasTierPricesProperty(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            product.HasTierPrices = GetTierPricesByProduct(product.Id).Any();
-            UpdateProduct(product);
+            product.HasTierPrices = (await GetTierPricesByProduct(product.Id)).Any();
+            await UpdateProduct(product);
         }
 
         /// <summary>
         /// Update HasDiscountsApplied property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void UpdateHasDiscountsApplied(Product product)
+        public virtual async Task UpdateHasDiscountsApplied(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             product.HasDiscountsApplied = _discountProductMappingRepository.Table.Any(dpm => dpm.EntityId == product.Id);
-            UpdateProduct(product);
+            await UpdateProduct(product);
         }
 
         /// <summary>
@@ -1033,12 +1020,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <returns>Number of products</returns>
-        public int GetNumberOfProductsByVendorId(int vendorId)
+        public async Task<int> GetNumberOfProductsByVendorId(int vendorId)
         {
             if (vendorId == 0)
                 return 0;
 
-            return _productRepository.Table.Count(p => p.VendorId == vendorId && !p.Deleted);
+            return await _productRepository.Table.CountAsync(p => p.VendorId == vendorId && !p.Deleted);
         }
 
         /// <summary>
@@ -1059,10 +1046,8 @@ namespace Nop.Services.Catalog
             foreach (var idStr in product.RequiredProductIds
                 .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
-            {
                 if (int.TryParse(idStr, out var id))
                     ids.Add(id);
-            }
 
             return ids.ToArray();
         }
@@ -1101,18 +1086,14 @@ namespace Nop.Services.Catalog
 
             var result = new List<int>();
             if (!string.IsNullOrWhiteSpace(product.AllowedQuantities))
-            {
                 product.AllowedQuantities
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .ToList()
                     .ForEach(qtyStr =>
                     {
-                        if (int.TryParse(qtyStr.Trim(), out var qty))
-                        {
+                        if (int.TryParse(qtyStr.Trim(), out var qty)) 
                             result.Add(qty);
-                        }
                     });
-            }
 
             return result.ToArray();
         }
@@ -1130,32 +1111,26 @@ namespace Nop.Services.Catalog
         /// Used only with "multiple warehouses" enabled.
         /// </param>
         /// <returns>Result</returns>
-        public virtual int GetTotalStockQuantity(Product product, bool useReservedQuantity = true, int warehouseId = 0)
+        public virtual async Task<int> GetTotalStockQuantity(Product product, bool useReservedQuantity = true, int warehouseId = 0)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
-            {
                 //We can calculate total stock quantity when 'Manage inventory' property is set to 'Track inventory'
                 return 0;
-            }
 
             if (!product.UseMultipleWarehouses)
                 return product.StockQuantity;
 
             var pwi = _productWarehouseInventoryRepository.Table.Where(wi => wi.ProductId == product.Id);
 
-            if (warehouseId > 0)
-            {
+            if (warehouseId > 0) 
                 pwi = pwi.Where(x => x.WarehouseId == warehouseId);
-            }
 
-            var result = pwi.Sum(x => x.StockQuantity);
-            if (useReservedQuantity)
-            {
-                result -= pwi.Sum(x => x.ReservedQuantity);
-            }
+            var result = await pwi.SumAsync(x => x.StockQuantity);
+            if (useReservedQuantity) 
+                result -= await pwi.SumAsync(x => x.ReservedQuantity);
 
             return result;
         }
@@ -1231,7 +1206,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
         /// <returns>The stock message</returns>
-        public virtual string FormatStockMessage(Product product, string attributesXml)
+        public virtual async Task<string> FormatStockMessage(Product product, string attributesXml)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1241,10 +1216,10 @@ namespace Nop.Services.Catalog
             switch (product.ManageInventoryMethod)
             {
                 case ManageInventoryMethod.ManageStock:
-                    stockMessage = GetStockMessage(product, stockMessage);
+                    stockMessage = await GetStockMessage(product, stockMessage);
                     break;
                 case ManageInventoryMethod.ManageStockByAttributes:
-                    stockMessage = GeStockMessage(product, attributesXml);
+                    stockMessage = await GeStockMessage(product, attributesXml);
                     break;
             }
 
@@ -1321,26 +1296,26 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
-        public virtual void UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds)
+        public virtual async Task UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds)
         {
             product.LimitedToStores = limitedToStoresIds.Any();
 
-            var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
-            var allStores = _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappings(product);
+            var allStores = await _storeService.GetAllStores();
             foreach (var store in allStores)
             {
                 if (limitedToStoresIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        _storeMappingService.InsertStoreMapping(product, store.Id);
+                        await _storeMappingService.InsertStoreMapping(product, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }
             }
         }
@@ -1350,9 +1325,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Result</returns>
-        public virtual bool HasAnyDownloadableProduct(int[] productIds)
+        public virtual async Task<bool> HasAnyDownloadableProduct(int[] productIds)
         {
-            return _productRepository.Table.Any(p => productIds.Contains(p.Id) && p.IsDownload);
+            return await _productRepository.Table.AnyAsync(p => productIds.Contains(p.Id) && p.IsDownload);
         }
 
         /// <summary>
@@ -1360,9 +1335,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Result</returns>
-        public virtual bool HasAnyGiftCardProduct(int[] productIds)
+        public virtual async Task<bool> HasAnyGiftCardProduct(int[] productIds)
         {
-            return _productRepository.Table.Any(p => productIds.Contains(p.Id) && p.IsGiftCard);
+            return await _productRepository.Table.AnyAsync(p => productIds.Contains(p.Id) && p.IsGiftCard);
         }
 
         /// <summary>
@@ -1370,9 +1345,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Result</returns>
-        public virtual bool HasAnyRecurringProduct(int[] productIds)
+        public virtual async Task<bool> HasAnyRecurringProduct(int[] productIds)
         {
-            return _productRepository.Table.Any(p => productIds.Contains(p.Id) && p.IsRecurring);
+            return await _productRepository.Table.AnyAsync(p => productIds.Contains(p.Id) && p.IsRecurring);
         }
 
         #endregion
@@ -1386,7 +1361,7 @@ namespace Nop.Services.Catalog
         /// <param name="quantityToChange">Quantity to increase or decrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="message">Message for the stock quantity history</param>
-        public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "")
+        public virtual async Task AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "")
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1397,30 +1372,30 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
                 //previous stock
-                var prevStockQuantity = GetTotalStockQuantity(product);
+                var prevStockQuantity = await GetTotalStockQuantity(product);
 
                 //update stock quantity
                 if (product.UseMultipleWarehouses)
                 {
                     //use multiple warehouses
                     if (quantityToChange < 0)
-                        ReserveInventory(product, quantityToChange);
+                        await ReserveInventory(product, quantityToChange);
                     else
-                        UnblockReservedInventory(product, quantityToChange);
+                        await UnblockReservedInventory(product, quantityToChange);
                 }
                 else
                 {
                     //do not use multiple warehouses
                     //simple inventory management
                     product.StockQuantity += quantityToChange;
-                    UpdateProduct(product);
+                    await UpdateProduct(product);
 
                     //quantity change history
-                    AddStockQuantityHistoryEntry(product, quantityToChange, product.StockQuantity, product.WarehouseId, message);
+                    await AddStockQuantityHistoryEntry(product, quantityToChange, product.StockQuantity, product.WarehouseId, message);
                 }
 
                 //qty is reduced. check if minimum stock quantity is reached
-                if (quantityToChange < 0 && product.MinStockQuantity >= GetTotalStockQuantity(product))
+                if (quantityToChange < 0 && product.MinStockQuantity >= await GetTotalStockQuantity(product))
                 {
                     //what should we do now? disable buy button, unpublish the product, or do nothing? check "Low stock activity" property
                     switch (product.LowStockActivity)
@@ -1428,11 +1403,11 @@ namespace Nop.Services.Catalog
                         case LowStockActivity.DisableBuyButton:
                             product.DisableBuyButton = true;
                             product.DisableWishlistButton = true;
-                            UpdateProduct(product);
+                            await UpdateProduct(product);
                             break;
                         case LowStockActivity.Unpublish:
                             product.Published = false;
-                            UpdateProduct(product);
+                            await UpdateProduct(product);
                             break;
                         default:
                             break;
@@ -1441,18 +1416,18 @@ namespace Nop.Services.Catalog
                 //qty is increased. product is back in stock (minimum stock quantity is reached again)?
                 if (_catalogSettings.PublishBackProductWhenCancellingOrders)
                 {
-                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < GetTotalStockQuantity(product))
+                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < await GetTotalStockQuantity(product))
                     {
                         switch (product.LowStockActivity)
                         {
                             case LowStockActivity.DisableBuyButton:
                                 product.DisableBuyButton = false;
                                 product.DisableWishlistButton = false;
-                                UpdateProduct(product);
+                                await UpdateProduct(product);
                                 break;
                             case LowStockActivity.Unpublish:
                                 product.Published = true;
-                                UpdateProduct(product);
+                                await UpdateProduct(product);
                                 break;
                             default:
                                 break;
@@ -1461,45 +1436,45 @@ namespace Nop.Services.Catalog
                 }
 
                 //send email notification
-                if (quantityToChange < 0 && GetTotalStockQuantity(product) < product.NotifyAdminForQuantityBelow)
+                if (quantityToChange < 0 && await GetTotalStockQuantity(product) < product.NotifyAdminForQuantityBelow)
                 {
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
-                    workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
+                    await workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
                 }
             }
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
-                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var combination = await _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
                 if (combination != null)
                 {
                     combination.StockQuantity += quantityToChange;
-                    _productAttributeService.UpdateProductAttributeCombination(combination);
+                    await _productAttributeService.UpdateProductAttributeCombination(combination);
 
                     //quantity change history
-                    AddStockQuantityHistoryEntry(product, quantityToChange, combination.StockQuantity, message: message, combinationId: combination.Id);
+                    await AddStockQuantityHistoryEntry(product, quantityToChange, combination.StockQuantity, message: message, combinationId: combination.Id);
 
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
                         var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
-                        workflowMessageService.SendQuantityBelowStoreOwnerNotification(combination, _localizationSettings.DefaultAdminLanguageId);
+                        await workflowMessageService.SendQuantityBelowStoreOwnerNotification(combination, _localizationSettings.DefaultAdminLanguageId);
                     }
                 }
             }
 
             //bundled products
-            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
+            var attributeValues = await _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
                 if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct)
                     continue;
 
                 //associated product (bundle)
-                var associatedProduct = GetProductById(attributeValue.AssociatedProductId);
+                var associatedProduct = await GetProductById(attributeValue.AssociatedProductId);
                 if (associatedProduct != null)
                 {
-                    AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
+                    await AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
                 }
             }
         }
@@ -1509,7 +1484,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        public virtual void ReserveInventory(Product product, int quantity)
+        public virtual async Task ReserveInventory(Product product, int quantity)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1544,7 +1519,7 @@ namespace Nop.Services.Catalog
                 pwi.ReservedQuantity += qty;
             }
 
-            UpdateProductWarehouseInventory(productInventory);
+            await UpdateProductWarehouseInventory(productInventory);
         }
 
         /// <summary>
@@ -1552,7 +1527,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be positive</param>
-        public virtual void UnblockReservedInventory(Product product, int quantity)
+        public virtual async Task UnblockReservedInventory(Product product, int quantity)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1560,10 +1535,10 @@ namespace Nop.Services.Catalog
             if (quantity < 0)
                 throw new ArgumentException("Value must be positive.", nameof(quantity));
 
-            var productInventory = _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
+            var productInventory = await _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
                 .OrderByDescending(pwi => pwi.ReservedQuantity)
                 .ThenByDescending(pwi => pwi.StockQuantity)
-                .ToList();
+                .ToListAsync();
 
             if (!productInventory.Any())
                 return;
@@ -1586,7 +1561,7 @@ namespace Nop.Services.Catalog
                 pwi.StockQuantity += qty;
             }
 
-            UpdateProductWarehouseInventory(productInventory);
+            await UpdateProductWarehouseInventory(productInventory);
         }
 
         /// <summary>
@@ -1596,7 +1571,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
         /// <param name="message">Message for the stock quantity history</param>
-        public virtual void BookReservedInventory(Product product, int warehouseId, int quantity, string message = "")
+        public virtual async Task BookReservedInventory(Product product, int warehouseId, int quantity, string message = "")
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1608,17 +1583,17 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock || !product.UseMultipleWarehouses)
                 return;
 
-            var pwi = _productWarehouseInventoryRepository.Table.FirstOrDefault(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
+            var pwi = await _productWarehouseInventoryRepository.Table.FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
             if (pwi == null)
                 return;
 
             pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
             pwi.StockQuantity += quantity;
 
-            UpdateProductWarehouseInventory(pwi);
+            await UpdateProductWarehouseInventory(pwi);
 
             //quantity change history
-            AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message);
+            await AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message);
         }
 
         /// <summary>
@@ -1628,7 +1603,7 @@ namespace Nop.Services.Catalog
         /// <param name="shipmentItem">Shipment item</param>
         /// <param name="message">Message for the stock quantity history</param>
         /// <returns>Quantity reversed</returns>
-        public virtual int ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "")
+        public virtual async Task<int> ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "")
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1640,11 +1615,11 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock || !product.UseMultipleWarehouses)
                 return 0;
 
-            var pwi = _productWarehouseInventoryRepository.Table.FirstOrDefault(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
+            var pwi = await _productWarehouseInventoryRepository.Table.FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
             if (pwi == null)
                 return 0;
 
-            var shipment = _shipmentRepository.ToCachedGetById(shipmentItem.ShipmentId);
+            var shipment = await _shipmentRepository.ToCachedGetById(shipmentItem.ShipmentId);
 
             //not shipped yet? hence "BookReservedInventory" method was not invoked
             if (!shipment.ShippedDateUtc.HasValue)
@@ -1655,10 +1630,10 @@ namespace Nop.Services.Catalog
             pwi.StockQuantity += qty;
             pwi.ReservedQuantity += qty;
 
-            UpdateProductWarehouseInventory(pwi);
+            await UpdateProductWarehouseInventory(pwi);
 
             //quantity change history
-            AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message);
+            await AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message);
 
             return qty;
         }
@@ -1671,15 +1646,15 @@ namespace Nop.Services.Catalog
         /// Deletes a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public virtual void DeleteRelatedProduct(RelatedProduct relatedProduct)
+        public virtual async Task DeleteRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException(nameof(relatedProduct));
 
-            _relatedProductRepository.Delete(relatedProduct);
+            await _relatedProductRepository.Delete(relatedProduct);
 
             //event notification
-            _eventPublisher.EntityDeleted(relatedProduct);
+            await _eventPublisher.EntityDeleted(relatedProduct);
         }
 
         /// <summary>
@@ -1688,7 +1663,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Related products</returns>
-        public virtual IList<RelatedProduct> GetRelatedProductsByProductId1(int productId, bool showHidden = false)
+        public virtual async Task<IList<RelatedProduct>> GetRelatedProductsByProductId1(int productId, bool showHidden = false)
         {
             var query = from rp in _relatedProductRepository.Table
                         join p in _productRepository.Table on rp.ProductId2 equals p.Id
@@ -1698,7 +1673,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsRelatedCacheKey, productId, showHidden));
+            var relatedProducts = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsRelatedCacheKey, productId, showHidden));
 
             return relatedProducts;
         }
@@ -1708,42 +1683,42 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="relatedProductId">Related product identifier</param>
         /// <returns>Related product</returns>
-        public virtual RelatedProduct GetRelatedProductById(int relatedProductId)
+        public virtual async Task<RelatedProduct> GetRelatedProductById(int relatedProductId)
         {
             if (relatedProductId == 0)
                 return null;
 
-            return _relatedProductRepository.ToCachedGetById(relatedProductId);
+            return await _relatedProductRepository.ToCachedGetById(relatedProductId);
         }
 
         /// <summary>
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public virtual void InsertRelatedProduct(RelatedProduct relatedProduct)
+        public virtual async Task InsertRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException(nameof(relatedProduct));
 
-            _relatedProductRepository.Insert(relatedProduct);
+            await _relatedProductRepository.Insert(relatedProduct);
 
             //event notification
-            _eventPublisher.EntityInserted(relatedProduct);
+            await _eventPublisher.EntityInserted(relatedProduct);
         }
 
         /// <summary>
         /// Updates a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public virtual void UpdateRelatedProduct(RelatedProduct relatedProduct)
+        public virtual async Task UpdateRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException(nameof(relatedProduct));
 
-            _relatedProductRepository.Update(relatedProduct);
+            await _relatedProductRepository.Update(relatedProduct);
 
             //event notification
-            _eventPublisher.EntityUpdated(relatedProduct);
+            await _eventPublisher.EntityUpdated(relatedProduct);
         }
 
         /// <summary>
@@ -1769,15 +1744,15 @@ namespace Nop.Services.Catalog
         /// Deletes a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell identifier</param>
-        public virtual void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
+        public virtual async Task DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException(nameof(crossSellProduct));
 
-            _crossSellProductRepository.Delete(crossSellProduct);
+            await _crossSellProductRepository.Delete(crossSellProduct);
 
             //event notification
-            _eventPublisher.EntityDeleted(crossSellProduct);
+            await _eventPublisher.EntityDeleted(crossSellProduct);
         }
 
         /// <summary>
@@ -1786,9 +1761,9 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell products</returns>
-        public virtual IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
+        public virtual async Task<IList<CrossSellProduct>> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
         {
-            return GetCrossSellProductsByProductIds(new[] { productId1 }, showHidden);
+            return await GetCrossSellProductsByProductIds(new[] { productId1 }, showHidden);
         }
 
         /// <summary>
@@ -1797,7 +1772,7 @@ namespace Nop.Services.Catalog
         /// <param name="productIds">The first product identifiers</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell products</returns>
-        public virtual IList<CrossSellProduct> GetCrossSellProductsByProductIds(int[] productIds, bool showHidden = false)
+        public virtual async Task<IList<CrossSellProduct>> GetCrossSellProductsByProductIds(int[] productIds, bool showHidden = false)
         {
             if (productIds == null || productIds.Length == 0)
                 return new List<CrossSellProduct>();
@@ -1809,7 +1784,8 @@ namespace Nop.Services.Catalog
                               (showHidden || p.Published)
                         orderby csp.Id
                         select csp;
-            var crossSellProducts = query.ToList();
+            var crossSellProducts = await query.ToListAsync();
+
             return crossSellProducts;
         }
 
@@ -1818,42 +1794,42 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="crossSellProductId">Cross-sell product identifier</param>
         /// <returns>Cross-sell product</returns>
-        public virtual CrossSellProduct GetCrossSellProductById(int crossSellProductId)
+        public virtual async Task<CrossSellProduct> GetCrossSellProductById(int crossSellProductId)
         {
             if (crossSellProductId == 0)
                 return null;
 
-            return _crossSellProductRepository.ToCachedGetById(crossSellProductId);
+            return await _crossSellProductRepository.ToCachedGetById(crossSellProductId);
         }
 
         /// <summary>
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        public virtual void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
+        public virtual async Task InsertCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException(nameof(crossSellProduct));
 
-            _crossSellProductRepository.Insert(crossSellProduct);
+            await _crossSellProductRepository.Insert(crossSellProduct);
 
             //event notification
-            _eventPublisher.EntityInserted(crossSellProduct);
+            await _eventPublisher.EntityInserted(crossSellProduct);
         }
 
         /// <summary>
         /// Updates a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        public virtual void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
+        public virtual async Task UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException(nameof(crossSellProduct));
 
-            _crossSellProductRepository.Update(crossSellProduct);
+            await _crossSellProductRepository.Update(crossSellProduct);
 
             //event notification
-            _eventPublisher.EntityUpdated(crossSellProduct);
+            await _eventPublisher.EntityUpdated(crossSellProduct);
         }
 
         /// <summary>
@@ -1862,7 +1838,7 @@ namespace Nop.Services.Catalog
         /// <param name="cart">Shopping cart</param>
         /// <param name="numberOfProducts">Number of products to return</param>
         /// <returns>Cross-sells</returns>
-        public virtual IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts)
+        public virtual async Task<IList<Product>> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts)
         {
             var result = new List<Product>();
 
@@ -1881,7 +1857,7 @@ namespace Nop.Services.Catalog
             }
 
             var productIds = cart.Select(sci => sci.ProductId).ToArray();
-            var crossSells = GetCrossSellProductsByProductIds(productIds);
+            var crossSells = await GetCrossSellProductsByProductIds(productIds);
             foreach (var crossSell in crossSells)
             {
                 //validate that this product is not added to result yet
@@ -1889,7 +1865,7 @@ namespace Nop.Services.Catalog
                 if (result.Find(p => p.Id == crossSell.ProductId2) != null || cartProductIds.Contains(crossSell.ProductId2))
                     continue;
 
-                var productToAdd = GetProductById(crossSell.ProductId2);
+                var productToAdd = await GetProductById(crossSell.ProductId2);
                 //validate product
                 if (productToAdd == null || productToAdd.Deleted || !productToAdd.Published)
                     continue;
@@ -1928,7 +1904,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
-        public virtual IList<TierPrice> GetTierPrices(Product product, Customer customer, int storeId)
+        public virtual async Task<IList<TierPrice>> GetTierPrices(Product product, Customer customer, int storeId)
         {
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
@@ -1940,10 +1916,10 @@ namespace Nop.Services.Catalog
                 return null;
 
             //get actual tier prices
-            return GetTierPricesByProduct(product.Id)
+            return (await GetTierPricesByProduct(product.Id))
                 .OrderBy(price => price.Quantity)
                 .FilterByStore(storeId)
-                .FilterByCustomerRole(_catalogSettings.IgnoreAcl ? Array.Empty<int>() : _customerService.GetCustomerRoleIds(customer))
+                .FilterByCustomerRole(_catalogSettings.IgnoreAcl ? Array.Empty<int>() : await _customerService.GetCustomerRoleIds(customer))
                 .FilterByDate()
                 .RemoveDuplicatedQuantities()
                 .ToList();
@@ -1953,9 +1929,9 @@ namespace Nop.Services.Catalog
         /// Gets a tier prices by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
+        public virtual async Task<IList<TierPrice>> GetTierPricesByProduct(int productId)
         {
-            return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
+            return await _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
                 .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTierPricesCacheKey, productId));
         }
 
@@ -1963,15 +1939,15 @@ namespace Nop.Services.Catalog
         /// Deletes a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public virtual void DeleteTierPrice(TierPrice tierPrice)
+        public virtual async Task DeleteTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException(nameof(tierPrice));
 
-            _tierPriceRepository.Delete(tierPrice);
+            await _tierPriceRepository.Delete(tierPrice);
 
             //event notification
-            _eventPublisher.EntityDeleted(tierPrice);
+            await _eventPublisher.EntityDeleted(tierPrice);
         }
 
         /// <summary>
@@ -1979,42 +1955,42 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="tierPriceId">Tier price identifier</param>
         /// <returns>Tier price</returns>
-        public virtual TierPrice GetTierPriceById(int tierPriceId)
+        public virtual async Task<TierPrice> GetTierPriceById(int tierPriceId)
         {
             if (tierPriceId == 0)
                 return null;
 
-            return _tierPriceRepository.ToCachedGetById(tierPriceId);
+            return await _tierPriceRepository.ToCachedGetById(tierPriceId);
         }
 
         /// <summary>
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public virtual void InsertTierPrice(TierPrice tierPrice)
+        public virtual async Task InsertTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException(nameof(tierPrice));
 
-            _tierPriceRepository.Insert(tierPrice);
+            await _tierPriceRepository.Insert(tierPrice);
 
             //event notification
-            _eventPublisher.EntityInserted(tierPrice);
+            await _eventPublisher.EntityInserted(tierPrice);
         }
 
         /// <summary>
         /// Updates the tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public virtual void UpdateTierPrice(TierPrice tierPrice)
+        public virtual async Task UpdateTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException(nameof(tierPrice));
 
-            _tierPriceRepository.Update(tierPrice);
+            await _tierPriceRepository.Update(tierPrice);
 
             //event notification
-            _eventPublisher.EntityUpdated(tierPrice);
+            await _eventPublisher.EntityUpdated(tierPrice);
         }
 
         /// <summary>
@@ -2025,7 +2001,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Tier price</returns>
-        public virtual TierPrice GetPreferredTierPrice(Product product, Customer customer, int storeId, int quantity)
+        public virtual async Task<TierPrice> GetPreferredTierPrice(Product product, Customer customer, int storeId, int quantity)
         {
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
@@ -2037,7 +2013,7 @@ namespace Nop.Services.Catalog
                 return null;
 
             //get the most suitable tier price based on the passed quantity
-            return GetTierPrices(product, customer, storeId)?.LastOrDefault(price => quantity >= price.Quantity);
+            return (await GetTierPrices(product, customer, storeId))?.LastOrDefault(price => quantity >= price.Quantity);
         }
 
         #endregion
@@ -2048,15 +2024,15 @@ namespace Nop.Services.Catalog
         /// Deletes a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public virtual void DeleteProductPicture(ProductPicture productPicture)
+        public virtual async Task DeleteProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
                 throw new ArgumentNullException(nameof(productPicture));
 
-            _productPictureRepository.Delete(productPicture);
+            await _productPictureRepository.Delete(productPicture);
 
             //event notification
-            _eventPublisher.EntityDeleted(productPicture);
+            await _eventPublisher.EntityDeleted(productPicture);
         }
 
         /// <summary>
@@ -2064,14 +2040,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>Product pictures</returns>
-        public virtual IList<ProductPicture> GetProductPicturesByProductId(int productId)
+        public virtual async Task<IList<ProductPicture>> GetProductPicturesByProductId(int productId)
         {
             var query = from pp in _productPictureRepository.Table
                         where pp.ProductId == productId
                         orderby pp.DisplayOrder, pp.Id
                         select pp;
 
-            var productPictures = query.ToList();
+            var productPictures = await query.ToListAsync();
 
             return productPictures;
         }
@@ -2081,42 +2057,42 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productPictureId">Product picture identifier</param>
         /// <returns>Product picture</returns>
-        public virtual ProductPicture GetProductPictureById(int productPictureId)
+        public virtual async Task<ProductPicture> GetProductPictureById(int productPictureId)
         {
             if (productPictureId == 0)
                 return null;
 
-            return _productPictureRepository.ToCachedGetById(productPictureId);
+            return await _productPictureRepository.ToCachedGetById(productPictureId);
         }
 
         /// <summary>
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public virtual void InsertProductPicture(ProductPicture productPicture)
+        public virtual async Task InsertProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
                 throw new ArgumentNullException(nameof(productPicture));
 
-            _productPictureRepository.Insert(productPicture);
+            await _productPictureRepository.Insert(productPicture);
 
             //event notification
-            _eventPublisher.EntityInserted(productPicture);
+            await _eventPublisher.EntityInserted(productPicture);
         }
 
         /// <summary>
         /// Updates a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public virtual void UpdateProductPicture(ProductPicture productPicture)
+        public virtual async Task UpdateProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
                 throw new ArgumentNullException(nameof(productPicture));
 
-            _productPictureRepository.Update(productPicture);
+            await _productPictureRepository.Update(productPicture);
 
             //event notification
-            _eventPublisher.EntityUpdated(productPicture);
+            await _eventPublisher.EntityUpdated(productPicture);
         }
 
         /// <summary>
@@ -2124,9 +2100,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productsIds">Products IDs</param>
         /// <returns>All picture identifiers grouped by product ID</returns>
-        public IDictionary<int, int[]> GetProductsImagesIds(int[] productsIds)
+        public async Task<IDictionary<int, int[]>> GetProductsImagesIds(int[] productsIds)
         {
-            var productPictures = _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId)).ToList();
+            var productPictures = await _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId)).ToListAsync();
 
             return productPictures.GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
         }
@@ -2139,7 +2115,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of products</returns>
-        public virtual IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
+        public virtual Task<IPagedList<Product>> GetProductsWithAppliedDiscount(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
@@ -2155,7 +2131,7 @@ namespace Nop.Services.Catalog
 
             products = products.OrderBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
-            return new PagedList<Product>(products, pageIndex, pageSize);
+            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(products, pageIndex, pageSize));
         }
 
         #endregion
@@ -2177,7 +2153,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        public virtual IPagedList<ProductReview> GetAllProductReviews(int customerId = 0, bool? approved = null,
+        public virtual Task<IPagedList<ProductReview>> GetAllProductReviews(int customerId = 0, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -2226,7 +2202,7 @@ namespace Nop.Services.Catalog
 
             var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
 
-            return productReviews;
+            return Task.FromResult((IPagedList<ProductReview>)productReviews);
         }
 
         /// <summary>
@@ -2234,12 +2210,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewId">Product review identifier</param>
         /// <returns>Product review</returns>
-        public virtual ProductReview GetProductReviewById(int productReviewId)
+        public virtual async Task<ProductReview> GetProductReviewById(int productReviewId)
         {
             if (productReviewId == 0)
                 return null;
 
-            return _productReviewRepository.ToCachedGetById(productReviewId);
+            return await _productReviewRepository.ToCachedGetById(productReviewId);
         }
 
         /// <summary>
@@ -2247,7 +2223,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        public virtual IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds)
+        public virtual async Task<IList<ProductReview>> GetProducReviewsByIds(int[] productReviewIds)
         {
             if (productReviewIds == null || productReviewIds.Length == 0)
                 return new List<ProductReview>();
@@ -2255,7 +2231,7 @@ namespace Nop.Services.Catalog
             var query = from pr in _productReviewRepository.Table
                         where productReviewIds.Contains(pr.Id)
                         select pr;
-            var productReviews = query.ToList();
+            var productReviews = await query.ToListAsync();
             //sort by passed identifiers
             var sortedProductReviews = new List<ProductReview>();
             foreach (var id in productReviewIds)
@@ -2272,63 +2248,61 @@ namespace Nop.Services.Catalog
         /// Inserts a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        public virtual void InsertProductReview(ProductReview productReview)
+        public virtual async Task InsertProductReview(ProductReview productReview)
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            _productReviewRepository.Insert(productReview);
+            await _productReviewRepository.Insert(productReview);
 
             //event notification
-            _eventPublisher.EntityInserted(productReview);
+            await _eventPublisher.EntityInserted(productReview);
         }
 
         /// <summary>
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        public virtual void DeleteProductReview(ProductReview productReview)
+        public virtual async Task DeleteProductReview(ProductReview productReview)
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            _productReviewRepository.Delete(productReview);
+            await _productReviewRepository.Delete(productReview);
 
             //event notification
-            _eventPublisher.EntityDeleted(productReview);
+            await _eventPublisher.EntityDeleted(productReview);
         }
 
         /// <summary>
         /// Deletes product reviews
         /// </summary>
         /// <param name="productReviews">Product reviews</param>
-        public virtual void DeleteProductReviews(IList<ProductReview> productReviews)
+        public virtual async Task DeleteProductReviews(IList<ProductReview> productReviews)
         {
             if (productReviews == null)
                 throw new ArgumentNullException(nameof(productReviews));
 
-            _productReviewRepository.Delete(productReviews);
+            await _productReviewRepository.Delete(productReviews);
 
             //event notification
-            foreach (var productReview in productReviews)
-            {
-                _eventPublisher.EntityDeleted(productReview);
-            }
+            foreach (var productReview in productReviews) 
+                await _eventPublisher.EntityDeleted(productReview);
         }
 
         /// <summary>
         /// Inserts a product review helpfulness record
         /// </summary>
         /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
-        public virtual void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness)
+        public virtual async Task InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness)
         {
             if (productReviewHelpfulness == null)
                 throw new ArgumentNullException(nameof(productReviewHelpfulness));
 
-            _productReviewHelpfulnessRepository.Insert(productReviewHelpfulness);
+            await _productReviewHelpfulnessRepository.Insert(productReviewHelpfulness);
 
             //event notification
-            _eventPublisher.EntityInserted(productReviewHelpfulness);
+            await _eventPublisher.EntityInserted(productReviewHelpfulness);
         }
 
         /// <summary>
@@ -2336,12 +2310,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="helpfulness">Value indicating whether a review a helpful</param>
-        public virtual void SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness)
+        public virtual async Task SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness)
         {
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var prh = _productReviewHelpfulnessRepository.Table.SingleOrDefault(h => h.ProductReviewId == productReview.Id && h.CustomerId == _workContext.CurrentCustomer.Id);
+            var prh = await _productReviewHelpfulnessRepository.Table.SingleOrDefaultAsync(h => h.ProductReviewId == productReview.Id && h.CustomerId == _workContext.GetCurrentCustomer().Result.Id);
 
             if (prh is null)
             {
@@ -2349,22 +2323,22 @@ namespace Nop.Services.Catalog
                 prh = new ProductReviewHelpfulness
                 {
                     ProductReviewId = productReview.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = (await _workContext.GetCurrentCustomer()).Id,
                     WasHelpful = helpfulness,
                 };
 
-                InsertProductReviewHelpfulness(prh);
+                await InsertProductReviewHelpfulness(prh);
 
                 //event notification
-                _eventPublisher.EntityInserted(prh);
+                await _eventPublisher.EntityInserted(prh);
             }
             else
             {
                 //existing one
                 prh.WasHelpful = helpfulness;
-                _productReviewHelpfulnessRepository.Update(prh);
+                await _productReviewHelpfulnessRepository.Update(prh);
                 //event notification
-                _eventPublisher.EntityUpdated(prh);
+                await _eventPublisher.EntityUpdated(prh);
             }
         }
 
@@ -2373,30 +2347,30 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <returns>Result</returns>
-        public virtual (int usefulCount, int notUsefulCount) GetHelpfulnessCounts(ProductReview productReview)
+        public virtual async Task<(int usefulCount, int notUsefulCount)> GetHelpfulnessCounts(ProductReview productReview)
         {
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
             var productReviewHelpfulness = _productReviewHelpfulnessRepository.Table.Where(prh => prh.ProductReviewId == productReview.Id);
 
-            return (productReviewHelpfulness.Count(prh => prh.WasHelpful), productReviewHelpfulness.Count(prh => !prh.WasHelpful));
+            return (await productReviewHelpfulness.CountAsync(prh => prh.WasHelpful), await productReviewHelpfulness.CountAsync(prh => !prh.WasHelpful));
         }
 
         /// <summary>
         /// Updates a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        public virtual void UpdateProductReview(ProductReview productReview)
+        public virtual async Task UpdateProductReview(ProductReview productReview)
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
             //update
-            _productReviewRepository.Update(productReview);
+            await _productReviewRepository.Update(productReview);
 
             //event notification
-            _eventPublisher.EntityUpdated(productReview);
+            await _eventPublisher.EntityUpdated(productReview);
         }
 
         /// <summary>
@@ -2404,17 +2378,17 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <returns>Result</returns>
-        public virtual void UpdateProductReviewHelpfulnessTotals(ProductReview productReview)
+        public virtual async Task UpdateProductReviewHelpfulnessTotals(ProductReview productReview)
         {
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            (productReview.HelpfulYesTotal, productReview.HelpfulNoTotal) = GetHelpfulnessCounts(productReview);
+            (productReview.HelpfulYesTotal, productReview.HelpfulNoTotal) = await GetHelpfulnessCounts(productReview);
 
-            _productReviewRepository.Update(productReview);
+            await _productReviewRepository.Update(productReview);
 
             //event notification
-            _eventPublisher.EntityUpdated(productReview);
+            await _eventPublisher.EntityUpdated(productReview);
         }
 
         #endregion
@@ -2425,9 +2399,9 @@ namespace Nop.Services.Catalog
         /// Get a product warehouse-inventory records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual IList<ProductWarehouseInventory> GetAllProductWarehouseInventoryRecords(int productId)
+        public virtual async Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecords(int productId)
         {
-            return _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == productId).ToList();
+            return await _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == productId).ToListAsync();
         }
 
         /// <summary>
@@ -2435,12 +2409,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Result</returns>
-        public virtual Warehouse GetWarehousesById(int warehouseId)
+        public virtual async Task<Warehouse> GetWarehousesById(int warehouseId)
         {
             if (warehouseId == 0)
                 return null;
 
-            return _warehouseRepository.ToCachedGetById(warehouseId);
+            return await _warehouseRepository.ToCachedGetById(warehouseId);
         }
 
         /// <summary>
@@ -2448,63 +2422,63 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>List of warehouses</returns>
-        public virtual IList<Warehouse> GetWarehousesByProductId(int productId)
+        public virtual async Task<IList<Warehouse>> GetWarehousesByProductId(int productId)
         {
-            return (from w in _warehouseRepository.Table
+            return await (from w in _warehouseRepository.Table
                     join pwi in _productWarehouseInventoryRepository.Table on w.Id equals pwi.WarehouseId
                     where pwi.ProductId == productId
-                    select w).ToList();
+                    select w).ToListAsync();
         }
 
         /// <summary>
         /// Deletes a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
-        public virtual void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi)
+        public virtual async Task DeleteProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
             if (pwi == null)
                 throw new ArgumentNullException(nameof(pwi));
 
-            _productWarehouseInventoryRepository.Delete(pwi);
+            await _productWarehouseInventoryRepository.Delete(pwi);
 
-            _eventPublisher.EntityDeleted(pwi);
+            await _eventPublisher.EntityDeleted(pwi);
         }
 
         /// <summary>
         /// Inserts a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
-        public virtual void InsertProductWarehouseInventory(ProductWarehouseInventory pwi)
+        public virtual async Task InsertProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
             if (pwi == null)
                 throw new ArgumentNullException(nameof(pwi));
 
-            _productWarehouseInventoryRepository.Insert(pwi);
+            await _productWarehouseInventoryRepository.Insert(pwi);
 
             //event notification
-            _eventPublisher.EntityInserted(pwi);
+            await _eventPublisher.EntityInserted(pwi);
         }
 
         /// <summary>
         /// Updates a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
-        public virtual void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi)
+        public virtual async Task UpdateProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
             if (pwi == null)
                 throw new ArgumentNullException(nameof(pwi));
 
-            _productWarehouseInventoryRepository.Update(pwi);
+            await _productWarehouseInventoryRepository.Update(pwi);
 
             //event notification
-            _eventPublisher.EntityUpdated(pwi);
+            await _eventPublisher.EntityUpdated(pwi);
         }
 
         /// <summary>
         /// Updates a records to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwis">Records to manage product inventory per warehouse</param>
-        public virtual void UpdateProductWarehouseInventory(IList<ProductWarehouseInventory> pwis)
+        public virtual async Task UpdateProductWarehouseInventory(IList<ProductWarehouseInventory> pwis)
         {
             if (pwis == null)
                 throw new ArgumentNullException(nameof(pwis));
@@ -2512,12 +2486,12 @@ namespace Nop.Services.Catalog
             if (!pwis.Any())
                 return;
 
-            _productWarehouseInventoryRepository.Update(pwis);
+            await _productWarehouseInventoryRepository.Update(pwis);
 
             //event notification
             foreach (var pwi in pwis)
             {
-                _eventPublisher.EntityUpdated(pwi);
+                await _eventPublisher.EntityUpdated(pwi);
             }
         }
 
@@ -2534,7 +2508,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="message">Message</param>
         /// <param name="combinationId">Product attribute combination identifier</param>
-        public virtual void AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
+        public virtual async Task AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
             int warehouseId = 0, string message = "", int? combinationId = null)
         {
             if (product == null)
@@ -2554,10 +2528,10 @@ namespace Nop.Services.Catalog
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            _stockQuantityHistoryRepository.Insert(historyEntry);
+            await _stockQuantityHistoryRepository.Insert(historyEntry);
 
             //event notification
-            _eventPublisher.EntityInserted(historyEntry);
+            await _eventPublisher.EntityInserted(historyEntry);
         }
 
         /// <summary>
@@ -2569,7 +2543,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of stock quantity change entries</returns>
-        public virtual IPagedList<StockQuantityHistory> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
+        public virtual Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             if (product == null)
@@ -2585,7 +2559,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
 
-            return new PagedList<StockQuantityHistory>(query, pageIndex, pageSize);
+            return Task.FromResult((IPagedList<StockQuantityHistory>)new PagedList<StockQuantityHistory>(query, pageIndex, pageSize));
         }
 
         #endregion
@@ -2596,7 +2570,7 @@ namespace Nop.Services.Catalog
         /// Clean up product references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public virtual void ClearDiscountProductMapping(Discount discount)
+        public virtual async Task ClearDiscountProductMapping(Discount discount)
         {
             if (discount is null)
                 throw new ArgumentNullException(nameof(discount));
@@ -2607,14 +2581,14 @@ namespace Nop.Services.Catalog
                 where dcm.DiscountId == discount.Id
                 select new { product = p, dcm };
 
-            foreach (var pdcm in mappingsWithProducts.ToList())
+            foreach (var pdcm in await mappingsWithProducts.ToListAsync())
             {
-                _discountProductMappingRepository.Delete(pdcm.dcm);
+                await _discountProductMappingRepository.Delete(pdcm.dcm);
                 //event notification
-                _eventPublisher.EntityDeleted(pdcm.dcm);
+                await _eventPublisher.EntityDeleted(pdcm.dcm);
 
                 //update "HasDiscountsApplied" property
-                UpdateHasDiscountsApplied(pdcm.product);
+                await UpdateHasDiscountsApplied(pdcm.product);
             }
         }
 
@@ -2622,9 +2596,9 @@ namespace Nop.Services.Catalog
         /// Get a discount-product mapping records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual IList<DiscountProductMapping> GetAllDiscountsAppliedToProduct(int productId)
+        public virtual async Task<IList<DiscountProductMapping>> GetAllDiscountsAppliedToProduct(int productId)
         {
-            return _discountProductMappingRepository.Table.Where(dcm => dcm.EntityId == productId).ToList();
+            return await _discountProductMappingRepository.Table.Where(dcm => dcm.EntityId == productId).ToListAsync();
         }
 
         /// <summary>
@@ -2633,39 +2607,39 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Result</returns>
-        public virtual DiscountProductMapping GetDiscountAppliedToProduct(int productId, int discountId)
+        public virtual async Task<DiscountProductMapping> GetDiscountAppliedToProduct(int productId, int discountId)
         {
-            return _discountProductMappingRepository.Table.FirstOrDefault(dcm => dcm.EntityId == productId && dcm.DiscountId == discountId);
+            return await _discountProductMappingRepository.Table.FirstOrDefaultAsync(dcm => dcm.EntityId == productId && dcm.DiscountId == discountId);
         }
 
         /// <summary>
         /// Inserts a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
-        public virtual void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping)
+        public virtual async Task InsertDiscountProductMapping(DiscountProductMapping discountProductMapping)
         {
             if (discountProductMapping is null)
                 throw new ArgumentNullException(nameof(discountProductMapping));
 
-            _discountProductMappingRepository.Insert(discountProductMapping);
+            await _discountProductMappingRepository.Insert(discountProductMapping);
 
             //event notification
-            _eventPublisher.EntityInserted(discountProductMapping);
+            await _eventPublisher.EntityInserted(discountProductMapping);
         }
 
         /// <summary>
         /// Deletes a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
-        public virtual void DeleteDiscountProductMapping(DiscountProductMapping discountProductMapping)
+        public virtual async Task DeleteDiscountProductMapping(DiscountProductMapping discountProductMapping)
         {
             if (discountProductMapping is null)
                 throw new ArgumentNullException(nameof(discountProductMapping));
 
-            _discountProductMappingRepository.Delete(discountProductMapping);
+            await _discountProductMappingRepository.Delete(discountProductMapping);
 
             //event notification
-            _eventPublisher.EntityDeleted(discountProductMapping);
+            await _eventPublisher.EntityDeleted(discountProductMapping);
         }
 
         #endregion

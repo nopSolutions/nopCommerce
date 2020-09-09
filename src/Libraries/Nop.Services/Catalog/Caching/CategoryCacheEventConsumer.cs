@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Caching;
 using Nop.Services.Discounts;
 
@@ -13,25 +14,25 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Category entity)
+        protected override async Task ClearCache(Category entity)
         {
             var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
+              await RemoveByPrefix(prefix);
             prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
+              await RemoveByPrefix(prefix);
 
             prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity);
-            RemoveByPrefix(prefix);
+              await RemoveByPrefix(prefix);
             prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
+              await RemoveByPrefix(prefix);
             
-            RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesAllPrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefixCacheKey);
+            await RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);
+            await RemoveByPrefix(NopCatalogDefaults.CategoriesAllPrefixCacheKey);
+            await RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefixCacheKey);
             
-            RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
+            await RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
 
-            RemoveByPrefix(NopDiscountDefaults.DiscountCategoryIdsPrefixCacheKey);
+            await RemoveByPrefix(NopDiscountDefaults.DiscountCategoryIdsPrefixCacheKey);
         }
     }
 }

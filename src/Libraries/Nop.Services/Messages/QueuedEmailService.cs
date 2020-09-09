@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
@@ -38,62 +40,62 @@ namespace Nop.Services.Messages
         /// Inserts a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>        
-        public virtual void InsertQueuedEmail(QueuedEmail queuedEmail)
+        public virtual async Task InsertQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException(nameof(queuedEmail));
 
-            _queuedEmailRepository.Insert(queuedEmail);
+            await _queuedEmailRepository.Insert(queuedEmail);
 
             //event notification
-            _eventPublisher.EntityInserted(queuedEmail);
+            await _eventPublisher.EntityInserted(queuedEmail);
         }
 
         /// <summary>
         /// Updates a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        public virtual void UpdateQueuedEmail(QueuedEmail queuedEmail)
+        public virtual async Task UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException(nameof(queuedEmail));
 
-            _queuedEmailRepository.Update(queuedEmail);
+            await _queuedEmailRepository.Update(queuedEmail);
 
             //event notification
-            _eventPublisher.EntityUpdated(queuedEmail);
+            await _eventPublisher.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
         /// Deleted a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        public virtual void DeleteQueuedEmail(QueuedEmail queuedEmail)
+        public virtual async Task DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
                 throw new ArgumentNullException(nameof(queuedEmail));
 
-            _queuedEmailRepository.Delete(queuedEmail);
+            await _queuedEmailRepository.Delete(queuedEmail);
 
             //event notification
-            _eventPublisher.EntityDeleted(queuedEmail);
+            await _eventPublisher.EntityDeleted(queuedEmail);
         }
 
         /// <summary>
         /// Deleted a queued emails
         /// </summary>
         /// <param name="queuedEmails">Queued emails</param>
-        public virtual void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
+        public virtual async Task DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
         {
             if (queuedEmails == null)
                 throw new ArgumentNullException(nameof(queuedEmails));
 
-            _queuedEmailRepository.Delete(queuedEmails);
+            await _queuedEmailRepository.Delete(queuedEmails);
 
             //event notification
             foreach (var queuedEmail in queuedEmails)
             {
-                _eventPublisher.EntityDeleted(queuedEmail);
+                await _eventPublisher.EntityDeleted(queuedEmail);
             }
         }
 
@@ -102,12 +104,12 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>
         /// <returns>Queued email</returns>
-        public virtual QueuedEmail GetQueuedEmailById(int queuedEmailId)
+        public virtual async Task<QueuedEmail> GetQueuedEmailById(int queuedEmailId)
         {
             if (queuedEmailId == 0)
                 return null;
 
-            return _queuedEmailRepository.ToCachedGetById(queuedEmailId);
+            return await _queuedEmailRepository.ToCachedGetById(queuedEmailId);
         }
 
         /// <summary>
@@ -115,7 +117,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="queuedEmailIds">queued email identifiers</param>
         /// <returns>Queued emails</returns>
-        public virtual IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds)
+        public virtual async Task<IList<QueuedEmail>> GetQueuedEmailsByIds(int[] queuedEmailIds)
         {
             if (queuedEmailIds == null || queuedEmailIds.Length == 0)
                 return new List<QueuedEmail>();
@@ -123,7 +125,7 @@ namespace Nop.Services.Messages
             var query = from qe in _queuedEmailRepository.Table
                         where queuedEmailIds.Contains(qe.Id)
                         select qe;
-            var queuedEmails = query.ToList();
+            var queuedEmails = await query.ToListAsync();
             //sort by passed identifiers
             var sortedQueuedEmails = new List<QueuedEmail>();
             foreach (var id in queuedEmailIds)
@@ -150,7 +152,7 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item list</returns>
-        public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail,
+        public virtual Task<IPagedList<QueuedEmail>> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc,
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
@@ -183,7 +185,7 @@ namespace Nop.Services.Messages
                 query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
 
             var queuedEmails = new PagedList<QueuedEmail>(query, pageIndex, pageSize);
-            return queuedEmails;
+            return Task.FromResult((IPagedList<QueuedEmail>)queuedEmails);
         }
 
         /// <summary>
@@ -192,7 +194,7 @@ namespace Nop.Services.Messages
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <returns>Number of deleted emails</returns>
-        public virtual int DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc)
+        public virtual async Task<int> DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc)
         {
             var query = _queuedEmailRepository.Table;
 
@@ -204,9 +206,9 @@ namespace Nop.Services.Messages
             if (createdToUtc.HasValue)
                 query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
 
-            var emails = query.ToArray();
+            var emails = await query.ToArrayAsync();
 
-            DeleteQueuedEmails(emails);
+            await DeleteQueuedEmails(emails);
 
             return emails.Length;
         }
@@ -214,9 +216,9 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Delete all queued emails
         /// </summary>
-        public virtual void DeleteAllEmails()
+        public virtual async Task DeleteAllEmails()
         {
-            _queuedEmailRepository.Truncate();
+            await _queuedEmailRepository.Truncate();
         }
 
         #endregion

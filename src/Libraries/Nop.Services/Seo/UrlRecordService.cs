@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
@@ -1133,31 +1135,31 @@ namespace Nop.Services.Seo
         /// Deletes an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void DeleteUrlRecord(UrlRecord urlRecord)
+        public virtual async Task DeleteUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException(nameof(urlRecord));
 
-            _urlRecordRepository.Delete(urlRecord);
+            await _urlRecordRepository.Delete(urlRecord);
 
             //event notification
-            _eventPublisher.EntityDeleted(urlRecord);
+            await _eventPublisher.EntityDeleted(urlRecord);
         }
 
         /// <summary>
         /// Deletes an URL records
         /// </summary>
         /// <param name="urlRecords">URL records</param>
-        public virtual void DeleteUrlRecords(IList<UrlRecord> urlRecords)
+        public virtual async Task DeleteUrlRecords(IList<UrlRecord> urlRecords)
         {
             if (urlRecords == null)
                 throw new ArgumentNullException(nameof(urlRecords));
 
-            _urlRecordRepository.Delete(urlRecords);
+            await _urlRecordRepository.Delete(urlRecords);
             
             //event notification
             foreach (var urlRecord in urlRecords) 
-                _eventPublisher.EntityDeleted(urlRecord);
+                await _eventPublisher.EntityDeleted(urlRecord);
         }
 
         /// <summary>
@@ -1165,13 +1167,13 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="urlRecordIds">URL record identifiers</param>
         /// <returns>URL record</returns>
-        public virtual IList<UrlRecord> GetUrlRecordsByIds(int[] urlRecordIds)
+        public virtual async Task<IList<UrlRecord>> GetUrlRecordsByIds(int[] urlRecordIds)
         {
             var query = _urlRecordRepository.Table;
 
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordByIdsCacheKey, urlRecordIds);
 
-            return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
+            return await query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }
 
         /// <summary>
@@ -1179,42 +1181,42 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="urlRecordId">URL record identifier</param>
         /// <returns>URL record</returns>
-        public virtual UrlRecord GetUrlRecordById(int urlRecordId)
+        public virtual async Task<UrlRecord> GetUrlRecordById(int urlRecordId)
         {
             if (urlRecordId == 0)
                 return null;
 
-            return _urlRecordRepository.ToCachedGetById(urlRecordId);
+            return await _urlRecordRepository.ToCachedGetById(urlRecordId);
         }
 
         /// <summary>
         /// Inserts an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void InsertUrlRecord(UrlRecord urlRecord)
+        public virtual async Task InsertUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException(nameof(urlRecord));
 
-            _urlRecordRepository.Insert(urlRecord);
+            await _urlRecordRepository.Insert(urlRecord);
 
             //event notification
-            _eventPublisher.EntityInserted(urlRecord);
+            await _eventPublisher.EntityInserted(urlRecord);
         }
 
         /// <summary>
         /// Updates the URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void UpdateUrlRecord(UrlRecord urlRecord)
+        public virtual async Task UpdateUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException(nameof(urlRecord));
 
-            _urlRecordRepository.Update(urlRecord);
+            await _urlRecordRepository.Update(urlRecord);
 
             //event notification
-            _eventPublisher.EntityUpdated(urlRecord);
+            await _eventPublisher.EntityUpdated(urlRecord);
         }
 
         /// <summary>
@@ -1222,7 +1224,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="slug">Slug</param>
         /// <returns>Found URL record</returns>
-        public virtual UrlRecord GetBySlug(string slug)
+        public virtual async Task<UrlRecord> GetBySlug(string slug)
         {
             if (string.IsNullOrEmpty(slug))
                 return null;
@@ -1231,10 +1233,10 @@ namespace Nop.Services.Seo
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return _staticCacheManager.Get(key, () =>
+                return await _staticCacheManager.Get(key, async () =>
                 {
                     //load all records (we know they are cached)
-                    var source = GetAllUrlRecords();
+                    var source = await GetAllUrlRecords();
                     var urlRecords = from ur in source
                         where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
                         //first, try to find an active record
@@ -1253,7 +1255,7 @@ namespace Nop.Services.Seo
                 orderby ur.IsActive descending, ur.Id
                 select ur;
 
-            var urlRecord = query.ToCachedFirstOrDefault(key);
+            var urlRecord = await query.ToCachedFirstOrDefault(key);
 
             return urlRecord;
         }
@@ -1267,14 +1269,14 @@ namespace Nop.Services.Seo
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        public virtual IPagedList<UrlRecord> GetAllUrlRecords(
+        public virtual async Task<IPagedList<UrlRecord>> GetAllUrlRecords(
             string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _urlRecordRepository.Table;
             query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = query
-                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey))
+            var urlRecords = (await query
+                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey)))
                 .AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(slug))
@@ -1298,17 +1300,17 @@ namespace Nop.Services.Seo
         /// <param name="entityName">Entity name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Found slug</returns>
-        public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
+        public virtual async Task<string> GetActiveSlug(int entityId, string entityName, int languageId)
         {
             //gradual loading
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey, entityId, entityName, languageId);
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return _staticCacheManager.Get(key, () =>
+                return await _staticCacheManager.Get(key, async () =>
                 {
                     //load all records (we know they are cached)
-                    var source = GetAllUrlRecords();
+                    var source = await GetAllUrlRecords();
                     var urlRecords = from ur in source
                         where ur.EntityId == entityId &&
                               ur.EntityName == entityName &&
@@ -1332,7 +1334,7 @@ namespace Nop.Services.Seo
                 orderby ur.Id descending
                 select ur.Slug;
 
-            var rezSlug = query.ToCachedFirstOrDefault(key) ?? string.Empty;
+            var rezSlug = await query.ToCachedFirstOrDefault(key) ?? string.Empty;
 
             return rezSlug;
         }
@@ -1344,7 +1346,7 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        public virtual void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported
+        public virtual async Task SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -1358,7 +1360,7 @@ namespace Nop.Services.Seo
                               ur.LanguageId == languageId
                         orderby ur.Id descending
                         select ur;
-            var allUrlRecords = query.ToList();
+            var allUrlRecords = await query.ToListAsync();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
             UrlRecord nonActiveRecordWithSpecifiedSlug;
 
@@ -1372,7 +1374,7 @@ namespace Nop.Services.Seo
                 {
                     //mark non-active record as active
                     nonActiveRecordWithSpecifiedSlug.IsActive = true;
-                    UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
+                    await UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
                 }
                 else
                 {
@@ -1385,7 +1387,7 @@ namespace Nop.Services.Seo
                         LanguageId = languageId,
                         IsActive = true
                     };
-                    InsertUrlRecord(urlRecord);
+                    await InsertUrlRecord(urlRecord);
                 }
             }
 
@@ -1393,7 +1395,7 @@ namespace Nop.Services.Seo
             {
                 //disable the previous active URL record
                 activeUrlRecord.IsActive = false;
-                UpdateUrlRecord(activeUrlRecord);
+                await UpdateUrlRecord(activeUrlRecord);
             }
 
             if (activeUrlRecord == null || string.IsNullOrWhiteSpace(slug))
@@ -1410,11 +1412,11 @@ namespace Nop.Services.Seo
             {
                 //mark non-active record as active
                 nonActiveRecordWithSpecifiedSlug.IsActive = true;
-                UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
+                await UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
 
                 //disable the previous active URL record
                 activeUrlRecord.IsActive = false;
-                UpdateUrlRecord(activeUrlRecord);
+                await UpdateUrlRecord(activeUrlRecord);
             }
             else
             {
@@ -1429,11 +1431,11 @@ namespace Nop.Services.Seo
                     LanguageId = languageId,
                     IsActive = true
                 };
-                InsertUrlRecord(urlRecord);
+                await InsertUrlRecord(urlRecord);
 
                 //disable the previous active URL record
                 activeUrlRecord.IsActive = false;
-                UpdateUrlRecord(activeUrlRecord);
+                await UpdateUrlRecord(activeUrlRecord);
             }
         }
 
@@ -1446,7 +1448,7 @@ namespace Nop.Services.Seo
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Search engine  name (slug)</returns>
-        public virtual string GetSeName<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
+        public virtual async Task<string> GetSeName<T>(T entity, int? languageId = null, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true) where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
@@ -1454,7 +1456,7 @@ namespace Nop.Services.Seo
 
             var entityName = entity.GetType().Name;
 
-            return GetSeName(entity.Id, entityName, languageId ?? _workContext.WorkingLanguage.Id, returnDefaultValue, ensureTwoPublishedLanguages);
+            return await GetSeName(entity.Id, entityName, languageId ?? (await _workContext.GetWorkingLanguage()).Id, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
         /// <summary>
@@ -1466,10 +1468,10 @@ namespace Nop.Services.Seo
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Search engine  name (slug)</returns>
-        public virtual string GetSeName(int entityId, string entityName, int? languageId = null,
+        public virtual async Task<string> GetSeName(int entityId, string entityName, int? languageId = null,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
         {
-            languageId ??= _workContext.WorkingLanguage.Id;
+            languageId ??= (await _workContext.GetWorkingLanguage()).Id;
             var result = string.Empty;
             
             if (languageId > 0)
@@ -1478,18 +1480,18 @@ namespace Nop.Services.Seo
                 var loadLocalizedValue = true;
                 if (ensureTwoPublishedLanguages)
                 {
-                    var totalPublishedLanguages = _languageService.GetAllLanguages().Count;
+                    var totalPublishedLanguages = (await _languageService.GetAllLanguages()).Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }
 
                 //localized value
                 if (loadLocalizedValue)
-                    result = GetActiveSlug(entityId, entityName, languageId.Value);
+                    result = await GetActiveSlug(entityId, entityName, languageId.Value);
             }
 
             //set default value if required
             if (string.IsNullOrEmpty(result) && returnDefaultValue)
-                result = GetActiveSlug(entityId, entityName, 0);
+                result = await GetActiveSlug(entityId, entityName, 0);
 
             return result;
         }
@@ -1501,10 +1503,10 @@ namespace Nop.Services.Seo
         /// <param name="convertNonWesternChars">A value indicating whether non western chars should be converted</param>
         /// <param name="allowUnicodeCharsInUrls">A value indicating whether Unicode chars are allowed</param>
         /// <returns>Result</returns>
-        public virtual string GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls)
+        public virtual Task<string> GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls)
         {
             if (string.IsNullOrEmpty(name))
-                return name;
+                return Task.FromResult(name);
 
             var okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
@@ -1539,7 +1541,8 @@ namespace Nop.Services.Seo
                 name2 = name2.Replace("--", "-");
             while (name2.Contains("__"))
                 name2 = name2.Replace("__", "_");
-            return name2;
+
+            return Task.FromResult(name2);
         }
 
         /// <summary>
@@ -1550,13 +1553,14 @@ namespace Nop.Services.Seo
         /// <param name="name">User-friendly name used to generate sename</param>
         /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
         /// <returns>Valid sename</returns>
-        public virtual string ValidateSeName<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported
+        public virtual async Task<string> ValidateSeName<T>(T entity, string seName, string name, bool ensureNotEmpty) where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             var entityName = entity.GetType().Name;
-            return ValidateSeName(entity.Id, entityName, seName, name, ensureNotEmpty);
+
+            return await ValidateSeName(entity.Id, entityName, seName, name, ensureNotEmpty);
         }
 
         /// <summary>
@@ -1568,14 +1572,14 @@ namespace Nop.Services.Seo
         /// <param name="name">User-friendly name used to generate sename</param>
         /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
         /// <returns>Valid sename</returns>
-        public virtual string ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty)
+        public virtual async Task<string> ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty)
         {
             //use name if sename is not specified
             if (string.IsNullOrWhiteSpace(seName) && !string.IsNullOrWhiteSpace(name))
                 seName = name;
 
             //validation
-            seName = GetSeName(seName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+            seName = await GetSeName(seName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
 
             //max length
             seName = CommonHelper.EnsureMaximumLength(seName, NopSeoDefaults.SearchEngineNameLength);
@@ -1600,12 +1604,12 @@ namespace Nop.Services.Seo
             while (true)
             {
                 //check whether such slug already exists (and that is not the current entity)
-                var urlRecord = GetBySlug(tempSeName);
+                var urlRecord = await GetBySlug(tempSeName);
                 var reserved1 = urlRecord != null && !(urlRecord.EntityId == entityId && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
                 var reserved2 = _seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
                 //and it's not equal to a language code
-                var reserved3 = _languageService.GetAllLanguages(true).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.InvariantCultureIgnoreCase));
+                var reserved3 = (await _languageService.GetAllLanguages(true)).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.InvariantCultureIgnoreCase));
                 if (!reserved1 && !reserved2 && !reserved3)
                     break;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -69,7 +70,7 @@ namespace Nop.Services.Catalog
         /// Add cookie value for the compared products
         /// </summary>
         /// <param name="comparedProductIds">Collection of compared products identifiers</param>
-        protected virtual void AddCompareProductsCookie(IEnumerable<int> comparedProductIds)
+        protected virtual async Task AddCompareProductsCookie(IEnumerable<int> comparedProductIds)
         {
             //delete current cookie if exists
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
@@ -84,7 +85,7 @@ namespace Nop.Services.Catalog
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
                 HttpOnly = true,
-                Secure =  _webHelper.IsCurrentConnectionSecured()
+                Secure =  await _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie
@@ -112,13 +113,13 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        public virtual IList<Product> GetComparedProducts()
+        public virtual async Task<IList<Product>> GetComparedProducts()
         {
             //get list of compared product identifiers
             var productIds = GetComparedProductIds();
 
             //return list of product
-            return _productService.GetProductsByIds(productIds.ToArray())
+            return (await _productService.GetProductsByIds(productIds.ToArray()))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 
@@ -126,7 +127,7 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void RemoveProductFromCompareList(int productId)
+        public virtual async Task RemoveProductFromCompareList(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
@@ -142,14 +143,14 @@ namespace Nop.Services.Catalog
             comparedProductIds.Remove(productId);
 
             //set cookie
-            AddCompareProductsCookie(comparedProductIds);
+            await AddCompareProductsCookie(comparedProductIds);
         }
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void AddProductToCompareList(int productId)
+        public virtual async Task AddProductToCompareList(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
@@ -165,7 +166,7 @@ namespace Nop.Services.Catalog
             comparedProductIds = comparedProductIds.Take(_catalogSettings.CompareProductsNumber).ToList();
 
             //set cookie
-            AddCompareProductsCookie(comparedProductIds);
+            await AddCompareProductsCookie(comparedProductIds);
         }
 
         #endregion

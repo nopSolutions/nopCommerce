@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
@@ -54,15 +55,15 @@ namespace Nop.Services.Directory
         /// Deletes currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public virtual void DeleteCurrency(Currency currency)
+        public virtual async Task DeleteCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
-            _currencyRepository.Delete(currency);
+            await _currencyRepository.Delete(currency);
 
             //event notification
-            _eventPublisher.EntityDeleted(currency);
+            await _eventPublisher.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -70,12 +71,12 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyById(int currencyId)
+        public virtual async Task<Currency> GetCurrencyById(int currencyId)
         {
             if (currencyId == 0)
                 return null;
             
-            return _currencyRepository.ToCachedGetById(currencyId);
+            return await _currencyRepository.ToCachedGetById(currencyId);
         }
 
         /// <summary>
@@ -83,11 +84,12 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyByCode(string currencyCode)
+        public virtual async Task<Currency> GetCurrencyByCode(string currencyCode)
         {
             if (string.IsNullOrEmpty(currencyCode))
                 return null;
-            return GetAllCurrencies(true)
+
+            return (await GetAllCurrencies(true))
                 .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
         }
 
@@ -97,7 +99,7 @@ namespace Nop.Services.Directory
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Currencies</returns>
-        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
+        public virtual async Task<IList<Currency>> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
             var query = _currencyRepository.Table;
 
@@ -108,12 +110,12 @@ namespace Nop.Services.Directory
 
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
 
-            var currencies = query.ToCachedList(key);
+            var currencies = await query.ToCachedList(key);
 
             //store mapping
             if (storeId > 0)
                 currencies = currencies
-                    .Where(c => _storeMappingService.Authorize(c, storeId))
+                    .Where(c => _storeMappingService.Authorize(c, storeId).Result)
                     .ToList();
 
             return currencies;
@@ -123,30 +125,30 @@ namespace Nop.Services.Directory
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public virtual void InsertCurrency(Currency currency)
+        public virtual async Task InsertCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
-            _currencyRepository.Insert(currency);
+            await _currencyRepository.Insert(currency);
 
             //event notification
-            _eventPublisher.EntityInserted(currency);
+            await _eventPublisher.EntityInserted(currency);
         }
 
         /// <summary>
         /// Updates the currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public virtual void UpdateCurrency(Currency currency)
+        public virtual async Task UpdateCurrency(Currency currency)
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
-            _currencyRepository.Update(currency);
+            await _currencyRepository.Update(currency);
 
             //event notification
-            _eventPublisher.EntityUpdated(currency);
+            await _eventPublisher.EntityUpdated(currency);
         }
 
         #endregion
@@ -158,15 +160,15 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyCode">Currency code; pass null to use primary exchange rate currency</param>
         /// <returns>Exchange rates</returns>
-        public virtual IList<ExchangeRate> GetCurrencyLiveRates(string currencyCode = null)
+        public virtual async Task<IList<ExchangeRate>> GetCurrencyLiveRates(string currencyCode = null)
         {
             var exchangeRateProvider = _exchangeRatePluginManager.LoadPrimaryPlugin()
                 ?? throw new Exception("Active exchange rate provider cannot be loaded");
 
-            currencyCode ??= GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId)?.CurrencyCode
+            currencyCode ??= (await GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId))?.CurrencyCode
                 ?? throw new NopException("Primary exchange rate currency is not set");
 
-            return exchangeRateProvider.GetCurrencyLiveRates(currencyCode);
+            return await exchangeRateProvider.GetCurrencyLiveRates(currencyCode);
         }
 
         /// <summary>
@@ -179,6 +181,7 @@ namespace Nop.Services.Directory
         {
             if (amount != decimal.Zero && exchangeRate != decimal.Zero)
                 return amount * exchangeRate;
+
             return decimal.Zero;
         }
 
@@ -189,7 +192,7 @@ namespace Nop.Services.Directory
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
+        public virtual async Task<decimal> ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException(nameof(sourceCurrencyCode));
@@ -202,8 +205,8 @@ namespace Nop.Services.Directory
             if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 
-            result = ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
-            result = ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
+            result = await ConvertToPrimaryExchangeRateCurrency(result, sourceCurrencyCode);
+            result = await ConvertFromPrimaryExchangeRateCurrency(result, targetCurrencyCode);
             return result;
         }
 
@@ -213,12 +216,12 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
+        public virtual async Task<decimal> ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
-            var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = await GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
@@ -240,12 +243,12 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
+        public virtual async Task<decimal> ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
         {
             if (targetCurrencyCode == null)
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
-            var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = await GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
@@ -267,13 +270,14 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="sourceCurrencyCode">Source currency code</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
+        public virtual async Task<decimal> ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
-            var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            var result = ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);
+            var primaryStoreCurrency = await GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var result = await ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);
+            
             return result;
         }
 
@@ -283,10 +287,11 @@ namespace Nop.Services.Directory
         /// <param name="amount">Amount</param>
         /// <param name="targetCurrencyCode">Target currency code</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
+        public virtual async Task<decimal> ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
         {
-            var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            var result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
+            var primaryStoreCurrency = await GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var result = await ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
+            
             return result;
         }
 
