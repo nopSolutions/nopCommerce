@@ -1,4 +1,5 @@
-﻿using Nop.Core.Caching;
+﻿using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Events;
 using Nop.Services.Events;
@@ -30,17 +31,17 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
             _staticCacheManager = staticCacheManager;
         }
 
-        public void HandleEvent(EntityInsertedEvent<Setting> eventMessage)
+        public async Task HandleEvent(EntityInsertedEvent<Setting> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
+        public async Task HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeletedEvent<Setting> eventMessage)
+        public async Task HandleEvent(EntityDeletedEvent<Setting> eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
         }
     }
 }

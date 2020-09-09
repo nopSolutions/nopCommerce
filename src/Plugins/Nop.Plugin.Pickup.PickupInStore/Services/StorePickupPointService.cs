@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
@@ -62,17 +64,17 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Pickup points</returns>
-        public virtual IPagedList<StorePickupPoint> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<StorePickupPoint>> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var key = _cacheKeyService.PrepareKeyForShortTermCache(_pickupPointAllKey, storeId);
-            var rez = _staticCacheManager.Get(key, () =>
+            var rez = await _staticCacheManager.Get(key, async () =>
             {
                 var query = _storePickupPointRepository.Table;
                 if (storeId > 0)
                     query = query.Where(point => point.StoreId == storeId || point.StoreId == 0);
                 query = query.OrderBy(point => point.DisplayOrder).ThenBy(point => point.Name);
 
-                return query.ToList();
+                return await query.ToListAsync();
             });
 
             return new PagedList<StorePickupPoint>(rez, pageIndex, pageSize);
@@ -83,51 +85,51 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// </summary>
         /// <param name="pickupPointId">Pickup point identifier</param>
         /// <returns>Pickup point</returns>
-        public virtual StorePickupPoint GetStorePickupPointById(int pickupPointId)
+        public virtual async Task<StorePickupPoint> GetStorePickupPointById(int pickupPointId)
         {
             if (pickupPointId == 0)
                 return null;
 
-            return _storePickupPointRepository.GetById(pickupPointId);
+            return await _storePickupPointRepository.GetById(pickupPointId);
         }
 
         /// <summary>
         /// Inserts a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        public virtual void InsertStorePickupPoint(StorePickupPoint pickupPoint)
+        public virtual async Task InsertStorePickupPoint(StorePickupPoint pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException(nameof(pickupPoint));
 
-            _storePickupPointRepository.Insert(pickupPoint);
-            _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            await _storePickupPointRepository.Insert(pickupPoint);
+            await _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
         /// Updates the pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        public virtual void UpdateStorePickupPoint(StorePickupPoint pickupPoint)
+        public virtual async Task UpdateStorePickupPoint(StorePickupPoint pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException(nameof(pickupPoint));
 
-            _storePickupPointRepository.Update(pickupPoint);
-            _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            await _storePickupPointRepository.Update(pickupPoint);
+            await _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
         /// Deletes a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        public virtual void DeleteStorePickupPoint(StorePickupPoint pickupPoint)
+        public virtual async Task DeleteStorePickupPoint(StorePickupPoint pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException(nameof(pickupPoint));
 
-            _storePickupPointRepository.Delete(pickupPoint);
-            _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            await _storePickupPointRepository.Delete(pickupPoint);
+            await _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         #endregion

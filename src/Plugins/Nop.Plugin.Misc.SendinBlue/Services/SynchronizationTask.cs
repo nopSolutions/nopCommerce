@@ -1,4 +1,5 @@
 ﻿using Nop.Services.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Plugin.Misc.SendinBlue.Services
 {
@@ -27,9 +28,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <summary>
         /// Execute task
         /// </summary>
-        public void Execute()
+        public Task Execute()
         {
             _sendinBlueEmailManager.Synchronize();
+
+            return Task.CompletedTask;
         }
 
         #endregion

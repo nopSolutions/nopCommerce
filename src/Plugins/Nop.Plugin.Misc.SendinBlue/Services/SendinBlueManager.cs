@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -88,10 +89,10 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Prepare API client
         /// </summary>
         /// <returns>API client</returns>
-        private TClient CreateApiClient<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
+        private async Task<TClient> CreateApiClient<TClient>(Func<Configuration, TClient> clientCtor) where TClient : IApiAccessor
         {
             //check whether plugin is configured to request services (validate API key)
-            var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>();
+            var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>();
             if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
                 throw new NopException($"Plugin not configured");
 
@@ -109,7 +110,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// </summary>
         /// <param name="storeIds">List of store identifiers</param>
         /// <returns>List of messages</returns>
-        private IList<(NotifyType Type, string Message)> ImportContacts(IList<int> storeIds)
+        private async Task<IList<(NotifyType Type, string Message)>> ImportContacts(IList<int> storeIds)
         {
             var messages = new List<(NotifyType, string)>();
 
@@ -117,25 +118,25 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new ContactsApi(config));
+                var client = await CreateApiClient(config => new ContactsApi(config));
 
                 foreach (var storeId in storeIds)
                 {
                     //get list identifier from the settings
                     var key = $"{nameof(SendinBlueSettings)}.{nameof(SendinBlueSettings.ListId)}";
-                    var listId = _settingService.GetSettingByKey<int>(key, storeId: storeId);
+                    var listId = await _settingService.GetSettingByKey<int>(key, storeId: storeId);
                     if (listId == 0)
                     {
-                        _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{storeId}");
+                        await _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{storeId}");
                         messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
                         continue;
                     }
 
                     //try to get store subscriptions
-                    var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId, isActive: true);
+                    var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId, isActive: true);
                     if (!subscriptions.Any())
                     {
-                        _logger.Warning($"SendinBlue synchronization warning: There are no subscriptions for store #{storeId}");
+                        await _logger.Warning($"SendinBlue synchronization warning: There are no subscriptions for store #{storeId}");
                         messages.Add((NotifyType.Warning, $"There are no subscriptions for store #{storeId}"));
                         continue;
                     }
@@ -146,7 +147,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                     var name = string.Empty;
 
-                    switch (GetAccountLanguage())
+                    switch (await GetAccountLanguage())
                     {
                         case SendinBlueAccountLanguage.French:
                             name =
@@ -218,14 +219,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         var state = string.Empty;
                         var fax = string.Empty;
 
-                        var customer = _customerService.GetCustomerByEmail(subscription.Email);
+                        var customer = _customerService.GetCustomerByEmail(subscription.Email).Result;
                         if (customer != null)
                         {
-                            firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                            lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                            phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                            var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                            var country = _countryService.GetCountryById(countryId);
+                            firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute).Result;
+                            lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute).Result;
+                            phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute).Result;
+                            var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute).Result;
+                            var country = _countryService.GetCountryById(countryId).Result;
                             countryName = country?.Name;
                             var countryIsoCode = country?.NumericIsoCode ?? 0;
                             if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
@@ -235,16 +236,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                                     ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
                                 sms = phone.Replace($"+{phoneCode}", string.Empty);
                             }
-                            gender = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute);
-                            dateOfBirth = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                            company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                            address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                            address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                            zipCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                            city = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
-                            county = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                            state = _stateProvinceService.GetStateProvinceById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute))?.Name;
-                            fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
+                            gender = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute).Result;
+                            dateOfBirth = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DateOfBirthAttribute).Result;
+                            company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute).Result;
+                            address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute).Result;
+                            address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute).Result;
+                            zipCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute).Result;
+                            city = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute).Result;
+                            county = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute).Result;
+                            state = _stateProvinceService.GetStateProvinceById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute).Result).Result?.Name;
+                            fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute).Result;
                         }
                         return $"{all}\n" +
                             $"{subscription.Email};" +
@@ -282,7 +283,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue synchronization error: {exception.Message}", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue synchronization error: {exception.Message}", exception, await _workContext.GetCurrentCustomer());
                 messages.Add((NotifyType.Error, $"SendinBlue synchronization error: {exception.Message}"));
             }
 
@@ -294,23 +295,23 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// </summary>
         /// <param name="storeIds">List of store identifiers</param>
         /// <returns>List of messages</returns>
-        private IList<(NotifyType Type, string Message)> ExportContacts(IList<int> storeIds)
+        private async Task<IList<(NotifyType Type, string Message)>> ExportContacts(IList<int> storeIds)
         {
             var messages = new List<(NotifyType, string)>();
 
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new ContactsApi(config));
+                var client = await CreateApiClient(config => new ContactsApi(config));
 
                 foreach (var storeId in storeIds)
                 {
                     //get list identifier from the settings
                     var key = $"{nameof(SendinBlueSettings)}.{nameof(SendinBlueSettings.ListId)}";
-                    var listId = _settingService.GetSettingByKey<int>(key, storeId: storeId, loadSharedValueIfNotFound: true);
+                    var listId = await _settingService.GetSettingByKey<int>(key, storeId: storeId, loadSharedValueIfNotFound: true);
                     if (listId == 0)
                     {
-                        _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{storeId}");
+                        await _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{storeId}");
                         messages.Add((NotifyType.Warning, $"List ID is empty for store #{storeId}"));
                         continue;
                     }
@@ -325,13 +326,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     foreach (var email in blackListedEmails)
                     {
                         //email in black list, so unsubscribe contact from all stores
-                        foreach (var id in _storeService.GetAllStores().Select(store => store.Id))
+                        foreach (var id in (await _storeService.GetAllStores()).Select(store => store.Id))
                         {
-                            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, id);
+                            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, id);
                             if (subscription != null)
                             {
                                 subscription.Active = false;
-                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription, false);
+                                await _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription, false);
                             }
                         }
                     }
@@ -340,7 +341,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue synchronization error: {exception.Message}", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue synchronization error: {exception.Message}", exception, await _workContext.GetCurrentCustomer());
                 messages.Add((NotifyType.Error, $"SendinBlue synchronization error: {exception.Message}"));
             }
 
@@ -353,7 +354,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="category">Category of attribute</param>
         /// <param name="attributes">Collection of attributes</param>
         /// <returns>Errors if exist</returns>
-        private string CreateAttibutes(IList<(CategoryEnum Category, string Name, string Value, CreateAttribute.TypeEnum? Type)> attributes)
+        private async Task<string> CreateAttibutes(IList<(CategoryEnum Category, string Name, string Value, CreateAttribute.TypeEnum? Type)> attributes)
         {
             if (!attributes.Any())
                 return string.Empty;
@@ -361,7 +362,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AttributesApi(config));
+                var client = await CreateApiClient(config => new AttributesApi(config));
 
                 foreach (var attribute in attributes)
                 {
@@ -375,7 +376,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return exception.Message;
             }
 
@@ -394,13 +395,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="synchronizationTask">Whether it's a scheduled synchronization</param>
         /// <param name="storeId">Store identifier; pass 0 to synchronize contacts for all stores</param>
         /// <returns>List of messages</returns>
-        public IList<(NotifyType Type, string Message)> Synchronize(bool synchronizationTask = true, int storeId = 0)
+        public async Task<IList<(NotifyType Type, string Message)>> Synchronize(bool synchronizationTask = true, int storeId = 0)
         {
             var messages = new List<(NotifyType, string)>();
             try
             {
                 //whether plugin is configured
-                var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>();
+                var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>();
                 if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
                     throw new NopException($"Plugin not configured");
 
@@ -408,19 +409,19 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //use all store ids for the synchronization task
                 var storeIds = !synchronizationTask
                     ? new List<int> { storeId }
-                    : new List<int> { 0 }.Union(_storeService.GetAllStores().Select(store => store.Id)).ToList();
+                    : new List<int> { 0 }.Union((await _storeService.GetAllStores()).Select(store => store.Id)).ToList();
 
-                var importMessages = ImportContacts(storeIds);
+                var importMessages = await ImportContacts(storeIds);
                 messages.AddRange(importMessages);
 
-                var exportMessages = ExportContacts(storeIds);
+                var exportMessages = await ExportContacts(storeIds);
                 messages.AddRange(exportMessages);
 
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue synchronization error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue synchronization error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 messages.Add((NotifyType.Error, $"SendinBlue synchronization error: {exception.Message}"));
             }
 
@@ -431,21 +432,21 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Subscribe new contact
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        public void Subscribe(NewsLetterSubscription subscription)
+        public async Task Subscribe(NewsLetterSubscription subscription)
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new ContactsApi(config));
+                var client = await CreateApiClient(config => new ContactsApi(config));
 
                 //try to get list identifier
                 var key = $"{nameof(SendinBlueSettings)}.{nameof(SendinBlueSettings.ListId)}";
-                var listId = _settingService.GetSettingByKey<int>(key, storeId: subscription.StoreId);
+                var listId = await _settingService.GetSettingByKey<int>(key, storeId: subscription.StoreId);
                 if (listId == 0)
-                    listId = _settingService.GetSettingByKey<int>(key);
+                    listId = await _settingService.GetSettingByKey<int>(key);
                 if (listId == 0)
                 {
-                    _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{subscription.StoreId}");
+                    await _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{subscription.StoreId}");
                     return;
                 }
 
@@ -476,14 +477,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     var state = string.Empty;
                     var fax = string.Empty;
 
-                    var customer = _customerService.GetCustomerByEmail(subscription.Email);
+                    var customer = await _customerService.GetCustomerByEmail(subscription.Email);
                     if (customer != null)
                     {
-                        firstName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                        lastName = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                        phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                        var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                        var country = _countryService.GetCountryById(countryId);
+                        firstName = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                        lastName = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                        phone = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                        var countryId = await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                        var country = await _countryService.GetCountryById(countryId);
                         countryName = country?.Name;
                         var countryIsoCode = country?.NumericIsoCode ?? 0;
                         if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
@@ -493,16 +494,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                                 ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
                             sms = phone.Replace($"+{phoneCode}", string.Empty);
                         }
-                        gender = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute);
-                        dateOfBirth = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DateOfBirthAttribute);
-                        company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                        address1 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                        address2 = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                        zipCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                        city = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
-                        county = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                        state = _stateProvinceService.GetStateProvinceById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute))?.Name;
-                        fax = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
+                        gender = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute);
+                        dateOfBirth = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                        company = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                        address1 = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                        address2 = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                        zipCode = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                        city = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
+                        county = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
+                        state = (await _stateProvinceService.GetStateProvinceById(await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)))?.Name;
+                        fax = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
                     }
 
                     var attributes = new Dictionary<string, string>
@@ -524,7 +525,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         [SendinBlueDefaults.FaxServiceAttribute] = fax
                     };
 
-                    switch (GetAccountLanguage())
+                    switch (await GetAccountLanguage())
                     {
                         case SendinBlueAccountLanguage.French:
                             attributes.Add(SendinBlueDefaults.FirstNameFrenchServiceAttribute, firstName);
@@ -575,7 +576,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
             }
         }
 
@@ -583,21 +584,21 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Unsubscribe contact
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        public void Unsubscribe(NewsLetterSubscription subscription)
+        public async Task Unsubscribe(NewsLetterSubscription subscription)
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new ContactsApi(config));
+                var client = await CreateApiClient(config => new ContactsApi(config));
 
                 //try to get list identifier
                 var key = $"{nameof(SendinBlueSettings)}.{nameof(SendinBlueSettings.ListId)}";
-                var listId = _settingService.GetSettingByKey<int>(key, storeId: subscription.StoreId);
+                var listId = await _settingService.GetSettingByKey<int>(key, storeId: subscription.StoreId);
                 if (listId == 0)
-                    listId = _settingService.GetSettingByKey<int>(key);
+                    listId = await _settingService.GetSettingByKey<int>(key);
                 if (listId == 0)
                 {
-                    _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{subscription.StoreId}");
+                    await _logger.Warning($"SendinBlue synchronization warning: List ID is empty for store #{subscription.StoreId}");
                     return;
                 }
 
@@ -611,7 +612,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
             }
         }
 
@@ -619,12 +620,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Unsubscribe contact
         /// </summary>
         /// <param name="unsubscribeContact">Contact information</param>
-        public void UnsubscribeWebhook(string unsubscribeContact)
+        public async Task UnsubscribeWebhook(string unsubscribeContact)
         {
             try
             {
                 //whether plugin is configured
-                var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>();
+                var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>();
                 if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
                     throw new NopException($"Plugin not configured");
 
@@ -639,19 +640,19 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                 //get subscription by email and store identifier
                 var email = unsubscriber?.email;
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId.Value);
+                var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId.Value);
                 if (subscription == null)
                     return;
 
                 //update subscription
                 subscription.Active = false;
-                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
-                _logger.Information($"SendinBlue unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
+                await _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
+                await _logger.Information($"SendinBlue unsubscription: email {email}, store #{storeId}, date {unsubscriber?.date_event}");
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
             }
         }
 
@@ -659,15 +660,15 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Create webhook to get notification about unsubscribed contacts
         /// </summary>
         /// <returns>Webhook id</returns>
-        public int GetUnsubscribeWebHookId()
+        public async Task<int> GetUnsubscribeWebHookId()
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new WebhooksApi(config));
+                var client = await CreateApiClient(config => new WebhooksApi(config));
 
                 //check whether webhook already exist
-                var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>();
+                var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>();
                 if (sendinBlueSettings.UnsubscribeWebhookId != 0)
                 {
                     client.GetWebhook(sendinBlueSettings.UnsubscribeWebhookId);
@@ -686,7 +687,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return 0;
             }
         }
@@ -695,17 +696,17 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Update contact after completing order
         /// </summary>
         /// <param name="order">Order</param>
-        public void UpdateContactAfterCompletingOrder(Order order)
+        public async Task UpdateContactAfterCompletingOrder(Order order)
         {
             try
             {
                 if (order is null)
                     throw new ArgumentNullException(nameof(order));
 
-                var customer = _customerService.GetCustomerById(order.CustomerId);
+                var customer = await _customerService.GetCustomerById(order.CustomerId);
 
                 //create API client
-                var client = CreateApiClient(config => new ContactsApi(config));
+                var client = await CreateApiClient(config => new ContactsApi(config));
 
                 //update contact
                 var attributes = new Dictionary<string, string>
@@ -721,7 +722,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
             }
         }
 
@@ -733,12 +734,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Get account information
         /// </summary>
         /// <returns>Account info; whether marketing automation is enabled, errors if exist</returns>
-        public (string Info, bool MarketingAutomationEnabled, string MAkey, string Errors) GetAccountInfo()
+        public async Task<(string Info, bool MarketingAutomationEnabled, string MAkey, string Errors)> GetAccountInfo()
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AccountApi(config));
+                var client = await CreateApiClient(config => new AccountApi(config));
 
                 //get account
                 var account = client.GetAccount();
@@ -760,7 +761,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return (null, false, null, exception.Message);
             }
         }
@@ -769,12 +770,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Set partner value
         /// </summary>
         /// <returns>True if partner successfully set; otherwise false</returns>
-        public bool SetPartner()
+        public async Task<bool> SetPartner()
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AccountApi(config));
+                var client = await CreateApiClient(config => new AccountApi(config));
 
                 //set partner
                 client.SetPartner(new SetPartner(SendinBlueDefaults.PartnerName));
@@ -782,7 +783,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return false;
             }
 
@@ -793,14 +794,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Get available lists to synchronize contacts
         /// </summary>
         /// <returns>List of id-name pairs of lists; errors if exist</returns>
-        public (IList<(string Id, string Name)> Lists, string Errors) GetLists()
+        public async Task<(IList<(string Id, string Name)> Lists, string Errors)> GetLists()
         {
             var availableLists = new List<(string Id, string Name)>();
 
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new ContactsApi(config));
+                var client = await CreateApiClient(config => new ContactsApi(config));
 
                 //get available lists
                 var lists = client.GetLists(SendinBlueDefaults.DefaultSynchronizationListsLimit);
@@ -820,7 +821,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return (availableLists, exception.Message);
             }
 
@@ -831,14 +832,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Get available senders of transactional emails
         /// </summary>
         /// <returns>List of id-name pairs of senders; errors if exist</returns>
-        public (IList<(string Id, string Name)> Lists, string Errors) GetSenders()
+        public async Task<(IList<(string Id, string Name)> Lists, string Errors)> GetSenders()
         {
             var availableSenders = new List<(string Id, string Name)>();
 
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new SendersApi(config));
+                var client = await CreateApiClient(config => new SendersApi(config));
 
                 //get available senderes
                 var senders = client.GetSenders();
@@ -852,7 +853,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return (availableSenders, exception.Message);
             }
 
@@ -863,12 +864,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Get account language
         /// </summary>
         /// <returns>SendinBlueAccountLanguage</returns>
-        public SendinBlueAccountLanguage GetAccountLanguage()
+        public async Task<SendinBlueAccountLanguage> GetAccountLanguage()
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AttributesApi(config));
+                var client = await CreateApiClient(config => new AttributesApi(config));
 
                 var attributes = client.GetAttributes();
                 var allAttribytes = attributes.Attributes.Select(s => s.Name).ToList();
@@ -935,14 +936,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         newAttributes.Add(attribute);
                 }
 
-                CreateAttibutes(newAttributes);
+                await CreateAttibutes(newAttributes);
 
                 return SendinBlueAccountLanguage.English;
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return SendinBlueAccountLanguage.English;
             }
         }
@@ -951,12 +952,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Check and create missing attributes in account
         /// </summary>
         /// <returns>Errors if exist</returns>
-        public string PrepareAttributes()
+        public async Task<string> PrepareAttributes()
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AttributesApi(config));
+                var client = await CreateApiClient(config => new AttributesApi(config));
 
                 var attributes = client.GetAttributes();
                 var attributeNames = attributes.Attributes.Select(s => s.Name).ToList();
@@ -997,12 +998,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         newAttributes.Add(attribute);
                 }
 
-                return CreateAttibutes(newAttributes);
+                return await CreateAttibutes(newAttributes);
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return exception.Message;
             }
         }
@@ -1012,12 +1013,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// </summary>
         /// <param name="tokens">List of available message templates tokens</param>
         /// <returns>Errors if exist</returns>
-        public string PrepareTransactionalAttributes(IList<string> tokens)
+        public async Task<string> PrepareTransactionalAttributes(IList<string> tokens)
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AttributesApi(config));
+                var client = await CreateApiClient(config => new AttributesApi(config));
 
                 //get already existing transactional attributes
                 var attributes = client.GetAttributes();
@@ -1039,12 +1040,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     newAttributes.Add((CategoryEnum.Transactional, token, null, CreateAttribute.TypeEnum.Text));
                 }
 
-                return CreateAttibutes(newAttributes);
+                return await CreateAttibutes(newAttributes);
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return exception.Message;
             }
         }
@@ -1057,12 +1058,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Check whether SMTP is enabled on account
         /// </summary>
         /// <returns>Result of check; errors if exist</returns>
-        public (bool Enabled, string Errors) SmtpIsEnabled()
+        public async Task<(bool Enabled, string Errors)> SmtpIsEnabled()
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new AccountApi(config));
+                var client = await CreateApiClient(config => new AccountApi(config));
 
                 //get account
                 var account = client.GetAccount();
@@ -1071,7 +1072,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return (false, exception.Message);
             }
         }
@@ -1082,13 +1083,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="senderId">Sender identifier</param>
         /// <param name="smtpKey">SMTP key</param>
         /// <returns>Email account identifier; errors if exist</returns>
-        public (int Id, string Errors) GetEmailAccountId(string senderId, string smtpKey)
+        public async Task<(int Id, string Errors)> GetEmailAccountId(string senderId, string smtpKey)
         {
             try
             {
                 //create API clients
-                var sendersClient = CreateApiClient(config => new SendersApi(config));
-                var accountClient = CreateApiClient(config => new AccountApi(config));
+                var sendersClient = await CreateApiClient(config => new SendersApi(config));
+                var accountClient = await CreateApiClient(config => new AccountApi(config));
 
                 //get all available senders
                 var senders = sendersClient.GetSenders();
@@ -1099,7 +1100,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 if (currentSender != null)
                 {
                     //try to find existing email account by name and email
-                    var emailAccount = _emailAccountService.GetAllEmailAccounts()
+                    var emailAccount = (await _emailAccountService.GetAllEmailAccounts())
                         .FirstOrDefault(account => account.DisplayName == currentSender.Name && account.Email == currentSender.Email);
                     if (emailAccount != null)
                         return (emailAccount.Id, null);
@@ -1118,14 +1119,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     Email = currentSender.Email,
                     DisplayName = currentSender.Name
                 };
-                _emailAccountService.InsertEmailAccount(newEmailAccount);
+                await _emailAccountService.InsertEmailAccount(newEmailAccount);
 
                 return (newEmailAccount.Id, null);
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return (0, exception.Message);
             }
         }
@@ -1137,12 +1138,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="message">Message template</param>
         /// <param name="emailAccount">Email account</param>
         /// <returns>Email template identifier</returns>
-        public int? GetTemplateId(int? templateId, MessageTemplate message, EmailAccount emailAccount)
+        public async Task<int?> GetTemplateId(int? templateId, MessageTemplate message, EmailAccount emailAccount)
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new SMTPApi(config));
+                var client = await CreateApiClient(config => new SMTPApi(config));
 
                 //check whether email template already exists
                 if (templateId > 0)
@@ -1171,7 +1172,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return null;
             }
         }
@@ -1181,12 +1182,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// </summary>
         /// <param name="templateId">Email template identifier</param>
         /// <returns>Queued email</returns>
-        public QueuedEmail GetQueuedEmailFromTemplate(int templateId)
+        public async Task<QueuedEmail> GetQueuedEmailFromTemplate(int templateId)
         {
             try
             {
                 //create API client
-                var client = CreateApiClient(config => new SMTPApi(config));
+                var client = await CreateApiClient(config => new SMTPApi(config));
 
                 if (templateId == 0)
                     throw new NopException("Message template is empty");
@@ -1212,7 +1213,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue email sending error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue email sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return null;
             }
         }
@@ -1227,10 +1228,10 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="to">Phone number of the receiver</param>
         /// <param name="from">Name of sender</param>
         /// <param name="text">Text</param>
-        public void SendSMS(string to, string from, string text)
+        public async Task SendSMS(string to, string from, string text)
         {
             //whether SMS notifications enabled
-            var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>();
+            var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>();
             if (!sendinBlueSettings.UseSmsNotifications)
                 return;
 
@@ -1241,19 +1242,19 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     throw new NopException("Phone number or SMS text is empty");
 
                 //create API client
-                var client = CreateApiClient(config => new TransactionalSMSApi(config));
+                var client = await CreateApiClient(config => new TransactionalSMSApi(config));
 
                 //create SMS data
                 var transactionalSms = new SendTransacSms(sender: from, recipient: to, content: text, type: SendTransacSms.TypeEnum.Transactional);
 
                 //send SMS
                 var sms = client.SendTransacSms(transactionalSms);
-                _logger.Information($"SendinBlue SMS sent: {sms?.Reference ?? $"credits remaining {sms?.RemainingCredits?.ToString()}"}");
+                await _logger.Information($"SendinBlue SMS sent: {sms?.Reference ?? $"credits remaining {sms?.RemainingCredits?.ToString()}"}");
             }
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue SMS sending error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue SMS sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
             }
         }
 
@@ -1263,7 +1264,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="listId">Contact list identifier</param>
         /// <param name="from">Name of sender</param>
         /// <param name="text">Text</param>
-        public string SendSMSCampaign(int listId, string from, string text)
+        public async Task<string> SendSMSCampaign(int listId, string from, string text)
         {
             try
             {
@@ -1272,7 +1273,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     throw new NopException("List or SMS text or sender name is empty");
 
                 //create API client
-                var client = CreateApiClient(config => new SMSCampaignsApi(config));
+                var client = await CreateApiClient(config => new SMSCampaignsApi(config));
 
                 //create SMS campaign
                 var campaign = client.CreateSmsCampaign(new CreateSmsCampaign(name: CommonHelper.EnsureMaximumLength(text, 20),
@@ -1284,7 +1285,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             catch (Exception exception)
             {
                 //log full error
-                _logger.Error($"SendinBlue SMS sending error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                await _logger.Error($"SendinBlue SMS sending error: {exception.Message}.", exception, await _workContext.GetCurrentCustomer());
                 return exception.Message;
             }
 

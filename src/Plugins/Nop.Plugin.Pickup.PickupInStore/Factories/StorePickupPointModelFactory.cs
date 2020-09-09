@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Plugin.Pickup.PickupInStore.Models;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Localization;
@@ -40,15 +41,15 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
         /// <returns>Store pickup point list model</returns>
-        public StorePickupPointListModel PrepareStorePickupPointListModel(StorePickupPointSearchModel searchModel)
+        public async Task<StorePickupPointListModel> PrepareStorePickupPointListModel(StorePickupPointSearchModel searchModel)
         {
-            var pickupPoints = _storePickupPointService.GetAllStorePickupPoints(pageIndex: searchModel.Page - 1,
+            var pickupPoints = await _storePickupPointService.GetAllStorePickupPoints(pageIndex: searchModel.Page - 1,
                 pageSize: searchModel.PageSize);
             var model = new StorePickupPointListModel().PrepareToGrid(searchModel, pickupPoints, () =>
             {
                 return pickupPoints.Select(point =>
                 {
-                    var store = _storeService.GetStoreById(point.StoreId);
+                    var store = _storeService.GetStoreById(point.StoreId).Result;
                     return new StorePickupPointModel
                     {
                         Id = point.Id,
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                         DisplayOrder = point.DisplayOrder,
                         StoreName = store?.Name ?? (point.StoreId == 0
                                         ? _localizationService.GetResource(
-                                            "Admin.Configuration.Settings.StoreScope.AllStores")
+                                            "Admin.Configuration.Settings.StoreScope.AllStores").Result
                                         : string.Empty)
                     };
                 });
@@ -72,7 +73,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
         /// <returns>Store pickup point search model</returns>
-        public StorePickupPointSearchModel PrepareStorePickupPointSearchModel(StorePickupPointSearchModel searchModel)
+        public Task<StorePickupPointSearchModel> PrepareStorePickupPointSearchModel(StorePickupPointSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -80,7 +81,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         #endregion

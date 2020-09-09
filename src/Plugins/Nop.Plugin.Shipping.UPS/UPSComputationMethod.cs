@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Services;
@@ -48,7 +49,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -59,7 +60,7 @@ namespace Nop.Plugin.Shipping.UPS
             if (getShippingOptionRequest.ShippingAddress?.CountryId == null)
                 return new GetShippingOptionResponse { Errors = new[] { "Shipping address is not set" } };
 
-            return _upsService.GetRates(getShippingOptionRequest);
+            return await _upsService.GetRates(getShippingOptionRequest);
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             return null;
         }
@@ -77,16 +78,16 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation()}Admin/UPSShipping/Configure";
+            return $"{_webHelper.GetStoreLocation().Result}Admin/UPSShipping/Configure";
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //settings
-            _settingService.SaveSetting(new UPSSettings
+            await _settingService.SaveSetting(new UPSSettings
             {
                 UseSandbox = true,
                 CustomerClassification = CustomerClassification.StandardListRates,
@@ -100,7 +101,7 @@ namespace Nop.Plugin.Shipping.UPS
             });
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage"] = "Pack by one item per package",
@@ -151,22 +152,22 @@ namespace Nop.Plugin.Shipping.UPS
                 ["Plugins.Shipping.UPS.Tracker.Pickup"] = "Pickup"
             });
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //settings
-            _settingService.DeleteSetting<UPSSettings>();
+            await _settingService.DeleteSetting<UPSSettings>();
 
             //locales
-            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.UPS");
-            _localizationService.DeleteLocaleResources("Plugins.Shipping.UPS");
+            await _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.UPS");
+            await _localizationService.DeleteLocaleResources("Plugins.Shipping.UPS");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
         #endregion

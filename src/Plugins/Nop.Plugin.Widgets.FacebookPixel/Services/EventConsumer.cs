@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
@@ -43,7 +44,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle shopping cart item inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
+        public async Task  HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             if (eventMessage?.Entity != null)
                 _facebookPixelService.PrepareAddToCartScript(eventMessage.Entity);
@@ -53,7 +54,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(OrderPlacedEvent eventMessage)
+        public async Task  HandleEvent(OrderPlacedEvent eventMessage)
         {
             if (eventMessage?.Order != null)
                 _facebookPixelService.PreparePurchaseScript(eventMessage.Order);
@@ -63,7 +64,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle product details model prepared event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(ModelPreparedEvent<BaseNopModel> eventMessage)
+        public async Task  HandleEvent(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage?.Model is ProductDetailsModel productDetailsModel)
                 _facebookPixelService.PrepareViewContentScript(productDetailsModel);
@@ -73,7 +74,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle page rendering event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(PageRenderingEvent eventMessage)
+        public async Task  HandleEvent(PageRenderingEvent eventMessage)
         {
             var routeName = eventMessage.GetRouteName() ?? string.Empty;
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
@@ -84,7 +85,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle product search event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(ProductSearchEvent eventMessage)
+        public async Task  HandleEvent(ProductSearchEvent eventMessage)
         {
             if (!string.IsNullOrEmpty(eventMessage?.SearchTerm))
                 _facebookPixelService.PrepareSearchScript(eventMessage.SearchTerm);
@@ -94,7 +95,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle message token added event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(MessageTokensAddedEvent<Token> eventMessage)
+        public async Task  HandleEvent(MessageTokensAddedEvent<Token> eventMessage)
         {
             if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
                 _facebookPixelService.PrepareContactScript();
@@ -104,7 +105,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle customer registered event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public void HandleEvent(CustomerRegisteredEvent eventMessage)
+        public async Task  HandleEvent(CustomerRegisteredEvent eventMessage)
         {
             if (eventMessage?.Customer != null)
                 _facebookPixelService.PrepareCompleteRegistrationScript();

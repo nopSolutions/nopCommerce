@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.ShipStation.Services;
@@ -52,7 +53,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -73,7 +74,7 @@ namespace Nop.Plugin.Shipping.ShipStation
 
             try
             {
-                foreach (var rate in _shipStationService.GetAllRates(getShippingOptionRequest))
+                foreach (var rate in await _shipStationService.GetAllRates(getShippingOptionRequest))
                 {
                     response.ShippingOptions.Add(new ShippingOption
                     {
@@ -96,7 +97,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -109,23 +110,23 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation()}Admin/ShipStation/Configure";
+            return $"{_webHelper.GetStoreLocation().Result}Admin/ShipStation/Configure";
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //settings
             var settings = new ShipStationSettings
             {
                 PackingPackageVolume = 5184
             };
-            _settingService.SaveSetting(settings);
+            await _settingService.SaveSetting(settings);
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume"] = "Pack by volume",
@@ -145,22 +146,22 @@ namespace Nop.Plugin.Shipping.ShipStation
                 ["Plugins.Shipping.ShipStation.Fields.UserName.Hint"] = "Specify ShipStation user name"
             });
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //settings
-            _settingService.DeleteSetting<ShipStationSettings>();
+            await _settingService.DeleteSetting<ShipStationSettings>();
 
             //locales
-            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
-            _localizationService.DeleteLocaleResources("Plugins.Shipping.ShipStation");
+            await _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
+            await _localizationService.DeleteLocaleResources("Plugins.Shipping.ShipStation");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
         #endregion

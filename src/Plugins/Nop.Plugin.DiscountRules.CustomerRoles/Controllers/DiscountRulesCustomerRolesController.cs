@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -51,9 +52,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 
         #region Methods
 
-        public IActionResult Configure(int discountId, int? discountRequirementId)
+        public async Task<IActionResult> Configure(int discountId, int? discountRequirementId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             //load the discount
@@ -66,7 +67,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 return Content("Failed to load requirement.");
 
             //try to get previously saved restricted customer role identifier
-            var restrictedRoleId = _settingService.GetSettingByKey<int>(string.Format(DiscountRequirementDefaults.SettingsKey, discountRequirementId ?? 0));
+            var restrictedRoleId = await _settingService.GetSettingByKey<int>(string.Format(DiscountRequirementDefaults.SettingsKey, discountRequirementId ?? 0));
 
             var model = new RequirementModel
             {
@@ -76,7 +77,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             };
 
             //set available customer roles
-            model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(role => new SelectListItem
+            model.AvailableCustomerRoles = (await _customerService.GetAllCustomerRoles(true)).Select(role => new SelectListItem
             {
                 Text = role.Name,
                 Value = role.Id.ToString(),
@@ -84,7 +85,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             }).ToList();
             model.AvailableCustomerRoles.Insert(0, new SelectListItem
             {
-                Text = _localizationService.GetResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"),
+                Text = await _localizationService.GetResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"),
                 Value = "0"
             });
 
@@ -95,9 +96,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
         }
 
         [HttpPost]        
-        public IActionResult Configure(RequirementModel model)
+        public async Task<IActionResult> Configure(RequirementModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
             if (ModelState.IsValid)
@@ -108,8 +109,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                     return NotFound(new { Errors = new[] { "Discount could not be loaded" } });
 
                 //get the discount requirement
-                var discountRequirement = _discountService.GetDiscountRequirementById(model.RequirementId);
-
+                var discountRequirement = await _discountService.GetDiscountRequirementById(model.RequirementId);
+                
                 //the discount requirement does not exist, so create a new one
                 if (discountRequirement == null)
                 {
@@ -119,11 +120,11 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                         DiscountRequirementRuleSystemName = DiscountRequirementDefaults.SystemName
                     };
 
-                    _discountService.InsertDiscountRequirement(discountRequirement);
+                    await _discountService.InsertDiscountRequirement(discountRequirement);
                 }
 
                 //save restricted customer role identifier
-                _settingService.SetSetting(string.Format(DiscountRequirementDefaults.SettingsKey, discountRequirement.Id), model.CustomerRoleId);
+                await _settingService.SetSetting(string.Format(DiscountRequirementDefaults.SettingsKey, discountRequirement.Id), model.CustomerRoleId);
 
                 return Ok(new { NewRequirementId = discountRequirement.Id });
             }

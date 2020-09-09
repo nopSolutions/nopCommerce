@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Localization;
@@ -25,12 +26,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
             _workContext = workContext;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> Invoke()
         {
             var model = new PaymentInfoModel
             {
-                DescriptionText = _localizationService.GetLocalizedSetting(_checkMoneyOrderPaymentSettings,
-                    x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
+                DescriptionText = await _localizationService.GetLocalizedSetting(_checkMoneyOrderPaymentSettings,
+                    x => x.DescriptionText, (await _workContext.GetWorkingLanguage()).Id, (await _storeContext.GetCurrentStore()).Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);

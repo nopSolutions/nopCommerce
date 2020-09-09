@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -120,16 +121,16 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <typeparam name="TResult">Result type</typeparam>
         /// <param name="function">Function</param>
         /// <returns>Result</returns>
-        private TResult HandleFunction<TResult>(Func<TResult> function)
+        private async Task<TResult> HandleFunction<TResult>(Func<Task<TResult>> function)
         {
             try
             {
                 //check whether the plugin is active
-                if (!PluginActive())
+                if (!await PluginActive())
                     return default;
 
                 //invoke function
-                return function();
+                return await function();
             }
             catch (Exception exception)
             {
@@ -143,7 +144,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
                 //log errors
                 var error = $"{FacebookPixelDefaults.SystemName} error: {Environment.NewLine}{exception.Message}";
-                _logger.Error(error, exception, _workContext.CurrentCustomer);
+                await _logger.Error(error, exception, await _workContext.GetCurrentCustomer());
 
                 return default;
             }
@@ -153,10 +154,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Check whether the plugin is active for the current user and the current store
         /// </summary>
         /// <returns>Result</returns>
-        private bool PluginActive()
+        private async Task<bool> PluginActive()
         {
             return _widgetPluginManager
-                .IsPluginActive(FacebookPixelDefaults.SystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                .IsPluginActive(FacebookPixelDefaults.SystemName, await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id);
         }
 
         /// <summary>
@@ -164,10 +165,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
         /// <returns>Script code</returns>
-        private string PrepareScripts(IList<FacebookPixelConfiguration> configurations)
+        private async Task<string> PrepareScripts(IList<FacebookPixelConfiguration> configurations)
         {
             return PrepareInitScript(configurations) +
-                PrepareUserPropertiesScript(configurations) +
+                await PrepareUserPropertiesScript(configurations) +
                 PreparePageViewScript(configurations) +
                 PrepareTrackedEventsScript(configurations);
         }
@@ -180,21 +181,21 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         private string PrepareInitScript(IList<FacebookPixelConfiguration> configurations)
         {
             //local function to prepare user info (used with Advanced Matching feature)
-            string getUserObject()
+            async Task<string> getUserObject()
             {
                 //prepare user object
-                var email = _workContext.CurrentCustomer.Email;
-                var firstName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.FirstNameAttribute);
-                var lastName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.LastNameAttribute);
-                var phone = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.PhoneAttribute);
-                var gender = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.GenderAttribute);
-                var birthday = _genericAttributeService.GetAttribute<DateTime?>(_workContext.CurrentCustomer, NopCustomerDefaults.DateOfBirthAttribute);
-                var city = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.CityAttribute);
-                var countryId = _genericAttributeService.GetAttribute<int>(_workContext.CurrentCustomer, NopCustomerDefaults.CountryIdAttribute);
-                var countryName = _countryService.GetCountryById(countryId)?.TwoLetterIsoCode;
-                var stateId = _genericAttributeService.GetAttribute<int>(_workContext.CurrentCustomer, NopCustomerDefaults.StateProvinceIdAttribute);
-                var stateName = _stateProvinceService.GetStateProvinceById(stateId)?.Abbreviation;
-                var zipcode = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                var email = (await _workContext.GetCurrentCustomer()).Email;
+                var firstName = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.FirstNameAttribute);
+                var lastName = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.LastNameAttribute);
+                var phone = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.PhoneAttribute);
+                var gender = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.GenderAttribute);
+                var birthday = await _genericAttributeService.GetAttribute<DateTime?>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.DateOfBirthAttribute);
+                var city = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CityAttribute);
+                var countryId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CountryIdAttribute);
+                var countryName = (await _countryService.GetCountryById(countryId))?.TwoLetterIsoCode;
+                var stateId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.StateProvinceIdAttribute);
+                var stateName = (await _stateProvinceService.GetStateProvinceById(stateId))?.Abbreviation;
+                var zipcode = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.ZipPostalCodeAttribute);
 
                 var userObject = FormatEventObject(new List<(string Name, object Value)>
                 {
@@ -202,7 +203,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                     ("fn", firstName?.ToLower()),
                     ("ln", lastName?.ToLower()),
                     ("ph", new string(phone?.Where(c => char.IsDigit(c)).ToArray()) ?? string.Empty),
-                    ("external_id", _workContext.CurrentCustomer.CustomerGuid.ToString().ToLower()),
+                    ("external_id", (await _workContext.GetCurrentCustomer()).CustomerGuid.ToString().ToLower()),
                     ("ge", gender?.FirstOrDefault().ToString().ToLower()),
                     ("db", birthday?.ToString("yyyyMMdd")),
                     ("ct", city?.ToLower()),
@@ -218,7 +219,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             return FormatScript(configurations, configuration =>
             {
                 var additionalParameter = configuration.PassUserProperties
-                    ? $", {{uid: '{_workContext.CurrentCustomer.CustomerGuid}'}}"
+                    ? $", {{uid: '{_workContext.GetCurrentCustomer().Result.CustomerGuid}'}}"
                     : (configuration.UseAdvancedMatching
                     ? $", {getUserObject()}"
                     : null);
@@ -231,7 +232,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
         /// <returns>Script code</returns>
-        private string PrepareUserPropertiesScript(IList<FacebookPixelConfiguration> configurations)
+        private async Task<string> PrepareUserPropertiesScript(IList<FacebookPixelConfiguration> configurations)
         {
             //filter active configurations
             var activeConfigurations = configurations.Where(configuration => configuration.PassUserProperties).ToList();
@@ -239,16 +240,16 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 return string.Empty;
 
             //prepare user object
-            var createdOn = new DateTimeOffset(_workContext.CurrentCustomer.CreatedOnUtc).ToUnixTimeSeconds().ToString();
-            var city = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.CityAttribute);
-            var countryId = _genericAttributeService.GetAttribute<int>(_workContext.CurrentCustomer, NopCustomerDefaults.CountryIdAttribute);
-            var countryName = _countryService.GetCountryById(countryId)?.TwoLetterIsoCode;
-            var currency = _workContext.WorkingCurrency?.CurrencyCode;
-            var gender = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.GenderAttribute);
-            var language = _workContext.WorkingLanguage?.UniqueSeoCode;
-            var stateId = _genericAttributeService.GetAttribute<int>(_workContext.CurrentCustomer, NopCustomerDefaults.StateProvinceIdAttribute);
-            var stateName = _stateProvinceService.GetStateProvinceById(stateId)?.Abbreviation;
-            var zipcode = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.ZipPostalCodeAttribute);
+            var createdOn = new DateTimeOffset((await _workContext.GetCurrentCustomer()).CreatedOnUtc).ToUnixTimeSeconds().ToString();
+            var city = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CityAttribute);
+            var countryId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CountryIdAttribute);
+            var countryName = (await _countryService.GetCountryById(countryId))?.TwoLetterIsoCode;
+            var currency = (await _workContext.GetWorkingCurrency())?.CurrencyCode;
+            var gender = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.GenderAttribute);
+            var language = (await _workContext.GetWorkingLanguage())?.UniqueSeoCode;
+            var stateId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.StateProvinceIdAttribute);
+            var stateName = (await _stateProvinceService.GetStateProvinceById(stateId))?.Abbreviation;
+            var zipcode = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.ZipPostalCodeAttribute);
 
             var userObject = FormatEventObject(new List<(string Name, object Value)>
             {
@@ -291,7 +292,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             var events = _httpContextAccessor.HttpContext.Session
                 .Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
             var activeEvents = events.Where(trackedEvent =>
-                trackedEvent.CustomerId == _workContext.CurrentCustomer.Id && trackedEvent.StoreId == _storeContext.CurrentStore.Id)
+                trackedEvent.CustomerId == _workContext.GetCurrentCustomer().Result.Id && trackedEvent.StoreId == _storeContext.GetCurrentStore().Result.Id)
                 .ToList();
             _httpContextAccessor.HttpContext.Session.Set(FacebookPixelDefaults.TrackedEventsSessionValue, events.Except(activeEvents).ToList());
 
@@ -316,7 +317,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 if (trackedEvent.IsCustomEvent)
                 {
                     activeConfigurations = configurations.Where(configuration =>
-                        GetCustomEvents(configuration.Id).Any(customEvent => customEvent.EventName == trackedEvent.EventName)).ToList();
+                        GetCustomEvents(configuration.Id).Result.Any(customEvent => customEvent.EventName == trackedEvent.EventName)).ToList();
                 }
 
                 //prepare event scripts
@@ -346,12 +347,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="isCustomEvent">Whether the event is a custom one</param>
-        private void PrepareTrackedEventScript(string eventName, string eventObject,
+        private async Task PrepareTrackedEventScript(string eventName, string eventObject,
             int? customerId = null, int? storeId = null, bool isCustomEvent = false)
         {
             //prepare script and store it into the session data, we use this later
-            customerId ??= _workContext.CurrentCustomer.Id;
-            storeId ??= _storeContext.CurrentStore.Id;
+            customerId ??= (await _workContext.GetCurrentCustomer()).Id;
+            storeId ??= (await _storeContext.GetCurrentStore()).Id;
             var events = _httpContextAccessor.HttpContext.Session
                 .Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
             var activeEvent = events.FirstOrDefault(trackedEvent =>
@@ -443,7 +444,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>List of configurations</returns>
-        private IList<FacebookPixelConfiguration> GetConfigurations(int storeId = 0)
+        private async Task<IList<FacebookPixelConfiguration>> GetConfigurations(int storeId = 0)
         {
             var key = _cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationsCacheKey, storeId);
 
@@ -455,7 +456,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             query = query.OrderBy(configuration => configuration.Id);
 
-            return query.ToCachedList(key);
+            return await query.ToCachedList(key);
         }
 
         #endregion
@@ -468,12 +469,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare Facebook Pixel script
         /// </summary>
         /// <returns>Script code</returns>
-        public string PrepareScript()
+        public async Task<string> PrepareScript()
         {
-            return HandleFunction(() =>
+            return await HandleFunction(async () =>
             {
                 //get the enabled configurations
-                var configurations = GetConfigurations(_storeContext.CurrentStore.Id).Where(configuration =>
+                var configurations = (await GetConfigurations((await _storeContext.GetCurrentStore()).Id)).Where(configuration =>
                 {
                     if (!configuration.Enabled)
                         return false;
@@ -482,8 +483,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                         return true;
 
                     //don't display Pixel for users who not accepted Cookie Consent
-                    var cookieConsentAccepted = _genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer,
-                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, _storeContext.CurrentStore.Id);
+                    var cookieConsentAccepted = _genericAttributeService.GetAttribute<bool>(_workContext.GetCurrentCustomer().Result,
+                            NopCustomerDefaults.EuCookieLawAcceptedAttribute, _storeContext.GetCurrentStore().Result.Id).Result;
                     return cookieConsentAccepted;
                 }).ToList();
                 if (!configurations.Any())
@@ -523,14 +524,14 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="widgetZone">Widget zone to place script</param>
         /// <returns>Script code</returns>
-        public string PrepareCustomEventsScript(string widgetZone)
+        public async Task<string> PrepareCustomEventsScript(string widgetZone)
         {
-            return HandleFunction(() =>
+            return await HandleFunction(async () =>
             {
-                var customEvents = GetConfigurations().SelectMany(configuration => GetCustomEvents(configuration.Id, widgetZone)).ToList();
+                var customEvents = (await GetConfigurations()).SelectMany(configuration => GetCustomEvents(configuration.Id, widgetZone).Result).ToList();
                 foreach (var customEvent in customEvents)
                 {
-                    PrepareTrackedEventScript(customEvent.EventName, string.Empty, isCustomEvent: true);
+                    await PrepareTrackedEventScript(customEvent.EventName, string.Empty, isCustomEvent: true);
                 }
 
                 return string.Empty;
@@ -541,24 +542,24 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "AddToCart" and "AddToWishlist" events
         /// </summary>
         /// <param name="item">Shopping cart item</param>
-        public void PrepareAddToCartScript(ShoppingCartItem item)
+        public async Task PrepareAddToCartScript(ShoppingCartItem item)
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //check whether the adding was initiated by the customer
-                if (item.CustomerId != _workContext.CurrentCustomer.Id)
+                if (item.CustomerId != (await _workContext.GetCurrentCustomer()).Id)
                     return false;
 
                 //prepare event object
-                var product = _productService.GetProductById(item.ProductId);
-                var categoryMapping = _categoryService.GetProductCategoriesByProductId(product?.Id ?? 0).FirstOrDefault();
-                var categoryName = _categoryService.GetCategoryById(categoryMapping?.CategoryId ?? 0)?.Name;
+                var product = await _productService.GetProductById(item.ProductId);
+                var categoryMapping = (await _categoryService.GetProductCategoriesByProductId(product?.Id ?? 0)).FirstOrDefault();
+                var categoryName = (await _categoryService.GetCategoryById(categoryMapping?.CategoryId ?? 0))?.Name;
                 var sku = product != null ? _productService.FormatSku(product, item.AttributesXml) : string.Empty;
                 var quantity = product != null ? (int?)item.Quantity : null;
-                var productPrice = _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false);
-                var price = _taxService.GetProductPrice(product, productPrice, out _);
-                var priceValue = _currencyService.ConvertFromPrimaryStoreCurrency(price, _workContext.WorkingCurrency);
-                var currency = _workContext.WorkingCurrency?.CurrencyCode;
+                var (productPrice, _, _) = await _priceCalculationService.GetFinalPrice(product, await _workContext.GetCurrentCustomer(), includeDiscounts: false);
+                var (price, _) = await _taxService.GetProductPrice(product, productPrice);
+                var priceValue = _currencyService.ConvertFromPrimaryStoreCurrency(price, await _workContext.GetWorkingCurrency());
+                var currency = (await _workContext.GetWorkingCurrency())?.CurrencyCode;
 
                 var contentsProperties = new List<(string Name, object Value)> { ("id", sku), ("quantity", quantity) };
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
@@ -575,7 +576,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var eventName = item.ShoppingCartTypeId == (int)ShoppingCartType.ShoppingCart
                     ? FacebookPixelDefaults.ADD_TO_CART
                     : FacebookPixelDefaults.ADD_TO_WISHLIST;
-                PrepareTrackedEventScript(eventName, eventObject, item.CustomerId, item.StoreId);
+                await PrepareTrackedEventScript(eventName, eventObject, item.CustomerId, item.StoreId);
 
                 return true;
             });
@@ -585,19 +586,19 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "Purchase" event
         /// </summary>
         /// <param name="order">Order</param>
-        public void PreparePurchaseScript(Order order)
+        public async Task PreparePurchaseScript(Order order)
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //check whether the purchase was initiated by the customer
-                if (order.CustomerId != _workContext.CurrentCustomer.Id)
+                if (order.CustomerId != (await _workContext.GetCurrentCustomer()).Id)
                     return false;
 
                 //prepare event object
-                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-                var contentsProperties = _orderService.GetOrderItems(order.Id).Select(item =>
+                var currency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var contentsProperties = (await _orderService.GetOrderItems(order.Id)).Select(item =>
                 {
-                    var product = _productService.GetProductById(item.ProductId);
+                    var product = _productService.GetProductById(item.ProductId).Result;
                     var sku = product != null ? _productService.FormatSku(product, item.AttributesXml) : string.Empty;
                     var quantity = product != null ? (int?)item.Quantity : null;
                     return new List<(string Name, object Value)> { ("id", sku), ("quantity", quantity) };
@@ -611,7 +612,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 });
 
                 //prepare event script
-                PrepareTrackedEventScript(FacebookPixelDefaults.PURCHASE, eventObject, order.CustomerId, order.StoreId);
+                await PrepareTrackedEventScript(FacebookPixelDefaults.PURCHASE, eventObject, order.CustomerId, order.StoreId);
 
                 return true;
             });
@@ -621,17 +622,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "ViewContent" event
         /// </summary>
         /// <param name="model">Product details model</param>
-        public void PrepareViewContentScript(ProductDetailsModel model)
+        public async Task PrepareViewContentScript(ProductDetailsModel model)
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //prepare event object
-                var product = _productService.GetProductById(model.Id);
-                var categoryMapping = _categoryService.GetProductCategoriesByProductId(product?.Id ?? 0).FirstOrDefault();
-                var categoryName = _categoryService.GetCategoryById(categoryMapping?.CategoryId ?? 0)?.Name;
+                var product = await _productService.GetProductById(model.Id);
+                var categoryMapping = (await _categoryService.GetProductCategoriesByProductId(product?.Id ?? 0)).FirstOrDefault();
+                var categoryName = (await _categoryService.GetCategoryById(categoryMapping?.CategoryId ?? 0))?.Name;
                 var sku = model.Sku;
                 var priceValue = model.ProductPrice.PriceValue;
-                var currency = _workContext.WorkingCurrency?.CurrencyCode;
+                var currency = (await _workContext.GetWorkingCurrency())?.CurrencyCode;
 
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
                 {
@@ -644,7 +645,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 });
 
                 //prepare event script
-                PrepareTrackedEventScript(FacebookPixelDefaults.VIEW_CONTENT, eventObject);
+                await PrepareTrackedEventScript(FacebookPixelDefaults.VIEW_CONTENT, eventObject);
 
                 return true;
             });
@@ -653,20 +654,20 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare script to track "InitiateCheckout" event
         /// </summary>
-        public void PrepareInitiateCheckoutScript()
+        public async Task PrepareInitiateCheckoutScript()
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //prepare event object
-                var cart = _shoppingCartService
-                    .GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-                var price = _orderTotalCalculationService.GetShoppingCartTotal(cart, false, false);
-                var priceValue = _currencyService.ConvertFromPrimaryStoreCurrency(price ?? 0, _workContext.WorkingCurrency);
-                var currency = _workContext.WorkingCurrency?.CurrencyCode;
+                var cart = await _shoppingCartService
+                    .GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
+                var (price, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotal(cart, false, false);
+                var priceValue = _currencyService.ConvertFromPrimaryStoreCurrency(price ?? 0, await _workContext.GetWorkingCurrency());
+                var currency = (await _workContext.GetWorkingCurrency())?.CurrencyCode;
 
                 var contentsProperties = cart.Select(item =>
                 {
-                    var product = _productService.GetProductById(item.ProductId);
+                    var product = _productService.GetProductById(item.ProductId).Result;
                     var sku = product != null ? _productService.FormatSku(product, item.AttributesXml) : string.Empty;
                     var quantity = product != null ? (int?)item.Quantity : null;
                     return new List<(string Name, object Value)> { ("id", sku), ("quantity", quantity) };
@@ -680,7 +681,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 });
 
                 //prepare event script
-                PrepareTrackedEventScript(FacebookPixelDefaults.INITIATE_CHECKOUT, eventObject);
+                await PrepareTrackedEventScript(FacebookPixelDefaults.INITIATE_CHECKOUT, eventObject);
 
                 return true;
             });
@@ -690,9 +691,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Prepare script to track "Search" event
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public void PrepareSearchScript(string searchTerm)
+        public async Task PrepareSearchScript(string searchTerm)
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //prepare event object
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
@@ -701,7 +702,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 });
 
                 //prepare event script
-                PrepareTrackedEventScript(FacebookPixelDefaults.SEARCH, eventObject);
+                await PrepareTrackedEventScript(FacebookPixelDefaults.SEARCH, eventObject);
 
                 return true;
             });
@@ -710,12 +711,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare script to track "Contact" event
         /// </summary>
-        public void PrepareContactScript()
+        public async Task PrepareContactScript()
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //prepare event script
-                PrepareTrackedEventScript(FacebookPixelDefaults.CONTACT, string.Empty);
+                await PrepareTrackedEventScript(FacebookPixelDefaults.CONTACT, string.Empty);
 
                 return true;
             });
@@ -724,9 +725,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <summary>
         /// Prepare script to track "CompleteRegistration" event
         /// </summary>
-        public void PrepareCompleteRegistrationScript()
+        public async Task PrepareCompleteRegistrationScript()
         {
-            HandleFunction(() =>
+            await HandleFunction(async () =>
             {
                 //prepare event object
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
@@ -735,7 +736,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 });
 
                 //prepare event script
-                PrepareTrackedEventScript(FacebookPixelDefaults.COMPLETE_REGISTRATION, eventObject);
+                await PrepareTrackedEventScript(FacebookPixelDefaults.COMPLETE_REGISTRATION, eventObject);
 
                 return true;
             });
@@ -770,52 +771,52 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurationId">Configuration identifier</param>
         /// <returns>Configuration</returns>
-        public FacebookPixelConfiguration GetConfigurationById(int configurationId)
+        public async Task<FacebookPixelConfiguration> GetConfigurationById(int configurationId)
         {
             if (configurationId == 0)
                 return null;
 
-            return _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), () =>
-                _facebookPixelConfigurationRepository.GetById(configurationId));
+            return await _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), async () =>
+                await _facebookPixelConfigurationRepository.GetById(configurationId));
         }
 
         /// <summary>
         /// Insert the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
-        public void InsertConfiguration(FacebookPixelConfiguration configuration)
+        public async Task InsertConfiguration(FacebookPixelConfiguration configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _facebookPixelConfigurationRepository.Insert(configuration);
-            _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
+            await _facebookPixelConfigurationRepository.Insert(configuration);
+            await _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
         }
 
         /// <summary>
         /// Update the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
-        public void UpdateConfiguration(FacebookPixelConfiguration configuration)
+        public async Task UpdateConfiguration(FacebookPixelConfiguration configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _facebookPixelConfigurationRepository.Update(configuration);
-            _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
+            await _facebookPixelConfigurationRepository.Update(configuration);
+            await _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
         }
 
         /// <summary>
         /// Delete the configuration
         /// </summary>
         /// <param name="configuration">Configuration</param>
-        public void DeleteConfiguration(FacebookPixelConfiguration configuration)
+        public async Task DeleteConfiguration(FacebookPixelConfiguration configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _facebookPixelConfigurationRepository.Delete(configuration);
-            _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
+            await _facebookPixelConfigurationRepository.Delete(configuration);
+            await _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
         }
 
         /// <summary>
@@ -824,12 +825,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="configurationId">Configuration identifier</param>
         /// <param name="widgetZone">Widget zone name; pass null to load all records</param>
         /// <returns>List of custom events</returns>
-        public IList<CustomEvent> GetCustomEvents(int configurationId, string widgetZone = null)
+        public async Task<IList<CustomEvent>> GetCustomEvents(int configurationId, string widgetZone = null)
         {
-            var cachedCustomEvents = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.CustomEventsCacheKey, configurationId), () =>
+            var cachedCustomEvents = await _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.CustomEventsCacheKey, configurationId), async () =>
             {
                 //load configuration custom events
-                var configuration = GetConfigurationById(configurationId);
+                var configuration = await GetConfigurationById(configurationId);
                 var customEventsValue = configuration?.CustomEvents ?? string.Empty;
                 var customEvents = JsonConvert.DeserializeObject<List<CustomEvent>>(customEventsValue) ?? new List<CustomEvent>();
                 return customEvents;
@@ -848,12 +849,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="configurationId">Configuration identifier</param>
         /// <param name="eventName">Event name</param>
         /// <param name="widgetZones">Widget zones names</param>
-        public void SaveCustomEvents(int configurationId, string eventName, IList<string> widgetZones)
+        public async Task SaveCustomEvents(int configurationId, string eventName, IList<string> widgetZones)
         {
             if (string.IsNullOrEmpty(eventName))
                 return;
 
-            var configuration = GetConfigurationById(configurationId);
+            var configuration = await GetConfigurationById(configurationId);
             if (configuration == null)
                 return;
 
@@ -880,22 +881,22 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             //update configuration 
             configuration.CustomEvents = JsonConvert.SerializeObject(customEvents);
-            UpdateConfiguration(configuration);
-            _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.WidgetPrefixCacheKey);
+            await UpdateConfiguration(configuration);
+            await _staticCacheManager.RemoveByPrefix(FacebookPixelDefaults.PrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopModelCacheDefaults.WidgetPrefixCacheKey);
         }
 
         /// <summary>
         /// Get used widget zones for all custom events
         /// </summary>
         /// <returns>List of widget zones names</returns>
-        public IList<string> GetCustomEventsWidgetZones()
+        public async Task<IList<string>> GetCustomEventsWidgetZones()
         {
-            return _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.WidgetZonesCacheKey), () =>
+            return await _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.WidgetZonesCacheKey), async () =>
             {
                 //load custom events and their widget zones
-                var configurations = GetConfigurations();
-                var customEvents = configurations.SelectMany(configuration => GetCustomEvents(configuration.Id));
+                var configurations = await GetConfigurations();
+                var customEvents = configurations.SelectMany(configuration => GetCustomEvents(configuration.Id).Result);
                 var widgetZones = customEvents.SelectMany(customEvent => customEvent.WidgetZones).Distinct().ToList();
 
                 return widgetZones;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
@@ -62,9 +63,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// </summary>
         /// <param name="shippingMethodId">Shipping method ID</param>
         /// <returns>Rate</returns>
-        private decimal GetRate(int shippingMethodId)
+        private async Task<decimal> GetRate(int shippingMethodId)
         {
-            return _settingService.GetSettingByKey<decimal>(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethodId));
+            return await _settingService.GetSettingByKey<decimal>(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethodId));
         }
 
         /// <summary>
@@ -72,9 +73,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// </summary>
         /// <param name="shippingMethodId">Shipping method ID</param>
         /// <returns>Transit days</returns>
-        private int? GetTransitDays(int shippingMethodId)
+        private async Task<int?> GetTransitDays(int shippingMethodId)
         {
-            return _settingService.GetSettingByKey<int?>(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethodId));
+            return await _settingService.GetSettingByKey<int?>(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethodId));
         }
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -138,7 +139,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     return response;
                 }
 
-                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : _storeContext.CurrentStore.Id;
+                var storeId = getShippingOptionRequest.StoreId != 0 ? getShippingOptionRequest.StoreId : (await _storeContext.GetCurrentStore()).Id;
                 var countryId = getShippingOptionRequest.ShippingAddress.CountryId ?? 0;
                 var stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId ?? 0;
                 var warehouseId = getShippingOptionRequest.WarehouseFrom?.Id ?? 0;
@@ -148,21 +149,21 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                 var subTotal = decimal.Zero;
                 foreach (var packageItem in getShippingOptionRequest.Items)
                 {
-                    if (_shippingService.IsFreeShipping(packageItem.ShoppingCartItem))
+                    if (await _shippingService.IsFreeShipping(packageItem.ShoppingCartItem))
                         continue;
 
-                    subTotal += _shoppingCartService.GetSubTotal(packageItem.ShoppingCartItem);
+                    subTotal += (await _shoppingCartService.GetSubTotal(packageItem.ShoppingCartItem, true)).subTotal;
                 }
 
                 //get weight of shipped items (excluding items with free shipping)
-                var weight = _shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true);
+                var weight = await _shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true);
 
-                foreach (var shippingMethod in _shippingService.GetAllShippingMethods(countryId))
+                foreach (var shippingMethod in await _shippingService.GetAllShippingMethods(countryId))
                 {
                     int? transitDays = null;
                     var rate = decimal.Zero;
 
-                    var shippingByWeightByTotalRecord = _shippingByWeightByTotalService.FindRecords(
+                    var shippingByWeightByTotalRecord = await _shippingByWeightByTotalService.FindRecords(
                             shippingMethod.Id, storeId, warehouseId, countryId, stateProvinceId, zip, weight, subTotal);
                     if (shippingByWeightByTotalRecord == null)
                     {
@@ -177,8 +178,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
                     response.ShippingOptions.Add(new ShippingOption
                     {
-                        Name = _localizationService.GetLocalized(shippingMethod, x => x.Name),
-                        Description = _localizationService.GetLocalized(shippingMethod, x => x.Description),
+                        Name = await _localizationService.GetLocalized(shippingMethod, x => x.Name),
+                        Description = await _localizationService.GetLocalized(shippingMethod, x => x.Description),
                         Rate = rate,
                         TransitDays = transitDays
                     });
@@ -188,12 +189,12 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             {
                 //shipping rate calculation by fixed rate
                 var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-                response.ShippingOptions = _shippingService.GetAllShippingMethods(restrictByCountryId).Select(shippingMethod => new ShippingOption
+                response.ShippingOptions = (await _shippingService.GetAllShippingMethods(restrictByCountryId)).Select(shippingMethod => new ShippingOption
                 {
-                    Name = _localizationService.GetLocalized(shippingMethod, x => x.Name),
-                    Description = _localizationService.GetLocalized(shippingMethod, x => x.Description),
-                    Rate = GetRate(shippingMethod.Id),
-                    TransitDays = GetTransitDays(shippingMethod.Id)
+                    Name = _localizationService.GetLocalized(shippingMethod, x => x.Name).Result,
+                    Description = _localizationService.GetLocalized(shippingMethod, x => x.Description).Result,
+                    Rate = GetRate(shippingMethod.Id).Result,
+                    TransitDays = GetTransitDays(shippingMethod.Id).Result
                 }).ToList();
             }
 
@@ -205,7 +206,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -215,8 +216,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                 return null;
 
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-            var rates = _shippingService.GetAllShippingMethods(restrictByCountryId)
-                .Select(shippingMethod => GetRate(shippingMethod.Id)).Distinct().ToList();
+            var rates = (await _shippingService.GetAllShippingMethods(restrictByCountryId))
+                .Select(shippingMethod => GetRate(shippingMethod.Id).Result).Distinct().ToList();
 
             //return default rate if all of them equal
             if (rates.Count == 1)
@@ -230,19 +231,19 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation()}Admin/FixedByWeightByTotal/Configure";
+            return $"{_webHelper.GetStoreLocation().Result}Admin/FixedByWeightByTotal/Configure";
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //settings
-            _settingService.SaveSetting(new FixedByWeightByTotalSettings());
+            await _settingService.SaveSetting(new FixedByWeightByTotalSettings());
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Shipping.FixedByWeightByTotal.AddRecord"] = "Add record",
                 ["Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"] = "Additional fixed cost",
@@ -285,28 +286,28 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                 ["Plugins.Shipping.FixedByWeightByTotal.ShippingByWeight"] = "By Weight"
             });
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //settings
-            _settingService.DeleteSetting<FixedByWeightByTotalSettings>();
+            await _settingService.DeleteSetting<FixedByWeightByTotalSettings>();
 
             //fixed rates
-            var fixedRates = _shippingService.GetAllShippingMethods()
+            var fixedRates = (await _shippingService.GetAllShippingMethods())
                 .Select(shippingMethod => _settingService.GetSetting(
-                    string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)))
+                    string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)).Result)
                 .Where(setting => setting != null).ToList();
-            _settingService.DeleteSettings(fixedRates);
+            await _settingService.DeleteSettings(fixedRates);
 
             //locales
-            _localizationService.DeleteLocaleResources("Plugins.Shipping.FixedByWeightByTotal");
+            await _localizationService.DeleteLocaleResources("Plugins.Shipping.FixedByWeightByTotal");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
         #endregion

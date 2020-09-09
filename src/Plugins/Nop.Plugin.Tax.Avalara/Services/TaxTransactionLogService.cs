@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
@@ -66,57 +67,57 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="logItemId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual TaxTransactionLog GetTaxTransactionLogById(int logItemId)
+        public virtual async Task<TaxTransactionLog> GetTaxTransactionLogById(int logItemId)
         {
             if (logItemId == 0)
                 return null;
 
-            return _taxTransactionLogRepository.GetById(logItemId);
+            return await _taxTransactionLogRepository.GetById(logItemId);
         }
 
         /// <summary>
         /// Insert the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual void InsertTaxTransactionLog(TaxTransactionLog logItem)
+        public virtual async Task InsertTaxTransactionLog(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Insert(logItem);
+            await _taxTransactionLogRepository.Insert(logItem);
         }
 
         /// <summary>
         /// Update the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual void UpdateTaxTransactionLog(TaxTransactionLog logItem)
+        public virtual async Task UpdateTaxTransactionLog(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Update(logItem);
+            await _taxTransactionLogRepository.Update(logItem);
         }
 
         /// <summary>
         /// Delete the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual void DeleteTaxTransactionLog(TaxTransactionLog logItem)
+        public virtual async Task DeleteTaxTransactionLog(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Delete(logItem);
+            await _taxTransactionLogRepository.Delete(logItem);
         }
 
         /// <summary>
         /// Delete log items
         /// </summary>
         /// <param name="ids">Log items identifiers</param>
-        public virtual void DeleteTaxTransactionLog(int[] ids)
+        public virtual async Task DeleteTaxTransactionLog(int[] ids)
         {
-            _taxTransactionLogRepository.Delete(logItem => ids.Contains(logItem.Id));
+            await _taxTransactionLogRepository.Delete(logItem => ids.Contains(logItem.Id));
         }
 
         #endregion

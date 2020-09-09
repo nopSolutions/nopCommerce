@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Shipping.ShipStation.Models;
@@ -41,11 +42,11 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
         
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public ActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var shipStationSettings = _settingService.LoadSetting<ShipStationSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
+            var shipStationSettings = await _settingService.LoadSetting<ShipStationSettings>(storeScope);
 
             var model = new ShipStationModel
             {
@@ -58,19 +59,19 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
                 ActiveStoreScopeConfiguration = storeScope,
                 UserName = shipStationSettings.UserName,
                 Password = shipStationSettings.Password,
-                WebhookURL = $"{_webHelper.GetStoreLocation()}Plugins/ShipStation/Webhook"
+                WebhookURL = $"{await _webHelper.GetStoreLocation()}Plugins/ShipStation/Webhook"
             };
 
             if (storeScope <= 0)
                 return View("~/Plugins/Shipping.ShipStation/Views/Configure.cshtml", model);
 
-            model.ApiKey_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.ApiKey, storeScope);
-            model.ApiSecret_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.ApiSecret, storeScope);
-            model.PackingPackageVolume_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.PackingPackageVolume, storeScope);
-            model.PackingType_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.PackingType, storeScope);
-            model.PassDimensions_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.PassDimensions, storeScope);
-            model.Password_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.Password, storeScope);
-            model.UserName_OverrideForStore = _settingService.SettingExists(shipStationSettings, x => x.UserName, storeScope);
+            model.ApiKey_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.ApiKey, storeScope);
+            model.ApiSecret_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.ApiSecret, storeScope);
+            model.PackingPackageVolume_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.PackingPackageVolume, storeScope);
+            model.PackingType_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.PackingType, storeScope);
+            model.PassDimensions_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.PassDimensions, storeScope);
+            model.Password_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.Password, storeScope);
+            model.UserName_OverrideForStore = await _settingService.SettingExists(shipStationSettings, x => x.UserName, storeScope);
 
             return View("~/Plugins/Shipping.ShipStation/Views/Configure.cshtml", model);
         }
@@ -78,14 +79,14 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
-        public ActionResult Configure(ShipStationModel model)
+        public async Task<IActionResult> Configure(ShipStationModel model)
         {
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var shipStationSettings = _settingService.LoadSetting<ShipStationSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
+            var shipStationSettings = await _settingService.LoadSetting<ShipStationSettings>(storeScope);
 
             //save settings
             shipStationSettings.ApiKey = model.ApiKey;
@@ -99,45 +100,45 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.ApiKey, model.ApiKey_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.ApiSecret, model.ApiSecret_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.PackingPackageVolume, model.PackingPackageVolume_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.PackingType, model.PackingType_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.PassDimensions, model.PassDimensions_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.Password, model.Password_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.UserName, model.UserName_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.ApiKey, model.ApiKey_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.ApiSecret, model.ApiSecret_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.PackingPackageVolume, model.PackingPackageVolume_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.PackingType, model.PackingType_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.PassDimensions, model.PassDimensions_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.Password, model.Password_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(shipStationSettings, x => x.UserName, model.UserName_OverrideForStore, storeScope, false);
 
             //now clear settings cache
-            _settingService.ClearCache();
+            await _settingService.ClearCache();
 
-			_notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+			_notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
             
-            return Configure();
+            return await Configure();
         }
 
-        public IActionResult Webhook()
+        public async Task<IActionResult> Webhook()
         {
-            var userName = _webHelper.QueryString<string>("SS-UserName");
-            var password = _webHelper.QueryString<string>("SS-Password");
+            var userName = await _webHelper.QueryString<string>("SS-UserName");
+            var password = await _webHelper.QueryString<string>("SS-Password");
 
             //load settings for a chosen store scope
-            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
-            var shipStationSettings = _settingService.LoadSetting<ShipStationSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
+            var shipStationSettings = await _settingService.LoadSetting<ShipStationSettings>(storeScope);
 
             if (!userName.Equals(shipStationSettings.UserName) || !password.Equals(shipStationSettings.Password))
                 return Content(string.Empty);
 
-            var action = _webHelper.QueryString<string>("action") ?? string.Empty;
+            var action = await _webHelper.QueryString<string>("action") ?? string.Empty;
 
             if (Request.Method == WebRequestMethods.Http.Post &&
                 action.Equals("shipnotify", StringComparison.InvariantCultureIgnoreCase))
             {
-                var orderNumber = _webHelper.QueryString<string>("order_number");
-                var carrier = _webHelper.QueryString<string>("carrier");
-                var service = _webHelper.QueryString<string>("service");
-                var trackingNumber = _webHelper.QueryString<string>("tracking_number");
+                var orderNumber = await _webHelper.QueryString<string>("order_number");
+                var carrier = await _webHelper.QueryString<string>("carrier");
+                var service = await _webHelper.QueryString<string>("service");
+                var trackingNumber = await _webHelper.QueryString<string>("tracking_number");
 
-                _shipStationService.CreateOrUpadeteShipping(orderNumber, carrier, service, trackingNumber);
+                await _shipStationService.CreateOrUpadeteShipping(orderNumber, carrier, service, trackingNumber);
 
                 //nothing should be rendered to visitor
                 return Content(string.Empty);
@@ -146,9 +147,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             if (!action.Equals("export", StringComparison.InvariantCultureIgnoreCase))
                 return Content(string.Empty);
 
-            var startDateParam = _webHelper.QueryString<string>("start_date");
-            var endDateParam = _webHelper.QueryString<string>("end_date");
-            var pageIndex = _webHelper.QueryString<int>("page");
+            var startDateParam = await _webHelper.QueryString<string>("start_date");
+            var endDateParam = await _webHelper.QueryString<string>("end_date");
+            var pageIndex = await _webHelper.QueryString<int>("page");
 
             if (pageIndex > 0)
                 pageIndex -= 1;
@@ -156,7 +157,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             var startDate = string.IsNullOrEmpty(startDateParam) ? (DateTime?)null : DateTime.ParseExact(startDateParam, _shipStationService.DateFormat, CultureInfo.InvariantCulture);
             var endDate = string.IsNullOrEmpty(endDateParam) ? (DateTime?)null : DateTime.ParseExact(endDateParam, _shipStationService.DateFormat, CultureInfo.InvariantCulture);
             
-            return Content(_shipStationService.GetXmlOrders(startDate, endDate, pageIndex, 200), "text/xml");
+            return Content(await _shipStationService.GetXmlOrders(startDate, endDate, pageIndex, 200), "text/xml");
         }
     }
 }

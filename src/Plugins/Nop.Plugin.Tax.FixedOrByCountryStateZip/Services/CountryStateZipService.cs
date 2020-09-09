@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
@@ -52,31 +54,31 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// Deletes a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void DeleteTaxRate(TaxRate taxRate)
+        public virtual async Task DeleteTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException(nameof(taxRate));
 
-            _taxRateRepository.Delete(taxRate);
+            await _taxRateRepository.Delete(taxRate);
 
             //event notification
-            _eventPublisher.EntityDeleted(taxRate);
+            await _eventPublisher.EntityDeleted(taxRate);
         }
 
         /// <summary>
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
-        public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<TaxRate>> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var key = _cacheKeyService.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY);
-            var rez = _staticCacheManager.Get(key, () =>
+            var rez = await _staticCacheManager.Get(key, async () =>
             {
                 var query = from tr in _taxRateRepository.Table
                             orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
                             select tr;
 
-                return query.ToList();
+                return await query.ToListAsync();
             });
 
             var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);
@@ -89,42 +91,42 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        public virtual TaxRate GetTaxRateById(int taxRateId)
+        public virtual async Task<TaxRate> GetTaxRateById(int taxRateId)
         {
             if (taxRateId == 0)
                 return null;
 
-            return _taxRateRepository.GetById(taxRateId);
+            return await _taxRateRepository.GetById(taxRateId);
         }
 
         /// <summary>
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void InsertTaxRate(TaxRate taxRate)
+        public virtual async Task InsertTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException(nameof(taxRate));
 
-            _taxRateRepository.Insert(taxRate);
+            await _taxRateRepository.Insert(taxRate);
 
             //event notification
-            _eventPublisher.EntityInserted(taxRate);
+            await _eventPublisher.EntityInserted(taxRate);
         }
 
         /// <summary>
         /// Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void UpdateTaxRate(TaxRate taxRate)
+        public virtual async Task UpdateTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
                 throw new ArgumentNullException(nameof(taxRate));
 
-            _taxRateRepository.Update(taxRate);
+            await _taxRateRepository.Update(taxRate);
 
             //event notification
-            _eventPublisher.EntityUpdated(taxRate);
+            await _eventPublisher.EntityUpdated(taxRate);
         }
 
         #endregion

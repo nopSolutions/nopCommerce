@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -66,7 +67,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         public IList<string> GetWidgetZones()
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
-            widgetZones.AddRange(_facebookPixelService.GetCustomEventsWidgetZones());
+            widgetZones.AddRange(_facebookPixelService.GetCustomEventsWidgetZones().Result);
             return widgetZones;
         }
 
@@ -86,9 +87,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
@@ -136,20 +137,20 @@ namespace Nop.Plugin.Widgets.FacebookPixel
                 ["Plugins.Widgets.FacebookPixel.Configuration.Search.Store.Hint"] = "Search configuration by the store."
             });
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);
-            _settingService.SaveSetting(_widgetSettings);
+            await _settingService.SaveSetting(_widgetSettings);
 
-            _localizationService.DeleteLocaleResources("Plugins.Widgets.FacebookPixel");
+            await _localizationService.DeleteLocaleResources("Plugins.Widgets.FacebookPixel");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
         #endregion

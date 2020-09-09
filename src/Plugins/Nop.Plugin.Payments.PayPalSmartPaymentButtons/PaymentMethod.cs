@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -76,18 +77,18 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
+        public async Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
             //try to get an order id from custom values
-            var orderIdKey = _localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId");
+            var orderIdKey = await _localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId");
             if (!processPaymentRequest.CustomValues.TryGetValue(orderIdKey, out var orderId) || string.IsNullOrEmpty(orderId?.ToString()))
                 throw new NopException("Failed to get the PayPal order ID");
 
             //authorize or capture the order
             var (order, error) = _settings.PaymentType == PaymentType.Capture
-                ? _serviceManager.Capture(_settings, orderId.ToString())
+                ? await _serviceManager.Capture(_settings, orderId.ToString())
                 : (_settings.PaymentType == PaymentType.Authorize
-                ? _serviceManager.Authorize(_settings, orderId.ToString())
+                ? await _serviceManager.Authorize(_settings, orderId.ToString())
                 : (default, default));
 
             if (!string.IsNullOrEmpty(error))
@@ -119,8 +120,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
+        public Task PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -128,10 +130,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
-        public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
+        public async Task<CapturePaymentResult> Capture(CapturePaymentRequest capturePaymentRequest)
         {
             //capture previously authorized payment
-            var (capture, error) = _serviceManager
+            var (capture, error) = await _serviceManager
                 .CaptureAuthorization(_settings, capturePaymentRequest.Order.AuthorizationTransactionId);
 
             if (!string.IsNullOrEmpty(error))
@@ -151,10 +153,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
+        public async Task<VoidPaymentResult> Void(VoidPaymentRequest voidPaymentRequest)
         {
             //void previously authorized payment
-            var (_, error) = _serviceManager.Void(_settings, voidPaymentRequest.Order.AuthorizationTransactionId);
+            var (_, error) = await _serviceManager.Void(_settings, voidPaymentRequest.Order.AuthorizationTransactionId);
 
             if (!string.IsNullOrEmpty(error))
                 return new VoidPaymentResult { Errors = new[] { error } };
@@ -168,24 +170,24 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
+        public async Task<RefundPaymentResult> Refund(RefundPaymentRequest refundPaymentRequest)
         {
             //refund previously captured payment
             var amount = refundPaymentRequest.AmountToRefund != refundPaymentRequest.Order.OrderTotal
                 ? (decimal?)refundPaymentRequest.AmountToRefund
                 : null;
-            var (refund, error) = _serviceManager.Refund(_settings, refundPaymentRequest.Order.CaptureTransactionId,
+            var (refund, error) = await _serviceManager.Refund(_settings, refundPaymentRequest.Order.CaptureTransactionId,
                 refundPaymentRequest.Order.CustomerCurrencyCode, amount);
 
             if (!string.IsNullOrEmpty(error))
                 return new RefundPaymentResult { Errors = new[] { error } };
 
             //request succeeded
-            var refundIds = _genericAttributeService.GetAttribute<List<string>>(refundPaymentRequest.Order, Defaults.RefundIdAttributeName)
+            var refundIds = await _genericAttributeService.GetAttribute<List<string>>(refundPaymentRequest.Order, Defaults.RefundIdAttributeName)
                 ?? new List<string>();
             if (!refundIds.Contains(refund.Id))
                 refundIds.Add(refund.Id);
-            _genericAttributeService.SaveAttribute(refundPaymentRequest.Order, Defaults.RefundIdAttributeName, refundIds);
+            await _genericAttributeService.SaveAttribute(refundPaymentRequest.Order, Defaults.RefundIdAttributeName, refundIds);
             return new RefundPaymentResult
             {
                 NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded
@@ -197,9 +199,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
+        public Task<ProcessPaymentResult> ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            return new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } };
+            return Task.FromResult(new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } });
         }
 
         /// <summary>
@@ -207,9 +209,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
+        public Task<CancelRecurringPaymentResult> CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            return new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } };
+            return Task.FromResult(new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } });
         }
 
         /// <summary>
@@ -217,9 +219,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
+        public Task<bool> HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
         /// <summary>
@@ -227,9 +229,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
+        public Task<decimal> GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return decimal.Zero;
+            return Task.FromResult(decimal.Zero);
         }
 
         /// <summary>
@@ -237,9 +239,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        public bool CanRePostProcessPayment(Order order)
+        public Task<bool> CanRePostProcessPayment(Order order)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
         /// <summary>
@@ -247,7 +249,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="form">The parsed form values</param>
         /// <returns>List of validating errors</returns>
-        public IList<string> ValidatePaymentForm(IFormCollection form)
+        public Task<IList<string>> ValidatePaymentForm(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
@@ -258,7 +260,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             if (form.TryGetValue(nameof(PaymentInfoModel.Errors), out var errorValue) && !StringValues.IsNullOrEmpty(errorValue))
                 errors.Add(errorValue.ToString());
 
-            return errors;
+            return Task.FromResult<IList<string>>(errors);
         }
 
         /// <summary>
@@ -266,13 +268,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// </summary>
         /// <param name="form">The parsed form values</param>
         /// <returns>Payment info holder</returns>
-        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        public Task<ProcessPaymentRequest> GetPaymentInfo(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
             //already set
-            return _actionContextAccessor.ActionContext.HttpContext.Session.Get<ProcessPaymentRequest>(Defaults.PaymentRequestSessionKey);
+            return Task.FromResult(_actionContextAccessor.ActionContext.HttpContext.Session.Get<ProcessPaymentRequest>(Defaults.PaymentRequestSessionKey));
         }
 
         /// <summary>
@@ -341,10 +343,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override void Install()
+        public override async Task Install()
         {
             //settings
-            _settingService.SaveSetting(new PayPalSmartPaymentButtonsSettings
+            await _settingService.SaveSetting(new PayPalSmartPaymentButtonsSettings
             {
                 UseSandbox = true,
                 PaymentType = PaymentType.Capture,
@@ -359,11 +361,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(Defaults.SystemName))
             {
                 _widgetSettings.ActiveWidgetSystemNames.Add(Defaults.SystemName);
-                _settingService.SaveSetting(_widgetSettings);
+                await _settingService.SaveSetting(_widgetSettings);
             }
 
             //locales
-            _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize"] = "Authorize",
                 ["Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture"] = "Capture",
@@ -398,18 +400,18 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
                 ["Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning"] = "Webhook was not created, so some functions may not work correctly (see details in the <a href=\"{0}\" target=\"_blank\">log</a>)"
             });
 
-            base.Install();
+            await base.Install();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override void Uninstall()
+        public override async Task Uninstall()
         {
             //webhooks
-            foreach (var store in _storeService.GetAllStores())
+            foreach (var store in await _storeService.GetAllStores())
             {
-                var settings = _settingService.LoadSetting<PayPalSmartPaymentButtonsSettings>(store.Id);
+                var settings = await _settingService.LoadSetting<PayPalSmartPaymentButtonsSettings>(store.Id);
                 if (!string.IsNullOrEmpty(settings.WebhookId))
                     _serviceManager.DeleteWebhook(settings);
             }
@@ -418,15 +420,15 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             if (_widgetSettings.ActiveWidgetSystemNames.Contains(Defaults.SystemName))
             {
                 _widgetSettings.ActiveWidgetSystemNames.Remove(Defaults.SystemName);
-                _settingService.SaveSetting(_widgetSettings);
+                await _settingService.SaveSetting(_widgetSettings);
             }
-            _settingService.DeleteSetting<PayPalSmartPaymentButtonsSettings>();
+            await _settingService.DeleteSetting<PayPalSmartPaymentButtonsSettings>();
 
             //locales
-            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons");
-            _localizationService.DeleteLocaleResources("Plugins.Payments.PayPalSmartPaymentButtons");
+            await _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons");
+            await _localizationService.DeleteLocaleResources("Plugins.Payments.PayPalSmartPaymentButtons");
 
-            base.Uninstall();
+            await base.Uninstall();
         }
 
         #endregion
@@ -471,7 +473,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription");
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription").Result;
 
         /// <summary>
         /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Core;
@@ -46,9 +47,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
         /// <returns>View component result</returns>
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> Invoke(string widgetZone, object additionalData)
         {
-            if (!_paymentPluginManager.IsPluginActive(Defaults.SystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id))
+            if (!_paymentPluginManager.IsPluginActive(Defaults.SystemName, await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id))
                 return Content(string.Empty);
 
             var script = widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) && _settings.DisplayLogoInHeaderLinks

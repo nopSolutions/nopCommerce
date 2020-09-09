@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Shipping.UPS.Domain;
@@ -58,10 +59,10 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
         #region Methods
 
-        public IActionResult Configure()
+        public async Task<IActionResult> Configure()
         {
             //whether user has the authority to manage configuration
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare common model
@@ -120,14 +121,14 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         }
 
         [HttpPost]
-        public IActionResult Configure(UPSShippingModel model)
+        public async Task<IActionResult> Configure(UPSShippingModel model)
         {
             //whether user has the authority to manage configuration
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return await Configure();
 
             //save settings
             _upsSettings.AccountNumber = model.AccountNumber;
@@ -161,11 +162,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
             _upsSettings.CarrierServicesOffered = string.Join(':', model.CarrierServices.Select(service => $"[{service}]"));
 
-            _settingService.SaveSetting(_upsSettings);
+            await _settingService.SaveSetting(_upsSettings);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return await Configure();
         }
 
         #endregion

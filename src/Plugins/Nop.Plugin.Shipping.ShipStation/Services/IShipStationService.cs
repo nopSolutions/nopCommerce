@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.ShipStation.Services
@@ -11,8 +12,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// </summary>
         /// <param name="shippingOptionRequest"></param>
         /// <returns></returns>
-        IList<ShipStationServiceRate> GetAllRates(GetShippingOptionRequest shippingOptionRequest);
-        
+        Task<IList<ShipStationServiceRate>> GetAllRates(GetShippingOptionRequest shippingOptionRequest);
+
         /// <summary>
         /// Create or upadete shipping
         /// </summary>
@@ -20,7 +21,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="carrier"></param>
         /// <param name="service"></param>
         /// <param name="trackingNumber"></param>
-        void CreateOrUpadeteShipping(string orderNumber, string carrier, string service, string trackingNumber);
+        Task CreateOrUpadeteShipping(string orderNumber, string carrier, string service, string trackingNumber);
 
         /// <summary>
         /// Get XML view of orders to sending to the ShipStation service
@@ -30,7 +31,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>XML view of orders</returns>
-        string GetXmlOrders(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
+        Task<string> GetXmlOrders(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets a string that defines the required format of date time
