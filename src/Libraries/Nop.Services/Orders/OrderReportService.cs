@@ -571,36 +571,47 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            //this inner query should retrieve all purchased product identifiers
-            var query_tmp = (from orderItem in _orderItemRepository.Table
-                             join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                             where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                                   (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                                   !o.Deleted
-                             select orderItem.ProductId).Distinct();
-
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
-            var query = from p in _productRepository.Table
-                        join pm in _productManufacturerRepository.Table on p.Id 
-                            equals pm.ProductId 
-                            into p_pm
-                from pm in p_pm.DefaultIfEmpty()
-                        join pc in _productCategoryRepository.Table on p.Id 
-                            equals pc.ProductId 
+            var availableProductsQuery =
+                from oi in _orderItemRepository.Table
+                join o in _orderRepository.Table on oi.OrderId equals o.Id
+                where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                      !o.Deleted
+                select new { ProductId = oi.ProductId };
+
+            var query = 
+                from p in _productRepository.Table
+                join oi in availableProductsQuery on p.Id equals oi.ProductId
+                    into p_oi
+                from oi in p_oi.DefaultIfEmpty()
+                where oi == null &&
+                      p.ProductTypeId == simpleProductTypeId &&
+                      !p.Deleted &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      (showHidden || p.Published)
+                select p;
+
+            if (categoryId > 0)
+            {
+                query = from p in query
+                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
                             into p_pc
-                from pc in p_pc.DefaultIfEmpty()
-                        where !query_tmp.Contains(p.Id) &&
-                              //include only simple products
-                              p.ProductTypeId == simpleProductTypeId &&
-                              !p.Deleted &&
-                              (vendorId == 0 || p.VendorId == vendorId) &&
-                              //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                              //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
-                              (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                              (categoryId == 0 || pc.CategoryId == categoryId) &&
-                              (showHidden || p.Published)
+                        from pc in p_pc.DefaultIfEmpty()
+                        where pc.CategoryId == categoryId
                         select p;
+            }
+
+            if (manufacturerId > 0)
+            {
+                query = from p in query
+                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                            into p_pm
+                        from pm in p_pm.DefaultIfEmpty()
+                        where pm.ManufacturerId == manufacturerId
+                        select p;
+            }
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
