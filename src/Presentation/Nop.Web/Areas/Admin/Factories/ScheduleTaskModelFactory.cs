@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Services.Helpers;
 using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Models.Extensions;
+using Task = System.Threading.Tasks.Task;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -38,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task search model</returns>
-        public virtual ScheduleTaskSearchModel PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel searchModel)
+        public virtual Task<ScheduleTaskSearchModel> PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -46,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -54,13 +56,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task list model</returns>
-        public virtual ScheduleTaskListModel PrepareScheduleTaskListModel(ScheduleTaskSearchModel searchModel)
+        public virtual async Task<ScheduleTaskListModel> PrepareScheduleTaskListModel(ScheduleTaskSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get schedule tasks
-            var scheduleTasks = _scheduleTaskService.GetAllTasks(true).ToPagedList(searchModel);
+            var scheduleTasks = (await _scheduleTaskService.GetAllTasks(true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ScheduleTaskListModel().PrepareToGrid(searchModel, scheduleTasks, () =>

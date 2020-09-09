@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
@@ -36,21 +37,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         #region Methods
         
-        public virtual IActionResult CurrentCarts()
+        public virtual async Task<IActionResult> CurrentCarts()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _shoppingCartModelFactory.PrepareShoppingCartSearchModel(new ShoppingCartSearchModel());
+            var model = await _shoppingCartModelFactory.PrepareShoppingCartSearchModel(new ShoppingCartSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CurrentCarts(ShoppingCartSearchModel searchModel)
+        public virtual async Task<IActionResult> CurrentCarts(ShoppingCartSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
@@ -60,13 +61,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult GetCartDetails(ShoppingCartItemSearchModel searchModel)
+        public virtual async Task<IActionResult> GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
-            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+            var customer = await _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
@@ -76,12 +77,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
         
         [HttpPost]
-        public virtual IActionResult DeleteItem(int id)
+        public virtual async Task<IActionResult> DeleteItem(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedDataTablesJson();
             
-            _shoppingCartService.DeleteShoppingCartItem(id);
+            await _shoppingCartService.DeleteShoppingCartItem(id);
 
             return new NullJsonResult();
         }

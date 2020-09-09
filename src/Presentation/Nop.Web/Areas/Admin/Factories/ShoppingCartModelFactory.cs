@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -99,24 +100,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
         /// <returns>Shopping cart search model</returns>
-        public virtual ShoppingCartSearchModel PrepareShoppingCartSearchModel(ShoppingCartSearchModel searchModel)
+        public virtual async Task<ShoppingCartSearchModel> PrepareShoppingCartSearchModel(ShoppingCartSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available shopping cart types
-            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
+            await _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
 
             //set default search values
             searchModel.ShoppingCartType = ShoppingCartType.ShoppingCart;
 
             //prepare available billing countries
-            searchModel.AvailableCountries = _countryService.GetAllCountriesForBilling(showHidden: true)
+            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBilling(showHidden: true))
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -134,13 +135,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shopping cart search model</param>
         /// <returns>Shopping cart list model</returns>
-        public virtual ShoppingCartListModel PrepareShoppingCartListModel(ShoppingCartSearchModel searchModel)
+        public virtual async Task<ShoppingCartListModel> PrepareShoppingCartListModel(ShoppingCartSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customers with shopping carts
-            var customers = _customerService.GetCustomersWithShoppingCarts(searchModel.ShoppingCartType,
+            var customers = await _customerService.GetCustomersWithShoppingCarts(searchModel.ShoppingCartType,
                 storeId: searchModel.StoreId,
                 productId: searchModel.ProductId,
                 createdFromUtc: searchModel.StartDate,
@@ -160,10 +161,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    shoppingCartModel.CustomerEmail = _customerService.IsRegistered(customer)
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    shoppingCartModel.CustomerEmail = _customerService.IsRegistered(customer).Result
+                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
                     shoppingCartModel.TotalItems = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
-                        searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Sum(item => item.Quantity);
+                        searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Result.Sum(item => item.Quantity);
 
                     return shoppingCartModel;
                 });
@@ -178,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Shopping cart item search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Shopping cart item list model</returns>
-        public virtual ShoppingCartItemListModel PrepareShoppingCartItemListModel(ShoppingCartItemSearchModel searchModel, Customer customer)
+        public virtual async Task<ShoppingCartItemListModel> PrepareShoppingCartItemListModel(ShoppingCartItemSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -187,8 +188,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get shopping cart items
-            var items = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
-                searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).ToPagedList(searchModel);
+            var items = (await _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
+                searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate)).ToPagedList(searchModel);
             
             var isSearchProduct = searchModel.ProductId > 0;
 
@@ -196,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             if (isSearchProduct)
             {
-                product = _productService.GetProductById(searchModel.ProductId) ?? throw new Exception("Product is not found");
+                product = await _productService.GetProductById(searchModel.ProductId) ?? throw new Exception("Product is not found");
             }
 
             //prepare list model
@@ -208,18 +209,18 @@ namespace Nop.Web.Areas.Admin.Factories
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
                     if (!isSearchProduct)
-                        product = _productService.GetProductById(item.ProductId);
+                        product = _productService.GetProductById(item.ProductId).Result;
 
                     //convert dates to the user time
                     itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    itemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Deleted";
-                    itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer);
-                    var unitPrice = _shoppingCartService.GetUnitPrice(item);
-                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, unitPrice, out var _));
-                    var subTotal = _shoppingCartService.GetSubTotal(item);
-                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, subTotal, out _));
+                    itemModel.Store = _storeService.GetStoreById(item.StoreId).Result?.Name ?? "Deleted";
+                    itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer).Result;
+                    var unitPrice = _shoppingCartService.GetUnitPrice(item, true).Result.unitPrice;
+                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, unitPrice).Result.price).Result;
+                    var subTotal = _shoppingCartService.GetSubTotal(item, true).Result.subTotal;
+                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, subTotal).Result.price).Result;
 
                     //set product name since it does not survive mapping
                     itemModel.ProductName = product.Name;

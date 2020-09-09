@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -199,13 +200,13 @@ namespace Nop.Web.Factories
         /// Get the number of unread private messages
         /// </summary>
         /// <returns>Number of private messages</returns>
-        protected virtual int GetUnreadPrivateMessages()
+        protected virtual async Task<int> GetUnreadPrivateMessages()
         {
             var result = 0;
-            var customer = _workContext.CurrentCustomer;
-            if (_forumSettings.AllowPrivateMessages && !_customerService.IsGuest(customer))
+            var customer = await _workContext.GetCurrentCustomer();
+            if (_forumSettings.AllowPrivateMessages && !await _customerService.IsGuest(customer))
             {
-                var privateMessages = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
+                var privateMessages = await _forumService.GetAllPrivateMessages((await _storeContext.GetCurrentStore()).Id,
                     0, customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
@@ -225,29 +226,29 @@ namespace Nop.Web.Factories
         /// Prepare the logo model
         /// </summary>
         /// <returns>Logo model</returns>
-        public virtual LogoModel PrepareLogoModel()
+        public virtual async Task<LogoModel> PrepareLogoModel()
         {
             var model = new LogoModel
             {
-                StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)
+                StoreName = await _localizationService.GetLocalized(await _storeContext.GetCurrentStore(), x => x.Name)
             };
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreLogoPath
-                , _storeContext.CurrentStore, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
-            model.LogoPath = _staticCacheManager.Get(cacheKey, () =>
+                , await _storeContext.GetCurrentStore(), _themeContext.GetWorkingThemeName(), _webHelper.IsCurrentConnectionSecured());
+            model.LogoPath = await _staticCacheManager.Get(cacheKey, async () =>
             {
                 var logo = string.Empty;
                 var logoPictureId = _storeInformationSettings.LogoPictureId;
 
                 if (logoPictureId > 0)
-                    logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                    logo = await _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
 
                 if (string.IsNullOrEmpty(logo))
                 {
                     //use default logo
                     var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty;
-                    var storeLocation = _mediaSettings.UseAbsoluteImagePath ? _webHelper.GetStoreLocation() : $"{pathBase}/";
-                    logo = $"{storeLocation}Themes/{_themeContext.WorkingThemeName}/Content/images/logo.png";
+                    var storeLocation = _mediaSettings.UseAbsoluteImagePath ? await _webHelper.GetStoreLocation() : $"{pathBase}/";
+                    logo = $"{storeLocation}Themes/{_themeContext.GetWorkingThemeName()}/Content/images/logo.png";
                 }
 
                 return logo;
@@ -260,10 +261,10 @@ namespace Nop.Web.Factories
         /// Prepare the language selector model
         /// </summary>
         /// <returns>Language selector model</returns>
-        public virtual LanguageSelectorModel PrepareLanguageSelectorModel()
+        public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModel()
         {
-            var availableLanguages = _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+            var availableLanguages = (await _languageService
+                    .GetAllLanguages(storeId: (await _storeContext.GetCurrentStore()).Id))
                     .Select(x => new LanguageModel
                     {
                         Id = x.Id,
@@ -273,7 +274,7 @@ namespace Nop.Web.Factories
 
             var model = new LanguageSelectorModel
             {
-                CurrentLanguageId = _workContext.WorkingLanguage.Id,
+                CurrentLanguageId = (await _workContext.GetWorkingLanguage()).Id,
                 AvailableLanguages = availableLanguages,
                 UseImages = _localizationSettings.UseImagesForLanguageSelection
             };
@@ -285,10 +286,10 @@ namespace Nop.Web.Factories
         /// Prepare the currency selector model
         /// </summary>
         /// <returns>Currency selector model</returns>
-        public virtual CurrencySelectorModel PrepareCurrencySelectorModel()
+        public virtual async Task<CurrencySelectorModel> PrepareCurrencySelectorModel()
         {
-            var availableCurrencies = _currencyService
-                .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
+            var availableCurrencies = (await _currencyService
+                .GetAllCurrencies(storeId: (await _storeContext.GetCurrentStore()).Id))
                 .Select(x =>
                 {
                     //currency char
@@ -300,7 +301,7 @@ namespace Nop.Web.Factories
                     var currencyModel = new CurrencyModel
                     {
                         Id = x.Id,
-                        Name = _localizationService.GetLocalized(x, y => y.Name),
+                        Name = _localizationService.GetLocalized(x, y => y.Name).Result,
                         CurrencySymbol = currencySymbol
                     };
 
@@ -309,7 +310,7 @@ namespace Nop.Web.Factories
 
             var model = new CurrencySelectorModel
             {
-                CurrentCurrencyId = _workContext.WorkingCurrency.Id,
+                CurrentCurrencyId = (await _workContext.GetWorkingCurrency()).Id,
                 AvailableCurrencies = availableCurrencies
             };
 
@@ -320,11 +321,11 @@ namespace Nop.Web.Factories
         /// Prepare the tax type selector model
         /// </summary>
         /// <returns>Tax type selector model</returns>
-        public virtual TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
+        public virtual async Task<TaxTypeSelectorModel> PrepareTaxTypeSelectorModel()
         {
             var model = new TaxTypeSelectorModel
             {
-                CurrentTaxType = _workContext.TaxDisplayType
+                CurrentTaxType = await _workContext.GetTaxDisplayType()
             };
 
             return model;
@@ -334,43 +335,43 @@ namespace Nop.Web.Factories
         /// Prepare the header links model
         /// </summary>
         /// <returns>Header links model</returns>
-        public virtual HeaderLinksModel PrepareHeaderLinksModel()
+        public virtual async Task<HeaderLinksModel> PrepareHeaderLinksModel()
         {
-            var customer = _workContext.CurrentCustomer;
+            var customer = await _workContext.GetCurrentCustomer();
 
-            var unreadMessageCount = GetUnreadPrivateMessages();
+            var unreadMessageCount = await GetUnreadPrivateMessages();
             var unreadMessage = string.Empty;
             var alertMessage = string.Empty;
             if (unreadMessageCount > 0)
             {
-                unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
+                unreadMessage = string.Format(await _localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
                 //notifications here
                 if (_forumSettings.ShowAlertForPM &&
-                    !_genericAttributeService.GetAttribute<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, _storeContext.CurrentStore.Id))
+                    !await _genericAttributeService.GetAttribute<bool>(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, (await _storeContext.GetCurrentStore()).Id))
                 {
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, _storeContext.CurrentStore.Id);
-                    alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
+                    await _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.NotifiedAboutNewPrivateMessagesAttribute, true, (await _storeContext.GetCurrentStore()).Id);
+                    alertMessage = string.Format(await _localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                 }
             }
 
             var model = new HeaderLinksModel
             {
-                IsAuthenticated = _customerService.IsRegistered(customer),
-                CustomerName = _customerService.IsRegistered(customer) ? _customerService.FormatUsername(customer) : string.Empty,
-                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
-                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                AllowPrivateMessages = _customerService.IsRegistered(customer) && _forumSettings.AllowPrivateMessages,
+                IsAuthenticated = await _customerService.IsRegistered(customer),
+                CustomerName = await _customerService.IsRegistered(customer) ? await _customerService.FormatUsername(customer) : string.Empty,
+                ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                AllowPrivateMessages = await _customerService.IsRegistered(customer) && _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
             };
             //performance optimization (use "HasShoppingCartItems" property)
             if (customer.HasShoppingCartItems)
             {
-                model.ShoppingCartItems = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id)
+                model.ShoppingCartItems = (await _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id))
                     .Sum(item => item.Quantity);
 
-                model.WishlistItems = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id)
+                model.WishlistItems = (await _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.Wishlist, (await _storeContext.GetCurrentStore()).Id))
                     .Sum(item => item.Quantity);
             }
 
@@ -381,15 +382,15 @@ namespace Nop.Web.Factories
         /// Prepare the admin header links model
         /// </summary>
         /// <returns>Admin header links model</returns>
-        public virtual AdminHeaderLinksModel PrepareAdminHeaderLinksModel()
+        public virtual async Task<AdminHeaderLinksModel> PrepareAdminHeaderLinksModel()
         {
-            var customer = _workContext.CurrentCustomer;
+            var customer = await _workContext.GetCurrentCustomer();
 
             var model = new AdminHeaderLinksModel
             {
-                ImpersonatedCustomerName = _customerService.IsRegistered(customer) ? _customerService.FormatUsername(customer) : string.Empty,
+                ImpersonatedCustomerName = await _customerService.IsRegistered(customer) ? await _customerService.FormatUsername(customer) : string.Empty,
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
-                DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                DisplayAdminLink = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
             };
 
@@ -400,14 +401,14 @@ namespace Nop.Web.Factories
         /// Prepare the social model
         /// </summary>
         /// <returns>Social model</returns>
-        public virtual SocialModel PrepareSocialModel()
+        public virtual async Task<SocialModel> PrepareSocialModel()
         {
             var model = new SocialModel
             {
                 FacebookLink = _storeInformationSettings.FacebookLink,
                 TwitterLink = _storeInformationSettings.TwitterLink,
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
-                WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                WorkingLanguageId = (await _workContext.GetWorkingLanguage()).Id,
                 NewsEnabled = _newsSettings.Enabled,
             };
 
@@ -418,16 +419,16 @@ namespace Nop.Web.Factories
         /// Prepare the footer model
         /// </summary>
         /// <returns>Footer model</returns>
-        public virtual FooterModel PrepareFooterModel()
+        public virtual async Task<FooterModel> PrepareFooterModel()
         {
             //footer topics
-            var topicModels = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+            var topicModels = (await _topicService.GetAllTopics((await _storeContext.GetCurrentStore()).Id))
                     .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
                     .Select(t => new FooterModel.FooterTopicModel
                     {
                         Id = t.Id,
-                        Name = _localizationService.GetLocalized(t, x => x.Title),
-                        SeName = _urlRecordService.GetSeName(t),
+                        Name = _localizationService.GetLocalized(t, x => x.Title).Result,
+                        SeName = _urlRecordService.GetSeName(t).Result,
                         IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
                         IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
                         IncludeInFooterColumn3 = t.IncludeInFooterColumn3
@@ -436,11 +437,11 @@ namespace Nop.Web.Factories
             //model
             var model = new FooterModel
             {
-                StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name),
-                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                StoreName = await _localizationService.GetLocalized(await _storeContext.GetCurrentStore(), x => x.Name),
+                WishlistEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                ShoppingCartEnabled = await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _sitemapSettings.SitemapEnabled,
-                WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                WorkingLanguageId = (await _workContext.GetWorkingLanguage()).Id,
                 BlogEnabled = _blogSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
@@ -478,15 +479,15 @@ namespace Nop.Web.Factories
         /// <param name="model">Contact us model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>Contact us model</returns>
-        public virtual ContactUsModel PrepareContactUsModel(ContactUsModel model, bool excludeProperties)
+        public virtual async Task<ContactUsModel> PrepareContactUsModel(ContactUsModel model, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties)
             {
-                model.Email = _workContext.CurrentCustomer.Email;
-                model.FullName = _customerService.GetCustomerFullName(_workContext.CurrentCustomer);
+                model.Email = (await _workContext.GetCurrentCustomer()).Email;
+                model.FullName = await _customerService.GetCustomerFullName(await _workContext.GetCurrentCustomer());
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
@@ -502,7 +503,7 @@ namespace Nop.Web.Factories
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>Contact vendor model</returns>
-        public virtual ContactVendorModel PrepareContactVendorModel(ContactVendorModel model, Vendor vendor, bool excludeProperties)
+        public virtual async Task<ContactVendorModel> PrepareContactVendorModel(ContactVendorModel model, Vendor vendor, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -512,14 +513,14 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.Email = _workContext.CurrentCustomer.Email;
-                model.FullName = _customerService.GetCustomerFullName(_workContext.CurrentCustomer);
+                model.Email = (await _workContext.GetCurrentCustomer()).Email;
+                model.FullName = await _customerService.GetCustomerFullName(await _workContext.GetCurrentCustomer());
             }
 
             model.SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
             model.VendorId = vendor.Id;
-            model.VendorName = _localizationService.GetLocalized(vendor, x => x.Name);
+            model.VendorName = await _localizationService.GetLocalized(vendor, x => x.Name);
 
             return model;
         }
@@ -529,14 +530,14 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="pageModel">Sitemap page model</param>
         /// <returns>Sitemap model</returns>
-        public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
+        public virtual async Task<SitemapModel> PrepareSitemapModel(SitemapPageModel pageModel)
         {
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
-                _workContext.WorkingLanguage,
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                _storeContext.CurrentStore);
+                await _workContext.GetWorkingLanguage(),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _storeContext.GetCurrentStore());
 
-            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
+            var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
             {
                 //get URL helper
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
@@ -544,13 +545,13 @@ namespace Nop.Web.Factories
                 var model = new SitemapModel();
 
                 //prepare common items
-                var commonGroupTitle = _localizationService.GetResource("Sitemap.General");
+                var commonGroupTitle = await _localizationService.GetResource("Sitemap.General");
 
                 //home page
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
-                    Name = _localizationService.GetResource("Homepage"),
+                    Name = await _localizationService.GetResource("Homepage"),
                     Url = urlHelper.RouteUrl("Homepage")
                 });
 
@@ -558,7 +559,7 @@ namespace Nop.Web.Factories
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
-                    Name = _localizationService.GetResource("Search"),
+                    Name = await _localizationService.GetResource("Search"),
                     Url = urlHelper.RouteUrl("ProductSearch")
                 });
 
@@ -568,7 +569,7 @@ namespace Nop.Web.Factories
                     model.Items.Add(new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetResource("News"),
+                        Name = await _localizationService.GetResource("News"),
                         Url = urlHelper.RouteUrl("NewsArchive")
                     });
                 }
@@ -579,7 +580,7 @@ namespace Nop.Web.Factories
                     model.Items.Add(new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetResource("Blog"),
+                        Name = await _localizationService.GetResource("Blog"),
                         Url = urlHelper.RouteUrl("Blog")
                     });
                 }
@@ -590,7 +591,7 @@ namespace Nop.Web.Factories
                     model.Items.Add(new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetResource("Forum.Forums"),
+                        Name = await _localizationService.GetResource("Forum.Forums"),
                         Url = urlHelper.RouteUrl("Boards")
                     });
                 }
@@ -599,7 +600,7 @@ namespace Nop.Web.Factories
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
-                    Name = _localizationService.GetResource("ContactUs"),
+                    Name = await _localizationService.GetResource("ContactUs"),
                     Url = urlHelper.RouteUrl("ContactUs")
                 });
 
@@ -607,29 +608,29 @@ namespace Nop.Web.Factories
                 model.Items.Add(new SitemapModel.SitemapItemModel
                 {
                     GroupTitle = commonGroupTitle,
-                    Name = _localizationService.GetResource("Account.MyAccount"),
+                    Name = await _localizationService.GetResource("Account.MyAccount"),
                     Url = urlHelper.RouteUrl("CustomerInfo")
                 });
 
                 //at the moment topics are in general category too
                 if (_sitemapSettings.SitemapIncludeTopics)
                 {
-                    var topics = _topicService.GetAllTopics(storeId: _storeContext.CurrentStore.Id)
+                    var topics = (await _topicService.GetAllTopics(storeId: (await _storeContext.GetCurrentStore()).Id))
                         .Where(topic => topic.IncludeInSitemap);
 
                     model.Items.AddRange(topics.Select(topic => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = commonGroupTitle,
-                        Name = _localizationService.GetLocalized(topic, x => x.Title),
-                        Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
+                        Name = _localizationService.GetLocalized(topic, x => x.Title).Result,
+                        Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic).Result })
                     }));
                 }
 
                 //blog posts
                 if (_sitemapSettings.SitemapIncludeBlogPosts && _blogSettings.Enabled)
                 {
-                    var blogPostsGroupTitle = _localizationService.GetResource("Sitemap.BlogPosts");
-                    var blogPosts = _blogService.GetAllBlogPosts(storeId: _storeContext.CurrentStore.Id)
+                    var blogPostsGroupTitle = await _localizationService.GetResource("Sitemap.BlogPosts");
+                    var blogPosts = (await _blogService.GetAllBlogPosts(storeId: (await _storeContext.GetCurrentStore()).Id))
                         .Where(p => p.IncludeInSitemap);
 
                     model.Items.AddRange(blogPosts.Select(post => new SitemapModel.SitemapItemModel
@@ -637,73 +638,73 @@ namespace Nop.Web.Factories
                         GroupTitle = blogPostsGroupTitle,
                         Name = post.Title,
                         Url = urlHelper.RouteUrl("BlogPost",
-                            new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false) })
+                            new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false).Result })
                     }));
                 }
 
                 //news
                 if (_sitemapSettings.SitemapIncludeNews && _newsSettings.Enabled)
                 {
-                    var newsGroupTitle = _localizationService.GetResource("Sitemap.News");
-                    var news = _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id);
+                    var newsGroupTitle = await _localizationService.GetResource("Sitemap.News");
+                    var news = await _newsService.GetAllNews(storeId: (await _storeContext.GetCurrentStore()).Id);
                     model.Items.AddRange(news.Select(newsItem => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = newsGroupTitle,
                         Name = newsItem.Title,
                         Url = urlHelper.RouteUrl("NewsItem",
-                            new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) })
+                            new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false).Result })
                     }));
                 }
 
                 //categories
                 if (_sitemapSettings.SitemapIncludeCategories)
                 {
-                    var categoriesGroupTitle = _localizationService.GetResource("Sitemap.Categories");
-                    var categories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                    var categoriesGroupTitle = await _localizationService.GetResource("Sitemap.Categories");
+                    var categories = await _categoryService.GetAllCategories(storeId: (await _storeContext.GetCurrentStore()).Id);
                     model.Items.AddRange(categories.Select(category => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = categoriesGroupTitle,
-                        Name = _localizationService.GetLocalized(category, x => x.Name),
-                        Url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category) })
+                        Name = _localizationService.GetLocalized(category, x => x.Name).Result,
+                        Url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category).Result })
                     }));
                 }
 
                 //manufacturers
                 if (_sitemapSettings.SitemapIncludeManufacturers)
                 {
-                    var manufacturersGroupTitle = _localizationService.GetResource("Sitemap.Manufacturers");
-                    var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+                    var manufacturersGroupTitle = await _localizationService.GetResource("Sitemap.Manufacturers");
+                    var manufacturers = await _manufacturerService.GetAllManufacturers(storeId: (await _storeContext.GetCurrentStore()).Id);
                     model.Items.AddRange(manufacturers.Select(manufacturer => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = manufacturersGroupTitle,
-                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                        Url = urlHelper.RouteUrl("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) })
+                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name).Result,
+                        Url = urlHelper.RouteUrl("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer).Result })
                     }));
                 }
 
                 //products
                 if (_sitemapSettings.SitemapIncludeProducts)
                 {
-                    var productsGroupTitle = _localizationService.GetResource("Sitemap.Products");
-                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, visibleIndividuallyOnly: true);
+                    var productsGroupTitle = await _localizationService.GetResource("Sitemap.Products");
+                    var products = await _productService.SearchProducts(0, storeId: (await _storeContext.GetCurrentStore()).Id, visibleIndividuallyOnly: true);
                     model.Items.AddRange(products.Select(product => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productsGroupTitle,
-                        Name = _localizationService.GetLocalized(product, x => x.Name),
-                        Url = urlHelper.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
+                        Name = _localizationService.GetLocalized(product, x => x.Name).Result,
+                        Url = urlHelper.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product).Result })
                     }));
                 }
 
                 //product tags
                 if (_sitemapSettings.SitemapIncludeProductTags)
                 {
-                    var productTagsGroupTitle = _localizationService.GetResource("Sitemap.ProductTags");
-                    var productTags = _productTagService.GetAllProductTags();
+                    var productTagsGroupTitle = await _localizationService.GetResource("Sitemap.ProductTags");
+                    var productTags = await _productTagService.GetAllProductTags();
                     model.Items.AddRange(productTags.Select(productTag => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productTagsGroupTitle,
-                        Name = _localizationService.GetLocalized(productTag, x => x.Name),
-                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) })
+                        Name = _localizationService.GetLocalized(productTag, x => x.Name).Result,
+                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag).Result })
                     }));
                 }
 
@@ -726,14 +727,14 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
-        public virtual string PrepareSitemapXml(int? id)
+        public virtual async Task<string> PrepareSitemapXml(int? id)
         {
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey, id,
-                _workContext.WorkingLanguage,
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                _storeContext.CurrentStore);
+                await _workContext.GetWorkingLanguage(),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _storeContext.GetCurrentStore());
 
-            var siteMap = _staticCacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(id));
+            var siteMap = await _staticCacheManager.Get(cacheKey, async () => await _sitemapGenerator.Generate(id));
 
             return siteMap;
         }
@@ -742,18 +743,18 @@ namespace Nop.Web.Factories
         /// Prepare the store theme selector model
         /// </summary>
         /// <returns>Store theme selector model</returns>
-        public virtual StoreThemeSelectorModel PrepareStoreThemeSelectorModel()
+        public virtual async Task<StoreThemeSelectorModel> PrepareStoreThemeSelectorModel()
         {
             var model = new StoreThemeSelectorModel();
 
-            var currentTheme = _themeProvider.GetThemeBySystemName(_themeContext.WorkingThemeName);
+            var currentTheme = await _themeProvider.GetThemeBySystemName(await _themeContext.GetWorkingThemeName());
             model.CurrentStoreTheme = new StoreThemeModel
             {
                 Name = currentTheme?.SystemName,
                 Title = currentTheme?.FriendlyName
             };
 
-            model.AvailableStoreThemes = _themeProvider.GetThemes().Select(x => new StoreThemeModel
+            model.AvailableStoreThemes = (await _themeProvider.GetThemes()).Select(x => new StoreThemeModel
             {
                 Name = x.SystemName,
                 Title = x.FriendlyName
@@ -766,21 +767,21 @@ namespace Nop.Web.Factories
         /// Prepare the favicon model
         /// </summary>
         /// <returns>Favicon model</returns>
-        public virtual FaviconAndAppIconsModel PrepareFaviconAndAppIconsModel()
+        public virtual Task<FaviconAndAppIconsModel> PrepareFaviconAndAppIconsModel()
         {
             var model = new FaviconAndAppIconsModel
             {
                 HeadCode = _commonSettings.FaviconAndAppIconsHeadCode
             };
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
         /// Get robots.txt file
         /// </summary>
         /// <returns>Robots.txt file as string</returns>
-        public virtual string PrepareRobotsTextFile()
+        public virtual async Task<string> PrepareRobotsTextFile()
         {
             var sb = new StringBuilder();
 
@@ -880,21 +881,21 @@ namespace Nop.Web.Factories
                     if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     {
                         //URLs are localizable. Append SEO code
-                        foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                        foreach (var language in await _languageService.GetAllLanguages(storeId: (await _storeContext.GetCurrentStore()).Id))
                         {
-                            sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _webHelper.GetStoreLocation(), language.UniqueSeoCode);
+                            sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", await _webHelper.GetStoreLocation(), language.UniqueSeoCode);
                             sb.Append(newLine);
                         }
                     }
                     else
                     {
                         //localizable paths (without SEO code)
-                        sb.AppendFormat("Sitemap: {0}sitemap.xml", _webHelper.GetStoreLocation());
+                        sb.AppendFormat("Sitemap: {0}sitemap.xml", await _webHelper.GetStoreLocation());
                         sb.Append(newLine);
                     }
                 }
                 //host
-                sb.AppendFormat("Host: {0}", _webHelper.GetStoreLocation());
+                sb.AppendFormat("Host: {0}", await _webHelper.GetStoreLocation());
                 sb.Append(newLine);
 
                 //usual paths
@@ -913,7 +914,7 @@ namespace Nop.Web.Factories
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     //URLs are localizable. Append SEO code
-                    foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                    foreach (var language in await _languageService.GetAllLanguages(storeId: (await _storeContext.GetCurrentStore()).Id))
                     {
                         foreach (var path in localizableDisallowPaths)
                         {
@@ -927,7 +928,7 @@ namespace Nop.Web.Factories
                 var robotsAdditionsFile = _fileProvider.Combine(_fileProvider.MapPath("~/"), "robots.additions.txt");
                 if (_fileProvider.FileExists(robotsAdditionsFile))
                 {
-                    var robotsFileContent = _fileProvider.ReadAllText(robotsAdditionsFile, Encoding.UTF8);
+                    var robotsFileContent = await _fileProvider.ReadAllText(robotsAdditionsFile, Encoding.UTF8);
                     sb.Append(robotsFileContent);
                 }
             }

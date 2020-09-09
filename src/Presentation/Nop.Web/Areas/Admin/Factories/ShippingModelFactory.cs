@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
@@ -136,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipping provider search model</param>
         /// <returns>Shipping provider search model</returns>
-        public virtual ShippingProviderSearchModel PrepareShippingProviderSearchModel(ShippingProviderSearchModel searchModel)
+        public virtual Task<ShippingProviderSearchModel> PrepareShippingProviderSearchModel(ShippingProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -144,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipping provider search model</param>
         /// <returns>Shipping provider list model</returns>
-        public virtual ShippingProviderListModel PrepareShippingProviderListModel(ShippingProviderSearchModel searchModel)
+        public virtual Task<ShippingProviderListModel> PrepareShippingProviderListModel(ShippingProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -177,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Pickup point provider search model</param>
         /// <returns>Pickup point provider search model</returns>
-        public virtual PickupPointProviderSearchModel PreparePickupPointProviderSearchModel(PickupPointProviderSearchModel searchModel)
+        public virtual Task<PickupPointProviderSearchModel> PreparePickupPointProviderSearchModel(PickupPointProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -193,7 +194,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Pickup point provider search model</param>
         /// <returns>Pickup point provider list model</returns>
-        public virtual PickupPointProviderListModel PreparePickupPointProviderListModel(PickupPointProviderSearchModel searchModel)
+        public virtual Task<PickupPointProviderListModel> PreparePickupPointProviderListModel(PickupPointProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -226,7 +227,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -234,7 +235,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipping method search model</param>
         /// <returns>Shipping method search model</returns>
-        public virtual ShippingMethodSearchModel PrepareShippingMethodSearchModel(ShippingMethodSearchModel searchModel)
+        public virtual Task<ShippingMethodSearchModel> PrepareShippingMethodSearchModel(ShippingMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -242,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -250,13 +251,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipping method search model</param>
         /// <returns>Shipping method list model</returns>
-        public virtual ShippingMethodListModel PrepareShippingMethodListModel(ShippingMethodSearchModel searchModel)
+        public virtual async Task<ShippingMethodListModel> PrepareShippingMethodListModel(ShippingMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping methods
-            var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
+            var shippingMethods = (await _shippingService.GetAllShippingMethods()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ShippingMethodListModel().PrepareToGrid(searchModel, shippingMethods, () =>
@@ -274,7 +275,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="shippingMethod">Shipping method</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Shipping method model</returns>
-        public virtual ShippingMethodModel PrepareShippingMethodModel(ShippingMethodModel model,
+        public virtual async Task<ShippingMethodModel> PrepareShippingMethodModel(ShippingMethodModel model,
             ShippingMethod shippingMethod, bool excludeProperties = false)
         {
             Action<ShippingMethodLocalizedModel, int> localizedModelConfiguration = null;
@@ -285,16 +286,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= shippingMethod.ToModel<ShippingMethodModel>();
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(shippingMethod, entity => entity.Name, languageId, false, false);
-                    locale.Description = _localizationService.GetLocalized(shippingMethod, entity => entity.Description, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalized(shippingMethod, entity => entity.Name, languageId, false, false);
+                    locale.Description = await _localizationService.GetLocalized(shippingMethod, entity => entity.Description, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
@@ -304,7 +305,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Dates and ranges search model</param>
         /// <returns>Dates and ranges search model</returns>
-        public virtual DatesRangesSearchModel PrepareDatesRangesSearchModel(DatesRangesSearchModel searchModel)
+        public virtual Task<DatesRangesSearchModel> PrepareDatesRangesSearchModel(DatesRangesSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -313,7 +314,7 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareDeliveryDateSearchModel(searchModel.DeliveryDateSearchModel);
             PrepareProductAvailabilityRangeSearchModel(searchModel.ProductAvailabilityRangeSearchModel);
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -321,13 +322,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Delivery date search model</param>
         /// <returns>Delivery date list model</returns>
-        public virtual DeliveryDateListModel PrepareDeliveryDateListModel(DeliveryDateSearchModel searchModel)
+        public virtual async Task<DeliveryDateListModel> PrepareDeliveryDateListModel(DeliveryDateSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get delivery dates
-            var deliveryDates = _dateRangeService.GetAllDeliveryDates().ToPagedList(searchModel);
+            var deliveryDates = (await _dateRangeService.GetAllDeliveryDates()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new DeliveryDateListModel().PrepareToGrid(searchModel, deliveryDates, () =>
@@ -346,7 +347,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="deliveryDate">Delivery date</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Delivery date model</returns>
-        public virtual DeliveryDateModel PrepareDeliveryDateModel(DeliveryDateModel model, DeliveryDate deliveryDate, bool excludeProperties = false)
+        public virtual async Task<DeliveryDateModel> PrepareDeliveryDateModel(DeliveryDateModel model, DeliveryDate deliveryDate, bool excludeProperties = false)
         {
             Action<DeliveryDateLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -356,15 +357,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= deliveryDate.ToModel<DeliveryDateModel>();
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(deliveryDate, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalized(deliveryDate, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
@@ -374,13 +375,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product availability range search model</param>
         /// <returns>Product availability range list model</returns>
-        public virtual ProductAvailabilityRangeListModel PrepareProductAvailabilityRangeListModel(ProductAvailabilityRangeSearchModel searchModel)
+        public virtual async Task<ProductAvailabilityRangeListModel> PrepareProductAvailabilityRangeListModel(ProductAvailabilityRangeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product availability ranges
-            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges().ToPagedList(searchModel);
+            var productAvailabilityRanges = (await _dateRangeService.GetAllProductAvailabilityRanges()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductAvailabilityRangeListModel().PrepareToGrid(searchModel, productAvailabilityRanges, () =>
@@ -399,7 +400,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAvailabilityRange">Product availability range</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product availability range model</returns>
-        public virtual ProductAvailabilityRangeModel PrepareProductAvailabilityRangeModel(ProductAvailabilityRangeModel model,
+        public virtual async Task<ProductAvailabilityRangeModel> PrepareProductAvailabilityRangeModel(ProductAvailabilityRangeModel model,
             ProductAvailabilityRange productAvailabilityRange, bool excludeProperties = false)
         {
             Action<ProductAvailabilityRangeLocalizedModel, int> localizedModelConfiguration = null;
@@ -410,15 +411,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= productAvailabilityRange.ToModel<ProductAvailabilityRangeModel>();
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(productAvailabilityRange, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalized(productAvailabilityRange, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
@@ -428,7 +429,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Warehouse search model</param>
         /// <returns>Warehouse search model</returns>
-        public virtual WarehouseSearchModel PrepareWarehouseSearchModel(WarehouseSearchModel searchModel)
+        public virtual Task<WarehouseSearchModel> PrepareWarehouseSearchModel(WarehouseSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -436,7 +437,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -444,14 +445,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Warehouse search model</param>
         /// <returns>Warehouse list model</returns>
-        public virtual WarehouseListModel PrepareWarehouseListModel(WarehouseSearchModel searchModel)
+        public virtual async Task<WarehouseListModel> PrepareWarehouseListModel(WarehouseSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get warehouses
-            var warehouses = _shippingService.GetAllWarehouses(
-                name : searchModel.SearchName)
+            var warehouses = (await _shippingService.GetAllWarehouses(
+                name : searchModel.SearchName))
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -471,7 +472,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="warehouse">Warehouse</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Warehouse model</returns>
-        public virtual WarehouseModel PrepareWarehouseModel(WarehouseModel model, Warehouse warehouse, bool excludeProperties = false)
+        public virtual async Task<WarehouseModel> PrepareWarehouseModel(WarehouseModel model, Warehouse warehouse, bool excludeProperties = false)
         {
             if (warehouse != null)
             {
@@ -483,7 +484,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare address model
-            var address = _addressService.GetAddressById(warehouse?.AddressId ?? 0);
+            var address = await _addressService.GetAddressById(warehouse?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
             PrepareAddressModel(model.Address, address);
@@ -496,21 +497,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Shipping method restriction model</param>
         /// <returns>Shipping method restriction model</returns>
-        public virtual ShippingMethodRestrictionModel PrepareShippingMethodRestrictionModel(ShippingMethodRestrictionModel model)
+        public virtual async Task<ShippingMethodRestrictionModel> PrepareShippingMethodRestrictionModel(ShippingMethodRestrictionModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var countries = _countryService.GetAllCountries(showHidden: true);
+            var countries = await _countryService.GetAllCountries(showHidden: true);
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id).Result?.Count ?? 0;
 
                 return countryModel;
             }).ToList();
 
-            foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
+            foreach (var shippingMethod in await _shippingService.GetAllShippingMethods())
             {
                 model.AvailableShippingMethods.Add(shippingMethod.ToModel<ShippingMethodModel>());
                 foreach (var country in countries)
@@ -518,7 +519,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!model.Restricted.ContainsKey(country.Id))
                         model.Restricted[country.Id] = new Dictionary<int, bool>();
 
-                    model.Restricted[country.Id][shippingMethod.Id] = _shippingService.CountryRestrictionExists(shippingMethod, country.Id);
+                    model.Restricted[country.Id][shippingMethod.Id] = await _shippingService.CountryRestrictionExists(shippingMethod, country.Id);
                 }
             }
 

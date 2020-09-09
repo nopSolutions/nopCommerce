@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
@@ -26,15 +27,15 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)
+        public async Task<IViewComponentResult> Invoke(int productId, int? productThumbPictureSize)
         {
             //load and cache report
-            var productIds = _productService.GetRelatedProductsByProductId1(productId).Select(x => x.ProductId2).ToArray();
+            var productIds = (await _productService.GetRelatedProductsByProductId1(productId)).Select(x => x.ProductId2).ToArray();
 
             //load products
-            var products = _productService.GetProductsByIds(productIds);
+            var products = await _productService.GetProductsByIds(productIds);
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
             //visible individually
@@ -43,7 +44,7 @@ namespace Nop.Web.Components
             if (!products.Any())
                 return Content(string.Empty);
 
-            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

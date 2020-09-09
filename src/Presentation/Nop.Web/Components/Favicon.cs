@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -13,9 +14,9 @@ namespace Nop.Web.Components
             _commonModelFactory = commonModelFactory;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> Invoke()
         {
-            var model = _commonModelFactory.PrepareFaviconAndAppIconsModel();
+            var model = await _commonModelFactory.PrepareFaviconAndAppIconsModel();
             if (string.IsNullOrEmpty(model.HeadCode))
                 return Content("");
             return View(model);

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
@@ -48,17 +49,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult Index()
+        public virtual async Task<IActionResult> Index()
         {
             //display a warning to a store owner if there are some error
-            if (_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
             {
-                var warnings = _commonModelFactory.PrepareSystemWarningModels();
+                var warnings = await _commonModelFactory.PrepareSystemWarningModels();
                 if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
                                             warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
                                             warning.Level == SystemWarningLevel.Warning))
                     _notificationService.WarningNotification(
-                        string.Format(_localizationService.GetResource("Admin.System.Warnings.Errors"),
+                        string.Format(await _localizationService.GetResource("Admin.System.Warnings.Errors"),
                         Url.Action("Warnings", "Common")),
                         //do not encode URLs
                         false);
@@ -71,10 +72,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult NopCommerceNewsHideAdv()
+        public virtual async Task<IActionResult> NopCommerceNewsHideAdv()
         {
             _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
-            _settingService.SaveSetting(_adminAreaSettings);
+            await _settingService.SaveSetting(_adminAreaSettings);
 
             return Content("Setting changed");
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -32,14 +33,14 @@ namespace Nop.Web.Components
             _shippingSettings = shippingSettings;
         }
 
-        public IViewComponentResult Invoke(bool? prepareAndDisplayOrderReviewData)
+        public async Task<IViewComponentResult> Invoke(bool? prepareAndDisplayOrderReviewData)
         {
             if (!_shippingSettings.EstimateShippingCartPageEnabled)
                 return Content("");
 
-            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
 
-            var model = _shoppingCartModelFactory.PrepareEstimateShippingModel(cart);
+            var model = await _shoppingCartModelFactory.PrepareEstimateShippingModel(cart);
             if (!model.Enabled)
                 return Content("");
 

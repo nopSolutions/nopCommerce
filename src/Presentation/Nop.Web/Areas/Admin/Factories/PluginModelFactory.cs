@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -148,16 +149,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Plugin search model</param>
         /// <returns>Plugin search model</returns>
-        public virtual PluginSearchModel PreparePluginSearchModel(PluginSearchModel searchModel)
+        public virtual async Task<PluginSearchModel> PreparePluginSearchModel(PluginSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available load plugin modes
-            _baseAdminModelFactory.PrepareLoadPluginModes(searchModel.AvailableLoadModes, false);
+            await _baseAdminModelFactory.PrepareLoadPluginModes(searchModel.AvailableLoadModes, false);
 
             //prepare available groups
-            _baseAdminModelFactory.PreparePluginGroups(searchModel.AvailableGroups);
+            await _baseAdminModelFactory.PreparePluginGroups(searchModel.AvailableGroups);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -172,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Plugin search model</param>
         /// <returns>Plugin list model</returns>
-        public virtual PluginListModel PreparePluginListModel(PluginSearchModel searchModel)
+        public virtual Task<PluginListModel> PreparePluginListModel(PluginSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -206,7 +207,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -216,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Plugin model</returns>
-        public virtual PluginModel PreparePluginModel(PluginModel model, PluginDescriptor pluginDescriptor, bool excludeProperties = false)
+        public virtual async Task<PluginModel> PreparePluginModel(PluginModel model, PluginDescriptor pluginDescriptor, bool excludeProperties = false)
         {
             Action<PluginLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -233,21 +234,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     PrepareInstalledPluginModel(model, plugin);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.FriendlyName = _localizationService.GetLocalizedFriendlyName(plugin, languageId, false);
+                    locale.FriendlyName = await _localizationService.GetLocalizedFriendlyName(plugin, languageId, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             //prepare model customer roles
-            _aclSupportedModelFactory.PrepareModelCustomerRoles(model);
+            await _aclSupportedModelFactory.PrepareModelCustomerRoles(model);
 
             //prepare available stores
-            _storeMappingSupportedModelFactory.PrepareModelStores(model);
+            await _storeMappingSupportedModelFactory.PrepareModelStores(model);
 
             return model;
         }
@@ -257,14 +258,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model of plugins of the official feed</param>
         /// <returns>Search model of plugins of the official feed</returns>
-        public virtual OfficialFeedPluginSearchModel PrepareOfficialFeedPluginSearchModel(OfficialFeedPluginSearchModel searchModel)
+        public virtual async Task<OfficialFeedPluginSearchModel> PrepareOfficialFeedPluginSearchModel(OfficialFeedPluginSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available versions
-            var pluginVersions = _officialFeedManager.GetVersions();
-            searchModel.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var pluginVersions = await _officialFeedManager.GetVersions();
+            searchModel.AvailableVersions.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var version in pluginVersions)
                 searchModel.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
 
@@ -278,8 +279,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available plugin categories
-            var pluginCategories = _officialFeedManager.GetCategories();
-            searchModel.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var pluginCategories = await _officialFeedManager.GetCategories();
+            searchModel.AvailableCategories.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var pluginCategory in pluginCategories)
             {
                 var pluginCategoryNames = new List<string>();
@@ -303,17 +304,17 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "0",
-                Text = _localizationService.GetResource("Admin.Common.All")
+                Text = await _localizationService.GetResource("Admin.Common.All")
             });
             searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "10",
-                Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free")
+                Text = await _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free")
             });
             searchModel.AvailablePrices.Add(new SelectListItem
             {
                 Value = "20",
-                Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial")
+                Text = await _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial")
             });
 
             //prepare page parameters
@@ -327,13 +328,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Search model of plugins of the official feed</param>
         /// <returns>List model of plugins of the official feed</returns>
-        public virtual OfficialFeedPluginListModel PrepareOfficialFeedPluginListModel(OfficialFeedPluginSearchModel searchModel)
+        public virtual async Task<OfficialFeedPluginListModel> PrepareOfficialFeedPluginListModel(OfficialFeedPluginSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get plugins
-            var plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
+            var plugins = await _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
                 versionId: searchModel.SearchVersionId,
                 price: searchModel.SearchPriceId,
                 searchTerm: searchModel.SearchName,
@@ -362,14 +363,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="pluginsConfigurationModel">Plugins configuration model</param>
         /// <returns>Plugins configuration model</returns>
-        public virtual PluginsConfigurationModel PreparePluginsConfigurationModel(PluginsConfigurationModel pluginsConfigurationModel)
+        public virtual async Task<PluginsConfigurationModel> PreparePluginsConfigurationModel(PluginsConfigurationModel pluginsConfigurationModel)
         {
             if (pluginsConfigurationModel == null)
                 throw new ArgumentNullException(nameof(pluginsConfigurationModel));
 
             //prepare nested search models
-            PreparePluginSearchModel(pluginsConfigurationModel.PluginsLocal);
-            PrepareOfficialFeedPluginSearchModel(pluginsConfigurationModel.AllPluginsAndThemes);
+            await PreparePluginSearchModel(pluginsConfigurationModel.PluginsLocal);
+            await PrepareOfficialFeedPluginSearchModel(pluginsConfigurationModel.AllPluginsAndThemes);
 
             return pluginsConfigurationModel;
         }
@@ -378,13 +379,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare plugin models for admin navigation
         /// </summary>
         /// <returns>List of models</returns>
-        public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
+        public virtual async Task<IList<AdminNavigationPluginModel>> PrepareAdminNavigationPluginModels()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer);
-            return _staticCacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, await _workContext.GetCurrentCustomer());
+            return await _staticCacheManager.Get(cacheKey, async () =>
             {
                 //get installed plugins
-                return _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.InstalledOnly, _workContext.CurrentCustomer)
+                return _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.InstalledOnly, await _workContext.GetCurrentCustomer())
                     .Where(plugin => plugin.ShowInPluginsList)
                     .Select(plugin => new AdminNavigationPluginModel
                     {

@@ -12,7 +12,7 @@
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage();
 
-    var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowRoxyFileman = await permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
 
     var random = CommonHelper.GenerateRandomInteger();
 

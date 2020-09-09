@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -72,62 +73,62 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _productReviewModelFactory.PrepareProductReviewSearchModel(new ProductReviewSearchModel());
+            var model = await _productReviewModelFactory.PrepareProductReviewSearchModel(new ProductReviewSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(ProductReviewSearchModel searchModel)
+        public virtual async Task<IActionResult> List(ProductReviewSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _productReviewModelFactory.PrepareProductReviewListModel(searchModel);
+            var model = await _productReviewModelFactory.PrepareProductReviewListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //try to get a product review with the specified id
-            var productReview = _productService.GetProductReviewById(id);
+            var productReview = await _productService.GetProductReviewById(id);
             if (productReview == null)
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
+            if (await _workContext.GetCurrentVendor() != null && (await _productService.GetProductById(productReview.ProductId)).VendorId != (await _workContext.GetCurrentVendor()).Id)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _productReviewModelFactory.PrepareProductReviewModel(null, productReview);
+            var model = await _productReviewModelFactory.PrepareProductReviewModel(null, productReview);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(ProductReviewModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(ProductReviewModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //try to get a product review with the specified id
-            var productReview = _productService.GetProductReviewById(model.Id);
+            var productReview = await _productService.GetProductReviewById(model.Id);
             if (productReview == null)
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && _productService.GetProductById(productReview.ProductId).VendorId != _workContext.CurrentVendor.Id)
+            if (await _workContext.GetCurrentVendor() != null && (await _productService.GetProductById(productReview.ProductId)).VendorId != (await _workContext.GetCurrentVendor()).Id)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -135,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var previousIsApproved = productReview.IsApproved;
 
                 //vendor can edit "Reply text" only
-                var isLoggedInAsVendor = _workContext.CurrentVendor != null;
+                var isLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
                 if (!isLoggedInAsVendor)
                 {
                     productReview.Title = model.Title;
@@ -149,173 +150,173 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (productReview.IsApproved && !string.IsNullOrEmpty(productReview.ReplyText)
                     && _catalogSettings.NotifyCustomerAboutProductReviewReply && !productReview.CustomerNotifiedOfReply)
                 {
-                    var customerLanguageId = _genericAttributeService.GetAttribute<Customer, int>(productReview.CustomerId,
+                    var customerLanguageId = await _genericAttributeService.GetAttribute<Customer, int>(productReview.CustomerId,
                         NopCustomerDefaults.LanguageIdAttribute, productReview.StoreId);
 
-                    var queuedEmailIds = _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
+                    var queuedEmailIds = await _workflowMessageService.SendProductReviewReplyCustomerNotificationMessage(productReview, customerLanguageId);
                     if (queuedEmailIds.Any())
                         productReview.CustomerNotifiedOfReply = true;
                 }
 
-                _productService.UpdateProductReview(productReview);
+                await _productService.UpdateProductReview(productReview);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditProductReview",
-                   string.Format(_localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id), productReview);
+                await _customerActivityService.InsertActivity("EditProductReview",
+                   string.Format(await _localizationService.GetResource("ActivityLog.EditProductReview"), productReview.Id), productReview);
 
                 //vendor can edit "Reply text" only
                 if (!isLoggedInAsVendor)
                 {
-                    var product = _productService.GetProductById(productReview.ProductId);
+                    var product = await _productService.GetProductById(productReview.ProductId);
                     //update product totals
-                    _productService.UpdateProductReviewTotals(product);
+                    await _productService.UpdateProductReviewTotals(product);
 
                     //raise event (only if it wasn't approved before and is approved now)
                     if (!previousIsApproved && productReview.IsApproved)
-                        _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                        await _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
                 }
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = productReview.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _productReviewModelFactory.PrepareProductReviewModel(model, productReview, true);
+            model = await _productReviewModelFactory.PrepareProductReviewModel(model, productReview, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //try to get a product review with the specified id
-            var productReview = _productService.GetProductReviewById(id);
+            var productReview = await _productService.GetProductReviewById(id);
             if (productReview == null)
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (await _workContext.GetCurrentVendor() != null)
                 return RedirectToAction("List");
 
-            _productService.DeleteProductReview(productReview);
+            await _productService.DeleteProductReview(productReview);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteProductReview",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id), productReview);
+            await _customerActivityService.InsertActivity("DeleteProductReview",
+                string.Format(await _localizationService.GetResource("ActivityLog.DeleteProductReview"), productReview.Id), productReview);
 
-            var product = _productService.GetProductById(productReview.ProductId);
+            var product = await _productService.GetProductById(productReview.ProductId);
 
             //update product totals
-            _productService.UpdateProductReviewTotals(product);
+            await _productService.UpdateProductReviewTotals(product);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.ProductReviews.Deleted"));
 
             return RedirectToAction("List");
         }
 
         [HttpPost]
-        public virtual IActionResult ApproveSelected(ICollection<int> selectedIds)
+        public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (await _workContext.GetCurrentVendor() != null)
                 return RedirectToAction("List");
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
             //filter not approved reviews
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => !review.IsApproved);
+            var productReviews = (await _productService.GetProducReviewsByIds(selectedIds.ToArray())).Where(review => !review.IsApproved);
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = true;
-                _productService.UpdateProductReview(productReview);
+                await _productService.UpdateProductReview(productReview);
 
-                var product = _productService.GetProductById(productReview.ProductId);
+                var product = await _productService.GetProductById(productReview.ProductId);
 
                 //update product totals
-                _productService.UpdateProductReviewTotals(product);
+                await _productService.UpdateProductReviewTotals(product);
 
                 //raise event 
-                _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                await _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
             }
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult DisapproveSelected(ICollection<int> selectedIds)
+        public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (await _workContext.GetCurrentVendor() != null)
                 return RedirectToAction("List");
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
             //filter approved reviews
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => review.IsApproved);
+            var productReviews = (await _productService.GetProducReviewsByIds(selectedIds.ToArray())).Where(review => review.IsApproved);
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = false;
-                _productService.UpdateProductReview(productReview);
+                await _productService.UpdateProductReview(productReview);
 
-                var product = _productService.GetProductById(productReview.ProductId);
+                var product = await _productService.GetProductById(productReview.ProductId);
 
                 //update product totals
-                _productService.UpdateProductReviewTotals(product);
+                await _productService.UpdateProductReviewTotals(product);
             }
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null)
+            if (await _workContext.GetCurrentVendor() != null)
                 return RedirectToAction("List");
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
-            var products = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
+            var productReviews = await _productService.GetProducReviewsByIds(selectedIds.ToArray());
+            var products = await _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
 
-            _productService.DeleteProductReviews(productReviews);
+            await _productService.DeleteProductReviews(productReviews);
 
             //update product totals
             foreach (var product in products)
             {
-                _productService.UpdateProductReviewTotals(product);
+                await _productService.UpdateProductReviewTotals(product);
             }
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
+        public virtual async Task<IActionResult> ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedDataTablesJson();
-            var productReview = _productService.GetProductReviewById(searchModel.ProductReviewId)
+            var productReview = await _productService.GetProductReviewById(searchModel.ProductReviewId)
                 ?? throw new ArgumentException("No product review found with the specified id");
 
             //prepare model
-            var model = _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModel(searchModel, productReview);
+            var model = await _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModel(searchModel, productReview);
 
             return Json(model);
         }

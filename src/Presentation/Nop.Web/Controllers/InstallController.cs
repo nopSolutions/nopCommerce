@@ -147,13 +147,13 @@ namespace Nop.Web.Controllers
                 if (string.IsNullOrEmpty(connectionString))
                     throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
 
-                DataSettingsManager.SaveSettings(new DataSettings
+                await DataSettingsManager.SaveSettings(new DataSettings
                 {
                     DataProvider = model.DataProvider,
                     ConnectionString = connectionString
                 }, _fileProvider);
 
-                DataSettingsManager.LoadSettings(reloadSettings: true);
+                await DataSettingsManager.LoadSettings(reloadSettings: true);
 
                 if (model.CreateDatabaseIfNotExists)
                 {
@@ -177,10 +177,10 @@ namespace Nop.Web.Controllers
 
                 //now resolve installation service
                 var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                installationService.InstallRequiredData(model.AdminEmail, model.AdminPassword);
+                await installationService.InstallRequiredData(model.AdminEmail, model.AdminPassword);
 
                 if (model.InstallSampleData)
-                    installationService.InstallSampleData(model.AdminEmail);
+                    await installationService.InstallSampleData(model.AdminEmail);
 
                 //prepare plugins to install
                 var pluginService = EngineContext.Current.Resolve<IPluginService>();
@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var plugin in plugins)
                 {
-                    pluginService.PreparePluginToInstall(plugin.SystemName, checkDependencies: false);
+                    await pluginService.PreparePluginToInstall(plugin.SystemName, checkDependencies: false);
                 }
 
                 //register default permissions
@@ -209,7 +209,7 @@ namespace Nop.Web.Controllers
                 foreach (var providerType in permissionProviders)
                 {
                     var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                    EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                    await EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
                 }
 
                 //installation completed notification
@@ -230,10 +230,10 @@ namespace Nop.Web.Controllers
                 DataSettingsManager.ResetCache();
 
                 var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-                staticCacheManager.Clear();
+                await staticCacheManager.Clear();
 
                 //clear provider settings if something got wrong
-                DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
+                await DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
 
                 ModelState.AddModelError(string.Empty, string.Format(_locService.GetResource("SetupFailed"), exception.Message));
             }
@@ -262,13 +262,13 @@ namespace Nop.Web.Controllers
             return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
         }
 
-        public virtual IActionResult RestartApplication()
+        public virtual async Task<IActionResult> RestartApplication()
         {
             if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("Homepage");
 
             //restart application
-            EngineContext.Current.Resolve<IWebHelper>().RestartAppDomain();
+            await EngineContext.Current.Resolve<IWebHelper>().RestartAppDomain();
 
             return new EmptyResult();
         }

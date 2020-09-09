@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Services.Cms;
@@ -40,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
         /// <returns>Widget search model</returns>
-        public virtual WidgetSearchModel PrepareWidgetSearchModel(WidgetSearchModel searchModel)
+        public virtual Task<WidgetSearchModel> PrepareWidgetSearchModel(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -48,7 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
         /// <returns>Widget list model</returns>
-        public virtual WidgetListModel PrepareWidgetListModel(WidgetSearchModel searchModel)
+        public virtual Task<WidgetListModel> PrepareWidgetListModel(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -82,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -91,10 +92,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
         /// <returns>List of render widget models</returns>
-        public virtual IList<RenderWidgetModel> PrepareRenderWidgetModels(string widgetZone, object additionalData = null)
+        public virtual async Task<IList<RenderWidgetModel>> PrepareRenderWidgetModels(string widgetZone, object additionalData = null)
         {
             //get active widgets by widget zone
-            var widgets = _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, widgetZone: widgetZone);
+            var widgets = _widgetPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomer(), widgetZone: widgetZone);
 
             //prepare models
             var models = widgets.Select(widget => new RenderWidgetModel

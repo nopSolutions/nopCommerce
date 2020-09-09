@@ -14,7 +14,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "CurrentCartsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
@@ -217,7 +217,7 @@
                                 {
                                     Title = T("Admin.CurrentCarts.Store").Text,
                                     Width = "150",
-                                    Visible = storeService.GetAllStores().Count > 1
+                                    Visible = (await storeService.GetAllStores()).Count > 1
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
                                 {

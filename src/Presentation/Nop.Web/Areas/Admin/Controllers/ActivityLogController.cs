@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
@@ -43,9 +44,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult ActivityTypes()
+        public virtual async Task<IActionResult> ActivityTypes()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //prepare model
@@ -55,13 +56,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("SaveTypes")]
-        public virtual IActionResult SaveTypes(IFormCollection form)
+        public virtual async Task<IActionResult> SaveTypes(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //activity log
-            _customerActivityService.InsertActivity("EditActivityLogTypes", _localizationService.GetResource("ActivityLog.EditActivityLogTypes"));
+            await _customerActivityService.InsertActivity("EditActivityLogTypes", await _localizationService.GetResource("ActivityLog.EditActivityLogTypes"));
 
             //get identifiers of selected activity types
             var selectedActivityTypesIds = form["checkbox_activity_types"]
@@ -70,21 +71,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                 .Distinct().ToList();
 
             //update activity types
-            var activityTypes = _customerActivityService.GetAllActivityTypes();
+            var activityTypes = await _customerActivityService.GetAllActivityTypes();
             foreach (var activityType in activityTypes)
             {
                 activityType.Enabled = selectedActivityTypesIds.Contains(activityType.Id);
-                _customerActivityService.UpdateActivityType(activityType);
+                await _customerActivityService.UpdateActivityType(activityType);
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.ActivityLogType.Updated"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.ActivityLogType.Updated"));
 
             return RedirectToAction("ActivityTypes");
         }
 
-        public virtual IActionResult ActivityLogs()
+        public virtual async Task<IActionResult> ActivityLogs()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //prepare model
@@ -94,9 +95,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ListLogs(ActivityLogSearchModel searchModel)
+        public virtual async Task<IActionResult> ListLogs(ActivityLogSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
@@ -106,34 +107,34 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ActivityLogDelete(int id)
+        public virtual async Task<IActionResult> ActivityLogDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             //try to get a log item with the specified id
-            var logItem = _customerActivityService.GetActivityById(id)
+            var logItem = await _customerActivityService.GetActivityById(id)
                 ?? throw new ArgumentException("No activity log found with the specified id", nameof(id));
 
-            _customerActivityService.DeleteActivity(logItem);
+            await _customerActivityService.DeleteActivity(logItem);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteActivityLog",
-                _localizationService.GetResource("ActivityLog.DeleteActivityLog"), logItem);
+            await _customerActivityService.InsertActivity("DeleteActivityLog",
+                await _localizationService.GetResource("ActivityLog.DeleteActivityLog"), logItem);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public virtual IActionResult ClearAll()
+        public virtual async Task<IActionResult> ClearAll()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
-            _customerActivityService.ClearAllActivities();
+            await _customerActivityService.ClearAllActivities();
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteActivityLog", _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
+            await _customerActivityService.InsertActivity("DeleteActivityLog", await _localizationService.GetResource("ActivityLog.DeleteActivityLog"));
 
             return RedirectToAction("ActivityLogs");
         }

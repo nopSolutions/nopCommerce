@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -47,22 +48,22 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public IViewComponentResult Invoke(int? productThumbPictureSize)
+        public async Task<IViewComponentResult> Invoke(int? productThumbPictureSize)
         {
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
 
             //load and cache report
-            var report = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore),
-                () => _orderReportService.BestSellersReport(
-                        storeId: _storeContext.CurrentStore.Id,
-                        pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
+            var report = await _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, await _storeContext.GetCurrentStore()),
+                async () => (await _orderReportService.BestSellersReport(
+                        storeId: (await _storeContext.GetCurrentStore()).Id,
+                        pageSize: _catalogSettings.NumberOfBestsellersOnHomepage))
                     .ToList());
 
             //load products
-            var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
+            var products = await _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
@@ -70,7 +71,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //prepare model
-            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -68,30 +69,30 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review search model</returns>
-        public virtual ProductReviewSearchModel PrepareProductReviewSearchModel(ProductReviewSearchModel searchModel)
+        public virtual async Task<ProductReviewSearchModel> PrepareProductReviewSearchModel(ProductReviewSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.All"),
+                Text = await _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.All"),
                 Value = "0"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
+                Text = await _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
+                Text = await _localizationService.GetResource("Admin.Catalog.ProductReviews.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
@@ -108,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review list model</returns>
-        public virtual ProductReviewListModel PrepareProductReviewListModel(ProductReviewSearchModel searchModel)
+        public virtual async Task<ProductReviewListModel> PrepareProductReviewListModel(ProductReviewSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -119,10 +120,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var createdToFromValue = !searchModel.CreatedOnTo.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
-            var vendorId = _workContext.CurrentVendor?.Id ?? 0;
+            var vendorId = (await _workContext.GetCurrentVendor())?.Id ?? 0;
 
             //get product reviews
-            var productReviews = _productService.GetAllProductReviews(showHidden: true,
+            var productReviews = await _productService.GetAllProductReviews(showHidden: true,
                 customerId: 0,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
@@ -145,10 +146,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     productReviewModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    productReviewModel.StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name;
-                    productReviewModel.ProductName = _productService.GetProductById(productReview.ProductId)?.Name;
-                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    productReviewModel.StoreName = _storeService.GetStoreById(productReview.StoreId).Result?.Name;
+                    productReviewModel.ProductName = _productService.GetProductById(productReview.ProductId).Result?.Name;
+                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId).Result is Customer customer && _customerService.IsRegistered(customer).Result
+                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
                     productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
@@ -166,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productReview">Product review</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product review model</returns>
-        public virtual ProductReviewModel PrepareProductReviewModel(ProductReviewModel model,
+        public virtual async Task<ProductReviewModel> PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties = false)
         {
             if (productReview != null)
@@ -175,15 +176,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= new ProductReviewModel
                 {
                     Id = productReview.Id,
-                    StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name,
+                    StoreName = (await _storeService.GetStoreById(productReview.StoreId))?.Name,
                     ProductId = productReview.ProductId,
-                    ProductName = _productService.GetProductById(productReview.ProductId)?.Name,
+                    ProductName = (await _productService.GetProductById(productReview.ProductId))?.Name,
                     CustomerId = productReview.CustomerId,
                     Rating = productReview.Rating
                 };
 
-                model.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
-                    ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                model.CustomerInfo = await _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && await _customerService.IsRegistered(customer)
+                    ? customer.Email : await _localizationService.GetResource("Admin.Customers.Guest");
 
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -196,10 +197,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 //prepare nested search model
-                PrepareProductReviewReviewTypeMappingSearchModel(model.ProductReviewReviewTypeMappingSearchModel, productReview);
+                await PrepareProductReviewReviewTypeMappingSearchModel(model.ProductReviewReviewTypeMappingSearchModel, productReview);
             }
 
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.IsLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
 
             return model;
         }
@@ -210,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product review mapping search model</param>
         /// <param name="productReview">Product</param>
         /// <returns>Product review mapping search model</returns>
-        public virtual ProductReviewReviewTypeMappingSearchModel PrepareProductReviewReviewTypeMappingSearchModel(ProductReviewReviewTypeMappingSearchModel searchModel,
+        public virtual async Task<ProductReviewReviewTypeMappingSearchModel> PrepareProductReviewReviewTypeMappingSearchModel(ProductReviewReviewTypeMappingSearchModel searchModel,
             ProductReview productReview)
         {
             if (searchModel == null)
@@ -221,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.ProductReviewId = productReview.Id;
 
-            searchModel.IsAnyReviewTypes = _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).Any();
+            searchModel.IsAnyReviewTypes = (await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id)).Any();
 
             //prepare page parameters
             searchModel.SetGridPageSize();            
@@ -235,7 +236,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product review and review type mapping search model</param>
         /// <param name="productReview">Product review</param>
         /// <returns>Product review and review type mapping list model</returns>
-        public virtual ProductReviewReviewTypeMappingListModel PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel, ProductReview productReview)
+        public virtual async Task<ProductReviewReviewTypeMappingListModel> PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel, ProductReview productReview)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -244,8 +245,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productReview));
 
             //get product review and review type mappings
-            var productReviewReviewTypeMappings = _reviewTypeService
-                .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).ToPagedList(searchModel);
+            var productReviewReviewTypeMappings = (await _reviewTypeService
+                .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new ProductReviewReviewTypeMappingListModel().PrepareToGrid(searchModel, productReviewReviewTypeMappings, () =>
@@ -258,12 +259,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     var reviewType =
-                        _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
+                        _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId).Result;
 
                     productReviewReviewTypeMappingModel.Name =
-                        _localizationService.GetLocalized(reviewType, entity => entity.Name);
+                        _localizationService.GetLocalized(reviewType, entity => entity.Name).Result;
                     productReviewReviewTypeMappingModel.Description =
-                        _localizationService.GetLocalized(reviewType, entity => entity.Description);
+                        _localizationService.GetLocalized(reviewType, entity => entity.Description).Result;
                     productReviewReviewTypeMappingModel.VisibleToAllCustomers =
                         reviewType.VisibleToAllCustomers;
 

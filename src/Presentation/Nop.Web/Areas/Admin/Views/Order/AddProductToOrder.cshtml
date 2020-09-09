@@ -9,7 +9,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "AddProductToOrderPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">

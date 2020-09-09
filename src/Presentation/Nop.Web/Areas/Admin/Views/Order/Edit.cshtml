@@ -9,16 +9,16 @@
 
 @{
     const string hideInfoBlockAttributeName = "OrderPage.HideInfoBlock";
-    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideInfoBlockAttributeName);
 
     const string hideBillingAndShippingBlockAttributeName = "OrderPage.HideBillingAndShippingBlock";
-    var hideBillingAndShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBillingAndShippingBlockAttributeName);
+    var hideBillingAndShippingBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideBillingAndShippingBlockAttributeName);
 
     const string hideProductsBlockAttributeName = "OrderPage.HideProductsBlock";
-    var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
+    var hideProductsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideProductsBlockAttributeName);
 
     const string hideNotesBlockAttributeName = "OrderPage.HideNotesBlock";
-    var hideNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideNotesBlockAttributeName);
+    var hideNotesBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideNotesBlockAttributeName);
 }
 
 <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -154,7 +155,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
         /// <param name="command">Catalog paging filtering command</param>
-        public virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        public virtual async Task PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException(nameof(pagingFilteringModel));
@@ -185,13 +186,13 @@ namespace Nop.Web.Factories
             command.OrderBy = pagingFilteringModel.OrderBy ?? orderedActiveSortingOptions.FirstOrDefault().Id;
 
             //prepare available model sorting options
-            var currentPageUrl = _webHelper.GetThisPageUrl(true);
+            var currentPageUrl = await _webHelper.GetThisPageUrl(true);
             foreach (var option in orderedActiveSortingOptions)
             {
                 pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                 {
-                    Text = _localizationService.GetLocalizedEnum((ProductSortingEnum)option.Id),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "orderby", option.Id.ToString()),
+                    Text = await _localizationService.GetLocalizedEnum((ProductSortingEnum)option.Id),
+                    Value = await _webHelper.ModifyQueryString(currentPageUrl, "orderby", option.Id.ToString()),
                     Selected = option.Id == command.OrderBy
                 });
             }
@@ -202,7 +203,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="pagingFilteringModel">Catalog paging filtering model</param>
         /// <param name="command">Catalog paging filtering command</param>
-        public virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        public virtual async Task PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException(nameof(pagingFilteringModel));
@@ -218,19 +219,19 @@ namespace Nop.Web.Factories
             pagingFilteringModel.ViewMode = viewMode;
             if (pagingFilteringModel.AllowProductViewModeChanging)
             {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                var currentPageUrl = await _webHelper.GetThisPageUrl(true);
                 //grid
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "grid"),
+                    Text = await _localizationService.GetResource("Catalog.ViewMode.Grid"),
+                    Value = await _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "grid"),
                     Selected = viewMode == "grid"
                 });
                 //list
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "list"),
+                    Text = await _localizationService.GetResource("Catalog.ViewMode.List"),
+                    Value = await _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "list"),
                     Selected = viewMode == "list"
                 });
             }
@@ -244,7 +245,7 @@ namespace Nop.Web.Factories
         /// <param name="allowCustomersToSelectPageSize">Are customers allowed to select page size?</param>
         /// <param name="pageSizeOptions">Page size options</param>
         /// <param name="fixedPageSize">Fixed page size</param>
-        public virtual void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
+        public virtual async Task PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
@@ -275,8 +276,8 @@ namespace Nop.Web.Factories
                         }
                     }
 
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.RemoveQueryString(currentPageUrl, "pagenumber");
+                    var currentPageUrl = await _webHelper.GetThisPageUrl(true);
+                    var sortUrl = await _webHelper.RemoveQueryString(currentPageUrl, "pagenumber");
 
                     foreach (var pageSize in pageSizes)
                     {
@@ -289,7 +290,7 @@ namespace Nop.Web.Factories
                         pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
-                            Value = _webHelper.ModifyQueryString(sortUrl, "pagesize", pageSize),
+                            Value = await _webHelper.ModifyQueryString(sortUrl, "pagesize", pageSize),
                             Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
                         });
                     }
@@ -329,7 +330,7 @@ namespace Nop.Web.Factories
         /// <param name="category">Category</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Category model</returns>
-        public virtual CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
+        public virtual async Task<CategoryModel> PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
         {
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
@@ -337,36 +338,36 @@ namespace Nop.Web.Factories
             var model = new CategoryModel
             {
                 Id = category.Id,
-                Name = _localizationService.GetLocalized(category, x => x.Name),
-                Description = _localizationService.GetLocalized(category, x => x.Description),
-                MetaKeywords = _localizationService.GetLocalized(category, x => x.MetaKeywords),
-                MetaDescription = _localizationService.GetLocalized(category, x => x.MetaDescription),
-                MetaTitle = _localizationService.GetLocalized(category, x => x.MetaTitle),
-                SeName = _urlRecordService.GetSeName(category),
+                Name = await _localizationService.GetLocalized(category, x => x.Name),
+                Description = await _localizationService.GetLocalized(category, x => x.Description),
+                MetaKeywords = await _localizationService.GetLocalized(category, x => x.MetaKeywords),
+                MetaDescription = await _localizationService.GetLocalized(category, x => x.MetaDescription),
+                MetaTitle = await _localizationService.GetLocalized(category, x => x.MetaTitle),
+                SeName = await _urlRecordService.GetSeName(category),
             };
 
             //sorting
-            PrepareSortingOptions(model.PagingFilteringContext, command);
+            await PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            PrepareViewModes(model.PagingFilteringContext, command);
+            await PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            PreparePageSizeOptions(model.PagingFilteringContext, command,
+            await PreparePageSizeOptions(model.PagingFilteringContext, command,
                 category.AllowCustomersToSelectPageSize,
                 category.PageSizeOptions,
                 category.PageSize);
 
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category.PriceRanges, _webHelper, _priceFormatter);
-            var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
+            await model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category.PriceRanges, _webHelper, _priceFormatter);
+            var selectedPriceRange = await model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, category.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;
             if (selectedPriceRange != null)
             {
                 if (selectedPriceRange.From.HasValue)
-                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+                    minPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, await _workContext.GetWorkingCurrency());
 
                 if (selectedPriceRange.To.HasValue)
-                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+                    maxPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, await _workContext.GetWorkingCurrency());
             }
 
             //category breadcrumb
@@ -374,52 +375,57 @@ namespace Nop.Web.Factories
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                model.CategoryBreadcrumb = _categoryService.GetCategoryBreadCrumb(category).Select(catBr =>
+                model.CategoryBreadcrumb = (await _categoryService.GetCategoryBreadCrumb(category)).Select(catBr =>
                     new CategoryModel
                     {
                         Id = catBr.Id,
-                        Name = _localizationService.GetLocalized(catBr, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(catBr)
+                        Name =  _localizationService.GetLocalized(catBr, x => x.Name).Result,
+                        SeName = _urlRecordService.GetSeName(catBr).Result
                     }).ToList();
             }
 
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             //subcategories
-            model.SubCategories = _categoryService.GetAllCategoriesByParentCategoryId(category.Id)
+            model.SubCategories = (await _categoryService.GetAllCategoriesByParentCategoryId(category.Id))
                     .Select(curCategory =>
                     {
                         var subCatModel = new CategoryModel.SubCategoryModel
                         {
                             Id = curCategory.Id,
-                            Name = _localizationService.GetLocalized(curCategory, y => y.Name),
-                            SeName = _urlRecordService.GetSeName(curCategory),
-                            Description = _localizationService.GetLocalized(curCategory, y => y.Description)
+                            Name = _localizationService.GetLocalized(curCategory, y => y.Name).Result,
+                            SeName = _urlRecordService.GetSeName(curCategory).Result,
+                            Description = _localizationService.GetLocalized(curCategory, y => y.Description).Result
                         };
 
                         //prepare picture model
                         var categoryPictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, curCategory,
-                            pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(),
-                            _storeContext.CurrentStore);
+                            pictureSize, true, _workContext.GetWorkingLanguage().Result, _webHelper.IsCurrentConnectionSecured(),
+                            _storeContext.GetCurrentStore().Result);
 
-                        subCatModel.PictureModel = _staticCacheManager.Get(categoryPictureCacheKey, () =>
+                        subCatModel.PictureModel = _staticCacheManager.Get(categoryPictureCacheKey, async () =>
                         {
-                            var picture = _pictureService.GetPictureById(curCategory.PictureId);
+                            var picture = await _pictureService.GetPictureById(curCategory.PictureId);
+                            string fullSizeImageUrl, imageUrl;
+
+                            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrl(picture);
+                            (imageUrl, _) = await _pictureService.GetPictureUrl(picture, pictureSize);
+
                             var pictureModel = new PictureModel
                             {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
-                                ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
+                                FullSizeImageUrl = fullSizeImageUrl,
+                                ImageUrl = imageUrl,
                                 Title = string.Format(
-                                    _localizationService.GetResource("Media.Category.ImageLinkTitleFormat"),
+                                    await _localizationService.GetResource("Media.Category.ImageLinkTitleFormat"),
                                     subCatModel.Name),
                                 AlternateText =
                                     string.Format(
-                                        _localizationService.GetResource("Media.Category.ImageAlternateTextFormat"),
+                                        await _localizationService.GetResource("Media.Category.ImageAlternateTextFormat"),
                                         subCatModel.Name)
                             };
 
                             return pictureModel;
-                        });
+                        }).Result;
 
                         return subCatModel;
                     }).ToList();
@@ -430,14 +436,14 @@ namespace Nop.Web.Factories
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
                 var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category,
-                    _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), _storeContext.CurrentStore);
-                var hasFeaturedProductsCache = _staticCacheManager.Get(cacheKey, () =>
+                    _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), await _storeContext.GetCurrentStore());
+                var hasFeaturedProductsCache = await _staticCacheManager.Get(cacheKey, async () =>
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = await _productService.SearchProducts(0,
                        categoryIds: new List<int> { category.Id },
-                       storeId: _storeContext.CurrentStore.Id,
+                       storeId: (await _storeContext.GetCurrentStore()).Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
 
@@ -448,16 +454,16 @@ namespace Nop.Web.Factories
                 {
                     //cache indicates that the category has featured products
                     //let's load them
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = await _productService.SearchProducts(0,
                        categoryIds: new List<int> { category.Id },
-                       storeId: _storeContext.CurrentStore.Id,
+                       storeId: (await _storeContext.GetCurrentStore()).Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
                 }
 
                 if (featuredProducts != null)
                 {
-                    model.FeaturedProducts = _productModelFactory.PrepareProductOverviewModels(featuredProducts).ToList();
+                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModels(featuredProducts)).ToList();
                 }
             }
 
@@ -465,14 +471,13 @@ namespace Nop.Web.Factories
 
             //include subcategories
             if (_catalogSettings.ShowProductsFromSubcategories)
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
+                categoryIds.AddRange(await _categoryService.GetChildCategoryIds(category.Id, (await _storeContext.GetCurrentStore()).Id));
 
             //products
-            IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
-            var products = _productService.SearchProducts(out var filterableSpecificationAttributeOptionIds,
-                true,
+            IList<int> alreadyFilteredSpecOptionIds = await model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+            var (products, filterableSpecificationAttributeOptionIds) = await _productService.SearchProducts(true,
                 categoryIds: categoryIds,
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: (await _storeContext.GetCurrentStore()).Id,
                 visibleIndividuallyOnly: true,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted,
@@ -481,12 +486,12 @@ namespace Nop.Web.Factories
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
-            model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+            model.Products = (await _productModelFactory.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
             //specs
-            model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+            await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
                 filterableSpecificationAttributeOptionIds?.ToArray(), _cacheKeyService,
                 _specificationAttributeService, _localizationService, _webHelper, _workContext, _staticCacheManager);
 
@@ -498,10 +503,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="templateId">Template identifier</param>
         /// <returns>Category template view path</returns>
-        public virtual string PrepareCategoryTemplateViewPath(int templateId)
+        public virtual async Task<string> PrepareCategoryTemplateViewPath(int templateId)
         {
-            var template = _categoryTemplateService.GetCategoryTemplateById(templateId) ??
-                           _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+            var template = await _categoryTemplateService.GetCategoryTemplateById(templateId) ??
+                           (await _categoryTemplateService.GetAllCategoryTemplates()).FirstOrDefault();
 
             if (template == null)
                 throw new Exception("No default template could be loaded");
@@ -515,7 +520,7 @@ namespace Nop.Web.Factories
         /// <param name="currentCategoryId">Current category identifier</param>
         /// <param name="currentProductId">Current product identifier</param>
         /// <returns>Category navigation model</returns>
-        public virtual CategoryNavigationModel PrepareCategoryNavigationModel(int currentCategoryId, int currentProductId)
+        public virtual async Task<CategoryNavigationModel> PrepareCategoryNavigationModel(int currentCategoryId, int currentProductId)
         {
             //get active category
             var activeCategoryId = 0;
@@ -527,12 +532,12 @@ namespace Nop.Web.Factories
             else if (currentProductId > 0)
             {
                 //product details page
-                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                var productCategories = await _categoryService.GetProductCategoriesByProductId(currentProductId);
                 if (productCategories.Any())
                     activeCategoryId = productCategories[0].CategoryId;
             }
 
-            var cachedCategoriesModel = PrepareCategorySimpleModels();
+            var cachedCategoriesModel = await PrepareCategorySimpleModels();
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
@@ -546,20 +551,20 @@ namespace Nop.Web.Factories
         /// Prepare top menu model
         /// </summary>
         /// <returns>Top menu model</returns>
-        public virtual TopMenuModel PrepareTopMenuModel()
+        public virtual async Task<TopMenuModel> PrepareTopMenuModel()
         {
             var cachedCategoriesModel = new List<CategorySimpleModel>();
             //categories
             if (!_catalogSettings.UseAjaxLoadMenu)
-                cachedCategoriesModel = PrepareCategorySimpleModels();
+                cachedCategoriesModel = await PrepareCategorySimpleModels();
 
             //top menu topics
-            var topicModel = _topicService.GetAllTopics(_storeContext.CurrentStore.Id, onlyIncludedInTopMenu: true)
+            var topicModel = (await _topicService.GetAllTopics((await _storeContext.GetCurrentStore()).Id, onlyIncludedInTopMenu: true))
                     .Select(t => new TopMenuModel.TopicModel
                     {
                         Id = t.Id,
-                        Name = _localizationService.GetLocalized(t, x => x.Title),
-                        SeName = _urlRecordService.GetSeName(t)
+                        Name = _localizationService.GetLocalized(t, x => x.Title).Result,
+                        SeName = _urlRecordService.GetSeName(t).Result
                     }).ToList();
 
             var model = new TopMenuModel
@@ -586,51 +591,56 @@ namespace Nop.Web.Factories
         /// Prepare homepage category models
         /// </summary>
         /// <returns>List of homepage category models</returns>
-        public virtual List<CategoryModel> PrepareHomepageCategoryModels()
+        public virtual async Task<List<CategoryModel>> PrepareHomepageCategoryModels()
         {
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             var categoriesCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey, 
                 pictureSize,
-                _workContext.WorkingLanguage,
+                await _workContext.GetWorkingLanguage(),
                 _webHelper.IsCurrentConnectionSecured());
 
-            var model = _staticCacheManager.Get(categoriesCacheKey, () =>
-                _categoryService.GetAllCategoriesDisplayedOnHomepage()
+            var model = await _staticCacheManager.Get(categoriesCacheKey, async () =>
+                (await _categoryService.GetAllCategoriesDisplayedOnHomepage())
                     .Select(category =>
                     {
                         var catModel = new CategoryModel
                         {
                             Id = category.Id,
-                            Name = _localizationService.GetLocalized(category, x => x.Name),
-                            Description = _localizationService.GetLocalized(category, x => x.Description),
-                            MetaKeywords = _localizationService.GetLocalized(category, x => x.MetaKeywords),
-                            MetaDescription = _localizationService.GetLocalized(category, x => x.MetaDescription),
-                            MetaTitle = _localizationService.GetLocalized(category, x => x.MetaTitle),
-                            SeName = _urlRecordService.GetSeName(category),
+                            Name = _localizationService.GetLocalized(category, x => x.Name).Result,
+                            Description = _localizationService.GetLocalized(category, x => x.Description).Result,
+                            MetaKeywords = _localizationService.GetLocalized(category, x => x.MetaKeywords).Result,
+                            MetaDescription = _localizationService.GetLocalized(category, x => x.MetaDescription).Result,
+                            MetaTitle = _localizationService.GetLocalized(category, x => x.MetaTitle).Result,
+                            SeName = _urlRecordService.GetSeName(category).Result,
                         };
 
                         //prepare picture model
                         var categoryPictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, 
-                            category, pictureSize, true, _workContext.WorkingLanguage,
-                            _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-                        catModel.PictureModel = _staticCacheManager.Get(categoryPictureCacheKey, () =>
+                            category, pictureSize, true, _workContext.GetWorkingLanguage().Result,
+                            _webHelper.IsCurrentConnectionSecured(), _storeContext.GetCurrentStore().Result);
+                        catModel.PictureModel = _staticCacheManager.Get(categoryPictureCacheKey, async () =>
                         {
-                            var picture = _pictureService.GetPictureById(category.PictureId);
+                            var picture = await _pictureService.GetPictureById(category.PictureId);
+                            string fullSizeImageUrl, imageUrl;
+
+                            (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrl(picture);
+                            (imageUrl, _) = await _pictureService.GetPictureUrl(picture, pictureSize);
+
                             var pictureModel = new PictureModel
                             {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
-                                ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
+                                FullSizeImageUrl = fullSizeImageUrl,
+                                ImageUrl = imageUrl,
                                 Title = string.Format(
-                                    _localizationService.GetResource("Media.Category.ImageLinkTitleFormat"),
+                                    await _localizationService.GetResource("Media.Category.ImageLinkTitleFormat"),
                                     catModel.Name),
                                 AlternateText =
                                     string.Format(
-                                        _localizationService.GetResource("Media.Category.ImageAlternateTextFormat"),
+                                        await _localizationService.GetResource("Media.Category.ImageAlternateTextFormat"),
                                         catModel.Name)
                             };
                             return pictureModel;
-                        });
+                        }).Result;
 
                         return catModel;
                     }).ToList());
@@ -642,15 +652,15 @@ namespace Nop.Web.Factories
         /// Prepare category (simple) models
         /// </summary>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels()
         {
             //load and cache them
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey, 
-                _workContext.WorkingLanguage,
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                _storeContext.CurrentStore);
+                await _workContext.GetWorkingLanguage(),
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _storeContext.GetCurrentStore());
 
-            return _staticCacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0));
+            return await _staticCacheManager.Get(cacheKey, async () => await PrepareCategorySimpleModels(0));
         }
 
         /// <summary>
@@ -659,7 +669,7 @@ namespace Nop.Web.Factories
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
         {
             var result = new List<CategorySimpleModel>();
 
@@ -668,15 +678,15 @@ namespace Nop.Web.Factories
             //it'll load all categories anyway.
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
             //so we load all categories at once (we know they are cached)
-            var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+            var allCategories = await _categoryService.GetAllCategories(storeId: (await _storeContext.GetCurrentStore()).Id);
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
             foreach (var category in categories)
             {
                 var categoryModel = new CategorySimpleModel
                 {
                     Id = category.Id,
-                    Name = _localizationService.GetLocalized(category, x => x.Name),
-                    SeName = _urlRecordService.GetSeName(category),
+                    Name = await _localizationService.GetLocalized(category, x => x.Name),
+                    SeName = await _urlRecordService.GetSeName(category),
                     IncludeInTopMenu = category.IncludeInTopMenu
                 };
 
@@ -687,15 +697,15 @@ namespace Nop.Web.Factories
                     //include subcategories
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                         categoryIds.AddRange(
-                            _categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
+                            await _categoryService.GetChildCategoryIds(category.Id, (await _storeContext.GetCurrentStore()).Id));
 
                     categoryModel.NumberOfProducts =
-                        _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
+                        await _productService.GetNumberOfProductsInCategory(categoryIds, (await _storeContext.GetCurrentStore()).Id);
                 }
 
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id);
+                    var subCategories = await PrepareCategorySimpleModels(category.Id);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
 
@@ -712,20 +722,20 @@ namespace Nop.Web.Factories
         /// Prepare category (simple) xml document
         /// </summary>
         /// <returns>Xml document of category (simple) models</returns>
-        public virtual XDocument PrepareCategoryXmlDocument()
+        public virtual async Task<XDocument> PrepareCategoryXmlDocument()
         {
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey, 
-                _workContext.WorkingLanguage,
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                _storeContext.CurrentStore);
+                await _workContext.GetWorkingLanguage(),
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _storeContext.GetCurrentStore());
 
-            return _staticCacheManager.Get(cacheKey, () =>
+            return await _staticCacheManager.Get(cacheKey, async () =>
             {
-                var categories = PrepareCategorySimpleModels();
+                var categories = await PrepareCategorySimpleModels();
 
                 var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
 
-                using var strWriter = new StringWriter();
+                await using var strWriter = new StringWriter();
                 using var writer = XmlWriter.Create(strWriter);
                 xsSubmit.Serialize(writer, categories);
                 var xml = strWriter.ToString();
@@ -738,9 +748,9 @@ namespace Nop.Web.Factories
         /// Prepare root categories for menu
         /// </summary>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareRootCategories()
+        public virtual async Task<List<CategorySimpleModel>> PrepareRootCategories()
         {
-            var doc = PrepareCategoryXmlDocument();
+            var doc = await PrepareCategoryXmlDocument();
 
             var models = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
                          select GetCategorySimpleModel(xe);
@@ -753,9 +763,9 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="id">Id of category to get subcategory</param>
         /// <returns></returns>
-        public virtual List<CategorySimpleModel> PrepareSubCategories(int id)
+        public virtual async Task<List<CategorySimpleModel>> PrepareSubCategories(int id)
         {
-            var doc = PrepareCategoryXmlDocument();
+            var doc = await PrepareCategoryXmlDocument();
 
             var model = from xe in doc.Descendants("CategorySimpleModel")
                         where xe.XPathSelectElement("Id").Value == id.ToString()
@@ -777,7 +787,7 @@ namespace Nop.Web.Factories
         /// <param name="manufacturer">Manufacturer identifier</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Manufacturer model</returns>
-        public virtual ManufacturerModel PrepareManufacturerModel(Manufacturer manufacturer, CatalogPagingFilteringModel command)
+        public virtual async Task<ManufacturerModel> PrepareManufacturerModel(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException(nameof(manufacturer));
@@ -785,36 +795,36 @@ namespace Nop.Web.Factories
             var model = new ManufacturerModel
             {
                 Id = manufacturer.Id,
-                Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                Description = _localizationService.GetLocalized(manufacturer, x => x.Description),
-                MetaKeywords = _localizationService.GetLocalized(manufacturer, x => x.MetaKeywords),
-                MetaDescription = _localizationService.GetLocalized(manufacturer, x => x.MetaDescription),
-                MetaTitle = _localizationService.GetLocalized(manufacturer, x => x.MetaTitle),
-                SeName = _urlRecordService.GetSeName(manufacturer),
+                Name = await _localizationService.GetLocalized(manufacturer, x => x.Name),
+                Description = await _localizationService.GetLocalized(manufacturer, x => x.Description),
+                MetaKeywords = await _localizationService.GetLocalized(manufacturer, x => x.MetaKeywords),
+                MetaDescription = await _localizationService.GetLocalized(manufacturer, x => x.MetaDescription),
+                MetaTitle = await _localizationService.GetLocalized(manufacturer, x => x.MetaTitle),
+                SeName = await _urlRecordService.GetSeName(manufacturer),
             };
 
             //sorting
-            PrepareSortingOptions(model.PagingFilteringContext, command);
+            await PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            PrepareViewModes(model.PagingFilteringContext, command);
+            await PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            PreparePageSizeOptions(model.PagingFilteringContext, command,
+            await PreparePageSizeOptions(model.PagingFilteringContext, command,
                 manufacturer.AllowCustomersToSelectPageSize,
                 manufacturer.PageSizeOptions,
                 manufacturer.PageSize);
 
             //price ranges
-            model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(manufacturer.PriceRanges, _webHelper, _priceFormatter);
-            var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, manufacturer.PriceRanges);
+            await model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(manufacturer.PriceRanges, _webHelper, _priceFormatter);
+            var selectedPriceRange = await model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, manufacturer.PriceRanges);
             decimal? minPriceConverted = null;
             decimal? maxPriceConverted = null;
             if (selectedPriceRange != null)
             {
                 if (selectedPriceRange.From.HasValue)
-                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+                    minPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, await _workContext.GetWorkingCurrency());
 
                 if (selectedPriceRange.To.HasValue)
-                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+                    maxPriceConverted = await _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, await _workContext.GetWorkingCurrency());
             }
 
             //featured products
@@ -825,15 +835,15 @@ namespace Nop.Web.Factories
                 //We cache a value indicating whether we have featured products
                 var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey, 
                     manufacturer,
-                    _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                    _storeContext.CurrentStore);
-                var hasFeaturedProductsCache = _staticCacheManager.Get(cacheKey, () =>
+                    _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                    await _storeContext.GetCurrentStore());
+                var hasFeaturedProductsCache = await _staticCacheManager.Get(cacheKey, async () =>
                 {
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = await _productService.SearchProducts(0,
                        manufacturerId: manufacturer.Id,
-                       storeId: _storeContext.CurrentStore.Id,
+                       storeId: (await _storeContext.GetCurrentStore()).Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
 
@@ -844,23 +854,23 @@ namespace Nop.Web.Factories
                 {
                     //cache indicates that the manufacturer has featured products
                     //let's load them
-                    featuredProducts = _productService.SearchProducts(
+                    featuredProducts = await _productService.SearchProducts(0,
                        manufacturerId: manufacturer.Id,
-                       storeId: _storeContext.CurrentStore.Id,
+                       storeId: (await _storeContext.GetCurrentStore()).Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
                 }
 
                 if (featuredProducts != null)
                 {
-                    model.FeaturedProducts = _productModelFactory.PrepareProductOverviewModels(featuredProducts).ToList();
+                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModels(featuredProducts)).ToList();
                 }
             }
 
             //products
-            var products = _productService.SearchProducts(out _, true,
+            var (products, _) = await _productService.SearchProducts(true,
                 manufacturerId: manufacturer.Id,
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: (await _storeContext.GetCurrentStore()).Id,
                 visibleIndividuallyOnly: true,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted,
@@ -868,7 +878,7 @@ namespace Nop.Web.Factories
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
-            model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+            model.Products = (await _productModelFactory.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
@@ -880,10 +890,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="templateId">Template identifier</param>
         /// <returns>Manufacturer template view path</returns>
-        public virtual string PrepareManufacturerTemplateViewPath(int templateId)
+        public virtual async Task<string> PrepareManufacturerTemplateViewPath(int templateId)
         {
-            var template = _manufacturerTemplateService.GetManufacturerTemplateById(templateId) ??
-                           _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+            var template = await _manufacturerTemplateService.GetManufacturerTemplateById(templateId) ??
+                           (await _manufacturerTemplateService.GetAllManufacturerTemplates()).FirstOrDefault();
 
             if (template == null)
                 throw new Exception("No default template could be loaded");
@@ -895,37 +905,42 @@ namespace Nop.Web.Factories
         /// Prepare manufacturer all models
         /// </summary>
         /// <returns>List of manufacturer models</returns>
-        public virtual List<ManufacturerModel> PrepareManufacturerAllModels()
+        public virtual async Task<List<ManufacturerModel>> PrepareManufacturerAllModels()
         {
             var model = new List<ManufacturerModel>();
-            var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+            var manufacturers = await _manufacturerService.GetAllManufacturers(storeId: (await _storeContext.GetCurrentStore()).Id);
             foreach (var manufacturer in manufacturers)
             {
                 var modelMan = new ManufacturerModel
                 {
                     Id = manufacturer.Id,
-                    Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                    Description = _localizationService.GetLocalized(manufacturer, x => x.Description),
-                    MetaKeywords = _localizationService.GetLocalized(manufacturer, x => x.MetaKeywords),
-                    MetaDescription = _localizationService.GetLocalized(manufacturer, x => x.MetaDescription),
-                    MetaTitle = _localizationService.GetLocalized(manufacturer, x => x.MetaTitle),
-                    SeName = _urlRecordService.GetSeName(manufacturer),
+                    Name = await _localizationService.GetLocalized(manufacturer, x => x.Name),
+                    Description = await _localizationService.GetLocalized(manufacturer, x => x.Description),
+                    MetaKeywords = await _localizationService.GetLocalized(manufacturer, x => x.MetaKeywords),
+                    MetaDescription = await _localizationService.GetLocalized(manufacturer, x => x.MetaDescription),
+                    MetaTitle = await _localizationService.GetLocalized(manufacturer, x => x.MetaTitle),
+                    SeName = await _urlRecordService.GetSeName(manufacturer),
                 };
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
                 var manufacturerPictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerPictureModelKey, 
-                    manufacturer, pictureSize, true, _workContext.WorkingLanguage, 
-                    _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-                modelMan.PictureModel = _staticCacheManager.Get(manufacturerPictureCacheKey, () =>
+                    manufacturer, pictureSize, true, await _workContext.GetWorkingLanguage(), 
+                    _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStore());
+                modelMan.PictureModel = await _staticCacheManager.Get(manufacturerPictureCacheKey, async () =>
                 {
-                    var picture = _pictureService.GetPictureById(manufacturer.PictureId);
+                    var picture = await _pictureService.GetPictureById(manufacturer.PictureId);
+                    string fullSizeImageUrl, imageUrl;
+
+                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrl(picture);
+                    (imageUrl, _) = await _pictureService.GetPictureUrl(picture, pictureSize);
+
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
-                        ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        ImageUrl = imageUrl,
+                        Title = string.Format(await _localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
+                        AlternateText = string.Format(await _localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
                     };
 
                     return pictureModel;
@@ -942,18 +957,18 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="currentManufacturerId">Current manufacturer identifier</param>
         /// <returns>Manufacturer navigation model</returns>
-        public virtual ManufacturerNavigationModel PrepareManufacturerNavigationModel(int currentManufacturerId)
+        public virtual async Task<ManufacturerNavigationModel> PrepareManufacturerNavigationModel(int currentManufacturerId)
         {
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerNavigationModelKey, 
                 currentManufacturerId,
-                _workContext.WorkingLanguage,
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                _storeContext.CurrentStore);
-            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
+                await _workContext.GetWorkingLanguage(),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _storeContext.GetCurrentStore());
+            var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
             {
-                var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
+                var currentManufacturer = await _manufacturerService.GetManufacturerById(currentManufacturerId);
 
-                var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id,
+                var manufacturers = await _manufacturerService.GetAllManufacturers(storeId: (await _storeContext.GetCurrentStore()).Id,
                     pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay);
                 var model = new ManufacturerNavigationModel
                 {
@@ -965,8 +980,8 @@ namespace Nop.Web.Factories
                     var modelMan = new ManufacturerBriefInfoModel
                     {
                         Id = manufacturer.Id,
-                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(manufacturer),
+                        Name = await _localizationService.GetLocalized(manufacturer, x => x.Name),
+                        SeName = await _urlRecordService.GetSeName(manufacturer),
                         IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
                     };
                     model.Manufacturers.Add(modelMan);
@@ -988,7 +1003,7 @@ namespace Nop.Web.Factories
         /// <param name="vendor">Vendor</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Vendor model</returns>
-        public virtual VendorModel PrepareVendorModel(Vendor vendor, CatalogPagingFilteringModel command)
+        public virtual async Task<VendorModel> PrepareVendorModel(Vendor vendor, CatalogPagingFilteringModel command)
         {
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
@@ -996,35 +1011,34 @@ namespace Nop.Web.Factories
             var model = new VendorModel
             {
                 Id = vendor.Id,
-                Name = _localizationService.GetLocalized(vendor, x => x.Name),
-                Description = _localizationService.GetLocalized(vendor, x => x.Description),
-                MetaKeywords = _localizationService.GetLocalized(vendor, x => x.MetaKeywords),
-                MetaDescription = _localizationService.GetLocalized(vendor, x => x.MetaDescription),
-                MetaTitle = _localizationService.GetLocalized(vendor, x => x.MetaTitle),
-                SeName = _urlRecordService.GetSeName(vendor),
+                Name = await _localizationService.GetLocalized(vendor, x => x.Name),
+                Description = await _localizationService.GetLocalized(vendor, x => x.Description),
+                MetaKeywords = await _localizationService.GetLocalized(vendor, x => x.MetaKeywords),
+                MetaDescription = await _localizationService.GetLocalized(vendor, x => x.MetaDescription),
+                MetaTitle = await _localizationService.GetLocalized(vendor, x => x.MetaTitle),
+                SeName = await _urlRecordService.GetSeName(vendor),
                 AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
 
             //sorting
-            PrepareSortingOptions(model.PagingFilteringContext, command);
+            await PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            PrepareViewModes(model.PagingFilteringContext, command);
+            await PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            PreparePageSizeOptions(model.PagingFilteringContext, command,
+            await PreparePageSizeOptions(model.PagingFilteringContext, command,
                 vendor.AllowCustomersToSelectPageSize,
                 vendor.PageSizeOptions,
                 vendor.PageSize);
 
             //products
-            var products = _productService.SearchProducts(out _,
-                true,
+            var (products, _) = await _productService.SearchProducts(true,
                 vendorId: vendor.Id,
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: (await _storeContext.GetCurrentStore()).Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
-            model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+            model.Products = (await _productModelFactory.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
 
@@ -1035,37 +1049,42 @@ namespace Nop.Web.Factories
         /// Prepare vendor all models
         /// </summary>
         /// <returns>List of vendor models</returns>
-        public virtual List<VendorModel> PrepareVendorAllModels()
+        public virtual async Task<List<VendorModel>> PrepareVendorAllModels()
         {
             var model = new List<VendorModel>();
-            var vendors = _vendorService.GetAllVendors();
+            var vendors = await _vendorService.GetAllVendors();
             foreach (var vendor in vendors)
             {
                 var vendorModel = new VendorModel
                 {
                     Id = vendor.Id,
-                    Name = _localizationService.GetLocalized(vendor, x => x.Name),
-                    Description = _localizationService.GetLocalized(vendor, x => x.Description),
-                    MetaKeywords = _localizationService.GetLocalized(vendor, x => x.MetaKeywords),
-                    MetaDescription = _localizationService.GetLocalized(vendor, x => x.MetaDescription),
-                    MetaTitle = _localizationService.GetLocalized(vendor, x => x.MetaTitle),
-                    SeName = _urlRecordService.GetSeName(vendor),
+                    Name = await _localizationService.GetLocalized(vendor, x => x.Name),
+                    Description = await _localizationService.GetLocalized(vendor, x => x.Description),
+                    MetaKeywords = await _localizationService.GetLocalized(vendor, x => x.MetaKeywords),
+                    MetaDescription = await _localizationService.GetLocalized(vendor, x => x.MetaDescription),
+                    MetaTitle = await _localizationService.GetLocalized(vendor, x => x.MetaTitle),
+                    SeName = await _urlRecordService.GetSeName(vendor),
                     AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey, 
-                    vendor, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-                vendorModel.PictureModel = _staticCacheManager.Get(pictureCacheKey, () =>
+                    vendor, pictureSize, true, await _workContext.GetWorkingLanguage(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStore());
+                vendorModel.PictureModel = await _staticCacheManager.Get(pictureCacheKey, async () =>
                 {
-                    var picture = _pictureService.GetPictureById(vendor.PictureId);
+                    var picture = await _pictureService.GetPictureById(vendor.PictureId);
+                    string fullSizeImageUrl, imageUrl;
+
+                    (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrl(picture);
+                    (imageUrl, _) = await _pictureService.GetPictureUrl(picture, pictureSize);
+
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
-                        ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
-                        Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
+                        FullSizeImageUrl = fullSizeImageUrl,
+                        ImageUrl = imageUrl,
+                        Title = string.Format(await _localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
+                        AlternateText = string.Format(await _localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
                     };
 
                     return pictureModel;
@@ -1081,12 +1100,12 @@ namespace Nop.Web.Factories
         /// Prepare vendor navigation model
         /// </summary>
         /// <returns>Vendor navigation model</returns>
-        public virtual VendorNavigationModel PrepareVendorNavigationModel()
+        public virtual async Task<VendorNavigationModel> PrepareVendorNavigationModel()
         {
             var cacheKey = NopModelCacheDefaults.VendorNavigationModelKey;
-            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
+            var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
             {
-                var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
+                var vendors = await _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
                 var model = new VendorNavigationModel
                 {
                     TotalVendors = vendors.TotalCount
@@ -1097,8 +1116,8 @@ namespace Nop.Web.Factories
                     model.Vendors.Add(new VendorBriefInfoModel
                     {
                         Id = vendor.Id,
-                        Name = _localizationService.GetLocalized(vendor, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(vendor),
+                        Name = await _localizationService.GetLocalized(vendor, x => x.Name),
+                        SeName = await _urlRecordService.GetSeName(vendor),
                     });
                 }
 
@@ -1116,31 +1135,30 @@ namespace Nop.Web.Factories
         /// Prepare popular product tags model
         /// </summary>
         /// <returns>Product tags model</returns>
-        public virtual PopularProductTagsModel PreparePopularProductTagsModel()
+        public virtual async Task<PopularProductTagsModel> PreparePopularProductTagsModel()
         {
             var model = new PopularProductTagsModel();
 
             //get all tags
-            var tags = _productTagService
-                .GetAllProductTags()
+            var tags = (await _productTagService.GetAllProductTags())
                 //filter by current store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.GetCurrentStore().Result.Id).Result > 0)
                 .ToList();
 
             model.TotalTags = tags.Count;
 
             model.Tags.AddRange(tags
                 //order by product count
-                .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id))
+                .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.GetCurrentStore().Result.Id).Result)
                 .Take(_catalogSettings.NumberOfProductTags)
                 //sorting
                 .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name))
                 .Select(tag => new ProductTagModel
                 {
                     Id = tag.Id,
-                    Name = _localizationService.GetLocalized(tag, y => y.Name),
-                    SeName = _urlRecordService.GetSeName(tag),
-                    ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                    Name =  _localizationService.GetLocalized(tag, y => y.Name).Result,
+                    SeName = _urlRecordService.GetSeName(tag).Result,
+                    ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.GetCurrentStore().Result.Id).Result
                 }));
 
             return model;
@@ -1152,7 +1170,7 @@ namespace Nop.Web.Factories
         /// <param name="productTag">Product tag</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Products by tag model</returns>
-        public virtual ProductsByTagModel PrepareProductsByTagModel(ProductTag productTag, CatalogPagingFilteringModel command)
+        public virtual async Task<ProductsByTagModel> PrepareProductsByTagModel(ProductTag productTag, CatalogPagingFilteringModel command)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
@@ -1160,29 +1178,29 @@ namespace Nop.Web.Factories
             var model = new ProductsByTagModel
             {
                 Id = productTag.Id,
-                TagName = _localizationService.GetLocalized(productTag, y => y.Name),
-                TagSeName = _urlRecordService.GetSeName(productTag)
+                TagName = await _localizationService.GetLocalized(productTag, y => y.Name),
+                TagSeName = await _urlRecordService.GetSeName(productTag)
             };
 
             //sorting
-            PrepareSortingOptions(model.PagingFilteringContext, command);
+            await PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            PrepareViewModes(model.PagingFilteringContext, command);
+            await PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            PreparePageSizeOptions(model.PagingFilteringContext, command,
+            await PreparePageSizeOptions(model.PagingFilteringContext, command,
                 _catalogSettings.ProductsByTagAllowCustomersToSelectPageSize,
                 _catalogSettings.ProductsByTagPageSizeOptions,
                 _catalogSettings.ProductsByTagPageSize);
 
             //products
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
+            var (products, _) = await _productService.SearchProducts(false,
+                storeId: (await _storeContext.GetCurrentStore()).Id,
                 productTagId: productTag.Id,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
-            model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+            model.Products = (await _productModelFactory.PrepareProductOverviewModels(products)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             return model;
@@ -1192,14 +1210,13 @@ namespace Nop.Web.Factories
         /// Prepare product tags all model
         /// </summary>
         /// <returns>Popular product tags model</returns>
-        public virtual PopularProductTagsModel PrepareProductTagsAllModel()
+        public virtual async Task<PopularProductTagsModel> PrepareProductTagsAllModel()
         {
             var model = new PopularProductTagsModel
             {
-                Tags = _productTagService
-                .GetAllProductTags()
+                Tags = (await _productTagService.GetAllProductTags())
                 //filter by current store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.GetCurrentStore().Result.Id).Result > 0)
                 //sort by name
                 .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name))
                 .Select(x =>
@@ -1207,9 +1224,9 @@ namespace Nop.Web.Factories
                     var ptModel = new ProductTagModel
                     {
                         Id = x.Id,
-                        Name = _localizationService.GetLocalized(x, y => y.Name),
-                        SeName = _urlRecordService.GetSeName(x),
-                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                        Name = _localizationService.GetLocalized(x, y => y.Name).Result,
+                        SeName = _urlRecordService.GetSeName(x).Result,
+                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.GetCurrentStore().Result.Id).Result
                     };
                     return ptModel;
                 })
@@ -1228,7 +1245,7 @@ namespace Nop.Web.Factories
         /// <param name="model">Search model</param>
         /// <param name="command">Catalog paging filtering command</param>
         /// <returns>Search model</returns>
-        public virtual SearchModel PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
+        public virtual async Task<SearchModel> PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -1238,11 +1255,11 @@ namespace Nop.Web.Factories
             searchTerms = searchTerms.Trim();
 
             //sorting
-            PrepareSortingOptions(model.PagingFilteringContext, command);
+            await PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            PrepareViewModes(model.PagingFilteringContext, command);
+            await PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            PreparePageSizeOptions(model.PagingFilteringContext, command,
+            await PreparePageSizeOptions(model.PagingFilteringContext, command,
                 _catalogSettings.SearchPageAllowCustomersToSelectPageSize,
                 _catalogSettings.SearchPagePageSizeOptions,
                 _catalogSettings.SearchPageProductsPerPage);
@@ -1250,15 +1267,15 @@ namespace Nop.Web.Factories
 
             var categoriesModels = new List<SearchModel.CategoryModel>();
             //all categories
-            var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+            var allCategories = await _categoryService.GetAllCategories(storeId: (await _storeContext.GetCurrentStore()).Id);
             foreach (var c in allCategories)
             {
                 //generate full category name (breadcrumb)
                 var categoryBreadcrumb = string.Empty;
-                var breadcrumb = _categoryService.GetCategoryBreadCrumb(c, allCategories);
+                var breadcrumb = await _categoryService.GetCategoryBreadCrumb(c, allCategories);
                 for (var i = 0; i <= breadcrumb.Count - 1; i++)
                 {
-                    categoryBreadcrumb += _localizationService.GetLocalized(breadcrumb[i], x => x.Name);
+                    categoryBreadcrumb += await _localizationService.GetLocalized(breadcrumb[i], x => x.Name);
                     if (i != breadcrumb.Count - 1)
                         categoryBreadcrumb += " >> ";
                 }
@@ -1276,7 +1293,7 @@ namespace Nop.Web.Factories
                 model.AvailableCategories.Add(new SelectListItem
                 {
                     Value = "0",
-                    Text = _localizationService.GetResource("Common.All")
+                    Text = await _localizationService.GetResource("Common.All")
                 });
                 //all other categories
                 foreach (var c in categoriesModels)
@@ -1290,19 +1307,19 @@ namespace Nop.Web.Factories
                 }
             }
 
-            var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
+            var manufacturers = await _manufacturerService.GetAllManufacturers(storeId: (await _storeContext.GetCurrentStore()).Id);
             if (manufacturers.Any())
             {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
                     Value = "0",
-                    Text = _localizationService.GetResource("Common.All")
+                    Text = await _localizationService.GetResource("Common.All")
                 });
                 foreach (var m in manufacturers)
                     model.AvailableManufacturers.Add(new SelectListItem
                     {
                         Value = m.Id.ToString(),
-                        Text = _localizationService.GetLocalized(m, x => x.Name),
+                        Text = await _localizationService.GetLocalized(m, x => x.Name),
                         Selected = model.mid == m.Id
                     });
             }
@@ -1310,26 +1327,26 @@ namespace Nop.Web.Factories
             model.asv = _vendorSettings.AllowSearchByVendor;
             if (model.asv)
             {
-                var vendors = _vendorService.GetAllVendors();
+                var vendors = await _vendorService.GetAllVendors();
                 if (vendors.Any())
                 {
                     model.AvailableVendors.Add(new SelectListItem
                     {
                         Value = "0",
-                        Text = _localizationService.GetResource("Common.All")
+                        Text = await _localizationService.GetResource("Common.All")
                     });
                     foreach (var vendor in vendors)
                         model.AvailableVendors.Add(new SelectListItem
                         {
                             Value = vendor.Id.ToString(),
-                            Text = _localizationService.GetLocalized(vendor, x => x.Name),
+                            Text = await _localizationService.GetLocalized(vendor, x => x.Name),
                             Selected = model.vid == vendor.Id
                         });
                 }
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
+            // only search if query string search keyword is set (used to aasync Task searching or displaying search term min length error message on /search page load)
             //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
             var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
             if (isSearchTermSpecified)
@@ -1337,7 +1354,7 @@ namespace Nop.Web.Factories
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
                     model.Warning =
-                        string.Format(_localizationService.GetResource("Search.SearchTermMinimumLengthIsNCharacters"),
+                        string.Format(await _localizationService.GetResource("Search.SearchTermMinimumLengthIsNCharacters"),
                             _catalogSettings.ProductSearchTermMinimumLength);
                 }
                 else
@@ -1359,7 +1376,7 @@ namespace Nop.Web.Factories
                             {
                                 //include subcategories
                                 categoryIds.AddRange(
-                                    _categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id));
+                                    await _categoryService.GetChildCategoryIds(categoryId, (await _storeContext.GetCurrentStore()).Id));
                             }
                         }
 
@@ -1370,8 +1387,8 @@ namespace Nop.Web.Factories
                         {
                             if (decimal.TryParse(model.pf, out var minPrice))
                                 minPriceConverted =
-                                    _currencyService.ConvertToPrimaryStoreCurrency(minPrice,
-                                        _workContext.WorkingCurrency);
+                                    await _currencyService.ConvertToPrimaryStoreCurrency(minPrice,
+                                        await _workContext.GetWorkingCurrency());
                         }
 
                         //max price
@@ -1379,8 +1396,8 @@ namespace Nop.Web.Factories
                         {
                             if (decimal.TryParse(model.pt, out var maxPrice))
                                 maxPriceConverted =
-                                    _currencyService.ConvertToPrimaryStoreCurrency(maxPrice,
-                                        _workContext.WorkingCurrency);
+                                    await _currencyService.ConvertToPrimaryStoreCurrency(maxPrice,
+                                        await _workContext.GetWorkingCurrency());
                         }
 
                         if (model.asv)
@@ -1393,22 +1410,22 @@ namespace Nop.Web.Factories
                     var searchInProductTags = searchInDescriptions;
 
                     //products
-                    products = _productService.SearchProducts(
+                    (products, _) = await _productService.SearchProducts(false,
                         categoryIds: categoryIds,
                         manufacturerId: manufacturerId,
-                        storeId: _storeContext.CurrentStore.Id,
+                        storeId: (await _storeContext.GetCurrentStore()).Id,
                         visibleIndividuallyOnly: true,
                         priceMin: minPriceConverted,
                         priceMax: maxPriceConverted,
                         keywords: searchTerms,
                         searchDescriptions: searchInDescriptions,
                         searchProductTags: searchInProductTags,
-                        languageId: _workContext.WorkingLanguage.Id,
+                        languageId: (await _workContext.GetWorkingLanguage()).Id,
                         orderBy: (ProductSortingEnum)command.OrderBy,
                         pageIndex: command.PageNumber - 1,
                         pageSize: command.PageSize,
                         vendorId: vendorId);
-                    model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
+                    model.Products = (await _productModelFactory.PrepareProductOverviewModels(products)).ToList();
 
                     model.NoResults = !model.Products.Any();
 
@@ -1416,32 +1433,32 @@ namespace Nop.Web.Factories
                     if (!string.IsNullOrEmpty(searchTerms))
                     {
                         var searchTerm =
-                            _searchTermService.GetSearchTermByKeyword(searchTerms, _storeContext.CurrentStore.Id);
+                            await _searchTermService.GetSearchTermByKeyword(searchTerms, (await _storeContext.GetCurrentStore()).Id);
                         if (searchTerm != null)
                         {
                             searchTerm.Count++;
-                            _searchTermService.UpdateSearchTerm(searchTerm);
+                            await _searchTermService.UpdateSearchTerm(searchTerm);
                         }
                         else
                         {
                             searchTerm = new SearchTerm
                             {
                                 Keyword = searchTerms,
-                                StoreId = _storeContext.CurrentStore.Id,
+                                StoreId = (await _storeContext.GetCurrentStore()).Id,
                                 Count = 1
                             };
-                            _searchTermService.InsertSearchTerm(searchTerm);
+                            await _searchTermService.InsertSearchTerm(searchTerm);
                         }
                     }
 
                     //event
-                    _eventPublisher.Publish(new ProductSearchEvent
+                    await _eventPublisher.Publish(new ProductSearchEvent
                     {
                         SearchTerm = searchTerms,
                         SearchInDescriptions = searchInDescriptions,
                         CategoryIds = categoryIds,
                         ManufacturerId = manufacturerId,
-                        WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                        WorkingLanguageId = (await _workContext.GetWorkingLanguage()).Id,
                         VendorId = vendorId
                     });
                 }
@@ -1455,7 +1472,7 @@ namespace Nop.Web.Factories
         /// Prepare search box model
         /// </summary>
         /// <returns>Search box model</returns>
-        public virtual SearchBoxModel PrepareSearchBoxModel()
+        public virtual Task<SearchBoxModel> PrepareSearchBoxModel()
         {
             var model = new SearchBoxModel
             {
@@ -1464,7 +1481,8 @@ namespace Nop.Web.Factories
                 SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
                 ShowSearchBox = _catalogSettings.ProductSearchEnabled
             };
-            return model;
+
+            return Task.FromResult(model);
         }
 
         #endregion
@@ -1475,7 +1493,7 @@ namespace Nop.Web.Factories
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
-            return new CategorySimpleModel
+            var model = new CategorySimpleModel
             {
                 Id = int.Parse(elem.XPathSelectElement("Id").Value),
                 Name = elem.XPathSelectElement("Name").Value,
@@ -1489,6 +1507,8 @@ namespace Nop.Web.Factories
                 HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
                 Route = urlHelper.RouteUrl("Category", new { SeName = elem.XPathSelectElement("SeName").Value })
             };
+
+            return model;
         }
 
         #endregion

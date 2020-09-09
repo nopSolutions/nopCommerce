@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -10,6 +11,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Task = Nop.Services.Tasks.Task;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -52,9 +54,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
             //prepare model
@@ -64,9 +66,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult List(ScheduleTaskSearchModel searchModel)
+        public virtual async Task<IActionResult> List(ScheduleTaskSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
@@ -76,45 +78,45 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult TaskUpdate(ScheduleTaskModel model)
+        public virtual async Task<IActionResult> TaskUpdate(ScheduleTaskModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a schedule task with the specified id
-            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id)
+            var scheduleTask = await _scheduleTaskService.GetTaskById(model.Id)
                                ?? throw new ArgumentException("Schedule task cannot be loaded");
 
             scheduleTask = model.ToEntity(scheduleTask);
 
-            _scheduleTaskService.UpdateTask(scheduleTask);
+            await _scheduleTaskService.UpdateTask(scheduleTask);
 
             //activity log
-            _customerActivityService.InsertActivity("EditTask",
-                string.Format(_localizationService.GetResource("ActivityLog.EditTask"), scheduleTask.Id), scheduleTask);
+            await _customerActivityService.InsertActivity("EditTask",
+                string.Format(await _localizationService.GetResource("ActivityLog.EditTask"), scheduleTask.Id), scheduleTask);
 
             return new NullJsonResult();
         }
 
-        public virtual IActionResult RunNow(int id)
+        public virtual async Task<IActionResult> RunNow(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
             try
             {
                 //try to get a schedule task with the specified id
-                var scheduleTask = _scheduleTaskService.GetTaskById(id)
+                var scheduleTask = await _scheduleTaskService.GetTaskById(id)
                                    ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
 
                 //ensure that the task is enabled
                 var task = new Task(scheduleTask) { Enabled = true };
-                task.Execute(true, false);
+                await task.Execute(true, false);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
             catch (Exception exc)
             {

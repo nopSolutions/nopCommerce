@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.News;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.News;
 using Nop.Web.Models.News;
 
 namespace Nop.Web.Factories
@@ -13,7 +14,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <returns>News comment model</returns>
-        NewsCommentModel PrepareNewsCommentModel(NewsComment newsComment);
+        Task<NewsCommentModel> PrepareNewsCommentModel(NewsComment newsComment);
 
         /// <summary>
         /// Prepare the news item model
@@ -22,19 +23,19 @@ namespace Nop.Web.Factories
         /// <param name="newsItem">News item</param>
         /// <param name="prepareComments">Whether to prepare news comment models</param>
         /// <returns>News item model</returns>
-        NewsItemModel PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments);
+        Task<NewsItemModel> PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments);
 
         /// <summary>
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        HomepageNewsItemsModel PrepareHomepageNewsItemsModel();
+        Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModel();
 
         /// <summary>
         /// Prepare the news item list model
         /// </summary>
         /// <param name="command">News paging filtering model</param>
         /// <returns>News item list model</returns>
-        NewsItemListModel PrepareNewsItemListModel(NewsPagingFilteringModel command);
+        Task<NewsItemListModel> PrepareNewsItemListModel(NewsPagingFilteringModel command);
     }
 }

@@ -6,7 +6,7 @@
 
     const string prefix = "customer-statistics";
     const string hidePanelAttributeName = "Reports.HideCustomerStatisticsPanel";
-    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    var hidePanel = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePanelAttributeName);
 }
 <div class="box box-info @if (hidePanel){<text>collapsed-box</text>}" id="@(prefix)-box">
     <div class="box-header with-border">

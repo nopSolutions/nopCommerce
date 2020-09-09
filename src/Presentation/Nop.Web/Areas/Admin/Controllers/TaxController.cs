@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
@@ -53,32 +54,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Providers");
         }
 
-        public virtual IActionResult Providers()
+        public virtual async Task<IActionResult> Providers()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _taxModelFactory.PrepareTaxProviderSearchModel(new TaxProviderSearchModel());
+            var model = await _taxModelFactory.PrepareTaxProviderSearchModel(new TaxProviderSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Providers(TaxProviderSearchModel searchModel)
+        public virtual async Task<IActionResult> Providers(TaxProviderSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _taxModelFactory.PrepareTaxProviderListModel(searchModel);
+            var model = await _taxModelFactory.PrepareTaxProviderListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult MarkAsPrimaryProvider(string systemName)
+        public virtual async Task<IActionResult> MarkAsPrimaryProvider(string systemName)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(systemName))
@@ -89,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Providers");
 
             _taxSettings.ActiveTaxProviderSystemName = systemName;
-            _settingService.SaveSetting(_taxSettings);
+            await _settingService.SaveSetting(_taxSettings);
 
             return RedirectToAction("Providers");
         }
@@ -98,49 +99,49 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Tax Categories
 
-        public virtual IActionResult Categories()
+        public virtual async Task<IActionResult> Categories()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _taxModelFactory.PrepareTaxCategorySearchModel(new TaxCategorySearchModel());
+            var model = await _taxModelFactory.PrepareTaxCategorySearchModel(new TaxCategorySearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Categories(TaxCategorySearchModel searchModel)
+        public virtual async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _taxModelFactory.PrepareTaxCategoryListModel(searchModel);
+            var model = await _taxModelFactory.PrepareTaxCategoryListModel(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryUpdate(TaxCategoryModel model)
+        public virtual async Task<IActionResult> CategoryUpdate(TaxCategoryModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
+            var taxCategory = await _taxCategoryService.GetTaxCategoryById(model.Id);
             taxCategory = model.ToEntity(taxCategory);
-            _taxCategoryService.UpdateTaxCategory(taxCategory);
+            await _taxCategoryService.UpdateTaxCategory(taxCategory);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryAdd(TaxCategoryModel model)
+        public virtual async Task<IActionResult> CategoryAdd(TaxCategoryModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -148,22 +149,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var taxCategory = new TaxCategory();
             taxCategory = model.ToEntity(taxCategory);
-            _taxCategoryService.InsertTaxCategory(taxCategory);
+            await _taxCategoryService.InsertTaxCategory(taxCategory);
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryDelete(int id)
+        public virtual async Task<IActionResult> CategoryDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //try to get a tax category with the specified id
-            var taxCategory = _taxCategoryService.GetTaxCategoryById(id)
+            var taxCategory = await _taxCategoryService.GetTaxCategoryById(id)
                 ?? throw new ArgumentException("No tax category found with the specified id", nameof(id));
 
-            _taxCategoryService.DeleteTaxCategory(taxCategory);
+            await _taxCategoryService.DeleteTaxCategory(taxCategory);
 
             return new NullJsonResult();
         }

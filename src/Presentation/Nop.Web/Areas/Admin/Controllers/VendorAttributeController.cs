@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
@@ -51,22 +52,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdateAttributeLocales(VendorAttribute vendorAttribute, VendorAttributeModel model)
+        protected virtual async Task UpdateAttributeLocales(VendorAttribute vendorAttribute, VendorAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(vendorAttribute,
+                await _localizedEntityService.SaveLocalizedValue(vendorAttribute,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
             }
         }
 
-        protected virtual void UpdateValueLocales(VendorAttributeValue vendorAttributeValue, VendorAttributeValueModel model)
+        protected virtual async Task UpdateValueLocales(VendorAttributeValue vendorAttributeValue, VendorAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(vendorAttributeValue,
+                await _localizedEntityService.SaveLocalizedValue(vendorAttributeValue,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -82,9 +83,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //we just redirect a user to the vendor settings page
@@ -92,9 +93,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult List(VendorAttributeSearchModel searchModel)
+        public virtual async Task<IActionResult> List(VendorAttributeSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
@@ -103,36 +104,36 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _vendorAttributeModelFactory.PrepareVendorAttributeModel(new VendorAttributeModel(), null);
+            var model = await _vendorAttributeModelFactory.PrepareVendorAttributeModel(new VendorAttributeModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(VendorAttributeModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(VendorAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var vendorAttribute = model.ToEntity<VendorAttribute>();
-                _vendorAttributeService.InsertVendorAttribute(vendorAttribute);
+                await _vendorAttributeService.InsertVendorAttribute(vendorAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewVendorAttribute",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewVendorAttribute"), vendorAttribute.Id), vendorAttribute);
+                await _customerActivityService.InsertActivity("AddNewVendorAttribute",
+                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewVendorAttribute"), vendorAttribute.Id), vendorAttribute);
 
                 //locales
-                UpdateAttributeLocales(vendorAttribute, model);
+                await UpdateAttributeLocales(vendorAttribute, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Vendors.VendorAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -141,52 +142,52 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _vendorAttributeModelFactory.PrepareVendorAttributeModel(model, null, true);
+            model = await _vendorAttributeModelFactory.PrepareVendorAttributeModel(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(id);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(id);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _vendorAttributeModelFactory.PrepareVendorAttributeModel(null, vendorAttribute);
+            var model = await _vendorAttributeModelFactory.PrepareVendorAttributeModel(null, vendorAttribute);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(VendorAttributeModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(VendorAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(model.Id);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(model.Id);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 vendorAttribute = model.ToEntity(vendorAttribute);
-                _vendorAttributeService.UpdateVendorAttribute(vendorAttribute);
+                await _vendorAttributeService.UpdateVendorAttribute(vendorAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditVendorAttribute",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditVendorAttribute"), vendorAttribute.Id), vendorAttribute);
+                await _customerActivityService.InsertActivity("EditVendorAttribute",
+                    string.Format(await _localizationService.GetResource("ActivityLog.EditVendorAttribute"), vendorAttribute.Id), vendorAttribute);
 
                 //locales
-                UpdateAttributeLocales(vendorAttribute, model);
+                await UpdateAttributeLocales(vendorAttribute, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Vendors.VendorAttributes.Updated"));
                 if (!continueEditing)
                     return RedirectToAction("List");
                 
@@ -194,30 +195,30 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _vendorAttributeModelFactory.PrepareVendorAttributeModel(model, vendorAttribute, true);
+            model = await _vendorAttributeModelFactory.PrepareVendorAttributeModel(model, vendorAttribute, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(id);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(id);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
-            _vendorAttributeService.DeleteVendorAttribute(vendorAttribute);
+            await _vendorAttributeService.DeleteVendorAttribute(vendorAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteVendorAttribute",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteVendorAttribute"), vendorAttribute.Id), vendorAttribute);
+            await _customerActivityService.InsertActivity("DeleteVendorAttribute",
+                string.Format(await _localizationService.GetResource("ActivityLog.DeleteVendorAttribute"), vendorAttribute.Id), vendorAttribute);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Vendors.VendorAttributes.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -227,13 +228,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Vendor attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(VendorAttributeValueSearchModel searchModel)
+        public virtual async Task<IActionResult> ValueList(VendorAttributeValueSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedDataTablesJson();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(searchModel.VendorAttributeId)
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(searchModel.VendorAttributeId)
                 ?? throw new ArgumentException("No vendor attribute found with the specified id");
 
             //prepare model
@@ -242,30 +243,30 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult ValueCreatePopup(int vendorAttributeId)
+        public virtual async Task<IActionResult> ValueCreatePopup(int vendorAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(vendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(vendorAttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(new VendorAttributeValueModel(), vendorAttribute, null);
+            var model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(new VendorAttributeValueModel(), vendorAttribute, null);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ValueCreatePopup(VendorAttributeValueModel model)
+        public virtual async Task<IActionResult> ValueCreatePopup(VendorAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(model.VendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(model.VendorAttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
@@ -273,13 +274,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var value = model.ToEntity<VendorAttributeValue>();
 
-                _vendorAttributeService.InsertVendorAttributeValue(value);
+                await _vendorAttributeService.InsertVendorAttributeValue(value);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewVendorAttributeValue",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewVendorAttributeValue"), value.Id), value);
+                await _customerActivityService.InsertActivity("AddNewVendorAttributeValue",
+                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewVendorAttributeValue"), value.Id), value);
 
-                UpdateValueLocales(value, model);
+                await UpdateValueLocales(value, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -287,61 +288,61 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(model, vendorAttribute, null, true);
+            model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(model, vendorAttribute, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         //edit
-        public virtual IActionResult ValueEditPopup(int id)
+        public virtual async Task<IActionResult> ValueEditPopup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute value with the specified id
-            var vendorAttributeValue = _vendorAttributeService.GetVendorAttributeValueById(id);
+            var vendorAttributeValue = await _vendorAttributeService.GetVendorAttributeValueById(id);
             if (vendorAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(vendorAttributeValue.VendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(vendorAttributeValue.VendorAttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(null, vendorAttribute, vendorAttributeValue);
+            var model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(null, vendorAttribute, vendorAttributeValue);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ValueEditPopup(VendorAttributeValueModel model)
+        public virtual async Task<IActionResult> ValueEditPopup(VendorAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute value with the specified id
-            var vendorAttributeValue = _vendorAttributeService.GetVendorAttributeValueById(model.Id);
+            var vendorAttributeValue = await _vendorAttributeService.GetVendorAttributeValueById(model.Id);
             if (vendorAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a vendor attribute with the specified id
-            var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(vendorAttributeValue.VendorAttributeId);
+            var vendorAttribute = await _vendorAttributeService.GetVendorAttributeById(vendorAttributeValue.VendorAttributeId);
             if (vendorAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 vendorAttributeValue = model.ToEntity(vendorAttributeValue);
-                _vendorAttributeService.UpdateVendorAttributeValue(vendorAttributeValue);
+                await _vendorAttributeService.UpdateVendorAttributeValue(vendorAttributeValue);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditVendorAttributeValue",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditVendorAttributeValue"), vendorAttributeValue.Id),
+                await _customerActivityService.InsertActivity("EditVendorAttributeValue",
+                    string.Format(await _localizationService.GetResource("ActivityLog.EditVendorAttributeValue"), vendorAttributeValue.Id),
                     vendorAttributeValue);
 
-                UpdateValueLocales(vendorAttributeValue, model);
+                await UpdateValueLocales(vendorAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -349,27 +350,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(model, vendorAttribute, vendorAttributeValue, true);
+            model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueModel(model, vendorAttribute, vendorAttributeValue, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ValueDelete(int id)
+        public virtual async Task<IActionResult> ValueDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a vendor attribute value with the specified id
-            var value = _vendorAttributeService.GetVendorAttributeValueById(id)
+            var value = await _vendorAttributeService.GetVendorAttributeValueById(id)
                 ?? throw new ArgumentException("No vendor attribute value found with the specified id", nameof(id));
 
-            _vendorAttributeService.DeleteVendorAttributeValue(value);
+            await _vendorAttributeService.DeleteVendorAttributeValue(value);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteVendorAttributeValue",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteVendorAttributeValue"), value.Id), value);
+            await _customerActivityService.InsertActivity("DeleteVendorAttributeValue",
+                string.Format(await _localizationService.GetResource("ActivityLog.DeleteVendorAttributeValue"), value.Id), value);
 
             return new NullJsonResult();
         }

@@ -11,7 +11,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "BlogCommentsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
@@ -134,7 +134,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.StoreName").Text,
                                 Width = "100",
-                                Visible = storeService.GetAllStores().Count > 1
+                                Visible = (await storeService.GetAllStores()).Count > 1
                             },
                             new ColumnProperty(nameof(BlogCommentModel.CustomerInfo))
                             {

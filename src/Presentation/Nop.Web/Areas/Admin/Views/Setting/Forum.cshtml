@@ -9,16 +9,16 @@
 
 @{
     const string hideCommonBlockAttributeName = "ForumSettingsPage.HideCommonBlock";
-    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCommonBlockAttributeName);
 
     const string hidePermissionsBlockAttributeName = "ForumSettingsPage.HidePermissionsBlock";
-    var hidePermissionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePermissionsBlockAttributeName);
+    var hidePermissionsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePermissionsBlockAttributeName);
 
     const string hidePageSizesBlockAttributeName = "ForumSettingsPage.HidePageSizesBlock";
-    var hidePageSizesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePageSizesBlockAttributeName);
+    var hidePageSizesBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePageSizesBlockAttributeName);
 
     const string hideFeedsBlockAttributeName = "ForumSettingsPage.HideFeedsBlock";
-    var hideFeedsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideFeedsBlockAttributeName);
+    var hideFeedsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideFeedsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Forum" method="post">

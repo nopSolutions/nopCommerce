@@ -3,7 +3,7 @@
 @{
     const string panelId = "latest-orders-box";
     const string hidePanelAttributeName = "Reports.HideLatestOrdersPanel";
-    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    var hidePanel = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePanelAttributeName);
     var gridPageSize = 5;
 }
 

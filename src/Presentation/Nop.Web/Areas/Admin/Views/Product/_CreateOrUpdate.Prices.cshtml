@@ -3,7 +3,7 @@
 @inject IStoreService storeService
 @using Nop.Services.Stores
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStores();
 }
 <script>
     $(document).ready(function() {

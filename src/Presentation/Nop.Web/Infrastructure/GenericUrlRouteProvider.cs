@@ -29,7 +29,7 @@ namespace Nop.Web.Infrastructure
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     var langservice = endpointRouteBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguages().ToList();
+                    var languages = langservice.GetAllLanguages().Result.ToList();
                     pattern = "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + "}/{SeName}";
                 }
             }

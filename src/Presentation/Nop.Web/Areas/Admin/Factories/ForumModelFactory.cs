@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
@@ -58,7 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Forum group search model</param>
         /// <returns>Forum group search model</returns>
-        public virtual ForumGroupSearchModel PrepareForumGroupSearchModel(ForumGroupSearchModel searchModel)
+        public virtual Task<ForumGroupSearchModel> PrepareForumGroupSearchModel(ForumGroupSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -69,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -77,13 +78,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Forum group search model</param>
         /// <returns>Forum group list model</returns>
-        public virtual ForumGroupListModel PrepareForumGroupListModel(ForumGroupSearchModel searchModel)
+        public virtual async Task<ForumGroupListModel> PrepareForumGroupListModel(ForumGroupSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get forum groups
-            var forumGroups = _forumService.GetAllForumGroups().ToPagedList(searchModel);
+            var forumGroups = (await _forumService.GetAllForumGroups()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ForumGroupListModel().PrepareToGrid(searchModel, forumGroups, () =>
@@ -110,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="forumGroup">Forum group</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Forum group model</returns>
-        public virtual ForumGroupModel PrepareForumGroupModel(ForumGroupModel model, ForumGroup forumGroup, bool excludeProperties = false)
+        public virtual Task<ForumGroupModel> PrepareForumGroupModel(ForumGroupModel model, ForumGroup forumGroup, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (forumGroup != null)
@@ -120,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (forumGroup == null)
                 model.DisplayOrder = 1;
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Forum search model</param>
         /// <param name="forumGroup">Forum group</param>
         /// <returns>Forum list model</returns>
-        public virtual ForumListModel PrepareForumListModel(ForumSearchModel searchModel, ForumGroup forumGroup)
+        public virtual async Task<ForumListModel> PrepareForumListModel(ForumSearchModel searchModel, ForumGroup forumGroup)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -138,7 +139,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(forumGroup));
             
             //get forums
-            var forums = _forumService.GetAllForumsByGroupId(forumGroup.Id).ToPagedList(searchModel);
+            var forums = (await _forumService.GetAllForumsByGroupId(forumGroup.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ForumListModel().PrepareToGrid(searchModel, forums, () =>
@@ -165,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="forum">Forum</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Forum model</returns>
-        public virtual ForumModel PrepareForumModel(ForumModel model, Forum forum, bool excludeProperties = false)
+        public virtual async Task<ForumModel> PrepareForumModel(ForumModel model, Forum forum, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (forum != null)
@@ -176,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.DisplayOrder = 1;
 
             //prepare available forum groups
-            foreach (var forumGroup in _forumService.GetAllForumGroups())
+            foreach (var forumGroup in await _forumService.GetAllForumGroups())
             {
                 model.ForumGroups.Add(forumGroup.ToModel<ForumGroupModel>());
             }

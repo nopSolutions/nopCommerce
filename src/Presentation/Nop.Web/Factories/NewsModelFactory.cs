@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -84,28 +85,28 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <returns>News comment model</returns>
-        public virtual NewsCommentModel PrepareNewsCommentModel(NewsComment newsComment)
+        public virtual async Task<NewsCommentModel> PrepareNewsCommentModel(NewsComment newsComment)
         {
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
-            var customer = _customerService.GetCustomerById(newsComment.CustomerId);
+            var customer = await _customerService.GetCustomerById(newsComment.CustomerId);
 
             var model = new NewsCommentModel
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(customer),
+                CustomerName = await _customerService.FormatUsername(customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !_customerService.IsGuest(customer),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuest(customer),
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
+                    await _genericAttributeService.GetAttribute<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -119,7 +120,7 @@ namespace Nop.Web.Factories
         /// <param name="newsItem">News item</param>
         /// <param name="prepareComments">Whether to prepare news comment models</param>
         /// <returns>News item model</returns>
-        public virtual NewsItemModel PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
+        public virtual async Task<NewsItemModel> PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -131,7 +132,7 @@ namespace Nop.Web.Factories
             model.MetaTitle = newsItem.MetaTitle;
             model.MetaDescription = newsItem.MetaDescription;
             model.MetaKeywords = newsItem.MetaKeywords;
-            model.SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = await _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = newsItem.Title;
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;
@@ -140,20 +141,20 @@ namespace Nop.Web.Factories
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
 
             //number of news comments
-            var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
+            var storeId = _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStore()).Id : 0;
             
-            model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, storeId, true);
+            model.NumberOfComments = await _newsService.GetNewsCommentsCount(newsItem, storeId, true);
 
             if (prepareComments)
             {
-                var newsComments = _newsService.GetAllComments(
+                var newsComments = await _newsService.GetAllComments(
                     newsItemId: newsItem.Id,
                     approved: true,
-                    storeId: _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0);
+                    storeId: _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStore()).Id : 0);
 
                 foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
-                    var commentModel = PrepareNewsCommentModel(nc);
+                    var commentModel = await PrepareNewsCommentModel(nc);
                     model.Comments.Add(commentModel);
                 }
             }
@@ -165,20 +166,20 @@ namespace Nop.Web.Factories
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        public virtual HomepageNewsItemsModel PrepareHomepageNewsItemsModel()
+        public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModel()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, _workContext.WorkingLanguage, _storeContext.CurrentStore);
-            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguage(), await _storeContext.GetCurrentStore());
+            var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
             {
-                var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
+                var newsItems = await _newsService.GetAllNews((await _workContext.GetWorkingLanguage()).Id, (await _storeContext.GetCurrentStore()).Id, 0, _newsSettings.MainPageNewsCount);
                 return new HomepageNewsItemsModel
                 {
-                    WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                    WorkingLanguageId = (await _workContext.GetWorkingLanguage()).Id,
                     NewsItems = newsItems
                         .Select(x =>
                         {
                             var newsModel = new NewsItemModel();
-                            PrepareNewsItemModel(newsModel, x, false);
+                            PrepareNewsItemModel(newsModel, x, false).Wait();
                             return newsModel;
                         }).ToList()
                 };
@@ -199,11 +200,11 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="command">News paging filtering model</param>
         /// <returns>News item list model</returns>
-        public virtual NewsItemListModel PrepareNewsItemListModel(NewsPagingFilteringModel command)
+        public virtual async Task<NewsItemListModel> PrepareNewsItemListModel(NewsPagingFilteringModel command)
         {
             var model = new NewsItemListModel
             {
-                WorkingLanguageId = _workContext.WorkingLanguage.Id
+                WorkingLanguageId = (await _workContext.GetWorkingLanguage()).Id
             };
 
             if (command.PageSize <= 0)
@@ -211,7 +212,7 @@ namespace Nop.Web.Factories
             if (command.PageNumber <= 0)
                 command.PageNumber = 1;
 
-            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
+            var newsItems = await _newsService.GetAllNews((await _workContext.GetWorkingLanguage()).Id, (await _storeContext.GetCurrentStore()).Id,
                 command.PageNumber - 1, command.PageSize);
             model.PagingFilteringContext.LoadPagedList(newsItems);
 
@@ -219,7 +220,7 @@ namespace Nop.Web.Factories
                 .Select(x =>
                 {
                     var newsModel = new NewsItemModel();
-                    PrepareNewsItemModel(newsModel, x, false);
+                    PrepareNewsItemModel(newsModel, x, false).Wait();
                     return newsModel;
                 }).ToList();
 

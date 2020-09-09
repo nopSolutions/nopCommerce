@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -70,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer attribute search model</param>
         /// <returns>Customer attribute search model</returns>
-        public virtual CustomerAttributeSearchModel PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel searchModel)
+        public virtual Task<CustomerAttributeSearchModel> PrepareCustomerAttributeSearchModel(CustomerAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -78,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -86,13 +87,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer attribute search model</param>
         /// <returns>Customer attribute list model</returns>
-        public virtual CustomerAttributeListModel PrepareCustomerAttributeListModel(CustomerAttributeSearchModel searchModel)
+        public virtual async Task<CustomerAttributeListModel> PrepareCustomerAttributeListModel(CustomerAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer attributes
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes().ToPagedList(searchModel);
+            var customerAttributes = (await _customerAttributeService.GetAllCustomerAttributes()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAttributeListModel().PrepareToGrid(searchModel, customerAttributes, () =>
@@ -103,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
+                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType).Result;
 
                     return attributeModel;
                 });
@@ -119,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customerAttribute">Customer attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Customer attribute model</returns>
-        public virtual CustomerAttributeModel PrepareCustomerAttributeModel(CustomerAttributeModel model,
+        public virtual async Task<CustomerAttributeModel> PrepareCustomerAttributeModel(CustomerAttributeModel model,
             CustomerAttribute customerAttribute, bool excludeProperties = false)
         {
             Action<CustomerAttributeLocalizedModel, int> localizedModelConfiguration = null;
@@ -133,15 +134,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareCustomerAttributeValueSearchModel(model.CustomerAttributeValueSearchModel, customerAttribute);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(customerAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalized(customerAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }
@@ -152,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Customer attribute value search model</param>
         /// <param name="customerAttribute">Customer attribute</param>
         /// <returns>Customer attribute value list model</returns>
-        public virtual CustomerAttributeValueListModel PrepareCustomerAttributeValueListModel(CustomerAttributeValueSearchModel searchModel,
+        public virtual async Task<CustomerAttributeValueListModel> PrepareCustomerAttributeValueListModel(CustomerAttributeValueSearchModel searchModel,
             CustomerAttribute customerAttribute)
         {
             if (searchModel == null)
@@ -162,8 +163,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customerAttribute));
 
             //get customer attribute values
-            var customerAttributeValues = _customerAttributeService
-                .GetCustomerAttributeValues(customerAttribute.Id).ToPagedList(searchModel);
+            var customerAttributeValues = (await _customerAttributeService
+                .GetCustomerAttributeValues(customerAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CustomerAttributeValueListModel().PrepareToGrid(searchModel, customerAttributeValues, () =>
@@ -183,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customerAttributeValue">Customer attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Customer attribute value model</returns>
-        public virtual CustomerAttributeValueModel PrepareCustomerAttributeValueModel(CustomerAttributeValueModel model,
+        public virtual async Task<CustomerAttributeValueModel> PrepareCustomerAttributeValueModel(CustomerAttributeValueModel model,
             CustomerAttribute customerAttribute, CustomerAttributeValue customerAttributeValue, bool excludeProperties = false)
         {
             if (customerAttribute == null)
@@ -197,9 +198,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= customerAttributeValue.ToModel<CustomerAttributeValueModel>();
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(customerAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalized(customerAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -207,7 +208,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             return model;
         }

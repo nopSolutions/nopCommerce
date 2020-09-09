@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -109,39 +110,39 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var model = _pluginModelFactory.PreparePluginSearchModel(new PluginSearchModel());
+            var model = await _pluginModelFactory.PreparePluginSearchModel(new PluginSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ListSelect(PluginSearchModel searchModel)
+        public virtual async Task<IActionResult> ListSelect(PluginSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _pluginModelFactory.PreparePluginListModel(searchModel);
+            var model = await _pluginModelFactory.PreparePluginListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult AdminNavigationPlugins()
+        public virtual async Task<IActionResult> AdminNavigationPlugins()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Json(new List<string>());
 
             //prepare models
-            var models = _pluginModelFactory.PrepareAdminNavigationPluginModels().Select(model => new
+            var models = (await _pluginModelFactory.PrepareAdminNavigationPluginModels()).Select(model => new
             {
                 title = model.FriendlyName,
                 link = model.ConfigurationUrl,
-                parent = _localizationService.GetResource("Admin.Configuration.Plugins.Local"),
+                parent = _localizationService.GetResource("Admin.Configuration.Plugins.Local").Result,
                 grandParent = string.Empty,
                 rate = -50 //negative rate is set to move plugins to the end of list
             }).ToList();
@@ -150,15 +151,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult UploadPluginsAndThemes(IFormFile archivefile)
+        public virtual async Task<IActionResult> UploadPluginsAndThemes(IFormFile archivefile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             try
             {
                 if (archivefile == null || archivefile.Length == 0)
-                    throw new NopException(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    throw new NopException(await _localizationService.GetResource("Admin.Common.UploadFile"));
 
                 var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
                 var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
@@ -167,24 +168,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //activity log
                 foreach (var descriptor in pluginDescriptors)
                 {
-                    _customerActivityService.InsertActivity("UploadNewPlugin",
-                        string.Format(_localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
+                    await _customerActivityService.InsertActivity("UploadNewPlugin",
+                        string.Format(await _localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName));
                 }
 
                 foreach (var descriptor in themeDescriptors)
                 {
-                    _customerActivityService.InsertActivity("UploadNewTheme",
-                        string.Format(_localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
+                    await _customerActivityService.InsertActivity("UploadNewTheme",
+                        string.Format(await _localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName));
                 }
 
                 //events
                 if (pluginDescriptors.Any())
-                    _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
+                    await _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
 
                 if (themeDescriptors.Any())
-                    _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
+                    await _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
 
-                var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
+                var message = string.Format(await _localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
                 return View("RestartApplication", Url.Action("List", "Plugin"));
@@ -199,9 +200,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
-        public virtual IActionResult Install(IFormCollection form)
+        public virtual async Task<IActionResult> Install(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             try
@@ -221,9 +222,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (pluginDescriptor.Installed)
                     return RedirectToAction("List");
 
-                _pluginService.PreparePluginToInstall(pluginDescriptor.SystemName, _workContext.CurrentCustomer);
+                await _pluginService.PreparePluginToInstall(pluginDescriptor.SystemName, await _workContext.GetCurrentCustomer());
                 pluginDescriptor.ShowInPluginsList = false;
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
             }
             catch (Exception exc)
             {
@@ -235,9 +236,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
-        public virtual IActionResult Uninstall(IFormCollection form)
+        public virtual async Task<IActionResult> Uninstall(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             try
@@ -257,9 +258,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!pluginDescriptor.Installed)
                     return RedirectToAction("List");
 
-                _pluginService.PreparePluginToUninstall(pluginDescriptor.SystemName);
+                await _pluginService.PreparePluginToUninstall(pluginDescriptor.SystemName);
                 pluginDescriptor.ShowInPluginsList = false;
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
             }
             catch (Exception exc)
             {
@@ -271,9 +272,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "delete-plugin-link-")]
-        public virtual IActionResult Delete(IFormCollection form)
+        public virtual async Task<IActionResult> Delete(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             try
@@ -290,9 +291,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (pluginDescriptor.Installed)
                     return RedirectToAction("List");
 
-                _pluginService.PreparePluginToDelete(pluginDescriptor.SystemName);
+                await _pluginService.PreparePluginToDelete(pluginDescriptor.SystemName);
                 pluginDescriptor.ShowInPluginsList = false;
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Plugins.ChangesApplyAfterReboot"));
             }
             catch (Exception exc)
             {
@@ -304,47 +305,47 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("plugin-reload-grid")]
-        public virtual IActionResult ReloadList()
+        public virtual async Task<IActionResult> ReloadList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            _pluginService.UninstallPlugins();
-            _pluginService.DeletePlugins();
+            await _pluginService.UninstallPlugins();
+            await _pluginService.DeletePlugins();
 
             return View("RestartApplication", Url.Action("List", "Plugin"));
         }
 
-        public virtual IActionResult UninstallAndDeleteUnusedPlugins(string[] names)
+        public virtual async Task<IActionResult> UninstallAndDeleteUnusedPlugins(string[] names)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            foreach (var name in names) 
-                _pluginService.PreparePluginToUninstall(name);
+            foreach (var name in names)
+                await _pluginService.PreparePluginToUninstall(name);
 
-            _pluginService.UninstallPlugins();
+            await _pluginService.UninstallPlugins();
 
             foreach (var name in names)
-                _pluginService.PreparePluginToDelete(name);
+                await _pluginService.PreparePluginToDelete(name);
 
-            _pluginService.DeletePlugins();
+            await _pluginService.DeletePlugins();
 
             return View("RestartApplication", Url.Action("Warnings", "Common"));
         }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("plugin-apply-changes")]
-        public virtual IActionResult ApplyChanges()
+        public virtual async Task<IActionResult> ApplyChanges()
         {
-            return ReloadList();
+            return await ReloadList();
         }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("plugin-discard-changes")]
-        public virtual IActionResult DiscardChanges()
+        public virtual async Task<IActionResult> DiscardChanges()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             _pluginService.ResetChanges();
@@ -352,9 +353,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult EditPopup(string systemName)
+        public virtual async Task<IActionResult> EditPopup(string systemName)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             //try to get a plugin with the specified system name
@@ -363,15 +364,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _pluginModelFactory.PreparePluginModel(null, pluginDescriptor);
+            var model = await _pluginModelFactory.PreparePluginModel(null, pluginDescriptor);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult EditPopup(PluginModel model)
+        public virtual async Task<IActionResult> EditPopup(PluginModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             //try to get a plugin with the specified system name
@@ -397,13 +398,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pluginDescriptor.Save();
 
                 //raise event
-                _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+                await _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
                 //locales
                 var pluginInstance = pluginDescriptor.Instance<IPlugin>();
                 foreach (var localized in model.Locales)
                 {
-                    _localizationService.SaveLocalizedFriendlyName(pluginInstance, localized.LanguageId, localized.FriendlyName);
+                    await _localizationService.SaveLocalizedFriendlyName(pluginInstance, localized.LanguageId, localized.FriendlyName);
                 }
 
                 //enabled/disabled
@@ -419,7 +420,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _paymentSettings.ActivePaymentMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_paymentSettings);
+                            await _settingService.SaveSetting(_paymentSettings);
                             break;
                         }
 
@@ -427,7 +428,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as enabled
                             _paymentSettings.ActivePaymentMethodSystemNames.Add(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_paymentSettings);
+                            await _settingService.SaveSetting(_paymentSettings);
                         }
 
                         break;
@@ -437,7 +438,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_shippingSettings);
+                            await _settingService.SaveSetting(_shippingSettings);
                             break;
                         }
 
@@ -445,7 +446,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as enabled
                             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_shippingSettings);
+                            await _settingService.SaveSetting(_shippingSettings);
                         }
 
                         break;
@@ -455,7 +456,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _shippingSettings.ActivePickupPointProviderSystemNames.Remove(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_shippingSettings);
+                            await _settingService.SaveSetting(_shippingSettings);
                             break;
                         }
 
@@ -463,7 +464,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as enabled
                             _shippingSettings.ActivePickupPointProviderSystemNames.Add(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_shippingSettings);
+                            await _settingService.SaveSetting(_shippingSettings);
                         }
 
                         break;
@@ -472,13 +473,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _taxSettings.ActiveTaxProviderSystemName = string.Empty;
-                            _settingService.SaveSetting(_taxSettings);
+                            await _settingService.SaveSetting(_taxSettings);
                             break;
                         }
 
                         //mark as enabled
                         _taxSettings.ActiveTaxProviderSystemName = model.SystemName;
-                        _settingService.SaveSetting(_taxSettings);
+                        await _settingService.SaveSetting(_taxSettings);
                         break;
                     case IExternalAuthenticationMethod externalAuthenticationMethod:
                         pluginIsActive = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
@@ -486,7 +487,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_externalAuthenticationSettings);
+                            await _settingService.SaveSetting(_externalAuthenticationSettings);
                             break;
                         }
 
@@ -494,7 +495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as enabled
                             _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_externalAuthenticationSettings);
+                            await _settingService.SaveSetting(_externalAuthenticationSettings);
                         }
 
                         break;
@@ -504,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _widgetSettings.ActiveWidgetSystemNames.Remove(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_widgetSettings);
+                            await _settingService.SaveSetting(_widgetSettings);
                             break;
                         }
 
@@ -512,45 +513,45 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as enabled
                             _widgetSettings.ActiveWidgetSystemNames.Add(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_widgetSettings);
+                            await _settingService.SaveSetting(_widgetSettings);
                         }
 
                         break;
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("EditPlugin",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditPlugin"), pluginDescriptor.FriendlyName));
+                await _customerActivityService.InsertActivity("EditPlugin",
+                    string.Format(await _localizationService.GetResource("ActivityLog.EditPlugin"), pluginDescriptor.FriendlyName));
 
                 return View(model);
             }
 
             //prepare model
-            model = _pluginModelFactory.PreparePluginModel(model, pluginDescriptor, true);
+            model = await _pluginModelFactory.PreparePluginModel(model, pluginDescriptor, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult OfficialFeed()
+        public virtual async Task<IActionResult> OfficialFeed()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _pluginModelFactory.PrepareOfficialFeedPluginSearchModel(new OfficialFeedPluginSearchModel());
+            var model = await _pluginModelFactory.PrepareOfficialFeedPluginSearchModel(new OfficialFeedPluginSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult OfficialFeedSelect(OfficialFeedPluginSearchModel searchModel)
+        public virtual async Task<IActionResult> OfficialFeedSelect(OfficialFeedPluginSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _pluginModelFactory.PrepareOfficialFeedPluginListModel(searchModel);
+            var model = await _pluginModelFactory.PrepareOfficialFeedPluginListModel(searchModel);
 
             return Json(model);
         }

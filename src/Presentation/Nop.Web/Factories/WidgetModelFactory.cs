@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -58,15 +59,15 @@ namespace Nop.Web.Factories
         /// <param name="widgetZone">Name of widget zone</param>
         /// <param name="additionalData">Additional data object</param>
         /// <returns>List of the render widget models</returns>
-        public virtual List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
+        public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
         {
-            var roles = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+            var roles = _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
 
             var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
-                roles, _storeContext.CurrentStore, widgetZone, _themeContext.WorkingThemeName);
+                roles, await _storeContext.GetCurrentStore(), widgetZone, _themeContext.GetWorkingThemeName());
 
-            var cachedModels = _staticCacheManager.Get(cacheKey, () =>
-                _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, widgetZone)
+            var cachedModels = await _staticCacheManager.Get(cacheKey, async () =>
+                _widgetPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id, widgetZone)
                 .Select(widget => new RenderWidgetModel
                 {
                     WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),

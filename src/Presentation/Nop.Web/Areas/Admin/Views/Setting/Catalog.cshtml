@@ -9,46 +9,46 @@
 
 @{
     const string hideSearchBlockAttributeName = "CatalogSettingsPage.HideSearchBlock";
-    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
 
     const string hideProductReviewsBlockAttributeName = "CatalogSettingsPage.HideProductReviewsBlock";
-    var hideProductReviewsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductReviewsBlockAttributeName);
+    var hideProductReviewsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideProductReviewsBlockAttributeName);
 
     const string hideReviewTypesBlockAttributeName = "CatalogSettingsPage.HideReviewTypesBlock";
-    var hideReviewTypesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideReviewTypesBlockAttributeName);
+    var hideReviewTypesBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideReviewTypesBlockAttributeName);
 
     const string hidePerformanceBlockAttributeName = "CatalogSettingsPage.HidePerformanceBlock";
-    var hidePerformanceBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePerformanceBlockAttributeName);
+    var hidePerformanceBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePerformanceBlockAttributeName);
 
     const string hideShareBlockAttributeName = "CatalogSettingsPage.HideShareBlock";
-    var hideShareBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShareBlockAttributeName);
+    var hideShareBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideShareBlockAttributeName);
 
     const string hideCompareProductsBlockAttributeName = "CatalogSettingsPage.HideCompareProductsBlock";
-    var hideCompareProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCompareProductsBlockAttributeName);
+    var hideCompareProductsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCompareProductsBlockAttributeName);
 
     const string hideAdditionalSectionsBlockAttributeName = "CatalogSettingsPage.HideAdditionalSectionsBlock";
-    var hideAdditionalSectionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAdditionalSectionsBlockAttributeName);
+    var hideAdditionalSectionsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideAdditionalSectionsBlockAttributeName);
 
     const string hideProductFieldsBlockAttributeName = "CatalogSettingsPage.HideProductFieldsBlock";
-    var hideProductFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductFieldsBlockAttributeName);
+    var hideProductFieldsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideProductFieldsBlockAttributeName);
 
     const string hideProductPageBlockAttributeName = "CatalogSettingsPage.HideProductPageBlock";
-    var hideProductPageBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductPageBlockAttributeName);
+    var hideProductPageBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideProductPageBlockAttributeName);
 
     const string hideCatalogPagesBlockAttributeName = "CatalogSettingsPage.HideCatalogPagesBlock";
-    var hideCatalogPagesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCatalogPagesBlockAttributeName);
+    var hideCatalogPagesBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCatalogPagesBlockAttributeName);
 
     const string hideTagsBlockAttributeName = "CatalogSettingsPage.HideTagsBlock";
-    var hideTagsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTagsBlockAttributeName);
+    var hideTagsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideTagsBlockAttributeName);
 
     const string hideTaxBlockAttributeName = "CatalogSettingsPage.HideTaxBlock";
-    var hideTaxBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTaxBlockAttributeName);
+    var hideTaxBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideTaxBlockAttributeName);
 
     const string hideExportImportBlockAttributeName = "CatalogSettingsPage.HideExportImportBlock";
-    var hideExportImportBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideExportImportBlockAttributeName);
+    var hideExportImportBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideExportImportBlockAttributeName);
 
     const string hideProductSortingBlockAttributeName = "CatalogSettingsPage.HideProductSortingBlock";
-    var hideProductSortingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductSortingBlockAttributeName);
+    var hideProductSortingBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideProductSortingBlockAttributeName);
 }
 
 

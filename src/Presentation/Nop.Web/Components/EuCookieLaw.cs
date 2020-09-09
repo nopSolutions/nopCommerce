@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
@@ -27,17 +28,17 @@ namespace Nop.Web.Components
             _storeInformationSettings = storeInformationSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> Invoke()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
                 return Content("");
 
             //ignore search engines because some pages could be indexed with the EU cookie as description
-            if (_workContext.CurrentCustomer.IsSearchEngineAccount())
+            if ((await _workContext.GetCurrentCustomer()).IsSearchEngineAccount())
                 return Content("");
 
-            if (_genericAttributeService.GetAttribute<bool>(_workContext.CurrentCustomer, NopCustomerDefaults.EuCookieLawAcceptedAttribute, _storeContext.CurrentStore.Id))
+            if (await _genericAttributeService.GetAttribute<bool>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, (await _storeContext.GetCurrentStore()).Id))
                 //already accepted
                 return Content("");
 

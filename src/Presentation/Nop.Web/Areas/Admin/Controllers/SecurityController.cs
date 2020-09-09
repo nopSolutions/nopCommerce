@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -53,23 +54,23 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult AccessDenied(string pageUrl)
+        public virtual async Task<IActionResult> AccessDenied(string pageUrl)
         {
-            var currentCustomer = _workContext.CurrentCustomer;
-            if (currentCustomer == null || _customerService.IsGuest(currentCustomer))
+            var currentCustomer = await _workContext.GetCurrentCustomer();
+            if (currentCustomer == null || await _customerService.IsGuest(currentCustomer))
             {
-                _logger.Information($"Access denied to anonymous request on {pageUrl}");
+                await _logger.Information($"Access denied to anonymous request on {pageUrl}");
                 return View();
             }
 
-            _logger.Information($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
+            await _logger.Information($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
 
             return View();
         }
 
-        public virtual IActionResult Permissions()
+        public virtual async Task<IActionResult> Permissions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //prepare model
@@ -79,13 +80,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual IActionResult PermissionsSave(PermissionMappingModel model, IFormCollection form)
+        public virtual async Task<IActionResult> PermissionsSave(PermissionMappingModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var permissionRecords = _permissionService.GetAllPermissionRecords();
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var permissionRecords = await _permissionService.GetAllPermissionRecords();
+            var customerRoles = await _customerService.GetAllCustomerRoles(true);
 
             foreach (var cr in customerRoles)
             {
@@ -98,23 +99,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
 
-                    if (allow == _permissionService.Authorize(pr.SystemName, cr.Id))
+                    if (allow == await _permissionService.Authorize(pr.SystemName, cr.Id))
                         continue;
 
                     if (allow)
                     {
-                        _permissionService.InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
+                        await _permissionService.InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
                     }
                     else
                     {
-                        _permissionService.DeletePermissionRecordCustomerRoleMapping(pr.Id, cr.Id);                        
+                        await _permissionService.DeletePermissionRecordCustomerRoleMapping(pr.Id, cr.Id);                        
                     }
 
-                    _permissionService.UpdatePermissionRecord(pr);
+                    await _permissionService.UpdatePermissionRecord(pr);
                 }
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.ACL.Updated"));
 
             return RedirectToAction("Permissions");
         }

@@ -44,7 +44,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country have states?
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Result.Any();
                     if (hasStates)
                     {
                         //if yes, then ensure that a state is selected
@@ -53,13 +53,13 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     }
 
                     return true;
-                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
+                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required").Result);
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
                 RuleFor(x => x.Company)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Company.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Company.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.StreetAddress)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.StreetAddress2)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress2.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress2.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.ZipPostalCode)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.ZipPostalCode.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.ZipPostalCode.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -91,7 +91,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.City)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.City.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.City.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.County)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.County.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.County.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.Phone)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Phone.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Phone.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.Fax)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Fax.Required"))
+                    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Fax.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
@@ -125,7 +125,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
 
         private bool IsRegisteredCustomerRoleChecked(CustomerModel model, ICustomerService customerService)
         {
-            var allCustomerRoles = customerService.GetAllCustomerRoles(true);
+            var allCustomerRoles = customerService.GetAllCustomerRoles(true).Result;
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))

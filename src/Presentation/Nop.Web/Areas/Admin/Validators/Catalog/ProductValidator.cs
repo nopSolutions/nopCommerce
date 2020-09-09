@@ -14,15 +14,15 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.Name.Required"));
+                .WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.Name.Required").Result);
             
             RuleFor(x => x.SeName)
                 .Length(0, NopSeoDefaults.SearchEngineNameLength)
-                .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength));
+                .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation").Result, NopSeoDefaults.SearchEngineNameLength));
             
             RuleFor(x => x.RentalPriceLength)
                 .GreaterThan(0)
-                .WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero"))
+                .WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero").Result)
                 .When(x => x.IsRental);
 
             SetDatabaseValidationRules<Product>(dataProvider);

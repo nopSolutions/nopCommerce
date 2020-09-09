@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -13,9 +14,9 @@ namespace Nop.Web.Components
             _shoppingCartModelFactory = shoppingCartModelFactory;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> Invoke()
         {
-            var attributes = _shoppingCartModelFactory.FormatSelectedCheckoutAttributes();
+            var attributes = await _shoppingCartModelFactory.FormatSelectedCheckoutAttributes();
             return View(null, attributes);
         }
     }

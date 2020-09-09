@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
@@ -51,22 +52,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void UpdateAttributeLocales(CustomerAttribute customerAttribute, CustomerAttributeModel model)
+        protected virtual async Task UpdateAttributeLocales(CustomerAttribute customerAttribute, CustomerAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(customerAttribute,
+                await _localizedEntityService.SaveLocalizedValue(customerAttribute,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
             }
         }
 
-        protected virtual void UpdateValueLocales(CustomerAttributeValue customerAttributeValue, CustomerAttributeValueModel model)
+        protected virtual async Task UpdateValueLocales(CustomerAttributeValue customerAttributeValue, CustomerAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(customerAttributeValue,
+                await _localizedEntityService.SaveLocalizedValue(customerAttributeValue,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -82,9 +83,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //select an appropriate panel
@@ -95,9 +96,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult List(CustomerAttributeSearchModel searchModel)
+        public virtual async Task<IActionResult> List(CustomerAttributeSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
@@ -106,37 +107,37 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(new CustomerAttributeModel(), null);
+            var model = await _customerAttributeModelFactory.PrepareCustomerAttributeModel(new CustomerAttributeModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(CustomerAttributeModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(CustomerAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var customerAttribute = model.ToEntity<CustomerAttribute>();
-                _customerAttributeService.InsertCustomerAttribute(customerAttribute);
+                await _customerAttributeService.InsertCustomerAttribute(customerAttribute);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerAttribute",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id),
+                await _customerActivityService.InsertActivity("AddNewCustomerAttribute",
+                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewCustomerAttribute"), customerAttribute.Id),
                     customerAttribute);
 
                 //locales
-                UpdateAttributeLocales(customerAttribute, model);
+                await UpdateAttributeLocales(customerAttribute, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.CustomerAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -145,35 +146,35 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             
             //prepare model
-            model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(model, null, true);
+            model = await _customerAttributeModelFactory.PrepareCustomerAttributeModel(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(id);
             if (customerAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _customerAttributeModelFactory.PrepareCustomerAttributeModel(null, customerAttribute);
+            var model = await _customerAttributeModelFactory.PrepareCustomerAttributeModel(null, customerAttribute);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(CustomerAttributeModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(CustomerAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.Id);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(model.Id);
             if (customerAttribute == null)
                 //no customer attribute found with the specified id
                 return RedirectToAction("List");
@@ -183,17 +184,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View(model);
 
             customerAttribute = model.ToEntity(customerAttribute);
-            _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
+            await _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("EditCustomerAttribute",
-                string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id),
+            await _customerActivityService.InsertActivity("EditCustomerAttribute",
+                string.Format(await _localizationService.GetResource("ActivityLog.EditCustomerAttribute"), customerAttribute.Id),
                 customerAttribute);
 
             //locales
-            UpdateAttributeLocales(customerAttribute, model);
+            await UpdateAttributeLocales(customerAttribute, model);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Updated"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.CustomerAttributes.Updated"));
 
             if (!continueEditing)
                 return RedirectToAction("List");
@@ -202,20 +203,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
-            _customerAttributeService.DeleteCustomerAttribute(customerAttribute);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(id);
+            await _customerAttributeService.DeleteCustomerAttribute(customerAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCustomerAttribute",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id),
+            await _customerActivityService.InsertActivity("DeleteCustomerAttribute",
+                string.Format(await _localizationService.GetResource("ActivityLog.DeleteCustomerAttribute"), customerAttribute.Id),
                 customerAttribute);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
             return RedirectToAction("List");
         }
 
@@ -224,59 +225,59 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Customer attribute values
 
         [HttpPost]
-        public virtual IActionResult ValueList(CustomerAttributeValueSearchModel searchModel)
+        public virtual async Task<IActionResult> ValueList(CustomerAttributeValueSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedDataTablesJson();
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(searchModel.CustomerAttributeId)
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(searchModel.CustomerAttributeId)
                 ?? throw new ArgumentException("No customer attribute found with the specified id");
 
             //prepare model
-            var model = _customerAttributeModelFactory.PrepareCustomerAttributeValueListModel(searchModel, customerAttribute);
+            var model = await _customerAttributeModelFactory.PrepareCustomerAttributeValueListModel(searchModel, customerAttribute);
 
             return Json(model);
         }
 
-        public virtual IActionResult ValueCreatePopup(int customerAttributeId)
+        public virtual async Task<IActionResult> ValueCreatePopup(int customerAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
             if (customerAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _customerAttributeModelFactory
+            var model = await _customerAttributeModelFactory
                 .PrepareCustomerAttributeValueModel(new CustomerAttributeValueModel(), customerAttribute, null);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ValueCreatePopup(CustomerAttributeValueModel model)
+        public virtual async Task<IActionResult> ValueCreatePopup(CustomerAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             if (customerAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 var cav = model.ToEntity<CustomerAttributeValue>();
-                _customerAttributeService.InsertCustomerAttributeValue(cav);
+                await _customerAttributeService.InsertCustomerAttributeValue(cav);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerAttributeValue",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerAttributeValue"), cav.Id), cav);
+                await _customerActivityService.InsertActivity("AddNewCustomerAttributeValue",
+                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewCustomerAttributeValue"), cav.Id), cav);
 
-                UpdateValueLocales(cav, model);
+                await UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -284,60 +285,60 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, null, true);
+            model = await _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult ValueEditPopup(int id)
+        public virtual async Task<IActionResult> ValueEditPopup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a customer attribute value with the specified id
-            var customerAttributeValue = _customerAttributeService.GetCustomerAttributeValueById(id);
+            var customerAttributeValue = await _customerAttributeService.GetCustomerAttributeValueById(id);
             if (customerAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeValue.CustomerAttributeId);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(customerAttributeValue.CustomerAttributeId);
             if (customerAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(null, customerAttribute, customerAttributeValue);
+            var model = await _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(null, customerAttribute, customerAttributeValue);
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ValueEditPopup(CustomerAttributeValueModel model)
+        public virtual async Task<IActionResult> ValueEditPopup(CustomerAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a customer attribute value with the specified id
-            var customerAttributeValue = _customerAttributeService.GetCustomerAttributeValueById(model.Id);
+            var customerAttributeValue = await _customerAttributeService.GetCustomerAttributeValueById(model.Id);
             if (customerAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get a customer attribute with the specified id
-            var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeValue.CustomerAttributeId);
+            var customerAttribute = await _customerAttributeService.GetCustomerAttributeById(customerAttributeValue.CustomerAttributeId);
             if (customerAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 customerAttributeValue = model.ToEntity(customerAttributeValue);
-                _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
+                await _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCustomerAttributeValue",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), customerAttributeValue.Id),
+                await _customerActivityService.InsertActivity("EditCustomerAttributeValue",
+                    string.Format(await _localizationService.GetResource("ActivityLog.EditCustomerAttributeValue"), customerAttributeValue.Id),
                     customerAttributeValue);
 
-                UpdateValueLocales(customerAttributeValue, model);
+                await UpdateValueLocales(customerAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -345,27 +346,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, customerAttributeValue, true);
+            model = await _customerAttributeModelFactory.PrepareCustomerAttributeValueModel(model, customerAttribute, customerAttributeValue, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ValueDelete(int id)
+        public virtual async Task<IActionResult> ValueDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get a customer attribute value with the specified id
-            var customerAttributeValue = _customerAttributeService.GetCustomerAttributeValueById(id)
+            var customerAttributeValue = await _customerAttributeService.GetCustomerAttributeValueById(id)
                 ?? throw new ArgumentException("No customer attribute value found with the specified id", nameof(id));
 
-            _customerAttributeService.DeleteCustomerAttributeValue(customerAttributeValue);
+            await _customerAttributeService.DeleteCustomerAttributeValue(customerAttributeValue);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCustomerAttributeValue",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), customerAttributeValue.Id),
+            await _customerActivityService.InsertActivity("DeleteCustomerAttributeValue",
+                string.Format(await _localizationService.GetResource("ActivityLog.DeleteCustomerAttributeValue"), customerAttributeValue.Id),
                 customerAttributeValue);
 
             return new NullJsonResult();

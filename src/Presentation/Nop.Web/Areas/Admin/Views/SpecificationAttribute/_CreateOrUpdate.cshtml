@@ -4,13 +4,13 @@
 @inject IWorkContext workContext
 @{
     const string hideInfoBlockAttributeName = "SpecificationAttributePage.HideInfoBlock";
-    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideInfoBlockAttributeName);
 
     const string hideOptionsBlockAttributeName = "SpecificationAttributePage.HideOptionsBlock";
-    var hideOptionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOptionsBlockAttributeName, defaultValue: true);
+    var hideOptionsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideOptionsBlockAttributeName, defaultValue: true);
 
     const string hideUsedByProductsBlockAttributeName = "SpecificationAttributePage.HideUsedByProductsBlock";
-    var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName, defaultValue: true);
+    var hideUsedByProductsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideUsedByProductsBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

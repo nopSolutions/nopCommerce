@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
@@ -47,14 +48,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="methodsModel">Payment methods model</param>
         /// <returns>Payment methods model</returns>
-        public virtual PaymentMethodsModel PreparePaymentMethodsModel(PaymentMethodsModel methodsModel)
+        public virtual async Task<PaymentMethodsModel> PreparePaymentMethodsModel(PaymentMethodsModel methodsModel)
         {
             if (methodsModel == null)
                 throw new ArgumentNullException(nameof(methodsModel));
 
             //prepare nested search models
-            PreparePaymentMethodSearchModel(methodsModel.PaymentsMethod);
-            PreparePaymentMethodRestrictionModel(methodsModel.PaymentMethodRestriction);
+            await PreparePaymentMethodSearchModel(methodsModel.PaymentsMethod);
+            await PreparePaymentMethodRestrictionModel(methodsModel.PaymentMethodRestriction);
 
             return methodsModel;
         }
@@ -64,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method search model</returns>
-        public virtual PaymentMethodSearchModel PreparePaymentMethodSearchModel(PaymentMethodSearchModel searchModel)
+        public virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModel(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -72,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method list model</returns>
-        public virtual PaymentMethodListModel PreparePaymentMethodListModel(PaymentMethodSearchModel searchModel)
+        public virtual Task<PaymentMethodListModel> PreparePaymentMethodListModel(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -100,13 +101,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
                     paymentMethodModel.LogoUrl = _paymentPluginManager.GetPluginLogoUrl(method);
-                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
+                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType).Result;
 
                     return paymentMethodModel;
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -114,16 +115,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Payment method restriction model</param>
         /// <returns>Payment method restriction model</returns>
-        public virtual PaymentMethodRestrictionModel PreparePaymentMethodRestrictionModel(PaymentMethodRestrictionModel model)
+        public virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModel(PaymentMethodRestrictionModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var countries = _countryService.GetAllCountries(showHidden: true);
+            var countries = await _countryService.GetAllCountries(showHidden: true);
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id).Result?.Count ?? 0;
 
                 return countryModel;
             }).ToList();
@@ -131,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var method in _paymentPluginManager.LoadAllPlugins())
             {
                 var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
-                paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
+                paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                 model.AvailablePaymentMethods.Add(paymentMethodModel);
 

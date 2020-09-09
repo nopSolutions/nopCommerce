@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
@@ -53,13 +54,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign search model</returns>
-        public virtual CampaignSearchModel PrepareCampaignSearchModel(CampaignSearchModel searchModel)
+        public virtual async Task<CampaignSearchModel> PrepareCampaignSearchModel(CampaignSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -74,13 +75,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign list model</returns>
-        public virtual CampaignListModel PrepareCampaignListModel(CampaignSearchModel searchModel)
+        public virtual async Task<CampaignListModel> PrepareCampaignListModel(CampaignSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get campaigns
-            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId).ToPagedList(searchModel);
+            var campaigns = (await _campaignService.GetAllCampaigns(searchModel.StoreId)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CampaignListModel().PrepareToGrid(searchModel, campaigns, () =>
@@ -112,7 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="campaign">Campaign</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Campaign model</returns>
-        public virtual CampaignModel PrepareCampaignModel(CampaignModel model, Campaign campaign, bool excludeProperties = false)
+        public virtual async Task<CampaignModel> PrepareCampaignModel(CampaignModel model, Campaign campaign, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (campaign != null)
@@ -129,13 +130,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
 
             //prepare available stores
-            _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            await _baseAdminModelFactory.PrepareStores(model.AvailableStores);
 
             //prepare available customer roles
-            _baseAdminModelFactory.PrepareCustomerRoles(model.AvailableCustomerRoles);
+            await _baseAdminModelFactory.PrepareCustomerRoles(model.AvailableCustomerRoles);
 
             //prepare available email accounts
-            _baseAdminModelFactory.PrepareEmailAccounts(model.AvailableEmailAccounts, false);
+            await _baseAdminModelFactory.PrepareEmailAccounts(model.AvailableEmailAccounts, false);
 
             return model;
         }

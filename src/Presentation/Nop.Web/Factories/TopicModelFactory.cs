@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
@@ -56,7 +57,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="topic">Topic</param>
         /// <returns>Topic model</returns>
-        protected virtual TopicModel PrepareTopicModel(Topic topic)
+        protected virtual async Task<TopicModel> PrepareTopicModel(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
@@ -67,12 +68,12 @@ namespace Nop.Web.Factories
                 SystemName = topic.SystemName,
                 IncludeInSitemap = topic.IncludeInSitemap,
                 IsPasswordProtected = topic.IsPasswordProtected,
-                Title = topic.IsPasswordProtected ? string.Empty : _localizationService.GetLocalized(topic, x => x.Title),
-                Body = topic.IsPasswordProtected ? string.Empty : _localizationService.GetLocalized(topic, x => x.Body),
-                MetaKeywords = _localizationService.GetLocalized(topic, x => x.MetaKeywords),
-                MetaDescription = _localizationService.GetLocalized(topic, x => x.MetaDescription),
-                MetaTitle = _localizationService.GetLocalized(topic, x => x.MetaTitle),
-                SeName = _urlRecordService.GetSeName(topic),
+                Title = topic.IsPasswordProtected ? string.Empty : await _localizationService.GetLocalized(topic, x => x.Title),
+                Body = topic.IsPasswordProtected ? string.Empty : await _localizationService.GetLocalized(topic, x => x.Body),
+                MetaKeywords = await _localizationService.GetLocalized(topic, x => x.MetaKeywords),
+                MetaDescription = await _localizationService.GetLocalized(topic, x => x.MetaDescription),
+                MetaTitle = await _localizationService.GetLocalized(topic, x => x.MetaTitle),
+                SeName = await _urlRecordService.GetSeName(topic),
                 TopicTemplateId = topic.TopicTemplateId
             };
 
@@ -89,25 +90,25 @@ namespace Nop.Web.Factories
         /// <param name="topicId">Topic identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Topic model</returns>
-        public virtual TopicModel PrepareTopicModelById(int topicId, bool showHidden = false)
+        public virtual async Task<TopicModel> PrepareTopicModelById(int topicId, bool showHidden = false)
         {
-            var topic = _topicService.GetTopicById(topicId);
+            var topic = await _topicService.GetTopicById(topicId);
 
             if (topic == null)
                 return null;
 
             if (showHidden)
-                return PrepareTopicModel(topic);
+                return await PrepareTopicModel(topic);
 
             if (!topic.Published ||
                 //ACL (access control list)
-                !_aclService.Authorize(topic) ||
+                !await _aclService.Authorize(topic) ||
                 //store mapping
-                !_storeMappingService.Authorize(topic))
+                !await _storeMappingService.Authorize(topic))
 
                 return null;
 
-            return PrepareTopicModel(topic);
+            return await PrepareTopicModel(topic);
         }
 
         /// <summary>
@@ -115,14 +116,14 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="systemName">Topic system name</param>
         /// <returns>Topic model</returns>
-        public virtual TopicModel PrepareTopicModelBySystemName(string systemName)
+        public virtual async Task<TopicModel> PrepareTopicModelBySystemName(string systemName)
         {
             //load by store
-            var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
+            var topic = await _topicService.GetTopicBySystemName(systemName, (await _storeContext.GetCurrentStore()).Id);
             if (topic == null)
                 return null;
 
-            return PrepareTopicModel(topic);
+            return await PrepareTopicModel(topic);
         }
 
         /// <summary>
@@ -130,10 +131,10 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>View path</returns>
-        public virtual string PrepareTemplateViewPath(int topicTemplateId)
+        public virtual async Task<string> PrepareTemplateViewPath(int topicTemplateId)
         {
-            var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId) ??
-                           _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
+            var template = await _topicTemplateService.GetTopicTemplateById(topicTemplateId) ??
+                           (await _topicTemplateService.GetAllTopicTemplates()).FirstOrDefault();
 
             if (template == null)
                 throw new Exception("No default template could be loaded");

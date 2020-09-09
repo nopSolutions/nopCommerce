@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
@@ -58,7 +59,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Currency exchange rate provider model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
-        protected virtual void PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model, bool prepareExchangeRates)
+        protected virtual async Task PrepareExchangeRateProviderModel(CurrencyExchangeRateProviderModel model, bool prepareExchangeRates)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -77,23 +78,23 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare exchange rates
             if (prepareExchangeRates)
-                PrepareExchangeRateModels(model.ExchangeRates);
+                await PrepareExchangeRateModels(model.ExchangeRates);
         }
 
         /// <summary>
         /// Prepare exchange rate models
         /// </summary>
         /// <param name="models">List of currency exchange rate model</param>
-        protected virtual void PrepareExchangeRateModels(IList<CurrencyExchangeRateModel> models)
+        protected virtual async Task PrepareExchangeRateModels(IList<CurrencyExchangeRateModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //get exchange rates
-            var exchangeRates = _currencyService.GetCurrencyLiveRates();
+            var exchangeRates = await _currencyService.GetCurrencyLiveRates();
 
             //filter by existing currencies
-            var currencies = _currencyService.GetAllCurrencies(true);
+            var currencies = await _currencyService.GetAllCurrencies(true);
             exchangeRates = exchangeRates
                 .Where(rate => currencies
                     .Any(currency => currency.CurrencyCode.Equals(rate.CurrencyCode, StringComparison.InvariantCultureIgnoreCase))).ToList();
@@ -115,13 +116,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Currency search model</param>
         /// <param name="prepareExchangeRates">Whether to prepare exchange rate models</param>
         /// <returns>Currency search model</returns>
-        public virtual CurrencySearchModel PrepareCurrencySearchModel(CurrencySearchModel searchModel, bool prepareExchangeRates = false)
+        public virtual async Task<CurrencySearchModel> PrepareCurrencySearchModel(CurrencySearchModel searchModel, bool prepareExchangeRates = false)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare exchange rate provider model
-            PrepareExchangeRateProviderModel(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
+            await PrepareExchangeRateProviderModel(searchModel.ExchangeRateProviderModel, prepareExchangeRates);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -134,13 +135,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Currency search model</param>
         /// <returns>Currency list model</returns>
-        public virtual CurrencyListModel PrepareCurrencyListModel(CurrencySearchModel searchModel)
+        public virtual async Task<CurrencyListModel> PrepareCurrencyListModel(CurrencySearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get currencies
-            var currencies = _currencyService.GetAllCurrencies(showHidden: true).ToPagedList(searchModel);
+            var currencies = (await _currencyService.GetAllCurrencies(showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CurrencyListModel().PrepareToGrid(searchModel, currencies, () =>
@@ -168,7 +169,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="currency">Currency</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Currency model</returns>
-        public virtual CurrencyModel PrepareCurrencyModel(CurrencyModel model, Currency currency, bool excludeProperties = false)
+        public virtual async Task<CurrencyModel> PrepareCurrencyModel(CurrencyModel model, Currency currency, bool excludeProperties = false)
         {
             Action<CurrencyLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -181,9 +182,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(currency, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalized(currency, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -196,10 +197,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
 
             //prepare available stores
-            _storeMappingSupportedModelFactory.PrepareModelStores(model, currency, excludeProperties);
+            await _storeMappingSupportedModelFactory.PrepareModelStores(model, currency, excludeProperties);
 
             return model;
         }

@@ -7,7 +7,7 @@
 @inject ICustomerService customerService
 
 @{
-    var isRegisterCustomer = customerService.IsRegistered(workContext.CurrentCustomer);
+    var isRegisterCustomer = await customerService.IsRegistered(await workContext.GetCurrentCustomer());
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title

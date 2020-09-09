@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Localization;
@@ -54,14 +55,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual void SaveStoreMappings(Poll poll, PollModel model)
+        protected virtual async Task SaveStoreMappings(Poll poll, PollModel model)
         {
             poll.LimitedToStores = model.SelectedStoreIds.Any();
-            _pollService.UpdatePoll(poll);
+            await _pollService.UpdatePoll(poll);
 
             //manage store mappings
-            var existingStoreMappings = _storeMappingService.GetStoreMappings(poll);
-            foreach (var store in _storeService.GetAllStores())
+            var existingStoreMappings = await _storeMappingService.GetStoreMappings(poll);
+            foreach (var store in await _storeService.GetAllStores())
             {
                 var existingStoreMapping = existingStoreMappings.FirstOrDefault(storeMapping => storeMapping.StoreId == store.Id);
 
@@ -69,11 +70,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     if (existingStoreMapping == null)
-                        _storeMappingService.InsertStoreMapping(poll, store.Id);
+                        await _storeMappingService.InsertStoreMapping(poll, store.Id);
                 }
                 //or remove existing one
                 else if (existingStoreMapping != null)
-                    _storeMappingService.DeleteStoreMapping(existingStoreMapping);
+                    await _storeMappingService.DeleteStoreMapping(existingStoreMapping);
             }
         }
 
@@ -86,55 +87,55 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _pollModelFactory.PreparePollSearchModel(new PollSearchModel());
+            var model = await _pollModelFactory.PreparePollSearchModel(new PollSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(PollSearchModel searchModel)
+        public virtual async Task<IActionResult> List(PollSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _pollModelFactory.PreparePollListModel(searchModel);
+            var model = await _pollModelFactory.PreparePollListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _pollModelFactory.PreparePollModel(new PollModel(), null);
+            var model = await _pollModelFactory.PreparePollModel(new PollModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(PollModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(PollModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var poll = model.ToEntity<Poll>();
-                _pollService.InsertPoll(poll);
+                await _pollService.InsertPoll(poll);
 
                 //save store mappings
-                SaveStoreMappings(poll, model);
+                await SaveStoreMappings(poll, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -143,48 +144,48 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _pollModelFactory.PreparePollModel(model, null, true);
+            model = await _pollModelFactory.PreparePollModel(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll with the specified id
-            var poll = _pollService.GetPollById(id);
+            var poll = await _pollService.GetPollById(id);
             if (poll == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _pollModelFactory.PreparePollModel(null, poll);
+            var model = await _pollModelFactory.PreparePollModel(null, poll);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(PollModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(PollModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll with the specified id
-            var poll = _pollService.GetPollById(model.Id);
+            var poll = await _pollService.GetPollById(model.Id);
             if (poll == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 poll = model.ToEntity(poll);
-                _pollService.UpdatePoll(poll);
+                await _pollService.UpdatePoll(poll);
 
                 //save store mappings
-                SaveStoreMappings(poll, model);
+                await SaveStoreMappings(poll, model);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -193,26 +194,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _pollModelFactory.PreparePollModel(model, poll, true);
+            model = await _pollModelFactory.PreparePollModel(model, poll, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll with the specified id
-            var poll = _pollService.GetPollById(id);
+            var poll = await _pollService.GetPollById(id);
             if (poll == null)
                 return RedirectToAction("List");
 
-            _pollService.DeletePoll(poll);
+            await _pollService.DeletePoll(poll);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -222,69 +223,69 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Poll answer
 
         [HttpPost]
-        public virtual IActionResult PollAnswers(PollAnswerSearchModel searchModel)
+        public virtual async Task<IActionResult> PollAnswers(PollAnswerSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedDataTablesJson();
 
             //try to get a poll with the specified id
-            var poll = _pollService.GetPollById(searchModel.PollId)
+            var poll = await _pollService.GetPollById(searchModel.PollId)
                 ?? throw new ArgumentException("No poll found with the specified id");
 
             //prepare model
-            var model = _pollModelFactory.PreparePollAnswerListModel(searchModel, poll);
+            var model = await _pollModelFactory.PreparePollAnswerListModel(searchModel, poll);
 
             return Json(model);
         }
 
         //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult PollAnswerUpdate([Validate] PollAnswerModel model)
+        public virtual async Task<IActionResult> PollAnswerUpdate([Validate] PollAnswerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a poll answer with the specified id
-            var pollAnswer = _pollService.GetPollAnswerById(model.Id)
+            var pollAnswer = await _pollService.GetPollAnswerById(model.Id)
                 ?? throw new ArgumentException("No poll answer found with the specified id");
 
             pollAnswer = model.ToEntity(pollAnswer);
 
-            _pollService.UpdatePollAnswer(pollAnswer);
+            await _pollService.UpdatePollAnswer(pollAnswer);
 
             return new NullJsonResult();
         }
 
         //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
+        public virtual async Task<IActionResult> PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //fill entity from model
-            _pollService.InsertPollAnswer(model.ToEntity<PollAnswer>());
+            await _pollService.InsertPollAnswer(model.ToEntity<PollAnswer>());
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult PollAnswerDelete(int id)
+        public virtual async Task<IActionResult> PollAnswerDelete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             //try to get a poll answer with the specified id
-            var pollAnswer = _pollService.GetPollAnswerById(id)
+            var pollAnswer = await _pollService.GetPollAnswerById(id)
                 ?? throw new ArgumentException("No poll answer found with the specified id", nameof(id));
 
-            _pollService.DeletePollAnswer(pollAnswer);
+            await _pollService.DeletePollAnswer(pollAnswer);
 
             return new NullJsonResult();
         }

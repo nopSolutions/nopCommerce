@@ -5,7 +5,7 @@
 @{
     const string panelId = "nopcommerce-common-statistics-box";
     const string hidePanelAttributeName = "HideCommonStatisticsPanel";
-    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    var hidePanel = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePanelAttributeName);
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -181,21 +182,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare store URL warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareStoreUrlWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareStoreUrlWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //check whether current store URL matches the store configured URL
-            var currentStoreUrl = _storeContext.CurrentStore.Url;
+            var currentStoreUrl = (await _storeContext.GetCurrentStore()).Url;
             if (!string.IsNullOrEmpty(currentStoreUrl) &&
-                (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
-                currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
+                (currentStoreUrl.Equals(await _webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
+                currentStoreUrl.Equals(await _webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.URL.Match")
                 });
                 return;
             }
@@ -203,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
-                Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"),
+                Text = string.Format(await _localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"),
                     currentStoreUrl, _webHelper.GetStoreLocation(false))
             });
         }
@@ -212,7 +213,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare copyright removal key warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareRemovalKeyWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareRemovalKeyWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -224,9 +225,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var warning = string.Empty;
             try
             {
-                warning = _nopHttpClient.GetCopyrightWarningAsync().Result;
+                warning = await _nopHttpClient.GetCopyrightWarningAsync();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
+
             if (string.IsNullOrEmpty(warning))
                 return;
 
@@ -242,19 +247,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare primary exchange rate currency warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareExchangeRateCurrencyWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareExchangeRateCurrencyWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //check whether primary exchange rate currency set
-            var primaryExchangeRateCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.NotSet")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.NotSet")
                 });
                 return;
             }
@@ -262,7 +267,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Set")
+                Text = await _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Set")
             });
 
             //check whether primary exchange rate currency rate configured
@@ -271,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Rate1")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Rate1")
                 });
             }
         }
@@ -280,19 +285,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare primary store currency warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PreparePrimaryStoreCurrencyWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PreparePrimaryStoreCurrencyWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //check whether primary store currency set
-            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.NotSet")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.NotSet")
                 });
                 return;
             }
@@ -300,7 +305,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.Set")
+                Text = await _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.Set")
             });
         }
 
@@ -308,19 +313,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare base weight warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareBaseWeightWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareBaseWeightWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //check whether base measure weight set
-            var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
+            var baseWeight = await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (baseWeight == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.NotSet")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.NotSet")
                 });
                 return;
             }
@@ -328,7 +333,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Set")
+                Text = await _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Set")
             });
 
             //check whether base measure weight ratio configured
@@ -337,7 +342,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Ratio1")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Ratio1")
                 });
             }
         }
@@ -346,19 +351,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare base dimension warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareBaseDimensionWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareBaseDimensionWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //check whether base measure dimension set
-            var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
+            var baseDimension = await _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (baseDimension == null)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.NotSet")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.NotSet")
                 });
                 return;
             }
@@ -366,7 +371,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Pass,
-                Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Set")
+                Text = await _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Set")
             });
 
             //check whether base measure dimension ratio configured
@@ -375,7 +380,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Ratio1")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Ratio1")
                 });
             }
         }
@@ -384,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare payment methods warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PreparePaymentMethodsWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PreparePaymentMethodsWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -395,7 +400,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.OK")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.OK")
                 });
                 return;
             }
@@ -403,7 +408,7 @@ namespace Nop.Web.Areas.Admin.Factories
             models.Add(new SystemWarningModel
             {
                 Level = SystemWarningLevel.Fail,
-                Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
+                Text = await _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
             });
         }
 
@@ -411,7 +416,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare plugins warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PreparePluginsWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PreparePluginsWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -422,7 +427,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
+                    Text = string.Format(await _localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
                 });
             }
 
@@ -432,13 +437,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //get plugin references message
                 var message = assembly.Collisions
                     .Select(item => string.Format(_localizationService
-                        .GetResource("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
+                        .GetResource("Admin.System.Warnings.PluginRequiredAssembly").Result, item.PluginName, item.AssemblyName))
                     .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
 
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"),
+                    Text = string.Format(await _localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"),
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
@@ -448,18 +453,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare performance settings warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PreparePerformanceSettingsWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PreparePerformanceSettingsWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //check whether "IgnoreStoreLimitations" setting disabled
-            if (!_catalogSettings.IgnoreStoreLimitations && _storeService.GetAllStores().Count == 1)
+            if (!_catalogSettings.IgnoreStoreLimitations && (await _storeService.GetAllStores()).Count == 1)
             {
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Recommendation,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
                 });
             }
 
@@ -469,7 +474,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Recommendation,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreAcl")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreAcl")
                 });
             }
         }
@@ -478,7 +483,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare file permissions warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareFilePermissionsWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareFilePermissionsWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -493,7 +498,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"),
+                    Text = string.Format(await _localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"),
                         CurrentOSUser.FullName, dir)
                 });
                 dirPermissionsOk = false;
@@ -504,7 +509,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.OK")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.OK")
                 });
             }
 
@@ -518,7 +523,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"),
+                    Text = string.Format(await _localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"),
                         CurrentOSUser.FullName, file)
                 });
                 filePermissionsOk = false;
@@ -529,7 +534,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
             }
         }
@@ -554,7 +559,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare plugins enabled warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PreparePluginsEnabledWarningModel(List<SystemWarningModel> models)
+        protected virtual async Task PreparePluginsEnabledWarningModel(List<SystemWarningModel> models)
         {
             var plugins = _pluginService.GetPlugins<IPlugin>();
 
@@ -612,7 +617,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Level = SystemWarningLevel.Warning,
                     DontEncode = true,
-                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names=notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
+                    Text = $"{await _localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names=notEnabledSystemNames.ToArray() })}\">{await _localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
@@ -626,7 +631,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">System info model</param>
         /// <returns>System info model</returns>
-        public virtual SystemInfoModel PrepareSystemInfoModel(SystemInfoModel model)
+        public virtual Task<SystemInfoModel> PrepareSystemInfoModel(SystemInfoModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -645,7 +650,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AspNetInfo = RuntimeEnvironment.GetSystemVersion();
                 model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted.ToString();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
 
             foreach (var header in _httpContextAccessor.HttpContext.Request.Headers)
             {
@@ -676,7 +684,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     loadedAssemblyModel.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(_fileProvider.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
 
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
+
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
             
@@ -689,14 +701,14 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.AzureBlobStorageEnabled = _nopConfig.AzureBlobStorageEnabled;
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
         /// Prepare proxy connection warning model
         /// </summary>
         /// <param name="models">List of system warning models</param>
-        protected virtual void PrepareProxyConnectionWarningModel(IList<SystemWarningModel> models)
+        protected virtual async Task PrepareProxyConnectionWarningModel(IList<SystemWarningModel> models)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -713,7 +725,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.OK")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.OK")
                 });
             }
             catch
@@ -722,7 +734,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.Failed")
+                    Text = await _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.Failed")
                 });
             }
         }
@@ -731,45 +743,45 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare system warning models
         /// </summary>
         /// <returns>List of system warning models</returns>
-        public virtual IList<SystemWarningModel> PrepareSystemWarningModels()
+        public virtual async Task<IList<SystemWarningModel>> PrepareSystemWarningModels()
         {
             var models = new List<SystemWarningModel>();
 
             //store URL
-            PrepareStoreUrlWarningModel(models);
+            await PrepareStoreUrlWarningModel(models);
 
             //removal key
-            PrepareRemovalKeyWarningModel(models);
+            await PrepareRemovalKeyWarningModel(models);
 
             //primary exchange rate currency
-            PrepareExchangeRateCurrencyWarningModel(models);
+            await PrepareExchangeRateCurrencyWarningModel(models);
 
             //primary store currency
-            PreparePrimaryStoreCurrencyWarningModel(models);
+            await PreparePrimaryStoreCurrencyWarningModel(models);
 
             //base measure weight
-            PrepareBaseWeightWarningModel(models);
+            await PrepareBaseWeightWarningModel(models);
 
             //base dimension weight
-            PrepareBaseDimensionWarningModel(models);
+            await PrepareBaseDimensionWarningModel(models);
 
             //payment methods
-            PreparePaymentMethodsWarningModel(models);
+            await PreparePaymentMethodsWarningModel(models);
 
             //incompatible plugins
-            PreparePluginsWarningModel(models);
+            await PreparePluginsWarningModel(models);
 
             //performance settings
-            PreparePerformanceSettingsWarningModel(models);
+            await PreparePerformanceSettingsWarningModel(models);
 
             //validate write permissions (the same procedure like during installation)
-            PrepareFilePermissionsWarningModel(models);
+            await PrepareFilePermissionsWarningModel(models);
 
             //not active plugins
-            PreparePluginsEnabledWarningModel(models);
+            await PreparePluginsEnabledWarningModel(models);
 
             //proxy connection
-            PrepareProxyConnectionWarningModel(models);
+            await PrepareProxyConnectionWarningModel(models);
 
             return models;
         }
@@ -779,7 +791,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Maintenance model</param>
         /// <returns>Maintenance model</returns>
-        public virtual MaintenanceModel PrepareMaintenanceModel(MaintenanceModel model)
+        public virtual Task<MaintenanceModel> PrepareMaintenanceModel(MaintenanceModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -795,7 +807,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare nested search model
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -803,7 +815,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Backup file search model</param>
         /// <returns>Backup file list model</returns>
-        public virtual BackupFileListModel PrepareBackupFileListModel(BackupFileSearchModel searchModel)
+        public virtual Task<BackupFileListModel> PrepareBackupFileListModel(BackupFileSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -819,11 +831,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     Name = _fileProvider.GetFileName(file),
                     //fill in additional values (not existing in the entity)
                     Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
-                    Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{_fileProvider.GetFileName(file)}"
+                    Link = $"{_webHelper.GetStoreLocation(false).Result}db_backups/{_fileProvider.GetFileName(file)}"
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>
@@ -831,7 +843,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">URL record search model</param>
         /// <returns>URL record search model</returns>
-        public virtual UrlRecordSearchModel PrepareUrlRecordSearchModel(UrlRecordSearchModel searchModel)
+        public virtual async Task<UrlRecordSearchModel> PrepareUrlRecordSearchModel(UrlRecordSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -839,27 +851,27 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available languages
             //we insert 0 as 'Standard' language.
             //let's insert -1 for 'All' language selection.
-            _baseAdminModelFactory.PrepareLanguages(searchModel.AvailableLanguages,
-                defaultItemText: _localizationService.GetResource("Admin.System.SeNames.List.Language.Standard"));
+            await _baseAdminModelFactory.PrepareLanguages(searchModel.AvailableLanguages,
+                defaultItemText: await _localizationService.GetResource("Admin.System.SeNames.List.Language.Standard"));
             searchModel.AvailableLanguages.Insert(0,
-                new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
+                new SelectListItem { Text = await _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
             searchModel.LanguageId = -1;
 
             //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
             searchModel.AvailableActiveOptions.Add(new SelectListItem
             {
                 Value = "0",
-                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.All")
+                Text = await _localizationService.GetResource("Admin.System.SeNames.List.IsActive.All")
             });
             searchModel.AvailableActiveOptions.Add(new SelectListItem
             {
                 Value = "1",
-                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.ActiveOnly")
+                Text = await _localizationService.GetResource("Admin.System.SeNames.List.IsActive.ActiveOnly")
             });
             searchModel.AvailableActiveOptions.Add(new SelectListItem
             {
                 Value = "2",
-                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.InactiveOnly")
+                Text = await _localizationService.GetResource("Admin.System.SeNames.List.IsActive.InactiveOnly")
             });
 
             //prepare page parameters
@@ -873,7 +885,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">URL record search model</param>
         /// <returns>URL record list model</returns>
-        public virtual UrlRecordListModel PrepareUrlRecordListModel(UrlRecordSearchModel searchModel)
+        public virtual async Task<UrlRecordListModel> PrepareUrlRecordListModel(UrlRecordSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -882,7 +894,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var languageId = searchModel.LanguageId < 0 ? null : (int?)(searchModel.LanguageId);
 
             //get URL records
-            var urlRecords = _urlRecordService.GetAllUrlRecords(slug: searchModel.SeName,
+            var urlRecords = await _urlRecordService.GetAllUrlRecords(slug: searchModel.SeName,
                 languageId: languageId, isActive: isActive,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -900,8 +912,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Name = urlRecord.Slug;
                     urlRecordModel.Language = urlRecord.LanguageId == 0
-                        ? _localizationService.GetResource("Admin.System.SeNames.Language.Standard")
-                        : _languageService.GetLanguageById(urlRecord.LanguageId)?.Name ?? "Unknown";
+                        ? _localizationService.GetResource("Admin.System.SeNames.Language.Standard").Result
+                        : _languageService.GetLanguageById(urlRecord.LanguageId).Result?.Name ?? "Unknown";
 
                     //details URL
                     var detailsUrl = string.Empty;
@@ -943,13 +955,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare language selector model
         /// </summary>
         /// <returns>Language selector model</returns>
-        public virtual LanguageSelectorModel PrepareLanguageSelectorModel()
+        public virtual async Task<LanguageSelectorModel> PrepareLanguageSelectorModel()
         {
             var model = new LanguageSelectorModel
             {
-                CurrentLanguage = _workContext.WorkingLanguage.ToModel<LanguageModel>(),
-                AvailableLanguages = _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                CurrentLanguage = (await _workContext.GetWorkingLanguage()).ToModel<LanguageModel>(),
+                AvailableLanguages = (await _languageService
+                    .GetAllLanguages(storeId: (await _storeContext.GetCurrentStore()).Id))
                     .Select(language => language.ToModel<LanguageModel>()).ToList()
             };
 
@@ -961,7 +973,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Popular search term search model</param>
         /// <returns>Popular search term search model</returns>
-        public virtual PopularSearchTermSearchModel PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel searchModel)
+        public virtual Task<PopularSearchTermSearchModel> PreparePopularSearchTermSearchModel(PopularSearchTermSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -969,7 +981,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize(5);
 
-            return searchModel;
+            return Task.FromResult(searchModel);
         }
 
         /// <summary>
@@ -977,13 +989,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Popular search term search model</param>
         /// <returns>Popular search term list model</returns>
-        public virtual PopularSearchTermListModel PreparePopularSearchTermListModel(PopularSearchTermSearchModel searchModel)
+        public virtual async Task<PopularSearchTermListModel> PreparePopularSearchTermListModel(PopularSearchTermSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get popular search terms
-            var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var searchTermRecordLines = await _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
             var model = new PopularSearchTermListModel().PrepareToGrid(searchModel, searchTermRecordLines, () =>
@@ -1002,24 +1014,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare common statistics model
         /// </summary>
         /// <returns>Common statistics model</returns>
-        public virtual CommonStatisticsModel PrepareCommonStatisticsModel()
+        public virtual async Task<CommonStatisticsModel> PrepareCommonStatisticsModel()
         {
             var model = new CommonStatisticsModel
             {
-                NumberOfOrders = _orderService.SearchOrders(pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount
+                NumberOfOrders = (await _orderService.SearchOrders(pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount
             };
 
-            var customerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName).Id };
-            model.NumberOfCustomers = _customerService.GetAllCustomers(customerRoleIds: customerRoleIds,
-                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount;
+            var customerRoleIds = new[] { (await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName)).Id };
+            model.NumberOfCustomers = (await _customerService.GetAllCustomers(customerRoleIds: customerRoleIds,
+                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount;
 
             var returnRequestStatus = ReturnRequestStatus.Pending;
-            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(rs: returnRequestStatus,
-                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true).TotalCount;
+            model.NumberOfPendingReturnRequests = (await _returnRequestService.SearchReturnRequests(rs: returnRequestStatus,
+                pageIndex: 0, pageSize: 1, getOnlyTotalCount: true)).TotalCount;
 
             model.NumberOfLowStockProducts =
-                _productService.GetLowStockProducts(getOnlyTotalCount: true).TotalCount +
-                _productService.GetLowStockProductCombinations(getOnlyTotalCount: true).TotalCount;
+                (await _productService.GetLowStockProducts(getOnlyTotalCount: true)).TotalCount +
+                (await _productService.GetLowStockProductCombinations(getOnlyTotalCount: true)).TotalCount;
 
             return model;
         }

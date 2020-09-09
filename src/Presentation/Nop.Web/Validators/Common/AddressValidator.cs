@@ -43,7 +43,7 @@ namespace Nop.Web.Validators.Common
                 {
                     //does selected country has states?
                     var countryId = x.CountryId ?? 0;
-                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Result.Any();
 
                     if (hasStates)
                     {

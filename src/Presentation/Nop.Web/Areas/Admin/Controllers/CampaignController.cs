@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
@@ -69,10 +70,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual EmailAccount GetEmailAccount(int emailAccountId)
+        protected virtual async Task<EmailAccount> GetEmailAccount(int emailAccountId)
         {
-            return _emailAccountService.GetEmailAccountById(emailAccountId)
-                ?? _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)
+            return await _emailAccountService.GetEmailAccountById(emailAccountId)
+                ?? await _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId)
                 ?? throw new NopException("Email account could not be loaded");
         }
 
@@ -85,44 +86,44 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _campaignModelFactory.PrepareCampaignSearchModel(new CampaignSearchModel());
+            var model = await _campaignModelFactory.PrepareCampaignSearchModel(new CampaignSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(CampaignSearchModel searchModel)
+        public virtual async Task<IActionResult> List(CampaignSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _campaignModelFactory.PrepareCampaignListModel(searchModel);
+            var model = await _campaignModelFactory.PrepareCampaignListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _campaignModelFactory.PrepareCampaignModel(new CampaignModel(), null);
+            var model = await _campaignModelFactory.PrepareCampaignModel(new CampaignModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(CampaignModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(CampaignModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -133,36 +134,36 @@ namespace Nop.Web.Areas.Admin.Controllers
                 campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
 
-                _campaignService.InsertCampaign(campaign);
+                await _campaignService.InsertCampaign(campaign);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCampaign",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCampaign"), campaign.Id), campaign);
+                await _customerActivityService.InsertActivity("AddNewCampaign",
+                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewCampaign"), campaign.Id), campaign);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, null, true);
+            model = await _campaignModelFactory.PrepareCampaignModel(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //try to get a campaign with the specified id
-            var campaign = _campaignService.GetCampaignById(id);
+            var campaign = await _campaignService.GetCampaignById(id);
             if (campaign == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _campaignModelFactory.PrepareCampaignModel(null, campaign);
+            var model = await _campaignModelFactory.PrepareCampaignModel(null, campaign);
 
             return View(model);
         }
@@ -170,13 +171,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Edit(CampaignModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(CampaignModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //try to get a campaign with the specified id
-            var campaign = _campaignService.GetCampaignById(model.Id);
+            var campaign = await _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 return RedirectToAction("List");
 
@@ -187,19 +188,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
 
-                _campaignService.UpdateCampaign(campaign);
+                await _campaignService.UpdateCampaign(campaign);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditCampaign",
-                    string.Format(_localizationService.GetResource("ActivityLog.EditCampaign"), campaign.Id), campaign);
+                await _customerActivityService.InsertActivity("EditCampaign",
+                    string.Format(await _localizationService.GetResource("ActivityLog.EditCampaign"), campaign.Id), campaign);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
+            model = await _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -207,43 +208,43 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-test-email")]
-        public virtual IActionResult SendTestEmail(CampaignModel model)
+        public virtual async Task<IActionResult> SendTestEmail(CampaignModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //try to get a campaign with the specified id
-            var campaign = _campaignService.GetCampaignById(model.Id);
+            var campaign = await _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 return RedirectToAction("List");
 
             //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign);
+            model = await _campaignModelFactory.PrepareCampaignModel(model, campaign);
 
             //ensure that the entered email is valid
             if (!CommonHelper.IsValidEmail(model.TestEmail))
             {
-                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.WrongEmail"));
+                _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Common.WrongEmail"));
                 return View(model);
             }
 
             try
             {
-                var emailAccount = GetEmailAccount(model.EmailAccountId);
-                var subscription = _newsLetterSubscriptionService
-                    .GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
+                var emailAccount = await GetEmailAccount(model.EmailAccountId);
+                var subscription = await _newsLetterSubscriptionService
+                    .GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, (await _storeContext.GetCurrentStore()).Id);
                 if (subscription != null)
                 {
                     //there's a subscription. let's use it
-                    _campaignService.SendCampaign(campaign, emailAccount, new List<NewsLetterSubscription> { subscription });
+                    await _campaignService.SendCampaign(campaign, emailAccount, new List<NewsLetterSubscription> { subscription });
                 }
                 else
                 {
                     //no subscription found
-                    _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
+                    await _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
                 }
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"));
 
                 return View(model);
             }
@@ -253,7 +254,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
+            model = await _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -261,31 +262,31 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-mass-email")]
-        public virtual IActionResult SendMassEmail(CampaignModel model)
+        public virtual async Task<IActionResult> SendMassEmail(CampaignModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //try to get a campaign with the specified id
-            var campaign = _campaignService.GetCampaignById(model.Id);
+            var campaign = await _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 return RedirectToAction("List");
 
             //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign);
+            model = await _campaignModelFactory.PrepareCampaignModel(model, campaign);
 
             try
             {
-                var emailAccount = GetEmailAccount(model.EmailAccountId);
+                var emailAccount = await GetEmailAccount(model.EmailAccountId);
 
                 //subscribers of certain store?
-                var storeId = _storeService.GetStoreById(campaign.StoreId)?.Id ?? 0;
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
+                var storeId = (await _storeService.GetStoreById(campaign.StoreId))?.Id ?? 0;
+                var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
                     customerRoleId: model.CustomerRoleId,
                     isActive: true);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
 
-                _notificationService.SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
+                _notificationService.SuccessNotification(string.Format(await _localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
 
                 return View(model);
             }
@@ -295,30 +296,30 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
+            model = await _campaignModelFactory.PrepareCampaignModel(model, campaign, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             //try to get a campaign with the specified id
-            var campaign = _campaignService.GetCampaignById(id);
+            var campaign = await _campaignService.GetCampaignById(id);
             if (campaign == null)
                 return RedirectToAction("List");
 
-            _campaignService.DeleteCampaign(campaign);
+            await _campaignService.DeleteCampaign(campaign);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCampaign",
-                string.Format(_localizationService.GetResource("ActivityLog.DeleteCampaign"), campaign.Id), campaign);
+            await _customerActivityService.InsertActivity("DeleteCampaign",
+                string.Format(await _localizationService.GetResource("ActivityLog.DeleteCampaign"), campaign.Id), campaign);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
 
             return RedirectToAction("List");
         }

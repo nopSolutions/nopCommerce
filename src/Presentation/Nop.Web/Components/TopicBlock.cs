@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -13,9 +14,9 @@ namespace Nop.Web.Components
             _topicModelFactory = topicModelFactory;
         }
 
-        public IViewComponentResult Invoke(string systemName)
+        public async Task<IViewComponentResult> Invoke(string systemName)
         {
-            var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
+            var model = await _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
                 return Content("");
             return View(model);

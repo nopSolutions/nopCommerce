@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Orders;
@@ -25,9 +26,9 @@ namespace Nop.Web.Components
             _workContext = workContext;
         }
 
-        public IViewComponentResult Invoke(bool isEditable)
+        public async Task<IViewComponentResult> Invoke(bool isEditable)
         {
-            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
 
             var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
             return View(model);

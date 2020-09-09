@@ -6,7 +6,7 @@
 @{
     const string panelId = "bestsellers-report-amount-box";
     const string hidePanelAttributeName = "Reports.HideBestsellersBriefReportByAmountPanel";
-    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+    var hidePanel = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePanelAttributeName);
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">

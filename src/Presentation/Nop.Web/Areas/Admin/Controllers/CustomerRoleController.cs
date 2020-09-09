@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -61,91 +62,91 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult List()
+        public virtual async Task<IActionResult> List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _customerRoleModelFactory.PrepareCustomerRoleSearchModel(new CustomerRoleSearchModel());
+            var model = await _customerRoleModelFactory.PrepareCustomerRoleSearchModel(new CustomerRoleSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(CustomerRoleSearchModel searchModel)
+        public virtual async Task<IActionResult> List(CustomerRoleSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _customerRoleModelFactory.PrepareCustomerRoleListModel(searchModel);
+            var model = await _customerRoleModelFactory.PrepareCustomerRoleListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _customerRoleModelFactory.PrepareCustomerRoleModel(new CustomerRoleModel(), null);
+            var model = await _customerRoleModelFactory.PrepareCustomerRoleModel(new CustomerRoleModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(CustomerRoleModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Create(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var customerRole = model.ToEntity<CustomerRole>();
-                _customerService.InsertCustomerRole(customerRole);
+                await _customerService.InsertCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerRole",
-                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name), customerRole);
+                await _customerActivityService.InsertActivity("AddNewCustomerRole",
+                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name), customerRole);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = _customerRoleModelFactory.PrepareCustomerRoleModel(model, null, true);
+            model = await _customerRoleModelFactory.PrepareCustomerRoleModel(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public virtual IActionResult Edit(int id)
+        public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //try to get a customer role with the specified id
-            var customerRole = _customerService.GetCustomerRoleById(id);
+            var customerRole = await _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _customerRoleModelFactory.PrepareCustomerRoleModel(null, customerRole);
+            var model = await _customerRoleModelFactory.PrepareCustomerRoleModel(null, customerRole);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(CustomerRoleModel model, bool continueEditing)
+        public virtual async Task<IActionResult> Edit(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //try to get a customer role with the specified id
-            var customerRole = _customerService.GetCustomerRoleById(model.Id);
+            var customerRole = await _customerService.GetCustomerRoleById(model.Id);
             if (customerRole == null)
                 return RedirectToAction("List");
 
@@ -154,29 +155,29 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     if (customerRole.IsSystemRole && !model.Active)
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active.CantEditSystem"));
+                        throw new NopException(await _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active.CantEditSystem"));
 
                     if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
+                        throw new NopException(await _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
 
                     if (NopCustomerDefaults.RegisteredRoleName.Equals(customerRole.SystemName, StringComparison.InvariantCultureIgnoreCase) &&
                         model.PurchasedWithProductId > 0)
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
+                        throw new NopException(await _localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
 
                     customerRole = model.ToEntity(customerRole);
-                    _customerService.UpdateCustomerRole(customerRole);
+                    await _customerService.UpdateCustomerRole(customerRole);
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditCustomerRole",
-                        string.Format(_localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name), customerRole);
+                    await _customerActivityService.InsertActivity("EditCustomerRole",
+                        string.Format(await _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name), customerRole);
 
-                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
+                    _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
 
                     return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
                 }
 
                 //prepare model
-                model = _customerRoleModelFactory.PrepareCustomerRoleModel(model, customerRole, true);
+                model = await _customerRoleModelFactory.PrepareCustomerRoleModel(model, customerRole, true);
 
                 //if we got this far, something failed, redisplay form
                 return View(model);
@@ -189,25 +190,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //try to get a customer role with the specified id
-            var customerRole = _customerService.GetCustomerRoleById(id);
+            var customerRole = await _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 return RedirectToAction("List");
 
             try
             {
-                _customerService.DeleteCustomerRole(customerRole);
+                await _customerService.DeleteCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerRole",
-                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name), customerRole);
+                await _customerActivityService.InsertActivity("DeleteCustomerRole",
+                    string.Format(await _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name), customerRole);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
+                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
 
                 return RedirectToAction("List");
             }
@@ -218,43 +219,43 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        public virtual IActionResult AssociateProductToCustomerRolePopup()
+        public virtual async Task<IActionResult> AssociateProductToCustomerRolePopup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //prepare model
-            var model = _customerRoleModelFactory.PrepareCustomerRoleProductSearchModel(new CustomerRoleProductSearchModel());
+            var model = await _customerRoleModelFactory.PrepareCustomerRoleProductSearchModel(new CustomerRoleProductSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
+        public virtual async Task<IActionResult> AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _customerRoleModelFactory.PrepareCustomerRoleProductListModel(searchModel);
+            var model = await _customerRoleModelFactory.PrepareCustomerRoleProductListModel(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult AssociateProductToCustomerRolePopup([Bind(Prefix = nameof(AddProductToCustomerRoleModel))] AddProductToCustomerRoleModel model)
+        public virtual async Task<IActionResult> AssociateProductToCustomerRolePopup([Bind(Prefix = nameof(AddProductToCustomerRoleModel))] AddProductToCustomerRoleModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !await _permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
             //try to get a product with the specified id
-            var associatedProduct = _productService.GetProductById(model.AssociatedToProductId);
+            var associatedProduct = await _productService.GetProductById(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id)
+            if (await _workContext.GetCurrentVendor() != null && associatedProduct.VendorId != (await _workContext.GetCurrentVendor()).Id)
                 return Content("This is not your product");
 
             ViewBag.RefreshPage = true;
