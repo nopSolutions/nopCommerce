@@ -585,6 +585,7 @@ namespace Nop.Web.Factories
         {
             var model = new LoginModel
             {
+                IsRegistrationDisabled = _customerSettings.UserRegistrationType == UserRegistrationType.Disabled,
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
                 CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
