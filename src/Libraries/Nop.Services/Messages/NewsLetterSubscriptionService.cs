@@ -86,6 +86,9 @@ namespace Nop.Services.Messages
             //Persist
             _subscriptionRepository.Insert(newsLetterSubscription);
 
+            //Publish event
+            _eventPublisher.EntityInserted(newsLetterSubscription);
+
             //Publish the subscription event 
             if (newsLetterSubscription.Active)
             {
@@ -113,6 +116,9 @@ namespace Nop.Services.Messages
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
+            
+            //Publish event
+            _eventPublisher.EntityUpdated(newsLetterSubscription);
 
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
@@ -147,6 +153,9 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(newsLetterSubscription));
 
             _subscriptionRepository.Delete(newsLetterSubscription);
+            
+            //event notification
+            _eventPublisher.EntityDeleted(newsLetterSubscription);
 
             //Publish the unsubscribe event 
             PublishSubscriptionEvent(newsLetterSubscription, false, publishSubscriptionEvents);

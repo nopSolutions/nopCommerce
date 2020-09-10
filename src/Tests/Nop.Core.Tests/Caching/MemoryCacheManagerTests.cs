@@ -1,39 +1,31 @@
 ﻿using System;
 using FluentAssertions;
-using Microsoft.Extensions.Caching.Memory;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Caching
 {
     [TestFixture]
-    public class MemoryCacheManagerTests
+    public class MemoryCacheManagerTests : BaseNopTest
     {
         private MemoryCacheManager _staticCacheManager;
 
         [SetUp]
         public void Setup()
         {
-            _staticCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()), new NopConfig());
-            Singleton<NopConfig>.Instance = new NopConfig
-            {
-                DefaultCacheTime = 60,
-                ShortTermCacheTime = 3,
-                BundledFilesCacheTime = 120
-            };
+            _staticCacheManager = GetService<IStaticCacheManager>() as MemoryCacheManager;
         }
 
         [Test]
-        public void Can_set_and_get_object_from_cache()
+        public void CanSetAndGetObjectFromCache()
         {
             _staticCacheManager.Set(new CacheKey("some_key_1"), 3);
             _staticCacheManager.Get(new CacheKey("some_key_1"), () => 0).Should().Be(3);
         }
 
         [Test]
-        public void Can_validate_whetherobject_is_cached()
+        public void CanValidateWhetherObjectIsCached()
         {
             _staticCacheManager.Set(new CacheKey("some_key_1"), 3);
             _staticCacheManager.Set(new CacheKey("some_key_2"), 4);
@@ -43,7 +35,7 @@ namespace Nop.Core.Tests.Caching
         }
 
         [Test]
-        public void Can_clear_cache()
+        public void CanClearCache()
         {
             _staticCacheManager.Set(new CacheKey("some_key_1"), 3);
 
@@ -53,7 +45,7 @@ namespace Nop.Core.Tests.Caching
         }
 
         [Test]
-        public void Can_perform_lock()
+        public void CanPerformLock()
         {
             var key = new CacheKey("Nop.Task");
             var expiration = TimeSpan.FromMinutes(2);

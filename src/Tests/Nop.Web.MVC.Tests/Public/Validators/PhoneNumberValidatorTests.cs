@@ -33,7 +33,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
 
             //validation without regex
             _validator.Validate(new Person { PhoneNumber = "test_phone_number" }).IsValid.Should().BeFalse();
-            _validator.Validate(new Person { PhoneNumber = "" }).IsValid.Should().BeFalse();
+            _validator.Validate(new Person { PhoneNumber = string.Empty }).IsValid.Should().BeFalse();
             _validator.Validate(new Person { PhoneNumber = "123" }).IsValid.Should().BeFalse();
             _validator.Validate(new Person { PhoneNumber = "[0-9]{1,14}^" }).IsValid.Should().BeTrue();
 
@@ -41,7 +41,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             _customerSettings.PhoneNumberValidationUseRegex = true;
             _validator.Validate(new Person { PhoneNumber = "test_phone_number" }).IsValid.Should().BeFalse();
             _validator.Validate(new Person { PhoneNumber = "123456789" }).IsValid.Should().BeTrue();
-            _validator.Validate(new Person { PhoneNumber = "" }).IsValid.Should().BeFalse();
+            _validator.Validate(new Person { PhoneNumber = string.Empty }).IsValid.Should().BeFalse();
             _validator.Validate(new Person { PhoneNumber = "+123456789" }).IsValid.Should().BeFalse();
         }
     }

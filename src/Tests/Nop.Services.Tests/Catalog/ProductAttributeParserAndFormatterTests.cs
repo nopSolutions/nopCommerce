@@ -1,268 +1,138 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
-using Moq;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
-using Nop.Services.Directory;
-using Nop.Services.Localization;
-using Nop.Services.Media;
-using Nop.Services.Tax;
 using NUnit.Framework;
-using Nop.Tests;
 
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
     public class ProductAttributeParserTests : ServiceTest
     {
-        private FakeRepository<ProductAttribute> _productAttributeRepo;
-        private FakeRepository<ProductAttributeMapping> _productAttributeMappingRepo;
-        private FakeRepository<ProductAttributeCombination> _productAttributeCombinationRepo=new FakeRepository<ProductAttributeCombination>();
-        private FakeRepository<ProductAttributeValue> _productAttributeValueRepo;
-        private FakeRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepo;
-        private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
-        private Mock<IWorkContext> _workContext;
-        private Mock<ICurrencyService> _currencyService;
-        private ILocalizationService _localizationService;
-        private Mock<ITaxService> _taxService;
-        private Mock<IPriceFormatter> _priceFormatter;
-        private Mock<IPriceCalculationService> _priceCalculationService;
-        private Mock<IDownloadService> _downloadService;
-        private Mock<IWebHelper> _webHelper;
-        private ShoppingCartSettings _shoppingCartSettings;
         private IProductAttributeFormatter _productAttributeFormatter;
-
-        private ProductAttribute pa1, pa2, pa3, pa4;
-        private ProductAttributeMapping pam1_1, pam2_1, pam3_1, pam4_1;
-        private ProductAttributeValue pav1_1, pav1_2, pav2_1, pav2_2, pav4_1;
+        private IEnumerable<KeyValuePair<ProductAttributeMapping, IList<ProductAttributeValue>>> _productAttributeMappings;
 
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
-            #region Test data
+            var productAttributeService = GetService<IProductAttributeService>();
 
-            //color (dropdownlist)
-            pa1 = new ProductAttribute
-            {
-                Id = 1,
-                Name = "Color"
-            };
-            pam1_1 = new ProductAttributeMapping
-            {
-                Id = 11,
-                ProductId = 1,
-                TextPrompt = "Select color:",
-                IsRequired = true,
-                AttributeControlType = AttributeControlType.DropdownList,
-                DisplayOrder = 1,
-                ProductAttributeId = pa1.Id
-            };
-            pav1_1 = new ProductAttributeValue
-            {
-                Id = 11,
-                Name = "Green",
-                DisplayOrder = 1,
-                ProductAttributeMappingId = pam1_1.Id
-            };
-            pav1_2 = new ProductAttributeValue
-            {
-                Id = 12,
-                Name = "Red",
-                DisplayOrder = 2,
-                ProductAttributeMappingId = pam1_1.Id
-            };
+            _productAttributeParser = GetService<IProductAttributeParser>();
+            _productAttributeFormatter = GetService<IProductAttributeFormatter>();
 
-            //custom option (checkboxes)
-            pa2 = new ProductAttribute
-            {
-                Id = 2,
-                Name = "Some custom option"
-            };
-            pam2_1 = new ProductAttributeMapping
-            {
-                Id = 21,
-                ProductId = 1,
-                TextPrompt = "Select at least one option:",
-                IsRequired = true,
-                AttributeControlType = AttributeControlType.Checkboxes,
-                DisplayOrder = 2,
-                ProductAttributeId = pa2.Id
-            };
-            pav2_1 = new ProductAttributeValue
-            {
-                Id = 21,
-                Name = "Option 1",
-                DisplayOrder = 1,
-                ProductAttributeMappingId = pam2_1.Id
-            };
-            pav2_2 = new ProductAttributeValue
-            {
-                Id = 22,
-                Name = "Option 2",
-                DisplayOrder = 2,
-                ProductAttributeMappingId = pam2_1.Id
-            };
+            _productAttributeMappings =
+                productAttributeService.GetProductAttributeMappingsByProductId(GetService<IProductService>()
+                    .GetProductBySku("COMP_CUST").Id).Select(p => KeyValuePair.Create(p, productAttributeService.GetProductAttributeValues(p.Id)));
+        }
 
-            //custom text
-            pa3 = new ProductAttribute
-            {
-                Id = 3,
-                Name = "Custom text"
-            };
-            pam3_1 = new ProductAttributeMapping
-            {
-                Id = 31,
-                ProductId = 1,
-                TextPrompt = "Enter custom text:",
-                IsRequired = true,
-                AttributeControlType = AttributeControlType.TextBox,
-                DisplayOrder = 1,
-                ProductAttributeId = pa3.Id
-            };
+        [Test]
+        public void CanAddAndParseProductAttributes()
+        {
+            var attributes = string.Empty;
 
-            //option radio
-            pa4 = new ProductAttribute
+            foreach (var productAttributeMapping in _productAttributeMappings)
             {
-                Id = 4,
-                Name = "Radio list"
-            };
-            pam4_1 = new ProductAttributeMapping
+                var skip = true;
+
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
+                {
+                    if (skip)
+                    {
+                        skip = false;
+                        continue;
+                    }
+
+                    attributes = _productAttributeParser.AddProductAttribute(attributes, productAttributeMapping.Key, productAttributeValue.Id.ToString());
+                }
+            }
+
+            var parsedAttributeValues = _productAttributeParser.ParseProductAttributeValues(attributes).Select(p => p.Id).ToList();
+
+            foreach (var productAttributeMapping in _productAttributeMappings)
             {
-                Id = 41,
-                ProductId = 1,
-                TextPrompt = "Select option and enter the quantity:",
-                IsRequired = true,
-                AttributeControlType = AttributeControlType.RadioList,
-                DisplayOrder = 2,
-                ProductAttributeId = pa4.Id
-            };
-            pav4_1 = new ProductAttributeValue
+                var skip = true;
+
+               foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
+                {
+                    if (skip)
+                    {
+                        parsedAttributeValues.Contains(productAttributeValue.Id).Should().BeFalse();
+                        skip = false;
+                        continue;
+                    }
+
+                    parsedAttributeValues.Contains(productAttributeValue.Id).Should().BeTrue();
+                }
+            }
+        }
+
+        [Test]
+        public void CanAddAndRemoveProductAttributes()
+        {
+            var attributes = string.Empty;
+
+            var delete = false;
+
+            foreach (var productAttributeMapping in _productAttributeMappings)
             {
-                Id = 41,
-                Name = "Option with quantity",
-                DisplayOrder = 1,
-                ProductAttributeMappingId = pam4_1.Id
-            };
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id)) 
+                    attributes = _productAttributeParser.AddProductAttribute(attributes, productAttributeMapping.Key, productAttributeValue.Id.ToString());
 
-            #endregion
+                if (delete)
+                    attributes = _productAttributeParser.RemoveProductAttribute(attributes, productAttributeMapping.Key);
 
-            _productAttributeRepo = new FakeRepository<ProductAttribute>(new List<ProductAttribute> { pa1, pa2, pa3, pa4 });
+                delete = !delete;
+            }
 
+            var parsedAttributeValues = _productAttributeParser.ParseProductAttributeValues(attributes).Select(p => p.Id).ToList();
 
-            _productAttributeMappingRepo = new FakeRepository<ProductAttributeMapping>(new List<ProductAttributeMapping> { pam1_1, pam2_1, pam3_1, pam4_1 });
+            delete = false;
+
+            foreach (var productAttributeMapping in _productAttributeMappings)
+            {
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id)) 
+                    parsedAttributeValues.Contains(productAttributeValue.Id).Should().Be(!delete);
+
+                delete = !delete;
+            }
+        }
+
+        [Test]
+        public void CanRenderAttributesWithoutPrices()
+        {
+            var attributes = string.Empty;
+
+            foreach (var productAttributeMapping in _productAttributeMappings)
+                foreach (var productAttributeValue in productAttributeMapping.Value.OrderBy(p => p.Id))
+                    attributes = _productAttributeParser.AddProductAttribute(attributes, productAttributeMapping.Key, productAttributeValue.Id.ToString());
+
+            attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                "recipientName 1", "recipientEmail@gmail.com",
+                "senderName 1", "senderEmail@gmail.com", "custom message");
             
-            _productAttributeValueRepo = new FakeRepository<ProductAttributeValue>(new List<ProductAttributeValue> { pav1_1, pav1_2, pav2_1, pav2_2, pav4_1 });
+            var product = new Product { IsGiftCard = true, GiftCardType = GiftCardType.Virtual };
+            var customer = new Customer();
 
-            _predefinedProductAttributeValueRepo = new FakeRepository<PredefinedProductAttributeValue>();
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+                attributes, customer, "<br />", false);
 
-            _productAttributeService = new ProductAttributeService(
-                _predefinedProductAttributeValueRepo,
-                _productAttributeRepo,
-                _productAttributeCombinationRepo,
-                _productAttributeMappingRepo,
-                _productAttributeValueRepo,
-                new TestCacheManager());
+            formattedAttributes.Should().Be(
+                "Processor: 2.2 GHz Intel Pentium Dual-Core E2200<br />Processor: 2.5 GHz Intel Pentium Dual-Core E2200 [+$15.00]<br />RAM: 2 GB<br />RAM: 4GB [+$20.00]<br />RAM: 8GB [+$60.00]<br />HDD: 320 GB<br />HDD: 400 GB [+$100.00]<br />OS: Vista Home [+$50.00]<br />OS: Vista Premium [+$60.00]<br />Software: Microsoft Office [+$50.00]<br />Software: Acrobat Reader [+$10.00]<br />Software: Total Commander [+$5.00]<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
 
-            _priceCalculationService = new Mock<IPriceCalculationService>();
+            formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+                attributes, customer, "<br />", false, false);
 
-            var workingLanguage = new Language();
-            _workContext = new Mock<IWorkContext>();
-            _workContext.Setup(x => x.WorkingLanguage).Returns(workingLanguage);
-            _currencyService = new Mock<ICurrencyService>();
-            _localizationService = TestLocalizationService.Init();
-            
-            _taxService = new Mock<ITaxService>();
-            _priceFormatter = new Mock<IPriceFormatter>();
-            _downloadService = new Mock<IDownloadService>();
-            _webHelper = new Mock<IWebHelper>();
-            _shoppingCartSettings = new ShoppingCartSettings();
-
-            _productAttributeParser = new ProductAttributeParser(_currencyService.Object,
-                _downloadService.Object,
-                _localizationService,
-                _productAttributeService,
-                _productAttributeValueRepo,
-                _workContext.Object);
-
-            _productAttributeFormatter = new ProductAttributeFormatter(_currencyService.Object,
-                _downloadService.Object,
-                _localizationService,
-                _priceCalculationService.Object,
-                _priceFormatter.Object,
-                _productAttributeParser,
-                _productAttributeService,
-                _taxService.Object,
-                _webHelper.Object,
-                _workContext.Object,
-                _shoppingCartSettings);
+            formattedAttributes.Should().Be(
+                "Processor: 2.2 GHz Intel Pentium Dual-Core E2200<br />Processor: 2.5 GHz Intel Pentium Dual-Core E2200<br />RAM: 2 GB<br />RAM: 4GB<br />RAM: 8GB<br />HDD: 320 GB<br />HDD: 400 GB<br />OS: Vista Home<br />OS: Vista Premium<br />Software: Microsoft Office<br />Software: Acrobat Reader<br />Software: Total Commander<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
 
         [Test]
-        public void Can_add_and_parse_productAttributes()
+        public void CanAddAndParseGiftCardAttributes()
         {
-            var attributes = "";
-            //color: green
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
-            //custom option: option 1, option 2
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_1.Id.ToString());
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_2.Id.ToString());
-            //custom text
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
-
-            RunWithTestServiceProvider(() =>
-            {
-                var parsedAttributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-                parsedAttributeValues.Contains(pav1_1).Should().BeTrue();
-                parsedAttributeValues.Contains(pav1_2).Should().BeFalse();
-                parsedAttributeValues.Contains(pav2_1).Should().BeTrue();
-                parsedAttributeValues.Contains(pav2_2).Should().BeTrue();
-                parsedAttributeValues.Contains(pav2_2).Should().BeTrue();
-            });
-
-            var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
-            parsedValues.Count.Should().Be(1);
-            parsedValues.Contains("Some custom text goes here").Should().BeTrue();
-            parsedValues.Contains("Some other custom text").Should().BeFalse();
-        }
-
-        [Test]
-        public void Can_add_and_remove_productAttributes()
-        {
-            var attributes = "";
-            //color: green
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
-            //custom option: option 1, option 2
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_1.Id.ToString());
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_2.Id.ToString());
-            //custom text
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
-            //delete some of them
-            attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam2_1);
-            attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam3_1);
-
-            RunWithTestServiceProvider(() =>
-            {
-                var parsedAttributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-                parsedAttributeValues.Contains(pav1_1).Should().BeTrue();
-                parsedAttributeValues.Contains(pav1_2).Should().BeFalse();
-                parsedAttributeValues.Contains(pav2_1).Should().BeFalse();
-                parsedAttributeValues.Contains(pav2_2).Should().BeFalse();
-                parsedAttributeValues.Contains(pav2_2).Should().BeFalse();
-            });
-
-            var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
-            parsedValues.Count.Should().Be(0);
-        }
-
-        [Test]
-        public void Can_add_and_parse_giftCardAttributes()
-        {
-            var attributes = "";
+            var attributes = string.Empty;
             attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
@@ -281,9 +151,9 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_render_virtual_gift_cart()
+        public void CanRenderVirtualGiftCart()
         {
-            var attributes = _productAttributeParser.AddGiftCardAttribute("",
+            var attributes = _productAttributeParser.AddGiftCardAttribute(string.Empty,
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
@@ -299,9 +169,9 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_render_physical_gift_cart()
+        public void CanRenderPhysicalGiftCart()
         {
-            var attributes = _productAttributeParser.AddGiftCardAttribute("",
+            var attributes = _productAttributeParser.AddGiftCardAttribute(string.Empty,
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
@@ -315,38 +185,5 @@ namespace Nop.Services.Tests.Catalog
                 attributes, customer, "<br />", false, false);
             formattedAttributes.Should().Be("From: senderName 1<br />For: recipientName 1");
         }
-
-        [Test]
-        public void Can_render_attributes_withoutPrices()
-        {
-            var attributes = "";
-            //color: green
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
-            //custom option: option 1, option 2
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_1.Id.ToString());
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_2.Id.ToString());
-            //custom text
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
-
-            //gift card attributes
-            attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
-                "recipientName 1", "recipientEmail@gmail.com",
-                "senderName 1", "senderEmail@gmail.com", "custom message");
-
-            var product = new Product
-            {
-                IsGiftCard = true,
-                GiftCardType = GiftCardType.Virtual
-            };
-            var customer = new Customer();
-
-            RunWithTestServiceProvider(() =>
-            {
-                var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
-                    attributes, customer, "<br />", false, false);
-                formattedAttributes.Should().Be("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Custom text: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
-            });
-        }
     }
 }
-

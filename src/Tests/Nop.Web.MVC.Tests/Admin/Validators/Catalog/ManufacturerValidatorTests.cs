@@ -1,28 +1,24 @@
 ﻿using FluentValidation.TestHelper;
-using Moq;
-using Nop.Data;
+using Nop.Tests;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Validators.Catalog;
-using Nop.Web.MVC.Tests.Public.Validators;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
 {
     [TestFixture]
-    public class ManufacturerValidatorTests : BaseValidatorTests
+    public class ManufacturerValidatorTests : BaseNopTest
     {
         private ManufacturerValidator _validator;
-        private Mock<INopDataProvider> _dataProvider;
 
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _dataProvider = new Mock<INopDataProvider>();
-            _validator = new ManufacturerValidator(_localizationService, _dataProvider.Object);
+            _validator = GetService<ManufacturerValidator>();
         }
 
         [Test]
-        public void Should_have_error_when_pageSizeOptions_has_duplicate_items()
+        public void ShouldHaveErrorWhenPageSizeOptionsHasDuplicateItems()
         {
             var model = new ManufacturerModel
             {
@@ -32,7 +28,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
         }
 
         [Test]
-        public void Should_not_have_error_when_pageSizeOptions_has_not_duplicate_items()
+        public void ShouldNotHaveErrorWhenPageSizeOptionsHasNotDuplicateItems()
         {
             var model = new ManufacturerModel
             {
@@ -42,14 +38,14 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
         }
 
         [Test]
-        public void Should_not_have_error_when_pageSizeOptions_is_null_or_empty()
+        public void ShouldNotHaveErrorWhenPageSizeOptionsIsNullOrEmpty()
         {
             var model = new ManufacturerModel
             {
                 PageSizeOptions = null
             };
             _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
-            model.PageSizeOptions = "";
+            model.PageSizeOptions = string.Empty;
             _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
         }
     }

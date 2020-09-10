@@ -16,14 +16,14 @@ namespace Nop.Core.Tests.Domain.Shipping
         }
 
         [Test]
-        public void Can_get_type_converter()
+        public void CanGetTypeConverter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(ShippingOption));
             converter.GetType().Should().Be(typeof(ShippingOptionTypeConverter));
         }
 
         [Test]
-        public void Can_convert_shippingOption_to_string_and_back()
+        public void CanConvertShippingOptionToStringAndBack()
         {
             var shippingOptionInput = new ShippingOption
             {

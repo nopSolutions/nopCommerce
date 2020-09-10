@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using Nop.Core.Domain.Messages;
+using Nop.Services.Configuration;
 using Nop.Services.Messages;
 using NUnit.Framework;
 
@@ -9,37 +10,52 @@ namespace Nop.Services.Tests.Messages
     [TestFixture]
     public class TokenizerTests : ServiceTest
     {
-        [Test]
-        public void Can_replace_tokens_case_sensitive()
-        {
-            var messageTemplatesSettings = new MessageTemplatesSettings
-            {
-                CaseInvariantReplacement = false
-            };
-            var tokenizer = new Tokenizer(messageTemplatesSettings);
+        private ITokenizer _tokenizer;
+        private MessageTemplatesSettings _messageTemplatesSettings;
+        private bool _defaultCaseInvariantReplacement;
 
+        [SetUp]
+        public void SetUp()
+        {
+            _messageTemplatesSettings = GetService<MessageTemplatesSettings>();
+            _defaultCaseInvariantReplacement = _messageTemplatesSettings.CaseInvariantReplacement;
+            _messageTemplatesSettings.CaseInvariantReplacement = false;
+            GetService<ISettingService>().SaveSetting(_messageTemplatesSettings);
+
+            _tokenizer = GetService<ITokenizer>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _messageTemplatesSettings.CaseInvariantReplacement = _defaultCaseInvariantReplacement;
+            GetService<ISettingService>().SaveSetting(_messageTemplatesSettings);
+        }
+
+        [Test]
+        public void CanReplaceTokensCaseSensitive()
+        {
             var tokens = new List<Token>
             {
                 new Token("Token1", "Value1")
             };
             //correct case
-            tokenizer
+            _tokenizer
                 .Replace("Some text %Token1%", tokens, false)
                 .Should().Be("Some text Value1");
             //wrong case
-            tokenizer
+            _tokenizer
                 .Replace("Some text %TOKeN1%", tokens, false)
                 .Should().Be("Some text %TOKeN1%");
         }
 
         [Test]
-        public void Can_replace_tokens_case_invariant()
+        public void CanReplaceTokensCaseInvariant()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings
-            {
-                CaseInvariantReplacement = true
-            };
-            var tokenizer = new Tokenizer(messageTemplatesSettings);
+            _messageTemplatesSettings.CaseInvariantReplacement = true;
+            GetService<ISettingService>().SaveSetting(_messageTemplatesSettings);
+
+            var tokenizer = GetService<ITokenizer>();
 
             var tokens = new List<Token>
             {
@@ -51,51 +67,34 @@ namespace Nop.Services.Tests.Messages
         }
 
         [Test]
-        public void Can_html_encode()
+        public void CanHtmlEncode()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings
-            {
-                CaseInvariantReplacement = false
-            };
-            var tokenizer = new Tokenizer(messageTemplatesSettings);
-
             var tokens = new List<Token>
             {
                 new Token("Token1", "<Value1>")
             };
 
-            tokenizer
+            _tokenizer
                 .Replace("Some text %Token1%", tokens, true)
                 .Should().Be("Some text &lt;Value1&gt;");
         }
 
         [Test]
-        public void Should_not_html_encode_if_token_doesnt_allow_it()
+        public void ShouldNotHtmlEncodeIfTokenDoesNotAllowIt()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings
-            {
-                CaseInvariantReplacement = false
-            };
-            var tokenizer = new Tokenizer(messageTemplatesSettings);
-
             var tokens = new List<Token>
             {
                 new Token("Token1", "<Value1>", true)
             };
 
-            tokenizer
+            _tokenizer
                 .Replace("Some text %Token1%", tokens, true)
                 .Should().Be("Some text <Value1>");
         }
 
         [Test]
-        public void Can_replace_tokens_with_conditional_statements()
+        public void CanReplaceTokensWithConditionalStatements()
         {
-            var tokenizer = new Tokenizer(new MessageTemplatesSettings
-            {
-                CaseInvariantReplacement = false
-            });
-
             var tokens = new List<Token>
             {
                 new Token("ConditionToken", true),
@@ -106,46 +105,41 @@ namespace Nop.Services.Tests.Messages
             };
 
             //simple condition
-            tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% endif% %SomeValueToken%", tokens, true)
+            _tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% endif% %SomeValueToken%", tokens, true)
                 .Should().Be("Some text value  10");
 
             //broken token in condition
-            tokenizer.Replace(@"Some text %if (ConditionToken%) %ThenToken% endif% %SomeValueToken%", tokens, true)
+            _tokenizer.Replace(@"Some text %if (ConditionToken%) %ThenToken% endif% %SomeValueToken%", tokens, true)
                 .Should().Be("Some text  10");
 
             //multiple conditions
-            tokenizer.Replace(@"Some text %if (%ConditionToken% && %ConditionToken2% > 1) %ThenToken% endif% %SomeValueToken%", tokens, true)
+            _tokenizer.Replace(@"Some text %if (%ConditionToken% && %ConditionToken2% > 1) %ThenToken% endif% %SomeValueToken%", tokens, true)
                 .Should().Be("Some text value  10");
 
             //nested conditional statements
-            tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% %if (%ConditionToken2% > 1) %ThenToken2% endif% %if (!%ConditionToken%) %ThenToken% endif% %ThenToken% endif% %SomeValueToken%", tokens, true)
+            _tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% %if (%ConditionToken2% > 1) %ThenToken2% endif% %if (!%ConditionToken%) %ThenToken% endif% %ThenToken% endif% %SomeValueToken%", tokens, true)
                 .Should().Be("Some text value value2   value  10");
 
             //wrong condition
-            tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken%", tokens, true)
+            _tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken%", tokens, true)
                 .Should().Be("Some text %if (True) value");
 
             //complex condition
-            tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% endif% %SomeValueToken% %if (%ConditionToken2% > 1) %ThenToken2% %if (!%ConditionToken%) %ThenToken% endif% endif% %SomeValueToken%", tokens, true)
+            _tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% endif% %SomeValueToken% %if (%ConditionToken2% > 1) %ThenToken2% %if (!%ConditionToken%) %ThenToken% endif% endif% %SomeValueToken%", tokens, true)
                 .Should().Be("Some text value  10 value2   10");
         }
 
         [Test]
-        public void Can_replace_tokens_with_non_string_values()
+        public void CanReplaceTokensWithNonStringValues()
         {
-            var tokenizer = new Tokenizer(new MessageTemplatesSettings
-            {
-                CaseInvariantReplacement = false
-            });
-
             var tokens = new List<Token>
             {
                 new Token("Token1", true),
                 new Token("Token2", 1),
-                new Token("Token3", "value"),
+                new Token("Token3", "value")
             };
 
-            tokenizer.Replace("Some text %Token1%, %Token2%, %Token3%", tokens, true)
+            _tokenizer.Replace("Some text %Token1%, %Token2%, %Token3%", tokens, true)
                 .Should().Be("Some text True, 1, value");
         }
     }

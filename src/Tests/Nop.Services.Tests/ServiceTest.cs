@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 using Nop.Services.Tests.Directory;
@@ -17,30 +15,8 @@ using NUnit.Framework;
 namespace Nop.Services.Tests
 {
     [TestFixture]
-    public abstract class ServiceTest
+    public abstract class ServiceTest : BaseNopTest
     {
-        protected readonly FakeDataStore _fakeDataStore = new FakeDataStore();
-
-        [SetUp]
-        public virtual void SetUp()
-        {
-            Singleton<NopConfig>.Instance = new NopConfig
-            {
-                DefaultCacheTime = 60,
-                ShortTermCacheTime = 3,
-                BundledFilesCacheTime = 120
-            };
-        }
-
-        public void RunWithTestServiceProvider(Action action)
-        {
-            EngineContext.Replace(new FakeNopEngine());
-
-            action();
-
-            EngineContext.Replace(null);
-        }
-        
         protected ServiceTest()
         {
             //init plugins
@@ -95,16 +71,6 @@ namespace Nop.Services.Tests
                     }
                 }
             };
-        }
-        
-        public class FakeNopEngine : NopEngine
-        {
-            public FakeNopEngine(IServiceProvider serviceProvider = null)
-            {
-                ServiceProvider = serviceProvider ?? new TestServiceProvider();
-            }
-
-            public override IServiceProvider ServiceProvider { get; }
         }
     }
 }

@@ -19,21 +19,21 @@ namespace Nop.Core.Tests.ComponentModel
         }
 
         [Test]
-        public void Can_get_int_list_type_converter()
+        public void CanGetIntListTypeConverter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(List<int>));
             converter.Should().BeOfType<GenericListTypeConverter<int>>();
         }
 
         [Test]
-        public void Can_get_string_list_type_converter()
+        public void CanGetStringListTypeConverter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(List<string>));
             converter.Should().BeOfType<GenericListTypeConverter<string>>();
         }
 
         [Test]
-        public void Can_get_int_list_from_string()
+        public void CanGetIntListFromString()
         {
             var items = "10,20,30,40,50";
             var converter = TypeDescriptor.GetConverter(typeof(List<int>));
@@ -43,7 +43,7 @@ namespace Nop.Core.Tests.ComponentModel
         }
 
         [Test]
-        public void Can_get_string_list_from_string()
+        public void CanGetStringListFromString()
         {
             var items = "foo, bar, day";
             var converter = TypeDescriptor.GetConverter(typeof(List<string>));
@@ -53,7 +53,7 @@ namespace Nop.Core.Tests.ComponentModel
         }
 
         [Test]
-        public void Can_convert_int_list_to_string()
+        public void CanConvertIntListToString()
         {
             var items = new List<int> { 10, 20, 30, 40, 50 };
             var converter = TypeDescriptor.GetConverter(items.GetType());
@@ -64,7 +64,7 @@ namespace Nop.Core.Tests.ComponentModel
         }
 
         [Test]
-        public void Can_convert_string_list_to_string()
+        public void CanConvertStringListToString()
         {
             var items = new List<string> { "foo", "bar", "day" };
             var converter = TypeDescriptor.GetConverter(items.GetType());
