@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Tests;
 using Nop.Web.Models.ShoppingCart;
 using Nop.Web.Validators.ShoppingCart;
 using NUnit.Framework;
@@ -6,30 +7,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
 {
     [TestFixture]
-    public class WishlistEmailAFriendValidatorTests : BaseValidatorTests
+    public class WishlistEmailAFriendValidatorTests : BaseNopTest
     {
         private WishlistEmailAFriendValidator _validator;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _validator = new WishlistEmailAFriendValidator(_localizationService);
+            _validator = GetService<WishlistEmailAFriendValidator>();
         }
         
         [Test]
-        public void Should_have_error_when_friendEmail_is_null_or_empty()
+        public void ShouldHaveErrorWhenFriendEmailIsNullOrEmpty()
         {
             var model = new WishlistEmailAFriendModel
             {
                 FriendEmail = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
-            model.FriendEmail = "";
+            model.FriendEmail = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.FriendEmail, model);
         }
 
         [Test]
-        public void Should_have_error_when_friendEmail_is_wrong_format()
+        public void ShouldHaveErrorWhenFriendEmailIsWrongFormat()
         {
             var model = new WishlistEmailAFriendModel
             {
@@ -39,7 +40,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
         }
 
         [Test]
-        public void Should_not_have_error_when_friendEmail_is_correct_format()
+        public void ShouldNotHaveErrorWhenFriendEmailIsCorrectFormat()
         {
             var model = new WishlistEmailAFriendModel
             {
@@ -49,19 +50,19 @@ namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
         }
 
         [Test]
-        public void Should_have_error_when_yourEmailAddress_is_null_or_empty()
+        public void ShouldHaveErrorWhenYourEmailAddressIsNullOrEmpty()
         {
             var model = new WishlistEmailAFriendModel
             {
                 YourEmailAddress = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
-            model.YourEmailAddress = "";
+            model.YourEmailAddress = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.YourEmailAddress, model);
         }
 
         [Test]
-        public void Should_have_error_when_yourEmailAddress_is_wrong_format()
+        public void ShouldHaveErrorWhenYourEmailAddressIsWrongFormat()
         {
             var model = new WishlistEmailAFriendModel
             {
@@ -71,7 +72,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
         }
 
         [Test]
-        public void Should_not_have_error_when_yourEmailAddress_is_correct_format()
+        public void ShouldNotHaveErrorWhenYourEmailAddressIsCorrectFormat()
         {
             var model = new WishlistEmailAFriendModel
             {

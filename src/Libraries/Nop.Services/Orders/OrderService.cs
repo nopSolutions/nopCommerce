@@ -11,9 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Html;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
-using Nop.Services.Events;
 using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
@@ -25,8 +23,6 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly CachingSettings _cachingSettings;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -43,9 +39,7 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public OrderService(CachingSettings cachingSettings,
-            IEventPublisher eventPublisher,
-            IProductService productService,
+        public OrderService(IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
@@ -57,8 +51,6 @@ namespace Nop.Services.Orders
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IShipmentService shipmentService)
         {
-            _cachingSettings = cachingSettings;
-            _eventPublisher = eventPublisher;
             _productService = productService;
             _addressRepository = addressRepository;
             _customerRepository = customerRepository;
@@ -85,10 +77,8 @@ namespace Nop.Services.Orders
         /// <returns>Order</returns>
         public virtual Order GetOrderById(int orderId)
         {
-            if (orderId == 0)
-                return null;
-
-            return _orderRepository.ToCachedGetById(orderId, _cachingSettings.ShortTermCacheTime);
+            return _orderRepository.GetById(orderId,
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Order>.ByIdCacheKey, orderId));
         }
 
         /// <summary>
@@ -125,25 +115,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
         /// <returns>Order</returns>
-        public virtual IList<Order> GetOrdersByIds(int[] orderIds)
+        public virtual IList<Order> GetOrdersByIds(int[] orderIds) 
         {
-            if (orderIds == null || orderIds.Length == 0)
-                return new List<Order>();
-
-            var query = from o in _orderRepository.Table
-                        where orderIds.Contains(o.Id) && !o.Deleted
-                        select o;
-            var orders = query.ToList();
-            //sort by passed identifiers
-            var sortedOrders = new List<Order>();
-            foreach (var id in orderIds)
-            {
-                var order = orders.Find(x => x.Id == id);
-                if (order != null)
-                    sortedOrders.Add(order);
-            }
-
-            return sortedOrders;
+            return _orderRepository.GetByIds(orderIds);
         }
 
         /// <summary>
@@ -169,14 +143,7 @@ namespace Nop.Services.Orders
         /// <param name="order">The order</param>
         public virtual void DeleteOrder(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-
-            order.Deleted = true;
-            UpdateOrder(order);
-
-            //event notification
-            _eventPublisher.EntityDeleted(order);
+            _orderRepository.Delete(order);
         }
 
         /// <summary>
@@ -218,11 +185,15 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
 
             if (vendorId > 0)
+            {
                 query = from o in query
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     join p in _productRepository.Table on oi.ProductId equals p.Id
                     where p.VendorId == vendorId
                     select o;
+
+                query = query.Distinct();
+            }
 
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
@@ -297,13 +268,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         public virtual void InsertOrder(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-
             _orderRepository.Insert(order);
-
-            //event notification
-            _eventPublisher.EntityInserted(order);
         }
 
         /// <summary>
@@ -312,13 +277,7 @@ namespace Nop.Services.Orders
         /// <param name="order">The order</param>
         public virtual void UpdateOrder(Order order)
         {
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-
             _orderRepository.Update(order);
-
-            //event notification
-            _eventPublisher.EntityUpdated(order);
         }
 
         /// <summary>
@@ -465,10 +424,8 @@ namespace Nop.Services.Orders
         /// <returns>Order item</returns>
         public virtual OrderItem GetOrderItemById(int orderItemId)
         {
-            if (orderItemId == 0)
-                return null;
-
-            return _orderItemRepository.ToCachedGetById(orderItemId, _cachingSettings.ShortTermCacheTime);
+            return _orderItemRepository.GetById(orderItemId,
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<OrderItem>.ByIdCacheKey, orderItemId));
         }
 
         /// <summary>
@@ -556,13 +513,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">The order item</param>
         public virtual void DeleteOrderItem(OrderItem orderItem)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
             _orderItemRepository.Delete(orderItem);
-
-            //event notification
-            _eventPublisher.EntityDeleted(orderItem);
         }
 
         /// <summary>
@@ -793,13 +744,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         public virtual void InsertOrderItem(OrderItem orderItem)
         {
-            if (orderItem is null)
-                throw new ArgumentNullException(nameof(orderItem));
-
             _orderItemRepository.Insert(orderItem);
-
-            //event notification
-            _eventPublisher.EntityInserted(orderItem);
         }
 
         /// <summary>
@@ -808,13 +753,7 @@ namespace Nop.Services.Orders
         /// <param name="orderItem">Order item</param>
         public virtual void UpdateOrderItem(OrderItem orderItem)
         {
-            if (orderItem == null)
-                throw new ArgumentNullException(nameof(orderItem));
-
             _orderItemRepository.Update(orderItem);
-
-            //event notification
-            _eventPublisher.EntityUpdated(orderItem);
         }
 
         #endregion
@@ -828,9 +767,6 @@ namespace Nop.Services.Orders
         /// <returns>Order note</returns>
         public virtual OrderNote GetOrderNoteById(int orderNoteId)
         {
-            if (orderNoteId == 0)
-                return null;
-
             return _orderNoteRepository.GetById(orderNoteId);
         }
 
@@ -861,13 +797,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNote">The order note</param>
         public virtual void DeleteOrderNote(OrderNote orderNote)
         {
-            if (orderNote == null)
-                throw new ArgumentNullException(nameof(orderNote));
-
             _orderNoteRepository.Delete(orderNote);
-
-            //event notification
-            _eventPublisher.EntityDeleted(orderNote);
         }
 
         /// <summary>
@@ -896,13 +826,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNote">The order note</param>
         public virtual void InsertOrderNote(OrderNote orderNote)
         {
-            if (orderNote is null)
-                throw new ArgumentNullException(nameof(orderNote));
-
             _orderNoteRepository.Insert(orderNote);
-
-            //event notification
-            _eventPublisher.EntityInserted(orderNote);
         }
 
         #endregion
@@ -915,14 +839,7 @@ namespace Nop.Services.Orders
         /// <param name="recurringPayment">Recurring payment</param>
         public virtual void DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
-
-            recurringPayment.Deleted = true;
-            UpdateRecurringPayment(recurringPayment);
-
-            //event notification
-            _eventPublisher.EntityDeleted(recurringPayment);
+            _recurringPaymentRepository.Delete(recurringPayment);
         }
 
         /// <summary>
@@ -932,10 +849,7 @@ namespace Nop.Services.Orders
         /// <returns>Recurring payment</returns>
         public virtual RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
         {
-            if (recurringPaymentId == 0)
-                return null;
-
-            return _recurringPaymentRepository.ToCachedGetById(recurringPaymentId);
+            return _recurringPaymentRepository.GetById(recurringPaymentId, cache => default);
         }
 
         /// <summary>
@@ -944,13 +858,7 @@ namespace Nop.Services.Orders
         /// <param name="recurringPayment">Recurring payment</param>
         public virtual void InsertRecurringPayment(RecurringPayment recurringPayment)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
-
             _recurringPaymentRepository.Insert(recurringPayment);
-
-            //event notification
-            _eventPublisher.EntityInserted(recurringPayment);
         }
 
         /// <summary>
@@ -959,13 +867,7 @@ namespace Nop.Services.Orders
         /// <param name="recurringPayment">Recurring payment</param>
         public virtual void UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
-            if (recurringPayment == null)
-                throw new ArgumentNullException(nameof(recurringPayment));
-
             _recurringPaymentRepository.Update(recurringPayment);
-
-            //event notification
-            _eventPublisher.EntityUpdated(recurringPayment);
         }
 
         /// <summary>
@@ -1034,13 +936,7 @@ namespace Nop.Services.Orders
         /// <param name="recurringPaymentHistory">Recurring payment history entry</param>
         public virtual void InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
         {
-            if (recurringPaymentHistory == null)
-                throw new ArgumentNullException(nameof(recurringPaymentHistory));
-
             _recurringPaymentHistoryRepository.Insert(recurringPaymentHistory);
-
-            //event notification
-            _eventPublisher.EntityInserted(recurringPaymentHistory);
         }
 
         #endregion

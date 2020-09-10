@@ -3,10 +3,9 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
@@ -87,14 +86,14 @@ namespace Nop.Services.Messages
             //Persist
             _subscriptionRepository.Insert(newsLetterSubscription);
 
+            //Publish event
+            _eventPublisher.EntityInserted(newsLetterSubscription);
+
             //Publish the subscription event 
             if (newsLetterSubscription.Active)
             {
                 PublishSubscriptionEvent(newsLetterSubscription, true, publishSubscriptionEvents);
             }
-
-            //Publish event
-            _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -117,6 +116,9 @@ namespace Nop.Services.Messages
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
+            
+            //Publish event
+            _eventPublisher.EntityUpdated(newsLetterSubscription);
 
             //Publish the subscription event 
             if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
@@ -138,9 +140,6 @@ namespace Nop.Services.Messages
                 //If the previous entry was true, but this one is false
                 PublishSubscriptionEvent(originalSubscription, false, publishSubscriptionEvents);
             }
-
-            //Publish event
-            _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
         /// <summary>
@@ -150,15 +149,16 @@ namespace Nop.Services.Messages
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
         public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null) throw new ArgumentNullException(nameof(newsLetterSubscription));
+            if (newsLetterSubscription == null) 
+                throw new ArgumentNullException(nameof(newsLetterSubscription));
 
             _subscriptionRepository.Delete(newsLetterSubscription);
+            
+            //event notification
+            _eventPublisher.EntityDeleted(newsLetterSubscription);
 
             //Publish the unsubscribe event 
             PublishSubscriptionEvent(newsLetterSubscription, false, publishSubscriptionEvents);
-
-            //event notification
-            _eventPublisher.EntityDeleted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -168,9 +168,7 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
-            if (newsLetterSubscriptionId == 0) return null;
-
-            return _subscriptionRepository.ToCachedGetById(newsLetterSubscriptionId);
+            return _subscriptionRepository.GetById(newsLetterSubscriptionId, cache => default);
         }
 
         /// <summary>
@@ -231,20 +229,23 @@ namespace Nop.Services.Messages
             if (customerRoleId == 0)
             {
                 //do not filter by customer role
-                var query = _subscriptionRepository.Table;
-                if (!string.IsNullOrEmpty(email))
-                    query = query.Where(nls => nls.Email.Contains(email));
-                if (createdFromUtc.HasValue)
-                    query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
-                if (createdToUtc.HasValue)
-                    query = query.Where(nls => nls.CreatedOnUtc <= createdToUtc.Value);
-                if (storeId > 0)
-                    query = query.Where(nls => nls.StoreId == storeId);
-                if (isActive.HasValue)
-                    query = query.Where(nls => nls.Active == isActive.Value);
-                query = query.OrderBy(nls => nls.Email);
+                var subscriptions = _subscriptionRepository.GetAllPaged(query =>
+                {
+                    if (!string.IsNullOrEmpty(email))
+                        query = query.Where(nls => nls.Email.Contains(email));
+                    if (createdFromUtc.HasValue)
+                        query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
+                    if (createdToUtc.HasValue)
+                        query = query.Where(nls => nls.CreatedOnUtc <= createdToUtc.Value);
+                    if (storeId > 0)
+                        query = query.Where(nls => nls.StoreId == storeId);
+                    if (isActive.HasValue)
+                        query = query.Where(nls => nls.Active == isActive.Value);
+                    query = query.OrderBy(nls => nls.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+                    return query;
+                }, pageIndex, pageSize);
+
                 return subscriptions;
             }
 
@@ -256,52 +257,54 @@ namespace Nop.Services.Messages
             if (guestRole.Id == customerRoleId)
             {
                 //guests
-                var query = _subscriptionRepository.Table;
-                if (!string.IsNullOrEmpty(email))
-                    query = query.Where(nls => nls.Email.Contains(email));
-                if (createdFromUtc.HasValue)
-                    query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
-                if (createdToUtc.HasValue)
-                    query = query.Where(nls => nls.CreatedOnUtc <= createdToUtc.Value);
-                if (storeId > 0)
-                    query = query.Where(nls => nls.StoreId == storeId);
-                if (isActive.HasValue)
-                    query = query.Where(nls => nls.Active == isActive.Value);
-                query = query.Where(nls => !_customerRepository.Table.Any(c => c.Email == nls.Email));
-                query = query.OrderBy(nls => nls.Email);
+                var subscriptions = _subscriptionRepository.GetAllPaged(query =>
+                {
+                    if (!string.IsNullOrEmpty(email))
+                        query = query.Where(nls => nls.Email.Contains(email));
+                    if (createdFromUtc.HasValue)
+                        query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
+                    if (createdToUtc.HasValue)
+                        query = query.Where(nls => nls.CreatedOnUtc <= createdToUtc.Value);
+                    if (storeId > 0)
+                        query = query.Where(nls => nls.StoreId == storeId);
+                    if (isActive.HasValue)
+                        query = query.Where(nls => nls.Active == isActive.Value);
+                    query = query.Where(nls => !_customerRepository.Table.Any(c => c.Email == nls.Email));
+                    query = query.OrderBy(nls => nls.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+                    return query;
+                }, pageIndex, pageSize);
 
                 return subscriptions;
             }
             else
             {
-                //other customer roles (not guests)
-                var query = _subscriptionRepository.Table.Join(_customerRepository.Table,
-                    nls => nls.Email,
-                    c => c.Email,
-                    (nls, c) => new
-                    {
-                        NewsletterSubscribers = nls,
-                        Customer = c
-                    });
+                var subscriptions = _subscriptionRepository.GetAllPaged(query =>
+                {
+                    //other customer roles (not guests)
+                    var joindQuery = query.Join(_customerRepository.Table,
+                        nls => nls.Email,
+                        c => c.Email,
+                        (nls, c) => new {NewsletterSubscribers = nls, Customer = c});
 
-                query = query.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
+                    joindQuery = joindQuery.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm =>
+                        ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
 
-                if (!string.IsNullOrEmpty(email))
-                    query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
-                if (createdFromUtc.HasValue)
-                    query = query.Where(x => x.NewsletterSubscribers.CreatedOnUtc >= createdFromUtc.Value);
-                if (createdToUtc.HasValue)
-                    query = query.Where(x => x.NewsletterSubscribers.CreatedOnUtc <= createdToUtc.Value);
-                if (storeId > 0)
-                    query = query.Where(x => x.NewsletterSubscribers.StoreId == storeId);
-                if (isActive.HasValue)
-                    query = query.Where(x => x.NewsletterSubscribers.Active == isActive.Value);
+                    if (!string.IsNullOrEmpty(email))
+                        joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.Email.Contains(email));
+                    if (createdFromUtc.HasValue)
+                        joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.CreatedOnUtc >= createdFromUtc.Value);
+                    if (createdToUtc.HasValue)
+                        joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.CreatedOnUtc <= createdToUtc.Value);
+                    if (storeId > 0)
+                        joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.StoreId == storeId);
+                    if (isActive.HasValue)
+                        joindQuery = joindQuery.Where(x => x.NewsletterSubscribers.Active == isActive.Value);
 
-                query = query.OrderBy(x => x.NewsletterSubscribers.Email);
+                    joindQuery = joindQuery.OrderBy(x => x.NewsletterSubscribers.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x => x.NewsletterSubscribers), pageIndex, pageSize);
+                    return joindQuery.Select(x => x.NewsletterSubscribers);
+                }, pageIndex, pageSize);
 
                 return subscriptions;
             }

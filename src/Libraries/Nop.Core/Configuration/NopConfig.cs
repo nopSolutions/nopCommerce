@@ -127,7 +127,12 @@ namespace Nop.Core.Configuration
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether should use MiniProfiler services
+        /// </summary>
+        public bool MiniProfilerEnabled { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether we should use Azure blob storage
         /// </summary>
@@ -139,5 +144,20 @@ namespace Nop.Core.Configuration
         /// </summary>
         [JsonIgnore]
         public bool EncryptDataProtectionKeysWithAzureKeyVault => !string.IsNullOrEmpty(AzureKeyVaultIdForDataProtectionKeys);
+        
+        /// <summary>
+        /// Gets or sets the default cache time in minutes
+        /// </summary>
+        public int DefaultCacheTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the short term cache time in minutes
+        /// </summary>
+        public int ShortTermCacheTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bundled files cache time in minutes
+        /// </summary>
+        public int BundledFilesCacheTime { get; set; }
     }
 }

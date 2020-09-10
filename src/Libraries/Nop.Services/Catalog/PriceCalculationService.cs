@@ -7,7 +7,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Services.Caching;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -23,7 +22,6 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -41,7 +39,6 @@ namespace Nop.Services.Catalog
 
         public PriceCalculationService(CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
-            ICacheKeyService cacheKeyService,
             ICategoryService categoryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -55,7 +52,6 @@ namespace Nop.Services.Catalog
         {
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
-            _cacheKeyService = cacheKeyService;
             _categoryService = categoryService;
             _currencyService = currencyService;
             _customerService = customerService;
@@ -352,7 +348,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey, 
                 product,
                 overriddenProductPrice,
                 additionalCharge,

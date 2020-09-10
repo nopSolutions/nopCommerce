@@ -4,8 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
@@ -16,17 +14,14 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
 
         #endregion
 
         #region Ctor
 
-        public QueuedEmailService(IEventPublisher eventPublisher,
-            IRepository<QueuedEmail> queuedEmailRepository)
+        public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository)
         {
-            _eventPublisher = eventPublisher;
             _queuedEmailRepository = queuedEmailRepository;
         }
 
@@ -40,13 +35,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>        
         public virtual void InsertQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             _queuedEmailRepository.Insert(queuedEmail);
-
-            //event notification
-            _eventPublisher.EntityInserted(queuedEmail);
         }
 
         /// <summary>
@@ -55,13 +44,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>
         public virtual void UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             _queuedEmailRepository.Update(queuedEmail);
-
-            //event notification
-            _eventPublisher.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
@@ -70,13 +53,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>
         public virtual void DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             _queuedEmailRepository.Delete(queuedEmail);
-
-            //event notification
-            _eventPublisher.EntityDeleted(queuedEmail);
         }
 
         /// <summary>
@@ -85,16 +62,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmails">Queued emails</param>
         public virtual void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
         {
-            if (queuedEmails == null)
-                throw new ArgumentNullException(nameof(queuedEmails));
-
             _queuedEmailRepository.Delete(queuedEmails);
-
-            //event notification
-            foreach (var queuedEmail in queuedEmails)
-            {
-                _eventPublisher.EntityDeleted(queuedEmail);
-            }
         }
 
         /// <summary>
@@ -104,10 +72,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email</returns>
         public virtual QueuedEmail GetQueuedEmailById(int queuedEmailId)
         {
-            if (queuedEmailId == 0)
-                return null;
-
-            return _queuedEmailRepository.ToCachedGetById(queuedEmailId);
+            return _queuedEmailRepository.GetById(queuedEmailId, cache => default);
         }
 
         /// <summary>
@@ -117,23 +82,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued emails</returns>
         public virtual IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds)
         {
-            if (queuedEmailIds == null || queuedEmailIds.Length == 0)
-                return new List<QueuedEmail>();
-
-            var query = from qe in _queuedEmailRepository.Table
-                        where queuedEmailIds.Contains(qe.Id)
-                        select qe;
-            var queuedEmails = query.ToList();
-            //sort by passed identifiers
-            var sortedQueuedEmails = new List<QueuedEmail>();
-            foreach (var id in queuedEmailIds)
-            {
-                var queuedEmail = queuedEmails.Find(x => x.Id == id);
-                if (queuedEmail != null)
-                    sortedQueuedEmails.Add(queuedEmail);
-            }
-
-            return sortedQueuedEmails;
+            return _queuedEmailRepository.GetByIds(queuedEmailIds);
         }
 
         /// <summary>

@@ -1,22 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
-using Moq;
-using Nop.Core;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Catalog;
-using Nop.Services.Directory;
-using Nop.Services.Events;
-using Nop.Services.Localization;
-using Nop.Services.Media;
 using Nop.Services.Orders;
-using Nop.Services.Stores;
-using Nop.Services.Tax;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Orders
@@ -24,33 +11,23 @@ namespace Nop.Services.Tests.Orders
     [TestFixture]
     public class CheckoutAttributeParserAndFormatterTests : ServiceTest
     {
-        private Mock<IRepository<CheckoutAttribute>> _checkoutAttributeRepo;
-        private Mock<IRepository<CheckoutAttributeValue>> _checkoutAttributeValueRepo;
-        private Mock<IEventPublisher> _eventPublisher;
-        private Mock<IStoreMappingService> _storeMappingService;
-        private ICheckoutAttributeService _checkoutAttributeService;
         private ICheckoutAttributeParser _checkoutAttributeParser;
-        private Mock<IWorkContext> _workContext;
-        private Mock<ICurrencyService> _currencyService;
-        private Mock<ITaxService> _taxService;
-        private Mock<IPriceFormatter> _priceFormatter;
-        private Mock<IDownloadService> _downloadService;
-        private Mock<IWebHelper> _webHelper;
-        private ILocalizationService _localizationService;
         private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        private ICheckoutAttributeService _checkoutAttributeService;
 
-        private CheckoutAttribute ca1, ca2, ca3;
-        private CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
+        private CheckoutAttribute _ca1, _ca2, _ca3;
+        private CheckoutAttributeValue _cav11, _cav12, _cav21, _cav22;
 
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
-            #region Test data
+            _checkoutAttributeParser = GetService<ICheckoutAttributeParser>();
+            _checkoutAttributeFormatter = GetService<ICheckoutAttributeFormatter>();
+            _checkoutAttributeService = GetService<ICheckoutAttributeService>();
 
             //color (dropdownlist)
-            ca1 = new CheckoutAttribute
+            _ca1 = new CheckoutAttribute
             {
-                Id = 1,
                 Name = "Color",
                 TextPrompt = "Select color:",
                 IsRequired = true,
@@ -58,50 +35,55 @@ namespace Nop.Services.Tests.Orders
                 DisplayOrder = 1
             };
 
-            cav1_1 = new CheckoutAttributeValue
+            _checkoutAttributeService.InsertCheckoutAttribute(_ca1);
+
+            _cav11 = new CheckoutAttributeValue
             {
-                Id = 11,
                 Name = "Green",
                 DisplayOrder = 1,
-                CheckoutAttributeId = ca1.Id
+                CheckoutAttributeId = _ca1.Id
             };
-            cav1_2 = new CheckoutAttributeValue
+            _cav12 = new CheckoutAttributeValue
             {
-                Id = 12,
                 Name = "Red",
                 DisplayOrder = 2,
-                CheckoutAttributeId = ca1.Id
+                CheckoutAttributeId = _ca1.Id
             };
 
+            _checkoutAttributeService.InsertCheckoutAttributeValue(_cav11);
+            _checkoutAttributeService.InsertCheckoutAttributeValue(_cav12);
+
             //custom option (checkboxes)
-            ca2 = new CheckoutAttribute
+            _ca2 = new CheckoutAttribute
             {
-                Id = 2,
                 Name = "Custom option",
                 TextPrompt = "Select custom option:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.Checkboxes,
                 DisplayOrder = 2
             };
-            cav2_1 = new CheckoutAttributeValue
+
+            _checkoutAttributeService.InsertCheckoutAttribute(_ca2);
+
+            _cav21 = new CheckoutAttributeValue
             {
-                Id = 21,
                 Name = "Option 1",
                 DisplayOrder = 1,
-                CheckoutAttributeId = ca2.Id
+                CheckoutAttributeId = _ca2.Id
             };
-            cav2_2 = new CheckoutAttributeValue
+            _cav22 = new CheckoutAttributeValue
             {
-                Id = 22,
                 Name = "Option 2",
                 DisplayOrder = 2,
-                CheckoutAttributeId = ca2.Id
+                CheckoutAttributeId = _ca2.Id
             };
 
+            _checkoutAttributeService.InsertCheckoutAttributeValue(_cav21);
+            _checkoutAttributeService.InsertCheckoutAttributeValue(_cav22);
+
             //custom text
-            ca3 = new CheckoutAttribute
+            _ca3 = new CheckoutAttribute
             {
-                Id = 3,
                 Name = "Custom text",
                 TextPrompt = "Enter custom text:",
                 IsRequired = true,
@@ -109,127 +91,93 @@ namespace Nop.Services.Tests.Orders
                 DisplayOrder = 3
             };
 
+            _checkoutAttributeService.InsertCheckoutAttribute(_ca3);
+        }
 
-            #endregion
+        [TearDown]
+        public void TearDown()
+        {
+            _checkoutAttributeService.DeleteCheckoutAttributeValue(_cav11);
+            _checkoutAttributeService.DeleteCheckoutAttributeValue(_cav12);
+            _checkoutAttributeService.DeleteCheckoutAttribute(_ca1);
 
-            _checkoutAttributeRepo = new Mock<IRepository<CheckoutAttribute>>();
-            _checkoutAttributeRepo.Setup(x => x.Table).Returns(new List<CheckoutAttribute> { ca1, ca2, ca3 }.AsQueryable());
-            _checkoutAttributeRepo.Setup(x => x.GetById(ca1.Id)).Returns(ca1);
-            _checkoutAttributeRepo.Setup(x => x.GetById(ca2.Id)).Returns(ca2);
-            _checkoutAttributeRepo.Setup(x => x.GetById(ca3.Id)).Returns(ca3);
+            _checkoutAttributeService.DeleteCheckoutAttributeValue(_cav21);
+            _checkoutAttributeService.DeleteCheckoutAttributeValue(_cav22);
+            _checkoutAttributeService.DeleteCheckoutAttribute(_ca2);
 
-            _checkoutAttributeValueRepo = new Mock<IRepository<CheckoutAttributeValue>>();
-            _checkoutAttributeValueRepo.Setup(x => x.Table).Returns(new List<CheckoutAttributeValue> { cav1_1, cav1_2, cav2_1, cav2_2 }.AsQueryable());
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav1_1.Id)).Returns(cav1_1);
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav1_2.Id)).Returns(cav1_2);
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_1.Id)).Returns(cav2_1);
-            _checkoutAttributeValueRepo.Setup(x => x.GetById(cav2_2.Id)).Returns(cav2_2);
-
-            var staticCacheManager = new TestCacheManager();
-
-            _storeMappingService = new Mock<IStoreMappingService>();
-
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            _checkoutAttributeService = new CheckoutAttributeService(new FakeCacheKeyService(), staticCacheManager, _eventPublisher.Object,
-                _checkoutAttributeRepo.Object, _checkoutAttributeValueRepo.Object, _storeMappingService.Object);
-
-            _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
-
-            var workingLanguage = new Language();
-            _workContext = new Mock<IWorkContext>();
-            _workContext.Setup(x => x.WorkingLanguage).Returns(workingLanguage);
-            _currencyService = new Mock<ICurrencyService>();
-            _taxService = new Mock<ITaxService>();
-            _priceFormatter = new Mock<IPriceFormatter>();
-            _downloadService = new Mock<IDownloadService>();
-            _webHelper = new Mock<IWebHelper>();
-            _localizationService = TestLocalizationService.Init();
-
-            //_localizationService.Setup(ls=>ls.GetLocalized(It.IsAny<CheckoutAttribute>(), attribute => attribute.Name, It.IsAny<int?>(), true, true)).Returns()
-
-            _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_checkoutAttributeParser,
-                _checkoutAttributeService, _currencyService.Object, _downloadService.Object, _localizationService,
-                _priceFormatter.Object, _taxService.Object, _webHelper.Object, _workContext.Object);
+            _checkoutAttributeService.DeleteCheckoutAttribute(_ca3);
         }
 
         [Test]
-        public void Can_add_and_parse_checkoutAttributes()
+        public void CanAddAndParseCheckoutAttributes()
         {
-            var attributes = "";
+            var attributes = string.Empty;
             //color: green
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca1, _cav11.Id.ToString());
             //custom option: option 1, option 2
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_1.Id.ToString());
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca2, _cav21.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca2, _cav22.Id.ToString());
             //custom text
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca3, "Some custom text goes here");
 
-            RunWithTestServiceProvider(() =>
-            {
-                var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_1).Should().BeTrue();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_2).Should().BeFalse();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_1).Should().BeTrue();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).Should().BeTrue();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).Should().BeTrue();
+            var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav11.Id).Should().BeTrue();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav12.Id).Should().BeFalse();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav21.Id).Should().BeTrue();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav22.Id).Should().BeTrue();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav22.Id).Should().BeTrue();
 
-                var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-                parsedValues.Count.Should().Be(1);
-                parsedValues.Contains("Some custom text goes here").Should().BeTrue();
-                parsedValues.Contains("Some other custom text").Should().BeFalse();
-            });
+            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, _ca3.Id);
+            parsedValues.Count.Should().Be(1);
+            parsedValues.Contains("Some custom text goes here").Should().BeTrue();
+            parsedValues.Contains("Some other custom text").Should().BeFalse();
         }
 
         [Test]
-        public void Can_add_render_attributes_withoutPrices()
+        public void CanAddRenderAttributesWithoutPrices()
         {
-            var attributes = "";
+            var attributes = string.Empty;
             //color: green
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca1, _cav11.Id.ToString());
             //custom option: option 1, option 2
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_1.Id.ToString());
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca2, _cav21.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca2, _cav22.Id.ToString());
             //custom text
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
-            
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca3, "Some custom text goes here");
+
             var customer = new Customer();
 
-            RunWithTestServiceProvider(() =>
-            {
-                var formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
-                formattedAttributes.Should().Be("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
-            });
+            var formattedAttributes =
+                _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
+            formattedAttributes.Should()
+                .Be(
+                    "Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
         }
 
         [Test]
-        public void Can_add_and_remove_checkoutAttributes()
+        public void CanAddAndRemoveCheckoutAttributes()
         {
-            var attributes = "";
+            var attributes = string.Empty;
             //color: green
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca1, _cav11.Id.ToString());
             //custom option: option 1, option 2
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_1.Id.ToString());
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca2, _cav21.Id.ToString());
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca2, _cav22.Id.ToString());
             //custom text
-            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
+            attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, _ca3, "Some custom text goes here");
             //delete some of them
-            attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca2);
-            attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca3);
+            attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, _ca2);
+            attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, _ca3);
 
-            RunWithTestServiceProvider(() =>
-            {
-                var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_1).Should().BeTrue();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_2).Should().BeFalse();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_1).Should().BeFalse();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).Should().BeFalse();
-                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).Should().BeFalse();
+            var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav11.Id).Should().BeTrue();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav12.Id).Should().BeFalse();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav21.Id).Should().BeFalse();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav22.Id).Should().BeFalse();
+            parsedAttributeValues.SelectMany(x => x.values.Select(p => p.Id)).Contains(_cav22.Id).Should().BeFalse();
 
-                var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-                parsedValues.Count.Should().Be(0);
-            });
+            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, _ca3.Id);
+            parsedValues.Count.Should().Be(0);
         }
     }
 }

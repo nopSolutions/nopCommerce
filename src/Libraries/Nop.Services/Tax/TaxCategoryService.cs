@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tax
 {
@@ -16,20 +12,14 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 
         #region Ctor
 
-        public TaxCategoryService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<TaxCategory> taxCategoryRepository)
+        public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _taxCategoryRepository = taxCategoryRepository;
         }
 
@@ -43,13 +33,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategory">Tax category</param>
         public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
             _taxCategoryRepository.Delete(taxCategory);
-
-            //event notification
-            _eventPublisher.EntityDeleted(taxCategory);
         }
 
         /// <summary>
@@ -58,11 +42,12 @@ namespace Nop.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
-            var query = from tc in _taxCategoryRepository.Table
-                orderby tc.DisplayOrder, tc.Id
-                select tc;
-
-            var taxCategories = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopTaxDefaults.TaxCategoriesAllCacheKey));
+            var taxCategories = _taxCategoryRepository.GetAll(query=>
+            {
+                return from tc in query
+                    orderby tc.DisplayOrder, tc.Id
+                    select tc;
+            }, cache => default);
 
             return taxCategories;
         }
@@ -74,10 +59,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax category</returns>
         public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
         {
-            if (taxCategoryId == 0)
-                return null;
-
-            return _taxCategoryRepository.ToCachedGetById(taxCategoryId);
+            return _taxCategoryRepository.GetById(taxCategoryId, cache => default);
         }
 
         /// <summary>
@@ -86,13 +68,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategory">Tax category</param>
         public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
             _taxCategoryRepository.Insert(taxCategory);
-
-            //event notification
-            _eventPublisher.EntityInserted(taxCategory);
         }
 
         /// <summary>
@@ -101,13 +77,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategory">Tax category</param>
         public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
             _taxCategoryRepository.Update(taxCategory);
-
-            //event notification
-            _eventPublisher.EntityUpdated(taxCategory);
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Tests;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -6,30 +7,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
     [TestFixture]
-    public class PasswordRecoveryValidatorTests : BaseValidatorTests
+    public class PasswordRecoveryValidatorTests : BaseNopTest
     {
         private PasswordRecoveryValidator _validator;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _validator = new PasswordRecoveryValidator(_localizationService);
+            _validator = GetService<PasswordRecoveryValidator>();
         }
         
         [Test]
-        public void Should_have_error_when_email_is_null_or_empty()
+        public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
         {
             var model = new PasswordRecoveryModel
             {
                 Email = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
-            model.Email = "";
+            model.Email = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
 
         [Test]
-        public void Should_have_error_when_email_is_wrong_format()
+        public void ShouldHaveErrorWhenEmailIsWrongFormat()
         {
             var model = new PasswordRecoveryModel
             {
@@ -39,7 +40,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_not_have_error_when_email_is_correct_format()
+        public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
         {
             var model = new PasswordRecoveryModel
             {

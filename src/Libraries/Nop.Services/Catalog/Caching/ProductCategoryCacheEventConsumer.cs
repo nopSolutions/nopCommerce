@@ -14,13 +14,9 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ProductCategory entity)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductCategoriesByProductPrefixCacheKey, entity.ProductId);
-            RemoveByPrefix(prefix);
-
-            RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
-            
-            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey, entity.ProductId);
-            RemoveByPrefix(prefix);
+            RemoveByPrefix(NopCatalogDefaults.ProductCategoriesByProductPrefix, entity.ProductId);
+            RemoveByPrefix(NopCatalogDefaults.CategoryProductsNumberPrefix);
+            RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
         }
     }
 }

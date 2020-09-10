@@ -14,10 +14,9 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(SpecificationAttributeOption entity)
         {
-            Remove(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
-            Remove(_cacheKeyService.PrepareKey(NopCatalogDefaults.SpecAttributesOptionsCacheKey, entity.SpecificationAttributeId));
-
-            RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdsPrefixCacheKey);
+            Remove(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
+            Remove(NopCatalogDefaults.SpecificationAttributeOptionsCacheKey, entity.SpecificationAttributeId);
+            RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
         }
     }
 }

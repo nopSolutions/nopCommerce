@@ -1,4 +1,5 @@
 ﻿@model DataTablesModel
+@using System.Globalization
 @using System.Net;
 
 @functions
@@ -19,8 +20,8 @@
 }
 
 @{
-    //the locale which MomentJS should use - the default is en (English).
-    var locale = "en";
+    //the locale which MomentJS should use
+    var locale = CultureInfo.CurrentCulture.Name;
 
     //Model name for js function names
     var model_name = ReplaceName(Model.Name);

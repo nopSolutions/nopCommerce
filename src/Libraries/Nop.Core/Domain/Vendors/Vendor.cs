@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Vendors
@@ -6,7 +7,7 @@ namespace Nop.Core.Domain.Vendors
     /// <summary>
     /// Represents a vendor
     /// </summary>
-    public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported
+    public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the name

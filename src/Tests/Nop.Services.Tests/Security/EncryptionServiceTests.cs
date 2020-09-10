@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Nop.Core.Domain.Security;
+using Nop.Services.Configuration;
 using Nop.Services.Security;
 using NUnit.Framework;
 
@@ -10,19 +11,31 @@ namespace Nop.Services.Tests.Security
     {
         private IEncryptionService _encryptionService;
         private SecuritySettings _securitySettings;
+        private ISettingService _settingService;
+        private string _defaultEncryptionKey;
 
         [SetUp]
-        public new void SetUp() 
+        public void SetUp()
         {
-            _securitySettings = new SecuritySettings
-            {
-                EncryptionKey = "273ece6f97dd844d"
-            };
-            _encryptionService = new EncryptionService(_securitySettings);
+            _securitySettings = GetService<SecuritySettings>();
+            _settingService = GetService<ISettingService>();
+
+            _defaultEncryptionKey = _securitySettings.EncryptionKey;
+            _securitySettings.EncryptionKey = "273ece6f97dd844d";
+            _settingService.SaveSetting(_securitySettings);
+            
+            _encryptionService = GetService<IEncryptionService>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _securitySettings.EncryptionKey = _defaultEncryptionKey;
+            _settingService.SaveSetting(_securitySettings);
         }
 
         [Test]
-        public void Can_hash_sha1()
+        public void CanHashSha1()
         {
             var password = "MyLittleSecret";
             var saltKey = "salt1";
@@ -31,7 +44,7 @@ namespace Nop.Services.Tests.Security
         }
 
         [Test]
-        public void Can_hash_sha512() 
+        public void CanHashSha512() 
         {
             var password = "MyLittleSecret";
             var saltKey = "salt1";
@@ -40,7 +53,7 @@ namespace Nop.Services.Tests.Security
         }
 
         [Test]
-        public void Can_encrypt_and_decrypt() 
+        public void CanEncryptAndDecrypt() 
         {
             var password = "MyLittleSecret";
             var encryptedPassword = _encryptionService.EncryptText(password);

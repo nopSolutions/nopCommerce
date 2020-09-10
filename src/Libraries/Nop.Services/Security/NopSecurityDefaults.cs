@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
 {
@@ -42,7 +43,7 @@ namespace Nop.Services.Security
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static CacheKey AclRecordByEntityIdNameCacheKey => new CacheKey("Nop.aclrecord.entityid-name-{0}-{1}");
+        public static CacheKey AclRecordCacheKey => new CacheKey("Nop.aclrecord.{0}-{1}");
 
         #endregion
 
@@ -55,15 +56,15 @@ namespace Nop.Services.Security
         /// {0} : permission system name
         /// {1} : customer role ID
         /// </remarks>
-        public static CacheKey PermissionsAllowedCacheKey => new CacheKey("Nop.permission.allowed-{0}-{1}", PermissionsAllowedPrefixCacheKey);
+        public static CacheKey PermissionAllowedCacheKey => new CacheKey("Nop.permissionrecord.allowed.{0}-{1}", PermissionAllowedPrefix);
 
         /// <summary>
-        /// Gets a key for caching
+        /// Gets a key pattern to clear cache
         /// </summary>
         /// <remarks>
         /// {0} : permission system name
         /// </remarks>
-        public static string PermissionsAllowedPrefixCacheKey => "Nop.permission.allowed-{0}";
+        public static string PermissionAllowedPrefix => "Nop.permissionrecord.allowed.{0}";
 
         /// <summary>
         /// Gets a key for caching
@@ -71,12 +72,7 @@ namespace Nop.Services.Security
         /// <remarks>
         /// {0} : customer role ID
         /// </remarks>
-        public static CacheKey PermissionsAllByCustomerRoleIdCacheKey => new CacheKey("Nop.permission.allbycustomerroleid-{0}", PermissionsAllByCustomerRoleIdPrefixCacheKey);
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string PermissionsAllByCustomerRoleIdPrefixCacheKey => "Nop.permission.allbycustomerroleid";
+        public static CacheKey PermissionRecordsAllCacheKey => new CacheKey("Nop.permissionrecord.all.{0}", NopEntityCacheDefaults<PermissionRecord>.AllPrefix);
 
         #endregion
 

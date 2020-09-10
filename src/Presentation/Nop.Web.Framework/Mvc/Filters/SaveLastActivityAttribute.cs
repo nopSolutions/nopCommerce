@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -22,7 +21,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public SaveLastActivityAttribute() : base(typeof(SaveLastActivityFilter))
         {
         }
-        
+
         #endregion
 
         #region Nested filter
@@ -35,7 +34,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly CustomerSettings _customerSettings;
-            private readonly ICustomerService _customerService;
+            private readonly IRepository<Customer> _customerRepository;
             private readonly IWorkContext _workContext;
 
             #endregion
@@ -43,11 +42,11 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public SaveLastActivityFilter(CustomerSettings customerSettings,
-                ICustomerService customerService,
+                IRepository<Customer> customerRepository,
                 IWorkContext workContext)
             {
                 _customerSettings = customerSettings;
-                _customerService = customerService;
+                _customerRepository = customerRepository;
                 _workContext = workContext;
             }
 
@@ -78,7 +77,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
                 {
                     _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                    //update customer without event notification
+                    _customerRepository.Update(_workContext.CurrentCustomer, false);
                 }
             }
 

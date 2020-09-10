@@ -18,7 +18,6 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
 {
     [Area(AreaNames.Admin)]
-    [HttpsRequirement]
     [AutoValidateAntiforgeryToken]
     [ValidateIpAddress]
     [AuthorizeAdmin]

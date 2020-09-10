@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -8,9 +7,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Directory
@@ -23,9 +19,7 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
@@ -36,18 +30,14 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CountryService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
             IStaticCacheManager staticCacheManager,
-            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
             _staticCacheManager = staticCacheManager;
-            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _countryRepository = countryRepository;
             _storeMappingRepository = storeMappingRepository;
@@ -64,13 +54,7 @@ namespace Nop.Services.Directory
         /// <param name="country">Country</param>
         public virtual void DeleteCountry(Country country)
         {
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
             _countryRepository.Delete(country);
-
-            //event notification
-            _eventPublisher.EntityDeleted(country);
         }
 
         /// <summary>
@@ -81,30 +65,34 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
 
             return _staticCacheManager.Get(key, () =>
             {
-                var query = _countryRepository.Table;
-                if (!showHidden)
-                    query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
-
-                if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
+                var countries = _countryRepository.GetAll(query =>
                 {
-                    //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
-                    query = from c in query
+                    if (!showHidden)
+                        query = query.Where(c => c.Published);
+
+                    if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
+                    {
+                        //Store mapping
+                        var currentStoreId = _storeContext.CurrentStore.Id;
+                        query = from c in query
                             join sc in _storeMappingRepository.Table
-                            on new { c1 = c.Id, c2 = nameof(Country) } equals new { c1 = sc.EntityId, c2 = sc.EntityName } into c_sc
+                                on new {c1 = c.Id, c2 = nameof(Country)} equals new
+                                {
+                                    c1 = sc.EntityId, c2 = sc.EntityName
+                                } into c_sc
                             from sc in c_sc.DefaultIfEmpty()
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;
 
-                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
-                }
+                        query = query.Distinct();
+                    }
 
-                var countries = query.ToList();
+                    return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                });
 
                 if (languageId > 0)
                 {
@@ -158,10 +146,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryById(int countryId)
         {
-            if (countryId == 0)
-                return null;
-            
-            return _countryRepository.ToCachedGetById(countryId);
+            return _countryRepository.GetById(countryId, cache => default);
         }
 
         /// <summary>
@@ -171,23 +156,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetCountriesByIds(int[] countryIds)
         {
-            if (countryIds == null || countryIds.Length == 0)
-                return new List<Country>();
-
-            var query = from c in _countryRepository.Table
-                        where countryIds.Contains(c.Id)
-                        select c;
-            var countries = query.ToList();
-            //sort by passed identifiers
-            var sortedCountries = new List<Country>();
-            foreach (var id in countryIds)
-            {
-                var country = countries.Find(x => x.Id == id);
-                if (country != null)
-                    sortedCountries.Add(country);
-            }
-
-            return sortedCountries;
+            return _countryRepository.GetByIds(countryIds);
         }
 
         /// <summary>
@@ -200,13 +169,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
 
             var query = from c in _countryRepository.Table
                 where c.TwoLetterIsoCode == twoLetterIsoCode
                 select c;
 
-            return query.ToCachedFirstOrDefault(key);
+            return _staticCacheManager.Get(key, query.FirstOrDefault);
         }
 
         /// <summary>
@@ -219,13 +188,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
 
             var query = from c in _countryRepository.Table
                 where c.ThreeLetterIsoCode == threeLetterIsoCode
                 select c;
 
-            return query.ToCachedFirstOrDefault(key);
+            return _staticCacheManager.Get(key, query.FirstOrDefault);
         }
 
         /// <summary>
@@ -234,13 +203,7 @@ namespace Nop.Services.Directory
         /// <param name="country">Country</param>
         public virtual void InsertCountry(Country country)
         {
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
             _countryRepository.Insert(country);
-
-            //event notification
-            _eventPublisher.EntityInserted(country);
         }
 
         /// <summary>
@@ -249,13 +212,7 @@ namespace Nop.Services.Directory
         /// <param name="country">Country</param>
         public virtual void UpdateCountry(Country country)
         {
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
             _countryRepository.Update(country);
-
-            //event notification
-            _eventPublisher.EntityUpdated(country);
         }
 
         #endregion
