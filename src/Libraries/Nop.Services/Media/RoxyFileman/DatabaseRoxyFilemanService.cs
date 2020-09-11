@@ -271,43 +271,49 @@ namespace Nop.Services.Media.RoxyFileman
                     false);
             }
 
-            //the named mutex helps to avoid creating the same files in different threads,
-            //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            using var mutex = new Mutex(false, thumbFileName);
             if (_fileProvider.FileExists(thumbFilePath))
                 return;
 
-            mutex.WaitOne();
+            //the named semaphore helps to avoid creating the same files in different threads,
+            //and does not decrease performance significantly, because the code is blocked only for the specific file.
+            using var semaphore = new Semaphore(1, 1, thumbFileName);
+            
+            semaphore.WaitOne();
 
-            //check, if the file was created, while we were waiting for the release of the mutex.
-            if (!_fileProvider.FileExists(thumbFilePath))
+            try
             {
-                byte[] pictureBinaryResized;
-                if (targetSize != 0)
+                //check, if the file was created, while we were waiting for the release of the mutex.
+                if (!_fileProvider.FileExists(thumbFilePath))
                 {
-                    //resizing required
-                    using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
-                    var size = image.Size();
-
-                    image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                    byte[] pictureBinaryResized;
+                    if (targetSize != 0)
                     {
-                        Mode = ResizeMode.Max,
-                        Size = CalculateDimensions(size, targetSize)
-                    }));
+                        //resizing required
+                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
+                        var size = image.Size();
 
-                    pictureBinaryResized = EncodeImage(image, imageFormat);
-                }
-                else
-                {
-                    //create a copy of pictureBinary
-                    pictureBinaryResized = pictureBinary.ToArray();
-                }
+                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                        {
+                            Mode = ResizeMode.Max,
+                            Size = CalculateDimensions(size, targetSize)
+                        }));
 
-                //save
-                await _fileProvider.WriteAllBytes(thumbFilePath, pictureBinaryResized);
+                        pictureBinaryResized = EncodeImage(image, imageFormat);
+                    }
+                    else
+                    {
+                        //create a copy of pictureBinary
+                        pictureBinaryResized = pictureBinary.ToArray();
+                    }
+
+                    //save
+                    await _fileProvider.WriteAllBytes(thumbFilePath, pictureBinaryResized);
+                }
             }
-
-            mutex.ReleaseMutex();
+            finally
+            {
+                semaphore.Release();
+            }
         }
 
         /// <summary>

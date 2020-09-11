@@ -601,46 +601,49 @@ namespace Nop.Services.Media
 
             var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
-            //the named mutex helps to avoid creating the same files in different threads,
+            if (GeneratedThumbExists(thumbFilePath, thumbFileName))
+                return (GetThumbUrl(thumbFileName, storeLocation), picture);
+
+            //the named semaphore helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            using (var mutex = new Mutex(false, thumbFileName))
+            using (var semaphore = new Semaphore(1, 1, thumbFileName))
             {
-                if (GeneratedThumbExists(thumbFilePath, thumbFileName))
-                    return (GetThumbUrl(thumbFileName, storeLocation), picture);
+                semaphore.WaitOne();
 
-                mutex.WaitOne();
-
-                //check, if the file was created, while we were waiting for the release of the mutex.
-                if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                try
                 {
-                    pictureBinary ??= await LoadPictureBinary(picture);
-
-                    if ((pictureBinary?.Length ?? 0) == 0)
-                        return showDefaultPicture ? (await GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation), picture) : (string.Empty, picture);
-
-                    byte[] pictureBinaryResized;
-                    if (targetSize != 0)
+                    //check, if the file was created, while we were waiting for the release of the mutex.
+                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
-                        //resizing required
-                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
-                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                        pictureBinary ??= await LoadPictureBinary(picture);
+
+                        if ((pictureBinary?.Length ?? 0) == 0)
+                            return showDefaultPicture ? (await GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation), picture) : (string.Empty, picture);
+
+                        byte[] pictureBinaryResized;
+                        if (targetSize != 0)
                         {
-                            Mode = ResizeMode.Max,
-                            Size = CalculateDimensions(image.Size(), targetSize)
-                        }));
+                            //resizing required
+                            using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
+                            image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
+                            {
+                                Mode = ResizeMode.Max,
+                                Size = CalculateDimensions(image.Size(), targetSize)
+                            }));
 
-                        pictureBinaryResized = EncodeImage(image, imageFormat);
-                    }
-                    else
-                    {
-                        //create a copy of pictureBinary
-                        pictureBinaryResized = pictureBinary.ToArray();
-                    }
+                            pictureBinaryResized = EncodeImage(image, imageFormat);
+                        }
+                        else
+                            //create a copy of pictureBinary
+                            pictureBinaryResized = pictureBinary.ToArray();
 
-                    SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                        SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
+                    }
                 }
-
-                mutex.ReleaseMutex();
+                finally
+                {
+                    semaphore.Release();
+                }
             }
 
             return (GetThumbUrl(thumbFileName, storeLocation), picture);
