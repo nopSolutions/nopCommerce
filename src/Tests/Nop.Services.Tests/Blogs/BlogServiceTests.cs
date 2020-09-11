@@ -1,26 +1,24 @@
 ﻿﻿using System;
 using FluentAssertions;
- using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Blogs;
 using Nop.Services.Blogs;
- using Nop.Tests;
- using NUnit.Framework;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Blogs
 {
     [TestFixture]
-    public class BlogServiceTests
+    public class BlogServiceTests: ServiceTest
     {
         private IBlogService _blogService;
 
         [SetUp]
         public void SetUp()
         {
-            _blogService = new BlogService(new CatalogSettings(), new FakeCacheKeyService(),  null, null, null, null, new TestCacheManager());
+            _blogService = GetService<IBlogService>();
         }
 
         [Test]
-        public void Can_parse_tags()
+        public void CanParseTags()
         {
             var blogPost = new BlogPost
             {
@@ -35,7 +33,7 @@ namespace Nop.Services.Tests.Blogs
         }
 
         [Test]
-        public void Should_be_available_when_startdate_is_not_set()
+        public void ShouldBeAvailableWhenStartDateIsNotSet()
         {
             var blogPost = new BlogPost
             {
@@ -46,7 +44,7 @@ namespace Nop.Services.Tests.Blogs
         }
 
         [Test]
-        public void Should_be_available_when_startdate_is_less_than_somedate()
+        public void ShouldBeAvailableWhenStartDateIsLessThanSomeDate()
         {
             var blogPost = new BlogPost
             {
@@ -57,7 +55,7 @@ namespace Nop.Services.Tests.Blogs
         }
 
         [Test]
-        public void Should_not_be_available_when_startdate_is_greater_than_somedate()
+        public void ShouldNotBeAvailableWhenStartDateIsGreaterThanSomeDate()
         {
             var blogPost = new BlogPost
             {
@@ -68,7 +66,7 @@ namespace Nop.Services.Tests.Blogs
         }
 
         [Test]
-        public void Should_be_available_when_enddate_is_not_set()
+        public void ShouldBeAvailableWhenEndDateIsNotSet()
         {
             var blogPost = new BlogPost
             {
@@ -79,7 +77,7 @@ namespace Nop.Services.Tests.Blogs
         }
 
         [Test]
-        public void Should_be_available_when_enddate_is_greater_than_somedate()
+        public void ShouldBeAvailableWhenEndDateIsGreaterThanSomeDate()
         {
             var blogPost = new BlogPost
             {
@@ -90,7 +88,7 @@ namespace Nop.Services.Tests.Blogs
         }
 
         [Test]
-        public void Should_not_be_available_when_enddate_is_less_than_somedate()
+        public void ShouldNotBeAvailableWhenEndDateIsLessThanSomeDate()
         {
             var blogPost = new BlogPost
             {

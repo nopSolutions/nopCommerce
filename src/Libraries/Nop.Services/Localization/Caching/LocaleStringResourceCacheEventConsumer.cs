@@ -9,12 +9,15 @@ namespace Nop.Services.Localization.Caching
     public partial class LocaleStringResourceCacheEventConsumer : CacheEventConsumer<LocaleStringResource>
     {
         /// <summary>
-        /// Clear cache data
+        /// Clear cache by entity event type
         /// </summary>
         /// <param name="entity">Entity</param>
         protected override void ClearCache(LocaleStringResource entity)
         {
-            RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
+            Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity.LanguageId);
+            Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity.LanguageId);
+            Remove(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity.LanguageId);
+            RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity.LanguageId);
         }
     }
 }

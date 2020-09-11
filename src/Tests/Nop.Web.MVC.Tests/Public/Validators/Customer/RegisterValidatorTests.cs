@@ -1,7 +1,8 @@
 ﻿using FluentValidation.TestHelper;
-using Moq;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
+using Nop.Tests;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -9,29 +10,31 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
     [TestFixture]
-    public class RegisterValidatorTests : BaseValidatorTests
+    public class RegisterValidatorTests : BaseNopTest
     {
-        [Test]
-        public void Should_have_error_when_email_is_null_or_empty()
+        private RegisterValidator _validator;
+
+        [SetUp]
+        public void SetUp()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
+            _validator = GetService<RegisterValidator>();
+        }
+
+        [Test]
+        public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
+        {
             var model = new RegisterModel
             {
                 Email = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
-            model.Email = "";
+            model.Email = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
 
         [Test]
-        public void Should_have_error_when_email_is_wrong_format()
+        public void ShouldHaveErrorWhenEmailIsWrongFormat()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 Email = "adminexample.com"
@@ -40,11 +43,8 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_not_have_error_when_email_is_correct_format()
+        public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 Email = "admin@example.com"
@@ -53,81 +53,82 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_firstName_is_null_or_empty()
+        public void ShouldHaveErrorWhenFirstnameIsNullOrEmpty()
         {
-            var _customerSettings = new CustomerSettings
+            var customerSettings = new CustomerSettings
             {
                 FirstNameEnabled = true,
                 FirstNameRequired = true
             };
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
+
+            var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
             var model = new RegisterModel
             {
                 FirstName = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
-            model.FirstName = "";
-            _validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
+            validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
+            model.FirstName = string.Empty;
+            validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_firstName_is_specified()
+        public void ShouldNotHaveErrorWhenFirstnameIsSpecified()
         {
-            var _customerSettings = new CustomerSettings
+            var customerSettings = new CustomerSettings
             {
                 FirstNameEnabled = true
             };
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
+
+            var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+
             var model = new RegisterModel
             {
                 FirstName = "John"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.FirstName, model);
+            validator.ShouldNotHaveValidationErrorFor(x => x.FirstName, model);
         }
 
         [Test]
-        public void Should_have_error_when_lastName_is_null_or_empty()
+        public void ShouldHaveErrorWhenLastNameIsNullOrEmpty()
         {
-            var _customerSettings = new CustomerSettings
+            var customerSettings = new CustomerSettings
             {
                 LastNameEnabled = true,
                 LastNameRequired = true
             };
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
+
+            var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+
             var model = new RegisterModel
             {
                 LastName = null
             };
-            _validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
-            model.LastName = "";
-            _validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
+
+            validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
+            model.LastName = string.Empty;
+            validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_lastName_is_specified()
+        public void ShouldNotHaveErrorWhenLastNameIsSpecified()
         {
-            var _customerSettings = new CustomerSettings
+            var customerSettings = new CustomerSettings
             {
                 LastNameEnabled = true
             };
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
+
+            var validator = new RegisterValidator(GetService<ILocalizationService>(), GetService<IStateProvinceService>(), customerSettings);
+
             var model = new RegisterModel
             {
                 LastName = "Smith"
             };
-            _validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
         }
 
         [Test]
-        public void Should_have_error_when_password_is_null_or_empty()
+        public void ShouldHaveErrorWhenPasswordIsNullOrEmpty()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 Password = null
@@ -135,18 +136,15 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.Password;
             _validator.ShouldHaveValidationErrorFor(x => x.Password, model);
-            model.Password = "";
+            model.Password = string.Empty;
             //we know that password should equal confirmation password
             model.ConfirmPassword = model.Password;
             _validator.ShouldHaveValidationErrorFor(x => x.Password, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_password_is_specified()
+        public void ShouldNotHaveErrorWhenPasswordIsSpecified()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 Password = "password"
@@ -157,26 +155,20 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_confirmPassword_is_null_or_empty()
+        public void ShouldHaveErrorWhenConfirmPasswordIsNullOrEmpty()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 ConfirmPassword = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmPassword, model);
-            model.ConfirmPassword = "";
+            model.ConfirmPassword = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmPassword, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_confirmPassword_is_specified()
+        public void ShouldNotHaveErrorWhenConfirmPasswordIsSpecified()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 ConfirmPassword = "some password"
@@ -187,11 +179,8 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_password_doesnot_equal_confirmationPassword()
+        public void ShouldHaveErrorWhenPasswordDoesNotEqualConfirmationPassword()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 Password = "some password",
@@ -201,11 +190,8 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_not_have_error_when_password_equals_confirmationPassword()
+        public void ShouldNotHaveErrorWhenPasswordEqualsConfirmationPassword()
         {
-            var _customerSettings = new CustomerSettings();
-            var _stateProvinceService = new Mock<IStateProvinceService>();
-            var _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
             var model = new RegisterModel
             {
                 Password = "some password",

@@ -1,5 +1,4 @@
-﻿@inject IWorkContext workContext
-@inject LocalizationSettings localizationSettings
+﻿@inject LocalizationSettings localizationSettings
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject INopFileProvider fileProvider;
@@ -43,60 +42,61 @@
     else
     {
         Html.AppendCssFileParts("~/css/admin/styles.css");
-        Html.AppendCssFileParts("~/lib/adminLTE/css/AdminLTE.min.css");
-        Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
+        Html.AppendCssFileParts("~/lib_npm/admin-lte/css/AdminLTE.min.css");
+        Html.AppendCssFileParts("~/lib_npm/bootstrap/css/bootstrap.min.css");
     }
 
-    Html.AppendCssFileParts($"~/lib/datatables/buttons.bootstrap.min.css");
-    Html.AppendCssFileParts($"~/lib/datatables/buttons.dataTables.min.css");
-    Html.AppendCssFileParts($"~/lib/datatables/datatables.min.css");
-    Html.AppendCssFileParts($"~/lib/datatables/css/dataTables.bootstrap.css");
+    Html.AppendCssFileParts($"~/lib_npm/datatables.net-buttons-bs/css/buttons.bootstrap.css");
+    Html.AppendCssFileParts($"~/lib_npm/datatables.net-bs/css/dataTables.bootstrap.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.common.min.css");
     Html.AppendCssFileParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-themes/smoothness/jquery-ui-{jQueryUI}.custom.min.css");
-    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
-    Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
+    Html.AppendCssFileParts("~/lib_npm/font-awesome/css/font-awesome.min.css");
+    Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
+    Html.AppendCssFileParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     //AdminLTE Skins (choose a skin from the css/skins)
-    Html.AppendCssFileParts("~/lib/adminLTE/css/skins/_all-skins.min.css");
+    Html.AppendCssFileParts("~/lib_npm/admin-lte/css/skins/_all-skins.min.css");
 
     //scripts
-    Html.AppendScriptParts($"~/lib/datatables/buttons.bootstrap.min.js");
-    Html.AppendScriptParts($"~/lib/datatables/dataTables.buttons.min.js");
-    Html.AppendScriptParts($"~/lib/datatables/moment-with-locales-2.22.2.min.js");
-    Html.AppendScriptParts($"~/lib/datatables/datatables.min.js");
-    Html.AppendScriptParts($"~/lib/datatables/js/dataTables.bootstrap.min.js");
-    Html.AppendScriptParts($"~/lib/datatables/js/jquery.dataTables.min.js");
+    Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons-bs/js/buttons.bootstrap.js");
+    Html.AppendScriptParts($"~/lib_npm/datatables.net-buttons/js/dataTables.buttons.min.js");
+    Html.AppendScriptParts($"~/lib_npm/moment/min/moment-with-locales.min.js");
+    Html.AppendScriptParts($"~/lib_npm/datatables.net-bs/js/dataTables.bootstrap.js");
+    Html.AppendScriptParts($"~/lib_npm/datatables.net/js/jquery.dataTables.min.js");
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentKendoCulture}.min.js");
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
     Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/kendo.ui.core.min.js");
 
+    Html.AppendScriptParts("~/js/admin.search.js");
+    Html.AppendScriptParts("~/js/admin.navigation.js");
     Html.AppendScriptParts("~/js/admin.common.js");
-    Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-3.1.0.min.js");
+    Html.AppendScriptParts("~/lib_npm/typeahead.js/typeahead.bundle.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery-migrate/jquery-migrate.min.js");
     Html.AppendScriptParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-{jQueryUI}.custom.min.js");
 
     // this file can be downloaded from :
     // https://github.com/johnnyreilly/jquery-validation-globalize
     //Html.AppendScriptParts("https://cdn.jsdelivr.net/gh/johnnyreilly/jquery-validation-globalize@1.0.0/jquery.validate.globalize.min.js");
-    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.globalize-1.0.0.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery-validation-globalize/jquery.validate.globalize.min.js");
 
     // globalize scripts
-    Html.AppendScriptParts("~/lib/globalize/dist/globalize/currency.min.js");
-    Html.AppendScriptParts("~/lib/globalize/dist/globalize/date.min.js");
-    Html.AppendScriptParts("~/lib/globalize/dist/globalize/number.min.js");
-    Html.AppendScriptParts("~/lib/globalize/dist/globalize.min.js");
+    Html.AppendScriptParts("~/lib_npm/globalize/globalize/currency.js");
+    Html.AppendScriptParts("~/lib_npm/globalize/globalize/date.js");
+    Html.AppendScriptParts("~/lib_npm/globalize/globalize/number.js");
+    Html.AppendScriptParts("~/lib_npm/globalize/globalize.js");
 
     // cldr scripts (needed for globalize)
-    Html.AppendScriptParts("~/lib/cldr/dist/cldr/supplemental.min.js");
-    Html.AppendScriptParts("~/lib/cldr/dist/cldr/event.min.js");
-    Html.AppendScriptParts("~/lib/cldr/dist/cldr.min.js");
+    Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/supplemental.js");
+    Html.AppendScriptParts("~/lib_npm/cldrjs/cldr/event.js");
+    Html.AppendScriptParts("~/lib_npm/cldrjs/cldr.js");
 
-    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib/adminLTE/js/adminlte.min.js");
-    Html.AppendScriptParts("~/lib/bootstrap/js/bootstrap.min.js");
-    Html.AppendScriptParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
-    Html.AppendScriptParts("~/lib/jquery/jquery-3.4.1.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery-validation/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib_npm/admin-lte/js/adminlte.min.js");
+    Html.AppendScriptParts("~/lib_npm/bootstrap/js/bootstrap.min.js");
+    Html.AppendScriptParts("~/lib_npm/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
+    Html.AppendScriptParts("~/lib_npm/jquery/jquery.min.js");
 
     //page title
     string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
@@ -125,14 +125,14 @@
 
             //load cldr for current culture
             $.when(
-                $.get("/lib/cldr-data/supplemental/likelySubtags.json"),
-                $.get("/lib/cldr-data/main/" + culture + "/numbers.json"),
-                $.get("/lib/cldr-data/main/" + culture + "/currencies.json"),
-                $.get("/lib/cldr-data/supplemental/numberingSystems.json"),
-                $.get("/lib/cldr-data/main/" + culture + "/ca-gregorian.json"),
-                $.get("/lib/cldr-data/main/" + culture + "/timeZoneNames.json"),
-                $.get("/lib/cldr-data/supplemental/timeData.json"),
-                $.get("/lib/cldr-data/supplemental/weekData.json"),
+                $.get("/lib_npm/cldr-data/supplemental/likelySubtags.json"),
+                $.get("/lib_npm/cldr-data/main/" + culture + "/numbers.json"),
+                $.get("/lib_npm/cldr-data/main/" + culture + "/currencies.json"),
+                $.get("/lib_npm/cldr-data/supplemental/numberingSystems.json"),
+                $.get("/lib_npm/cldr-data/main/" + culture + "/ca-gregorian.json"),
+                $.get("/lib_npm/cldr-data/main/" + culture + "/timeZoneNames.json"),
+                $.get("/lib_npm/cldr-data/supplemental/timeData.json"),
+                $.get("/lib_npm/cldr-data/supplemental/weekData.json"),
             ).then(function () {
                 // Normalize $.get results, we only need the JSON, not the request statuses.
                 return [].slice.apply(arguments, [0]).map(function (result) {

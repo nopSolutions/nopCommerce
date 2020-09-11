@@ -22,12 +22,10 @@ using Nop.Services.Shipping;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Checkout;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement]
     [AutoValidateAntiforgeryToken]
     public partial class CheckoutController : BasePublicController
     {

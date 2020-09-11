@@ -592,7 +592,7 @@ namespace Nop.Services.Media.RoxyFileman
                     }
 
                     if (removeOriginal)
-                        _pictureRepository.Delete(pictures);
+                        _pictureRepository.Delete(pictures, false);
                 }
             }
             catch
