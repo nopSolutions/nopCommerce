@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
-using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
@@ -20,7 +19,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ILogger _logger;
         private readonly IOrderModelFactory _orderModelFactory;
@@ -34,7 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
-            ICacheKeyService cacheKeyService,
             ICommonModelFactory commonModelFactory,
             ILogger logger,
             IOrderModelFactory orderModelFactory,
@@ -44,7 +41,6 @@ namespace Nop.Web.Areas.Admin.Factories
             NopHttpClient nopHttpClient)
         {
             _adminAreaSettings = adminAreaSettings;
-            _cacheKeyService = cacheKeyService;
             _commonModelFactory = commonModelFactory;
             _logger = logger;
             _orderModelFactory = orderModelFactory;
@@ -92,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
             try
             {
                 //try to get news RSS feed
-                var rssData = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), () =>
+                var rssData = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), () =>
                 {
                     try
                     {

@@ -16,6 +16,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -23,7 +24,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
@@ -381,7 +381,6 @@ namespace Nop.Web.Controllers
 
         #region Login / logout
 
-        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -522,9 +521,10 @@ namespace Nop.Web.Controllers
 
         #region Password recovery
 
-        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
             var model = new PasswordRecoveryModel();
@@ -538,6 +538,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult PasswordRecoverySend(PasswordRecoveryModel model, bool captchaValid)
         {
             // validate CAPTCHA
@@ -575,9 +577,10 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
@@ -620,6 +623,8 @@ namespace Nop.Web.Controllers
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        //available even when a store is closed
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
@@ -673,7 +678,6 @@ namespace Nop.Web.Controllers
 
         #region Register
 
-        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register()
@@ -1039,7 +1043,6 @@ namespace Nop.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
 
-        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult AccountActivation(string token, string email, Guid guid)
@@ -1084,7 +1087,6 @@ namespace Nop.Web.Controllers
 
         #region My account / Info
 
-        [HttpsRequirement]
         public virtual IActionResult Info()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1301,7 +1303,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult EmailRevalidation(string token, string email, Guid guid)
@@ -1363,7 +1364,6 @@ namespace Nop.Web.Controllers
 
         #region My account / Addresses
 
-        [HttpsRequirement]
         public virtual IActionResult Addresses()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1374,7 +1374,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [HttpsRequirement]
         public virtual IActionResult AddressDelete(int addressId)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1399,7 +1398,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement]
         public virtual IActionResult AddressAdd()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1459,7 +1457,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement]
         public virtual IActionResult AddressEdit(int addressId)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1526,7 +1523,6 @@ namespace Nop.Web.Controllers
 
         #region My account / Downloadable products
 
-        [HttpsRequirement]
         public virtual IActionResult DownloadableProducts()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1558,7 +1554,6 @@ namespace Nop.Web.Controllers
 
         #region My account / Change password
 
-        [HttpsRequirement]
         public virtual IActionResult ChangePassword()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1605,7 +1600,6 @@ namespace Nop.Web.Controllers
 
         #region My account / Avatar
 
-        [HttpsRequirement]
         public virtual IActionResult Avatar()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1696,7 +1690,6 @@ namespace Nop.Web.Controllers
 
         #region GDPR tools
 
-        [HttpsRequirement]
         public virtual IActionResult GdprTools()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1751,7 +1744,6 @@ namespace Nop.Web.Controllers
         #region Check gift card balance
 
         //check gift card balance page
-        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult CheckGiftCardBalance()

@@ -14,8 +14,8 @@ namespace Nop.Services.Customers.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(CustomerRole entity)
         {
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerRolesPrefixCacheKey);
-            RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefixCacheKey);
+            RemoveByPrefix(NopCustomerServicesDefaults.CustomerRolesBySystemNamePrefix);
+            RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
         }
     }
 }

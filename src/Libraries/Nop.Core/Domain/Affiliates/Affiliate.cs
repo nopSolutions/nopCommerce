@@ -1,9 +1,11 @@
-﻿namespace Nop.Core.Domain.Affiliates
+﻿using Nop.Core.Domain.Common;
+
+namespace Nop.Core.Domain.Affiliates
 {
     /// <summary>
     /// Represents an affiliate
     /// </summary>
-    public partial class Affiliate : BaseEntity
+    public partial class Affiliate : BaseEntity, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the address identifier

@@ -242,7 +242,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             _settingService.SaveSetting(new FixedByWeightByTotalSettings());
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Shipping.FixedByWeightByTotal.AddRecord"] = "Add record",
                 ["Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"] = "Additional fixed cost",
@@ -304,7 +304,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             _settingService.DeleteSettings(fixedRates);
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Shipping.FixedByWeightByTotal");
+            _localizationService.DeleteLocaleResources("Plugins.Shipping.FixedByWeightByTotal");
 
             base.Uninstall();
         }

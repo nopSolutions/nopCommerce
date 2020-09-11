@@ -8,13 +8,5 @@ namespace Nop.Services.Directory.Caching
     /// </summary>
     public partial class CurrencyCacheEventConsumer : CacheEventConsumer<Currency>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override void ClearCache(Currency entity)
-        {
-            RemoveByPrefix(NopDirectoryDefaults.CurrenciesAllPrefixCacheKey);
-        }
     }
 }

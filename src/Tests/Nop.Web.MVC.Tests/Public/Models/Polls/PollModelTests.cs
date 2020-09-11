@@ -8,8 +8,8 @@ namespace Nop.Web.MVC.Tests.Public.Models.Polls
     public class PollModelTests
     {
         [Test]
-        public void Can_clone()
-        {	    
+        public void CanClone()
+        {
             //create
             var model1 = new PollModel
             {

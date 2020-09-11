@@ -125,7 +125,7 @@ namespace Nop.Plugin.Misc.SendinBlue
             }
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Misc.SendinBlue.AccountInfo"] = "Account info",
                 ["Plugins.Misc.SendinBlue.AccountInfo.Hint"] = "Display account information.",
@@ -225,7 +225,7 @@ namespace Nop.Plugin.Misc.SendinBlue
                 _scheduleTaskService.DeleteTask(task);
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Misc.SendinBlue");
+            _localizationService.DeleteLocaleResources("Plugins.Misc.SendinBlue");
 
             base.Uninstall();
         }

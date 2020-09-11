@@ -100,7 +100,7 @@ namespace Nop.Plugin.Shipping.UPS
             });
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage"] = "Pack by one item per package",
@@ -163,8 +163,8 @@ namespace Nop.Plugin.Shipping.UPS
             _settingService.DeleteSetting<UPSSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Shipping.UPS");
-            _localizationService.DeletePluginLocaleResources("Plugins.Shipping.UPS");
+            _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.UPS");
+            _localizationService.DeleteLocaleResources("Plugins.Shipping.UPS");
 
             base.Uninstall();
         }

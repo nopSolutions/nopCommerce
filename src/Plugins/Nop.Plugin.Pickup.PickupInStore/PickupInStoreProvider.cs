@@ -141,7 +141,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
             _storePickupPointService.InsertStorePickupPoint(pickupPoint);
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Pickup.PickupInStore.AddNew"] = "Add a new pickup point",
                 ["Plugins.Pickup.PickupInStore.Fields.Description"] = "Description",
@@ -180,7 +180,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         public override void Uninstall()
         {
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Pickup.PickupInStore");
+            _localizationService.DeleteLocaleResources("Plugins.Pickup.PickupInStore");
 
             base.Uninstall();
         }

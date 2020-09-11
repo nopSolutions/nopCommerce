@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using Nop.Core.Domain.Customers;
+using Nop.Tests;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -7,20 +7,18 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
     [TestFixture]
-    public class PasswordRecoveryConfirmValidatorTests : BaseValidatorTests
+    public class PasswordRecoveryConfirmValidatorTests : BaseNopTest
     {
         private PasswordRecoveryConfirmValidator _validator;
-        private CustomerSettings _customerSettings;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _customerSettings = new CustomerSettings();
-            _validator = new PasswordRecoveryConfirmValidator(_localizationService, _customerSettings);
+            _validator = GetService<PasswordRecoveryConfirmValidator>();
         }
 
         [Test]
-        public void Should_have_error_when_newPassword_is_null_or_empty()
+        public void ShouldHaveErrorWhenNewPasswordIsNullOrEmpty()
         {
             var model = new PasswordRecoveryConfirmModel
             {
@@ -29,14 +27,14 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
-            model.NewPassword = "";
+            model.NewPassword = string.Empty;
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_newPassword_is_specified()
+        public void ShouldNotHaveErrorWhenNewPasswordIsSpecified()
         {
             var model = new PasswordRecoveryConfirmModel
             {
@@ -48,19 +46,19 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_confirmNewPassword_is_null_or_empty()
+        public void ShouldHaveErrorWhenConfirmNewPasswordIsNullOrEmpty()
         {
             var model = new PasswordRecoveryConfirmModel
             {
                 ConfirmNewPassword = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
-            model.ConfirmNewPassword = "";
+            model.ConfirmNewPassword = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_confirmNewPassword_is_specified()
+        public void ShouldNotHaveErrorWhenConfirmNewPasswordIsSpecified()
         {
             var model = new PasswordRecoveryConfirmModel
             {
@@ -72,7 +70,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_newPassword_doesnot_equal_confirmationPassword()
+        public void ShouldHaveErrorWhenNewPasswordDoesNotEqualConfirmationPassword()
         {
             var model = new PasswordRecoveryConfirmModel
             {

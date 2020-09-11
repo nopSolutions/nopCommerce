@@ -8,16 +8,10 @@ using NUnit.Framework;
 namespace Nop.Services.Tests.Catalog
 {
     [TestFixture]
-    public class TierPriceExtensionTests : ServiceTest
+    public class TierPriceExtensionTests
     {
-        [SetUp]
-        public new void SetUp()
-        {
-
-        }
-
         [Test]
-        public void Can_remove_duplicatedQuantities()
+        public void CanRemoveDuplicatedQuantities()
         {
             var tierPrices = new List<TierPrice>
             {

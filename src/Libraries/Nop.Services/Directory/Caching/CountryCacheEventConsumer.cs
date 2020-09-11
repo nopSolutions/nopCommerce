@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Directory;
 using Nop.Services.Caching;
 
 namespace Nop.Services.Directory.Caching
@@ -9,12 +10,13 @@ namespace Nop.Services.Directory.Caching
     public partial class CountryCacheEventConsumer : CacheEventConsumer<Country>
     {
         /// <summary>
-        /// Clear cache data
+        /// Clear cache by entity event type
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(Country entity)
+        /// <param name="entityEventType">Entity event type</param>
+        protected override void ClearCache(Country entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopDirectoryDefaults.CountriesPrefixCacheKey);
+            RemoveByPrefix(NopEntityCacheDefaults<Country>.Prefix);
         }
     }
 }

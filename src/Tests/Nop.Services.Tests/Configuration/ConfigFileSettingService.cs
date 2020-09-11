@@ -6,13 +6,12 @@ using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Configuration;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
-        public ConfigFileSettingService(IEventPublisher eventPublisher, IRepository<Setting> settingRepository, IStaticCacheManager staticCacheManager) : base(eventPublisher, settingRepository, staticCacheManager)
+        public ConfigFileSettingService(IRepository<Setting> settingRepository, IStaticCacheManager staticCacheManager) : base(settingRepository, staticCacheManager)
         {
         }
 

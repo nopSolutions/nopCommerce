@@ -7,7 +7,7 @@
 @using Nop.Web.Framework.UI
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage();
@@ -115,7 +115,8 @@
             convert_urls: false,
             //ensure that special chars are not encoded. For example, ä, ö and ü should NOT become "&auml;", "&ouml;" and "&uuml;"
             //Otherwise, database searches become impossible when words contain a character of this kind
-            entity_encoding: "raw",
+            entity_encoding: "named",
+            entities: '160,nbsp',
             @if (allowJavaScript)
             {
                 <text>

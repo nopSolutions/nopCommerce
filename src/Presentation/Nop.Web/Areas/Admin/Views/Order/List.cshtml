@@ -444,11 +444,11 @@
                                     success: function (data, textStatus, jqXHR) {
                                         if (data) {
                                             for (var key in data) {
-                                                var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Profit") <span>' + data['aggregatorprofit'] +'</span></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Shipping") <span>' + data['aggregatorshipping'] + '</span></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Tax") <span>' +  data['aggregatortax'] + '</span></div>' +
-                                                    '<div>@T("Admin.Orders.Report.Total") <span>' + data['aggregatortotal'] + '</span></div>'
+                                                var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary").Text</strong></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Profit").Text <span>' + data['aggregatorprofit'] +'</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Shipping").Text <span>' + data['aggregatorshipping'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Tax").Text <span>' +  data['aggregatortax'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Total").Text <span>' + data['aggregatortotal'] + '</span></div>'
                                                 var orderTotalsColumn = $('#orders-grid').DataTable().column(@(orderSummaryColumnNumber));
                                                 $(orderTotalsColumn.footer()).html(reportSummary);
                                             }

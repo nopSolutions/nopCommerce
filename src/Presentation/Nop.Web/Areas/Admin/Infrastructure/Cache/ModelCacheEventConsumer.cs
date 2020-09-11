@@ -100,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         /// <param name="eventMessage">Event</param>
         public void HandleEvent(PluginUpdatedEvent eventMessage)
         {
-            _staticCacheManager.RemoveByPrefix(NopPluginDefaults.AdminNavigationPluginsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopPluginDefaults.AdminNavigationPluginsPrefix);
         }
 
         #endregion

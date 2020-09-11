@@ -1,21 +1,17 @@
 ﻿using System;
 using FluentAssertions;
-using Moq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
-using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Common
 {
     [TestFixture]
-    public class AddressTests
+    public class AddressTests : BaseNopTest
     {
         [Test]
-        public void Can_clone_address()
+        public void CanCloneAddress()
         {
             var address = new Address
             {
@@ -36,7 +32,7 @@ namespace Nop.Core.Tests.Domain.Common
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
 
-            var addressService = new AddressService(new AddressSettings(), new CachingSettings(),  new Mock<IAddressAttributeParser>().Object, new Mock<IAddressAttributeService>().Object, new Mock<ICountryService>().Object, new Mock<IEventPublisher>().Object, new FakeRepository<Address>().GetRepository(), new Mock<IStateProvinceService>().Object);
+            var addressService = GetService<IAddressService>();
 
             var newAddress = addressService.CloneAddress(address);
             newAddress.Should().NotBeNull();
