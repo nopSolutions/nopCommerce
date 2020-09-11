@@ -33,7 +33,7 @@ namespace Nop.Web.Components
             _shippingSettings = shippingSettings;
         }
 
-        public async Task<IViewComponentResult> Invoke(bool? prepareAndDisplayOrderReviewData)
+        public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
         {
             if (!_shippingSettings.EstimateShippingCartPageEnabled)
                 return Content("");

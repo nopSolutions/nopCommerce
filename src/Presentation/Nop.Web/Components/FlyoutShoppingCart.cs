@@ -22,7 +22,7 @@ namespace Nop.Web.Components
             _shoppingCartSettings = shoppingCartSettings;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
@@ -30,7 +30,7 @@ namespace Nop.Web.Components
             if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = _shoppingCartModelFactory.PrepareMiniShoppingCartModel();
+            var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModel();
             return View(model);
         }
     }

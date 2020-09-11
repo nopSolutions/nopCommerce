@@ -37,7 +37,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             _webHelper = webHelper;
         }
 
-        public async Task<IViewComponentResult> Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var nivoSliderSettings = await _settingService.LoadSetting<NivoSliderSettings>((await _storeContext.GetCurrentStore()).Id);
 

@@ -32,7 +32,7 @@ namespace Nop.Web.Areas.Admin.Components
         /// </summary>
         /// <param name="modeName">Setting mode name</param>
         /// <returns>View component result</returns>
-        public async Task<IViewComponentResult> Invoke(string modeName = "settings-advanced-mode")
+        public async Task<IViewComponentResult> InvokeAsync(string modeName = "settings-advanced-mode")
         {
             //prepare model
             var model = await _settingModelFactory.PrepareSettingModeModel(modeName);

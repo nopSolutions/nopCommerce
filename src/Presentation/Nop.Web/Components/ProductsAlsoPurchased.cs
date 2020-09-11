@@ -48,7 +48,7 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public async Task<IViewComponentResult> Invoke(int productId, int? productThumbPictureSize)
+        public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");

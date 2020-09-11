@@ -17,7 +17,7 @@ namespace Nop.Web.Components
             _newsletterModelFactory = newsletterModelFactory;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");

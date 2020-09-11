@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Components
         /// Invoke view component
         /// </summary>
         /// <returns>View component result</returns>
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
                 !await _permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||

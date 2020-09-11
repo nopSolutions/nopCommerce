@@ -14,7 +14,7 @@ namespace Nop.Web.Components
             _shoppingCartModelFactory = shoppingCartModelFactory;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var attributes = await _shoppingCartModelFactory.FormatSelectedCheckoutAttributes();
             return View(null, attributes);

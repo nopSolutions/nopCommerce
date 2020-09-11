@@ -27,7 +27,7 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public async Task<IViewComponentResult> Invoke(int? productThumbPictureSize)
+        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
             var products = await _productService.GetAllProductsDisplayedOnHomepage();
             //ACL and store mapping

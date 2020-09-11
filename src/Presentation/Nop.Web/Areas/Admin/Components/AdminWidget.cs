@@ -34,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Components
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
         /// <returns>View component result</returns>
-        public async Task<IViewComponentResult> Invoke(string widgetZone, object additionalData = null)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
             //prepare model
             var models = await _widgetModelFactory.PrepareRenderWidgetModels(widgetZone, additionalData);

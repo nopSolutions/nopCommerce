@@ -18,7 +18,7 @@ namespace Nop.Web.Components
             _profileModelFactory = profileModelFactory;
         }
 
-        public async Task<IViewComponentResult> Invoke(int customerProfileId)
+        public async Task<IViewComponentResult> InvokeAsync(int customerProfileId)
         {
             var customer = await _customerService.GetCustomerById(customerProfileId);
             if (customer == null)

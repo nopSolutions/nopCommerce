@@ -27,7 +27,7 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public async Task<IViewComponentResult> Invoke(int productId, int? productThumbPictureSize)
+        public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
         {
             //load and cache report
             var productIds = (await _productService.GetRelatedProductsByProductId1(productId)).Select(x => x.ProductId2).ToArray();

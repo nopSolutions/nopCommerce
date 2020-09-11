@@ -42,7 +42,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Components
         /// <param name="widgetZone">Widget zone name</param>
         /// <param name="additionalData">Additional data</param>
         /// <returns>View component result</returns>
-        public async Task<IViewComponentResult> Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var trackingScript = string.Empty;
 

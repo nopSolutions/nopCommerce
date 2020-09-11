@@ -18,7 +18,7 @@ namespace Nop.Web.Components
             _taxSettings = taxSettings;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                 return Content("");

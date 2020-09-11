@@ -26,7 +26,7 @@ namespace Nop.Web.Components
             _workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> Invoke(bool isEditable)
+        public async Task<IViewComponentResult> InvokeAsync(bool isEditable)
         {
             var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
 

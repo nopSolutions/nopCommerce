@@ -14,7 +14,7 @@ namespace Nop.Web.Components
             _catalogModelFactory = catalogModelFactory;
         }
 
-        public async Task<IViewComponentResult> Invoke(int currentCategoryId, int currentProductId)
+        public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
         {
             var model = await _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
             return View(model);

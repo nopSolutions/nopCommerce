@@ -187,7 +187,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         #region Methods
 
-        public async Task<IViewComponentResult> Invoke(string widgetZone, object additionalData)
+        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var script = "";
             var routeData = Url.ActionContext.RouteData;

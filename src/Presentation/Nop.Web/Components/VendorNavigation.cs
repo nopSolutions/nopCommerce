@@ -19,7 +19,7 @@ namespace Nop.Web.Components
             _vendorSettings = vendorSettings;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");

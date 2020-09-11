@@ -26,7 +26,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
             _workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = new PaymentInfoModel
             {

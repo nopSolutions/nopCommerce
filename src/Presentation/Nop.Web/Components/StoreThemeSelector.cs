@@ -18,7 +18,7 @@ namespace Nop.Web.Components
             _storeInformationSettings = storeInformationSettings;
         }
 
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");

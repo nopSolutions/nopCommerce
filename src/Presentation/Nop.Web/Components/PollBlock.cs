@@ -14,7 +14,7 @@ namespace Nop.Web.Components
             _pollModelFactory = pollModelFactory;
         }
 
-        public async Task<IViewComponentResult> Invoke(string systemKeyword)
+        public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
         {
 
             if (string.IsNullOrWhiteSpace(systemKeyword))

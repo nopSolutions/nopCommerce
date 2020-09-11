@@ -36,7 +36,7 @@ namespace Nop.Web.Components
             _storeMappingService = storeMappingService;
         }
 
-        public async Task<IViewComponentResult> Invoke(int? productThumbPictureSize, bool? preparePriceModel)
+        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize, bool? preparePriceModel)
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");

@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Components
         /// Invoke view component
         /// </summary>
         /// <returns>View component result</returns>
-        public async Task<IViewComponentResult> Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             //prepare model
             var model = await _settingModelFactory.PrepareStoreScopeConfigurationModel();
