@@ -6501,6 +6501,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ExternalAuthenticationSettings
             {
                 RequireEmailValidation = false,
+                LogErrors = false,
                 AllowCustomersToRemoveAssociations = true
             });
 

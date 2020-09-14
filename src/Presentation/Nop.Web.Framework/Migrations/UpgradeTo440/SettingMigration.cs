@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -19,7 +20,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             //do not use DI, because it produces exception on the installation process
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            //use settingService to add, update and delete settings
+            var externalAuthenticationSettings = settingService.LoadSetting<ExternalAuthenticationSettings>();
+
+            if (!settingService.SettingExists(externalAuthenticationSettings, settings => settings.LogErrors))
+            {
+                externalAuthenticationSettings.LogErrors = false;
+
+                settingService.SaveSetting(externalAuthenticationSettings);
+            }
         }
 
         public override void Down()
