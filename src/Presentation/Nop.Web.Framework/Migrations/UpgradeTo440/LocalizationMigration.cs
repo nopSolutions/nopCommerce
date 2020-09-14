@@ -208,6 +208,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Info"] = "Attribute group info",
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Updated"] = "The attribute group has been updated successfully.",
                 ["Admin.Catalog.Products.SpecificationAttributes.NameFormat"] = "{0} >> {1}",
+                ["Admin.System.Warnings.PluginsOverrideSameService"] = "The \"{0}\" interface/class has been overridden in those assemblies: {1}. This situation may cause errors because there is only one of them will be used (Please contact the assembly(ies) developers to solve this problem.)"
             });
 
             // rename locales
