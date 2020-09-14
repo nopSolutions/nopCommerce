@@ -1,0 +1,93 @@
+@model AppSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="RedisConfigModel.Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="RedisConfigModel.Enabled" />
+            <span asp-validation-for="RedisConfigModel.Enabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="RedisConfigModel.Enabled">
+        <div class="form-group" id="redis-connection-string">
+            <div class="col-md-3">
+                <nop-label asp-for="RedisConfigModel.ConnectionString" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RedisConfigModel.ConnectionString" />
+                <span asp-validation-for="RedisConfigModel.ConnectionString"></span>
+            </div>
+        </div>
+        <div class="form-group" id="redis-database">
+            <div class="col-md-3">
+                <nop-label asp-for="RedisConfigModel.DatabaseId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RedisConfigModel.DatabaseId" />
+                <span asp-validation-for="RedisConfigModel.DatabaseId"></span>
+            </div>
+        </div>
+        <div class="form-group" id="redis-caching">
+            <div class="col-md-3">
+                <nop-label asp-for="RedisConfigModel.UseCaching" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RedisConfigModel.UseCaching" />
+                <span asp-validation-for="RedisConfigModel.UseCaching"></span>
+            </div>
+        </div>
+        <div class="form-group" id="redis-data-protection">
+            <div class="col-md-3">
+                <nop-label asp-for="RedisConfigModel.StoreDataProtectionKeys" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RedisConfigModel.StoreDataProtectionKeys" />
+                <span asp-validation-for="RedisConfigModel.StoreDataProtectionKeys"></span>
+            </div>
+        </div>
+        <div class="form-group" id="redis-plugins">
+            <div class="col-md-3">
+                <nop-label asp-for="RedisConfigModel.StorePluginsInfo" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RedisConfigModel.StorePluginsInfo" />
+                <span asp-validation-for="RedisConfigModel.StorePluginsInfo"></span>
+            </div>
+        </div>
+        <div class="form-group" id="redis-exception">
+            <div class="col-md-3">
+                <nop-label asp-for="RedisConfigModel.IgnoreTimeoutException" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="RedisConfigModel.IgnoreTimeoutException" />
+                <span asp-validation-for="RedisConfigModel.IgnoreTimeoutException"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.RedisConfigModel.Enabled)").click(toggleRedis);
+        toggleRedis();
+    });
+
+    function toggleRedis() {
+        if ($('#@Html.IdFor(model => model.RedisConfigModel.Enabled)').is(':checked')) {
+            $('#redis-connection-string').show();
+            $('#redis-database').show();
+            $('#redis-caching').show();
+            $('#redis-data-protection').show();
+            $('#redis-plugins').show();
+            $('#redis-exception').show();
+        } else {
+            $('#redis-connection-string').hide();
+            $('#redis-database').hide();
+            $('#redis-caching').hide();
+            $('#redis-data-protection').hide();
+            $('#redis-plugins').hide();
+            $('#redis-exception').hide();
+        }
+    }
+</script>

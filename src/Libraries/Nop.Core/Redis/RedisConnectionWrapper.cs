@@ -17,19 +17,20 @@ namespace Nop.Core.Redis
         #region Fields
 
         private bool _disposed = false;
-        private readonly NopConfig _config;
         private readonly object _lock = new object();
         private readonly Lazy<string> _connectionString;
         private volatile ConnectionMultiplexer _connection;
         private volatile RedLockFactory _redisLockFactory;
 
+        private readonly AppSettings _appSettings;
+
         #endregion
 
         #region Ctor
 
-        public RedisConnectionWrapper(NopConfig config)
+        public RedisConnectionWrapper(AppSettings appSettings)
         {
-            _config = config;
+            _appSettings = appSettings;
             _connectionString = new Lazy<string>(GetConnectionString);
             _redisLockFactory = CreateRedisLockFactory();
         }
@@ -44,7 +45,7 @@ namespace Nop.Core.Redis
         /// <returns></returns>
         protected string GetConnectionString()
         {
-            return _config.RedisConnectionString;
+            return _appSettings.RedisConfig.ConnectionString;
         }
 
         /// <summary>
@@ -53,11 +54,13 @@ namespace Nop.Core.Redis
         /// <returns></returns>
         protected ConnectionMultiplexer GetConnection()
         {
-            if (_connection != null && _connection.IsConnected) return _connection;
+            if (_connection != null && _connection.IsConnected)
+                return _connection;
 
             lock (_lock)
             {
-                if (_connection != null && _connection.IsConnected) return _connection;
+                if (_connection != null && _connection.IsConnected)
+                    return _connection;
 
                 //Connection disconnected. Disposing connection...
                 _connection?.Dispose();

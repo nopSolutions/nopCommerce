@@ -19,6 +19,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
+        private readonly IRepository<SpecificationAttributeGroup> _specificationAttributeGroupRepository;
         private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
@@ -29,18 +30,101 @@ namespace Nop.Services.Catalog
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
+            IRepository<SpecificationAttributeGroup> specificationAttributeGroupRepository,
             IStaticCacheManager staticCacheManager)
         {
             _productRepository = productRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
+            _specificationAttributeGroupRepository = specificationAttributeGroupRepository;
             _staticCacheManager = staticCacheManager;
         }
 
         #endregion
 
         #region Methods
+
+        #region Specification attribute group
+
+        /// <summary>
+        /// Gets a specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
+        /// <returns>Specification attribute group</returns>
+        public virtual SpecificationAttributeGroup GetSpecificationAttributeGroupById(int specificationAttributeGroupId)
+        {
+            return _specificationAttributeGroupRepository.GetById(specificationAttributeGroupId, cache => default);
+        }
+
+        /// <summary>
+        /// Gets specification attribute groups
+        /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Specification attribute groups</returns>
+        public virtual IPagedList<SpecificationAttributeGroup> GetSpecificationAttributeGroups(int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from sag in _specificationAttributeGroupRepository.Table
+                        orderby sag.DisplayOrder, sag.Id
+                        select sag;
+
+            return new PagedList<SpecificationAttributeGroup>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Gets product specification attribute groups
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Specification attribute groups</returns>
+        public virtual IList<SpecificationAttributeGroup> GetProductSpecificationAttributeGroups(int productId)
+        {
+            var productAttributesForGroupQuery =
+                from sa in _specificationAttributeRepository.Table
+                join sao in _specificationAttributeOptionRepository.Table
+                    on sa.Id equals sao.SpecificationAttributeId
+                join psa in _productSpecificationAttributeRepository.Table
+                    on sao.Id equals psa.SpecificationAttributeOptionId
+                where psa.ProductId == productId && psa.ShowOnProductPage
+                select sa.SpecificationAttributeGroupId;
+
+            var availableGroupsQuery =
+                from sag in _specificationAttributeGroupRepository.Table
+                where productAttributesForGroupQuery.Any(groupId => groupId == sag.Id)
+                select sag;
+
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributeGroupByProductCacheKey, productId);
+            return _staticCacheManager.Get(key, availableGroupsQuery.ToList);
+        }
+
+        /// <summary>
+        /// Deletes a specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroup">The specification attribute group</param>
+        public virtual void DeleteSpecificationAttributeGroup(SpecificationAttributeGroup specificationAttributeGroup)
+        {
+            _specificationAttributeGroupRepository.Delete(specificationAttributeGroup);
+        }
+
+        /// <summary>
+        /// Inserts a specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroup">The specification attribute group</param>
+        public virtual void InsertSpecificationAttributeGroup(SpecificationAttributeGroup specificationAttributeGroup)
+        {
+            _specificationAttributeGroupRepository.Insert(specificationAttributeGroup);
+        }
+
+        /// <summary>
+        /// Updates the specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroup">The specification attribute group</param>
+        public virtual void UpdateSpecificationAttributeGroup(SpecificationAttributeGroup specificationAttributeGroup)
+        {
+            _specificationAttributeGroupRepository.Update(specificationAttributeGroup);
+        }
+
+        #endregion
 
         #region Specification attribute
 
@@ -91,6 +175,22 @@ namespace Nop.Services.Catalog
                         select sa;
 
             return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey), query.ToList);
+        }
+
+        /// <summary>
+        /// Gets specification attributes by group identifier
+        /// </summary>
+        /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
+        /// <returns>Specification attributes</returns>
+        public virtual IList<SpecificationAttribute> GetSpecificationAttributesByGroupId(int? specificationAttributeGroupId = null)
+        {
+            var query = _specificationAttributeRepository.Table;
+            if (!specificationAttributeGroupId.HasValue || specificationAttributeGroupId > 0)
+                query = query.Where(sa => sa.SpecificationAttributeGroupId == specificationAttributeGroupId);
+
+            query = query.OrderBy(sa => sa.DisplayOrder).ThenBy(sa => sa.Id);
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -239,15 +339,17 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOptionId">Specification attribute option identifier; 0 to load all records</param>
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 1 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 1 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
+        /// <param name="specificationAttributeGroupId">Specification attribute group identifier; 0 to load all records; null to load attributes without group</param>
         /// <returns>Product specification attribute mapping collection</returns>
         public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributes(int productId = 0,
-            int specificationAttributeOptionId = 0, bool? allowFiltering = null, bool? showOnProductPage = null)
+            int specificationAttributeOptionId = 0, bool? allowFiltering = null, bool? showOnProductPage = null, int? specificationAttributeGroupId = 0)
         {
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
+            var specificationAttributeGroupIdCacheStr = specificationAttributeGroupId.HasValue ? specificationAttributeGroupId.ToString() : "null";
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeByProductCacheKey, 
-                productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeByProductCacheKey,
+                productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr, specificationAttributeGroupIdCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;
             if (productId > 0)
@@ -256,6 +358,16 @@ namespace Nop.Services.Catalog
                 query = query.Where(psa => psa.SpecificationAttributeOptionId == specificationAttributeOptionId);
             if (allowFiltering.HasValue)
                 query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);
+            if (!specificationAttributeGroupId.HasValue || specificationAttributeGroupId > 0)
+            {
+                query = from psa in query
+                        join sao in _specificationAttributeOptionRepository.Table
+                            on psa.SpecificationAttributeOptionId equals sao.Id
+                        join sa in _specificationAttributeRepository.Table
+                            on sao.SpecificationAttributeId equals sa.Id
+                        where sa.SpecificationAttributeGroupId == specificationAttributeGroupId
+                        select psa;
+            }
             if (showOnProductPage.HasValue)
                 query = query.Where(psa => psa.ShowOnProductPage == showOnProductPage.Value);
             query = query.OrderBy(psa => psa.DisplayOrder).ThenBy(psa => psa.Id);
@@ -321,7 +433,7 @@ namespace Nop.Services.Catalog
         {
             var query = from product in _productRepository.Table
                 join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
-                join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id 
+                join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id
                 where spao.SpecificationAttributeId == specificationAttributeId
                 orderby product.Name
                 select product;

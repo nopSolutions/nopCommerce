@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -47,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressService _addressService;
@@ -74,7 +76,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public SettingModelFactory(CurrencySettings currencySettings,
+        public SettingModelFactory(AppSettings appSettings,
+            CurrencySettings currencySettings,
             IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -97,6 +100,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReviewTypeModelFactory reviewTypeModelFactory,
             IWorkContext workContext)
         {
+            _appSettings = appSettings;
             _currencySettings = currencySettings;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _addressService = addressService;
@@ -735,6 +739,26 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Prepare app settings model
+        /// </summary>
+        /// <returns>App settings model</returns>
+        public virtual AppSettingsModel PrepareAppSettingsModel()
+        {
+            var model = new AppSettingsModel
+            {
+                CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
+                RedisConfigModel = _appSettings.RedisConfig.ToConfigModel<RedisConfigModel>(),
+                AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
+            };
+
+            return model;
+        }
 
         /// <summary>
         /// Prepare blog settings model

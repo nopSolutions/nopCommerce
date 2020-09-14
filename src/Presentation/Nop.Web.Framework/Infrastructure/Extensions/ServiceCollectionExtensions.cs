@@ -28,6 +28,7 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
@@ -50,36 +51,35 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="webHostEnvironment">Hosting environment</param>
-        /// <returns>Configured service provider</returns>
-        public static (IEngine, NopConfig) ConfigureApplicationServices(this IServiceCollection services,
+        /// <returns>Configured engine and app settings</returns>
+        public static (IEngine, AppSettings) ConfigureApplicationServices(this IServiceCollection services,
             IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            //add NopConfig configuration parameters
-            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
-            Singleton<NopConfig>.Instance = nopConfig;
-
-            //add hosting configuration parameters
-            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+            //create default file provider
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //create default file provider
-            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment);
+            //add configuration parameters
+            var appSettings = new AppSettings();
+            configuration.Bind(appSettings);
+            services.AddSingleton(appSettings);
+            AppSettingsHelper.SaveAppSettings(appSettings);
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            mvcCoreBuilder.PartManager.InitializePlugins(nopConfig);
+            mvcCoreBuilder.PartManager.InitializePlugins(appSettings);
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
-            engine.ConfigureServices(services, configuration, nopConfig);
+            engine.ConfigureServices(services, configuration);
 
-            return (engine, nopConfig);
+            return (engine, appSettings);
         }
 
         /// <summary>
@@ -89,19 +89,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Set of key/value application configuration properties</param>
         /// <returns>Instance of configuration parameters</returns>
-        public static TConfig ConfigureStartupConfig<TConfig>(this IServiceCollection services, IConfiguration configuration) where TConfig : class, new()
+        public static TConfig AddConfig<TConfig>(this IServiceCollection services, IConfiguration configuration)
+            where TConfig : class, IConfig, new()
         {
-            if (services == null)
-                throw new ArgumentNullException(nameof(services));
-
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
-
             //create instance of config
             var config = new TConfig();
 
             //bind it to the appropriate section of configuration
-            configuration.Bind(config);
+            configuration.Bind(config.Name, config);
 
             //and register it as a service
             services.AddSingleton(config);
@@ -175,8 +170,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopDataProtection(this IServiceCollection services)
         {
             //check whether to persist data protection in Redis
-            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
-            if (nopConfig.RedisEnabled && nopConfig.UseRedisToStoreDataProtectionKeys)
+            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StoreDataProtectionKeys)
             {
                 //store keys in Redis
                 services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
@@ -184,26 +179,26 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     //For some reason, data protection services are registered earlier. This configuration is called even before the request queue starts. 
                     //Service provider has not yet been built and we cannot get the required service. 
                     //So we create a new instance of RedisConnectionWrapper() bypassing the DI.
-                    var redisConnectionWrapper = new RedisConnectionWrapper(nopConfig);
-                    return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
+                    var redisConnectionWrapper = new RedisConnectionWrapper(appSettings);
+                    return redisConnectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
                 }, NopDataProtectionDefaults.RedisDataProtectionKey);
             }
-            else if (nopConfig.AzureBlobStorageEnabled && nopConfig.UseAzureBlobStorageToStoreDataProtectionKeys)
+            else if (appSettings.AzureBlobConfig.Enabled && appSettings.AzureBlobConfig.StoreDataProtectionKeys)
             {
-                var cloudStorageAccount = CloudStorageAccount.Parse(nopConfig.AzureBlobStorageConnectionString);
+                var cloudStorageAccount = CloudStorageAccount.Parse(appSettings.AzureBlobConfig.ConnectionString);
 
                 var client = cloudStorageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference(nopConfig.AzureBlobStorageContainerNameForDataProtectionKeys);
+                var container = client.GetContainerReference(appSettings.AzureBlobConfig.DataProtectionKeysContainerName);
 
                 var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, NopDataProtectionDefaults.AzureDataProtectionKeyFile);
 
-                if (!nopConfig.EncryptDataProtectionKeysWithAzureKeyVault)
+                if (!appSettings.AzureBlobConfig.DataProtectionKeysEncryptWithVault)
                     return;
 
                 var tokenProvider = new AzureServiceTokenProvider();
                 var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
 
-                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, nopConfig.AzureKeyVaultIdForDataProtectionKeys);
+                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, appSettings.AzureBlobConfig.DataProtectionKeysVaultId);
             }
             else
             {
@@ -277,8 +272,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             mvcBuilder.AddRazorRuntimeCompilation();
 
-            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
-            if (nopConfig.UseSessionStateTempDataProvider)
+            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            if (appSettings.CommonConfig.UseSessionStateTempDataProvider)
             {
                 //use session-based temp data provider
                 mvcBuilder.AddSessionStateTempDataProvider();
@@ -343,14 +338,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopMiniProfiler(this IServiceCollection services)
         {
-            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
+            //whether database is already installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
 
-            if (DataSettingsManager.DatabaseIsInstalled && nopConfig.MiniProfilerEnabled)
+            var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
+            if (appSettings.CommonConfig.MiniProfilerEnabled)
             {
                 services.AddMiniProfiler(miniProfilerOptions =>
                 {
                     //use memory cache provider for storing each result
-                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
+                    ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(appSettings.CacheConfig.DefaultCacheTime);
 
                     //determine who can access the MiniProfiler results
                     miniProfilerOptions.ResultsAuthorize = request => EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessProfiling);

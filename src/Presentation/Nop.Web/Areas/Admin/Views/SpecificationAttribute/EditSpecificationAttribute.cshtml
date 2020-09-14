@@ -2,18 +2,18 @@
 
 @{
     //page title
-    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
-<form asp-controller="SpecificationAttribute" asp-action="Edit" method="post" id="specificationattribute-form">
+<form asp-controller="SpecificationAttribute" asp-action="EditSpecificationAttribute" method="post" id="specificationattribute-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails") - @Model.Name
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails") - @Model.Name
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.BackToList")</a>
+                <a asp-action="List">@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">
@@ -32,6 +32,6 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
-    @await Html.PartialAsync("_CreateOrUpdate", Model)
+    @await Html.PartialAsync("_CreateOrUpdateSpecificationAttribute", Model)
 </form>
-<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="specificationattribute-delete" />
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="specificationattribute-delete" asp-action="DeleteSpecificationAttribute" />

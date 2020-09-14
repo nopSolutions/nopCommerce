@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -17,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly ISpecificationAttributeService _specificationAttributeService;
@@ -25,10 +27,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public SpecificationAttributeModelFactory(ILocalizationService localizationService,
+        public SpecificationAttributeModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             ISpecificationAttributeService specificationAttributeService)
         {
+            _baseAdminModelFactory = baseAdminModelFactory;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _specificationAttributeService = specificationAttributeService;
@@ -89,11 +93,11 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
-        /// Prepare specification attribute search model
+        /// Prepare specification attribute group search model
         /// </summary>
-        /// <param name="searchModel">Specification attribute search model</param>
-        /// <returns>Specification attribute search model</returns>
-        public virtual SpecificationAttributeSearchModel PrepareSpecificationAttributeSearchModel(SpecificationAttributeSearchModel searchModel)
+        /// <param name="searchModel">Specification attribute group search model</param>
+        /// <returns>Specification attribute group search model</returns>
+        public virtual SpecificationAttributeGroupSearchModel PrepareSpecificationAttributeGroupSearchModel(SpecificationAttributeGroupSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -105,18 +109,82 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// Prepare paged specification attribute group list model
+        /// </summary>
+        /// <param name="searchModel">Specification attribute group search model</param>
+        /// <returns>Specification attribute group list model</returns>
+        public virtual SpecificationAttributeGroupListModel PrepareSpecificationAttributeGroupListModel(SpecificationAttributeGroupSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //get specification attribute groups
+            var specificationAttributeGroups = _specificationAttributeService
+                .GetSpecificationAttributeGroups(searchModel.Page - 1, searchModel.PageSize);
+
+            if (searchModel.Page == 1)
+            {
+                //dislpay default group with non-grouped specification attributes on first page
+                specificationAttributeGroups.Insert(0, new SpecificationAttributeGroup
+                {
+                    Name = _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
+                });
+            }
+
+            //prepare list model
+            var model = new SpecificationAttributeGroupListModel().PrepareToGrid(searchModel, specificationAttributeGroups, () =>
+            {
+                //fill in model values from the entity
+                return specificationAttributeGroups.Select(attribute => attribute.ToModel<SpecificationAttributeGroupModel>());
+            });
+
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare specification attribute group model
+        /// </summary>
+        /// <param name="model">Specification attribute group model</param>
+        /// <param name="specificationAttributeGroup">Specification attribute group</param>
+        /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
+        /// <returns>Specification attribute group model</returns>
+        public virtual SpecificationAttributeGroupModel PrepareSpecificationAttributeGroupModel(SpecificationAttributeGroupModel model,
+            SpecificationAttributeGroup specificationAttributeGroup, bool excludeProperties = false)
+        {
+            Action<SpecificationAttributeGroupLocalizedModel, int> localizedModelConfiguration = null;
+
+            if (specificationAttributeGroup != null)
+            {
+                //fill in model values from the entity
+                model ??= specificationAttributeGroup.ToModel<SpecificationAttributeGroupModel>();
+
+                //define localized model configuration action
+                localizedModelConfiguration = (locale, languageId) =>
+                {
+                    locale.Name = _localizationService.GetLocalized(specificationAttributeGroup, entity => entity.Name, languageId, false, false);
+                };
+            }
+
+            //prepare localized models
+            if (!excludeProperties)
+                model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare paged specification attribute list model
         /// </summary>
         /// <param name="searchModel">Specification attribute search model</param>
+        /// <param name="group">Specification attribute group</param>
         /// <returns>Specification attribute list model</returns>
-        public virtual SpecificationAttributeListModel PrepareSpecificationAttributeListModel(SpecificationAttributeSearchModel searchModel)
+        public virtual SpecificationAttributeListModel PrepareSpecificationAttributeListModel(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get specification attributes
-            var specificationAttributes = _specificationAttributeService
-                .GetSpecificationAttributes(searchModel.Page - 1, searchModel.PageSize);
+            var specificationAttributes = _specificationAttributeService.GetSpecificationAttributesByGroupId(group?.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new SpecificationAttributeListModel().PrepareToGrid(searchModel, specificationAttributes, () =>
@@ -158,7 +226,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
+            {
                 model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+
+                _baseAdminModelFactory.PrepareSpecificationAttributeGroups(model.AvailableGroups,
+                    defaultItemText: _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.None"));
+            }
 
             return model;
         }
