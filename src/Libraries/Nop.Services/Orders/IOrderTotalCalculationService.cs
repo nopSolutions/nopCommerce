@@ -30,6 +30,7 @@ namespace Nop.Services.Orders
         Task<(decimal adjustedShippingRate, List<Discount> appliedDiscounts)> AdjustShippingRate(decimal shippingRate,
             IList<ShoppingCartItem> cart, bool applyToPickupInStore = false);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>
@@ -93,6 +94,7 @@ namespace Nop.Services.Orders
         /// <returns>Converted value</returns>
         Task<decimal> ConvertRewardPointsToAmount(int rewardPoints);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Converts an amount to reward points
         /// </summary>

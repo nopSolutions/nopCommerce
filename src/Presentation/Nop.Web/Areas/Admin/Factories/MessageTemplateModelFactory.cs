@@ -163,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
 
-            var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(_messageTokenProvider.GetTokenGroups(messageTemplate)));
+            var allowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokens(_messageTokenProvider.GetTokenGroups(messageTemplate)));
             model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}" +
                 $"{await _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 

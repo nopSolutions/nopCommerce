@@ -436,7 +436,7 @@ namespace Nop.Web.Factories
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
                 var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category,
-                    _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), await _storeContext.GetCurrentStore());
+                    await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), await _storeContext.GetCurrentStore());
                 var hasFeaturedProductsCache = await _staticCacheManager.Get(cacheKey, async () =>
                 {
                     //no value in the cache yet
@@ -657,7 +657,7 @@ namespace Nop.Web.Factories
             //load and cache them
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey, 
                 await _workContext.GetWorkingLanguage(),
-                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore());
 
             return await _staticCacheManager.Get(cacheKey, async () => await PrepareCategorySimpleModels(0));
@@ -726,7 +726,7 @@ namespace Nop.Web.Factories
         {
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey, 
                 await _workContext.GetWorkingLanguage(),
-                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore());
 
             return await _staticCacheManager.Get(cacheKey, async () =>
@@ -835,7 +835,7 @@ namespace Nop.Web.Factories
                 //We cache a value indicating whether we have featured products
                 var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey, 
                     manufacturer,
-                    _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                    await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                     await _storeContext.GetCurrentStore());
                 var hasFeaturedProductsCache = await _staticCacheManager.Get(cacheKey, async () =>
                 {
@@ -1152,7 +1152,7 @@ namespace Nop.Web.Factories
                 .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.GetCurrentStore().Result.Id).Result)
                 .Take(_catalogSettings.NumberOfProductTags)
                 //sorting
-                .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name))
+                .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name).Result)
                 .Select(tag => new ProductTagModel
                 {
                     Id = tag.Id,
@@ -1218,7 +1218,7 @@ namespace Nop.Web.Factories
                 //filter by current store
                 .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.GetCurrentStore().Result.Id).Result > 0)
                 //sort by name
-                .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name))
+                .OrderBy(x => _localizationService.GetLocalized(x, y => y.Name).Result)
                 .Select(x =>
                 {
                     var ptModel = new ProductTagModel

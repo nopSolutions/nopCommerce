@@ -42,6 +42,7 @@ namespace Nop.Services.Localization
         /// <param name="language">Language</param>
         Task UpdateLanguage(Language language);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get 2 letter ISO language code
         /// </summary>

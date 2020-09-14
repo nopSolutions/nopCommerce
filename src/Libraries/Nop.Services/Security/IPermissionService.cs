@@ -16,6 +16,7 @@ namespace Nop.Services.Security
         /// <param name="permission">Permission</param>
         Task DeletePermissionRecord(PermissionRecord permission);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a permission
         /// </summary>
@@ -23,6 +24,7 @@ namespace Nop.Services.Security
         /// <returns>Permission</returns>
         Task<PermissionRecord> GetPermissionRecordById(int permissionId);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets a permission
         /// </summary>
@@ -54,6 +56,7 @@ namespace Nop.Services.Security
         /// <param name="permissionProvider">Permission provider</param>
         Task InstallPermissions(IPermissionProvider permissionProvider);
 
+        //TODO: may be deleted
         /// <summary>
         /// Uninstall permissions
         /// </summary>

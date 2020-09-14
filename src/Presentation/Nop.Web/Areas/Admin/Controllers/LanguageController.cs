@@ -363,7 +363,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return ErrorJson(ModelState.SerializeErrors());
             }
 
-            var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
+            var res = await _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
             if (res == null)
             {
                 //fill entity from model

@@ -690,7 +690,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var allAttributesXml = await _productAttributeParser.GenerateAllCombinations(product, true, allowedAttributeIds);
             foreach (var attributesXml in allAttributesXml)
             {
-                var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                var existingCombination = await _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
 
                 //already exists?
                 if (existingCombination != null)
@@ -1121,7 +1121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (await _workContext.GetCurrentVendor() != null && originalProduct.VendorId != (await _workContext.GetCurrentVendor()).Id)
                     return RedirectToAction("List");
 
-                var newProduct = _copyProductService.CopyProduct(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
+                var newProduct = await _copyProductService.CopyProduct(originalProduct, copyModel.Name, copyModel.Published, copyModel.CopyImages);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Products.Copied"));
 
@@ -1906,7 +1906,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (_productService.GetProductById(productId) == null)
+            if (await _productService.GetProductById(productId) == null)
             {
                 _notificationService.ErrorNotification("No product found with the specified id");
                 return RedirectToAction("List");
@@ -3153,7 +3153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
 
             //check whether the same attribute combination already exists
-            var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            var existingCombination = await _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
             if (existingCombination != null)
                 warnings.Add(await _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 

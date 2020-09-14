@@ -6,7 +6,7 @@
 @inject IUserAgentHelper userAgentHelper
 @{
     var supportRtl = (await workContext.GetWorkingLanguage()).Rtl;
-    var themeName = themeContext.GetWorkingThemeName();
+    var themeName = await themeContext.GetWorkingThemeName();
 
     //add main CSS file
     if (supportRtl)

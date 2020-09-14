@@ -95,6 +95,7 @@ namespace Nop.Services.Catalog
         /// <returns>Rounded value</returns>
         Task<decimal> RoundPrice(decimal value, Currency currency = null);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Round
         /// </summary>

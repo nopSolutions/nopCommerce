@@ -8,6 +8,7 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial interface ICheckoutAttributeFormatter
     {
+        //TODO: may be deleted
         /// <summary>
         /// Formats attributes
         /// </summary>

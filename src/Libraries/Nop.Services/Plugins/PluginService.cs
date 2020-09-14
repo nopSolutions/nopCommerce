@@ -429,7 +429,7 @@ namespace Nop.Services.Plugins
             _pluginsInfo.PluginNamesToDelete.Clear();
             _pluginsInfo.PluginNamesToInstall.Clear();
             _pluginsInfo.PluginNamesToUninstall.Clear();
-            _pluginsInfo.Save();
+            _pluginsInfo.Save().Wait();
 
             //display all plugins on the plugin list page
             _pluginsInfo.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);

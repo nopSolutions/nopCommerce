@@ -15,6 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Templates model</returns>
         Task<TemplatesModel> PrepareTemplatesModel(TemplatesModel model);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare category template search model
         /// </summary>
@@ -29,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Category template list model</returns>
         Task<CategoryTemplateListModel> PrepareCategoryTemplateListModel(CategoryTemplateSearchModel searchModel);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare manufacturer template search model
         /// </summary>

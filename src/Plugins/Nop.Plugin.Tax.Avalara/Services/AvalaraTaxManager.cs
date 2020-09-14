@@ -197,7 +197,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 ResponseMessage = avaTaxCallEventArgs.ResponseString,
                 CustomerId = _workContext.GetCurrentCustomer().Result.Id,
                 CreatedDateUtc = DateTime.UtcNow
-            });
+            }).Wait();
         }
 
         /// <summary>
@@ -443,9 +443,9 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     var customer = _customerService.GetCustomerById(order.CustomerId).Result;
                     var billingAddress = _addressService.GetAddressById(order.BillingAddressId).Result;
                     var useEuVatRules = (product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
-                        && ((_countryService.GetCountryByAddress(billingAddress)
-                            ?? _countryService.GetCountryById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute).Result)
-                            ?? _countryService.GetCountryByTwoLetterIsoCode(_geoLookupService.LookupCountryIsoCode(customer.LastIpAddress))).Result
+                        && ((_countryService.GetCountryByAddress(billingAddress).Result
+                            ?? _countryService.GetCountryById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute).Result).Result
+                            ?? _countryService.GetCountryByTwoLetterIsoCode(_geoLookupService.LookupCountryIsoCode(customer.LastIpAddress)).Result)
                             ?.SubjectToVat ?? false)
                         && _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute).Result != (int)VatNumberStatus.Valid;
 

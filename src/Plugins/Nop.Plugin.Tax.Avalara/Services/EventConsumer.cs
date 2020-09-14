@@ -119,83 +119,75 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //create tax transaction
-            _avalaraTaxManager.CreateOrderTaxTransaction(eventMessage.Order);
+            await _avalaraTaxManager.CreateOrderTaxTransaction(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order refunded event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public Task HandleEvent(OrderRefundedEvent eventMessage)
+        public async Task HandleEvent(OrderRefundedEvent eventMessage)
         {
             if (eventMessage.Order == null)
-                return Task.CompletedTask;
+                return;
 
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
-                return Task.CompletedTask;
+                return;
 
             //refund tax transaction
-            _avalaraTaxManager.RefundTaxTransaction(eventMessage.Order, eventMessage.Amount);
-
-            return Task.CompletedTask;
+            await _avalaraTaxManager.RefundTaxTransaction(eventMessage.Order, eventMessage.Amount);
         }
 
         /// <summary>
         /// Handle order async Tasked event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public Task HandleEvent(OrderVoidedEvent eventMessage)
+        public async Task HandleEvent(OrderVoidedEvent eventMessage)
         {
             if (eventMessage.Order == null)
-                return Task.CompletedTask;
+                return;
 
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
-                return Task.CompletedTask;
+                return;
 
             //async Task tax transaction
-            _avalaraTaxManager.VoidTaxTransaction(eventMessage.Order);
-
-            return Task.CompletedTask;
+            await _avalaraTaxManager.VoidTaxTransaction(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order cancelled event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public Task HandleEvent(OrderCancelledEvent eventMessage)
+        public async Task HandleEvent(OrderCancelledEvent eventMessage)
         {
             if (eventMessage.Order == null)
-                return Task.CompletedTask;
+                return;
 
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
-                return Task.CompletedTask;
+                return;
 
             //async Task tax transaction
-            _avalaraTaxManager.VoidTaxTransaction(eventMessage.Order);
-
-            return Task.CompletedTask;
+            await _avalaraTaxManager.VoidTaxTransaction(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public Task HandleEvent(EntityDeletedEvent<Order> eventMessage)
+        public async Task HandleEvent(EntityDeletedEvent<Order> eventMessage)
         {
             if (eventMessage.Entity == null)
-                return Task.CompletedTask;
+                return;
 
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
-                return Task.CompletedTask;
+                return;
 
             //delete tax transaction
-            _avalaraTaxManager.DeleteTaxTransaction(eventMessage.Entity);
-
-            return Task.CompletedTask;
+            await _avalaraTaxManager.DeleteTaxTransaction(eventMessage.Entity);
         }
 
         #endregion

@@ -175,12 +175,12 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             var locService = EngineContext.Current.Resolve<ILocalizationService>();
 
-            days.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Day"));
+            days.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Day").Result);
             for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i, 
                     (SelectedDay.HasValue && SelectedDay.Value == i) ? " selected=\"selected\"" : null);
 
-            months.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Month"));
+            months.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Month").Result);
             for (var i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
@@ -189,7 +189,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
                     CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
             }
             
-            years.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Year"));
+            years.AppendFormat("<option value='{0}'>{1}</option>", "0", locService.GetResource("Common.Year").Result);
 
             if (BeginYear == null)
                 BeginYear = DateTime.UtcNow.Year - 100;

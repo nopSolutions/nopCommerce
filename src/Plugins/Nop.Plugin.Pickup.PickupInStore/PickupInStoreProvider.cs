@@ -139,7 +139,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
                 OpeningHours = "10.00 - 19.00",
                 PickupFee = 1.99m
             };
-            _storePickupPointService.InsertStorePickupPoint(pickupPoint);
+            await _storePickupPointService.InsertStorePickupPoint(pickupPoint);
 
             //locales
             await _localizationService.AddLocaleResource(new Dictionary<string, string>

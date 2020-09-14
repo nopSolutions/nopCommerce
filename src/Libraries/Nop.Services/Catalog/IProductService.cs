@@ -278,6 +278,7 @@ namespace Nop.Services.Catalog
         /// <returns>Number of products</returns>
         Task<int> GetNumberOfProductsByVendorId(int vendorId);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Parse "required product Ids" property
         /// </summary>
@@ -285,6 +286,7 @@ namespace Nop.Services.Catalog
         /// <returns>A list of required product IDs</returns>
         int[] ParseRequiredProductIds(Product product);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a product is available now (availability dates)
         /// </summary>
@@ -293,6 +295,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         bool ProductIsAvailable(Product product, DateTime? dateTime = null);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get a list of allowed quantities (parse 'AllowedQuantities' property)
         /// </summary>
@@ -315,6 +318,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         Task<int> GetTotalStockQuantity(Product product, bool useReservedQuantity = true, int warehouseId = 0);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get number of rental periods (price ratio)
         /// </summary>
@@ -332,6 +336,7 @@ namespace Nop.Services.Catalog
         /// <returns>The stock message</returns>
         Task<string> FormatStockMessage(Product product, string attributesXml);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats SKU
         /// </summary>
@@ -340,6 +345,7 @@ namespace Nop.Services.Catalog
         /// <returns>SKU</returns>
         string FormatSku(Product product, string attributesXml = null);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats manufacturer part number
         /// </summary>
@@ -348,6 +354,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer part number</returns>
         string FormatMpn(Product product, string attributesXml = null);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats GTIN
         /// </summary>
@@ -356,6 +363,7 @@ namespace Nop.Services.Catalog
         /// <returns>GTIN</returns>
         string FormatGtin(Product product, string attributesXml = null);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats start/end date for rental product
         /// </summary>
@@ -474,6 +482,7 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProduct">Related product</param>
         Task UpdateRelatedProduct(RelatedProduct relatedProduct);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a related product item by specified identifiers
         /// </summary>
@@ -522,6 +531,7 @@ namespace Nop.Services.Catalog
         /// <param name="crossSellProduct">Cross-sell product</param>
         Task InsertCrossSellProduct(CrossSellProduct crossSellProduct);
 
+        //TODO: may be deleted
         /// <summary>
         /// Updates a cross-sell product
         /// </summary>
@@ -536,6 +546,7 @@ namespace Nop.Services.Catalog
         /// <returns>Cross-sells</returns>
         Task<IList<Product>> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a cross-sell product item by specified identifiers
         /// </summary>
@@ -758,6 +769,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         Task<Warehouse> GetWarehousesById(int warehouseId);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a warehouses by product identifier
         /// </summary>

@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.Extensions
                 var standardTabName = $"{name}-standard-tab";
                 var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
                 tabStrip.AppendLine($"<li{(standardTabSelected ? " class=\"active\"" : null)}>");
-                tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{await EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();

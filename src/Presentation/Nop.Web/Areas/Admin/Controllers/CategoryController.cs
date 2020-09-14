@@ -361,7 +361,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
+                        if (await _categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
                             await _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                     }
                     else
@@ -535,7 +535,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No category found with the specified id");
 
             //prepare model
-            var model = _categoryModelFactory.PrepareCategoryProductListModel(searchModel, category);
+            var model = await _categoryModelFactory.PrepareCategoryProductListModel(searchModel, category);
 
             return Json(model);
         }

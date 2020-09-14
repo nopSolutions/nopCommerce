@@ -50,7 +50,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogTypeSearchModel(new ActivityLogTypeSearchModel());
+            var model = await _activityLogModelFactory.PrepareActivityLogTypeSearchModel(new ActivityLogTypeSearchModel());
 
             return View(model);
         }
@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogSearchModel(new ActivityLogSearchModel());
+            var model = await _activityLogModelFactory.PrepareActivityLogSearchModel(new ActivityLogSearchModel());
 
             return View(model);
         }
@@ -101,7 +101,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
+            var model = await _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
 
             return Json(model);
         }

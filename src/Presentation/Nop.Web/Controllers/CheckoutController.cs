@@ -617,7 +617,7 @@ namespace Nop.Web.Controllers
             //check if pickup point is selected on the shipping address step
             if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
-                var selectedPickUpPoint = _genericAttributeService
+                var selectedPickUpPoint = await _genericAttributeService
                     .GetAttribute<PickupPoint>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStore()).Id);
                 if (selectedPickUpPoint != null)
                     return RedirectToRoute("CheckoutPaymentMethod");

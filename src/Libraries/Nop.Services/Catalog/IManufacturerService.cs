@@ -160,6 +160,7 @@ namespace Nop.Services.Catalog
         /// <returns>List of names and/or IDs not existing manufacturers</returns>
         Task<string[]> GetNotExistingManufacturers(string[] manufacturerIdsNames);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Returns a ProductManufacturer that has the specified values
         /// </summary>

@@ -194,7 +194,7 @@ namespace Nop.Services.Catalog
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey, 
                 discount,
-                _customerService.GetCustomerRoleIds(customer),
+                await _customerService.GetCustomerRoleIds(customer),
                 await _storeContext.GetCurrentStore());
 
             var result = await _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)

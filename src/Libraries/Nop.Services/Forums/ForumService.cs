@@ -603,7 +603,7 @@ namespace Nop.Services.Forums
                 return forumTopic;
 
             var previousForumId = forumTopic.ForumId;
-            var newForum = GetForumById(newForumId);
+            var newForum = await GetForumById(newForumId);
 
             if (newForum == null)
                 return forumTopic;
@@ -637,7 +637,7 @@ namespace Nop.Services.Forums
 
             //delete topic if it was the first post
             var deleteTopic = false;
-            var firstPost = GetFirstPost(forumTopic);
+            var firstPost = await GetFirstPost(forumTopic);
             if (firstPost != null && firstPost.Id == forumPost.Id) 
                 deleteTopic = true;
 

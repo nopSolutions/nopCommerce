@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
+                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
                 var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
@@ -183,7 +183,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
+                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
                     var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{(await _storeContext.GetCurrentStore()).Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -250,7 +250,7 @@ namespace Nop.Web.Controllers
             var model = await _forumModelFactory.PrepareForumTopicPageModel(forumTopic, pageNumber);
             //if no posts loaded, redirect to the first page
             if (!model.ForumPostModels.Any() && pageNumber > 1)
-                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
+                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeName(forumTopic) });
 
             //update view count
             forumTopic.Views += 1;
@@ -331,7 +331,7 @@ namespace Nop.Web.Controllers
             if (forum != null && forumTopic.ForumId != newForumId)
                 await _forumService.MoveTopic(forumTopic.Id, newForumId);
 
-            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
+            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeName(forumTopic) });
         }
 
         [HttpPost]
@@ -356,7 +356,7 @@ namespace Nop.Web.Controllers
                 if (forum != null)
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = _forumService.GetForumSeName(forum) }),
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeName(forum) }),
                     });
             }
 
@@ -477,7 +477,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeName(forumTopic) });
                 }
                 catch (Exception ex)
                 {
@@ -616,7 +616,7 @@ namespace Nop.Web.Controllers
                     }
 
                     // redirect to the topic page with the topic slug
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeName(forumTopic) });
                 }
                 catch (Exception ex)
                 {
@@ -650,7 +650,7 @@ namespace Nop.Web.Controllers
             var forumTopic = await _forumService.GetTopicById(forumPost.TopicId);
             var forumId = forumTopic.ForumId;
             var forum = await _forumService.GetForumById(forumId);
-            var forumSlug = _forumService.GetForumSeName(forum);
+            var forumSlug = await _forumService.GetForumSeName(forum);
 
             await _forumService.DeletePost(forumPost);
 
@@ -664,7 +664,7 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
-                redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) }),
+                redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = await _forumService.GetTopicSeName(forumTopic) }),
             });
 
         }
@@ -876,11 +876,11 @@ namespace Nop.Web.Controllers
                     string url;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeName(forumTopic), pageNumber = pageIndex });
                     }
                     else
                     {
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic) });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = await _forumService.GetTopicSeName(forumTopic) });
                     }
                     return LocalRedirect($"{url}#{forumPost.Id}");
                 }

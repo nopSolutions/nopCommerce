@@ -16,10 +16,10 @@ namespace Nop.Plugin.Tax.Avalara.Validators
         {
             RuleFor(model => model.AccountId)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.Tax.Avalara.Fields.AccountId.Required"));
+                .WithMessage(localizationService.GetResource("Plugins.Tax.Avalara.Fields.AccountId.Required").Result);
             RuleFor(model => model.LicenseKey)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.Tax.Avalara.Fields.LicenseKey.Required"));
+                .WithMessage(localizationService.GetResource("Plugins.Tax.Avalara.Fields.LicenseKey.Required").Result);
         }
 
         #endregion

@@ -213,13 +213,13 @@ namespace Nop.Services.Customers
             }
 
             //validate unique user
-            if (_customerService.GetCustomerByEmail(request.Email) != null)
+            if (await _customerService.GetCustomerByEmail(request.Email) != null)
             {
                 result.AddError(await _localizationService.GetResource("Account.Register.Errors.EmailAlreadyExists"));
                 return result;
             }
 
-            if (_customerSettings.UsernamesEnabled && _customerService.GetCustomerByUsername(request.Username) != null)
+            if (_customerSettings.UsernamesEnabled && await _customerService.GetCustomerByUsername(request.Username) != null)
             {
                 result.AddError(await _localizationService.GetResource("Account.Register.Errors.UsernameAlreadyExists"));
                 return result;
@@ -255,7 +255,7 @@ namespace Nop.Services.Customers
             request.Customer.Active = request.IsApproved;
 
             //add to 'Registered' role
-            var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            var registeredRole = await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
 

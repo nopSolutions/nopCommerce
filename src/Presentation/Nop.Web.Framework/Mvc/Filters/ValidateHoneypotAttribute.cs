@@ -81,7 +81,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!StringValues.IsNullOrEmpty(inputValue))
                 {
                     //warning admin about it
-                    _logger.Warning("A bot detected. Honeypot.");
+                    _logger.Warning("A bot detected. Honeypot.").Wait();
 
                     //and redirect to the original page
                     filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true).Result);

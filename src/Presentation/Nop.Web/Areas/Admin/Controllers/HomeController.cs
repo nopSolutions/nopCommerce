@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            var model = _homeModelFactory.PrepareDashboardModel(new DashboardModel());
+            var model = await _homeModelFactory.PrepareDashboardModel(new DashboardModel());
 
             return View(model);
         }

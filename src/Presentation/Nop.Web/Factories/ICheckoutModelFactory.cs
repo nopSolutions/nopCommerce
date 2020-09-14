@@ -29,7 +29,6 @@ namespace Nop.Web.Factories
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <param name="cart">Cart</param>
         /// <returns>Shipping address model</returns>
         Task<CheckoutShippingAddressModel> PrepareShippingAddressModel(IList<ShoppingCartItem> cart, int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "");

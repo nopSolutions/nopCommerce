@@ -926,7 +926,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(store, tokens);
+            await _eventPublisher.EntityTokensAdded(store, tokens);
         }
 
         /// <summary>
@@ -962,7 +962,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingStateProvince", await _stateProvinceService.GetStateProvinceByAddress(billingAddress) is StateProvince billingStateProvince ? await _localizationService.GetLocalized(billingStateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingZipPostalCode", billingAddress.ZipPostalCode));
             tokens.Add(new Token("Order.BillingCountry", await _countryService.GetCountryByAddress(billingAddress) is Country billingCountry ? await _localizationService.GetLocalized(billingCountry, x => x.Name) : string.Empty));
-            tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(billingAddress.CustomAttributes), true));
+            tokens.Add(new Token("Order.BillingCustomAttributes", await _addressAttributeFormatter.FormatAttributes(billingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
@@ -1013,11 +1013,11 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
             }
 
-            var orderUrl = RouteUrl(order.StoreId, "OrderDetails", new { orderId = order.Id });
+            var orderUrl = await RouteUrl(order.StoreId, "OrderDetails", new { orderId = order.Id });
             tokens.Add(new Token("Order.OrderURLForCustomer", orderUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(order, tokens);
+            await _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
         /// <summary>
@@ -1039,7 +1039,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.AmountRefunded", refundedAmountStr));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(order, tokens);
+            await _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
         /// <summary>
@@ -1068,7 +1068,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(shipment, tokens);
+            await _eventPublisher.EntityTokensAdded(shipment, tokens);
         }
 
         /// <summary>
@@ -1085,7 +1085,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(orderNote, tokens);
+            await _eventPublisher.EntityTokensAdded(orderNote, tokens);
         }
 
         /// <summary>
@@ -1102,7 +1102,7 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentType(order.PaymentMethodSystemName).ToString()));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
+            await _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
         }
 
         /// <summary>
@@ -1126,7 +1126,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.Status", await _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus)));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(returnRequest, tokens);
+            await _eventPublisher.EntityTokensAdded(returnRequest, tokens);
         }
 
         /// <summary>
@@ -1149,7 +1149,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.Message", giftCardMessage, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(giftCard, tokens);
+            await _eventPublisher.EntityTokensAdded(giftCard, tokens);
         }
 
         /// <summary>
@@ -1176,7 +1176,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
-            tokens.Add(new Token("Customer.FullName", _customerService.GetCustomerFullName(customer)));
+            tokens.Add(new Token("Customer.FullName", await _customerService.GetCustomerFullName(customer)));
             tokens.Add(new Token("Customer.FirstName", await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute)));
             tokens.Add(new Token("Customer.LastName", await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute)));
             tokens.Add(new Token("Customer.VatNumber", await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute)));
@@ -1196,7 +1196,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(customer, tokens);
+            await _eventPublisher.EntityTokensAdded(customer, tokens);
         }
 
         /// <summary>
@@ -1210,10 +1210,10 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Vendor.Email", vendor.Email));
 
             var vendorAttributesXml = await _genericAttributeService.GetAttribute<string>(vendor, NopVendorDefaults.VendorAttributes);
-            tokens.Add(new Token("Vendor.VendorAttributes", _vendorAttributeFormatter.FormatAttributes(vendorAttributesXml), true));
+            tokens.Add(new Token("Vendor.VendorAttributes", await _vendorAttributeFormatter.FormatAttributes(vendorAttributesXml), true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(vendor, tokens);
+            await _eventPublisher.EntityTokensAdded(vendor, tokens);
         }
 
         /// <summary>
@@ -1232,7 +1232,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deactivationUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(subscription, tokens);
+            await _eventPublisher.EntityTokensAdded(subscription, tokens);
         }
 
         /// <summary>
@@ -1249,7 +1249,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductReview.ReplyText", productReview.ReplyText));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(productReview, tokens);
+            await _eventPublisher.EntityTokensAdded(productReview, tokens);
         }
 
         /// <summary>
@@ -1264,7 +1264,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("BlogComment.BlogPostTitle", blogPost.Title));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(blogComment, tokens);
+            await _eventPublisher.EntityTokensAdded(blogComment, tokens);
         }
 
         /// <summary>
@@ -1279,7 +1279,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(newsComment, tokens);
+            await _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
         /// <summary>
@@ -1300,7 +1300,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(product, tokens);
+            await _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
         /// <summary>
@@ -1318,7 +1318,7 @@ namespace Nop.Services.Messages
 
             var product = await _productService.GetProductById(combination.ProductId);
 
-            var attributes = productAttributeFormatter.FormatAttributes(product,
+            var attributes = await productAttributeFormatter.FormatAttributes(product,
                 combination.AttributesXml,
                 await _workContext.GetCurrentCustomer(),
                 renderPrices: false);
@@ -1328,7 +1328,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(combination, tokens);
+            await _eventPublisher.EntityTokensAdded(combination, tokens);
         }
 
         /// <summary>
@@ -1348,16 +1348,16 @@ namespace Nop.Services.Messages
 
             string topicUrl;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-                topicUrl = await RouteUrl(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = forumService.GetTopicSeName(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
+                topicUrl = await RouteUrl(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeName(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
             else
-                topicUrl = await RouteUrl(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = forumService.GetTopicSeName(forumTopic) });
+                topicUrl = await RouteUrl(routeName: "TopicSlug", routeValues: new { id = forumTopic.Id, slug = await forumService.GetTopicSeName(forumTopic) });
             if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
                 topicUrl = $"{topicUrl}#{appendedPostIdentifierAnchor.Value}";
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
             tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(forumTopic, tokens);
+            await _eventPublisher.EntityTokensAdded(forumTopic, tokens);
         }
 
         /// <summary>
@@ -1378,7 +1378,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(forumPost, tokens);
+            await _eventPublisher.EntityTokensAdded(forumPost, tokens);
         }
 
         /// <summary>
@@ -1393,12 +1393,12 @@ namespace Nop.Services.Messages
             //that's why we resolve it here this way
             var forumService = EngineContext.Current.Resolve<IForumService>();
 
-            var forumUrl = await RouteUrl(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = forumService.GetForumSeName(forum) });
+            var forumUrl = await RouteUrl(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = await forumService.GetForumSeName(forum) });
             tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
             tokens.Add(new Token("Forums.ForumName", forum.Name));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(forum, tokens);
+            await _eventPublisher.EntityTokensAdded(forum, tokens);
         }
 
         /// <summary>
@@ -1406,7 +1406,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="privateMessage">Private message</param>
-        public virtual Task AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
+        public virtual async Task AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
             //attributes
             //we cannot inject IForumService into constructor because it'll cause circular references.
@@ -1417,9 +1417,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("PrivateMessage.Text", forumService.FormatPrivateMessageText(privateMessage), true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(privateMessage, tokens);
-
-            return Task.CompletedTask;
+            await _eventPublisher.EntityTokensAdded(privateMessage, tokens);
         }
 
         /// <summary>
@@ -1436,7 +1434,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification
-            _eventPublisher.EntityTokensAdded(subscription, tokens);
+            await _eventPublisher.EntityTokensAdded(subscription, tokens);
         }
 
         /// <summary>

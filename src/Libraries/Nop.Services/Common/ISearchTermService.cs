@@ -9,12 +9,14 @@ namespace Nop.Services.Common
     /// </summary>
     public partial interface ISearchTermService
     {
+        //TODO: may be deleted
         /// <summary>
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
         Task DeleteSearchTerm(SearchTerm searchTerm);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a search term record by identifier
         /// </summary>
@@ -48,6 +50,6 @@ namespace Nop.Services.Common
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-         Task UpdateSearchTerm(SearchTerm searchTerm);
+        Task UpdateSearchTerm(SearchTerm searchTerm);
     }
 }

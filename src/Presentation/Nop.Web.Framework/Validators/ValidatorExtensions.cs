@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Validators
                 customerSettings.PasswordRequireNonAlphanumeric ? localizationService.GetResource("Validation.Password.RequireNonAlphanumeric").Result : "");
 
             var options = ruleBuilder
-                .NotEmpty().WithMessage(localizationService.GetResource("Validation.Password.IsNotEmpty"))
+                .NotEmpty().WithMessage(localizationService.GetResource("Validation.Password.IsNotEmpty").Result)
                 .Matches(regExp).WithMessage(message);
 
             return options;

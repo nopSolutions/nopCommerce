@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _securityModelFactory.PreparePermissionMappingModel(new PermissionMappingModel());
+            var model = await _securityModelFactory.PreparePermissionMappingModel(new PermissionMappingModel());
 
             return View(model);
         }

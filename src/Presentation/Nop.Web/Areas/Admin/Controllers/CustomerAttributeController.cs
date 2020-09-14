@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _customerAttributeModelFactory.PrepareCustomerAttributeListModel(searchModel);
+            var model = await _customerAttributeModelFactory.PrepareCustomerAttributeListModel(searchModel);
 
             return Json(model);
         }

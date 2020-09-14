@@ -706,8 +706,8 @@ namespace Nop.Web.Factories
 
             model.CustomerEnteredPrice = updatecartitem != null ? updatecartitem.CustomerEnteredPrice : minimumCustomerEnteredPrice;
             model.CustomerEnteredPriceRange = string.Format(await _localizationService.GetResource("Products.EnterProductPrice.Range"),
-                _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
-                _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
+                await _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
+                await _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
 
             return model;
         }
@@ -786,9 +786,9 @@ namespace Nop.Web.Factories
                             else
                             {
                                 if (priceAdjustmentBase > decimal.Zero)
-                                    valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                    valueModel.PriceAdjustment = "+" + await _priceFormatter.FormatPrice(priceAdjustment, false, false);
                                 else if (priceAdjustmentBase < decimal.Zero)
-                                    valueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                                    valueModel.PriceAdjustment = "-" + await _priceFormatter.FormatPrice(-priceAdjustment, false, false);
                             }
 
                             valueModel.PriceAdjustmentValue = priceAdjustment;

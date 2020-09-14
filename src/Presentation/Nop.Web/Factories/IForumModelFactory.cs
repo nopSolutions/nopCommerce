@@ -9,6 +9,7 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface IForumModelFactory
     {
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare the forum topic row model
         /// </summary>
@@ -16,6 +17,7 @@ namespace Nop.Web.Factories
         /// <returns>Forum topic row model</returns>
         Task<ForumTopicRowModel> PrepareForumTopicRowModel(ForumTopic topic);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare the forum row model
         /// </summary>

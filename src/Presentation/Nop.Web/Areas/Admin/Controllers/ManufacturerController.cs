@@ -345,7 +345,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
+                        if (await _manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
                             await _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
                     }
                     else

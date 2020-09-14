@@ -61,10 +61,10 @@ namespace Nop.Web.Factories
         /// <returns>List of the render widget models</returns>
         public virtual async Task<List<RenderWidgetModel>> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
         {
-            var roles = _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
+            var roles = await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
 
             var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey,
-                roles, await _storeContext.GetCurrentStore(), widgetZone, _themeContext.GetWorkingThemeName());
+                roles, await _storeContext.GetCurrentStore(), widgetZone, await _themeContext.GetWorkingThemeName());
 
             var cachedModels = await _staticCacheManager.Get(cacheKey, async () =>
                 _widgetPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id, widgetZone)

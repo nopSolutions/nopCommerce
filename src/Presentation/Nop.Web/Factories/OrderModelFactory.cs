@@ -169,7 +169,7 @@ namespace Nop.Web.Factories
                 {
                     Id = recurringPayment.Id,
                     StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
-                    CycleInfo = $"{recurringPayment.CycleLength} {_localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod)}",
+                    CycleInfo = $"{recurringPayment.CycleLength} {await _localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod)}",
                     NextPayment = await _orderProcessingService.GetNextPaymentDate(recurringPayment) is DateTime nextPaymentDate ? _dateTimeHelper.ConvertToUserTime(nextPaymentDate, DateTimeKind.Utc).ToString() : "",
                     TotalCycles = recurringPayment.TotalCycles,
                     CyclesRemaining = await _orderProcessingService.GetCyclesRemaining(recurringPayment),

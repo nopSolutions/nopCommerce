@@ -116,7 +116,7 @@ namespace Nop.Web.Controllers
             else
                 await _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            var model = _newsletterModelFactory.PrepareSubscriptionActivationModel(active);
+            var model = await _newsletterModelFactory.PrepareSubscriptionActivationModel(active);
             return View(model);
         }
     }

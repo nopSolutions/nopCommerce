@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _reviewTypeModelFactory.PrepareReviewTypeListModel(searchModel);
+            var model = await _reviewTypeModelFactory.PrepareReviewTypeListModel(searchModel);
 
             return Json(model);
         }

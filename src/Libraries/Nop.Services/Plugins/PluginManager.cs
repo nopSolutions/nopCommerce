@@ -43,7 +43,7 @@ namespace Nop.Services.Plugins
         /// <returns>Key</returns>
         protected virtual string GetKey(Customer customer, int storeId, string systemName = null)
         {
-            return $"{storeId}-{(customer != null ? string.Join(',', _customerService.GetCustomerRoleIds(customer)) : null)}-{systemName}";
+            return $"{storeId}-{(customer != null ? string.Join(',', _customerService.GetCustomerRoleIds(customer).Result) : null)}-{systemName}";
         }
 
         #endregion

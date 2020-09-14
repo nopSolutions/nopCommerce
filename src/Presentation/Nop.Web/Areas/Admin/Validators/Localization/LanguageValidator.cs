@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Validators.Localization
     {
         public LanguageValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.Name.Required").Result);
             RuleFor(x => x.LanguageCulture)
                 .Must(x =>
                           {
@@ -28,10 +28,10 @@ namespace Nop.Web.Areas.Admin.Validators.Localization
                                   return false;
                               }
                           })
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.LanguageCulture.Validation"));
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.LanguageCulture.Validation").Result);
 
-            RuleFor(x => x.UniqueSeoCode).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Required"));
-            RuleFor(x => x.UniqueSeoCode).Length(2).WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Length"));
+            RuleFor(x => x.UniqueSeoCode).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Required").Result);
+            RuleFor(x => x.UniqueSeoCode).Length(2).WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Length").Result);
 
             SetDatabaseValidationRules<Language>(dataProvider, "UniqueSeoCode");
         }

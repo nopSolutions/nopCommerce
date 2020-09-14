@@ -15,6 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Payment methods model</returns>
         Task<PaymentMethodsModel> PreparePaymentMethodsModel(PaymentMethodsModel methodsModel);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare payment method search model
         /// </summary>
@@ -29,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Payment method list model</returns>
         Task<PaymentMethodListModel> PreparePaymentMethodListModel(PaymentMethodSearchModel searchModel);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare payment method restriction model
         /// </summary>

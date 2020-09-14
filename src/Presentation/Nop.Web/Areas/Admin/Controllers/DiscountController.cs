@@ -485,7 +485,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 foreach (var product in selectedProducts)
                 {
-                    if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
+                    if (await _productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
                         await _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
 
                     await _productService.UpdateProduct(product);
@@ -580,7 +580,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (category == null)
                     continue;
 
-                if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
+                if (await _categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
                     await _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
 
                 await _categoryService.UpdateCategory(category);
@@ -673,7 +673,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (manufacturer == null)
                     continue;
 
-                if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
+                if (await _manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
                     await _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
 
                 await _manufacturerService.UpdateManufacturer(manufacturer);

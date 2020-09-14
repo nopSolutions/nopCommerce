@@ -4,7 +4,7 @@
 @inject IStoreService storeService
 
 @{
-    var stores = storeService.GetAllStores();
+    var stores = await storeService.GetAllStores();
 
     //page title
     ViewBag.PageTitle = T("Admin.CurrentCarts.CartsAndWishlists").Text;

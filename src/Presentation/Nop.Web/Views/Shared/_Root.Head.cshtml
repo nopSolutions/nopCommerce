@@ -39,7 +39,7 @@
     var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
         && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || await permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
     //event
-    eventPublisher.Publish(new PageRenderingEvent(this.Html));
+    await eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
 <html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguage())" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>

@@ -16,6 +16,7 @@ namespace Nop.Services.Stores
         /// <param name="storeMapping">Store mapping record</param>
         Task DeleteStoreMapping(StoreMapping storeMapping);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a store mapping record
         /// </summary>

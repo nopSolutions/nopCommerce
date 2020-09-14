@@ -676,7 +676,7 @@ namespace Nop.Web.Areas.Admin.Factories
                             }
                             else
                             {
-                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}" : $"-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}";
+                                priceAdjustmentStr = priceAdjustment > 0 ? $"+{await _priceFormatter.FormatPrice(priceAdjustment, false, false)}" : $"-{await _priceFormatter.FormatPrice(-priceAdjustment, false, false)}";
                             }
                         }
 

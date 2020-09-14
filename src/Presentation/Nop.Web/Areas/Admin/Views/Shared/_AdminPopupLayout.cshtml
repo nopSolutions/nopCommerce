@@ -103,7 +103,7 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //event
-    eventPublisher.Publish(new PageRenderingEvent(this.Html));
+    await eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
 <html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguage())" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>

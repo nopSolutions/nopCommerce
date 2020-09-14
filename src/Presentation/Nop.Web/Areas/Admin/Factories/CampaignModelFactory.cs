@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }
 
-            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokens());
 
             //whether to fill in some of properties
             if (!excludeProperties)

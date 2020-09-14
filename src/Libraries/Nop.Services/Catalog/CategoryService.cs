@@ -153,7 +153,7 @@ namespace Nop.Services.Catalog
         {
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllCacheKey,
                 storeId,
-                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 showHidden);
 
             var categories = await _staticCacheManager.Get(key, async () => (await GetAllCategories(string.Empty, storeId, showHidden: showHidden)).ToList());
@@ -320,7 +320,7 @@ namespace Nop.Services.Catalog
                 return categories;
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey,
-                await _storeContext.GetCurrentStore(), _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
+                await _storeContext.GetCurrentStore(), await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
 
             var result = await _staticCacheManager.Get(cacheKey, () =>
             {
@@ -345,7 +345,7 @@ namespace Nop.Services.Catalog
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountCategoryIdsModelCacheKey,
                 discount,
-                _customerService.GetCustomerRoleIds(customer),
+                await _customerService.GetCustomerRoleIds(customer),
                 await _storeContext.GetCurrentStore());
 
             var result = await _staticCacheManager.Get(cacheKey, async () =>
@@ -374,7 +374,7 @@ namespace Nop.Services.Catalog
         {
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdentifiersCacheKey,
                 parentCategoryId,
-                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore(),
                 showHidden);
 
@@ -847,7 +847,7 @@ namespace Nop.Services.Catalog
 
             var breadcrumbCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
                 category,
-                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore(),
                 await _workContext.GetWorkingLanguage());
 

@@ -112,7 +112,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                         continue;
                     
                     //apply discount coupon codes to customer
-                    _customerService.ApplyDiscountCouponCode(currentCustomer, discount.CouponCode);
+                    _customerService.ApplyDiscountCouponCode(currentCustomer, discount.CouponCode).Wait();
                     validCouponCodes.Add(discount.CouponCode);
                 }
 

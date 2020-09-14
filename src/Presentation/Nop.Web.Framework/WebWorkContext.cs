@@ -230,7 +230,7 @@ namespace Nop.Web.Framework
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
                 {
                     //try to get registered user
-                    customer = _authenticationService.GetAuthenticatedCustomer();
+                    customer = await _authenticationService.GetAuthenticatedCustomer();
                 }
 
                 if (customer != null && !customer.Deleted && customer.Active && !customer.RequireReLogin)

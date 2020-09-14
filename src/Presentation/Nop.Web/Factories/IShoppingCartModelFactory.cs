@@ -19,6 +19,7 @@ namespace Nop.Web.Factories
         /// <returns>Estimate shipping model</returns>
         Task<EstimateShippingModel> PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare the cart item picture model
         /// </summary>

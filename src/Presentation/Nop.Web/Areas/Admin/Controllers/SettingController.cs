@@ -162,7 +162,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ChangeStoreScopeConfiguration(int storeid, string returnUrl = "")
         {
-            var store = _storeService.GetStoreById(storeid);
+            var store = await _storeService.GetStoreById(storeid);
             if (store != null || storeid == 0)
             {
                 await _genericAttributeService

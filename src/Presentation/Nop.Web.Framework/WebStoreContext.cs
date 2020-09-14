@@ -90,7 +90,7 @@ namespace Nop.Web.Framework
                 var storeId = await _genericAttributeService
                     .GetAttribute<int>(currentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
 
-                _cachedActiveStoreScopeConfiguration = _storeService.GetStoreById(storeId)?.Id ?? 0;
+                _cachedActiveStoreScopeConfiguration = (await _storeService.GetStoreById(storeId))?.Id ?? 0;
             }
             else
                 _cachedActiveStoreScopeConfiguration = 0;

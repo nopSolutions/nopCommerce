@@ -666,7 +666,7 @@ namespace Nop.Services.Catalog
                 categoryIds.Remove(0);
 
             //Access control list. Allowed customer roles
-            var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
+            var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
 
             //pass category identifiers as comma-delimited string
             var commaSeparatedCategoryIds = categoryIds == null ? string.Empty : string.Join(",", categoryIds);

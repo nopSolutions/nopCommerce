@@ -129,7 +129,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 if (rez.ContainsKey("message"))
                 {
                     flag = true;
-                    _logger.Error(rez["message"]);
+                    _logger.Error(rez["message"]).Wait();
                 }
             }
             catch (JsonSerializationException)

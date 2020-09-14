@@ -133,11 +133,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
             //create new address as a copy of address to validate and with details of the validated one
             var validatedAddress = _addressService.CloneAddress(address);
             validatedAddress.City = validatedAddressInfo.city;
-            validatedAddress.CountryId = _countryService.GetCountryByTwoLetterIsoCode(validatedAddressInfo.country)?.Id;
+            validatedAddress.CountryId = (await _countryService.GetCountryByTwoLetterIsoCode(validatedAddressInfo.country))?.Id;
             validatedAddress.Address1 = validatedAddressInfo.line1;
             validatedAddress.Address2 = validatedAddressInfo.line2;
             validatedAddress.ZipPostalCode = validatedAddressInfo.postalCode;
-            validatedAddress.StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation(validatedAddressInfo.region)?.Id;
+            validatedAddress.StateProvinceId = (await _stateProvinceService.GetStateProvinceByAbbreviation(validatedAddressInfo.region))?.Id;
 
             //try to find an existing address with the same values
             var existingAddress = _addressService.FindAddress((await _customerService.GetAddressesByCustomerId((await _workContext.GetCurrentCustomer()).Id)).ToList(),

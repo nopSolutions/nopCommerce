@@ -344,7 +344,7 @@ namespace Nop.Web.Framework.Infrastructure
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
                     try
                     {
-                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId).Result;
                     }
                     catch
                     {

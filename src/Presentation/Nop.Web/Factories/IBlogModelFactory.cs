@@ -10,6 +10,7 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface IBlogModelFactory
     {
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare blog comment model
         /// </summary>

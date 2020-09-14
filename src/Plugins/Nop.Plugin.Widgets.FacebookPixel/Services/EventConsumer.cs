@@ -44,71 +44,71 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// Handle shopping cart item inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
+        public async Task HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             if (eventMessage?.Entity != null)
-                _facebookPixelService.PrepareAddToCartScript(eventMessage.Entity);
+                await _facebookPixelService.PrepareAddToCartScript(eventMessage.Entity);
         }
 
         /// <summary>
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(OrderPlacedEvent eventMessage)
+        public async Task HandleEvent(OrderPlacedEvent eventMessage)
         {
             if (eventMessage?.Order != null)
-                _facebookPixelService.PreparePurchaseScript(eventMessage.Order);
+                await _facebookPixelService.PreparePurchaseScript(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle product details model prepared event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(ModelPreparedEvent<BaseNopModel> eventMessage)
+        public async Task HandleEvent(ModelPreparedEvent<BaseNopModel> eventMessage)
         {
             if (eventMessage?.Model is ProductDetailsModel productDetailsModel)
-                _facebookPixelService.PrepareViewContentScript(productDetailsModel);
+                await _facebookPixelService.PrepareViewContentScript(productDetailsModel);
         }
 
         /// <summary>
         /// Handle page rendering event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(PageRenderingEvent eventMessage)
+        public async Task HandleEvent(PageRenderingEvent eventMessage)
         {
             var routeName = eventMessage.GetRouteName() ?? string.Empty;
             if (routeName == FacebookPixelDefaults.CheckoutRouteName || routeName == FacebookPixelDefaults.CheckoutOnePageRouteName)
-                _facebookPixelService.PrepareInitiateCheckoutScript();
+                await _facebookPixelService.PrepareInitiateCheckoutScript();
         }
 
         /// <summary>
         /// Handle product search event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(ProductSearchEvent eventMessage)
+        public async Task HandleEvent(ProductSearchEvent eventMessage)
         {
             if (!string.IsNullOrEmpty(eventMessage?.SearchTerm))
-                _facebookPixelService.PrepareSearchScript(eventMessage.SearchTerm);
+                await _facebookPixelService.PrepareSearchScript(eventMessage.SearchTerm);
         }
 
         /// <summary>
         /// Handle message token added event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(MessageTokensAddedEvent<Token> eventMessage)
+        public async Task HandleEvent(MessageTokensAddedEvent<Token> eventMessage)
         {
             if (eventMessage?.Message?.Name == MessageTemplateSystemNames.ContactUsMessage)
-                _facebookPixelService.PrepareContactScript();
+                await _facebookPixelService.PrepareContactScript();
         }
 
         /// <summary>
         /// Handle customer registered event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task  HandleEvent(CustomerRegisteredEvent eventMessage)
+        public async Task HandleEvent(CustomerRegisteredEvent eventMessage)
         {
             if (eventMessage?.Customer != null)
-                _facebookPixelService.PrepareCompleteRegistrationScript();
+                await _facebookPixelService.PrepareCompleteRegistrationScript();
         }
 
         #endregion

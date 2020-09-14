@@ -49,7 +49,7 @@ namespace Nop.Web.Controllers
             if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
 
-            var model = _profileModelFactory.PrepareProfileIndexModel(customer, pageNumber);
+            var model = await _profileModelFactory.PrepareProfileIndexModel(customer, pageNumber);
             return View(model);
         }
     }

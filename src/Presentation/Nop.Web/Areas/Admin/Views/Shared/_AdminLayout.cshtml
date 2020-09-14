@@ -219,7 +219,7 @@
                                 @if (await customerService.IsRegistered(currentCustomer))
                                 {
                                     <li class="account-info">
-                                        @customerService.GetCustomerFullName(currentCustomer)
+                                        @await customerService.GetCustomerFullName(currentCustomer)
                                     </li>
                                     <li>
                                         <a asp-controller="Customer" asp-action="Logout" asp-area="">@T("Admin.Header.Logout")</a>

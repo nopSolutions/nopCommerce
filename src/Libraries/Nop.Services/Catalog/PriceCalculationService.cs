@@ -324,7 +324,7 @@ namespace Nop.Services.Catalog
                 additionalCharge,
                 includeDiscounts,
                 quantity,
-                _customerService.GetCustomerRoleIds(customer),
+                await _customerService.GetCustomerRoleIds(customer),
                 await _storeContext.GetCurrentStore());
 
             //we do not cache price if this not allowed by settings or if the product is rental product

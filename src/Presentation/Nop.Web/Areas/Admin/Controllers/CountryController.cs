@@ -568,7 +568,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    var count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
+                    var count = await _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
 
                     _notificationService.SuccessNotification(string.Format(await _localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
 

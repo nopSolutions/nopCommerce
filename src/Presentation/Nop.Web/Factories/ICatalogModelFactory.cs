@@ -76,12 +76,14 @@ namespace Nop.Web.Factories
         /// <returns>List of homepage category models</returns>
         Task<List<CategoryModel>> PrepareHomepageCategoryModels();
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
         /// <returns>List of category (simple) models</returns>
         Task<List<CategorySimpleModel>> PrepareCategorySimpleModels();
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
@@ -90,6 +92,7 @@ namespace Nop.Web.Factories
         /// <returns>List of category (simple) models</returns>
         Task<List<CategorySimpleModel>> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare category (simple) xml document
         /// </summary>

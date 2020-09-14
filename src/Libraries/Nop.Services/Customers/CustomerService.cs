@@ -530,7 +530,7 @@ namespace Nop.Services.Customers
                 
                 await InsertCustomer(searchEngineUser);
 
-                var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+                var guestRole = await GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
                 if(guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");

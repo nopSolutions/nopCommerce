@@ -17,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>News content model</returns>
         Task<NewsContentModel> PrepareNewsContentModel(NewsContentModel newsContentModel, int? filterByNewsItemId);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare news item search model
         /// </summary>

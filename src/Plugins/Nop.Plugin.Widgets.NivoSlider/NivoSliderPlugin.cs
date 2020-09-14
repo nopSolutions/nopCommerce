@@ -73,10 +73,10 @@ namespace Nop.Plugin.Widgets.NivoSlider
             //settings
             var settings = new NivoSliderSettings
             {
-                Picture1Id = _pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner1.jpg")), MimeTypes.ImagePJpeg, "banner_1").Id,
+                Picture1Id = (await _pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner1.jpg")), MimeTypes.ImagePJpeg, "banner_1")).Id,
                 Text1 = "",
                 Link1 = await _webHelper.GetStoreLocation(false),
-                Picture2Id = _pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2").Id,
+                Picture2Id = (await _pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2")).Id,
                 Text2 = "",
                 Link2 = await _webHelper.GetStoreLocation(false)
                 //Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(_fileProvider.Combine(sampleImagesPath,"banner3.jpg")), MimeTypes.ImagePJpeg, "banner_3").Id,

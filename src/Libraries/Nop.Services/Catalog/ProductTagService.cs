@@ -95,11 +95,11 @@ namespace Nop.Services.Catalog
             {
                 //Access control list. Allowed customer roles
                 //pass customer role identifiers as comma-delimited string
-                allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
+                allowedCustomerRolesIds = string.Join(",", await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
             }
 
             var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
-                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), 
+                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), 
                 showHidden);
            
             return await _staticCacheManager.Get(key, async () =>

@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
                     return false;
 
                 return true;
-            }).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.PageSize.Positive"));
+            }).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.PageSize.Positive").Result);
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
                 .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation").Result, NopSeoDefaults.SearchEngineNameLength));
 

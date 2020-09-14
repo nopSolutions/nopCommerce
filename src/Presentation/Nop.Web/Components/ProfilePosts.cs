@@ -24,7 +24,7 @@ namespace Nop.Web.Components
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var model = _profileModelFactory.PrepareProfilePostsModel(customer, pageNumber);
+            var model = await _profileModelFactory.PrepareProfilePostsModel(customer, pageNumber);
             return View(model);
         }
     }

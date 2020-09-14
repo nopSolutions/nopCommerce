@@ -9,6 +9,7 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface ICompareProductsService
     {
+        //TODO: migrate to an extension method
         /// <summary>
         /// Clears a "compare products" list
         /// </summary>

@@ -133,7 +133,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             }
 
             //try to send SMS
-            _sendinBlueEmailManager.SendSMS(phoneNumberTo, sendinBlueSettings.SmsSenderName, text);
+            await _sendinBlueEmailManager.SendSMS(phoneNumberTo, sendinBlueSettings.SmsSenderName, text);
         }
 
         /// <summary>

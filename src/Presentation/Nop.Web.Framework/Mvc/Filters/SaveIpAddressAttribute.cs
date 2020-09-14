@@ -91,7 +91,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                      !currentIpAddress.Equals(_workContext.GetCurrentCustomer().Result.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _workContext.GetCurrentCustomer().Result.LastIpAddress = currentIpAddress;
-                    _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result);
+                    _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result).Wait();
                 }
             }
 

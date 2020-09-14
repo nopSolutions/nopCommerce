@@ -100,6 +100,7 @@ namespace Nop.Services.Orders
         /// <param name="order">The order</param>
         Task UpdateOrder(Order order);
 
+        //TODO: may be deleted
         /// <summary>
         /// Get an order by authorization transaction ID and payment method system name
         /// </summary>
@@ -206,6 +207,7 @@ namespace Nop.Services.Orders
         /// <returns>Total number of not yet shipped items (but added to shipments)</returns>
         Task<int> GetTotalNumberOfNotYetShippedItems(OrderItem orderItem);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets a total number of already shipped items
         /// </summary>
@@ -213,6 +215,7 @@ namespace Nop.Services.Orders
         /// <returns>Total number of already shipped items</returns>
         Task<int> GetTotalNumberOfShippedItems(OrderItem orderItem);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets a total number of already delivered items
         /// </summary>

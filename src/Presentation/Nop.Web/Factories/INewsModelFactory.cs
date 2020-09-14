@@ -9,6 +9,7 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface INewsModelFactory
     {
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare the news comment model
         /// </summary>

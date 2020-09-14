@@ -53,7 +53,7 @@ namespace Nop.Services.Media.RoxyFileman
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>() as NopFileProvider;
             var roxyFilemanService = EngineContext.Current.Resolve<IRoxyFilemanService>();
             var virtualPath = fileProvider?.GetVirtualPath(fileProvider.GetDirectoryName(_physicalFileProvider.GetFileInfo(subpath).PhysicalPath));
-            roxyFilemanService.FlushImagesOnDisk(virtualPath);
+            roxyFilemanService.FlushImagesOnDisk(virtualPath).Wait();
 
             return _physicalFileProvider.GetFileInfo(subpath);
         }

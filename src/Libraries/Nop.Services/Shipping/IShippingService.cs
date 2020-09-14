@@ -142,6 +142,7 @@ namespace Nop.Services.Shipping
         /// <returns>Total weight</returns>
         Task<decimal> GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Get dimensions of associated products (for quantity 1)
         /// </summary>
@@ -158,6 +159,7 @@ namespace Nop.Services.Shipping
         /// <returns>Width. Length. Height</returns>
         Task<(decimal width, decimal length, decimal height)> GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems, bool ignoreFreeShippedItems = false);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Get the nearest warehouse for the specified address
         /// </summary>

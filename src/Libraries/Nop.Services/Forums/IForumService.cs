@@ -268,6 +268,7 @@ namespace Nop.Services.Forums
         /// <param name="forumSubscription">Forum subscription</param>
         Task InsertSubscription(ForumSubscription forumSubscription);
 
+        //TODO: may be deleted
         /// <summary>
         /// Updates the forum subscription
         /// </summary>
@@ -375,6 +376,7 @@ namespace Nop.Services.Forums
         /// <param name="postVote">Post vote</param>
         Task InsertPostVote(ForumPostVote postVote);
 
+        //TODO: may be deleted
         /// <summary>
         /// Update a post vote
         /// </summary>
@@ -387,6 +389,7 @@ namespace Nop.Services.Forums
         /// <param name="postVote">Post vote</param>
         Task DeletePostVote(ForumPostVote postVote);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats the forum post text
         /// </summary>
@@ -394,6 +397,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         string FormatPostText(ForumPost forumPost);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Strips the topic subject
         /// </summary>
@@ -401,6 +405,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted subject</returns>
         string StripTopicSubject(ForumTopic forumTopic);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats the forum signature text
         /// </summary>
@@ -408,6 +413,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         string FormatForumSignatureText(string text);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Formats the private message text
         /// </summary>
@@ -415,6 +421,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         string FormatPrivateMessageText(PrivateMessage pm);
 
+        //TODO: may be deleted
         /// <summary>
         /// Get forum last topic
         /// </summary>
@@ -422,6 +429,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum topic</returns>
         Task<ForumTopic> GetLastTopic(Forum forum);
 
+        //TODO: may be deleted
         /// <summary>
         /// Get forum last post
         /// </summary>
@@ -436,6 +444,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum post</returns>
         Task<ForumPost> GetFirstPost(ForumTopic forumTopic);
 
+        //TODO: may be deleted
         /// <summary>
         /// Get last post
         /// </summary>

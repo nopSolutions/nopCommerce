@@ -118,7 +118,7 @@ namespace Nop.Web.Controllers
             var downloadId = 0;
             if (_orderSettings.ReturnRequestsAllowFiles)
             {
-                var download = _downloadService.GetDownloadByGuid(model.UploadedFileGuid);
+                var download = await _downloadService.GetDownloadByGuid(model.UploadedFileGuid);
                 if (download != null)
                     downloadId = download.Id;
             }

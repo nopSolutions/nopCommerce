@@ -35,7 +35,11 @@ namespace Nop.Services.Events
                     //log error, we put in to nested try-catch to prevent possible cyclic (if some error occurs)
                     try
                     {
-                        EngineContext.Current.Resolve<ILogger>()?.Error(exception.Message, exception);
+                        var logger = EngineContext.Current.Resolve<ILogger>();
+                        if (logger == null)
+                            return;
+
+                        await logger.Error(exception.Message, exception);
                     }
                     catch
                     {

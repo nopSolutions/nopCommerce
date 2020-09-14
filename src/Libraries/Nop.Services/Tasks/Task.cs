@@ -73,11 +73,11 @@ namespace Nop.Services.Tasks
 
             ScheduleTask.LastStartUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            scheduleTaskService.UpdateTask(ScheduleTask);
-            task.Execute();
+            scheduleTaskService.UpdateTask(ScheduleTask).Wait();
+            task.Execute().Wait();
             ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            scheduleTaskService.UpdateTask(ScheduleTask);
+            scheduleTaskService.UpdateTask(ScheduleTask).Wait();
         }
 
         /// <summary>

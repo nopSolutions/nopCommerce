@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="attributeMapping">Product attribute mapping</param>
         /// <returns>Validation rules string</returns>
-        protected virtual string PrepareProductAttributeMappingValidationRulesString(ProductAttributeMapping attributeMapping)
+        protected virtual async Task<string> PrepareProductAttributeMappingValidationRulesString(ProductAttributeMapping attributeMapping)
         {
             if (!attributeMapping.ValidationRulesAllowed())
                 return string.Empty;
@@ -226,35 +226,35 @@ namespace Nop.Web.Areas.Admin.Factories
             if (attributeMapping.ValidationMinLength.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
+                    await _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
                     attributeMapping.ValidationMinLength);
             }
 
             if (attributeMapping.ValidationMaxLength.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
+                    await _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
                     attributeMapping.ValidationMaxLength);
             }
 
             if (!string.IsNullOrEmpty(attributeMapping.ValidationFileAllowedExtensions))
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
+                    await _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
                     WebUtility.HtmlEncode(attributeMapping.ValidationFileAllowedExtensions));
             }
 
             if (attributeMapping.ValidationFileMaximumSize.HasValue)
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
+                    await _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
                     attributeMapping.ValidationFileMaximumSize);
             }
 
             if (!string.IsNullOrEmpty(attributeMapping.DefaultValue))
             {
                 validationRules.AppendFormat("{0}: {1}<br />",
-                    _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
+                    await _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
                     WebUtility.HtmlEncode(attributeMapping.DefaultValue));
             }
 
@@ -723,7 +723,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     (productModel.PictureThumbnailUrl, _) = _pictureService.GetPictureUrl(defaultProductPicture, 75).Result;
                     productModel.ProductTypeName = _localizationService.GetLocalizedEnum(product.ProductType).Result;
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productModel.StockQuantityStr = _productService.GetTotalStockQuantity(product).ToString();
+                        productModel.StockQuantityStr = _productService.GetTotalStockQuantity(product).Result.ToString();
 
                     return productModel;
                 });
@@ -1554,7 +1554,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get product tags
             var productTags = (await _productTagService.GetAllProductTags(tagName : searchModel.SearchTagName))
-                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true)).ToList()
+                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true).Result).ToList()
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -1813,7 +1813,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     productAttributeMappingModel.ConditionString = string.Empty;
-                    productAttributeMappingModel.ValidationRulesString = PrepareProductAttributeMappingValidationRulesString(attributeMapping);
+                    productAttributeMappingModel.ValidationRulesString = PrepareProductAttributeMappingValidationRulesString(attributeMapping).Result;
                     productAttributeMappingModel.ProductAttribute = _productAttributeService
                         .GetProductAttributeById(attributeMapping.ProductAttributeId).Result?.Name;
                     productAttributeMappingModel.AttributeControlType = _localizationService.GetLocalizedEnum(attributeMapping.AttributeControlType).Result;

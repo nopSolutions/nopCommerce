@@ -223,7 +223,7 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
-        public virtual Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptions(string email = null,
+        public virtual async Task<IPagedList<NewsLetterSubscription>> GetAllNewsLetterSubscriptions(string email = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int storeId = 0, bool? isActive = null, int customerRoleId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -245,11 +245,12 @@ namespace Nop.Services.Messages
                 query = query.OrderBy(nls => nls.Email);
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
-                return Task.FromResult((IPagedList<NewsLetterSubscription>)subscriptions);
+
+                return subscriptions;
             }
 
             //filter by customer role
-            var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+            var guestRole = await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
 
@@ -272,7 +273,7 @@ namespace Nop.Services.Messages
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
 
-                return Task.FromResult((IPagedList<NewsLetterSubscription>)subscriptions);
+                return subscriptions;
             }
             else
             {
@@ -303,7 +304,7 @@ namespace Nop.Services.Messages
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x => x.NewsletterSubscribers), pageIndex, pageSize);
 
-                return Task.FromResult((IPagedList<NewsLetterSubscription>)subscriptions);
+                return subscriptions;
             }
         }
 

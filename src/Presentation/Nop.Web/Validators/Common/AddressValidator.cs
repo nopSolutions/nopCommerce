@@ -18,24 +18,24 @@ namespace Nop.Web.Validators.Common
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Address.Fields.FirstName.Required"));
+                .WithMessage(localizationService.GetResource("Address.Fields.FirstName.Required").Result);
             RuleFor(x => x.LastName)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Address.Fields.LastName.Required"));
+                .WithMessage(localizationService.GetResource("Address.Fields.LastName.Required").Result);
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Address.Fields.Email.Required"));
+                .WithMessage(localizationService.GetResource("Address.Fields.Email.Required").Result);
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .WithMessage(localizationService.GetResource("Common.WrongEmail"));
+                .WithMessage(localizationService.GetResource("Common.WrongEmail").Result);
             if (addressSettings.CountryEnabled)
             {
                 RuleFor(x => x.CountryId)
                     .NotNull()
-                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required").Result);
                 RuleFor(x => x.CountryId)
                     .NotEqual(0)
-                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required").Result);
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
@@ -53,43 +53,43 @@ namespace Nop.Web.Validators.Common
                     }
 
                     return true;
-                }).WithMessage(localizationService.GetResource("Address.Fields.StateProvince.Required"));
+                }).WithMessage(localizationService.GetResource("Address.Fields.StateProvince.Required").Result);
             }
             if (addressSettings.CompanyRequired && addressSettings.CompanyEnabled)
             {
-                RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));
+                RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required").Result);
             }
             if (addressSettings.StreetAddressRequired && addressSettings.StreetAddressEnabled)
             {
-                RuleFor(x => x.Address1).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress.Required"));
+                RuleFor(x => x.Address1).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress.Required").Result);
             }
             if (addressSettings.StreetAddress2Required && addressSettings.StreetAddress2Enabled)
             {
-                RuleFor(x => x.Address2).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress2.Required"));
+                RuleFor(x => x.Address2).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress2.Required").Result);
             }
             if (addressSettings.ZipPostalCodeRequired && addressSettings.ZipPostalCodeEnabled)
             {
-                RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+                RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required").Result);
             }
             if (addressSettings.CountyEnabled && addressSettings.CountyRequired)
             {
-                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required"));
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required").Result);
             }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {
-                RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"));
+                RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required").Result);
             }
             if (addressSettings.PhoneRequired && addressSettings.PhoneEnabled)
             {
-                RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"));
+                RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required").Result);
             }
             if (addressSettings.PhoneEnabled)
             {
-                RuleFor(x => x.PhoneNumber).IsPhoneNumber(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Phone.NotValid"));
+                RuleFor(x => x.PhoneNumber).IsPhoneNumber(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Phone.NotValid").Result);
             }
             if (addressSettings.FaxRequired && addressSettings.FaxEnabled)
             {
-                RuleFor(x => x.FaxNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Fax.Required"));
+                RuleFor(x => x.FaxNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Fax.Required").Result);
             }
         }
     }

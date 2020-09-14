@@ -48,6 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List model of plugins of the official feed</returns>
         Task<OfficialFeedPluginListModel> PrepareOfficialFeedPluginListModel(OfficialFeedPluginSearchModel searchModel);
 
+        //TODO: may be deleted
         /// <summary>
         /// Prepare plugins configuration model
         /// </summary>

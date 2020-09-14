@@ -11,10 +11,10 @@ namespace Nop.Web.Areas.Admin.Validators.Settings
     {
         public GdprConsentValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Message).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Message.Required"));
+            RuleFor(x => x.Message).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Message.Required").Result);
             RuleFor(x => x.RequiredMessage)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Required"))
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.RequiredMessage.Required").Result)
                 .When(x => x.IsRequired);
 
             SetDatabaseValidationRules<GdprConsent>(dataProvider);

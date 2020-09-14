@@ -7042,7 +7042,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_computers.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Computers")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_computers.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Computers"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -7060,7 +7060,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_desktops.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Desktops")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_desktops.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Desktops"))).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7079,7 +7079,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_notebooks.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Notebooks")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_notebooks.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Notebooks"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -7097,7 +7097,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_software.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Software")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_software.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Software"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
@@ -7114,7 +7114,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_electronics.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Electronics")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_electronics.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Electronics"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomepage = true,
@@ -7133,7 +7133,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_camera_photo.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Camera, photo")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_camera_photo.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Camera, photo"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7152,7 +7152,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_cell_phones.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Cell phones")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_cell_phones.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Cell phones"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -7170,7 +7170,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Accessories")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Accessories"))).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -7188,7 +7188,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_apparel.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Apparel")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_apparel.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Apparel"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomepage = true,
@@ -7207,7 +7207,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_shoes.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Shoes")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_shoes.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Shoes"))).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7226,7 +7226,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_clothing.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Clothing")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_clothing.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Clothing"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -7244,7 +7244,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_apparel_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_apparel_accessories.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Apparel Accessories"))).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -7262,7 +7262,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_digital_downloads.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Digital downloads")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_digital_downloads.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Digital downloads"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomepage = true,
@@ -7282,7 +7282,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_book.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Book")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_book.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Book"))).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7300,7 +7300,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_jewelry.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Jewelry")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_jewelry.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Jewelry"))).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -7318,7 +7318,7 @@ namespace Nop.Services.Installation
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_gift_cards.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Gift Cards")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "category_gift_cards.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName("Gift Cards"))).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 7,
@@ -7359,7 +7359,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_apple.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Apple")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_apple.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Apple"))).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -7375,7 +7375,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_hp.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Hp")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_hp.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Hp"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -7391,7 +7391,7 @@ namespace Nop.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_nike.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Nike")).Id,
+                PictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "manufacturer_nike.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Nike"))).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -7459,8 +7459,8 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            var picProductDesktops1 = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_Desktops_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productBuildComputer.Name));
-            var picProductDesktops2 = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_Desktops_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productBuildComputer.Name));
+            var picProductDesktops1 = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_Desktops_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productBuildComputer.Name));
+            var picProductDesktops2 = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_Desktops_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productBuildComputer.Name));
 
             await InsertInstallationData(
                 new ProductPicture
@@ -7668,7 +7668,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            var picProductDigitalStorm = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_DigitalStorm.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productDigitalStorm.Name));
+            var picProductDigitalStorm = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_DigitalStorm.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productDigitalStorm.Name));
 
             await InsertInstallationData(new ProductPicture
             {
@@ -7785,8 +7785,8 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2
             });
 
-            var picProductMacBook1 = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_macbook_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productAppleMacBookPro.Name));
-            var picProductMacBook2 = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_macbook_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productAppleMacBookPro.Name));
+            var picProductMacBook1 = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_macbook_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productAppleMacBookPro.Name));
+            var picProductMacBook2 = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_macbook_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productAppleMacBookPro.Name));
 
             await InsertInstallationData(new ProductPicture
             {
@@ -7873,7 +7873,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            var picProductAsuspcN551Jk = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_asuspc_N551JK.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productAsusN551JK.Name));
+            var picProductAsuspcN551Jk = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_asuspc_N551JK.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productAsusN551JK.Name));
 
             await InsertInstallationData(new ProductPicture
             {
@@ -7963,7 +7963,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            var picProductSamsungNp900X4C = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_SamsungNP900X4C.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productSamsungSeries.Name));
+            var picProductSamsungNp900X4C = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_SamsungNP900X4C.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productSamsungSeries.Name));
 
             await InsertInstallationData(new ProductPicture
             {
@@ -8059,8 +8059,8 @@ namespace Nop.Services.Installation
                 DisplayOrder = 3
             });
 
-            var picProductHpSpectreXt1 = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productHpSpectre.Name));
-            var picProductHpSpectreXt2 = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productHpSpectre.Name));
+            var picProductHpSpectreXt1 = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_1.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productHpSpectre.Name));
+            var picProductHpSpectreXt2 = await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_HPSpectreXT_2.jpeg")), MimeTypes.ImageJpeg, await pictureService.GetPictureSeName(productHpSpectre.Name));
 
             await InsertInstallationData(new ProductPicture
             {
@@ -9356,7 +9356,7 @@ namespace Nop.Services.Installation
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Natural",
                     DisplayOrder = 1,
-                    ImageSquaresPictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_2.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Natural Print")).Id
+                    ImageSquaresPictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_2.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Natural Print"))).Id
                 },
                 new ProductAttributeValue
                 {
@@ -9365,7 +9365,7 @@ namespace Nop.Services.Installation
                     AttributeValueType = AttributeValueType.Simple,
                     Name = "Fresh",
                     DisplayOrder = 2,
-                    ImageSquaresPictureId = pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_1.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Fresh Print")).Id
+                    ImageSquaresPictureId = (await pictureService.InsertPicture(await _fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_1.jpg")), MimeTypes.ImagePJpeg, await pictureService.GetPictureSeName("Fresh Print"))).Id
                 });
 
             await AddProductTag(productNikeFloral, "cool");
@@ -9447,7 +9447,7 @@ namespace Nop.Services.Installation
                     SpecificationAttributeOptionId = await GetSpecificationAttributeOptionId("Color", "Blue")
                 });
 
-            var pamAdidasSize = InsertInstallationData(
+            var pamAdidasSize = await InsertInstallationData(
                 new ProductAttributeMapping
                 {
                     ProductId = productAdidas.Id,
@@ -9951,7 +9951,7 @@ namespace Nop.Services.Installation
 
             await InsertProductPicture(productObeyHat, "product_hat.jpg");
 
-            var pamObeyHatSize = InsertInstallationData(
+            var pamObeyHatSize = await InsertInstallationData(
                 new ProductAttributeMapping
                 {
                     ProductId = productObeyHat.Id,

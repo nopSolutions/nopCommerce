@@ -86,7 +86,7 @@ namespace Nop.Web.Controllers
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
-                model.AlreadySubscribed = _backInStockSubscriptionService
+                model.AlreadySubscribed = await _backInStockSubscriptionService
                     .FindSubscription((await _workContext.GetCurrentCustomer()).Id, product.Id, (await _storeContext.GetCurrentStore()).Id) != null;
             }
 

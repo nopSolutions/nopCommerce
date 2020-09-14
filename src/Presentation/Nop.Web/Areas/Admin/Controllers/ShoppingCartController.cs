@@ -55,7 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _shoppingCartModelFactory.PrepareShoppingCartListModel(searchModel);
+            var model = await _shoppingCartModelFactory.PrepareShoppingCartListModel(searchModel);
 
             return Json(model);
         }
@@ -71,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = _shoppingCartModelFactory.PrepareShoppingCartItemListModel(searchModel, customer);
+            var model = await _shoppingCartModelFactory.PrepareShoppingCartItemListModel(searchModel, customer);
 
             return Json(model);
         }

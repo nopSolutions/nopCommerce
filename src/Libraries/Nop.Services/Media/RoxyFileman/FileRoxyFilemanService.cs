@@ -376,7 +376,7 @@ namespace Nop.Services.Media.RoxyFileman
             }
             catch
             {
-                throw new Exception($"{GetLanguageResource("E_MoveDir")} \"{sourcePath}\"");
+                throw new Exception($"{await GetLanguageResource("E_MoveDir")} \"{sourcePath}\"");
             }
         }
 
@@ -414,7 +414,7 @@ namespace Nop.Services.Media.RoxyFileman
             }
             catch
             {
-                throw new Exception($"{GetLanguageResource("E_RenameDir")} \"{sourcePath}\"");
+                throw new Exception($"{await GetLanguageResource("E_RenameDir")} \"{sourcePath}\"");
             }
         }
 
@@ -564,7 +564,7 @@ namespace Nop.Services.Media.RoxyFileman
             }
             catch
             {
-                throw new Exception($"{GetLanguageResource("E_MoveFile")} \"{sourcePath}\"");
+                throw new Exception($"{await GetLanguageResource("E_MoveFile")} \"{sourcePath}\"");
             }
         }
 
@@ -596,7 +596,7 @@ namespace Nop.Services.Media.RoxyFileman
             }
             catch
             {
-                throw new Exception($"{GetLanguageResource("E_RenameFile")} \"{sourcePath}\"");
+                throw new Exception($"{await GetLanguageResource("E_RenameFile")} \"{sourcePath}\"");
             }
         }
 

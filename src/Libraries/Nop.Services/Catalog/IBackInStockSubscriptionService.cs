@@ -59,6 +59,7 @@ namespace Nop.Services.Catalog
         /// <param name="subscription">Subscription</param>
         Task InsertSubscription(BackInStockSubscription subscription);
 
+        //TODO: may be deleted
         /// <summary>
         /// Updates subscription
         /// </summary>

@@ -40,6 +40,7 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         Task UpdateStore(Store store);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Parse comma-separated Hosts
         /// </summary>

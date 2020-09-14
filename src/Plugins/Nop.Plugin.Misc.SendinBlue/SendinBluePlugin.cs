@@ -114,7 +114,7 @@ namespace Nop.Plugin.Misc.SendinBlue
             }
 
             //install synchronization task
-            if (_scheduleTaskService.GetTaskByType(SendinBlueDefaults.SynchronizationTask) == null)
+            if (await _scheduleTaskService.GetTaskByType(SendinBlueDefaults.SynchronizationTask) == null)
             {
                 await _scheduleTaskService.InsertTask(new ScheduleTask
                 {

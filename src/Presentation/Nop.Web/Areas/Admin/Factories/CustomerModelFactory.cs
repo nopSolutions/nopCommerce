@@ -480,7 +480,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Customer shopping cart search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer shopping cart search model</returns>
-        protected virtual CustomerShoppingCartSearchModel PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel searchModel,
+        protected virtual async Task<CustomerShoppingCartSearchModel> PrepareCustomerShoppingCartSearchModel(CustomerShoppingCartSearchModel searchModel,
             Customer customer)
         {
             if (searchModel == null)
@@ -493,7 +493,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available shopping cart types (search shopping cart by default)
             searchModel.ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
-            _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
+            await _baseAdminModelFactory.PrepareShoppingCartTypes(searchModel.AvailableShoppingCartTypes, false);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -595,7 +595,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
 
             //search registered customers by default
-            var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            var registeredRole = await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole != null)
                 searchModel.SelectedCustomerRoleIds.Add(registeredRole.Id);
 
@@ -743,7 +743,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!string.IsNullOrEmpty(customer.Email))
                     {
                         model.SelectedNewsletterSubscriptionStoreIds = (await _storeService.GetAllStores())
-                            .Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id) != null)
+                            .Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id).Result != null)
                             .Select(store => store.Id).ToList();
                     }
                 }
@@ -756,7 +756,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareRewardPointsSearchModel(model.CustomerRewardPointsSearchModel, customer);
                 PrepareCustomerAddressSearchModel(model.CustomerAddressSearchModel, customer);
                 PrepareCustomerOrderSearchModel(model.CustomerOrderSearchModel, customer);
-                PrepareCustomerShoppingCartSearchModel(model.CustomerShoppingCartSearchModel, customer);
+                await PrepareCustomerShoppingCartSearchModel(model.CustomerShoppingCartSearchModel, customer);
                 PrepareCustomerActivityLogSearchModel(model.CustomerActivityLogSearchModel, customer);
                 PrepareCustomerBackInStockSubscriptionSearchModel(model.CustomerBackInStockSubscriptionSearchModel, customer);
                 await PrepareCustomerAssociatedExternalAuthRecordsSearchModel(model.CustomerAssociatedExternalAuthRecordsSearchModel, customer);
@@ -767,7 +767,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (!excludeProperties)
                 {
                     //precheck Registered Role as a default role while creating a new customer through admin
-                    var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+                    var registeredRole = await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
                     if (registeredRole != null)
                         model.SelectedCustomerRoleIds.Add(registeredRole.Id);
                 }

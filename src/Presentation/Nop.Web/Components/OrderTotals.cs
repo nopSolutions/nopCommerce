@@ -30,7 +30,7 @@ namespace Nop.Web.Components
         {
             var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
 
-            var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
+            var model = await _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
             return View(model);
         }
     }

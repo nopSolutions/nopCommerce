@@ -152,6 +152,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         Task ClearCache();
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get setting key (stored into database)
         /// </summary>

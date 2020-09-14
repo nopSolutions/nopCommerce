@@ -600,10 +600,10 @@ namespace Nop.Web.Factories
                         switch (_forumSettings.ForumEditor)
                         {
                             case EditorType.SimpleTextBox:
-                                text = $"{_customerService.FormatUsername(customer)}:\n{quotePostText}\n";
+                                text = $"{await _customerService.FormatUsername(customer)}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = $"[quote={_customerService.FormatUsername(customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                                text = $"[quote={await _customerService.FormatUsername(customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;

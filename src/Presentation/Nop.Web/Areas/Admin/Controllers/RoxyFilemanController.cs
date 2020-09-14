@@ -38,9 +38,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <summary>
         /// Create configuration file for RoxyFileman
         /// </summary>
-        public virtual void CreateConfiguration()
+        public virtual async Task CreateConfiguration()
         {
-            _roxyFilemanService.CreateConfiguration();
+            await _roxyFilemanService.CreateConfiguration();
         }
 
         /// <summary>

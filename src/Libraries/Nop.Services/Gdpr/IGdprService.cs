@@ -56,6 +56,7 @@ namespace Nop.Services.Gdpr
 
         #region GDPR log
 
+        //TODO: may be deleted
         /// <summary>
         /// Get a GDPR log
         /// </summary>
@@ -92,12 +93,14 @@ namespace Nop.Services.Gdpr
         /// <param name="requestDetails">Request details</param>
         Task InsertLog(Customer customer, int consentId, GdprRequestType requestType, string requestDetails);
 
+        //TODO: may be deleted
         /// <summary>
         /// Update the GDPR log
         /// </summary>
         /// <param name="gdprLog">GDPR log</param>
         Task UpdateLog(GdprLog gdprLog);
 
+        //TODO: may be deleted
         /// <summary>
         /// Delete a GDPR log
         /// </summary>

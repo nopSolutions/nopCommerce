@@ -17,6 +17,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         Task DeleteAclRecord(AclRecord aclRecord);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets an ACL record
         /// </summary>
@@ -46,6 +47,7 @@ namespace Nop.Services.Security
         /// <param name="entity">Entity</param>
         Task InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
 
+        //TODO: may be deleted
         /// <summary>
         /// Updates the ACL record
         /// </summary>

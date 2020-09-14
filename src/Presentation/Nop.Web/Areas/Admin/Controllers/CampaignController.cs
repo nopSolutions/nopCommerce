@@ -284,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
                     customerRoleId: model.CustomerRoleId,
                     isActive: true);
-                var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
+                var totalEmailsSent = await _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
 
                 _notificationService.SuccessNotification(string.Format(await _localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent));
 

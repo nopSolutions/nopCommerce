@@ -558,7 +558,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var quantity = product != null ? (int?)item.Quantity : null;
                 var (productPrice, _, _) = await _priceCalculationService.GetFinalPrice(product, await _workContext.GetCurrentCustomer(), includeDiscounts: false);
                 var (price, _) = await _taxService.GetProductPrice(product, productPrice);
-                var priceValue = _currencyService.ConvertFromPrimaryStoreCurrency(price, await _workContext.GetWorkingCurrency());
+                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrency(price, await _workContext.GetWorkingCurrency());
                 var currency = (await _workContext.GetWorkingCurrency())?.CurrencyCode;
 
                 var contentsProperties = new List<(string Name, object Value)> { ("id", sku), ("quantity", quantity) };
@@ -662,7 +662,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var cart = await _shoppingCartService
                     .GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
                 var (price, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotal(cart, false, false);
-                var priceValue = _currencyService.ConvertFromPrimaryStoreCurrency(price ?? 0, await _workContext.GetWorkingCurrency());
+                var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrency(price ?? 0, await _workContext.GetWorkingCurrency());
                 var currency = (await _workContext.GetWorkingCurrency())?.CurrencyCode;
 
                 var contentsProperties = cart.Select(item =>

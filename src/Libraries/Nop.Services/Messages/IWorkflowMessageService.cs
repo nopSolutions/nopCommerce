@@ -464,6 +464,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         Task<int> SendTestEmail(int messageTemplateId, string sendToEmail, List<Token> tokens, int languageId);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Send notification
         /// </summary>

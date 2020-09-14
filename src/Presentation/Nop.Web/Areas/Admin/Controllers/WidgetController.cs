@@ -57,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _widgetModelFactory.PrepareWidgetSearchModel(new WidgetSearchModel());
+            var model = await _widgetModelFactory.PrepareWidgetSearchModel(new WidgetSearchModel());
 
             return View(model);
         }
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _widgetModelFactory.PrepareWidgetListModel(searchModel);
+            var model = await _widgetModelFactory.PrepareWidgetListModel(searchModel);
 
             return Json(model);
         }

@@ -192,7 +192,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("MetaKeywords", category.MetaKeywords, await IgnoreExportCategoryProperty());
                 xmlWriter.WriteString("MetaDescription", category.MetaDescription, await IgnoreExportCategoryProperty());
                 xmlWriter.WriteString("MetaTitle", category.MetaTitle, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("SeName", _urlRecordService.GetSeName(category, 0), await IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("SeName", await _urlRecordService.GetSeName(category, 0), await IgnoreExportCategoryProperty());
                 xmlWriter.WriteString("ParentCategoryId", category.ParentCategoryId);
                 xmlWriter.WriteString("PictureId", category.PictureId);
                 xmlWriter.WriteString("PageSize", category.PageSize, await IgnoreExportCategoryProperty());
@@ -722,7 +722,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("MetaKeywords", manufacturer.MetaKeywords, await IgnoreExportManufacturerProperty());
                 xmlWriter.WriteString("MetaDescription", manufacturer.MetaDescription, await IgnoreExportManufacturerProperty());
                 xmlWriter.WriteString("MetaTitle", manufacturer.MetaTitle, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("SEName", _urlRecordService.GetSeName(manufacturer, 0), await IgnoreExportManufacturerProperty());
+                xmlWriter.WriteString("SEName", await _urlRecordService.GetSeName(manufacturer, 0), await IgnoreExportManufacturerProperty());
                 xmlWriter.WriteString("PictureId", manufacturer.PictureId);
                 xmlWriter.WriteString("PageSize", manufacturer.PageSize, await IgnoreExportManufacturerProperty());
                 xmlWriter.WriteString("AllowCustomersToSelectPageSize", manufacturer.AllowCustomersToSelectPageSize, await IgnoreExportManufacturerProperty());
@@ -891,7 +891,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("MetaKeywords", product.MetaKeywords, await IgnoreExportProductProperty(p => p.Seo));
                 xmlWriter.WriteString("MetaDescription", product.MetaDescription, await IgnoreExportProductProperty(p => p.Seo));
                 xmlWriter.WriteString("MetaTitle", product.MetaTitle, await IgnoreExportProductProperty(p => p.Seo));
-                xmlWriter.WriteString("SEName", _urlRecordService.GetSeName(product, 0), await IgnoreExportProductProperty(p => p.Seo));
+                xmlWriter.WriteString("SEName", await _urlRecordService.GetSeName(product, 0), await IgnoreExportProductProperty(p => p.Seo));
                 xmlWriter.WriteString("AllowCustomerReviews", product.AllowCustomerReviews, await IgnoreExportProductProperty(p => p.AllowCustomerReviews));
                 xmlWriter.WriteString("SKU", product.Sku);
                 xmlWriter.WriteString("ManufacturerPartNumber", product.ManufacturerPartNumber, await IgnoreExportProductProperty(p => p.ManufacturerPartNumber));
@@ -1843,7 +1843,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<OrderItem>("Name", async oi => await _localizationService.GetLocalized(await _productService.GetProductById(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem>("Price", async oi => await _priceFormatter.FormatPrice(_currencyService.ConvertCurrency((await _orderService.GetOrderById(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, (await _orderService.GetOrderById(oi.OrderId)).CurrencyRate), true, (await _orderService.GetOrderById(oi.OrderId)).CustomerCurrencyCode, false, (await _workContext.GetWorkingLanguage()).Id)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
-                new PropertyByName<OrderItem>("Total", async oi => _priceFormatter.FormatPrice((await _orderService.GetOrderById(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
+                new PropertyByName<OrderItem>("Total", async oi => await _priceFormatter.FormatPrice((await _orderService.GetOrderById(oi.OrderId)).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
             }, _catalogSettings);
 
             var orders = await _orderService.SearchOrders(customerId: customer.Id);

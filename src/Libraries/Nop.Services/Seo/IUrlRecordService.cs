@@ -10,6 +10,7 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial interface IUrlRecordService
     {
+        //TODO: may be deleted
         /// <summary>
         /// Deletes an URL record
         /// </summary>
@@ -22,6 +23,7 @@ namespace Nop.Services.Seo
         /// <param name="urlRecords">URL records</param>
         Task DeleteUrlRecords(IList<UrlRecord> urlRecords);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets an URL record
         /// </summary>

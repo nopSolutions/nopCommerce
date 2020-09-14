@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
-            var defaultEmailAccount = _emailAccountService.GetEmailAccountById(id);
+            var defaultEmailAccount = await _emailAccountService.GetEmailAccountById(id);
             if (defaultEmailAccount == null)
                 return RedirectToAction("List");
 

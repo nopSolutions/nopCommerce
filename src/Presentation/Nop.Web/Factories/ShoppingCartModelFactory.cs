@@ -261,10 +261,10 @@ namespace Nop.Web.Factories
                                     await _workContext.GetWorkingCurrency());
                             if (priceAdjustmentBase > decimal.Zero)
                                 attributeValueModel.PriceAdjustment =
-                                    "+" + _priceFormatter.FormatPrice(priceAdjustment);
+                                    "+" + await _priceFormatter.FormatPrice(priceAdjustment);
                             else if (priceAdjustmentBase < decimal.Zero)
                                 attributeValueModel.PriceAdjustment =
-                                    "-" + _priceFormatter.FormatPrice(-priceAdjustment);
+                                    "-" + await _priceFormatter.FormatPrice(-priceAdjustment);
                         }
                     }
                 }

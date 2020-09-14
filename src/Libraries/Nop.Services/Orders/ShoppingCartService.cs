@@ -508,8 +508,8 @@ namespace Nop.Services.Orders
                     var minimumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, await _workContext.GetWorkingCurrency());
                     var maximumCustomerEnteredPrice = await _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, await _workContext.GetWorkingCurrency());
                     warnings.Add(string.Format(await _localizationService.GetResource("ShoppingCart.CustomerEnteredPrice.RangeError"),
-                        _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
-                        _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false)));
+                        await _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
+                        await _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false)));
                 }
             }
 
@@ -1166,7 +1166,7 @@ namespace Nop.Services.Orders
                 warnings.Add(!string.IsNullOrEmpty(await _localizationService.GetLocalized(a2, a => a.TextPrompt))
                     ? await _localizationService.GetLocalized(a2, a => a.TextPrompt)
                     : string.Format(await _localizationService.GetResource("ShoppingCart.SelectAttribute"),
-                        _localizationService.GetLocalized(a2, a => a.Name)));
+                        await _localizationService.GetLocalized(a2, a => a.Name)));
             }
 
             //now validation rules

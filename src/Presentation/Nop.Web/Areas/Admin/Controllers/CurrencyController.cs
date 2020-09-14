@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _currencyModelFactory.PrepareCurrencyListModel(searchModel);
+            var model = await _currencyModelFactory.PrepareCurrencyListModel(searchModel);
 
             return Json(model);
         }

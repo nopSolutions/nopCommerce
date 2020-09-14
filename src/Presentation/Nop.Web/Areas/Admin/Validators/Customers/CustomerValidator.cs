@@ -24,7 +24,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 .NotEmpty()
                 .EmailAddress()
                 //.WithMessage("Valid Email is required for customer to be in 'Registered' role")
-                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"))
+                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail").Result)
                 //only for registered users
                 .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
 
@@ -33,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
             {
                 RuleFor(x => x.CountryId)
                     .NotEqual(0)
-                    .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"))
+                    .WithMessage(localizationService.GetResource("Account.Fields.Country.Required").Result)
                     //only for registered users
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }

@@ -228,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorListModel(searchModel);
+            var model = await _vendorModelFactory.PrepareVendorListModel(searchModel);
 
             return Json(model);
         }
@@ -459,7 +459,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No vendor found with the specified id");
 
             //prepare model
-            var model = _vendorModelFactory.PrepareVendorNoteListModel(searchModel, vendor);
+            var model = await _vendorModelFactory.PrepareVendorNoteListModel(searchModel, vendor);
 
             return Json(model);
         }

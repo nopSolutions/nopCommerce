@@ -113,7 +113,7 @@ namespace Nop.Services.Directory
                     //we should sort countries by localized names when they have the same display order
                     countries = countries
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenBy(c => _localizationService.GetLocalized(c, x => x.Name, languageId))
+                        .ThenBy(c => _localizationService.GetLocalized(c, x => x.Name, languageId).Result)
                         .ToList();
                 }
 

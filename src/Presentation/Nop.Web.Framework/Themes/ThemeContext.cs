@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.Themes
                 themeName = _storeInformationSettings.DefaultStoreTheme;
 
             //ensure that this theme exists
-            if (!_themeProvider.ThemeExists(themeName).Result)
+            if (!await _themeProvider.ThemeExists(themeName))
             {
                 //if it does not exist, try to get the first one
                 themeName = _themeProvider.GetThemes().Result.FirstOrDefault()?.SystemName

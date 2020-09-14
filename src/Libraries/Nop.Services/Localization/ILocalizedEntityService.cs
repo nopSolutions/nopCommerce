@@ -17,6 +17,7 @@ namespace Nop.Services.Localization
         /// <param name="localizedProperty">Localized property</param>
         Task DeleteLocalizedProperty(LocalizedProperty localizedProperty);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a localized property
         /// </summary>

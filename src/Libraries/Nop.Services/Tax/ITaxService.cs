@@ -163,6 +163,7 @@ namespace Nop.Services.Tax
 
         #region Exempts
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets a value indicating whether a product is tax exempt
         /// </summary>
@@ -171,6 +172,7 @@ namespace Nop.Services.Tax
         /// <returns>A value indicating whether a product is tax exempt</returns>
         Task<bool> IsTaxExempt(Product product, Customer customer);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets a value indicating whether EU VAT exempt (the European Union Value Added Tax)
         /// </summary>

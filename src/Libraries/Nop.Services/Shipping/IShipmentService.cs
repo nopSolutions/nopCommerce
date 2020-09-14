@@ -84,6 +84,7 @@ namespace Nop.Services.Shipping
         /// <param name="shipment">Shipment</param>
         Task UpdateShipment(Shipment shipment);
 
+        //TODO: may be deleted
         /// <summary>
         /// Deletes a shipment item
         /// </summary>
@@ -97,6 +98,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment items</returns>
         Task<IList<ShipmentItem>> GetShipmentItemsByShipmentId(int shipmentId);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a shipment item
         /// </summary>
@@ -110,6 +112,7 @@ namespace Nop.Services.Shipping
         /// <param name="shipmentItem">Shipment item</param>
         Task InsertShipmentItem(ShipmentItem shipmentItem);
 
+        //TODO: may be deleted
         /// <summary>
         /// Updates the shipment item
         /// </summary>

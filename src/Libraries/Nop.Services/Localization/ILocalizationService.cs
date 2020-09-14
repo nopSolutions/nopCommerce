@@ -29,6 +29,7 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resource</returns>
         Task<LocaleStringResource> GetLocaleStringResourceById(int localeStringResourceId);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets a locale string resource
         /// </summary>

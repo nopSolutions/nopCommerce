@@ -17,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Blog content model</returns>
         Task<BlogContentModel> PrepareBlogContentModel(BlogContentModel blogContentModel, int? filterByBlogPostId);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare blog post search model
         /// </summary>

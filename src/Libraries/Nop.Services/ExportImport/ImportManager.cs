@@ -782,10 +782,8 @@ namespace Nop.Services.ExportImport
             {
                 var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
                 var fileData = client.GetByteArrayAsync(urlString).Result;
-                using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
-                {
+                await using (var fs = new FileStream(filePath, FileMode.OpenOrCreate)) 
                     fs.Write(fileData, 0, fileData.Length);
-                }
 
                 downloadedFiles?.Add(filePath);
                 return filePath;
@@ -1068,7 +1066,7 @@ namespace Nop.Services.ExportImport
             };
         }
 
-        private void ImportProductsFromSplitedXlsx(ExcelWorksheet worksheet, ImportProductMetadata metadata)
+        private async Task ImportProductsFromSplitedXlsx(ExcelWorksheet worksheet, ImportProductMetadata metadata)
         {
             foreach (var path in SplitProductFile(worksheet, metadata))
             {
@@ -1078,7 +1076,7 @@ namespace Nop.Services.ExportImport
                     var importManager = scope.ServiceProvider.GetRequiredService<IImportManager>();
 
                     using var sr = new StreamReader(path);
-                    importManager.ImportProductsFromXlsx(sr.BaseStream);
+                    await importManager.ImportProductsFromXlsx(sr.BaseStream);
                 }
 
                 try
@@ -1177,7 +1175,7 @@ namespace Nop.Services.ExportImport
 
             if (_catalogSettings.ExportImportSplitProductsFile && metadata.CountProductsInFile > _catalogSettings.ExportImportProductsCountInOneFile)
             {
-                ImportProductsFromSplitedXlsx(worksheet, metadata);
+                await ImportProductsFromSplitedXlsx(worksheet, metadata);
                 return;
             }
 
@@ -1861,7 +1859,7 @@ namespace Nop.Services.ExportImport
                     var published = bool.Parse(tmp[3].Trim());
                     var displayOrder = int.Parse(tmp[4].Trim());
 
-                    var country = _countryService.GetCountryByTwoLetterIsoCode(countryTwoLetterIsoCode);
+                    var country = await _countryService.GetCountryByTwoLetterIsoCode(countryTwoLetterIsoCode);
                     if (country == null)
                     {
                         //country cannot be loaded. skip
@@ -1976,7 +1974,7 @@ namespace Nop.Services.ExportImport
                             manufacturer.MetaTitle = property.StringValue;
                             break;
                         case "Picture":
-                            var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name, isNew ? null : (int?)manufacturer.PictureId);
+                            var picture = await LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name, isNew ? null : (int?)manufacturer.PictureId);
 
                             if (picture != null)
                                 manufacturer.PictureId = picture.Id;

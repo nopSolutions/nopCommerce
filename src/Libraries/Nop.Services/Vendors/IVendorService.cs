@@ -48,6 +48,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendors</returns>
         Task<IPagedList<Vendor>> GetAllVendors(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets vendors
         /// </summary>

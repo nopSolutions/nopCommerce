@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _storeModelFactory.PrepareStoreListModel(searchModel);
+            var model = await _storeModelFactory.PrepareStoreListModel(searchModel);
 
             return Json(model);
         }

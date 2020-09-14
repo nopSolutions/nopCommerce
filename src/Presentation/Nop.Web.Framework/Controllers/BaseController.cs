@@ -256,7 +256,7 @@ namespace Nop.Web.Framework.Controllers
         protected JsonResult AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description"));
+            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description").Result);
         }
 
         #endregion

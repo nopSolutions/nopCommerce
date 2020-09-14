@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
-        protected virtual void PrepareAddressModel(AddressModel model, Address address)
+        protected virtual async Task PrepareAddressModel(AddressModel model, Address address)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -217,13 +217,13 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FaxEnabled = true;
 
             //prepare available countries
-            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+            await _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
 
             //prepare available states
-            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
+            await _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
+            await _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var address = await _addressService.GetAddressById(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            PrepareAddressModel(model.Address, address);
+            await PrepareAddressModel(model.Address, address);
 
             return model;
         }

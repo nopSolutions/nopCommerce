@@ -112,7 +112,7 @@ namespace Nop.Services.Topics
                 return null;
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey
-                , systemName, storeId, _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
+                , systemName, storeId, await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
 
             var topic = await _staticCacheManager.Get(cacheKey, async () =>
             {
@@ -155,7 +155,7 @@ namespace Nop.Services.Topics
                     onlyIncludedInTopMenu)
                 : _cacheKeyService.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey,
                     storeId, showHidden, onlyIncludedInTopMenu,
-                    _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
+                    await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
 
             var query = _topicRepository.Table;
             query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);

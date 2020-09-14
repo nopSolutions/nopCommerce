@@ -26,6 +26,7 @@ namespace Nop.Services.News
         /// <returns>News</returns>
         Task<NewsItem> GetNewsById(int newsId);
 
+        //TODO: may be deleted
         /// <summary>
         /// Gets news
         /// </summary>
@@ -58,6 +59,7 @@ namespace Nop.Services.News
         /// <param name="news">News item</param>
         Task UpdateNews(NewsItem news);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Get a value indicating whether a news item is available now (availability dates)
         /// </summary>

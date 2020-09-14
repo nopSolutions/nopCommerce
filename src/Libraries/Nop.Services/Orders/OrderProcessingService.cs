@@ -474,14 +474,14 @@ namespace Nop.Services.Orders
             {
                 var minOrderSubtotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, await _workContext.GetWorkingCurrency());
                 throw new NopException(string.Format(await _localizationService.GetResource("Checkout.MinOrderSubtotalAmount"),
-                    _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
+                    await _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
             }
 
             if (!await ValidateMinOrderTotalAmount(details.Cart))
             {
                 var minOrderTotalAmount = await _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, await _workContext.GetWorkingCurrency());
                 throw new NopException(string.Format(await _localizationService.GetResource("Checkout.MinOrderTotalAmount"),
-                    _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
+                    await _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
             }
 
             //tax display type
@@ -512,7 +512,7 @@ namespace Nop.Services.Orders
                     NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
                 if (_shippingSettings.AllowPickupInStore && pickupPoint != null)
                 {
-                    var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
+                    var country = await _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
                     var state = await _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
 
                     details.PickupInStore = true;
@@ -1333,7 +1333,7 @@ namespace Nop.Services.Orders
             }
 
             //clear shopping cart
-            details.Cart.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false));
+            details.Cart.ToList().ForEach(async sci => await _shoppingCartService.DeleteShoppingCartItem(sci, false));
         }
 
         /// <summary>
@@ -1659,7 +1659,7 @@ namespace Nop.Services.Orders
                     Address1 = updateOrderParameters.PickupPoint.Address,
                     City = updateOrderParameters.PickupPoint.City,
                     County = updateOrderParameters.PickupPoint.County,
-                    CountryId = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode)?.Id,
+                    CountryId = (await _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode))?.Id,
                     ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
                     CreatedOnUtc = DateTime.UtcNow
                 };
@@ -1804,7 +1804,7 @@ namespace Nop.Services.Orders
                 if (customer == null)
                     throw new NopException("Customer could not be loaded");
 
-                if (GetNextPaymentDate(recurringPayment) is null)
+                if (await GetNextPaymentDate(recurringPayment) is null)
                     throw new NopException("Next payment date could not be calculated");
 
                 //payment info
@@ -2079,7 +2079,7 @@ namespace Nop.Services.Orders
                 if (customer.Id != customerToValidate.Id)
                     return false;
 
-            if (GetNextPaymentDate(recurringPayment) is null)
+            if (await GetNextPaymentDate(recurringPayment) is null)
                 return false;
 
             return true;

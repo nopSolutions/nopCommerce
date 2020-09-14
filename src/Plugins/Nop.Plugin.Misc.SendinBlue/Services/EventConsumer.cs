@@ -51,85 +51,71 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// Handle the email unsubscribed event.
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(EmailUnsubscribedEvent eventMessage)
+        public async Task HandleEvent(EmailUnsubscribedEvent eventMessage)
         {
             //unsubscribe contact
-            _sendinBlueEmailManager.Unsubscribe(eventMessage.Subscription);
-
-            return Task.CompletedTask;
+            await _sendinBlueEmailManager.Unsubscribe(eventMessage.Subscription);
         }
 
         /// <summary>
         /// Handle the email subscribed event.
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(EmailSubscribedEvent eventMessage)
+        public async Task HandleEvent(EmailSubscribedEvent eventMessage)
         {
             //subscribe contact
-            _sendinBlueEmailManager.Subscribe(eventMessage.Subscription);
-
-            return Task.CompletedTask;
+            await _sendinBlueEmailManager.Subscribe(eventMessage.Subscription);
         }
 
         /// <summary>
         /// Handle the add shopping cart item event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
+        public async Task HandleEvent(EntityInsertedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEvent(eventMessage.Entity);
-
-            return Task.CompletedTask;
+            await _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEvent(eventMessage.Entity);
         }
 
         /// <summary>
         /// Handle the update shopping cart item event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
+        public async Task HandleEvent(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEvent(eventMessage.Entity);
-
-            return Task.CompletedTask;
+            await _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEvent(eventMessage.Entity);
         }
 
         /// <summary>
         /// Handle the delete shopping cart item event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(EntityDeletedEvent<ShoppingCartItem> eventMessage)
+        public async Task HandleEvent(EntityDeletedEvent<ShoppingCartItem> eventMessage)
         {
             //handle event
-            _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEvent(eventMessage.Entity);
-
-            return Task.CompletedTask;
+            await _sendinBlueMarketingAutomationManager.HandleShoppingCartChangedEvent(eventMessage.Entity);
         }
 
         /// <summary>
         /// Handle the order paid event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(OrderPaidEvent eventMessage)
+        public async Task HandleEvent(OrderPaidEvent eventMessage)
         {
             //handle event
-            _sendinBlueMarketingAutomationManager.HandleOrderCompletedEvent(eventMessage.Order);
-            _sendinBlueEmailManager.UpdateContactAfterCompletingOrder(eventMessage.Order);
-
-            return Task.CompletedTask;
+            await _sendinBlueMarketingAutomationManager.HandleOrderCompletedEvent(eventMessage.Order);
+            await _sendinBlueEmailManager.UpdateContactAfterCompletingOrder(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle the order placed event
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public Task HandleEvent(OrderPlacedEvent eventMessage)
+        public async Task HandleEvent(OrderPlacedEvent eventMessage)
         {
             //handle event
-            _sendinBlueMarketingAutomationManager.HandleOrderPlacedEvent(eventMessage.Order);
-
-            return Task.CompletedTask;
+            await _sendinBlueMarketingAutomationManager.HandleOrderPlacedEvent(eventMessage.Order);
         }
 
         /// <summary>

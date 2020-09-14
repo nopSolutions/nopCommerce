@@ -427,7 +427,7 @@ namespace Nop.Web.Controllers
                             await _shoppingCartService.MigrateShoppingCart(await _workContext.GetCurrentCustomer(), customer, true);
 
                             //sign in new customer
-                            _authenticationService.SignIn(customer, model.RememberMe);
+                            await _authenticationService.SignIn(customer, model.RememberMe);
 
                             //raise event       
                             await _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
@@ -500,7 +500,7 @@ namespace Nop.Web.Controllers
                 await _localizationService.GetResource("ActivityLog.PublicStore.Logout"), await _workContext.GetCurrentCustomer());
 
             //standard logout 
-            _authenticationService.SignOut();
+            await _authenticationService.SignOut();
 
             //raise logged out event       
             await _eventPublisher.Publish(new CustomerLoggedOutEvent(await _workContext.GetCurrentCustomer()));
@@ -713,7 +713,7 @@ namespace Nop.Web.Controllers
             if (await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()))
             {
                 //Already registered customer. 
-                _authenticationService.SignOut();
+                await _authenticationService.SignOut();
 
                 //raise logged out event       
                 await _eventPublisher.Publish(new CustomerLoggedOutEvent(await _workContext.GetCurrentCustomer()));
@@ -898,7 +898,7 @@ namespace Nop.Web.Controllers
 
                     //login customer now
                     if (isApproved)
-                        _authenticationService.SignIn(customer, true);
+                        await _authenticationService.SignIn(customer, true);
 
                     //insert default address (if possible)
                     var defaultAddress = new Address
@@ -1156,7 +1156,7 @@ namespace Nop.Web.Controllers
                             //re-authenticate
                             //do not authenticate users in impersonation mode
                             if (_workContext.OriginalCustomerIfImpersonated == null)
-                                _authenticationService.SignIn(customer, true);
+                                await _authenticationService.SignIn(customer, true);
                         }
                     }
                     //email
@@ -1171,7 +1171,7 @@ namespace Nop.Web.Controllers
                         {
                             //re-authenticate (if usernames are disabled)
                             if (!_customerSettings.UsernamesEnabled && !requireValidation)
-                                _authenticationService.SignIn(customer, true);
+                                await _authenticationService.SignIn(customer, true);
                         }
                     }
 
@@ -1363,7 +1363,7 @@ namespace Nop.Web.Controllers
             //re-authenticate (if usernames are disabled)
             if (!_customerSettings.UsernamesEnabled)
             {
-                _authenticationService.SignIn(customer, true);
+                await _authenticationService.SignIn(customer, true);
             }
 
             var model = new EmailRevalidationModel

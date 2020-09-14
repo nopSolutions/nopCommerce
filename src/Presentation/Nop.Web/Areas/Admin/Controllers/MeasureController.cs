@@ -58,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _measureModelFactory.PrepareMeasureSearchModel(new MeasureSearchModel());
+            var model = await _measureModelFactory.PrepareMeasureSearchModel(new MeasureSearchModel());
 
             return View(model);
         }
@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _measureModelFactory.PrepareMeasureWeightListModel(searchModel);
+            var model = await _measureModelFactory.PrepareMeasureWeightListModel(searchModel);
 
             return Json(model);
         }
@@ -148,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a weight with the specified id
-            var weight = _measureService.GetMeasureWeightById(id)
+            var weight = await _measureService.GetMeasureWeightById(id)
                 ?? throw new ArgumentException("No weight found with the specified id", nameof(id));
 
             _measureSettings.BaseWeightId = weight.Id;
@@ -168,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _measureModelFactory.PrepareMeasureDimensionListModel(searchModel);
+            var model = await _measureModelFactory.PrepareMeasureDimensionListModel(searchModel);
 
             return Json(model);
         }
@@ -244,7 +244,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a dimension with the specified id
-            var dimension = _measureService.GetMeasureDimensionById(id)
+            var dimension = await _measureService.GetMeasureDimensionById(id)
                 ?? throw new ArgumentException("No dimension found with the specified id", nameof(id));
 
             _measureSettings.BaseDimensionId = dimension.Id;

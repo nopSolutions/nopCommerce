@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _vendorAttributeModelFactory.PrepareVendorAttributeListModel(searchModel);
+            var model = await _vendorAttributeModelFactory.PrepareVendorAttributeListModel(searchModel);
 
             return Json(model);
         }
@@ -238,7 +238,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No vendor attribute found with the specified id");
 
             //prepare model
-            var model = _vendorAttributeModelFactory.PrepareVendorAttributeValueListModel(searchModel, vendorAttribute);
+            var model = await _vendorAttributeModelFactory.PrepareVendorAttributeValueListModel(searchModel, vendorAttribute);
 
             return Json(model);
         }

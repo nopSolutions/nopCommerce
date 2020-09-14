@@ -70,6 +70,7 @@ namespace Nop.Services.Orders
         /// <returns>Active gift cards</returns>
         Task<IList<GiftCard>> GetActiveGiftCardsAppliedByCustomer(Customer customer);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Generate new gift card code
         /// </summary>

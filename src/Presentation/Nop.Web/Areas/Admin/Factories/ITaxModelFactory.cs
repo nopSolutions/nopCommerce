@@ -36,6 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Tax category list model</returns>
         Task<TaxCategoryListModel> PrepareTaxCategoryListModel(TaxCategorySearchModel searchModel);
 
+        //TODO: may be deleted
         /// <summary>
         /// Prepare tax configuration model
         /// </summary>

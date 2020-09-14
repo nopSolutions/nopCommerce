@@ -219,7 +219,7 @@ namespace Nop.Services.Catalog
                         if (origImageSquaresPicture != null)
                         {
                             //copy the picture
-                            var imageSquaresPictureCopy = _pictureService.InsertPicture(
+                            var imageSquaresPictureCopy = await _pictureService.InsertPicture(
                                 await _pictureService.LoadPictureBinary(origImageSquaresPicture),
                                 origImageSquaresPicture.MimeType,
                                 origImageSquaresPicture.SeoFilename,
@@ -253,9 +253,9 @@ namespace Nop.Services.Catalog
                 if (oldConditionAttributeMapping == null)
                     continue;
 
-                var oldConditionValues = await 
-                    _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml,
-                        oldConditionAttributeMapping.Id);
+                var oldConditionValues = await _productAttributeParser.ParseProductAttributeValues(
+                    productAttributeMapping.ConditionAttributeXml,
+                    oldConditionAttributeMapping.Id);
 
                 if (!oldConditionValues.Any())
                     continue;

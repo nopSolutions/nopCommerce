@@ -218,7 +218,7 @@ namespace Nop.Web.Controllers
                 {
                     var contentType = uploadedFile.ContentType;
                     var vendorPictureBinary = await _downloadService.GetDownloadBits(uploadedFile);
-                    var picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                    var picture = await _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
 
                     if (picture != null)
                         pictureId = picture.Id;

@@ -80,7 +80,7 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
-                html = RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
+                html = RenderPartialViewToString("_Poll", await _pollModelFactory.PreparePollModel(poll, true)),
             });
         }
 

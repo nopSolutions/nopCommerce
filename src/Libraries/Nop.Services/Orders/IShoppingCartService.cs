@@ -46,6 +46,7 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         IEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
@@ -206,6 +207,7 @@ namespace Nop.Services.Orders
         Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Finds a shopping cart item in the cart
         /// </summary>

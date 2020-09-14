@@ -221,6 +221,7 @@ namespace Nop.Services.Catalog
         Task<IList<Category>> SortCategoriesForTree(IList<Category> source, int parentId = 0,
             bool ignoreCategoriesWithoutExistingParent = false);
 
+        //TODO: migrate to an extension method
         /// <summary>
         /// Returns a ProductCategory that has the specified values
         /// </summary>

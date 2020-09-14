@@ -78,7 +78,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (_workContext.GetCurrentCustomer().Result.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
                 {
                     _workContext.GetCurrentCustomer().Result.LastActivityDateUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result);
+                    _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result).Wait();
                 }
             }
 

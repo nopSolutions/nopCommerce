@@ -1077,7 +1077,7 @@ namespace Nop.Services.Common
             }
 
             if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddress(billingAddress) is Country country)
-                billingAddressPdf.AddCell(new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
+                billingAddressPdf.AddCell(new Paragraph(indent + await _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
 
             //VAT number
             if (!string.IsNullOrEmpty(order.VatNumber))
@@ -1561,7 +1561,7 @@ namespace Nop.Services.Common
                         productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id)}: {product.Weight:0.00} {(await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name}", font));
 
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id)}: {_productService.GetTotalStockQuantity(product)}", font));
+                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantity(product)}", font));
 
                     productTable.AddCell(new Paragraph(" "));
                 }
@@ -1637,7 +1637,7 @@ namespace Nop.Services.Common
                             productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id)}: {associatedProduct.Weight:0.00} {(await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name}", font));
 
                         if (associatedProduct.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                            productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id)}: {_productService.GetTotalStockQuantity(associatedProduct)}", font));
+                            productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantity(associatedProduct)}", font));
 
                         productTable.AddCell(new Paragraph(" "));
 

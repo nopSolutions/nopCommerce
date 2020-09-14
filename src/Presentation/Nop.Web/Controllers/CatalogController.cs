@@ -126,7 +126,7 @@ namespace Nop.Web.Controllers
                 string.Format(await _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
 
             //model
-            var model = _catalogModelFactory.PrepareCategoryModel(category, command);
+            var model = await _catalogModelFactory.PrepareCategoryModel(category, command);
 
             //template
             var templateViewPath = await _catalogModelFactory.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);

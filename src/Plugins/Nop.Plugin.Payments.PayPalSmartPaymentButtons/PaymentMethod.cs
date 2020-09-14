@@ -413,7 +413,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             {
                 var settings = await _settingService.LoadSetting<PayPalSmartPaymentButtonsSettings>(store.Id);
                 if (!string.IsNullOrEmpty(settings.WebhookId))
-                    _serviceManager.DeleteWebhook(settings);
+                    await _serviceManager.DeleteWebhook(settings);
             }
 
             //settings

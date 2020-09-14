@@ -58,15 +58,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 Services.Tasks.TaskManager.Instance.Start();
 
                 //log application start
-                engine.Resolve<ILogger>().Information("Application started");
+                engine.Resolve<ILogger>().Information("Application started").Wait();
 
                 var pluginService = engine.Resolve<IPluginService>();
                 
                 //install plugins
-                pluginService.InstallPlugins();
+                pluginService.InstallPlugins().Wait();
 
                 //update plugins
-                pluginService.UpdatePlugins();
+                pluginService.UpdatePlugins().Wait();
 
                 //update nopCommerce core
                 var migrationManager = engine.Resolve<IMigrationManager>();
@@ -127,7 +127,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomer().Result;
 
                             //log error
-                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer).Wait();
                         }
                     }
                     finally
@@ -206,7 +206,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    logger.Error("Error 400. Bad request", null, customer: workContext.GetCurrentCustomer().Result);
+                    logger.Error("Error 400. Bad request", null, customer: workContext.GetCurrentCustomer().Result).Wait();
                 }
 
                 return Task.CompletedTask;

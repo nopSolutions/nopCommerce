@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _paymentModelFactory.PreparePaymentMethodsModel(new PaymentMethodsModel());
+            var model = await _paymentModelFactory.PreparePaymentMethodsModel(new PaymentMethodsModel());
 
             return View(model);
         }
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _paymentModelFactory.PreparePaymentMethodListModel(searchModel);
+            var model = await _paymentModelFactory.PreparePaymentMethodListModel(searchModel);
 
             return Json(model);
         }
@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _paymentModelFactory.PreparePaymentMethodsModel(new PaymentMethodsModel());
+            var model = await _paymentModelFactory.PreparePaymentMethodsModel(new PaymentMethodsModel());
 
             return View(model);
         }

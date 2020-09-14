@@ -9,6 +9,7 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial interface IReturnRequestModelFactory
     {
+        //TODO: may be deleted from interface
         /// <summary>
         /// Prepare the order item model
         /// </summary>

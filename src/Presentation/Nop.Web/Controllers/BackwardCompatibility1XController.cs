@@ -248,7 +248,7 @@ namespace Nop.Web.Controllers
             if (forumGroup == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = _forumService.GetForumGroupSeName(forumGroup) });
+            return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = await _forumService.GetForumGroupSeName(forumGroup) });
         }
 
         public virtual async Task<IActionResult> RedirectForum(string id, bool idIncludesSename = true)
@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
             if (forum == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = _forumService.GetForumSeName(forum) });
+            return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeName(forum) });
         }
 
         public virtual async Task<IActionResult> RedirectForumTopic(string id, bool idIncludesSename = true)
@@ -270,7 +270,7 @@ namespace Nop.Web.Controllers
             if (topic == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) });
+            return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeName(topic) });
         }
 
         public virtual async Task<IActionResult> RedirectUserProfile(string id)

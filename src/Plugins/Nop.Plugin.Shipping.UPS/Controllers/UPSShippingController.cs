@@ -110,11 +110,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             //check measures
             var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
-            if (_measureService.GetMeasureWeightBySystemKeyword(weightSystemName) == null)
+            if (await _measureService.GetMeasureWeightBySystemKeyword(weightSystemName) == null)
                 _notificationService.ErrorNotification($"Could not load '{weightSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure weight</a>", false);
 
             var dimensionSystemName = _upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
-            if (_measureService.GetMeasureDimensionBySystemKeyword(dimensionSystemName) == null)
+            if (await _measureService.GetMeasureDimensionBySystemKeyword(dimensionSystemName) == null)
                 _notificationService.ErrorNotification($"Could not load '{dimensionSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure dimension</a>", false);
 
             return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);

@@ -847,7 +847,7 @@ namespace Nop.Web.Controllers
             }
 
             //stock
-            var stockAvailability = _productService.FormatStockMessage(product, attributeXml);
+            var stockAvailability = await _productService.FormatStockMessage(product, attributeXml);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();

@@ -220,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModel(searchModel);
+            var model = await _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModel(searchModel);
 
             return Json(model);
         }

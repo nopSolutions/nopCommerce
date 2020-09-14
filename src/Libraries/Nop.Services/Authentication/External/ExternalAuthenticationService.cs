@@ -141,7 +141,7 @@ namespace Nop.Services.Authentication.External
         protected virtual async Task<IActionResult> RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //check whether the specified email has been already registered
-            if (_customerService.GetCustomerByEmail(parameters.Email) != null)
+            if (await _customerService.GetCustomerByEmail(parameters.Email) != null)
             {
                 var alreadyExistsError = string.Format(await _localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"),
                     !string.IsNullOrEmpty(parameters.ExternalDisplayIdentifier) ? parameters.ExternalDisplayIdentifier : parameters.ExternalIdentifier);
@@ -181,7 +181,7 @@ namespace Nop.Services.Authentication.External
             //authenticate
             if (registrationIsApproved)
             {
-                _authenticationService.SignIn(await _workContext.GetCurrentCustomer(), false);
+                await _authenticationService.SignIn(await _workContext.GetCurrentCustomer(), false);
                 await _workflowMessageService.SendCustomerWelcomeMessage(await _workContext.GetCurrentCustomer(), (await _workContext.GetWorkingLanguage()).Id);
 
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
@@ -216,7 +216,7 @@ namespace Nop.Services.Authentication.External
             await _shoppingCartService.MigrateShoppingCart(await _workContext.GetCurrentCustomer(), user, true);
 
             //authenticate
-            _authenticationService.SignIn(user, false);
+            await _authenticationService.SignIn(user, false);
 
             //raise event       
             await _eventPublisher.Publish(new CustomerLoggedinEvent(user));

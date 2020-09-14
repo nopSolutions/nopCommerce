@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     //we publish the ModelReceived event for all models as the BaseNopModel, 
                     //so you need to implement IConsumer<ModelReceived<BaseNopModel>> interface to handle this event
-                    _eventPublisher.ModelReceived(model, context.ModelState);
+                    _eventPublisher.ModelReceived(model, context.ModelState).Wait();
                 }
             }
 
@@ -135,14 +135,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                     {
                         //we publish the ModelPrepared event for all models as the BaseNopModel, 
                         //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
-                        _eventPublisher.ModelPrepared(model);
+                        _eventPublisher.ModelPrepared(model).Wait();
                     }
 
                     if (controller.ViewData.Model is IEnumerable<BaseNopModel> modelCollection)
                     {
                         //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
                         //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
-                        _eventPublisher.ModelPrepared(modelCollection);
+                        _eventPublisher.ModelPrepared(modelCollection).Wait();
                     }
                 }
             }

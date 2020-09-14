@@ -824,7 +824,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _orderService.InsertOrderNote(new OrderNote
                 {
                     OrderId = order.Id,
-                    Note = $"Order status has been edited. New status: {_localizationService.GetLocalizedEnum(order.OrderStatus)}",
+                    Note = $"Order status has been edited. New status: {await _localizationService.GetLocalizedEnum(order.OrderStatus)}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });

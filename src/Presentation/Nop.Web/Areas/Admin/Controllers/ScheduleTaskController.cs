@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _scheduleTaskModelFactory.PrepareScheduleTaskSearchModel(new ScheduleTaskSearchModel());
+            var model = await _scheduleTaskModelFactory.PrepareScheduleTaskSearchModel(new ScheduleTaskSearchModel());
 
             return View(model);
         }
@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _scheduleTaskModelFactory.PrepareScheduleTaskListModel(searchModel);
+            var model = await _scheduleTaskModelFactory.PrepareScheduleTaskListModel(searchModel);
 
             return Json(model);
         }

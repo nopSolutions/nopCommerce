@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionSearchModel(new NewsletterSubscriptionSearchModel());
+            var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionSearchModel(new NewsletterSubscriptionSearchModel());
 
             return View(model);
         }
@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModel(searchModel);
+            var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModel(searchModel);
 
             return Json(model);
         }
@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    var count = _importManager.ImportNewsletterSubscribersFromTxt(importcsvfile.OpenReadStream());
+                    var count = await _importManager.ImportNewsletterSubscribersFromTxt(importcsvfile.OpenReadStream());
 
                     _notificationService.SuccessNotification(string.Format(await _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
 

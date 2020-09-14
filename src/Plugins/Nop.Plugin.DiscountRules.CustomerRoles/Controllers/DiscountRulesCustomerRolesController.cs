@@ -58,12 +58,12 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 return Content("Access denied");
 
             //load the discount
-            var discount = _discountService.GetDiscountById(discountId);
+            var discount = await _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
             //check whether the discount requirement exists
-            if (discountRequirementId.HasValue && _discountService.GetDiscountRequirementById(discountRequirementId.Value) is null)
+            if (discountRequirementId.HasValue && await _discountService.GetDiscountRequirementById(discountRequirementId.Value) is null)
                 return Content("Failed to load requirement.");
 
             //try to get previously saved restricted customer role identifier
@@ -104,7 +104,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             if (ModelState.IsValid)
             {
                 //load the discount
-                var discount = _discountService.GetDiscountById(model.DiscountId);
+                var discount = await _discountService.GetDiscountById(model.DiscountId);
                 if (discount == null)
                     return NotFound(new { Errors = new[] { "Discount could not be loaded" } });
 

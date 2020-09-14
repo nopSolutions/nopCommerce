@@ -150,7 +150,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
             //check whether email account exists
-            if (sendinBlueSettings.UseSmtp && _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) != null)
+            if (sendinBlueSettings.UseSmtp && await _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) != null)
                 model.UseSmtp = sendinBlueSettings.UseSmtp;
 
             //get account info
@@ -192,7 +192,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 _notificationService.ErrorNotification($"{SendinBlueDefaults.NotificationMessage} {sendersErrors}");
 
             //get allowed tokens
-            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfAllowedTokens());
 
             //create attributes in account
             var attributesErrors = await _sendinBlueEmailManager.PrepareAttributes();
@@ -207,7 +207,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 {
                     sendinBlueSettings.PartnerValueSet = true;
                     await _settingService.SaveSetting(sendinBlueSettings, settings => settings.PartnerValueSet, clearCache: false);
-                    _settingService.ClearCache();
+                    await _settingService.ClearCache();
                 }
             }
         }
@@ -478,6 +478,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public async Task<IActionResult> SMSList(SmsSearchModel searchModel)
         {
             var storeId = await _storeContext.GetActiveStoreScopeConfiguration();
+
+            //TODO: may be deleted
             var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>(storeId);
 
             //get message templates which are sending in SMS

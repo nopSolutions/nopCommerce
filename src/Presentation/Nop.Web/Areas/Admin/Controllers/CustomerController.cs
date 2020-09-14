@@ -256,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private async Task<bool> SecondAdminAccountExists(Customer customer)
         {
-            var customers = await _customerService.GetAllCustomers(customerRoleIds: new[] { _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.AdministratorsRoleName).Id });
+            var customers = await _customerService.GetAllCustomers(customerRoleIds: new[] { (await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.AdministratorsRoleName)).Id });
 
             return customers.Any(c => c.Active && c.Id != customer.Id);
         }
@@ -311,11 +311,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            if (!string.IsNullOrWhiteSpace(model.Email) && _customerService.GetCustomerByEmail(model.Email) != null)
+            if (!string.IsNullOrWhiteSpace(model.Email) && await _customerService.GetCustomerByEmail(model.Email) != null)
                 ModelState.AddModelError(string.Empty, "Email is already registered");
 
             if (!string.IsNullOrWhiteSpace(model.Username) && _customerSettings.UsernamesEnabled &&
-                _customerService.GetCustomerByUsername(model.Username) != null)
+                await _customerService.GetCustomerByUsername(model.Username) != null)
             {
                 ModelState.AddModelError(string.Empty, "Username is already registered");
             }
@@ -1342,7 +1342,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
-            var searchCustomerRoleIds = new[] { _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName).Id };
+            var searchCustomerRoleIds = new[] { (await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName)).Id };
 
             var culture = new CultureInfo((await _workContext.GetWorkingLanguage()).LanguageCulture);
 

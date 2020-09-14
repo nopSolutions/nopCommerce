@@ -234,7 +234,7 @@ namespace Nop.Web.Factories
             };
 
             var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreLogoPath
-                , await _storeContext.GetCurrentStore(), _themeContext.GetWorkingThemeName(), _webHelper.IsCurrentConnectionSecured());
+                , await _storeContext.GetCurrentStore(), await _themeContext.GetWorkingThemeName(), _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = await _staticCacheManager.Get(cacheKey, async () =>
             {
                 var logo = string.Empty;
@@ -248,7 +248,7 @@ namespace Nop.Web.Factories
                     //use default logo
                     var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty;
                     var storeLocation = _mediaSettings.UseAbsoluteImagePath ? await _webHelper.GetStoreLocation() : $"{pathBase}/";
-                    logo = $"{storeLocation}Themes/{_themeContext.GetWorkingThemeName()}/Content/images/logo.png";
+                    logo = $"{storeLocation}Themes/{await _themeContext.GetWorkingThemeName()}/Content/images/logo.png";
                 }
 
                 return logo;
