@@ -137,6 +137,10 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         public virtual void DeleteDiscount(Discount discount)
         {
+            //first, delete related discount requirements
+            _discountRequirementRepository.Delete(GetAllDiscountRequirements(discount.Id));
+
+            //then delete the discount
             _discountRepository.Delete(discount);
         }
 
