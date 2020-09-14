@@ -29,6 +29,16 @@
 
     <div class="form-group">
         <div class="col-md-3">
+            <nop-label asp-for="SpecificationAttributeGroupId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="SpecificationAttributeGroupId" asp-items="Model.AvailableGroups" />
+            <span asp-validation-for="SpecificationAttributeGroupId"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
             <nop-label asp-for="DisplayOrder" />
         </div>
         <div class="col-md-9">

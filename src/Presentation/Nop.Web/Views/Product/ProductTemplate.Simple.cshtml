@@ -145,7 +145,7 @@
                 </div>
                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforeCollateral, additionalData = Model })
                 <div class="product-collateral">
-                    @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)
+                    @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
                     @await Html.PartialAsync("_ProductTags", Model.ProductTags)
                 </div>
                 @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })

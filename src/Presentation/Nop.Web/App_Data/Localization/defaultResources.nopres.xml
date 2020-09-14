@@ -756,6 +756,9 @@
   <LocaleResource Name="ActivityLog.AddNewSpecAttribute">
     <Value>Added a new specification attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewSpecAttributeGroup">
+    <Value>Added a new specification attribute group ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewStateProvince">
     <Value>Added a new state or province (ID = {0})</Value>
   </LocaleResource>
@@ -878,6 +881,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteSpecAttribute">
     <Value>Deleted a specification attribute ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteSpecAttributeGroup">
+    <Value>Deleted a specification attribute group ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteStateProvince">
     <Value>Deleted a state or province (ID = {0})</Value>
@@ -1004,6 +1010,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditSpecAttribute">
     <Value>Edited a specification attribute ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditSpecAttributeGroup">
+    <Value>Edited a specification attribute group ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditStateProvince">
     <Value>Edited a state or province (ID = {0})</Value>
@@ -1875,95 +1884,152 @@
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
     <Value>Specification attributes</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Added">
-    <Value>The new attribute has been added successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.AddNew">
-    <Value>Add a new specification attribute</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.BackToList">
-    <Value>back to specification attribute list</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Deleted">
-    <Value>The attribute has been deleted successfully.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Description">
     <Value>Specification attributes are product features i.e, screen size, number of USB-ports, visible on product details page. Specification attributes can be used for filtering products on the category details page. Unlike product attributes, specification attributes are used for information purposes only. You can add attributes to existing product on a product details page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Added">
+    <Value>The new attribute has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew">
+    <Value>Add a new specification attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList">
+    <Value>back to specification attribute list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.AddNew">
+    <Value>Add attributee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Buttons.DeleteSelected">
+    <Value>Delete attributes (selected)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Deleted">
+    <Value>The attribute has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.EditAttributeDetails">
     <Value>Edit specification attribute details</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder.Hint">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder.Hint">
     <Value>The display order of the specification attribute.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Hint">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Hint">
     <Value>The name of the specification attribute.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Required">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Info">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup">
+    <Value>Group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.Hint">
+    <Value>The group of the specification attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Info">
     <Value>Attribute info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options">
     <Value>Options</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.AddNew">
     <Value>Add a new option</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.EditOptionDetails">
     <Value>Edit option details</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.ColorSquaresRgb">
     <Value>RGB color</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb.Hint">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.ColorSquaresRgb.Hint">
     <Value>Choose color to be used instead of an option text name (it'll be displayed as "color square").</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder.Hint">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder.Hint">
     <Value>The display order of the option.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.EnableColorSquaresRgb">
     <Value>Specify color</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.EnableColorSquaresRgb.Hint">
     <Value>Check to choose color to be used instead of an option text name (it'll be displayed as "color square").</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Hint">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name.Hint">
     <Value>The name of the option.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Required">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.NumberOfAssociatedProducts">
     <Value>Number of associated products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.SaveBeforeEdit">
     <Value>You need to save the specification attribute before you can add options for this specification attribute page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Updated">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Updated">
     <Value>The attribute has been updated successfully.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts">
     <Value>Used by products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product">
     <Value>Product</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published">
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published">
     <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Added">
+    <Value>The new attribute group has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.AddNew">
+    <Value>Add a new specification attribute group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.BackToList">
+    <Value>back to specification attribute list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Buttons.AddNew">
+    <Value>Add group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName">
+    <Value>Default group (non-grouped specification attributes)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Deleted">
+    <Value>The attribute group has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.EditAttributeGroupDetails">
+    <Value>Edit specification attribute group details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.DisplayOrder.Hint">
+    <Value>The display order of the specification attribute group.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name.Hint">
+    <Value>The name of the specification attribute group.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Info">
+    <Value>Attribute group info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Updated">
+    <Value>The attribute group has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories">
     <Value>Categories</Value>

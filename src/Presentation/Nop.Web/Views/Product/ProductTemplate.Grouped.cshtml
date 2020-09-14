@@ -186,7 +186,7 @@
                             </div>
                         }
                     </div>
-                    @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)
+                    @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
                     @await Html.PartialAsync("_ProductTags", Model.ProductTags)
                 </div>
                 @*we do not display "also purchased" for grouped products

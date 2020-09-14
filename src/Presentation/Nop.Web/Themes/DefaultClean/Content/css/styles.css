@@ -2130,6 +2130,12 @@ label, label + * {
 	border: 1px solid #ddd;
 	padding: 10px;
 }
+.product-specs-box td.spec-group-name {
+  border: 0;
+  padding-top: 20px;
+  font-size: 16px;
+  color: #444;
+}
 
 .product-tags-list {
 	font-size: 0;
@@ -2291,6 +2297,7 @@ label, label + * {
 
 .attribute-squares {
 	font-size: 0;
+  display: inline-block;
 }
 .attribute-squares li {
 	display: inline-block;
@@ -2679,20 +2686,25 @@ label, label + * {
 	vertical-align: top;
 	color: #444;
 }
-.compare-products-table td:first-child {
-	min-width: 0;
-}
 .compare-products-table td label {
 	font-weight: normal;
     color: #777;
 }
+.compare-products-table .specification-group td {
+  border: 0;
+  padding: 20px 10px 10px 10px;
+}
+.compare-products-table .specification-group td label {
+  font-size: 16px;
+  color: #444;
+}
 .compare-products-table .remove-button {
-	display: inline-block;
-	border: none;
-	background: url('../images/remove.png') left center no-repeat;
-	padding: 0 0 0 18px;
-	font-size: 12px;
-	color: #666;
+  display: inline-block;
+  border: none;
+  background: url('../images/remove.png') left center no-repeat;
+  padding: 0 0 0 18px;
+  font-size: 12px;
+  color: #666;
 }
 .compare-products-table .remove-button:hover {
 	color: #4ab2f1;
