@@ -418,13 +418,13 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         }
         
         /// <summary>
-        /// Create or upadete shipping
+        /// Create or update shipping
         /// </summary>
-        /// <param name="orderNumber"></param>
-        /// <param name="carrier"></param>
-        /// <param name="service"></param>
-        /// <param name="trackingNumber"></param>
-        public void CreateOrUpadeteShipping(string orderNumber, string carrier, string service, string trackingNumber)
+        /// <param name="orderNumber">Order number</param>
+        /// <param name="carrier">Carrier</param>
+        /// <param name="service">Service</param>
+        /// <param name="trackingNumber">Tracking number</param>
+        public void CreateOrUpdateShipping(string orderNumber, string carrier, string service, string trackingNumber)
         {
             try
             {

@@ -12,15 +12,15 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="shippingOptionRequest"></param>
         /// <returns></returns>
         IList<ShipStationServiceRate> GetAllRates(GetShippingOptionRequest shippingOptionRequest);
-        
+
         /// <summary>
-        /// Create or upadete shipping
+        /// Create or update shipping
         /// </summary>
-        /// <param name="orderNumber"></param>
-        /// <param name="carrier"></param>
-        /// <param name="service"></param>
-        /// <param name="trackingNumber"></param>
-        void CreateOrUpadeteShipping(string orderNumber, string carrier, string service, string trackingNumber);
+        /// <param name="orderNumber">Order number</param>
+        /// <param name="carrier">Carrier</param>
+        /// <param name="service">Service</param>
+        /// <param name="trackingNumber">Tracking number</param>
+        void CreateOrUpdateShipping(string orderNumber, string carrier, string service, string trackingNumber);
 
         /// <summary>
         /// Get XML view of orders to sending to the ShipStation service
