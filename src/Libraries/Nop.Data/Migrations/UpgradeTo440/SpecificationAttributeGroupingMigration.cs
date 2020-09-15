@@ -6,11 +6,12 @@ using Nop.Data.Extensions;
 namespace Nop.Data.Migrations.UpgradeTo440
 {
     [NopMigration("2020/03/08 11:26:08:9037680", "Specification attribute grouping")]
+    [SkipMigrationOnInstall]
     public class SpecificationAttributeGroupingMigration : MigrationBase
     {
         #region Fields
 
-        private readonly IMigrationManager _migrationManager; 
+        private readonly IMigrationManager _migrationManager;
 
         #endregion
 
@@ -30,7 +31,8 @@ namespace Nop.Data.Migrations.UpgradeTo440
         /// </summary>
         public override void Up()
         {
-            _migrationManager.BuildTable<SpecificationAttributeGroup>(Create);
+            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Exists())
+                _migrationManager.BuildTable<SpecificationAttributeGroup>(Create);
 
             if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
             {
