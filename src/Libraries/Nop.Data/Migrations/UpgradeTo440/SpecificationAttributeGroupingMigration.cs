@@ -31,7 +31,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
         /// </summary>
         public override void Up()
         {
-            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Exists())
+            if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttributeGroup))).Exists())
                 _migrationManager.BuildTable<SpecificationAttributeGroup>(Create);
 
             if (!Schema.Table(NameCompatibilityManager.GetTableName(typeof(SpecificationAttribute))).Column(nameof(SpecificationAttribute.SpecificationAttributeGroupId)).Exists())
