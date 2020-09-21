@@ -399,7 +399,7 @@ namespace Nop.Services.Media.RoxyFileman
                 OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
 
                 //no need user to configure
-                INTEGRATION = "tinymce4",
+                INTEGRATION = "custom",
                 RETURN_URL_PREFIX = currentPathBase,
                 DIRLIST = $"{currentPathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
                 CREATEDIR = $"{currentPathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",
