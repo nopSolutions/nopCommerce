@@ -235,7 +235,7 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
-                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
+                .Where(a => !a.CountryId.HasValue || _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
                     country.Published &&
                     //allow billing
@@ -294,7 +294,7 @@ namespace Nop.Web.Factories
                 model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             //existing addresses
-            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
+            var addresses = !a.CountryId.HasValue || _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
                 .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
                     country.Published &&
