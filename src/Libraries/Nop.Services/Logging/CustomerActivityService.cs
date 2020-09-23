@@ -198,7 +198,7 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
             int? customerId = null, int? activityLogTypeId = null, string ipAddress = null, string entityName = null, int? entityId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -230,7 +230,7 @@ namespace Nop.Services.Logging
 
             query = query.OrderByDescending(logItem => logItem.CreatedOnUtc).ThenBy(logItem => logItem.Id);
 
-            return Task.FromResult((IPagedList<ActivityLog>)new PagedList<ActivityLog>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

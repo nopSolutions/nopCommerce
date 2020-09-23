@@ -87,13 +87,13 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Specification attributes</returns>
-        public virtual Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<SpecificationAttribute>> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
 
-            return Task.FromResult((IPagedList<SpecificationAttribute>)new PagedList<SpecificationAttribute>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Products</returns>
-        public virtual Task<IPagedList<Product>> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize)
+        public virtual async Task<IPagedList<Product>> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize)
         {
             var query = from product in _productRepository.Table
                 join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
@@ -417,7 +417,7 @@ namespace Nop.Services.Catalog
                 orderby product.Name
                 select product;
 
-            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         #endregion

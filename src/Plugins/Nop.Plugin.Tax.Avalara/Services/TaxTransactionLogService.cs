@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
+using Nop.Services;
 
 namespace Nop.Plugin.Tax.Avalara.Services
 {
@@ -38,7 +39,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Paged list of tax transaction log items</returns>
-        public virtual IPagedList<TaxTransactionLog> GetTaxTransactionLog(int? customerId = null,
+        public virtual async Task<IPagedList<TaxTransactionLog>> GetTaxTransactionLog(int? customerId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -59,7 +60,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             query = query.OrderByDescending(logItem => logItem.CreatedDateUtc).ThenByDescending(logItem => logItem.Id);
 
             //return paged log
-            return new PagedList<TaxTransactionLog>(query, pageIndex, pageSize);
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

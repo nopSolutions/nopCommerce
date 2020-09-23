@@ -653,7 +653,7 @@ namespace Nop.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
-        public virtual Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistory(int? discountId = null,
+        public virtual async Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistory(int? discountId = null,
             int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var discountUsageHistory = _discountUsageHistoryRepository.Table;
@@ -682,7 +682,7 @@ namespace Nop.Services.Discounts
             //order
             discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);
 
-            return Task.FromResult((IPagedList<DiscountUsageHistory>)new PagedList<DiscountUsageHistory>(discountUsageHistory, pageIndex, pageSize));
+            return await discountUsageHistory.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

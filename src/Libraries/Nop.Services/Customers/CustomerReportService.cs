@@ -55,7 +55,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        public virtual Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReport(DateTime? createdFromUtc,
+        public virtual async Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReport(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364)
         {
@@ -95,14 +95,14 @@ namespace Nop.Services.Customers
                 OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderCount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
-            return Task.FromResult((IPagedList<BestCustomerReportLine>)new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
+            var tmp = await query2.ToPagedList(pageIndex, pageSize);
+            return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
             {
                 CustomerId = x.CustomerId,
                 OrderTotal = x.OrderTotal,
                 OrderCount = x.OrderCount
-            }),
-                tmp.PageIndex, tmp.PageSize, tmp.TotalCount));
+            }).ToList(),
+                tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
         }
 
         /// <summary>

@@ -152,7 +152,7 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item list</returns>
-        public virtual Task<IPagedList<QueuedEmail>> SearchEmails(string fromEmail,
+        public virtual async Task<IPagedList<QueuedEmail>> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc,
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
@@ -184,8 +184,9 @@ namespace Nop.Services.Messages
                 //load by priority
                 query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
 
-            var queuedEmails = new PagedList<QueuedEmail>(query, pageIndex, pageSize);
-            return Task.FromResult((IPagedList<QueuedEmail>)queuedEmails);
+            var queuedEmails = await query.ToPagedList(pageIndex, pageSize);
+            
+            return queuedEmails;
         }
 
         /// <summary>

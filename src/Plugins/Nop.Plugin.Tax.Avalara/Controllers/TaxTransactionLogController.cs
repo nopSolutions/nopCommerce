@@ -65,7 +65,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 : null;
 
             //get tax transaction log
-            var taxtransactionLog = _taxTransactionLogService.GetTaxTransactionLog(createdFromUtc: createdFromValue, createdToUtc: createdToValue,
+            var taxtransactionLog = await _taxTransactionLogService.GetTaxTransactionLog(createdFromUtc: createdFromValue, createdToUtc: createdToValue,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model

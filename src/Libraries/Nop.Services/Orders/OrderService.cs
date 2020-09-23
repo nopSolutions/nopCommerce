@@ -206,7 +206,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Orders</returns>
-        public virtual Task<IPagedList<Order>> SearchOrders(int storeId = 0,
+        public virtual async Task<IPagedList<Order>> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
             int billingCountryId = 0, string paymentMethodSystemName = null,
@@ -291,7 +291,7 @@ namespace Nop.Services.Orders
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
             //database layer paging
-            return Task.FromResult<IPagedList<Order>>(new PagedList<Order>(query, pageIndex, pageSize, getOnlyTotalCount));
+            return await query.ToPagedList(pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -983,7 +983,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payments</returns>
-        public virtual Task<IPagedList<RecurringPayment>> SearchRecurringPayments(int storeId = 0,
+        public virtual async Task<IPagedList<RecurringPayment>> SearchRecurringPayments(int storeId = 0,
             int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -1011,9 +1011,9 @@ namespace Nop.Services.Orders
                          orderby rp.StartDateUtc, rp.Id
                          select rp;
 
-            var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
+            var recurringPayments = await query2.ToPagedList(pageIndex, pageSize);
             
-            return Task.FromResult<IPagedList<RecurringPayment>>(recurringPayments);
+            return recurringPayments;
         }
 
         #endregion

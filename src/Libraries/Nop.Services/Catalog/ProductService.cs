@@ -781,7 +781,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Products</returns>
-        public virtual Task<IPagedList<Product>> GetProductsByProductAtributeId(int productAttributeId,
+        public virtual async Task<IPagedList<Product>> GetProductsByProductAtributeId(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productRepository.Table
@@ -792,7 +792,7 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -882,7 +882,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Products</returns>
-        public virtual Task<IPagedList<Product>> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
+        public virtual async Task<IPagedList<Product>> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _productRepository.Table;
@@ -911,7 +911,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderBy(product => product.MinStockQuantity).ThenBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
-            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(query, pageIndex, pageSize, getOnlyTotalCount));
+            return await query.ToPagedList(pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -923,7 +923,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Product combinations</returns>
-        public virtual Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
+        public virtual async Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var combinations = from pac in _productAttributeCombinationRepository.Table
@@ -944,7 +944,7 @@ namespace Nop.Services.Catalog
                 orderby pac.ProductId, pac.Id
                 select pac;
 
-            return Task.FromResult((IPagedList<ProductAttributeCombination>)new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount));
+            return await combinations.ToPagedList(pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -2115,7 +2115,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of products</returns>
-        public virtual Task<IPagedList<Product>> GetProductsWithAppliedDiscount(int? discountId = null,
+        public virtual async Task<IPagedList<Product>> GetProductsWithAppliedDiscount(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
@@ -2131,7 +2131,7 @@ namespace Nop.Services.Catalog
 
             products = products.OrderBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
-            return Task.FromResult((IPagedList<Product>)new PagedList<Product>(products, pageIndex, pageSize));
+            return await products.ToPagedList(pageIndex, pageSize);
         }
 
         #endregion
@@ -2153,7 +2153,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        public virtual Task<IPagedList<ProductReview>> GetAllProductReviews(int customerId = 0, bool? approved = null,
+        public virtual async Task<IPagedList<ProductReview>> GetAllProductReviews(int customerId = 0, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -2200,9 +2200,9 @@ namespace Nop.Services.Catalog
                 ? query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id)
                 : query.OrderByDescending(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id);
 
-            var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
+            var productReviews = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<ProductReview>)productReviews);
+            return productReviews;
         }
 
         /// <summary>
@@ -2543,7 +2543,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of stock quantity change entries</returns>
-        public virtual Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
+        public virtual async Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             if (product == null)
@@ -2559,7 +2559,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
 
-            return Task.FromResult((IPagedList<StockQuantityHistory>)new PagedList<StockQuantityHistory>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         #endregion

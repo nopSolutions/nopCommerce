@@ -108,7 +108,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             model.FacebookPixelSearchModel.HideSearchBlock = await _genericAttributeService
                 .GetAttribute<bool>(await _workContext.GetCurrentCustomer(), FacebookPixelDefaults.HideSearchBlockAttribute);
             model.FacebookPixelSearchModel.SetGridPageSize();
-            model.HideList = !_facebookPixelService.GetPagedConfigurations().Any();
+            model.HideList = !(await _facebookPixelService.GetPagedConfigurations()).Any();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Configure.cshtml", model);
         }
@@ -119,7 +119,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedDataTablesJson();
 
-            var configurations = _facebookPixelService.GetPagedConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
+            var configurations = await _facebookPixelService.GetPagedConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
             var model = new FacebookPixelListModel().PrepareToGrid(searchModel, configurations, () =>
             {
                 //fill in model values from the configuration

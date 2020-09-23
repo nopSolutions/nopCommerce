@@ -119,7 +119,7 @@ namespace Nop.Services.Affiliates
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Affiliates</returns>
-        public virtual Task<IPagedList<Affiliate>> GetAllAffiliates(string friendlyUrlName = null,
+        public virtual async Task<IPagedList<Affiliate>> GetAllAffiliates(string friendlyUrlName = null,
             string firstName = null, string lastName = null,
             bool loadOnlyWithOrders = false,
             DateTime? ordersCreatedFromUtc = null, DateTime? ordersCreatedToUtc = null,
@@ -163,9 +163,9 @@ namespace Nop.Services.Affiliates
 
             query = query.Distinct().OrderByDescending(a => a.Id);
 
-            var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
+            var affiliates = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<Affiliate>) affiliates);
+            return affiliates;
         }
 
         /// <summary>

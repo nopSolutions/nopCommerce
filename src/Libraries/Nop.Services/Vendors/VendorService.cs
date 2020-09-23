@@ -115,7 +115,7 @@ namespace Nop.Services.Vendors
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        public virtual Task<IPagedList<Vendor>> GetAllVendors(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        public virtual async Task<IPagedList<Vendor>> GetAllVendors(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _vendorRepository.Table;
             if (!string.IsNullOrWhiteSpace(name))
@@ -130,9 +130,9 @@ namespace Nop.Services.Vendors
             query = query.Where(v => !v.Deleted);
             query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name).ThenBy(v => v.Email);
 
-            var vendors = new PagedList<Vendor>(query, pageIndex, pageSize);
+            var vendors = await query.ToPagedList(pageIndex, pageSize);
             
-            return Task.FromResult<IPagedList<Vendor>>(vendors);
+            return vendors;
         }
 
         /// <summary>
@@ -199,13 +199,13 @@ namespace Nop.Services.Vendors
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Vendor notes</returns>
-        public virtual Task<IPagedList<VendorNote>> GetVendorNotesByVendor(int vendorId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<VendorNote>> GetVendorNotesByVendor(int vendorId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _vendorNoteRepository.Table.Where(vn => vn.VendorId == vendorId);
 
             query = query.OrderBy(v => v.CreatedOnUtc).ThenBy(v => v.Id);
 
-            return Task.FromResult<IPagedList<VendorNote>>(new PagedList<VendorNote>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

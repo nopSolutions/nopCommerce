@@ -212,7 +212,7 @@ namespace Nop.Services.Gdpr
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>GDPR log records</returns>
-        public virtual Task<IPagedList<GdprLog>> GetAllLog(int customerId = 0, int consentId = 0,
+        public virtual async Task<IPagedList<GdprLog>> GetAllLog(int customerId = 0, int consentId = 0,
             string customerInfo = "", GdprRequestType? requestType = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -234,7 +234,7 @@ namespace Nop.Services.Gdpr
 
             query = query.OrderByDescending(log => log.CreatedOnUtc).ThenByDescending(log => log.Id);
 
-            return Task.FromResult((IPagedList<GdprLog>)new PagedList<GdprLog>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

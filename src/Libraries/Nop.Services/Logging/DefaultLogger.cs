@@ -118,7 +118,7 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        public virtual Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        public virtual async Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -137,8 +137,8 @@ namespace Nop.Services.Logging
                 query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
             query = query.OrderByDescending(l => l.CreatedOnUtc);
 
-            var log = new PagedList<Log>(query, pageIndex, pageSize);
-            return Task.FromResult((IPagedList<Log>)log);
+            var log = await query.ToPagedList(pageIndex, pageSize);
+            return log;
         }
 
         /// <summary>

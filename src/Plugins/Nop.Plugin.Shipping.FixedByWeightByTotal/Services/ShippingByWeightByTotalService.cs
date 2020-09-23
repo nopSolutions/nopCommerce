@@ -129,7 +129,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
                 .ThenBy(r => r.CountryId == 0).ThenBy(r => r.StateProvinceId == 0)
                 .ThenBy(r => string.IsNullOrEmpty(r.Zip));
 
-            var records = new PagedList<ShippingByWeightByTotalRecord>(foundRecords.AsQueryable(), pageIndex, pageSize);
+            var records = new PagedList<ShippingByWeightByTotalRecord>(foundRecords.ToList(), pageIndex, pageSize);
             
             return records;
         }

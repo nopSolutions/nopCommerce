@@ -97,7 +97,7 @@ namespace Nop.Services.Blogs
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="title">Filter by blog post title</param>
         /// <returns>Blog posts</returns>
-        public virtual Task<IPagedList<BlogPost>> GetAllBlogPosts(int storeId = 0, int languageId = 0,
+        public virtual async Task<IPagedList<BlogPost>> GetAllBlogPosts(int storeId = 0, int languageId = 0,
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
@@ -131,9 +131,9 @@ namespace Nop.Services.Blogs
 
             query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 
-            var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
+            var blogPosts = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<BlogPost>)blogPosts);
+            return blogPosts;
         }
 
         /// <summary>

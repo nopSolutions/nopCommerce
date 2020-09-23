@@ -153,7 +153,7 @@ namespace Nop.Services.Orders
                 .ThenByDescending(historyEntry => historyEntry.Id);
 
             //return paged reward points history
-            return new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

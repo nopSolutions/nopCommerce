@@ -95,7 +95,7 @@ namespace Nop.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Shipments</returns>
-        public virtual Task<IPagedList<Shipment>> GetAllShipments(int vendorId = 0, int warehouseId = 0,
+        public virtual async Task<IPagedList<Shipment>> GetAllShipments(int vendorId = 0, int warehouseId = 0,
             int shippingCountryId = 0,
             int shippingStateId = 0,
             string shippingCounty = null,
@@ -193,8 +193,9 @@ namespace Nop.Services.Shipping
 
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
-            var shipments = new PagedList<Shipment>(query, pageIndex, pageSize);
-            return Task.FromResult<IPagedList<Shipment>>(shipments);
+            var shipments = await query.ToPagedList(pageIndex, pageSize);
+            
+            return shipments;
         }
 
         /// <summary>

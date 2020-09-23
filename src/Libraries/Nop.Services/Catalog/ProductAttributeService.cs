@@ -88,16 +88,16 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Product attributes</returns>
-        public virtual Task<IPagedList<ProductAttribute>> GetAllProductAttributes(int pageIndex = 0,
+        public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributes(int pageIndex = 0,
             int pageSize = int.MaxValue)
         {
             var query = from pa in _productAttributeRepository.Table
                 orderby pa.Name
                 select pa;
 
-            var productAttributes = new PagedList<ProductAttribute>(query, pageIndex, pageSize);
+            var productAttributes = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<ProductAttribute>)productAttributes);
+            return productAttributes;
         }
 
         /// <summary>

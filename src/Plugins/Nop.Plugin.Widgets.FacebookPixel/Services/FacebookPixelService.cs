@@ -13,6 +13,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
+using Nop.Services;
 using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
@@ -753,7 +754,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Paged list of configurations</returns>
-        public IPagedList<FacebookPixelConfiguration> GetPagedConfigurations(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        public async Task<IPagedList<FacebookPixelConfiguration>> GetPagedConfigurations(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _facebookPixelConfigurationRepository.Table;
 
@@ -763,7 +764,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             query = query.OrderBy(configuration => configuration.Id);
 
-            return new PagedList<FacebookPixelConfiguration>(query, pageIndex, pageSize);
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

@@ -712,7 +712,7 @@ namespace Nop.Services.Media
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        public virtual Task<IPagedList<Picture>> GetPictures(string virtualPath = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<Picture>> GetPictures(string virtualPath = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pictureRepository.Table;
 
@@ -721,7 +721,7 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            return Task.FromResult((IPagedList<Picture>)new PagedList<Picture>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

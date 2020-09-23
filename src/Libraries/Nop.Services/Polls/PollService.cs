@@ -73,7 +73,7 @@ namespace Nop.Services.Polls
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
-        public virtual Task<IPagedList<Poll>> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
+        public virtual async Task<IPagedList<Poll>> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
             bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -125,7 +125,7 @@ namespace Nop.Services.Polls
             query = query.OrderBy(poll => poll.DisplayOrder).ThenBy(poll => poll.Id);
 
             //return paged list of polls
-            return Task.FromResult<IPagedList<Poll>>(new PagedList<Poll>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public virtual Task<IPagedList<PollAnswer>> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<PollAnswer>> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollAnswerRepository.Table.Where(pa => pa.PollId == pollId);
 
@@ -216,7 +216,7 @@ namespace Nop.Services.Polls
             query = query.OrderBy(pa => pa.DisplayOrder).ThenBy(pa => pa.Id);
 
             //return paged list of polls
-            return Task.FromResult<IPagedList<PollAnswer>>(new PagedList<PollAnswer>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -289,12 +289,12 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public virtual Task<IPagedList<PollVotingRecord>> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<PollVotingRecord>> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollVotingRecordRepository.Table.Where(pa => pa.PollAnswerId == pollAnswerId);
 
             //return paged list of poll voting records
-            return Task.FromResult<IPagedList<PollVotingRecord>>(new PagedList<PollVotingRecord>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         #endregion

@@ -151,7 +151,7 @@ namespace Nop.Services.Catalog
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
             if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
-                return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+                return await query.ToPagedList(pageIndex, pageSize);
 
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
@@ -178,7 +178,7 @@ namespace Nop.Services.Catalog
 
             query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
-            return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of manufacturers</returns>
-        public virtual Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscount(int? discountId = null,
+        public virtual async Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscount(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var manufacturers = _manufacturerRepository.Table;
@@ -240,7 +240,7 @@ namespace Nop.Services.Catalog
 
             manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
 
-            return Task.FromResult((IPagedList<Manufacturer>)new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize));
+            return await manufacturers.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
             }
 
-            var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
+            var productManufacturers = await query.ToPagedList(pageIndex, pageSize);
 
             return productManufacturers;
         }

@@ -113,7 +113,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Customers</returns>
-        public virtual Task<IPagedList<Customer>> GetAllCustomers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+        public virtual async Task<IPagedList<Customer>> GetAllCustomers(DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int affiliateId = 0, int vendorId = 0, int[] customerRoleIds = null,
             string email = null, string username = null, string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
@@ -246,9 +246,9 @@ namespace Nop.Services.Customers
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
-            var customers = new PagedList<Customer>(query, pageIndex, pageSize, getOnlyTotalCount);
+            var customers = await query.ToPagedList(pageIndex, pageSize, getOnlyTotalCount);
 
-            return Task.FromResult((IPagedList<Customer>)customers);
+            return customers;
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
-        public virtual Task<IPagedList<Customer>> GetOnlineCustomers(DateTime lastActivityFromUtc,
+        public virtual async Task<IPagedList<Customer>> GetOnlineCustomers(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
@@ -270,9 +270,9 @@ namespace Nop.Services.Customers
                 query = query.Where(c => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == c.Id && customerRoleIds.Contains(ccrm.CustomerRoleId)));
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
-            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+            var customers = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<Customer>)customers);
+            return customers;
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
-        public virtual Task<IPagedList<Customer>> GetCustomersWithShoppingCarts(ShoppingCartType? shoppingCartType = null,
+        public virtual async Task<IPagedList<Customer>> GetCustomersWithShoppingCarts(ShoppingCartType? shoppingCartType = null,
             int storeId = 0, int? productId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null, int? countryId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -328,7 +328,7 @@ namespace Nop.Services.Customers
                 orderby c.Id
                 select c;
 
-            return Task.FromResult((IPagedList<Customer>)new PagedList<Customer>(customersWithCarts.Distinct(), pageIndex, pageSize));
+            return await customersWithCarts.Distinct().ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

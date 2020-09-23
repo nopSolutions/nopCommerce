@@ -73,7 +73,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerId(int customerId,
+        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerId(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
@@ -93,7 +93,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
-            return Task.FromResult((IPagedList<BackInStockSubscription>)new PagedList<BackInStockSubscription>(query, pageIndex, pageSize));
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(int productId,
+        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
@@ -120,7 +120,8 @@ namespace Nop.Services.Catalog
                 select biss;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-            return Task.FromResult((IPagedList<BackInStockSubscription>)new PagedList<BackInStockSubscription>(query, pageIndex, pageSize));
+            
+            return await query.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>

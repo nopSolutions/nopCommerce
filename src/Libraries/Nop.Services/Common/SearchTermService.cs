@@ -89,7 +89,7 @@ namespace Nop.Services.Common
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>A list search term report lines</returns>
-        public virtual Task<IPagedList<SearchTermReportLine>> GetStats(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<SearchTermReportLine>> GetStats(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = (from st in _searchTermRepository.Table
                          group st by st.Keyword into groupedResult
@@ -105,9 +105,9 @@ namespace Nop.Services.Common
                             Count = r.Count
                         });
 
-            var result = new PagedList<SearchTermReportLine>(query, pageIndex, pageSize);
+            var result = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult<IPagedList<SearchTermReportLine>>(result);
+            return result;
         }
 
         /// <summary>

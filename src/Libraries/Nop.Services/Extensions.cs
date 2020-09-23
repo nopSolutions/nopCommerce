@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using LinqToDB;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -48,6 +50,26 @@ namespace Nop.Services
         public static SelectList ToSelectList<T>(this T objList, Func<BaseEntity, string> selector) where T : IEnumerable<BaseEntity>
         {
             return new SelectList(objList.Select(p => new { ID = p.Id, Name = selector(p) }), "ID", "Name");
+        }
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
+        public static async Task<IPagedList<T>> ToPagedList<T>(this IQueryable<T> source, int pageIndex, int pageSize, bool getOnlyTotalCount = false)
+        {
+            var count = await source.CountAsync();
+
+            var data = new List<T>();
+
+            if (!getOnlyTotalCount && source != null)
+                data.AddRange(await source.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync());
+
+            return new PagedList<T>(data, pageIndex,
+                pageSize, count);
         }
     }
 }

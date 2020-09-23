@@ -103,7 +103,7 @@ namespace Nop.Services.News
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="title">Filter by news item title</param>
         /// <returns>News items</returns>
-        public virtual Task<IPagedList<NewsItem>> GetAllNews(int languageId = 0, int storeId = 0,
+        public virtual async Task<IPagedList<NewsItem>> GetAllNews(int languageId = 0, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
             var query = _newsItemRepository.Table;
@@ -136,9 +136,9 @@ namespace Nop.Services.News
                 query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }
 
-            var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
+            var news = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<NewsItem>)news);
+            return news;
         }
 
         /// <summary>

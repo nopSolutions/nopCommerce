@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
+using Nop.Services;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
@@ -166,8 +167,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!string.IsNullOrEmpty(searchModel.SearchResourceValue))
                 localeResources = localeResources.Where(l => l.Value.Value.ToLowerInvariant().Contains(searchModel.SearchResourceValue.ToLowerInvariant()));
 
-            var pagedLocaleResources = new PagedList<KeyValuePair<string, KeyValuePair<int, string>>>(localeResources,
-                searchModel.Page - 1, searchModel.PageSize);
+            var pagedLocaleResources = await localeResources.ToPagedList(searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
             var model = new LocaleResourceListModel().PrepareToGrid(searchModel, pagedLocaleResources, () =>

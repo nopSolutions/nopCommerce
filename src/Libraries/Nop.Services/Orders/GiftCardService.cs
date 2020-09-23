@@ -87,7 +87,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual Task<IPagedList<GiftCard>> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
+        public virtual async Task<IPagedList<GiftCard>> GetAllGiftCards(int? purchasedWithOrderId = null, int? usedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -121,9 +121,9 @@ namespace Nop.Services.Orders
                 query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
-            var giftCards = new PagedList<GiftCard>(query, pageIndex, pageSize);
+            var giftCards = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult<IPagedList<GiftCard>>(giftCards);
+            return giftCards;
         }
 
         /// <summary>

@@ -244,7 +244,7 @@ namespace Nop.Services.Messages
                     query = query.Where(nls => nls.Active == isActive.Value);
                 query = query.OrderBy(nls => nls.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+                var subscriptions = await query.ToPagedList(pageIndex, pageSize);
 
                 return subscriptions;
             }
@@ -271,7 +271,7 @@ namespace Nop.Services.Messages
                 query = query.Where(nls => !_customerRepository.Table.Any(c => c.Email == nls.Email));
                 query = query.OrderBy(nls => nls.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+                var subscriptions = await query.ToPagedList(pageIndex, pageSize);
 
                 return subscriptions;
             }
@@ -302,7 +302,7 @@ namespace Nop.Services.Messages
 
                 query = query.OrderBy(x => x.NewsletterSubscribers.Email);
 
-                var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x => x.NewsletterSubscribers), pageIndex, pageSize);
+                var subscriptions = await query.Select(x => x.NewsletterSubscribers).ToPagedList(pageIndex, pageSize);
 
                 return subscriptions;
             }

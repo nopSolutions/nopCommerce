@@ -478,7 +478,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual Task<IPagedList<ForumTopic>> GetAllTopics(int forumId = 0,
+        public virtual async Task<IPagedList<ForumTopic>> GetAllTopics(int forumId = 0,
             int customerId = 0, string keywords = "", ForumSearchType searchType = ForumSearchType.All,
             int limitDays = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -504,9 +504,9 @@ namespace Nop.Services.Forums
                          orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
                          select ft;
 
-            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+            var topics = await query2.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<ForumTopic>)topics);
+            return topics;
         }
 
         /// <summary>
@@ -516,7 +516,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual Task<IPagedList<ForumTopic>> GetActiveTopics(int forumId = 0,
+        public virtual async Task<IPagedList<ForumTopic>> GetActiveTopics(int forumId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query1 = from ft in _forumTopicRepository.Table
@@ -530,9 +530,9 @@ namespace Nop.Services.Forums
                          orderby ft.LastPostTime descending
                          select ft;
 
-            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+            var topics = await query2.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult<IPagedList<ForumTopic>>(topics);
+            return topics;
         }
 
         /// <summary>
@@ -699,7 +699,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        public virtual Task<IPagedList<ForumPost>> GetAllPosts(int forumTopicId = 0, int customerId = 0,
+        public virtual async Task<IPagedList<ForumPost>> GetAllPosts(int forumTopicId = 0, int customerId = 0,
             string keywords = "", bool ascSort = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -714,9 +714,9 @@ namespace Nop.Services.Forums
                 query.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id) :
                 query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
 
-            var forumPosts = new PagedList<ForumPost>(query, pageIndex, pageSize);
+            var forumPosts = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<ForumPost>)forumPosts);
+            return forumPosts;
         }
 
         /// <summary>
@@ -824,7 +824,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        public virtual Task<IPagedList<PrivateMessage>> GetAllPrivateMessages(int storeId, int fromCustomerId,
+        public virtual async Task<IPagedList<PrivateMessage>> GetAllPrivateMessages(int storeId, int fromCustomerId,
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -849,9 +849,9 @@ namespace Nop.Services.Forums
 
             query = query.OrderByDescending(pm => pm.CreatedOnUtc);
 
-            var privateMessages = new PagedList<PrivateMessage>(query, pageIndex, pageSize);
+            var privateMessages = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult<IPagedList<PrivateMessage>>(privateMessages);
+            return privateMessages;
         }
 
         /// <summary>
@@ -939,7 +939,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        public virtual Task<IPagedList<ForumSubscription>> GetAllSubscriptions(int customerId = 0, int forumId = 0,
+        public virtual async Task<IPagedList<ForumSubscription>> GetAllSubscriptions(int customerId = 0, int forumId = 0,
             int topicId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var fsQuery = from fs in _forumSubscriptionRepository.Table
@@ -957,9 +957,9 @@ namespace Nop.Services.Forums
                         orderby fs.CreatedOnUtc descending, fs.SubscriptionGuid descending
                         select fs;
 
-            var forumSubscriptions = new PagedList<ForumSubscription>(query, pageIndex, pageSize);
+            var forumSubscriptions = await query.ToPagedList(pageIndex, pageSize);
 
-            return Task.FromResult((IPagedList<ForumSubscription>)forumSubscriptions);
+            return forumSubscriptions;
         }
 
         /// <summary>

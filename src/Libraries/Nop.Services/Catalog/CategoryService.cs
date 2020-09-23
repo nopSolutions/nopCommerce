@@ -416,7 +416,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of categories</returns>
-        public virtual Task<IPagedList<Category>> GetCategoriesByAppliedDiscount(int? discountId = null,
+        public virtual async Task<IPagedList<Category>> GetCategoriesByAppliedDiscount(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var categories = _categoryRepository.Table;
@@ -432,7 +432,7 @@ namespace Nop.Services.Catalog
 
             categories = categories.OrderBy(category => category.DisplayOrder).ThenBy(category => category.Id);
 
-            return Task.FromResult((IPagedList<Category>)new PagedList<Category>(categories, pageIndex, pageSize));
+            return await categories.ToPagedList(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -607,7 +607,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
             }
 
-            var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
+            var productCategories = await query.ToPagedList(pageIndex, pageSize);
 
             return productCategories;
         }

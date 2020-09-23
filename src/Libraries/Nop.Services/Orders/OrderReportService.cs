@@ -341,7 +341,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual Task<IPagedList<BestsellersReportLine>> BestSellersReport(
+        public virtual async Task<IPagedList<BestsellersReportLine>> BestSellersReport(
             int categoryId = 0, int manufacturerId = 0,
             int storeId = 0, int vendorId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
@@ -410,8 +410,8 @@ namespace Nop.Services.Orders
                 OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.TotalAmount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
-            return Task.FromResult((IPagedList<BestsellersReportLine>)result);
+            var result = await query2.ToPagedList(pageIndex, pageSize);
+            return result;
         }
 
         /// <summary>
@@ -480,7 +480,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual Task<IPagedList<Product>> ProductsNeverSold(int vendorId = 0, int storeId = 0,
+        public virtual async Task<IPagedList<Product>> ProductsNeverSold(int vendorId = 0, int storeId = 0,
             int categoryId = 0, int manufacturerId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
@@ -528,8 +528,8 @@ namespace Nop.Services.Orders
 
             query = query.OrderBy(p => p.Name);
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
-            return Task.FromResult<IPagedList<Product>>(products);
+            var products = await query.ToPagedList(pageIndex, pageSize);
+            return products;
         }
 
         /// <summary>
