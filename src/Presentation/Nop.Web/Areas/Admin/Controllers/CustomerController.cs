@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -109,47 +108,59 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             TaxSettings taxSettings)
         {
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._emailAccountSettings = emailAccountSettings;
-            this._forumSettings = forumSettings;
-            this._gdprSettings = gdprSettings;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._customerModelFactory = customerModelFactory;
-            this._customerRegistrationService = customerRegistrationService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
-            this._exportManager = exportManager;
-            this._forumService = forumService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._queuedEmailService = queuedEmailService;
-            this._rewardPointService = rewardPointService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._taxSettings = taxSettings;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _forumSettings = forumSettings;
+            _gdprSettings = gdprSettings;
+            _addressAttributeParser = addressAttributeParser;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _customerModelFactory = customerModelFactory;
+            _customerRegistrationService = customerRegistrationService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
+            _exportManager = exportManager;
+            _forumService = forumService;
+            _gdprService = gdprService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _queuedEmailService = queuedEmailService;
+            _rewardPointService = rewardPointService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _taxService = taxService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _taxSettings = taxSettings;
         }
 
         #endregion
 
         #region Utilities
 
-        protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
+        protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles, IList<CustomerRole> existingCustomerRoles)
         {
             if (customerRoles == null)
                 throw new ArgumentNullException(nameof(customerRoles));
+
+            if (existingCustomerRoles == null)
+                throw new ArgumentNullException(nameof(existingCustomerRoles));
+
+            //check ACL permission to manage customer roles
+            var rolesToAdd = customerRoles.Except(existingCustomerRoles);
+            var rolesToDelete = existingCustomerRoles.Except(customerRoles);
+            if (rolesToAdd.Any(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName) || rolesToDelete.Any())
+            {
+                if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                    return _localizationService.GetResource("Admin.Customers.Customers.CustomerRolesManagingError");
+            }
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
@@ -173,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
+                var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
                 StringValues ctrlAttributes;
 
                 switch (attribute.AttributeControlType)
@@ -273,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CustomerList(CustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerListModel(searchModel);
@@ -294,7 +305,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Create(CustomerModel model, bool continueEditing)
+        public virtual IActionResult Create(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -314,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
-            var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles, new List<CustomerRole>());
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
@@ -331,7 +342,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
@@ -358,8 +369,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
                 if (_customerSettings.GenderEnabled)
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                if (_customerSettings.FirstNameEnabled)
+                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                if (_customerSettings.LastNameEnabled)
+                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
                 if (_customerSettings.DateOfBirthEnabled)
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.DateOfBirthAttribute, model.DateOfBirth);
                 if (_customerSettings.CompanyEnabled)
@@ -437,17 +450,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var customerRole in newCustomerRoles)
                 {
                     //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
-                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !_workContext.CurrentCustomer.IsAdmin())
+                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !_customerService.IsAdmin(_workContext.CurrentCustomer))
                         continue;
 
-                    customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                    _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                 }
 
                 _customerService.UpdateCustomer(customer);
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't have access to other functionality in admin area
-                if (customer.IsAdmin() && customer.VendorId > 0)
+                if (_customerService.IsAdmin(customer) && customer.VendorId > 0)
                 {
                     customer.VendorId = 0;
                     _customerService.UpdateCustomer(customer);
@@ -457,15 +470,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //ensure that a customer in the Vendors role has a vendor account associated.
                 //otherwise, he will have access to ALL products
-                if (customer.IsVendor() && customer.VendorId == 0)
+                if (_customerService.IsVendor(customer) && customer.VendorId == 0)
                 {
-                    var vendorRole = customer
-                        .CustomerRoles
-                        .FirstOrDefault(x => x.SystemName == NopCustomerDefaults.VendorsRoleName);
-                    //customer.CustomerRoles.Remove(vendorRole);
-                    customer.RemoveCustomerRoleMapping(
-                        customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
-                    _customerService.UpdateCustomer(customer);
+                    var vendorRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.VendorsRoleName);
+                    _customerService.RemoveCustomerRoleMapping(customer, vendorRole);
 
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
@@ -477,9 +485,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
@@ -509,7 +514,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Edit(CustomerModel model, bool continueEditing)
+        public virtual IActionResult Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -525,7 +530,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
-            var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
+
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles, _customerService.GetCustomerRoles(customer));
+
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
@@ -541,7 +548,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
             if (newCustomerRoles.Any() && newCustomerRoles.FirstOrDefault(c => c.SystemName == NopCustomerDefaults.RegisteredRoleName) != null)
             {
                 var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
@@ -559,7 +566,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customer.IsTaxExempt = model.IsTaxExempt;
 
                     //prevent deactivation of the last active administrator
-                    if (!customer.IsAdmin() || model.Active || SecondAdminAccountExists(customer))
+                    if (!_customerService.IsAdmin(customer) || model.Active || SecondAdminAccountExists(customer))
                         customer.Active = model.Active;
                     else
                         _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
@@ -611,8 +618,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
                     if (_customerSettings.GenderEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                    if (_customerSettings.FirstNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                    if (_customerSettings.LastNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
                     if (_customerSettings.DateOfBirthEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.DateOfBirthAttribute, model.DateOfBirth);
                     if (_customerSettings.CompanyEnabled)
@@ -674,20 +683,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                     }
 
+                    var currentCustomerRoleIds = _customerService.GetCustomerRoleIds(customer, true);
+
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
                     {
                         //ensure that the current customer cannot add/remove to/from "Administrators" system role
                         //if he's not an admin himself
                         if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName &&
-                            !_workContext.CurrentCustomer.IsAdmin())
+                            !_customerService.IsAdmin(_workContext.CurrentCustomer))
                             continue;
 
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
-                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
-                                customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                            if (currentCustomerRoleIds.All(roleId => roleId != customerRole.Id))
+                                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                         }
                         else
                         {
@@ -699,12 +710,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                             }
 
                             //remove role
-                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) > 0)
-                            {
-                                customer.RemoveCustomerRoleMapping(
-                                    customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
-
-                            }
+                            if (currentCustomerRoleIds.Any(roleId => roleId == customerRole.Id))
+                                _customerService.RemoveCustomerRoleMapping(customer, customerRole);
                         }
                     }
 
@@ -712,7 +719,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
                     //otherwise, he won't have access to the other functionality in admin area
-                    if (customer.IsAdmin() && customer.VendorId > 0)
+                    if (_customerService.IsAdmin(customer) && customer.VendorId > 0)
                     {
                         customer.VendorId = 0;
                         _customerService.UpdateCustomer(customer);
@@ -721,15 +728,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     //ensure that a customer in the Vendors role has a vendor account associated.
                     //otherwise, he will have access to ALL products
-                    if (customer.IsVendor() && customer.VendorId == 0)
+                    if (_customerService.IsVendor(customer) && customer.VendorId == 0)
                     {
-                        var vendorRole = customer
-                            .CustomerRoles
-                            .FirstOrDefault(x => x.SystemName == NopCustomerDefaults.VendorsRoleName);
-                        //customer.CustomerRoles.Remove(vendorRole);
-                        customer.RemoveCustomerRoleMapping(
-                            customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
-                        _customerService.UpdateCustomer(customer);
+                        var vendorRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.VendorsRoleName);
+                        _customerService.RemoveCustomerRoleMapping(customer, vendorRole);
+
                         _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
 
@@ -741,9 +744,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     if (!continueEditing)
                         return RedirectToAction("List");
-
-                    //selected tab
-                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
@@ -773,7 +773,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
-            if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+            if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
                 return RedirectToAction("Edit", new { id = customer.Id });
@@ -864,14 +864,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prevent attempts to delete the user, if it is the last active administrator
-                if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
+                if (_customerService.IsAdmin(customer) && !SecondAdminAccountExists(customer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
@@ -924,7 +924,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //ensure that a non-admin user cannot impersonate as an administrator
             //otherwise, that user can simply impersonate as an administrator and gain additional administrative privileges
-            if (!_workContext.CurrentCustomer.IsAdmin() && customer.IsAdmin())
+            if (!_customerService.IsAdmin(_workContext.CurrentCustomer) && _customerService.IsAdmin(customer))
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
                 return RedirectToAction("Edit", customer.Id);
@@ -1050,12 +1050,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (!_forumSettings.AllowPrivateMessages)
                     throw new NopException("Private messages are disabled");
-                if (customer.IsGuest())
+                if (_customerService.IsGuest(customer))
                     throw new NopException("Customer should be registered");
                 if (string.IsNullOrWhiteSpace(model.SendPm.Subject))
-                    throw new NopException("PM subject is empty");
+                    throw new NopException(_localizationService.GetResource("PrivateMessages.SubjectCannotBeEmpty"));
                 if (string.IsNullOrWhiteSpace(model.SendPm.Message))
-                    throw new NopException("PM message is empty");
+                    throw new NopException(_localizationService.GetResource("PrivateMessages.MessageCannotBeEmpty"));
 
                 var privateMessage = new PrivateMessage
                 {
@@ -1071,7 +1071,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 };
 
                 _forumService.InsertPrivateMessage(privateMessage);
-                
+
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
             }
             catch (Exception exc)
@@ -1090,7 +1090,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RewardPointsHistorySelect(CustomerRewardPointsSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1109,12 +1109,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prevent adding a new row with zero value
             if (model.Points == 0)
-                return Json(new { Result = false, Error = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed")) });
+                return ErrorJson(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.AddingZeroValueNotAllowed"));
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
-                return Json(new { Result = false });
+                return ErrorJson("Customer cannot be loaded");
 
             //check whether delay is set
             DateTime? activatingDate = null;
@@ -1134,7 +1134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _rewardPointService.AddRewardPointsHistoryEntry(customer, model.Points, model.StoreId, model.Message,
                 activatingDate: activatingDate, endDate: endDate);
 
-            return Json(new { Result = true, Message = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Customers.Customers.SomeComment")) });
+            return Json(new { Result = true });
         }
 
         #endregion
@@ -1145,7 +1145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AddressesSelect(CustomerAddressSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1168,7 +1168,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
 
             //try to get an address with the specified id
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == id);
+            var address = _customerService.GetCustomerAddress(customer.Id, id);            
+
             if (address == null)
                 return Content("No address found with the specified id");
 
@@ -1198,7 +1199,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AddressCreate(CustomerAddressModel model)
+        public virtual IActionResult AddressCreate(CustomerAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1209,7 +1210,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1227,9 +1228,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                //customer.Addresses.Add(address);
-                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
-                _customerService.UpdateCustomer(customer);
+
+                _addressService.InsertAddress(address);
+
+                _customerService.InsertCustomerAddress(customer, address);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));
 
@@ -1265,7 +1267,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AddressEdit(CustomerAddressModel model)
+        public virtual IActionResult AddressEdit(CustomerAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1281,7 +1283,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customer.Id });
 
             //custom address attributes
-            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1314,7 +1316,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderList(CustomerOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1422,7 +1424,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GetCartList(CustomerShoppingCartSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1442,7 +1444,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListActivityLog(CustomerActivityLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1462,7 +1464,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BackInStockSubscriptionList(CustomerBackInStockSubscriptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -1493,7 +1495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GdprLogList(GdprLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareGdprLogListModel(searchModel);
@@ -1518,14 +1520,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prevent attempts to delete the user, if it is the last active administrator
-                if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
+                if (_customerService.IsAdmin(customer) && !SecondAdminAccountExists(customer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
@@ -1579,15 +1581,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportExcel")]
         [FormValueRequired("exportexcel-all")]
         public virtual IActionResult ExportExcelAll(CustomerSearchModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: false,
-                customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
+            var customers = _customerService.GetAllCustomers(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1638,15 +1639,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportXML")]
         [FormValueRequired("exportxml-all")]
         public virtual IActionResult ExportXmlAll(CustomerSearchModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: false,
-                customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
+            var customers = _customerService.GetAllCustomers(customerRoleIds: model.SelectedCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -1685,8 +1685,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            var xml = _exportManager.ExportCustomersToXml(customers);
-            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
+            try
+            {
+                var xml = _exportManager.ExportCustomersToXml(customers);
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
-using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
-    [Validator(typeof(LoginValidator))]
     public partial class LoginModel : BaseNopModel
     {
         public bool CheckoutAsGuest { get; set; }
@@ -20,7 +17,7 @@ namespace Nop.Web.Models.Customer
 
         public UserRegistrationType RegistrationType { get; set; }
 
-        [NopResourceDisplayName("Account.Login.Fields.UserName")]
+        [NopResourceDisplayName("Account.Login.Fields.Username")]
         public string Username { get; set; }
 
         [DataType(DataType.Password)]

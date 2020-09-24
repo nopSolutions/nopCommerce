@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Validators.Catalog;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -17,7 +15,6 @@ namespace Nop.Web.Models.Catalog
         public bool AllowCustomerReviews { get; set; }
     }
 
-    [Validator(typeof(ProductReviewsValidator))]
     public partial class ProductReviewsModel : BaseNopModel
     {
         public ProductReviewsModel()
@@ -66,6 +63,8 @@ namespace Nop.Web.Models.Catalog
         }
 
         public int CustomerId { get; set; }
+
+        public string CustomerAvatarUrl { get; set; }
 
         public string CustomerName { get; set; }
 

@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core.Infrastructure;
-using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Framework.UI
 {
@@ -176,14 +174,13 @@ namespace Nop.Web.Framework.UI
         /// Generate all script parts
         /// </summary>
         /// <param name="html">HTML helper</param>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopScripts(this IHtmlHelper html, IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public static IHtmlContent NopScripts(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateScripts(urlHelper, location, bundleFiles));
+            return new HtmlString(pageHeadBuilder.GenerateScripts(location, bundleFiles));
         }
 
 
@@ -216,13 +213,12 @@ namespace Nop.Web.Framework.UI
         /// Generate all inline script parts
         /// </summary>
         /// <param name="html">HTML helper</param>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopInlineScripts(this IHtmlHelper html, IUrlHelper urlHelper, ResourceLocation location)
+        public static IHtmlContent NopInlineScripts(this IHtmlHelper html, ResourceLocation location)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateInlineScripts(urlHelper, location));
+            return new HtmlString(pageHeadBuilder.GenerateInlineScripts(location));
         }
 
         /// <summary>
@@ -279,14 +275,13 @@ namespace Nop.Web.Framework.UI
         /// Generate all CSS parts
         /// </summary>
         /// <param name="html">HTML helper</param>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopCssFiles(this IHtmlHelper html, IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public static IHtmlContent NopCssFiles(this IHtmlHelper html, ResourceLocation location, bool? bundleFiles = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return new HtmlString(pageHeadBuilder.GenerateCssFiles(urlHelper, location, bundleFiles));
+            return new HtmlString(pageHeadBuilder.GenerateCssFiles(location, bundleFiles));
         }
 
         /// <summary>

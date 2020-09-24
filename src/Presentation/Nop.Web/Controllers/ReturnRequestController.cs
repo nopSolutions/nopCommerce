@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -14,11 +14,11 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class ReturnRequestController : BasePublicController
     {
         #region Fields
@@ -57,37 +57,35 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
-            this._customerService = customerService;
-            this._customNumberFormatter = customNumberFormatter;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._returnRequestService = returnRequestService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._orderSettings = orderSettings;
+            _customerService = customerService;
+            _customNumberFormatter = customNumberFormatter;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _returnRequestService = returnRequestService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _orderSettings = orderSettings;
         }
 
         #endregion
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerReturnRequests()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = _returnRequestModelFactory.PrepareCustomerReturnRequestsModel();
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ReturnRequest(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -95,7 +93,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new SubmitReturnRequestModel();
             model = _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
@@ -103,15 +101,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ReturnRequest")]
-        [PublicAntiForgery]
-        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model)
+        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var count = 0;
 
@@ -124,8 +121,7 @@ namespace Nop.Web.Controllers
             }
 
             //returnable products
-            var form = model.Form;
-            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
+            var orderItems = _orderService.GetOrderItems(order.Id, isNotReturnable: false);
             foreach (var orderItem in orderItems)
             {
                 var quantity = 0; //parse quantity
@@ -156,15 +152,18 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = DateTime.UtcNow,
                         UpdatedOnUtc = DateTime.UtcNow
                     };
-                    _workContext.CurrentCustomer.ReturnRequests.Add(rr);
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                    _returnRequestService.InsertReturnRequest(rr);
+
                     //set return request custom number
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    _returnRequestService.UpdateReturnRequest(rr);
+
                     //notify store owner
-                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, order, _localizationSettings.DefaultAdminLanguageId);
                     //notify customer
-                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
+                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order);
 
                     count++;
                 }
@@ -180,6 +179,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult UploadFileReturnRequest()
         {
             if (!_orderSettings.ReturnRequestsEnabled || !_orderSettings.ReturnRequestsAllowFiles)

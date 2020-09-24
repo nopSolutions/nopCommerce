@@ -35,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IRecurringPaymentModelFactory recurringPaymentModelFactory)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._recurringPaymentModelFactory = recurringPaymentModelFactory;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _recurringPaymentModelFactory = recurringPaymentModelFactory;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(RecurringPaymentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _recurringPaymentModelFactory.PrepareRecurringPaymentListModel(searchModel);
@@ -112,10 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = payment.Id });
             }
 
@@ -148,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult HistoryList(RecurringPaymentHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a recurring payment with the specified id
             var payment = _orderService.GetRecurringPaymentById(searchModel.RecurringPaymentId)
@@ -183,8 +180,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -195,8 +192,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -228,8 +225,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -240,8 +237,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected tab
-                SaveSelectedTabName(persistForTheNextRequest: false);
+                //selected panel
+                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }

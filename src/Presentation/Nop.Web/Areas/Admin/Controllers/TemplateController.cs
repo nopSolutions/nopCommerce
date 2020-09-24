@@ -8,8 +8,8 @@ using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Templates;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -35,12 +35,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             ITemplateModelFactory templateModelFactory,
             ITopicTemplateService topicTemplateService)
         {
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._permissionService = permissionService;
-            this._productTemplateService = productTemplateService;
-            this._templateModelFactory = templateModelFactory;
-            this._topicTemplateService = topicTemplateService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _permissionService = permissionService;
+            _productTemplateService = productTemplateService;
+            _templateModelFactory = templateModelFactory;
+            _topicTemplateService = topicTemplateService;
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CategoryTemplates(CategoryTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _templateModelFactory.PrepareCategoryTemplateListModel(searchModel);
@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a category template with the specified id
             var template = _categoryTemplateService.GetCategoryTemplateById(model.Id)
@@ -98,13 +98,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new CategoryTemplate();
             template = model.ToEntity(template);
             _categoryTemplateService.InsertCategoryTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -130,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _templateModelFactory.PrepareManufacturerTemplateListModel(searchModel);
@@ -145,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a manufacturer template with the specified id
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id)
@@ -164,13 +164,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new ManufacturerTemplate();
             template = model.ToEntity(template);
             _manufacturerTemplateService.InsertManufacturerTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -196,7 +196,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductTemplates(ProductTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _templateModelFactory.PrepareProductTemplateListModel(searchModel);
@@ -211,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a product template with the specified id
             var template = _productTemplateService.GetProductTemplateById(model.Id)
@@ -230,13 +230,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new ProductTemplate();
             template = model.ToEntity(template);
             _productTemplateService.InsertProductTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -262,7 +262,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult TopicTemplates(TopicTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _templateModelFactory.PrepareTopicTemplateListModel(searchModel);
@@ -277,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a topic template with the specified id
             var template = _topicTemplateService.GetTopicTemplateById(model.Id)
@@ -296,13 +296,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var template = new TopicTemplate();
             template = model.ToEntity(template);
             _topicTemplateService.InsertTopicTemplate(template);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]

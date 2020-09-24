@@ -3,15 +3,15 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Seo;
+using Nop.Data;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents a filter attribute that checks WWW at the beginning of the URL and properly redirect if necessary
     /// </summary>
-    public class WwwRequirementAttribute : TypeFilterAttribute
+    public sealed class WwwRequirementAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             public WwwRequirementFilter(IWebHelper webHelper,
                 SeoSettings seoSettings)
             {
-                this._webHelper = webHelper;
-                this._seoSettings = seoSettings;
+                _webHelper = webHelper;
+                _seoSettings = seoSettings;
             }
 
             #endregion

@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 
@@ -10,8 +9,6 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
-        private ICollection<CheckoutAttributeValue> _checkoutAttributeValues;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -96,15 +93,6 @@ namespace Nop.Core.Domain.Orders
         {
             get => (AttributeControlType)AttributeControlTypeId;
             set => AttributeControlTypeId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets the checkout attribute values
-        /// </summary>
-        public virtual ICollection<CheckoutAttributeValue> CheckoutAttributeValues
-        {
-            get => _checkoutAttributeValues ?? (_checkoutAttributeValues = new List<CheckoutAttributeValue>());
-            protected set => _checkoutAttributeValues = value;
         }
     }
 }

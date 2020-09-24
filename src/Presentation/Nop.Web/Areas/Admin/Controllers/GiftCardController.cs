@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
+        private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -52,24 +53,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             INotificationService notificationService,
+            IOrderService orderService,
             IPermissionService permissionService,
             IPriceFormatter priceFormatter,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._giftCardModelFactory = giftCardModelFactory;
-            this._giftCardService = giftCardService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._priceFormatter = priceFormatter;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
+            _giftCardModelFactory = giftCardModelFactory;
+            _giftCardService = giftCardService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _priceFormatter = priceFormatter;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -96,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult GiftCardList(GiftCardSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _giftCardModelFactory.PrepareGiftCardListModel(searchModel);
@@ -171,12 +174,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (giftCard == null)
                 return RedirectToAction("List");
 
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
+            var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+
+            model.PurchasedWithOrderId = order?.Id;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order.CustomOrderNumber;
+            model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
             if (ModelState.IsValid)
             {
@@ -191,9 +196,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = giftCard.Id });
             }
@@ -223,14 +225,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (giftCard == null)
                 return RedirectToAction("List");
 
-            model = giftCard.ToModel(model);
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
-            model.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
-            model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order.CustomOrderNumber;
-
             try
             {
                 if (!CommonHelper.IsValidEmail(giftCard.RecipientEmail))
@@ -240,7 +234,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException("Sender email is not valid");
 
                 var languageId = 0;
-                var order = giftCard.PurchasedWithOrderItem?.Order;
+                var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+                
                 if (order != null)
                 {
                     var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
@@ -266,6 +261,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 _notificationService.ErrorNotification(exc);
             }
+
+            //prepare model
+            model = _giftCardModelFactory.PrepareGiftCardModel(model, giftCard);
 
             return View(model);
         }
@@ -296,7 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a gift card with the specified id
             var giftCard = _giftCardService.GetGiftCardById(searchModel.GiftCardId)

@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Gdpr
+﻿namespace Nop.Core.Domain.Gdpr
 {
     /// <summary>
     /// Represents a GDPR request type
@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Gdpr
         /// <summary>
         /// Delete customer
         /// </summary>
-        DeleteCustomer = 15
+        DeleteCustomer = 15,
+
+        /// <summary>
+        /// User changed profile
+        /// </summary>
+        ProfileChanged = 20
     }
 }

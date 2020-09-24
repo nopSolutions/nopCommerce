@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Text;
 using Nop.Core;
@@ -44,15 +44,15 @@ namespace Nop.Services.Orders
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._priceFormatter = priceFormatter;
-            this._taxService = taxService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _priceFormatter = priceFormatter;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion
@@ -118,7 +118,6 @@ namespace Nop.Services.Orders
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                                 string attributeText;
                                 var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
                                 //encode (if required)
@@ -163,7 +162,7 @@ namespace Nop.Services.Orders
                                 formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
                                 if (renderPrices)
                                 {
-                                    var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
+                                    var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer);
                                     var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
@@ -177,7 +176,6 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
-
                         }
                     }
 

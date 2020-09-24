@@ -1,55 +1,52 @@
-﻿using Nop.Web.Validators.Catalog;
+﻿using FluentValidation.TestHelper;
+using Nop.Tests;
+using Nop.Web.Models.Catalog;
+using Nop.Web.Validators.Catalog;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
 {
     [TestFixture]
-    public class ProductReviewsValidatorTests : BaseValidatorTests
+    public class ProductReviewsValidatorTests : BaseNopTest
     {
         private ProductReviewsValidator _validator;
 
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _validator = new ProductReviewsValidator(_localizationService);
+            _validator = GetService<ProductReviewsValidator>();
         }
 
-        //TODO uncomment tests when the following FluentVlidation issue is fixed http://fluentvalidation.codeplex.com/workitem/7095
+        [Test]
+        public void ShouldHaveErrorWhenTitleIsNullOrEmpty()
+        {
+            var model = new ProductReviewsModel { AddProductReview = { Title = null } };
+            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.Title, model);
+            model.AddProductReview.Title = string.Empty;
+            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.Title, model);
+        }
 
-        //[Test]
-        //public void Should_have_error_when_title_is_null_or_empty()
-        //{
-        //    var model = new ProductReviewsModel();
-        //    model.AddProductReview.Title = null;
-        //    _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.Title, model);
-        //    model.AddProductReview.Title = "";
-        //    _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.Title, model);
-        //}
+        [Test]
+        public void ShouldNotHaveErrorWhenTitleIsSpecified()
+        {
+            var model = new ProductReviewsModel { AddProductReview = { Title = "some comment" } };
+            _validator.ShouldNotHaveValidationErrorFor(x => x.AddProductReview.Title, model);
+        }
 
-        //[Test]
-        //public void Should_not_have_error_when_title_is_specified()
-        //{
-        //    var model = new ProductReviewsModel();
-        //    model.AddProductReview.Title = "some comment";
-        //    _validator.ShouldNotHaveValidationErrorFor(x => x.AddProductReview.Title, model);
-        //}
+        [Test]
+        public void ShouldHaveErrorWhenReviewTextIsNullOrEmpty()
+        {
+            var model = new ProductReviewsModel { AddProductReview = { ReviewText = null } };
+            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
+            model.AddProductReview.ReviewText = string.Empty;
+            _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
+        }
 
-        //[Test]
-        //public void Should_have_error_when_reviewText_is_null_or_empty()
-        //{
-        //    var model = new ProductReviewsModel();
-        //    model.AddProductReview.ReviewText = null;
-        //    _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
-        //    model.AddProductReview.ReviewText = "";
-        //    _validator.ShouldHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
-        //}
-
-        //[Test]
-        //public void Should_not_have_error_when_reviewText_is_specified()
-        //{
-        //    var model = new ProductReviewsModel();
-        //    model.AddProductReview.ReviewText = "some comment";
-        //    _validator.ShouldNotHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
-        //}
+        [Test]
+        public void ShouldNotHaveErrorWhenReviewTextIsSpecified()
+        {
+            var model = new ProductReviewsModel { AddProductReview = { ReviewText = "some comment" } };
+            _validator.ShouldNotHaveValidationErrorFor(x => x.AddProductReview.ReviewText, model);
+        }
     }
 }

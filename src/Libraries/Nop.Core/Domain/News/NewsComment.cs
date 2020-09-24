@@ -1,6 +1,4 @@
-using System;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Stores;
+﻿using System;
 
 namespace Nop.Core.Domain.News
 {
@@ -43,20 +41,5 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the news item
-        /// </summary>
-        public virtual NewsItem NewsItem { get; set; }
-
-        /// <summary>
-        /// Gets or sets the store
-        /// </summary>
-        public virtual Store Store { get; set; }
     }
 }

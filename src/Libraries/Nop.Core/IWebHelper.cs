@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Nop.Core
 {
@@ -83,8 +83,7 @@ namespace Nop.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
-        /// <param name="makeRedirect">A value indicating whether we should made redirection after restart</param>
-        void RestartAppDomain(bool makeRedirect = false);
+        void RestartAppDomain();
         
         /// <summary>
         /// Gets a value that indicates whether the client is being redirected to a new location
@@ -114,5 +113,12 @@ namespace Nop.Core
         /// <param name="request">HTTP request</param>
         /// <returns>Raw URL</returns>
         string GetRawUrl(HttpRequest request);
+
+        /// <summary>
+        /// Gets whether the request is made with AJAX 
+        /// </summary>
+        /// <param name="request">HTTP request</param>
+        /// <returns>Result</returns>
+        bool IsAjaxRequest(HttpRequest request);
     }
 }

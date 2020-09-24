@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Catalog;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -9,13 +8,13 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a specification attribute model
     /// </summary>
-    [Validator(typeof(SpecificationAttributeValidator))]
     public partial class SpecificationAttributeModel : BaseNopEntityModel, ILocalizedModel<SpecificationAttributeLocalizedModel>
     {
         #region Ctor
 
         public SpecificationAttributeModel()
         {
+            AvailableGroups = new List<SelectListItem>();
             Locales = new List<SpecificationAttributeLocalizedModel>();
             SpecificationAttributeOptionSearchModel = new SpecificationAttributeOptionSearchModel();
             SpecificationAttributeProductSearchModel = new SpecificationAttributeProductSearchModel();
@@ -25,11 +24,16 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         #region Properties
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.DisplayOrder")]
+        public int DisplayOrder { get;set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup")]
+        public int? SpecificationAttributeGroupId { get; set; }
+
+        public IList<SelectListItem> AvailableGroups { get; set; }
 
         public IList<SpecificationAttributeLocalizedModel> Locales { get; set; }
 
@@ -38,13 +42,5 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public SpecificationAttributeProductSearchModel SpecificationAttributeProductSearchModel { get; set; }
 
         #endregion
-    }
-
-    public partial class SpecificationAttributeLocalizedModel : ILocalizedLocaleModel
-    {
-        public int LanguageId { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
-        public string Name { get; set; }
     }
 }

@@ -16,9 +16,8 @@ namespace Nop.Core.Infrastructure
     {
         #region Fields
 
-        protected INopFileProvider _fileProvider;
-
         private bool _ignoreReflectionErrors = true;
+        protected INopFileProvider _fileProvider;
 
         #endregion
 
@@ -26,7 +25,7 @@ namespace Nop.Core.Infrastructure
 
         public AppDomainTypeFinder(INopFileProvider fileProvider = null)
         {
-            this._fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            _fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
         }
 
         #endregion
@@ -163,8 +162,8 @@ namespace Nop.Core.Infrastructure
                     if (!implementedInterface.IsGenericType)
                         continue;
 
-                    var isMatch = genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
-                    return isMatch;
+                    if (genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition()))
+                        return true;
                 }
 
                 return false;

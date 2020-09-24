@@ -13,6 +13,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class PaymentCheckMoneyOrderController : BasePaymentController
     {
         #region Fields
@@ -35,12 +36,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -84,7 +85,6 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Security;
+using Nop.Data;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents filter attribute that validates IP address
     /// </summary>
-    public class ValidateIpAddressAttribute : TypeFilterAttribute
+    public sealed class ValidateIpAddressAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -44,8 +44,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             public ValidateIpAddressFilter(IWebHelper webHelper,
                 SecuritySettings securitySettings)
             {
-                this._webHelper = webHelper;
-                this._securitySettings = securitySettings;
+                _webHelper = webHelper;
+                _securitySettings = securitySettings;
             }
 
             #endregion

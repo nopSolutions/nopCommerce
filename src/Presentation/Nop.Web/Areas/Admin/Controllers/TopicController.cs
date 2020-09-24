@@ -50,18 +50,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             ITopicService topicService,
             IUrlRecordService urlRecordService)
         {
-            this._aclService = aclService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._topicModelFactory = topicModelFactory;
-            this._topicService = topicService;
-            this._urlRecordService = urlRecordService;
+            _aclService = aclService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _topicModelFactory = topicModelFactory;
+            _topicService = topicService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -106,6 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveTopicAcl(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _topicService.UpdateTopic(topic);
 
             var existingAclRecords = _aclService.GetAclRecords(topic);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -130,6 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Topic topic, TopicModel model)
         {
             topic.LimitedToStores = model.SelectedStoreIds.Any();
+            _topicService.UpdateTopic(topic);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(topic);
             var allStores = _storeService.GetAllStores();
@@ -175,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(TopicSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _topicModelFactory.PrepareTopicListModel(searchModel);
@@ -233,10 +235,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = topic.Id });
             }
 
@@ -303,10 +302,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = topic.Id });
             }
 

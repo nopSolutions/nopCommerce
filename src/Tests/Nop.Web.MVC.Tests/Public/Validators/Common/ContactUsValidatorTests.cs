@@ -1,5 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using Nop.Core.Domain.Common;
+using Nop.Tests;
 using Nop.Web.Models.Common;
 using Nop.Web.Validators.Common;
 using NUnit.Framework;
@@ -7,32 +7,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Common
 {
     [TestFixture]
-    public class ContactUsValidatorTests : BaseValidatorTests
+    public class ContactUsValidatorTests : BaseNopTest
     {
         private ContactUsValidator _validator;
-        private CommonSettings _commonSettings;
-        
+     
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _commonSettings = new CommonSettings();
-            _validator = new ContactUsValidator(_localizationService, _commonSettings);
+            _validator = GetService<ContactUsValidator>();
         }
         
         [Test]
-        public void Should_have_error_when_email_is_null_or_empty()
+        public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
         {
             var model = new ContactUsModel
             {
                 Email = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
-            model.Email = "";
+            model.Email = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
 
         [Test]
-        public void Should_have_error_when_email_is_wrong_format()
+        public void ShouldHaveErrorWhenEmailIsWrongFormat()
         {
             var model = new ContactUsModel
             {
@@ -42,7 +40,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         }
 
         [Test]
-        public void Should_not_have_error_when_email_is_correct_format()
+        public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
         {
             var model = new ContactUsModel
             {
@@ -52,19 +50,19 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         }
 
         [Test]
-        public void Should_have_error_when_fullName_is_null_or_empty()
+        public void ShouldHaveErrorWhenFullnameIsNullOrEmpty()
         {
             var model = new ContactUsModel
             {
                 FullName = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.FullName, model);
-            model.FullName = "";
+            model.FullName = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.FullName, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_fullName_is_specified()
+        public void ShouldNotHaveErrorWhenFullnameIsSpecified()
         {
             var model = new ContactUsModel
             {
@@ -74,19 +72,19 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         }
 
         [Test]
-        public void Should_have_error_when_enquiry_is_null_or_empty()
+        public void ShouldHaveErrorWhenEnquiryIsNullOrEmpty()
         {
             var model = new ContactUsModel
             {
                 Enquiry = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Enquiry, model);
-            model.Enquiry = "";
+            model.Enquiry = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Enquiry, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_enquiry_is_specified()
+        public void ShouldNotHaveErrorWhenEnquiryIsSpecified()
         {
             var model = new ContactUsModel
             {

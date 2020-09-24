@@ -12,8 +12,8 @@ namespace Nop.Web.Components
 
         public HomepageNewsViewComponent(INewsModelFactory newsModelFactory, NewsSettings newsSettings)
         {
-            this._newsModelFactory = newsModelFactory;
-            this._newsSettings = newsSettings;
+            _newsModelFactory = newsModelFactory;
+            _newsSettings = newsSettings;
         }
 
         public IViewComponentResult Invoke()
@@ -21,7 +21,7 @@ namespace Nop.Web.Components
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = _newsModelFactory.PrepareHomePageNewsItemsModel();
+            var model = _newsModelFactory.PrepareHomepageNewsItemsModel();
             return View(model);
         }
     }

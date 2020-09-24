@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Common
 {
@@ -26,10 +26,5 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the address attribute
-        /// </summary>
-        public virtual AddressAttribute AddressAttribute { get; set; }
     }
 }

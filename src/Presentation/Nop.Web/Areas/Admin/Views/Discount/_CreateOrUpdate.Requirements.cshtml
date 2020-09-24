@@ -1,6 +1,6 @@
 ﻿@model DiscountModel
 @{
-    Html.AddScriptParts("~/lib/jquery-tmpl/jquery.tmpl.min.js");
+    Html.AddScriptParts("~/lib_npm/jsrender/jsrender.min.js");
 }
 
 <div class="panel-body">
@@ -51,11 +51,14 @@
                         $.ajax({
                             cache: false,
                             url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
-                            data: { "systemName": ruleSystemName, "discountId": @Model.Id },
-                            success: function(result) {
-                                loadRequirementIntoBox(result.url, '#addrequirementplaceholder');
+                            data: {
+                                "systemName": ruleSystemName,
+                                "discountId": @Model.Id 
                             },
-                            error: function(xhr, ajaxOptions, thrownError) {
+                            success: function (data, textStatus, jqXHR) {
+                                loadRequirementIntoBox(data.url, '#addrequirementplaceholder');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 $('#addrequirementplaceholder').html('Failed to load requirement URL');
                             }
                         });
@@ -74,10 +77,10 @@
                     cache: false,
                     url: configureRuleUrl,
                     dataType: "html",
-                    success: function(result) {
-                        $(placeholderName).html(result);
+                    success: function (data, textStatus, jqXHR) {
+                        $(placeholderName).html(data);
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $(placeholderName).html('Failed to load requirement content.');
                     }
                 });
@@ -90,7 +93,7 @@
                     parentId: (typeof parentId === 'undefined' ? null : parentId),
                     interactionTypeId: (typeof interactionTypeId === 'undefined' ? null : interactionTypeId),
                     deleteRequirement: (typeof deleteRequirement === 'undefined' ? false : deleteRequirement)
-                };
+                };                              
 
                 addAntiForgeryToken(postData);
                 $.ajax({
@@ -98,14 +101,14 @@
                     type: "POST",
                     url: "@(Url.Action("GetDiscountRequirements", "Discount"))",
                     data: postData,
-                    success: function (result) {
+                    success: function (data, textStatus, jqXHR) {
                         //set requirements
-                        loadRequirementBoxes(result.Requirements, "#discountRequirementContainer", true);
+                        loadRequirementBoxes(data.Requirements, "#discountRequirementContainer", true);
 
                         //set available groups
                         var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                         groupsElement.html('');
-                        $.each(result.AvailableGroups, function (id, option) {
+                        $.each(data.AvailableGroups, function (id, option) {
                             groupsElement.append($('<option></option>').val(option.Value).html(option.Text));
                         });
                         var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
@@ -116,7 +119,7 @@
                             $("#pnlGroup").hide();
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $("#getDiscountRequirementsAlert").click();
                     }
                 });
@@ -124,12 +127,14 @@
 
             //load HTML for exisiting requirements
             function loadRequirementBoxes(requirements, placeholder, hideEmptyString) {
-                if(requirements.length > 0 || hideEmptyString)
+                if (requirements.length > 0 || hideEmptyString)
                     $(placeholder).html('');
                 else
                     $(placeholder).html('@T("Admin.Promotions.Discounts.Requirements.GroupIsEmpty")');
-
-                $("#discountRequirementTemplate").tmpl(requirements).appendTo(placeholder);
+                                
+                $(placeholder).append(
+                    $("#discountRequirementTemplate").render(requirements)
+                );
 
                 for (var i = 0; i < requirements.length; i++) {
                     var placeholderName = '#editrequirementplaceholder' + requirements[i].DiscountRequirementId;
@@ -156,10 +161,10 @@
                     type: "POST",
                     data: postData,
                     url: "@(Url.Action("AddNewGroup", "Discount"))",
-                    success: function (data) {
+                    success: function (data, textStatus, jqXHR) {
                         $("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);
                     },
-                    error:function (xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $("#failedToSave").click();
                     }
                 });
@@ -180,55 +185,52 @@
             <div id="discountRequirementContainer"></div>
 
             <!-- Discount requirement template -->
-            <script id="discountRequirementTemplate" type="text/html">
-                <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{= DiscountRequirementId }}">
+            <script id="discountRequirementTemplate" type="text/x-jsrender">
+                <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{>DiscountRequirementId}}">
                     <div class="requirement-heading clearfix">
                         {{if IsGroup}}
                         <span class="pull-left margin-r-5">
                             @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
-                            <i>{{= RuleName }}</i>
+                            <i>{{:RuleName}}</i>
                         </span>
                         <div class="interaction-type pull-left clearfix">
                             <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
-                            <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
-                                    onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
-                                {{each AvailableInteractionTypes}}
-                                {{if Selected}}
-                                <option value="${Value}" selected>${Text}</option>
-                                {{else}}
-                                <option value="${Value}">${Text}</option>
-                                {{/if}}
-                                {{/each}}
+                            <select class="form-control input-sm pull-left" id="interactiontype{{>DiscountRequirementId}}" 
+                                    name="interactiontype{{>DiscountRequirementId}}" 
+                                    onchange="changeInteraction({{> DiscountRequirementId}}, {{if ParentId}} {{>ParentId}} {{else}} null {{/if}}, this.value)">
+                                {{for AvailableInteractionTypes}}
+                                    {{if Selected}}
+                                        <option value="{{>Value}}" selected>{{>Text}}</option>
+                                    {{else}}
+                                        <option value="{{>Value}}">{{>Text}}</option>
+                                    {{/if}}
+                                {{/for}}
                             </select>
                         </div>
                         {{else}}
                         <div class="pull-left">
                             @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
-                            <i>{{= RuleName }}</i>
+                            <i>{{:RuleName}}</i>
                         </div>
                         {{/if}}
                         {{if ParentId}}
-                        <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
+                        <button type="button" class="btn btn-link" id="deleterequirement{{>DiscountRequirementId}}" onclick="deleteRequirement({{>DiscountRequirementId}})">
                             <i class="fa fa-trash"></i>
                             {{if IsGroup}}
-                            @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
+                                @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
                             {{else}}
-                            @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
+                                @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
                             {{/if}}
                         </button>
                         {{/if}}
                     </div>
                     <div class="requirement-body">
-                        <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
+                        <div id="editrequirementplaceholder{{>DiscountRequirementId}}"></div>
                     </div>
                 </div>
-                {{if !IsLastInGroup}}
+                {{if !IsLastInGroup}}                
                 <div class="interaction-type-label">
-                    {{each AvailableInteractionTypes}}
-                    {{if Value == InteractionTypeId}}
-                    ${Text}
-                    {{/if}}
-                    {{/each}}
+                    {{>InteractionType}}                    
                 </div>
                 {{/if}}
             </script>

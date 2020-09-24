@@ -5,8 +5,6 @@ using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -32,27 +30,27 @@ namespace Nop.Web.Controllers
             ITopicModelFactory topicModelFactory,
             ITopicService topicService)
         {
-            this._aclService = aclService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._topicModelFactory = topicModelFactory;
-            this._topicService = topicService;
+            _aclService = aclService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _topicModelFactory = topicModelFactory;
+            _topicService = topicService;
         }
 
         #endregion
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult TopicDetails(int topicId)
         {
-            var model = _topicModelFactory.PrepareTopicModelById(topicId);
+            //allow administrators to preview any topic
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics);
-            //access to Topics preview
-            if (model == null || (!model.Published && !hasAdminAccess))
-                return RedirectToRoute("HomePage");
-            
+
+            var model = _topicModelFactory.PrepareTopicModelById(topicId, hasAdminAccess);
+            if (model == null)
+                return InvokeHttp404();
+
             //display "edit" (manage) link
             if (hasAdminAccess)
                 DisplayEditLink(Url.Action("Edit", "Topic", new { id = model.Id, area = AreaNames.Admin }));
@@ -66,7 +64,7 @@ namespace Nop.Web.Controllers
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             ViewBag.IsPopup = true;
 
@@ -76,7 +74,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult Authenticate(int id, string password)
         {
             var authResult = false;

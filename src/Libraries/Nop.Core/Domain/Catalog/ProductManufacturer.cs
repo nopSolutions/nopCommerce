@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product manufacturer mapping
@@ -24,15 +24,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the manufacturer
-        /// </summary>
-        public virtual Manufacturer Manufacturer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
     }
 }

@@ -29,9 +29,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPermissionService permissionService)
         {
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -63,8 +63,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     if (!model.Allowed.ContainsKey(permissionRecord.SystemName))
                         model.Allowed[permissionRecord.SystemName] = new Dictionary<int, bool>();
-                    model.Allowed[permissionRecord.SystemName][role.Id] = permissionRecord.PermissionRecordCustomerRoleMappings
-                        .Any(mapping => mapping.CustomerRoleId == role.Id);
+                    model.Allowed[permissionRecord.SystemName][role.Id] = 
+                        _permissionService.GetMappingByPermissionRecordId(permissionRecord.Id).Any(mapping => mapping.CustomerRoleId == role.Id);
                 }
             }
 

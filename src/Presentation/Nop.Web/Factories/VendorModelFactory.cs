@@ -48,16 +48,16 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._commonSettings = commonSettings;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _captchaSettings = captchaSettings;
+            _commonSettings = commonSettings;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -216,7 +216,7 @@ namespace Nop.Web.Factories
 
             var picture = _pictureService.GetPictureById(vendor.PictureId);
             var pictureSize = _mediaSettings.AvatarPictureSize;
-            model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
+            model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(ref picture, pictureSize) : string.Empty;
 
             //vendor attributes
             if (string.IsNullOrEmpty(overriddenVendorAttributesXml))

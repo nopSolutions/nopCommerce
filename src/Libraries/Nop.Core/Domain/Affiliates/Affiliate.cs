@@ -1,11 +1,11 @@
-using Nop.Core.Domain.Common;
+﻿using Nop.Core.Domain.Common;
 
 namespace Nop.Core.Domain.Affiliates
 {
     /// <summary>
     /// Represents an affiliate
     /// </summary>
-    public partial class Affiliate : BaseEntity
+    public partial class Affiliate : BaseEntity, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the address identifier
@@ -31,10 +31,5 @@ namespace Nop.Core.Domain.Affiliates
         /// Gets or sets a value indicating whether the entity is active
         /// </summary>
         public bool Active { get; set; }
-
-        /// <summary>
-        /// Gets or sets the address
-        /// </summary>
-        public virtual Address Address { get; set; }
     }
 }

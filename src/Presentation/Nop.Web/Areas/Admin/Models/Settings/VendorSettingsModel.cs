@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public VendorSettingsModel()
         {
-            this.VendorAttributeSearchModel = new VendorAttributeSearchModel();
+            VendorAttributeSearchModel = new VendorAttributeSearchModel();
         }
 
         #endregion

@@ -10,7 +10,7 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -37,15 +37,16 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerService = customerService;
-            this._productService = productService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
+            _productService = productService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion
 
+   
         #region Methods
 
         /// <summary>
@@ -75,12 +76,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
+            var customerRoles = _customerService.GetAllCustomerRoles(true).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CustomerRoleListModel
+            var model = new CustomerRoleListModel().PrepareToGrid(searchModel, customerRoles, () =>
             {
-                Data = customerRoles.PaginationByRequestModel(searchModel).Select(role =>
+                return customerRoles.Select(role =>
                 {
                     //fill in model values from the entity
                     var customerRoleModel = role.ToModel<CustomerRoleModel>();
@@ -89,9 +90,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerRoleModel.PurchasedWithProductName = _productService.GetProductById(role.PurchasedWithProductId)?.Name;
 
                     return customerRoleModel;
-                }),
-                Total = customerRoles.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerRole != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerRole.ToModel<CustomerRoleModel>();
+                model ??= customerRole.ToModel<CustomerRoleModel>();
                 model.PurchasedWithProductName = _productService.GetProductById(customerRole.PurchasedWithProductId)?.Name;
             }
 
@@ -181,18 +181,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new CustomerRoleProductListModel
+            var model = new CustomerRoleProductListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product => 
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

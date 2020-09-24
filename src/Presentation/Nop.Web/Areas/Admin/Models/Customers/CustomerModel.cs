@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Areas.Admin.Validators.Customers;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -13,34 +11,33 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer model
     /// </summary>
-    [Validator(typeof(CustomerValidator))]
     public partial class CustomerModel : BaseNopEntityModel, IAclSupportedModel
     {
         #region Ctor
 
         public CustomerModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.SendEmail = new SendEmailModel() { SendImmediately = true };
-            this.SendPm = new SendPmModel();
+            AvailableTimeZones = new List<SelectListItem>();
+            SendEmail = new SendEmailModel() { SendImmediately = true };
+            SendPm = new SendPmModel();
 
-            this.SelectedCustomerRoleIds = new List<int>();
-            this.AvailableCustomerRoles = new List<SelectListItem>();
+            SelectedCustomerRoleIds = new List<int>();
+            AvailableCustomerRoles = new List<SelectListItem>();
 
-            this.AssociatedExternalAuthRecords = new List<CustomerAssociatedExternalAuthModel>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.AvailableVendors = new List<SelectListItem>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
-            this.AvailableNewsletterSubscriptionStores = new List<SelectListItem>();
-            this.SelectedNewsletterSubscriptionStoreIds = new List<int>();
-            this.AddRewardPoints = new AddRewardPointsToCustomerModel();
-            this.CustomerRewardPointsSearchModel = new CustomerRewardPointsSearchModel();
-            this.CustomerAddressSearchModel = new CustomerAddressSearchModel();
-            this.CustomerOrderSearchModel = new CustomerOrderSearchModel();
-            this.CustomerShoppingCartSearchModel = new CustomerShoppingCartSearchModel();
-            this.CustomerActivityLogSearchModel = new CustomerActivityLogSearchModel();
-            this.CustomerBackInStockSubscriptionSearchModel = new CustomerBackInStockSubscriptionSearchModel();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            AvailableNewsletterSubscriptionStores = new List<SelectListItem>();
+            SelectedNewsletterSubscriptionStoreIds = new List<int>();
+            AddRewardPoints = new AddRewardPointsToCustomerModel();
+            CustomerRewardPointsSearchModel = new CustomerRewardPointsSearchModel();
+            CustomerAddressSearchModel = new CustomerAddressSearchModel();
+            CustomerOrderSearchModel = new CustomerOrderSearchModel();
+            CustomerShoppingCartSearchModel = new CustomerShoppingCartSearchModel();
+            CustomerActivityLogSearchModel = new CustomerActivityLogSearchModel();
+            CustomerBackInStockSubscriptionSearchModel = new CustomerBackInStockSubscriptionSearchModel();
+            CustomerAssociatedExternalAuthRecordsSearchModel = new CustomerAssociatedExternalAuthRecordsSearchModel();
         }
 
         #endregion
@@ -72,9 +69,11 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
         public string FirstName { get; set; }
 
+        public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
         public string LastName { get; set; }
 
@@ -179,6 +178,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public bool DisplayVatNumber { get; set; }
 
+        public bool DisplayRegisteredInStore { get; set; }
+
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
@@ -222,6 +223,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         //send PM model
         public SendPmModel SendPm { get; set; }
 
+        //send a private message
+        public bool AllowSendingOfPrivateMessage { get; set; }
+
         //send the welcome message
         public bool AllowSendingOfWelcomeMessage { get; set; }
 
@@ -230,10 +234,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         //GDPR enabled
         public bool GdprEnabled { get; set; }
-
-        [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
-        public IList<CustomerAssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
-
+        
         public string AvatarUrl { get; internal set; }
 
         public CustomerAddressSearchModel CustomerAddressSearchModel { get; set; }
@@ -245,6 +246,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public CustomerActivityLogSearchModel CustomerActivityLogSearchModel { get; set; }
 
         public CustomerBackInStockSubscriptionSearchModel CustomerBackInStockSubscriptionSearchModel { get; set; }
+
+        public CustomerAssociatedExternalAuthRecordsSearchModel CustomerAssociatedExternalAuthRecordsSearchModel { get; set; }
 
         #endregion
 

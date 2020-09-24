@@ -52,17 +52,17 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            this._customerSettings = customerSettings;
-            this._forumSettings = forumSettings;
-            this._countryService = countryService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumService = forumService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
+            _customerSettings = customerSettings;
+            _forumSettings = forumSettings;
+            _countryService = countryService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _forumService = forumService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace Nop.Web.Factories
                 pagingPosts = true;
             }
 
-            var name = _customerService.FormatUserName(customer);
+            var name = _customerService.FormatUsername(customer);
             var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel
@@ -144,7 +144,7 @@ namespace Nop.Web.Factories
             }
 
             //private message
-            var pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
+            var pmEnabled = _forumSettings.AllowPrivateMessages && !_customerService.IsGuest(customer);
 
             //total forum posts
             var totalPostsEnabled = false;
@@ -232,11 +232,13 @@ namespace Nop.Web.Factories
                     posted = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                 }
 
+                var topic = _forumService.GetTopicById(forumPost.TopicId);
+
                 latestPosts.Add(new PostsModel
                 {
-                    ForumTopicId = forumPost.TopicId,
-                    ForumTopicTitle = forumPost.ForumTopic.Subject,
-                    ForumTopicSlug = _forumService.GetTopicSeName(forumPost.ForumTopic),
+                    ForumTopicId = topic.Id,
+                    ForumTopicTitle = topic.Subject,
+                    ForumTopicSlug = _forumService.GetTopicSeName(topic),
                     ForumPostText = _forumService.FormatPostText(forumPost),
                     Posted = posted
                 });

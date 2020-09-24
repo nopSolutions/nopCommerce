@@ -1,5 +1,7 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Localization;
+using Nop.Tests;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -7,32 +9,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
     [TestFixture]
-    public class LoginValidatorTests : BaseValidatorTests
+    public class LoginValidatorTests : BaseNopTest
     {
         private LoginValidator _validator;
-        private CustomerSettings _customerSettings;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _customerSettings = new CustomerSettings();
-            _validator = new LoginValidator(_localizationService, _customerSettings);
+            _validator = GetService<LoginValidator>();
         }
         
         [Test]
-        public void Should_have_error_when_email_is_null_or_empty()
+        public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
         {
             var model = new LoginModel
             {
                 Email = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
-            model.Email = "";
+            model.Email = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
 
         [Test]
-        public void Should_have_error_when_email_is_wrong_format()
+        public void ShouldHaveErrorWhenEmailIsWrongFormat()
         {
             var model = new LoginModel
             {
@@ -42,7 +42,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_not_have_error_when_email_is_correct_format()
+        public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
         {
             var model = new LoginModel
             {
@@ -52,13 +52,13 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_not_have_error_when_email_is_null_but_usernames_are_enabled()
+        public void ShouldNotHaveErrorWhenEmailIsNullButUsernamesAreEnabled()
         {
-            _customerSettings = new CustomerSettings
+            var customerSettings = new CustomerSettings
             {
                 UsernamesEnabled = true
             };
-            _validator = new LoginValidator(_localizationService, _customerSettings);
+            _validator = new LoginValidator(GetService<ILocalizationService>(), customerSettings);
 
             var model = new LoginModel
             {

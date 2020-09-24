@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore;
+﻿using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Nop.Services.Configuration;
 
 namespace Nop.Web
 {
@@ -7,12 +10,13 @@ namespace Nop.Web
     {
         public static void Main(string[] args)
         {
-            var host = WebHost.CreateDefaultBuilder(args)
-                .UseKestrel(options => options.AddServerHeader = false)
-                .UseStartup<Startup>()
-                .Build();
-
-            host.Run();
+            Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder => webBuilder
+                    .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(NopConfigurationDefaults.AppSettingsFilePath, true, true))
+                    .UseStartup<Startup>())
+                .Build()
+                .Run();
         }
     }
 }

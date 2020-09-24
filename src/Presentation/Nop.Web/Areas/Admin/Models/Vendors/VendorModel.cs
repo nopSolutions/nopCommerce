@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Areas.Admin.Validators.Vendors;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -13,7 +10,6 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
     /// <summary>
     /// Represents a vendor model
     /// </summary>
-    [Validator(typeof(VendorValidator))]
     public partial class VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>
     {
         #region Ctor

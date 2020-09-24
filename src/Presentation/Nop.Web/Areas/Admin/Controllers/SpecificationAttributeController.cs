@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
@@ -39,13 +40,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISpecificationAttributeModelFactory specificationAttributeModelFactory,
             ISpecificationAttributeService specificationAttributeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._specificationAttributeModelFactory = specificationAttributeModelFactory;
-            this._specificationAttributeService = specificationAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _specificationAttributeModelFactory = specificationAttributeModelFactory;
+            _specificationAttributeService = specificationAttributeService;
         }
 
         #endregion
@@ -57,6 +58,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(specificationAttribute,
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
+            }
+        }
+
+        protected virtual void UpdateAttributeGroupLocales(SpecificationAttributeGroup specificationAttributeGroup, SpecificationAttributeGroupModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(specificationAttributeGroup,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -88,37 +100,92 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            //prepare model
-            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeSearchModel(new SpecificationAttributeSearchModel());
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupSearchModel(new SpecificationAttributeGroupSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(SpecificationAttributeSearchModel searchModel)
+        public virtual IActionResult SpecificationAttributeGroupList(SpecificationAttributeGroupSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            //prepare model
-            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeListModel(searchModel);
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupListModel(searchModel);
 
             return Json(model);
         }
 
-        public virtual IActionResult Create()
+        [HttpPost]
+        public virtual IActionResult SpecificationAttributeList(SpecificationAttributeSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedDataTablesJson();
+
+            SpecificationAttributeGroup group = null;
+
+            if (searchModel.SpecificationAttributeGroupId > 0)
+            {
+                group = _specificationAttributeService.GetSpecificationAttributeGroupById(searchModel.SpecificationAttributeGroupId)
+                    ?? throw new ArgumentException("No specification attribute group found with the specified id");
+            }
+
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeListModel(searchModel, group);
+
+            return Json(model);
+        }
+
+        public virtual IActionResult CreateSpecificationAttributeGroup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            //prepare model
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupModel(new SpecificationAttributeGroupModel(), null);
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult CreateSpecificationAttributeGroup(SpecificationAttributeGroupModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var specificationAttributeGroup = model.ToEntity<SpecificationAttributeGroup>();
+                _specificationAttributeService.InsertSpecificationAttributeGroup(specificationAttributeGroup);
+                UpdateAttributeGroupLocales(specificationAttributeGroup, model);
+
+                _customerActivityService.InsertActivity("AddNewSpecAttributeGroup",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewSpecAttributeGroup"), specificationAttributeGroup.Name), specificationAttributeGroup);
+
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Added"));
+
+                if (!continueEditing)
+                    return RedirectToAction("List");
+
+                return RedirectToAction("EditSpecificationAttributeGroup", new { id = specificationAttributeGroup.Id });
+            }
+
+            model = _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupModel(model, null, true);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual IActionResult CreateSpecificationAttribute()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
             var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(new SpecificationAttributeModel(), null);
 
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Create(SpecificationAttributeModel model, bool continueEditing)
+        public virtual IActionResult CreateSpecificationAttribute(SpecificationAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -129,30 +196,71 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
                 UpdateAttributeLocales(specificationAttribute, model);
 
-                //activity log
                 _customerActivityService.InsertActivity("AddNewSpecAttribute",
                     string.Format(_localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
-                return RedirectToAction("Edit", new { id = specificationAttribute.Id });
+                
+                return RedirectToAction("EditSpecificationAttribute", new { id = specificationAttribute.Id });
             }
 
-            //prepare model
             model = _specificationAttributeModelFactory.PrepareSpecificationAttributeModel(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //edit
-        public virtual IActionResult Edit(int id)
+        public virtual IActionResult EditSpecificationAttributeGroup(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var specificationAttributeGroup = _specificationAttributeService.GetSpecificationAttributeGroupById(id);
+            if (specificationAttributeGroup == null)
+                return RedirectToAction("List");
+
+            var model = _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupModel(null, specificationAttributeGroup);
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult EditSpecificationAttributeGroup(SpecificationAttributeGroupModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var specificationAttributeGroup = _specificationAttributeService.GetSpecificationAttributeGroupById(model.Id);
+            if (specificationAttributeGroup == null)
+                return RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                specificationAttributeGroup = model.ToEntity(specificationAttributeGroup);
+                _specificationAttributeService.UpdateSpecificationAttributeGroup(specificationAttributeGroup);
+                UpdateAttributeGroupLocales(specificationAttributeGroup, model);
+
+                _customerActivityService.InsertActivity("EditSpecAttributeGroup",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditSpecAttributeGroup"), specificationAttributeGroup.Name), specificationAttributeGroup);
+
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Updated"));
+
+                if (!continueEditing)
+                    return RedirectToAction("List");
+
+                return RedirectToAction("EditSpecificationAttributeGroup", new { id = specificationAttributeGroup.Id });
+            }
+
+            model = _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupModel(model, specificationAttributeGroup, true);
+
+            //if we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public virtual IActionResult EditSpecificationAttribute(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -169,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
+        public virtual IActionResult EditSpecificationAttribute(SpecificationAttributeModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -190,15 +298,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditSpecAttribute",
                     string.Format(_localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
-                return RedirectToAction("Edit", new { id = specificationAttribute.Id });
+                
+                return RedirectToAction("EditSpecificationAttribute", new { id = specificationAttribute.Id });
             }
 
             //prepare model
@@ -209,25 +314,64 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Delete(int id)
+        public virtual IActionResult DeleteSpecificationAttributeGroup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            //try to get a specification attribute with the specified id
+            var specificationAttributeGroup = _specificationAttributeService.GetSpecificationAttributeGroupById(id);
+            if (specificationAttributeGroup == null)
+                return RedirectToAction("List");
+
+            _specificationAttributeService.DeleteSpecificationAttributeGroup(specificationAttributeGroup);
+
+            _customerActivityService.InsertActivity("DeleteSpecAttributeGroup",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteSpecAttributeGroup"), specificationAttributeGroup.Name), specificationAttributeGroup);
+
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Deleted"));
+
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSpecificationAttribute(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
                 return RedirectToAction("List");
 
             _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
 
-            //activity log
             _customerActivityService.InsertActivity("DeleteSpecAttribute",
                 string.Format(_localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Deleted"));
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSelectedSpecificationAttributes(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var specificationAttributes = _specificationAttributeService.GetSpecificationAttributeByIds(selectedIds.ToArray());
+                _specificationAttributeService.DeleteSpecificationAttributes(specificationAttributes);
+
+                foreach (var specificationAttribute in specificationAttributes)
+                {
+                    _customerActivityService.InsertActivity("DeleteSpecAttribute",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name), specificationAttribute);
+                }
+            }
+
+            return Json(new { Result = true });
         }
 
         #endregion
@@ -238,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OptionList(SpecificationAttributeOptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a specification attribute with the specified id
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(searchModel.SpecificationAttributeId)
@@ -408,7 +552,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsedByProducts(SpecificationAttributeProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a specification attribute with the specified id
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(searchModel.SpecificationAttributeId)

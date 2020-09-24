@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using Nop.Services.Media;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -14,17 +14,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IDownloadService _downloadService;
+        private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public DownloadController(IDownloadService downloadService,
-            INopFileProvider fileProvider)
+            ILogger logger,
+            INopFileProvider fileProvider,
+            IWorkContext workContext)
         {
-            this._downloadService = downloadService;
-            this._fileProvider = fileProvider;
+            _downloadService = downloadService;
+            _logger = logger;
+            _fileProvider = fileProvider;
+            _workContext = workContext;
         }
 
         #endregion
@@ -37,10 +43,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (download == null)
                 return Content("No download record found with the specified id");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //use stored data
+                //use stored data
             if (download.DownloadBinary == null)
                 return Content($"Download data is not available any more. Download GD={download.Id}");
 
@@ -56,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SaveDownloadUrl(string downloadUrl)
         {
             //don't allow to save empty download object
@@ -84,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AsyncUpload()
         {
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
@@ -93,8 +101,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = "No file uploaded",
-                    downloadGuid = Guid.Empty
+                    message = "No file uploaded"
                 });
             }
 
@@ -125,16 +132,30 @@ namespace Nop.Web.Areas.Admin.Controllers
                 Extension = fileExtension,
                 IsNew = true
             };
-            _downloadService.InsertDownload(download);
 
-            //when returning JSON the mime-type must be set to text/plain
-            //otherwise some browsers will pop-up a "Save As" dialog.
-            return Json(new
+            try
             {
-                success = true,
-                downloadId = download.Id,
-                downloadUrl = Url.Action("DownloadFile", new { downloadGuid = download.DownloadGuid })
-            });
+                _downloadService.InsertDownload(download);
+
+                //when returning JSON the mime-type must be set to text/plain
+                //otherwise some browsers will pop-up a "Save As" dialog.
+                return Json(new
+                {
+                    success = true,
+                    downloadId = download.Id,
+                    downloadUrl = Url.Action("DownloadFile", new { downloadGuid = download.DownloadGuid })
+                });
+            }
+            catch (Exception exc)
+            {
+                _logger.Error(exc.Message, exc, _workContext.CurrentCustomer);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "File cannot be saved"
+                });
+            }
         }
 
         #endregion

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
 using Nop.Web.Framework.Extensions;
-using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -14,8 +13,6 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     [HtmlTargetElement("nop-nested-setting", Attributes = ForAttributeName)]
     public class NopNestedSettingTagHelper : TagHelper
     {
-        private readonly AdminAreaSettings _adminAreaSettings;
-
         private const string ForAttributeName = "asp-for";
 
         /// <summary>
@@ -40,11 +37,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// Ctor
         /// </summary>
         /// <param name="generator">HTML generator</param>
-        /// <param name="adminAreaSettings">Admin area settings</param>
-        public NopNestedSettingTagHelper(IHtmlGenerator generator, AdminAreaSettings adminAreaSettings)
+        public NopNestedSettingTagHelper(IHtmlGenerator generator)
         {
             Generator = generator;
-            _adminAreaSettings = adminAreaSettings;
         }
 
         /// <summary>
@@ -74,18 +69,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "nested-setting");
+
             if (context.AllAttributes.ContainsName("id"))
                 nestedSettingId = context.AllAttributes["id"].Value.ToString();
+            output.Attributes.Add("id", nestedSettingId);
 
             //use javascript
-            if (_adminAreaSettings.UseNestedSetting)
-            {
-                var script = new TagBuilder("script");
-                script.InnerHtml.AppendHtml("$(document).ready(function () {" +
-                                                $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
-                                            "});");
-                output.PreContent.SetHtmlContent(script.RenderHtmlContent());
-            }
+            var script = new TagBuilder("script");
+            script.InnerHtml.AppendHtml("$(document).ready(function () {" +
+                                            $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
+                                        "});");
+            output.PreContent.SetHtmlContent(script.RenderHtmlContent());
         }
     }
 }

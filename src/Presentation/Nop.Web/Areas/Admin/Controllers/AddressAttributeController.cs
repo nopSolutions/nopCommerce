@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._addressAttributeService = addressAttributeService;
-            this._customerActivityService = customerActivityService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressAttributeService = addressAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -92,8 +92,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "address form fields" tab
-            SaveSelectedTabName("tab-addressformfields");
+            //select an appropriate panel
+            SaveSelectedPanelName("customersettings-addressformfields");
 
             //we just redirect a user to the address settings page
             return RedirectToAction("CustomerUser", "Setting");
@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(AddressAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _addressAttributeModelFactory.PrepareAddressAttributeListModel(searchModel);
@@ -145,9 +145,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = addressAttribute.Id });
             }
@@ -204,9 +201,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!continueEditing)
                     return RedirectToAction("List");
 
-                //selected tab
-                SaveSelectedTabName();
-
                 return RedirectToAction("Edit", new { id = addressAttribute.Id });
             }
 
@@ -248,7 +242,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ValueList(AddressAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an address attribute with the specified id
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(searchModel.AddressAttributeId)

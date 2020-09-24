@@ -74,6 +74,11 @@ namespace Nop.Core.Domain.Orders
         public bool DisableOrderCompletedPage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "Pickup in store" options should be displayed on the shipping method page
+        /// </summary>
+        public bool DisplayPickupInStoreOnShippingMethodPage { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order placed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }

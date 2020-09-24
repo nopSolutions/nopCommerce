@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <summary>
         /// Type finder
         /// </summary>
-        protected readonly ITypeFinder typeFinder;
+        protected readonly ITypeFinder _typeFinder;
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <param name="typeFinder">Type finder</param>
         public RoutePublisher(ITypeFinder typeFinder)
         {
-            this.typeFinder = typeFinder;
+            _typeFinder = typeFinder;
         }
 
         #endregion
@@ -37,11 +37,11 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public virtual void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public virtual void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             //find route providers provided by other assemblies
-            var routeProviders = typeFinder.FindClassesOfType<IRouteProvider>();
+            var routeProviders = _typeFinder.FindClassesOfType<IRouteProvider>();
 
             //create and sort instances of route providers
             var instances = routeProviders
@@ -50,7 +50,7 @@ namespace Nop.Web.Framework.Mvc.Routing
 
             //register all provided routes
             foreach (var routeProvider in instances)
-                routeProvider.RegisterRoutes(routeBuilder);
+                routeProvider.RegisterRoutes(endpointRouteBuilder);
         }
 
         #endregion

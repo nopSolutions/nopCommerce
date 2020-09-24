@@ -48,26 +48,33 @@ function checkAllOverriddenStoreValue(item) {
 
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
+
+    // first toggle appropriate hidden inputs for checkboxes
+    if ($(selector).is(':checkbox')) {
+        var name = $(selector).attr('name');
+        $('input:hidden[name="' + name + '"]').attr('disabled', !$(obj).is(':checked'));
+    }
+
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
-        }); 
+        });
     }
     else {
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
         });
-    };
+    }
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
@@ -77,30 +84,29 @@ function bindBootstrapTabSelectEvent(tabsId, inputId) {
     });
 }
 
-function display_kendoui_grid_error(e) {
-    if (e.errors) {
-        if ((typeof e.errors) == 'string') {
-            //single error
-            //display the message
-            alert(e.errors);
-        } else {
-            //array of errors
-            //source: http://docs.kendoui.com/getting-started/using-kendo-with/aspnet-mvc/helpers/grid/faq#how-do-i-display-model-state-errors?
-            var message = "The following errors have occurred:";
-            //create a message containing all errors.
-            $.each(e.errors, function (key, value) {
-                if (value.errors) {
-                    message += "\n";
-                    message += value.errors.join("\n");
-                }
-            });
-            //display the message
-            alert(message);
+function display_nop_error(e) {
+  if (e.error) {
+    if ((typeof e.error) == 'string') {
+      //single error
+      //display the message
+      alert(e.error);
+    } else {
+      //array of errors
+      var message = "The following errors have occurred:";
+      //create a message containing all errors.
+      $.each(e.error, function (key, value) {
+        if (value.errors) {
+          message += "\n";
+          message += value.errors.join("\n");
         }
-      //ignore empty error
-    } else if (e.errorThrown) {
-        alert('Error happened');
+      });
+      //display the message
+      alert(message);
     }
+    //ignore empty error
+  } else if (e.errorThrown) {
+    alert('Error happened');
+  }
 }
 
 // CSRF (XSRF) security
@@ -126,13 +132,17 @@ function saveUserPreferences(url, name, value) {
     $.ajax({
         cache: false,
         url: url,
-        type: 'post',
+        type: "POST",
         data: postData,
-        dataType: 'json',
-        error: function(xhr, ajaxOptions, thrownError) {
-            alert('Failed to save preferences.');
-        }
-    });
+        dataType: "json",
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert('Failed to save preferences.');
+        },
+        complete: function (jqXHR, textStatus) {
+          $("#ajaxBusy span").removeClass("no-ajax-loader");
+        }        
+  });
+
 };
 
 function warningValidation(validationUrl, warningElementName, passedParameters) {
@@ -149,10 +159,10 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
     $.ajax({
         cache: false,
         url: validationUrl,
-        type: 'post',
+        type: "POST",
         dataType: "json",
         data: passedParameters,
-        success: function (data) {
+        success: function (data, textStatus, jqXHR) {
             if (data.Result) {
                 messageElement.addClass("warning");
                 messageElement.html(data.Result);
@@ -161,7 +171,7 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
                 messageElement.html('');
             }
         },
-        error: function () {
+        error: function (jqXHR, textStatus, errorThrown) {
             messageElement.removeClass("warning");
             messageElement.html('');
         }
@@ -234,9 +244,9 @@ $(document).ready(function () {
 });
 
 function WrapAndSaveBlockData() {
-    $(this).parents(".panel").find(">.panel-container").slideToggle();
-
-    var icon = $(this).find("i");
+    $(this).parents(".panel").find(">.panel-container").slideToggle(null, null, function () { $(this).trigger("panel:toggle"); });
+    $("#ajaxBusy span").addClass("no-ajax-loader");
+    var icon = $(this).find("i.toggle-icon");
     if ($(this).hasClass("opened")) {
         icon.removeClass("fa-minus");
         icon.addClass("fa-plus");
@@ -249,3 +259,76 @@ function WrapAndSaveBlockData() {
 
     $(this).toggleClass("opened");
 }
+
+//collapse search block
+$(document).ready(function () {
+  $(".row.search-row").click(ToggleSearchBlockAndSavePreferences);
+});
+
+function ToggleSearchBlockAndSavePreferences() {
+    $(this).parents(".panel-search").find(".search-body").slideToggle(null, null, function () { $(this).trigger("panel:toggle"); });
+    var icon = $(this).find(".icon-collapse i");
+    if ($(this).hasClass("opened")) {
+      icon.removeClass("fa-angle-up");
+      icon.addClass("fa-angle-down");
+      saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), true);
+    } else {
+      icon.addClass("fa-angle-up");
+      icon.removeClass("fa-angle-down");
+      saveUserPreferences(rootAppPath + 'admin/preferences/savepreference', $(this).attr("data-hideAttribute"), false);
+    }
+
+    $(this).toggleClass("opened");
+}
+
+function ensureDataTablesRendered() {
+  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+}
+
+function reloadAllDataTables(itemCount) {
+  //depending on the number of elements, the time for animation of opening the menu should increase
+  var timePause = 300;
+  if (itemCount) {
+    timePause = itemCount * 100;
+  }
+  $('table[class^="table"]').each(function () {
+  setTimeout(function () {
+    ensureDataTablesRendered();
+  }, timePause);
+  });
+}
+
+//scrolling and hidden DataTables issue workaround
+//More info - https://datatables.net/examples/api/tabs_and_scrolling.html
+$(document).ready(function () {
+  $('button[data-widget="collapse"]').on('click', function (e) {
+    //hack with waiting animation. 
+    //when page is loaded, a box that should be collapsed have style 'display: none;'.that's why a table is not updated
+    setTimeout(function () {
+      ensureDataTablesRendered();
+    }, 1);
+  });
+  $('ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    ensureDataTablesRendered();
+  });
+  $(".panel.collapsible-panel >.panel-heading").click(function () {
+    ensureDataTablesRendered();
+  });
+  $('#advanced-settings-mode').on('click', function (e) {
+    ensureDataTablesRendered();
+  });
+});
+
+//Recalculate the column widths
+$(document).ready(function () {
+  // when menu item click
+  $('.treeview').on('click', function (e) {
+    var itemCount = $(e.currentTarget).find('ul').children('li:not([class])').length;
+       
+    reloadAllDataTables(itemCount);
+  });
+  //when sidebar-toggle click
+  $('#nopSideBarPusher').on('click', function (e) {
+    reloadAllDataTables();
+  });
+});

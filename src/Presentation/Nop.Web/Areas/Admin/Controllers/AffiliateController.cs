@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -19,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IAddressService _addressService;
         private readonly IAffiliateModelFactory _affiliateModelFactory;
         private readonly IAffiliateService _affiliateService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -30,19 +32,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public AffiliateController(IAffiliateModelFactory affiliateModelFactory,
+        public AffiliateController(IAddressService addressService,
+            IAffiliateModelFactory affiliateModelFactory,
             IAffiliateService affiliateService,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._affiliateModelFactory = affiliateModelFactory;
-            this._affiliateService = affiliateService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _addressService = addressService;
+            _affiliateModelFactory = affiliateModelFactory;
+            _affiliateService = affiliateService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -69,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(AffiliateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _affiliateModelFactory.PrepareAffiliateListModel(searchModel);
@@ -97,20 +101,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                var address = model.Address.ToEntity<Address>();
+
+                address.CreatedOnUtc = DateTime.UtcNow;
+
+                //some validation
+                if (address.CountryId == 0)
+                    address.CountryId = null;
+                if (address.StateProvinceId == 0)
+                    address.StateProvinceId = null;
+
+                _addressService.InsertAddress(address);
+
                 var affiliate = model.ToEntity<Affiliate>();
 
                 //validate friendly URL name
                 var friendlyUrlName = _affiliateService.ValidateFriendlyUrlName(affiliate, model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
-
-                affiliate.Address = model.Address.ToEntity<Address>();
-                affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
-
-                //some validation
-                if (affiliate.Address.CountryId == 0)
-                    affiliate.Address.CountryId = null;
-                if (affiliate.Address.StateProvinceId == 0)
-                    affiliate.Address.StateProvinceId = null;
+                affiliate.AddressId = address.Id;
 
                 _affiliateService.InsertAffiliate(affiliate);
 
@@ -159,19 +167,23 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                var address = _addressService.GetAddressById(affiliate.AddressId);
+                address = model.Address.ToEntity(address);
+
+                //some validation
+                if (address.CountryId == 0)
+                    address.CountryId = null;
+                if (address.StateProvinceId == 0)
+                    address.StateProvinceId = null;
+
+                _addressService.UpdateAddress(address);
+
                 affiliate = model.ToEntity(affiliate);
 
                 //validate friendly URL name
                 var friendlyUrlName = _affiliateService.ValidateFriendlyUrlName(affiliate, model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
-
-                affiliate.Address = model.Address.ToEntity(affiliate.Address);
-
-                //some validation
-                if (affiliate.Address.CountryId == 0)
-                    affiliate.Address.CountryId = null;
-                if (affiliate.Address.StateProvinceId == 0)
-                    affiliate.Address.StateProvinceId = null;
+                affiliate.AddressId = address.Id;
 
                 _affiliateService.UpdateAffiliate(affiliate);
 
@@ -183,9 +195,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = affiliate.Id });
             }
@@ -224,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AffiliatedOrderListGrid(AffiliatedOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
             var affiliate = _affiliateService.GetAffiliateById(searchModel.AffliateId)
@@ -240,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
             var affiliate = _affiliateService.GetAffiliateById(searchModel.AffliateId)

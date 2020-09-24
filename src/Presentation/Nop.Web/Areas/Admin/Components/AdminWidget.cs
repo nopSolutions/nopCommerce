@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Components
 
         public AdminWidgetViewComponent(IWidgetModelFactory widgetModelFactory)
         {
-            this._widgetModelFactory = widgetModelFactory;
+            _widgetModelFactory = widgetModelFactory;
         }
 
         #endregion

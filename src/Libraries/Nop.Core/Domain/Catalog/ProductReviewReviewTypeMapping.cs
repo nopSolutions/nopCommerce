@@ -21,15 +21,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the rating
         /// </summary>
         public int Rating { get; set; }
-
-        /// <summary>
-        /// Gets the product review
-        /// </summary>
-        public virtual ProductReview ProductReview { get; set; }
-
-        /// <summary>
-        /// Gets the review type
-        /// </summary>
-        public virtual ReviewType ReviewType { get; set; }
     }
 }

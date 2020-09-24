@@ -21,6 +21,9 @@ namespace Nop.Web.Framework.Infrastructure
             //add MiniProfiler services
             services.AddNopMiniProfiler();
 
+            //add WebMarkupMin services to the services container
+            services.AddNopWebMarkupMin();
+
             //add and configure MVC feature
             services.AddNopMvc();
 
@@ -34,20 +37,19 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //add MiniProfiler
+            //use MiniProfiler
             application.UseMiniProfiler();
 
-            //MVC routing
-            application.UseNopMvc();
+            //use WebMarkupMin
+            application.UseNopWebMarkupMin();
+
+            //Endpoints routing
+            application.UseNopEndpoints();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //MVC should be loaded last
-            get { return 1000; }
-        }
+        public int Order => 1000; //MVC should be loaded last
     }
 }

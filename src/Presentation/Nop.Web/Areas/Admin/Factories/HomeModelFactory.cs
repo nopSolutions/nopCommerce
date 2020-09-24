@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
-using System.Xml;
-using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Home;
-using Nop.Web.Framework.Mvc.Rss;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -18,31 +16,16 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial class HomeModelFactory : IHomeModelFactory
     {
-        #region Constants
-
-        /// <summary>
-        /// nopCommerce news URL
-        /// </summary>
-        /// <remarks>
-        /// {0} : nopCommerce version
-        /// {1} : whether the store based is on the localhost
-        /// {2} : whether advertisements are hidden
-        /// {3} : store URL
-        /// </remarks>
-        private const string NOP_COMMERCE_NEWS_URL = "https://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}";
-
-        #endregion
-
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly ICommonModelFactory _commonModelFactory;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _logger;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IWebHelper _webHelper;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
+        private readonly NopHttpClient _nopHttpClient;
 
         #endregion
 
@@ -50,21 +33,21 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
             ICommonModelFactory commonModelFactory,
-            IHttpContextAccessor httpContextAccessor,
+            ILogger logger,
             IOrderModelFactory orderModelFactory,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
-            IWebHelper webHelper,
-            IWorkContext workContext)
+            IStaticCacheManager staticCacheManager,
+            IWorkContext workContext,
+            NopHttpClient nopHttpClient)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._commonModelFactory = commonModelFactory;
-            this._httpContextAccessor = httpContextAccessor;
-            this._orderModelFactory = orderModelFactory;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _adminAreaSettings = adminAreaSettings;
+            _commonModelFactory = commonModelFactory;
+            _logger = logger;
+            _orderModelFactory = orderModelFactory;
+            _settingService = settingService;
+            _staticCacheManager = staticCacheManager;
+            _workContext = workContext;
+            _nopHttpClient = nopHttpClient;
         }
 
         #endregion
@@ -102,55 +85,53 @@ namespace Nop.Web.Areas.Admin.Factories
                 HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
             };
 
-            var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () =>
+            try
             {
-                //compose nopCommerce news RSS feed URL
-                var nopCommerceNewsUrl = string.Format(NOP_COMMERCE_NEWS_URL,
-                    NopVersion.CurrentVersion,
-                    _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
-                    _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                    _webHelper.GetStoreLocation()).ToLowerInvariant();
-
-                //create request
-                var request = WebRequest.Create(nopCommerceNewsUrl);
-
-                //specify request timeout
-                request.Timeout = 3000;
-
-                //try to get nopCommerce news RSS feed
-                using (var response = request.GetResponse())
-                    using (var reader = XmlReader.Create(response.GetResponseStream()))
-                        return RssFeed.Load(reader);
-            });
-
-            for (var i = 0; i < rssData.Items.Count; i++)
-            {
-                var item = rssData.Items.ElementAt(i);
-                var newsItem = new NopCommerceNewsDetailsModel
+                //try to get news RSS feed
+                var rssData = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), () =>
                 {
-                    Title = item.TitleText,
-                    Summary = item.ContentText,
-                    Url = item.Url.OriginalString,
-                    PublishDate = item.PublishDate
-                };
-                model.Items.Add(newsItem);
-
-                //has new items?
-                if (i == 0)
-                {
-                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
-                    if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
+                    try
                     {
-                        _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                        _settingService.SaveSetting(_adminAreaSettings);
-
-                        if (!firstRequest)
-                        {
-                            //new item
-                            model.HasNewItems = true;
-                        }
+                        return _nopHttpClient.GetNewsRssAsync().Result;
                     }
+                    catch (AggregateException exception)
+                    {
+                        //rethrow actual excepion
+                        throw exception.InnerException;
+                    }
+                });
+
+                for (var i = 0; i < rssData.Items.Count; i++)
+                {
+                    var item = rssData.Items.ElementAt(i);
+                    var newsItem = new NopCommerceNewsDetailsModel
+                    {
+                        Title = item.TitleText,
+                        Summary = item.ContentText,
+                        Url = item.Url.OriginalString,
+                        PublishDate = item.PublishDate
+                    };
+                    model.Items.Add(newsItem);
+
+                    //has new items?
+                    if (i != 0)
+                        continue;
+
+                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
+                    if (_adminAreaSettings.LastNewsTitleAdminArea == newsItem.Title)
+                        continue;
+
+                    _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
+                    _settingService.SaveSetting(_adminAreaSettings);
+
+                    //new item
+                    if (!firstRequest)
+                        model.HasNewItems = true;
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the news. Website www.nopcommerce.com is not available.", ex);
             }
 
             return model;

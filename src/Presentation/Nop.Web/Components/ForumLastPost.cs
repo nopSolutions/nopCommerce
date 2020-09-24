@@ -12,8 +12,8 @@ namespace Nop.Web.Components
 
         public ForumLastPostViewComponent(IForumModelFactory forumModelFactory, IForumService forumService)
         {
-            this._forumModelFactory = forumModelFactory;
-            this._forumService = forumService;
+            _forumModelFactory = forumModelFactory;
+            _forumService = forumService;
         }
 
         public IViewComponentResult Invoke(int forumPostId, bool showTopic)

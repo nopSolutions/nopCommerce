@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public CustomerNavigationViewComponent(ICustomerModelFactory customerModelFactory)
         {
-            this._customerModelFactory = customerModelFactory;
+            _customerModelFactory = customerModelFactory;
         }
 
         public IViewComponentResult Invoke(int selectedTabId = 0)

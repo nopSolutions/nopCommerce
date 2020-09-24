@@ -1,90 +1,55 @@
 ﻿@model ReviewTypeSearchModel
 
-<div class="panel panel-default advanced-setting">
-    <div class="panel-heading">
-        @T("Admin.Settings.ReviewType")
-    </div>
-    <div class="panel-body">
-        <p>
-            <em>@T("Admin.Settings.ReviewType.Description")</em>
-        </p>
-        <div id="reviewtypes-grid"></div>
-        <script>
-                $(document).ready(function () {
-                    $("#reviewtypes-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "ReviewType"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Settings.ReviewType.Fields.Name")",
-                            width: 300
-                        }, {
-                            field: "IsRequired",
-                            title: "@T("Admin.Settings.ReviewType.Fields.IsRequired")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        }, {
-                            field: "VisibleToAllCustomers",
-                            title: "@T("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(VisibleToAllCustomers) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        },{
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Settings.ReviewType.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 80,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/ReviewType/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-        </script>
-    </div>    
-    <div class="panel-footer">
-        <a class="btn btn-primary" href="@Url.Action("Create", "ReviewType")">
-            <i class="fa fa-plus-square"></i>
-            @T("Admin.Common.AddNew")
-        </a>
-    </div>
+<div class="panel-body">
+    <p>
+        <em>@T("Admin.Settings.ReviewType.Description")</em>
+    </p>
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "reviewtypes-grid",
+        UrlRead = new DataUrl("List", "ReviewType", null),
+        Length = Model.PageSize,
+        LengthMenu = Model.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(ReviewTypeModel.Name))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.Name").Text,
+                Width = "300"
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.IsRequired))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.IsRequired").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.VisibleToAllCustomers))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.VisibleToAllCustomers").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.DisplayOrder))
+            {
+                Title = T("Admin.Settings.ReviewType.Fields.DisplayOrder").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll
+            },
+            new ColumnProperty(nameof(ReviewTypeModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/ReviewType/Edit/"))
+            }
+        }
+    })
+</div>    
+<div class="panel-footer">
+    <a class="btn btn-primary" href="@Url.Action("Create", "ReviewType")">
+        <i class="fa fa-plus-square"></i>
+        @T("Admin.Common.AddNew")
+    </a>
 </div>

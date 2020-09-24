@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -29,13 +28,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDiscountModelFactory _discountModelFactory;
+        private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
-        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -45,41 +44,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICategoryService categoryService,
             ICustomerActivityService customerActivityService,
             IDiscountModelFactory discountModelFactory,
+            IDiscountPluginManager discountPluginManager,
             IDiscountService discountService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             INotificationService notificationService,
             IPermissionService permissionService,
-            IProductService productService,
-            IWebHelper webHelper)
+            IProductService productService)
         {
-            this._catalogSettings = catalogSettings;
-            this._categoryService = categoryService;
-            this._customerActivityService = customerActivityService;
-            this._discountModelFactory = discountModelFactory;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._webHelper = webHelper;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        protected void DeleteRequirement(ICollection<DiscountRequirement> requirements)
-        {
-            //recursively delete child requirements
-            var tmpRequirements = requirements.ToList();
-            for (var i = 0; i < tmpRequirements.Count; i++)
-            {
-                if (tmpRequirements[i].ChildRequirements.Any())
-                    DeleteRequirement(tmpRequirements[i].ChildRequirements);
-                _discountService.DeleteDiscountRequirement(tmpRequirements[i]);
-            }
+            _catalogSettings = catalogSettings;
+            _categoryService = categoryService;
+            _customerActivityService = customerActivityService;
+            _discountModelFactory = discountModelFactory;
+            _discountPluginManager = discountPluginManager;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productService = productService;
         }
 
         #endregion
@@ -112,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(DiscountSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _discountModelFactory.PrepareDiscountListModel(searchModel);
@@ -150,9 +133,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = discount.Id });
             }
@@ -197,32 +177,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 discount = model.ToEntity(discount);
                 _discountService.UpdateDiscount(discount);
 
-                //clean up old references (if changed) and update "HasDiscountsApplied" properties
-                if (prevDiscountType == DiscountType.AssignedToCategories && discount.DiscountType != DiscountType.AssignedToCategories)
+                //clean up old references (if changed) 
+                if (prevDiscountType != discount.DiscountType)
                 {
-                    //applied to categories
-                    discount.DiscountCategoryMappings.Clear();
-                    _discountService.UpdateDiscount(discount);
-                }
-
-                if (prevDiscountType == DiscountType.AssignedToManufacturers && discount.DiscountType != DiscountType.AssignedToManufacturers)
-                {
-                    //applied to manufacturers
-                    discount.DiscountManufacturerMappings.Clear();
-                    _discountService.UpdateDiscount(discount);
-                }
-
-                if (prevDiscountType == DiscountType.AssignedToSkus && discount.DiscountType != DiscountType.AssignedToSkus)
-                {
-                    //applied to products
-                    var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
-
-                    discount.DiscountProductMappings.Clear();
-                    _discountService.UpdateDiscount(discount);
-
-                    //update "HasDiscountsApplied" property
-                    foreach (var p in products)
-                        _productService.UpdateHasDiscountsApplied(p);
+                    switch (prevDiscountType)
+                    {
+                        case DiscountType.AssignedToSkus:
+                            _productService.ClearDiscountProductMapping(discount);
+                            break;
+                        case DiscountType.AssignedToCategories:
+                            _categoryService.ClearDiscountCategoryMapping(discount);
+                            break;
+                        case DiscountType.AssignedToManufacturers:
+                            _manufacturerService.ClearDiscountManufacturerMapping(discount);
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 //activity log
@@ -233,9 +204,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = discount.Id });
             }
@@ -259,7 +227,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //applied to products
-            var products = _discountService.GetProductsWithAppliedDiscount(discount.Id, true);
+            var products = _productService.GetProductsWithAppliedDiscount(discount.Id, true);
 
             _discountService.DeleteDiscount(discount);
 
@@ -288,13 +256,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
-            var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
-            if (discountRequirementRule == null)
-                throw new ArgumentException("Discount requirement rule could not be loaded");
+            var discountRequirementRule = _discountPluginManager.LoadPluginBySystemName(systemName)
+                ?? throw new ArgumentException("Discount requirement rule could not be loaded");
 
-            var discount = _discountService.GetDiscountById(discountId);
-            if (discount == null)
-                throw new ArgumentException("Discount could not be loaded");
+            var discount = _discountService.GetDiscountById(discountId)
+                ?? throw new ArgumentException("Discount could not be loaded");
 
             var url = discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId);
 
@@ -313,35 +279,41 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 return Json(requirements);
 
-            var discountRequirement = discount.DiscountRequirements.FirstOrDefault(requirement => requirement.Id == discountRequirementId);
+            var discountRequirement = _discountService.GetDiscountRequirementById(discountRequirementId);
             if (discountRequirement != null)
             {
                 //delete
                 if (deleteRequirement)
                 {
-                    DeleteRequirement(new List<DiscountRequirement> { discountRequirement });
+                    _discountService.DeleteDiscountRequirement(discountRequirement, true);
+
+                    var discountRequirements = _discountService.GetAllDiscountRequirements(discount.Id);
 
                     //delete default group if there are no any requirements
-                    if (!discount.DiscountRequirements.Any(requirement => requirement.ParentId.HasValue))
-                        DeleteRequirement(discount.DiscountRequirements);
+                    if (!discountRequirements.Any(requirement => requirement.ParentId.HasValue))
+                    {
+                        foreach (var dr in discountRequirements)
+                            _discountService.DeleteDiscountRequirement(dr, true);
+                    }
                 }
                 //or update the requirement
                 else
                 {
-                    var defaultGroupId = discount.DiscountRequirements.FirstOrDefault(requirement =>
-                        !requirement.ParentId.HasValue && requirement.IsGroup)?.Id ?? 0;
+                    var defaultGroupId = _discountService.GetAllDiscountRequirements(discount.Id, true).FirstOrDefault(requirement => requirement.IsGroup)?.Id ?? 0;
                     if (defaultGroupId == 0)
                     {
                         //add default requirement group
                         var defaultGroup = new DiscountRequirement
                         {
                             IsGroup = true,
+                            DiscountId = discount.Id,
                             InteractionType = RequirementGroupInteractionType.And,
                             DiscountRequirementRuleSystemName = _localizationService
                                 .GetResource("Admin.Promotions.Discounts.Requirements.DefaultRequirementGroup")
                         };
-                        discount.DiscountRequirements.Add(defaultGroup);
-                        _discountService.UpdateDiscount(discount);
+
+                        _discountService.InsertDiscountRequirement(defaultGroup);
+
                         defaultGroupId = defaultGroup.Id;
                     }
 
@@ -359,13 +331,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (interactionTypeId.HasValue)
                         discountRequirement.InteractionTypeId = interactionTypeId;
 
-                    _discountService.UpdateDiscount(discount);
+                    _discountService.UpdateDiscountRequirement(discountRequirement);
                 }
             }
 
             //get current requirements
-            var topLevelRequirements = discount.DiscountRequirements
-                .Where(requirement => !requirement.ParentId.HasValue && requirement.IsGroup).ToList();
+            var topLevelRequirements = _discountService.GetAllDiscountRequirements(discount.Id, true).Where(requirement => requirement.IsGroup).ToList();
 
             //get interaction type of top-level group
             var interactionType = topLevelRequirements.FirstOrDefault()?.InteractionType;
@@ -377,7 +348,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //get available groups
-            var requirementGroups = discount.DiscountRequirements.Where(requirement => requirement.IsGroup);
+            var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id).Where(requirement => requirement.IsGroup);
+
             var availableRequirementGroups = requirementGroups.Select(requirement =>
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
@@ -393,13 +365,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            var defaultGroup = discount.DiscountRequirements
-                .FirstOrDefault(requirement => !requirement.ParentId.HasValue && requirement.IsGroup);
+            var defaultGroup = _discountService.GetAllDiscountRequirements(discount.Id, true).FirstOrDefault(requirement => requirement.IsGroup);
             if (defaultGroup == null)
             {
                 //add default requirement group
-                discount.DiscountRequirements.Add(new DiscountRequirement
+                _discountService.InsertDiscountRequirement(new DiscountRequirement
                 {
+                    DiscountId = discount.Id,
                     IsGroup = true,
                     InteractionType = RequirementGroupInteractionType.And,
                     DiscountRequirementRuleSystemName = _localizationService
@@ -410,18 +382,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             //save new requirement group
             var discountRequirementGroup = new DiscountRequirement
             {
+                DiscountId = discount.Id,
                 IsGroup = true,
                 DiscountRequirementRuleSystemName = name,
                 InteractionType = RequirementGroupInteractionType.And
             };
-            discount.DiscountRequirements.Add(discountRequirementGroup);
-            _discountService.UpdateDiscount(discount);
+
+            _discountService.InsertDiscountRequirement(discountRequirementGroup);
 
             if (!string.IsNullOrEmpty(name))
                 return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
 
             //set identifier as group name (if not specified)
             discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
+            _discountService.UpdateDiscountRequirement(discountRequirementGroup);
+            
             _discountService.UpdateDiscount(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
@@ -435,7 +410,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductList(DiscountProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = _discountService.GetDiscountById(searchModel.DiscountId)
@@ -461,8 +436,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product found with the specified id", nameof(productId));
 
             //remove discount
-            if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                product.DiscountProductMappings.Remove(product.DiscountProductMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+            if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is DiscountProductMapping discountProductMapping)
+                _productService.DeleteDiscountProductMapping(discountProductMapping);
 
             _productService.UpdateProduct(product);
             _productService.UpdateHasDiscountsApplied(product);
@@ -485,7 +460,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAddPopupList(AddProductToDiscountSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _discountModelFactory.PrepareAddProductToDiscountListModel(searchModel);
@@ -509,8 +484,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 foreach (var product in selectedProducts)
                 {
-                    if (product.DiscountProductMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                        product.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discount });
+                    if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
+                        _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
 
                     _productService.UpdateProduct(product);
                     _productService.UpdateHasDiscountsApplied(product);
@@ -530,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CategoryList(DiscountCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = _discountService.GetDiscountById(searchModel.DiscountId)
@@ -556,8 +531,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No category found with the specified id", nameof(categoryId));
 
             //remove discount
-            if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                category.DiscountCategoryMappings.Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+            if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is DiscountCategoryMapping mapping)
+                _categoryService.DeleteDiscountCategoryMapping(mapping);
 
             _categoryService.UpdateCategory(category);
 
@@ -579,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CategoryAddPopupList(AddCategoryToDiscountSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _discountModelFactory.PrepareAddCategoryToDiscountListModel(searchModel);
@@ -604,8 +579,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (category == null)
                     continue;
 
-                if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                    category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
+                    _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
 
                 _categoryService.UpdateCategory(category);
             }
@@ -623,7 +598,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ManufacturerList(DiscountManufacturerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = _discountService.GetDiscountById(searchModel.DiscountId)
@@ -649,8 +624,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No manufacturer found with the specified id", nameof(manufacturerId));
 
             //remove discount
-            if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                manufacturer.DiscountManufacturerMappings.Remove(manufacturer.DiscountManufacturerMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+            if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
+                _manufacturerService.DeleteDiscountManufacturerMapping(discountManufacturerMapping);
 
             _manufacturerService.UpdateManufacturer(manufacturer);
 
@@ -672,7 +647,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ManufacturerAddPopupList(AddManufacturerToDiscountSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _discountModelFactory.PrepareAddManufacturerToDiscountListModel(searchModel);
@@ -697,8 +672,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (manufacturer == null)
                     continue;
 
-                if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                    manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
+                if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
+                    _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
 
                 _manufacturerService.UpdateManufacturer(manufacturer);
             }
@@ -716,7 +691,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsageHistoryList(DiscountUsageHistorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = _discountService.GetDiscountById(searchModel.DiscountId)
@@ -735,9 +710,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a discount with the specified id
-            var unused = _discountService.GetDiscountById(discountId)
+            _ = _discountService.GetDiscountById(discountId)
                 ?? throw new ArgumentException("No discount found with the specified id", nameof(discountId));
-                
+
             //try to get a discount usage history entry with the specified id
             var discountUsageHistoryEntry = _discountService.GetDiscountUsageHistoryById(id)
                 ?? throw new ArgumentException("No discount usage history entry found with the specified id", nameof(id));

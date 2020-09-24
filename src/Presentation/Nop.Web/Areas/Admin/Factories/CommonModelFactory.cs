@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -38,8 +38,11 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Autofac;
+using Nop.Services.Events;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -48,29 +51,21 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial class CommonModelFactory : ICommonModelFactory
     {
-        #region Constants
-
-        /// <summary>
-        /// nopCommerce warning URL
-        /// </summary>
-        /// <remarks>
-        /// {0} : store URL
-        /// {1} : whether the store based is on the localhost
-        /// </remarks>
-        private const string NOPCOMMERCE_WARNING_URL = "https://www.nopcommerce.com/SiteWarnings.aspx?local={0}&url={1}";
-
-        #endregion
-
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly AppSettings _appSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly IComponentContext _componentContext;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
+        private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -78,87 +73,109 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IMeasureService _measureService;
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPluginService _pluginService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly TaxSettings _taxSettings;
+        private readonly NopHttpClient _nopHttpClient;
+        private readonly ProxySettings _proxySettings;
 
         #endregion
 
         #region Ctor
 
         public CommonModelFactory(AdminAreaSettings adminAreaSettings,
+            AppSettings appSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
+            IAuthenticationPluginManager authenticationPluginManager,
+            IBaseAdminModelFactory baseAdminModelFactory,
+            IComponentContext componentContext,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
-            IExternalAuthenticationService externalAuthenticationService,
             INopFileProvider fileProvider,
+            IExchangeRatePluginManager exchangeRatePluginManager,
             IHttpContextAccessor httpContextAccessor,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IMeasureService measureService,
             IOrderService orderService,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
+            IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
             IProductService productService,
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
-            IShippingService shippingService,
+            IShippingPluginManager shippingPluginManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
+            ITaxPluginManager taxPluginManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            IWidgetService widgetService,
+            IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            TaxSettings taxSettings)
+            NopHttpClient nopHttpClient,
+            ProxySettings proxySettings)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._currencyService = currencyService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._fileProvider = fileProvider;
-            this._httpContextAccessor = httpContextAccessor;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._maintenanceService = maintenanceService;
-            this._measureService = measureService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pluginService = pluginService;
-            this._productService = productService;
-            this._returnRequestService = returnRequestService;
-            this._searchTermService = searchTermService;
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
-            this._workContext = workContext;
-            this._measureSettings = measureSettings;
-            this._taxSettings = taxSettings;
+            _adminAreaSettings = adminAreaSettings;
+            _appSettings = appSettings;
+            _catalogSettings = catalogSettings;
+            _currencySettings = currencySettings;
+            _actionContextAccessor = actionContextAccessor;
+            _authenticationPluginManager = authenticationPluginManager;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _componentContext = componentContext;
+            _currencyService = currencyService;
+            _customerService = customerService;
+            _dataProvider = dataProvider;
+            _dateTimeHelper = dateTimeHelper;
+            _exchangeRatePluginManager = exchangeRatePluginManager;
+            _httpContextAccessor = httpContextAccessor;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _maintenanceService = maintenanceService;
+            _measureService = measureService;
+            _fileProvider = fileProvider;
+            _orderService = orderService;
+            _paymentPluginManager = paymentPluginManager;
+            _pickupPluginManager = pickupPluginManager;
+            _pluginService = pluginService;
+            _productService = productService;
+            _returnRequestService = returnRequestService;
+            _searchTermService = searchTermService;
+            _shippingPluginManager = shippingPluginManager;
+            _staticCacheManager = staticCacheManager;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _taxPluginManager = taxPluginManager;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _widgetPluginManager = widgetPluginManager;
+            _workContext = workContext;
+            _measureSettings = measureSettings;
+            _nopHttpClient = nopHttpClient;
+            _proxySettings = proxySettings;
         }
 
         #endregion
@@ -208,33 +225,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!_adminAreaSettings.CheckCopyrightRemovalKey)
                 return;
 
-            var currentStoreUrl = _storeContext.CurrentStore.Url;
-            var local = _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request);
-
+            //try to get a warning
+            var warning = string.Empty;
             try
             {
-                using (var client = new HttpClient())
-                {
-                    //specify request timeout
-                    client.Timeout = TimeSpan.FromMilliseconds(2000);
-
-                    var url = string.Format(NOPCOMMERCE_WARNING_URL, local, currentStoreUrl);
-                    var warning = client.GetStringAsync(url).Result;
-
-                    if (!String.IsNullOrEmpty(warning))
-                        models.Add(new SystemWarningModel
-                        {
-                            Level = SystemWarningLevel.CopyrightRemovalKey,
-                            Text = warning,
-                            //this text could contain links. so don't encode it
-                            DontEncode = true
-                        });
-                }
+                warning = _nopHttpClient.GetCopyrightWarningAsync().Result;
             }
-            catch
+            catch { }
+            if (string.IsNullOrEmpty(warning))
+                return;
+
+            models.Add(new SystemWarningModel
             {
-                //ignore exceptions
-            }
+                Level = SystemWarningLevel.CopyrightRemovalKey,
+                Text = warning,
+                DontEncode = true //this text could contain links, so don't encode it
+            });
         }
 
         /// <summary>
@@ -389,7 +395,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether payment methods activated
-            if (_paymentService.LoadActivePaymentMethods().Any())
+            if (_paymentPluginManager.LoadAllPlugins().Any())
             {
                 models.Add(new SystemWarningModel
                 {
@@ -405,7 +411,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
             });
         }
-
+        
         /// <summary>
         /// Prepare plugins warning model
         /// </summary>
@@ -439,6 +445,31 @@ namespace Nop.Web.Areas.Admin.Factories
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.AssemblyHasCollision"),
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
+                });
+            }
+
+            //check whether there are different plugins which try to override the same interface
+            var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
+            var overridenServices = _componentContext.ComponentRegistry.Registrations.Where(p =>
+                    p.Services.Any(s =>
+                        s.Description.StartsWith("Nop.", StringComparison.InvariantCulture) &&
+                        !s.Description.StartsWith(typeof(IConsumer<>).FullName?.Replace("~1", string.Empty) ?? string.Empty,
+                            StringComparison.InvariantCulture))).SelectMany(p => p.Services.Select(x =>
+                    KeyValuePair.Create(x.Description, p.Target.Activator.LimitType.Assembly.GetName().Name)))
+                .Where(p => baseLibraries.All(library=> !p.Value.StartsWith(library, StringComparison.InvariantCultureIgnoreCase)))
+                .GroupBy(p => p.Key, p => p.Value)
+                .Where(p => p.Count() > 1)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            foreach (var overridenService in overridenServices)
+            {
+                var assemblies = overridenService.Value
+                    .Aggregate("", (current, all) => all + ", " + current).TrimEnd(',', ' ');
+
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginsOverrideSameService"), overridenService.Key, assemblies)
                 });
             }
         }
@@ -493,7 +524,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"),
-                        WindowsIdentity.GetCurrent().Name, dir)
+                        CurrentOSUser.FullName, dir)
                 });
                 dirPermissionsOk = false;
             }
@@ -518,7 +549,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Level = SystemWarningLevel.Warning,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"),
-                        WindowsIdentity.GetCurrent().Name, file)
+                        CurrentOSUser.FullName, file)
                 });
                 filePermissionsOk = false;
             }
@@ -558,6 +589,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var plugins = _pluginService.GetPlugins<IPlugin>();
 
             var notEnabled = new List<string>();
+            var notEnabledSystemNames = new List<string>();
 
             foreach (var plugin in plugins)
             {
@@ -566,33 +598,31 @@ namespace Nop.Web.Areas.Admin.Factories
                 switch (plugin)
                 {
                     case IPaymentMethod paymentMethod:
-                        isEnabled = _paymentService.IsPaymentMethodActive(paymentMethod);
+                        isEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
                         break;
 
                     case IShippingRateComputationMethod shippingRateComputationMethod:
-                        isEnabled =
-                            _shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod);
+                        isEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
                         break;
 
                     case IPickupPointProvider pickupPointProvider:
-                        isEnabled = _shippingService.IsPickupPointProviderActive(pickupPointProvider);
+                        isEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
                         break;
 
-                    case ITaxProvider _:
-                        isEnabled = plugin.PluginDescriptor.SystemName
-                            .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                    case ITaxProvider taxProvider:
+                        isEnabled = _taxPluginManager.IsPluginActive(taxProvider);
                         break;
 
                     case IExternalAuthenticationMethod externalAuthenticationMethod:
-                        isEnabled = _externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod);
+                        isEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                         break;
 
                     case IWidgetPlugin widgetPlugin:
-                        isEnabled = _widgetService.IsWidgetActive(widgetPlugin);
+                        isEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
                         break;
 
                     case IExchangeRateProvider exchangeRateProvider:
-                        isEnabled = exchangeRateProvider.PluginDescriptor.SystemName == _currencySettings.ActiveExchangeRateProviderSystemName;
+                        isEnabled = _exchangeRatePluginManager.IsPluginActive(exchangeRateProvider);
                         break;
                 }
 
@@ -600,14 +630,19 @@ namespace Nop.Web.Areas.Admin.Factories
                     continue;
 
                 notEnabled.Add(plugin.PluginDescriptor.FriendlyName);
+                notEnabledSystemNames.Add(plugin.PluginDescriptor.SystemName);
             }
 
             if (notEnabled.Any())
             {
+                //get URL helper
+                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)}"
+                    DontEncode = true,
+                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
@@ -626,7 +661,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.NopVersion = NopVersion.CurrentVersion;
+            model.NopVersion = NopVersion.FULL_VERSION;
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
@@ -675,7 +710,51 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
 
+            model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
+
+            model.RedisEnabled = _appSettings.RedisConfig.Enabled;
+            model.UseRedisToStoreDataProtectionKeys = _appSettings.RedisConfig.StoreDataProtectionKeys;
+            model.UseRedisForCaching = _appSettings.RedisConfig.UseCaching;
+            model.UseRedisToStorePluginsInfo = _appSettings.RedisConfig.StorePluginsInfo;
+
+            model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
+
             return model;
+        }
+
+        /// <summary>
+        /// Prepare proxy connection warning model
+        /// </summary>
+        /// <param name="models">List of system warning models</param>
+        protected virtual void PrepareProxyConnectionWarningModel(IList<SystemWarningModel> models)
+        {
+            if (models == null)
+                throw new ArgumentNullException(nameof(models));
+
+            //whether proxy is enabled
+            if (!_proxySettings.Enabled)
+                return;
+
+            try
+            {
+                _nopHttpClient.PingAsync().Wait();
+
+                //connection is OK
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.OK")
+                });
+            }
+            catch
+            {
+                //connection failed
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ProxyConnection.Failed")
+                });
+            }
         }
 
         /// <summary>
@@ -707,9 +786,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //payment methods
             PreparePaymentMethodsWarningModel(models);
 
-            //incompatible plugins
+            //plugins
             PreparePluginsWarningModel(models);
-
+            
             //performance settings
             PreparePerformanceSettingsWarningModel(models);
 
@@ -718,6 +797,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //not active plugins
             PreparePluginsEnabledWarningModel(models);
+
+            //proxy connection
+            PrepareProxyConnectionWarningModel(models);
 
             return models;
         }
@@ -736,6 +818,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
 
+            model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
+
+            model.BackupSupported = _dataProvider.BackupSupported;
+
             //prepare nested search model
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 
@@ -753,27 +839,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get backup files
-            var backupFiles = _maintenanceService.GetAllBackupFiles().ToList();
+            var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
             {
-                Data = backupFiles.PaginationByRequestModel(searchModel).Select(file =>
+                return backupFiles.Select(file => new BackupFileModel
                 {
-                    //fill in model values from the entity
-                    var backupFileModel = new BackupFileModel
-                    {
-                        Name = _fileProvider.GetFileName(file)
-                    };
-
+                    Name = _fileProvider.GetFileName(file),
                     //fill in additional values (not existing in the entity)
-                    backupFileModel.Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb";
-                    backupFileModel.Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{backupFileModel.Name}";
-
-                    return backupFileModel;
-                }),
-                Total = backupFiles.Count
-            };
+                    Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
+                    Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{_fileProvider.GetFileName(file)}"
+                });
+            });
 
             return model;
         }
@@ -787,6 +865,32 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare available languages
+            //we insert 0 as 'Standard' language.
+            //let's insert -1 for 'All' language selection.
+            _baseAdminModelFactory.PrepareLanguages(searchModel.AvailableLanguages,
+                defaultItemText: _localizationService.GetResource("Admin.System.SeNames.List.Language.Standard"));
+            searchModel.AvailableLanguages.Insert(0,
+                new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
+            searchModel.LanguageId = -1;
+
+            //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.All")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.ActiveOnly")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.InactiveOnly")
+            });
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -804,17 +908,21 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
+            var languageId = searchModel.LanguageId < 0 ? null : (int?)(searchModel.LanguageId);
+
             //get URL records
             var urlRecords = _urlRecordService.GetAllUrlRecords(slug: searchModel.SeName,
+                languageId: languageId, isActive: isActive,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //get URL helper
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             //prepare list model
-            var model = new UrlRecordListModel
+            var model = new UrlRecordListModel().PrepareToGrid(searchModel, urlRecords, () =>
             {
-                Data = urlRecords.Select(urlRecord =>
+                return urlRecords.Select(urlRecord =>
                 {
                     //fill in model values from the entity
                     var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
@@ -856,10 +964,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     urlRecordModel.DetailsUrl = detailsUrl;
 
                     return urlRecordModel;
-                }),
-                Total = urlRecords.TotalCount
-            };
-
+                });
+            });
             return model;
         }
 
@@ -891,8 +997,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.PageSize = 5;
-            searchModel.AvailablePageSizes = "5";
+            searchModel.SetGridPageSize(5);
 
             return searchModel;
         }
@@ -911,16 +1016,14 @@ namespace Nop.Web.Areas.Admin.Factories
             var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PopularSearchTermListModel
+            var model = new PopularSearchTermListModel().PrepareToGrid(searchModel, searchTermRecordLines, () =>
             {
-                //fill in model values from the entity
-                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
+                return searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
                 {
                     Keyword = searchTerm.Keyword,
                     Count = searchTerm.Count
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
+                });
+            });
 
             return model;
         }

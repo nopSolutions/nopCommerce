@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -41,10 +41,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the checkout attribute
-        /// </summary>
-        public virtual CheckoutAttribute CheckoutAttribute { get; set; }
     }
 }

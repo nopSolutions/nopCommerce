@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Tax providers",
+  "FriendlyName": "Avalara tax provider",
+  "SystemName": "Tax.Avalara",
+  "Version": "2.35",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Tax.Avalara.dll",
+  "Description": "This plugin allows using Avalara AvaTax service"
+}

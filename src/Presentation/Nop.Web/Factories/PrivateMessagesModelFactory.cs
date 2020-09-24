@@ -38,13 +38,13 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._customerSettings = customerSettings;
-            this._forumSettings = forumSettings;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumService = forumService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _customerSettings = customerSettings;
+            _forumSettings = forumSettings;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _forumService = forumService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion
@@ -70,13 +70,16 @@ namespace Nop.Web.Factories
                     {
                         inboxPage = page.Value;
                     }
+
                     break;
                 case "sent":
                     if (page.HasValue)
                     {
                         sentItemsPage = page.Value;
                     }
+
                     sentItemsTabSelected = true;
+
                     break;
                 default:
                     break;
@@ -190,8 +193,8 @@ namespace Nop.Web.Factories
             var model = new SendPrivateMessageModel
             {
                 ToCustomerId = customerTo.Id,
-                CustomerToName = _customerService.FormatUserName(customerTo),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
+                CustomerToName = _customerService.FormatUsername(customerTo),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customerTo)
             };
 
             if (replyToPM == null)
@@ -217,15 +220,18 @@ namespace Nop.Web.Factories
             if (pm == null)
                 throw new ArgumentNullException(nameof(pm));
 
+            var fromCustomer = _customerService.GetCustomerById(pm.FromCustomerId);
+            var toCustomer = _customerService.GetCustomerById(pm.ToCustomerId);
+
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,
-                FromCustomerId = pm.FromCustomer.Id,
-                CustomerFromName = _customerService.FormatUserName(pm.FromCustomer),
-                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
-                ToCustomerId = pm.ToCustomer.Id,
-                CustomerToName = _customerService.FormatUserName(pm.ToCustomer),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
+                FromCustomerId = pm.FromCustomerId,
+                CustomerFromName = _customerService.FormatUsername(fromCustomer),
+                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(fromCustomer),
+                ToCustomerId = pm.ToCustomerId,
+                CustomerToName = _customerService.FormatUsername(toCustomer),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(toCustomer),
                 Subject = pm.Subject,
                 Message = _forumService.FormatPrivateMessageText(pm),
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),

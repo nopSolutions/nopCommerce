@@ -1,6 +1,4 @@
-﻿@using System.Text.Encodings.Web
-
-@model ApplyVendorModel
+﻿@model ApplyVendorModel
 @{
     Layout = "_ColumnsOne";
 
@@ -51,9 +49,7 @@
                         @await Html.PartialAsync("_VendorAttributes", Model.VendorAttributes)
                         @if (Model.DisplayCaptcha)
                         {
-                            <div class="captcha-box">
-                                <nop-captcha />
-                            </div>
+                            <nop-captcha />
                         }
                         @if (Model.TermsOfServiceEnabled)
                         {

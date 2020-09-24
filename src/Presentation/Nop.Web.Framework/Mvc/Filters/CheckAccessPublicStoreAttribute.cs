@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that confirms access to public store
     /// </summary>
-    public class CheckAccessPublicStoreAttribute : TypeFilterAttribute
+    public sealed class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
         #region Fields
 
@@ -26,8 +26,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessPublicStoreAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         #endregion
@@ -59,8 +59,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public CheckAccessPublicStoreFilter(bool ignoreFilter, IPermissionService permissionService)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
             }
 
             #endregion

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -13,31 +13,6 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial interface ITaxService
     {
-        #region Tax providers
-
-        /// <summary>
-        /// Load active tax provider
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Active tax provider</returns>
-        ITaxProvider LoadActiveTaxProvider(Customer customer = null);
-
-        /// <summary>
-        /// Load tax provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
-        ITaxProvider LoadTaxProviderBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all tax providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Tax providers</returns>
-        IList<ITaxProvider> LoadAllTaxProviders(Customer customer = null);
-
-        #endregion
-
         #region Product price
         
         /// <summary>
@@ -149,7 +124,7 @@ namespace Nop.Services.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer, out decimal taxRate);
-        
+
         #endregion
 
         #region Checkout attribute price
@@ -157,37 +132,41 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav);
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav);
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer);
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer);
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer);
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer, out decimal taxRate);
 
         #endregion
@@ -261,6 +240,18 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
         bool IsVatExempt(Address address, Customer customer);
+
+        #endregion
+
+        #region Tax total
+
+        /// <summary>
+        /// Get tax total for the passed shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
+        /// <returns>Result</returns>
+        TaxTotalResult GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
 
         #endregion
     }

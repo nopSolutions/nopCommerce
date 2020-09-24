@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Moq;
-using Nop.Core;
-using Nop.Core.Domain.Common;
+using FluentAssertions;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Stores;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Tests;
 using NUnit.Framework;
@@ -17,19 +14,17 @@ namespace Nop.Services.Tests.Helpers
     [TestFixture]
     public class DateTimeHelperTests : ServiceTest
     {
-        private Mock<IWorkContext> _workContext;
-        private Mock<IStoreContext> _storeContext;
-        private Mock<IGenericAttributeService> _genericAttributeService;
-        private Mock<ISettingService> _settingService;
+        private IGenericAttributeService _genericAttributeService;
         private DateTimeSettings _dateTimeSettings;
         private IDateTimeHelper _dateTimeHelper;
-        private Store _store;
+        private ISettingService _settingService;
+        private Customer _customer;
 
         /// <summary>
         /// (GMT+02:00) Minsk
         /// </summary>
         private string _gmtPlus2MinskTimeZoneId;
-
+       
         /// <summary>
         /// (GMT+03:00) Moscow, St. Petersburg, Volgograd
         /// </summary>
@@ -40,131 +35,125 @@ namespace Nop.Services.Tests.Helpers
         /// </summary>
         private string _gmtPlus7KrasnoyarskTimeZoneId;
 
+        private string _defaultTimeZone;
+        private bool _defaultAllowCustomersToSetTimeZone;
+        private string _defaultDefaultStoreTimeZoneId;
+
         [SetUp]
-        public new void SetUp()
+        public void SetUp()
         {
-            _genericAttributeService = new Mock<IGenericAttributeService>();
-            _settingService = new Mock<ISettingService>();
+            _genericAttributeService = GetService<IGenericAttributeService>();
+            _dateTimeSettings = GetService<DateTimeSettings>();
+            _dateTimeHelper = GetService<IDateTimeHelper>();
+            _settingService = GetService<ISettingService>();
 
-            _workContext = new Mock<IWorkContext>();
+            _customer = GetService<ICustomerService>().GetCustomerByEmail(NopTestsDefaults.AdminEmail);
 
-            _store = new Store { Id = 1 };
-            _storeContext = new Mock<IStoreContext>();
-            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
+            _defaultTimeZone = _genericAttributeService.GetAttribute<string>(_customer, NopCustomerDefaults.TimeZoneIdAttribute);
 
-            _dateTimeSettings = new DateTimeSettings
-            {
-                AllowCustomersToSetTimeZone = false,
-                DefaultStoreTimeZoneId = string.Empty
-            };
+            _defaultAllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            _defaultDefaultStoreTimeZoneId = _dateTimeSettings.DefaultStoreTimeZoneId;
 
-            _dateTimeHelper = new DateTimeHelper(_dateTimeSettings, _genericAttributeService.Object, 
-                _settingService.Object, _workContext.Object);
+            _gmtPlus2MinskTimeZoneId = "E. Europe Standard Time";  //(GMT+02:00) Minsk
+            _gmtPlus3MoscowTimeZoneId = "Russian Standard Time"; //(GMT+03:00) Moscow, St. Petersburg, Volgograd
+            _gmtPlus7KrasnoyarskTimeZoneId = "North Asia Standard Time"; //(GMT+07:00) Krasnoyarsk;
 
-            var isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
+            if (Environment.OSVersion.Platform != PlatformID.Unix) 
+                return;
 
-            _gmtPlus2MinskTimeZoneId = isUnix ? "Europe/Minsk" : "E. Europe Standard Time";  
-            _gmtPlus3MoscowTimeZoneId = isUnix ? "Europe/Moscow" : "Russian Standard Time"; 
-            _gmtPlus7KrasnoyarskTimeZoneId  = isUnix ? "Asia/Krasnoyarsk" : "North Asia Standard Time"; 
+            _gmtPlus2MinskTimeZoneId = "Europe/Minsk";  //(GMT+02:00) Minsk;
+            _gmtPlus3MoscowTimeZoneId = "Europe/Moscow"; //(GMT+03:00) Moscow, St. Petersburg, Volgograd
+            _gmtPlus7KrasnoyarskTimeZoneId = "Asia/Krasnoyarsk"; //(GMT+07:00) Krasnoyarsk;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _genericAttributeService.SaveAttribute(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _defaultTimeZone);
+
+            _dateTimeSettings.AllowCustomersToSetTimeZone = _defaultAllowCustomersToSetTimeZone;
+            _dateTimeSettings.DefaultStoreTimeZoneId = _defaultDefaultStoreTimeZoneId;
+
+            _settingService.SaveSetting(_dateTimeSettings);
         }
 
         [Test]
-        public void Can_find_systemTimeZone_by_id()
+        public void CanFindSystemTimeZoneById()
         {
-            var timeZones = _dateTimeHelper.FindTimeZoneById(_gmtPlus2MinskTimeZoneId);
-            timeZones.ShouldNotBeNull();
-            timeZones.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);
+            var timeZones = _dateTimeHelper.FindTimeZoneById(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
+            timeZones.Should().NotBeNull();
+            timeZones.Id.Should().Be(_gmtPlus2MinskTimeZoneId);
         }
 
         [Test]
-        public void Can_get_all_systemTimeZones()
+        public void CanGetAllSystemTimeZones()
         {
             var systemTimeZones = _dateTimeHelper.GetSystemTimeZones();
-            systemTimeZones.ShouldNotBeNull();
-            systemTimeZones.Any().ShouldBeTrue();
+            systemTimeZones.Should().NotBeNull();
+            systemTimeZones.Any().Should().BeTrue();
         }
 
         [Test]
-        public void Can_get_customer_timeZone_with_customTimeZones_enabled()
+        public void CanGetCustomerTimeZoneWithCustomTimeZonesEnabled()
         {
             _dateTimeSettings.AllowCustomersToSetTimeZone = true;
-            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId;
+            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId; //(GMT+02:00) Minsk;
+            _settingService.SaveSetting(_dateTimeSettings);
 
-            var customer = new Customer
-            {
-                Id = 10
-            };
+            _genericAttributeService.SaveAttribute(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _gmtPlus3MoscowTimeZoneId);
 
-            _genericAttributeService.Setup(x => x.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute, 0))
-                .Returns(_gmtPlus3MoscowTimeZoneId);
-
-            var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
-            timeZone.ShouldNotBeNull();
-            timeZone.Id.ShouldEqual(_gmtPlus3MoscowTimeZoneId);
+            var timeZone = GetService<IDateTimeHelper>().GetCustomerTimeZone(_customer);
+            timeZone.Should().NotBeNull();
+            timeZone.Id.Should().Be(_gmtPlus3MoscowTimeZoneId);
         }
 
         [Test]
-        public void Can_get_customer_timeZone_with_customTimeZones_disabled()
+        public void CanGetCustomerTimezoneWithCustomTimeZonesDisabled()
         {
             _dateTimeSettings.AllowCustomersToSetTimeZone = false;
-            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId;
+            _dateTimeSettings.DefaultStoreTimeZoneId = _gmtPlus2MinskTimeZoneId; //(GMT+02:00) Minsk;
+            _settingService.SaveSetting(_dateTimeSettings);
 
-            var customer = new Customer
-            {
-                Id = 10
-            };
-
-            _genericAttributeService.Setup(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = 0,
-                                        EntityId = customer.Id,
-                                        Key = NopCustomerDefaults.TimeZoneIdAttribute,
-                                        KeyGroup = "Customer",
-                                        Value = _gmtPlus3MoscowTimeZoneId
-                                    }
-                            });
-
-            var timeZone = _dateTimeHelper.GetCustomerTimeZone(customer);
-            timeZone.ShouldNotBeNull();
-            timeZone.Id.ShouldEqual(_gmtPlus2MinskTimeZoneId);
+            _genericAttributeService.SaveAttribute(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _gmtPlus3MoscowTimeZoneId);
+            
+            var timeZone = GetService<IDateTimeHelper>().GetCustomerTimeZone(_customer);
+            timeZone.Should().NotBeNull();
+            timeZone.Id.Should().Be(_gmtPlus2MinskTimeZoneId);  //(GMT+02:00) Minsk
         }
 
         [Test]
-        public void Can_convert_dateTime_to_userTime()
+        public void CanConvertDatetimeToUserTime()
         {
-            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId);
-            sourceDateTime.ShouldNotBeNull();
+            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId); //(GMT+02:00) Minsk;
+            sourceDateTime.Should().NotBeNull();
 
-            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus7KrasnoyarskTimeZoneId);
-            destinationDateTime.ShouldNotBeNull();
+            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus7KrasnoyarskTimeZoneId); //(GMT+07:00) Krasnoyarsk;
+            destinationDateTime.Should().NotBeNull();
 
             //summer time
             _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 06, 01, 0, 0, 0), sourceDateTime, destinationDateTime)
-                .ShouldEqual(new DateTime(2010, 06, 01, 5, 0, 0));
+                .Should().Be(new DateTime(2010, 06, 01, 5, 0, 0));
 
             //winter time
             _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 01, 01, 0, 0, 0), sourceDateTime, destinationDateTime)
-                .ShouldEqual(new DateTime(2010, 01, 01, 5, 0, 0));
+                .Should().Be(new DateTime(2010, 01, 01, 5, 0, 0));
         }
 
         [Test]
-        public void Can_convert_dateTime_to_utc_dateTime()
+        public void CanConvertDatetimeToUtcDateTime()
         {
-            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId);
-            sourceDateTime.ShouldNotBeNull();
+            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById(_gmtPlus2MinskTimeZoneId); //(GMT+02:00) Minsk;
+            sourceDateTime.Should().NotBeNull();
 
             //summer time
             var dateTime1 = new DateTime(2010, 06, 01, 0, 0, 0);
             var convertedDateTime1 = _dateTimeHelper.ConvertToUtcTime(dateTime1, sourceDateTime);
-            convertedDateTime1.ShouldEqual(new DateTime(2010, 05, 31, 21, 0, 0));
+            convertedDateTime1.Should().Be(new DateTime(2010, 05, 31, 21, 0, 0));
 
             //winter time
             var dateTime2 = new DateTime(2010, 01, 01, 0, 0, 0);
             var convertedDateTime2 = _dateTimeHelper.ConvertToUtcTime(dateTime2, sourceDateTime);
-            convertedDateTime2.ShouldEqual(new DateTime(2009, 12, 31, 22, 0, 0));
+            convertedDateTime2.Should().Be(new DateTime(2009, 12, 31, 22, 0, 0));
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -14,7 +13,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -53,17 +52,50 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductService productService,
             IWorkContext workContext)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._countryService = countryService;
-            this._customerReportService = customerReportService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._orderReportService = orderReportService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productService = productService;
-            this._workContext = workContext;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
+            _customerReportService = customerReportService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _orderReportService = orderReportService;
+            _priceFormatter = priceFormatter;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productService = productService;
+            _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual IPagedList<BestsellersReportLine> GetBestsellersReport(BestsellerSearchModel searchModel)
+        {
+            //get parameters to filter bestsellers
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+            if (_workContext.CurrentVendor != null)
+                searchModel.VendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //get bestsellers
+            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: searchModel.BillingCountryId,
+                orderBy: OrderByEnum.OrderByTotalAmount,
+                vendorId: searchModel.VendorId,
+                categoryId: searchModel.CategoryId,
+                manufacturerId: searchModel.ManufacturerId,
+                storeId: searchModel.StoreId,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            return bestsellers;
         }
 
         #endregion
@@ -134,23 +166,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }));
 
-            lowStockProductModels.AddRange(combinations.Select(combination => new LowStockProductModel
-            {
-                Id = combination.Product.Id,
-                Name = combination.Product.Name,
-                Attributes = _productAttributeFormatter
-                    .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                ManageInventoryMethod = _localizationService.GetLocalizedEnum(combination.Product.ManageInventoryMethod),
-                StockQuantity = combination.StockQuantity,
-                Published = combination.Product.Published
+            lowStockProductModels.AddRange(combinations.Select(combination => {
+
+                var product = _productService.GetProductById(combination.ProductId);
+
+                return new LowStockProductModel
+                {
+                    Id = combination.ProductId,
+                    Name = product.Name,
+                    Attributes = _productAttributeFormatter
+                        .FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                    ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod),
+                    StockQuantity = combination.StockQuantity,
+                    Published = product.Published
+                };
             }));
 
+            var pagesList = lowStockProductModels.ToPagedList(searchModel);
+
             //prepare list model
-            var model = new LowStockProductListModel
+            var model = new LowStockProductListModel().PrepareToGrid(searchModel, pagesList, () =>
             {
-                Data = lowStockProductModels.PaginationByRequestModel(searchModel),
-                Total = lowStockProductModels.Count
-            };
+                return pagesList;
+            });
 
             return model;
         }
@@ -210,34 +248,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            //get parameters to filter bestsellers
-            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
-            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            if (_workContext.CurrentVendor != null)
-                searchModel.VendorId = _workContext.CurrentVendor.Id;
-            var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            //get bestsellers
-            var bestsellers = _orderReportService.BestSellersReport(showHidden: true,
-                createdFromUtc: startDateValue,
-                createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                billingCountryId: searchModel.BillingCountryId,
-                orderBy: 2,
-                vendorId: searchModel.VendorId,
-                categoryId: searchModel.CategoryId,
-                manufacturerId: searchModel.ManufacturerId,
-                storeId: searchModel.StoreId,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+            var bestsellers = GetBestsellersReport(searchModel);
 
             //prepare list model
-            var model = new BestsellerListModel
+            var model = new BestsellerListModel().PrepareToGrid(searchModel, bestsellers, () =>
             {
-                Data = bestsellers.Select(bestseller =>
+                return bestsellers.Select(bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -251,11 +267,27 @@ namespace Nop.Web.Areas.Admin.Factories
                     bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;
-                }),
-                Total = bestsellers.TotalCount
-            };
+                });
+            });
 
             return model;
+        }
+
+        /// <summary>
+        /// Get bestsellers total amount
+        /// </summary>
+        /// <param name="searchModel">Bestseller search model</param>
+        /// <returns>Bestseller total amount</returns>
+        public virtual string GetBestsellerTotalAmount(BestsellerSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            var bestsellers = GetBestsellersReport(searchModel);
+
+            var totalAmount = _priceFormatter.FormatPrice(bestsellers.Sum(bestseller => bestseller.TotalAmount), true, false);
+
+            return totalAmount;
         }
 
         #endregion
@@ -321,16 +353,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NeverSoldReportListModel
+            var model = new NeverSoldReportListModel().PrepareToGrid(searchModel, items, () =>
             {
                 //fill in model values from the entity
-                Data = items.Select(item => new NeverSoldReportModel
+                return items.Select(item => new NeverSoldReportModel
                 {
                     ProductId = item.Id,
                     ProductName = item.Name
-                }),
-                Total = items.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -383,12 +414,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var items = _orderReportService.GetCountryReport(os: orderStatus,
                 ps: paymentStatus,
                 startTimeUtc: startDateValue,
-                endTimeUtc: endDateValue);
+                endTimeUtc: endDateValue).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryReportListModel
+            var model = new CountryReportListModel().PrepareToGrid(searchModel, items, () =>
             {
-                Data = items.PaginationByRequestModel(searchModel).Select(item =>
+                return items.Select(item =>
                 {
                     //fill in model values from the entity
                     var countryReportModel = new CountryReportModel
@@ -401,9 +432,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     countryReportModel.CountryName = _countryService.GetCountryById(item.CountryId ?? 0)?.Name;
 
                     return countryReportModel;
-                }),
-                Total = items.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -423,7 +453,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare nested search models
-            PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByOrderTotal);
+            PrepareBestCustomersReportByOrderTotalSearchModel(searchModel.BestCustomersByOrderTotal);
             PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByNumberOfOrders);
             PrepareRegisteredCustomersReportSearchModel(searchModel.RegisteredCustomers);
 
@@ -431,7 +461,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Prepare best customers report search model
+        /// Prepare best customers by number of orders report search model
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report search model</returns>
@@ -450,6 +480,28 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
+
+        /// <summary>
+        /// Prepare best customers by order total report search model
+        /// </summary>
+        /// <param name="searchModel">Best customers report search model</param>
+        /// <returns>Best customers report search model</returns>
+        protected virtual BestCustomersReportSearchModel PrepareBestCustomersReportByOrderTotalSearchModel(BestCustomersReportSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            //prepare available order, payment and shipping statuses
+            _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
 
         /// <summary>
         /// Prepare registered customers report search model
@@ -496,34 +548,33 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestCustomersReportListModel
+            var model = new BestCustomersReportListModel().PrepareToGrid(searchModel, reportItems, () =>
             {
-                Data = reportItems.Select(item =>
-                {
+                return reportItems.Select(item =>
+               {
                     //fill in model values from the entity
                     var bestCustomersReportModel = new BestCustomersReportModel
-                    {
-                        CustomerId = item.CustomerId,
-                        OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
-                        OrderCount = item.OrderCount
-                    };
+                   {
+                       CustomerId = item.CustomerId,
+                       OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false),
+                       OrderCount = item.OrderCount
+                   };
 
                     //fill in additional values (not existing in the entity)
                     var customer = _customerService.GetCustomerById(item.CustomerId);
-                    if (customer != null)
-                    {
-                        bestCustomersReportModel.CustomerName = customer.IsRegistered() ? customer.Email :
-                            _localizationService.GetResource("Admin.Customers.Guest");
-                    }
+                   if (customer != null)
+                   {
+                       bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer) ? customer.Email :
+                           _localizationService.GetResource("Admin.Customers.Guest");
+                   }
 
-                    return bestCustomersReportModel;
-                }),
-                Total = reportItems.TotalCount
-            };
+                   return bestCustomersReportModel;
+               });
+            });
 
             return model;
         }
-
+                
         /// <summary>
         /// Prepare paged registered customers report list model
         /// </summary>
@@ -559,12 +610,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
             };
 
+            var pagedList = reportItems.ToPagedList(searchModel);
+
             //prepare list model
-            var model = new RegisteredCustomersReportListModel
+            var model = new RegisteredCustomersReportListModel().PrepareToGrid(searchModel, pagedList, () =>
             {
-                Data = reportItems.PaginationByRequestModel(searchModel),
-                Total = reportItems.Count
-            };
+                return pagedList;
+            });
 
             return model;
         }

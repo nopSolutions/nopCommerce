@@ -33,12 +33,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._logger = logger;
-            this._logModelFactory = logModelFactory;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _logger = logger;
+            _logModelFactory = logModelFactory;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult LogList(LogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _logModelFactory.PrepareLogListModel(searchModel);

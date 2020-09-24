@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Plugins;
+﻿using System.Collections.Generic;
 
 namespace Nop.Services.Plugins
 {
@@ -16,7 +15,7 @@ namespace Nop.Services.Plugins
         /// <param name="uploadedPlugins">Uploaded plugins</param>
         public PluginsUploadedEvent(IList<PluginDescriptor> uploadedPlugins)
         {
-            this.UploadedPlugins = uploadedPlugins;
+            UploadedPlugins = uploadedPlugins;
         }
 
         #endregion

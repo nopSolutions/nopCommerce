@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Services.Events;
+using Nop.Core.Events;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 
@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// Represents filter attribute that publish ModelReceived event before the action executes, after model binding is complete
     /// and publish ModelPrepared event after the action executes, before the action result
     /// </summary>
-    public class PublishModelEventsAttribute : TypeFilterAttribute
+    public sealed class PublishModelEventsAttribute : TypeFilterAttribute
     {
         #region Fields
 
@@ -30,8 +30,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public PublishModelEventsAttribute(bool ignore = false) : base(typeof(PublishModelEventsFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         #endregion
@@ -65,8 +65,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             public PublishModelEventsFilter(bool ignoreFilter,
                 IEventPublisher eventPublisher)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._eventPublisher = eventPublisher;
+                _ignoreFilter = ignoreFilter;
+                _eventPublisher = eventPublisher;
             }
 
             #endregion

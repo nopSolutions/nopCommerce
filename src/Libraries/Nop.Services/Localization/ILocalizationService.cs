@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {
@@ -43,13 +44,6 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resource</returns>
         LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
             bool logIfNotFound = true);
-
-        /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        IList<LocaleStringResource> GetAllResources(int languageId);
 
         /// <summary>
         /// Inserts a locale string resource
@@ -101,9 +95,9 @@ namespace Nop.Services.Localization
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
-        /// <param name="xml">XML</param>
+        /// <param name="xmlStreamReader">Stream reader of XML file</param>
         /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
-        void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true);
+        void ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true);
 
         /// <summary>
         /// Get localized property of an entity
@@ -183,13 +177,34 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
+        void AddOrUpdateLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
+
+        /// <summary>
+        /// Add locale resources
+        /// </summary>
+        /// <param name="resources">Resource name-value pairs</param>
+        /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
+        void AddLocaleResource(IDictionary<string, string> resources, int? languageId = null);
 
         /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
-        void DeletePluginLocaleResource(string resourceName);
+        void DeleteLocaleResource(string resourceName);
+
+        /// <summary>
+        /// Delete locale resources
+        /// </summary>
+        /// <param name="resourceNames">Resource names</param>
+        /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
+        void DeleteLocaleResources(IList<string> resourceNames, int? languageId = null);
+
+        /// <summary>
+        /// Delete locale resources by the passed name prefix
+        /// </summary>
+        /// <param name="resourceNamePrefix">Resource name prefix</param>
+        /// <param name="languageId">Language identifier; pass null to delete resources by prefix from all languages</param>
+        void DeleteLocaleResources(string resourceNamePrefix, int? languageId = null);
 
         /// <summary>
         /// Get localized friendly name of a plugin

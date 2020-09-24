@@ -11,10 +11,11 @@ namespace Nop.Web.Controllers
 
         public ScheduleTaskController(IScheduleTaskService scheduleTaskService)
         {
-            this._scheduleTaskService = scheduleTaskService;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult RunTask(string taskType)
         {
             var scheduleTask = _scheduleTaskService.GetTaskByType(taskType);

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
@@ -20,7 +20,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
-        IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml);
+        IEnumerable<(CheckoutAttribute attribute, IEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml);
 
         /// <summary>
         /// Gets selected checkout attribute value

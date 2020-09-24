@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public TopMenuViewComponent(ICatalogModelFactory catalogModelFactory)
         {
-            this._catalogModelFactory = catalogModelFactory;
+            _catalogModelFactory = catalogModelFactory;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)

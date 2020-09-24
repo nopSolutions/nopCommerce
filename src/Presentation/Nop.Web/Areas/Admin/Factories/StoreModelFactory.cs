@@ -5,8 +5,8 @@ using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Stores;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -31,14 +31,14 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IStoreService storeService)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._storeService = storeService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _storeService = storeService;
         }
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -68,15 +68,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get stores
-            var stores = _storeService.GetAllStores(loadCacheableCopy: false);
+            var stores = _storeService.GetAllStores().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new StoreListModel
+            var model = new StoreListModel().PrepareToGrid(searchModel, stores, () =>
             {
                 //fill in model values from the entity
-                Data = stores.PaginationByRequestModel(searchModel).Select(store => store.ToModel<StoreModel>()),
-                Total = stores.Count
-            };
+                return stores.Select(store => store.ToModel<StoreModel>());
+            });
 
             return model;
         }
@@ -95,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (store != null)
             {
                 //fill in model values from the entity
-                model = model ?? store.ToModel<StoreModel>();
+                model ??= store.ToModel<StoreModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -105,7 +104,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available languages
-            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, defaultItemText: _localizationService.GetResource("Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText"));
+            _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, 
+                defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
 
             //prepare localized models
             if (!excludeProperties)

@@ -18,7 +18,7 @@ namespace Nop.Web.Framework.Validators
         public UsernamePropertyValidator(CustomerSettings customerSettings)
             : base("Username is not valid")
         {
-            this._customerSettings = customerSettings;
+            _customerSettings = customerSettings;
         }
 
         /// <summary>

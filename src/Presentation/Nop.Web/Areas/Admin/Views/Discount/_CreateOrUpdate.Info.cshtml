@@ -87,16 +87,16 @@
 <div class="panel-body">
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="Name"/>
+            <nop-label asp-for="Name" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="Name" asp-required="true"/>
+            <nop-editor asp-for="Name" asp-required="true" />
             <span asp-validation-for="Name"></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="DiscountTypeId"/>
+            <nop-label asp-for="DiscountTypeId" />
         </div>
         <div class="col-md-9">
             <nop-select asp-for="DiscountTypeId" asp-items="@((DiscountType) Model.DiscountTypeId).ToSelectList()" />
@@ -105,19 +105,19 @@
     </div>
     <div class="form-group" id="pnlAppliedToSubCategories">
         <div class="col-md-3">
-            <nop-label asp-for="AppliedToSubCategories"/>
+            <nop-label asp-for="AppliedToSubCategories" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="AppliedToSubCategories"/>
+            <nop-editor asp-for="AppliedToSubCategories" />
             <span asp-validation-for="AppliedToSubCategories"></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="UsePercentage"/>
+            <nop-label asp-for="UsePercentage" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="UsePercentage"/>
+            <nop-editor asp-for="UsePercentage" />
             <span asp-validation-for="UsePercentage"></span>
         </div>
     </div>
@@ -152,10 +152,10 @@
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="RequiresCouponCode"/>
+            <nop-label asp-for="RequiresCouponCode" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="RequiresCouponCode"/>
+            <nop-editor asp-for="RequiresCouponCode" />
             <span asp-validation-for="RequiresCouponCode"></span>
         </div>
     </div>
@@ -182,34 +182,34 @@
     </nop-nested-setting>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="StartDateUtc"/>
+            <nop-label asp-for="StartDateUtc" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="StartDateUtc"/>
+            <nop-editor asp-for="StartDateUtc" />
             <span asp-validation-for="StartDateUtc"></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="EndDateUtc"/>
+            <nop-label asp-for="EndDateUtc" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="EndDateUtc"/>
+            <nop-editor asp-for="EndDateUtc" />
             <span asp-validation-for="EndDateUtc"></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="IsCumulative"/>
+            <nop-label asp-for="IsCumulative" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="IsCumulative"/>
+            <nop-editor asp-for="IsCumulative" />
             <span asp-validation-for="IsCumulative"></span>
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="DiscountLimitationId"/>
+            <nop-label asp-for="DiscountLimitationId" />
         </div>
         <div class="col-md-9">
             <nop-select asp-for="DiscountLimitationId" asp-items="@(((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())" />
@@ -218,20 +218,29 @@
     </div>
     <div class="form-group" id="pnlLimitationTimes">
         <div class="col-md-3">
-            <nop-label asp-for="LimitationTimes"/>
+            <nop-label asp-for="LimitationTimes" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="LimitationTimes"/>
+            <nop-editor asp-for="LimitationTimes" />
             <span asp-validation-for="LimitationTimes"></span> @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
         </div>
     </div>
     <div class="form-group" id="pnlMaximumDiscountedQuantity">
         <div class="col-md-3">
-            <nop-label asp-for="MaximumDiscountedQuantity"/>
+            <nop-label asp-for="MaximumDiscountedQuantity" />
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="MaximumDiscountedQuantity"/>
+            <nop-editor asp-for="MaximumDiscountedQuantity" />
             <span asp-validation-for="MaximumDiscountedQuantity"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="AdminComment" />
+        </div>
+        <div class="col-md-9">
+            <nop-textarea asp-for="AdminComment" />
+            <span asp-validation-for="AdminComment"></span>
         </div>
     </div>
 </div>

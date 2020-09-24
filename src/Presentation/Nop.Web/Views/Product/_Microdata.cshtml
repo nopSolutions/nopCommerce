@@ -1,0 +1,61 @@
+﻿@model ProductDetailsModel
+@using System.Globalization
+@using Nop.Core.Domain.Catalog
+@inject Nop.Core.IWebHelper webHelper
+
+<!--Microdata-->
+<div @if (ViewData.ContainsKey("isAccessoryOrSparePartFor")) { <text>itemprop="isAccessoryOrSparePartFor"</text> } itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="name" content="@Model.Name"/>
+    <meta itemprop="sku" content="@Model.Sku"/>
+    <meta itemprop="gtin" content="@Model.Gtin"/>
+    <meta itemprop="mpn" content="@Model.ManufacturerPartNumber"/>
+    <meta itemprop="description" content="@Model.ShortDescription"/>
+    <meta itemprop="image" content="@Model.DefaultPictureModel.ImageUrl"/>
+    @foreach (var manufacturer in Model.ProductManufacturers)
+    {
+        <meta itemprop="brand" content="@manufacturer.Name"/>
+    }
+    @if (@Model.ProductReviewOverview.TotalReviews > 0)
+    {
+        <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+            @{
+                var ratingPercent = 0;
+                if (Model.ProductReviewOverview.TotalReviews != 0)
+                {
+                    ratingPercent = ((Model.ProductReviewOverview.RatingSum * 100) / Model.ProductReviewOverview.TotalReviews) / 5;
+                }
+                var ratingValue = ratingPercent / (decimal)20;
+            }
+            <meta itemprop="ratingValue" content="@ratingValue.ToString("0.0", new CultureInfo("en-US"))"/>
+            <meta itemprop="reviewCount" content="@Model.ProductReviewOverview.TotalReviews"/>
+        </div>
+    }    
+    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <meta itemprop="url" content="@Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant()"/>
+        <meta itemprop="price" content="@Model.ProductPrice.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
+        <meta itemprop="priceCurrency" content="@Model.ProductPrice.CurrencyCode"/>
+        <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
+        @if (Model.ManageInventoryMethod == ManageInventoryMethod.ManageStock || Model.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+        {
+            @if (Model.StockAvailability.Contains(@T("Products.Availability.InStock").ToString(), StringComparison.InvariantCultureIgnoreCase) || 
+                Model.StockAvailability.Contains(@T("Products.Availability.InStockWithQuantity").ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                <meta itemprop="availability" content="http://schema.org/InStock"/>
+            }
+            else
+            {
+                <meta itemprop="availability" content="http://schema.org/OutOfStock"/>
+            }
+        }        
+    </div>
+    <div itemprop="review" itemscope itemtype="http://schema.org/Review">
+        <meta itemprop="author" content="ALL"/>
+        <meta itemprop="url" content="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductReviewOverview.ProductId })"/>
+    </div>
+    @foreach (var product in Model.AssociatedProducts)
+    {
+        var dataAccociatedType = new ViewDataDictionary(ViewData);
+        dataAccociatedType.Add("isAccessoryOrSparePartFor", "true");
+        @await Html.PartialAsync("_Microdata", product, dataAccociatedType)        
+    }
+</div>

@@ -1,9 +1,11 @@
+﻿using Nop.Core.Domain.Localization;
+
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product specification attribute
     /// </summary>
-    public partial class ProductSpecificationAttribute : BaseEntity
+    public partial class ProductSpecificationAttribute : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
@@ -39,16 +41,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the specification attribute option
-        /// </summary>
-        public virtual SpecificationAttributeOption SpecificationAttributeOption { get; set; }
 
         /// <summary>
         /// Gets the attribute control type

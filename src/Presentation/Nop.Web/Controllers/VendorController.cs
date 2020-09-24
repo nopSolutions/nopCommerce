@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
@@ -20,8 +19,6 @@ using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Controllers
@@ -66,21 +63,21 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerService = customerService;
-            this._downloadService = downloadService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._vendorModelFactory = vendorModelFactory;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._vendorSettings = vendorSettings;
+            _captchaSettings = captchaSettings;
+            _customerService = customerService;
+            _downloadService = downloadService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _pictureService = pictureService;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _vendorModelFactory = vendorModelFactory;
+            _vendorService = vendorService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -103,7 +100,7 @@ namespace Nop.Web.Controllers
             var attributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"vendor_attribute_{attribute.Id}";
+                var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -178,13 +175,12 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = new ApplyVendorModel();
@@ -193,20 +189,23 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ApplyVendor")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [ValidateCaptcha]
-        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
+        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile, IFormCollection form)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
+
+            if (_customerService.IsAdmin(_workContext.CurrentCustomer))
+                ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.IsAdmin"));
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             var pictureId = 0;
@@ -229,7 +228,7 @@ namespace Nop.Web.Controllers
             }
 
             //vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -279,10 +278,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Info()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
@@ -294,11 +292,11 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("save-info-button")]
-        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile)
+        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile, IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
@@ -324,7 +322,7 @@ namespace Nop.Web.Controllers
             var prevPicture = _pictureService.GetPictureById(vendor.PictureId);
 
             //vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -365,11 +363,11 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Info")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("remove-picture")]
         public virtual IActionResult RemovePicture()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)

@@ -1,4 +1,4 @@
-using Nop.Core.Plugins;
+﻿using Nop.Services.Plugins;
 
 namespace Nop.Services.Common
 {
@@ -8,6 +8,5 @@ namespace Nop.Services.Common
     /// </summary>
     public partial interface IMiscPlugin : IPlugin
     {
-
     }
 }

@@ -6,15 +6,15 @@ using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Services.Shipping.Pickup;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Shipping;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -31,8 +31,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateRangeService _dateRangeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IPluginService _pluginService;
+        private readonly IPickupPluginManager _pickupPluginManager;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 
@@ -44,17 +46,21 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateRangeService dateRangeService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IPluginService pluginService,
-            IShippingService shippingService)
+            IPickupPluginManager pickupPluginManager,
+            IShippingPluginManager shippingPluginManager,
+            IShippingService shippingService,
+            IStateProvinceService stateProvinceService)
         {
-            this._addressService = addressService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._countryService = countryService;
-            this._dateRangeService = dateRangeService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._pluginService = pluginService;
-            this._shippingService = shippingService;
+            _addressService = addressService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
+            _dateRangeService = dateRangeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _pickupPluginManager = pickupPluginManager;
+            _shippingPluginManager = shippingPluginManager;
+            _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -120,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -152,25 +158,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping providers
-            var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
+            var shippingProviders = _shippingPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ShippingProviderListModel
+            var model = new ShippingProviderListModel().PrepareToGrid(searchModel, shippingProviders, () =>
             {
-                Data = shippingProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                return shippingProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var shippingProviderModel = provider.ToPluginModel<ShippingProviderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    shippingProviderModel.IsActive = _shippingService.IsShippingRateComputationMethodActive(provider);
+                    shippingProviderModel.IsActive = _shippingPluginManager.IsPluginActive(provider);
                     shippingProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    shippingProviderModel.LogoUrl = _pluginService.GetPluginLogoUrl(provider.PluginDescriptor);
+                    shippingProviderModel.LogoUrl = _shippingPluginManager.GetPluginLogoUrl(provider);
 
                     return shippingProviderModel;
-                }),
-                Total = shippingProviders.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -202,25 +207,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get pickup point providers
-            var pickupPointProviders = _shippingService.LoadAllPickupPointProviders();
+            var pickupPointProviders = _pickupPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new PickupPointProviderListModel
+            var model = new PickupPointProviderListModel().PrepareToGrid(searchModel, pickupPointProviders, () =>
             {
-                Data = pickupPointProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                return pickupPointProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pickupPointProviderModel.IsActive = _shippingService.IsPickupPointProviderActive(provider);
+                    pickupPointProviderModel.IsActive = _pickupPluginManager.IsPluginActive(provider);
                     pickupPointProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    pickupPointProviderModel.LogoUrl = _pluginService.GetPluginLogoUrl(provider.PluginDescriptor);
+                    pickupPointProviderModel.LogoUrl = _pickupPluginManager.GetPluginLogoUrl(provider);
 
                     return pickupPointProviderModel;
-                }),
-                Total = pickupPointProviders.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -252,15 +256,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping methods
-            var shippingMethods = _shippingService.GetAllShippingMethods();
+            var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ShippingMethodListModel
+            var model = new ShippingMethodListModel().PrepareToGrid(searchModel, shippingMethods, () =>
             {
-                //fill in model values from the entity
-                Data = shippingMethods.PaginationByRequestModel(searchModel).Select(method => method.ToModel<ShippingMethodModel>()),
-                Total = shippingMethods.Count
-            };
+                return shippingMethods.Select(method => method.ToModel<ShippingMethodModel>());
+            });
 
             return model;
         }
@@ -280,7 +282,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (shippingMethod != null)
             {
                 //fill in model values from the entity
-                model = model ?? shippingMethod.ToModel<ShippingMethodModel>();
+                model ??= shippingMethod.ToModel<ShippingMethodModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -325,15 +327,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get delivery dates
-            var deliveryDates = _dateRangeService.GetAllDeliveryDates();
+            var deliveryDates = _dateRangeService.GetAllDeliveryDates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new DeliveryDateListModel
+            var model = new DeliveryDateListModel().PrepareToGrid(searchModel, deliveryDates, () =>
             {
                 //fill in model values from the entity
-                Data = deliveryDates.PaginationByRequestModel(searchModel).Select(date => date.ToModel<DeliveryDateModel>()),
-                Total = deliveryDates.Count
-            };
+                return deliveryDates.Select(date => date.ToModel<DeliveryDateModel>());
+            });
 
             return model;
         }
@@ -352,7 +353,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (deliveryDate != null)
             {
                 //fill in model values from the entity
-                model = model ?? deliveryDate.ToModel<DeliveryDateModel>();
+                model ??= deliveryDate.ToModel<DeliveryDateModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -379,16 +380,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product availability ranges
-            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges();
+            var productAvailabilityRanges = _dateRangeService.GetAllProductAvailabilityRanges().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAvailabilityRangeListModel
+            var model = new ProductAvailabilityRangeListModel().PrepareToGrid(searchModel, productAvailabilityRanges, () =>
             {
                 //fill in model values from the entity
-                Data = productAvailabilityRanges.PaginationByRequestModel(searchModel)
-                    .Select(range => range.ToModel<ProductAvailabilityRangeModel>()),
-                Total = productAvailabilityRanges.Count
-            };
+                return productAvailabilityRanges.Select(range => range.ToModel<ProductAvailabilityRangeModel>());
+            });
 
             return model;
         }
@@ -408,7 +407,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAvailabilityRange != null)
             {
                 //fill in model values from the entity
-                model = model ?? productAvailabilityRange.ToModel<ProductAvailabilityRangeModel>();
+                model ??= productAvailabilityRange.ToModel<ProductAvailabilityRangeModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -451,15 +450,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get warehouses
-            var warehouses = _shippingService.GetAllWarehouses();
+            var warehouses = _shippingService.GetAllWarehouses(
+                name : searchModel.SearchName)
+                .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new WarehouseListModel
+            var model = new WarehouseListModel().PrepareToGrid(searchModel, warehouses, () =>
             {
                 //fill in model values from the entity
-                Data = warehouses.PaginationByRequestModel(searchModel).Select(warehouse => warehouse.ToModel<WarehouseModel>()),
-                Total = warehouses.Count
-            };
+                return warehouses.Select(warehouse => warehouse.ToModel<WarehouseModel>());
+            });
 
             return model;
         }
@@ -505,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
 
                 return countryModel;
             }).ToList();

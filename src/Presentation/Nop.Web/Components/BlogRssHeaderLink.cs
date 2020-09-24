@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public BlogRssHeaderLinkViewComponent(BlogSettings blogSettings)
         {
-            this._blogSettings = blogSettings;
+            _blogSettings = blogSettings;
         }
 
         public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)

@@ -1,0 +1,18 @@
+﻿@model SpecificationAttributeGroupModel
+
+@{
+    const string hideInfoBlockAttributeGroupName = "SpecificationAttributeGroupPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeGroupName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="specification-attribute-group-panels">
+            <nop-panel asp-name="specification-attribute-group-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeGroupName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdateSpecificationAttributeGroup.Info", Model)</nop-panel>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeGroupDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

@@ -13,8 +13,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public OrderSettingsModel()
         {
-            this.ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
-            this.ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
+            ReturnRequestReasonSearchModel = new ReturnRequestReasonSearchModel();
+            ReturnRequestActionSearchModel = new ReturnRequestActionSearchModel();
         }
 
         #endregion
@@ -74,6 +74,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DisableOrderCompletedPage")]
         public bool DisableOrderCompletedPage { get; set; }
         public bool DisableOrderCompletedPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage")]
+        public bool DisplayPickupInStoreOnShippingMethodPage { get; set; }
+        public bool DisplayPickupInStoreOnShippingMethodPage_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail")]
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }

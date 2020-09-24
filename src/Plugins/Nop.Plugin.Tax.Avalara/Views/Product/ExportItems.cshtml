@@ -1,0 +1,6 @@
+﻿<script>
+    $(document).ready(function () {
+        $('#delete-selected').before(`@await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Product/_ExportItemsButton.cshtml")`);
+        $('#export-excel-selected-form').after(`@Html.Raw((await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Product/_ExportItemsForm.cshtml")).ToHtmlString().Replace("</script>", "<\\/script>"))`);
+    });
+</script>

@@ -1,48 +1,69 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Net.Http;
 using Nop.Core;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using Nop.Services.Stores;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics
 {
     public class EventConsumer : IConsumer<OrderCancelledEvent>, IConsumer<OrderPaidEvent>, IConsumer<EntityDeletedEvent<Order>>
     {
+        private readonly IAddressService _addressService;
         private readonly ICategoryService _categoryService;
+        private readonly ICountryService _countryService;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
+        private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
 
-        public EventConsumer(ICategoryService categoryService,
+        public EventConsumer(IAddressService addressService,
+            ICategoryService categoryService,
+            ICountryService countryService,
+            IHttpClientFactory httpClientFactory,
             ILogger logger,
+            IOrderService orderService,
             IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
             IWebHelper webHelper,
-            IWidgetService widgetService)
+            IWidgetPluginManager widgetPluginManager)
         {
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productService = productService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
+            _addressService = addressService;
+            _categoryService = categoryService;
+            _countryService = countryService;
+            _httpClientFactory = httpClientFactory;
+            _logger = logger;
+            _orderService = orderService;
+            _productService = productService;
+            _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _webHelper = webHelper;
+            _widgetPluginManager = widgetPluginManager;
         }
 
         private string FixIllegalJavaScriptChars(string text)
@@ -57,8 +78,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         private bool IsPluginEnabled()
         {
-            return _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") is GoogleAnalyticsPlugin plugin
-                && _widgetService.IsWidgetActive(plugin);
+            return _widgetPluginManager.IsPluginActive("Widgets.GoogleAnalytics");
         }
 
         private void ProcessOrderEvent(Order order, bool add)
@@ -87,39 +107,43 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     orderTax = -orderTax;
                     orderTotal = -orderTotal;
                 }
+
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
                 var trans = new Transaction(FixIllegalJavaScriptChars(orderId),
-                    order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City),
-                    order.BillingAddress == null || order.BillingAddress.Country == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.Country.Name),
-                    order.BillingAddress == null || order.BillingAddress.StateProvince == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.StateProvince.Name),
+                    FixIllegalJavaScriptChars(billingAddress.City),
+                    _countryService.GetCountryByAddress(billingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
+                    _stateProvinceService.GetStateProvinceByAddress(billingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
                     store.Name,
                     orderShipping,
                     orderTax,
                     orderTotal);
 
-                foreach (var item in order.OrderItems)
+                foreach (var item in _orderService.GetOrderItems(order.Id))
                 {
+                    var product = _productService.GetProductById(item.ProductId);
                     //get category
-                    var category = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.Category?.Name;
-
+                    var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault()?.CategoryId ?? 0)?.Name;
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     var qty = item.Quantity;
                     if (!add)
                         qty = -qty;
 
-                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
-                    if (String.IsNullOrEmpty(sku))
-                        sku = item.Product.Id.ToString();
-                    var product = new TransactionItem(FixIllegalJavaScriptChars(orderId),
+                    var sku = _productService.FormatSku(product, item.AttributesXml);
+                    if (string.IsNullOrEmpty(sku))
+                        sku = product.Id.ToString();
+
+                    var productItem = new TransactionItem(FixIllegalJavaScriptChars(orderId),
                       FixIllegalJavaScriptChars(sku),
-                      FixIllegalJavaScriptChars(item.Product.Name),
+                      FixIllegalJavaScriptChars(product.Name),
                       unitPrice,
                       qty,
                       FixIllegalJavaScriptChars(category));
 
-                    trans.Items.Add(product);
+                    trans.Items.Add(productItem);
                 }
 
-                request.SendRequest(trans);
+                request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));
             }
             catch (Exception ex)
             {
@@ -186,7 +210,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
             //if we use JS to notify GA about new orders (even when they are placed), then we should always notify GA about deleted orders
             //if we use HTTP requests to notify GA about new orders (only when they are paid), then we should notify GA about deleted AND paid orders
-            bool sendRequest = googleAnalyticsSettings.UseJsToSendEcommerceInfo || order.PaymentStatus == PaymentStatus.Paid;
+            var sendRequest = googleAnalyticsSettings.UseJsToSendEcommerceInfo || order.PaymentStatus == PaymentStatus.Paid;
 
             if (sendRequest)
                 ProcessOrderEvent(order, false);
@@ -213,7 +237,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 return;
 
             //we use HTTP requests to notify GA about new orders (only when they are paid)
-            bool sendRequest = !googleAnalyticsSettings.UseJsToSendEcommerceInfo;
+            var sendRequest = !googleAnalyticsSettings.UseJsToSendEcommerceInfo;
 
             if (sendRequest)
                 ProcessOrderEvent(order, true);

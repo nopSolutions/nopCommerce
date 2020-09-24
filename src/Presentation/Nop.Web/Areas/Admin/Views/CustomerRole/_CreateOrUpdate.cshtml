@@ -36,37 +36,37 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="Name"/>
+                            <nop-label asp-for="Name" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="Name" asp-required="true"/>
+                            <nop-editor asp-for="Name" asp-required="true" />
                             <span asp-validation-for="Name"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="SystemName"/>
+                            <nop-label asp-for="Active" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="SystemName"/>
-                            <span asp-validation-for="SystemName"></span>
+                            <nop-editor asp-for="Active" />
+                            <span asp-validation-for="Active"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="FreeShipping"/>
+                            <nop-label asp-for="FreeShipping" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="FreeShipping"/>
+                            <nop-editor asp-for="FreeShipping" />
                             <span asp-validation-for="FreeShipping"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="TaxExempt"/>
+                            <nop-label asp-for="TaxExempt" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="TaxExempt"/>
+                            <nop-editor asp-for="TaxExempt" />
                             <span asp-validation-for="TaxExempt"></span>
                         </div>
                     </div>
@@ -92,35 +92,16 @@
                     </nop-nested-setting>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="EnablePasswordLifetime"/>
+                            <nop-label asp-for="EnablePasswordLifetime" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="EnablePasswordLifetime"/>
+                            <nop-editor asp-for="EnablePasswordLifetime" />
                             <span asp-validation-for="EnablePasswordLifetime"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            <nop-label asp-for="Active"/>
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="Active"/>
-                            <span asp-validation-for="Active"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="IsSystemRole"/>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="form-text-row">@T(Model.IsSystemRole ? "Admin.Common.Yes" : "Admin.Common.No")</div>
-                            <input type="hidden" asp-for="IsSystemRole"/>
-                            <span asp-validation-for="IsSystemRole"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            <nop-label asp-for="PurchasedWithProductId"/>
+                            <nop-label asp-for="PurchasedWithProductId" />
                         </div>
                         <div class="col-md-9">
                             <input type="hidden" asp-for="PurchasedWithProductId" />
@@ -133,7 +114,7 @@
                                 @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove")
                             </button>
                             <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
-                            
+
                             <script>
                                 $(document).ready(function () {
                                     $('#purchased-with-product-name-remove').click(function () {
@@ -152,6 +133,25 @@
                                     });
                                 });
                             </script>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="IsSystemRole" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@T(Model.IsSystemRole ? "Admin.Common.Yes" : "Admin.Common.No")</div>
+                            <input type="hidden" asp-for="IsSystemRole" />
+                            <span asp-validation-for="IsSystemRole"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SystemName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SystemName" />
+                            <span asp-validation-for="SystemName"></span>
                         </div>
                     </div>
                 </div>

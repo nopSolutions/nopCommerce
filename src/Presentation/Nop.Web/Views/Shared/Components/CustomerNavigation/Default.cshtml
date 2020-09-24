@@ -8,8 +8,8 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.AccountNavigationBefore })
             @foreach (var item in Model.CustomerNavigationItems)
             {
-                <li class="@item.ItemClass">
-                    <a href="@Url.RouteUrl(item.RouteName)" class="@(Model.SelectedTab == item.Tab ? "active" : "inactive")">@(item.Title)</a>
+                <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
+                    <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
                 </li>
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.AccountNavigationAfter })

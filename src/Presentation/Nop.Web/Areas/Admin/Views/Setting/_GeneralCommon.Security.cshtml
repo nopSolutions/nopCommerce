@@ -1,0 +1,39 @@
+@model GeneralCommonSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
+            <span asp-validation-for="SecuritySettings.AdminAreaAllowedIpAddresses"></span>
+        </div>
+    </div>   
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="SecuritySettings.HoneypotEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SecuritySettings.HoneypotEnabled" />
+            <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="SecuritySettings.EncryptionKey" />
+        </div>
+        <div class="col-md-9">
+            <div class="input-group input-group-short">
+                <nop-editor asp-for="SecuritySettings.EncryptionKey" />
+                <span class="input-group-btn">
+                    <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info">
+                        @T("Admin.Common.Change")
+                    </button>
+                    <nop-action-confirmation asp-button-id="changeencryptionkey" />
+                </span>
+            </div>
+            <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
+        </div>
+    </div>
+</div>

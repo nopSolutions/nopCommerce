@@ -15,9 +15,9 @@ namespace Nop.Services.Tests.Customers
         //    customer.ApplyGiftCardCouponCode("code3");
 
         //    var codes = customer.ParseAppliedGiftCardCouponCodes();
-        //    codes.Length.ShouldEqual(2);
-        //    codes[0].ShouldEqual("code1");
-        //    codes[1].ShouldEqual("code3");
+        //    codes.Length.Should().Be(2);
+        //    codes[0].Should().Be("code1");
+        //    codes[1].Should().Be("code3");
         //}
         //[Test]
         //public void Can_not_add_duplicate_giftCardCouponCodes()
@@ -28,9 +28,9 @@ namespace Nop.Services.Tests.Customers
         //    customer.ApplyGiftCardCouponCode("code1");
 
         //    var codes = customer.ParseAppliedGiftCardCouponCodes();
-        //    codes.Length.ShouldEqual(2);
-        //    codes[0].ShouldEqual("code1");
-        //    codes[1].ShouldEqual("code2");
+        //    codes.Length.Should().Be(2);
+        //    codes[0].Should().Be("code1");
+        //    codes[1].Should().Be("code2");
         //}
     }
 }

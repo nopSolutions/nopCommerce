@@ -11,8 +11,10 @@ namespace Nop.Web.Areas.Admin.Models.Directory
 
         public MeasureSearchModel()
         {
-            this.MeasureDimensionSearchModel = new MeasureDimensionSearchModel();
-            this.MeasureWeightSearchModel = new MeasureWeightSearchModel();
+            MeasureDimensionSearchModel = new MeasureDimensionSearchModel();
+            MeasureWeightSearchModel = new MeasureWeightSearchModel();
+            AddMeasureDimension = new MeasureDimensionModel();
+            AddMeasureWeight = new MeasureWeightModel();
         }
 
         #endregion
@@ -23,6 +25,8 @@ namespace Nop.Web.Areas.Admin.Models.Directory
 
         public MeasureWeightSearchModel MeasureWeightSearchModel { get; set; }
 
+        public MeasureDimensionModel AddMeasureDimension { get; set; }
+        public MeasureWeightModel AddMeasureWeight { get; set; }
         #endregion
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Themes
 {

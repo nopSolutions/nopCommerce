@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -13,40 +13,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial interface IShippingService
     {
-        #region Shipping rate computation methods
-
-        /// <summary>
-        /// Load active shipping rate computation methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load shipping rate computation method by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found Shipping rate computation method</returns>
-        IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all shipping rate computation methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Is shipping rate computation method active
-        /// </summary>
-        /// <param name="srcm">Shipping rate computation method</param>
-        /// <returns>Result</returns>
-        bool IsShippingRateComputationMethodActive(IShippingRateComputationMethod srcm);
-
-        #endregion
-
         #region Shipping methods
 
         /// <summary>
@@ -89,6 +55,26 @@ namespace Nop.Services.Shipping
         /// <returns>Result</returns>
         bool CountryRestrictionExists(ShippingMethod shippingMethod, int countryId);
 
+        /// <summary>
+        /// Gets shipping country mappings
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Shipping country mappings</returns>
+        IList<ShippingMethodCountryMapping> GetShippingMethodCountryMapping(int shippingMethodId, int countryId);
+
+        /// <summary>
+        /// Inserts a shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
+        /// <summary>
+        /// Delete the shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        void DeleteShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
         #endregion
 
         #region Warehouses
@@ -109,8 +95,9 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets all warehouses
         /// </summary>
+        /// <param name="name">Warehouse name</param>
         /// <returns>Warehouses</returns>
-        IList<Warehouse> GetAllWarehouses();
+        IList<Warehouse> GetAllWarehouses(string name = null);
 
         /// <summary>
         /// Inserts a warehouse
@@ -125,41 +112,7 @@ namespace Nop.Services.Shipping
         void UpdateWarehouse(Warehouse warehouse);
 
         #endregion
-
-        #region Pickup points
-
-        /// <summary>
-        /// Load active pickup point providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup point providers</returns>
-        IList<IPickupPointProvider> LoadActivePickupPointProviders(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load pickup point provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found pickup point provider</returns>
-        IPickupPointProvider LoadPickupPointProviderBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all pickup point providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup point providers</returns>
-        IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Is pickup point provider active
-        /// </summary>
-        /// <param name="pickupPointProvider">Pickup point provider</param>
-        /// <returns>Result</returns>
-        bool IsPickupPointProviderActive(IPickupPointProvider pickupPointProvider);
-
-        #endregion
-
+        
         #region Workflow
 
         /// <summary>
@@ -244,12 +197,12 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets available pickup points
         /// </summary>
-        /// <param name="address">Address</param>
+        /// <param name="addressId">Address identifier</param>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup points</returns>
-        GetPickupPointsResponse GetPickupPoints(Address address, Customer customer = null, string providerSystemName = null, int storeId = 0);
+        GetPickupPointsResponse GetPickupPoints(int addressId, Customer customer = null, string providerSystemName = null, int storeId = 0);
 
         /// <summary>
         /// Whether the shopping cart item is ship enabled

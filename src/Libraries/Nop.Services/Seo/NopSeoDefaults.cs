@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Seo
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Seo
 {
     /// <summary>
     /// Represents default values related to SEO services
@@ -35,7 +37,7 @@
 
         #endregion
 
-        #region URL records
+        #region Caching defaults
 
         /// <summary>
         /// Gets a key for caching
@@ -45,12 +47,7 @@
         /// {1} : entity name
         /// {2} : language ID
         /// </remarks>
-        public static string UrlRecordActiveByIdNameLanguageCacheKey => "Nop.urlrecord.active.id-name-language-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static string UrlRecordAllCacheKey => "Nop.urlrecord.all";
+        public static CacheKey UrlRecordCacheKey => new CacheKey("Nop.urlrecord.{0}-{1}-{2}");
 
         /// <summary>
         /// Gets a key for caching
@@ -58,12 +55,7 @@
         /// <remarks>
         /// {0} : slug
         /// </remarks>
-        public static string UrlRecordBySlugCacheKey => "Nop.urlrecord.active.slug-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string UrlRecordPatternCacheKey => "Nop.urlrecord.";
+        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.byslug.{0}");
 
         #endregion
     }

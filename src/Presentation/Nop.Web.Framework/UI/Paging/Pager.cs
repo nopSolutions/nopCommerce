@@ -1,4 +1,4 @@
-//Contributor : MVCContrib
+﻿//Contributor : MVCContrib
 
 using System;
 using System.Collections.Generic;
@@ -111,17 +111,14 @@ namespace Nop.Web.Framework.UI.Paging
 		public Pager(IPageableModel model, ViewContext context)
 		{
             this.model = model;
-            this.viewContext = context;
-            this.booleanParameterNames = new List<string>();
+            viewContext = context;
+            booleanParameterNames = new List<string>();
 		}
 
         /// <summary>
         /// ViewContext
         /// </summary>
-		protected ViewContext ViewContext 
-		{
-			get { return viewContext; }
-		}
+		protected ViewContext ViewContext => viewContext;
 
         /// <summary>
         /// Set 
@@ -130,7 +127,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager QueryParam(string value)
 		{
-            this.pageQueryName = value;
+            pageQueryName = value;
 			return this;
         }
         /// <summary>
@@ -140,7 +137,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowTotalSummary(bool value)
         {
-            this.showTotalSummary = value;
+            showTotalSummary = value;
             return this;
         }
         /// <summary>
@@ -150,7 +147,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowPagerItems(bool value)
         {
-            this.showPagerItems = value;
+            showPagerItems = value;
             return this;
         }
         /// <summary>
@@ -160,7 +157,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowFirst(bool value)
         {
-            this.showFirst = value;
+            showFirst = value;
             return this;
         }
         /// <summary>
@@ -170,7 +167,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowPrevious(bool value)
         {
-            this.showPrevious = value;
+            showPrevious = value;
             return this;
         }
         /// <summary>
@@ -180,7 +177,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowNext(bool value)
         {
-            this.showNext = value;
+            showNext = value;
             return this;
         }
         /// <summary>
@@ -190,7 +187,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowLast(bool value)
         {
-            this.showLast = value;
+            showLast = value;
             return this;
         }
         /// <summary>
@@ -200,7 +197,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager ShowIndividualPages(bool value)
         {
-            this.showIndividualPages = value;
+            showIndividualPages = value;
             return this;
         }
         /// <summary>
@@ -210,7 +207,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager RenderEmptyParameters(bool value)
         {
-            this.renderEmptyParameters = value;
+            renderEmptyParameters = value;
             return this;
         }
         /// <summary>
@@ -220,7 +217,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Pager</returns>
         public Pager IndividualPagesDisplayedCount(int value)
         {
-            this.individualPagesDisplayedCount = value;
+            individualPagesDisplayedCount = value;
             return this;
         }
         /// <summary>
@@ -240,7 +237,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager FirstPageCssClass(string value) {
-            this.firstPageCssClass = value;
+            firstPageCssClass = value;
             return this;
         }
         /// <summary>
@@ -249,7 +246,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager PreviousPageCssClass(string value) {
-            this.previousPageCssClass = value;
+            previousPageCssClass = value;
             return this;
         }
         /// <summary>
@@ -258,7 +255,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager CurrentPageCssClass(string value) {
-            this.currentPageCssClass = value;
+            currentPageCssClass = value;
             return this;
         }
         /// <summary>
@@ -267,7 +264,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager IndividualPageCssClass(string value) {
-            this.individualPageCssClass = value;
+            individualPageCssClass = value;
             return this;
         }
         /// <summary>
@@ -276,7 +273,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager NextPageCssClass(string value) {
-            this.nextPageCssClass = value;
+            nextPageCssClass = value;
             return this;
         }
         /// <summary>
@@ -285,7 +282,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager LastPageCssClass(string value) {
-            this.lastPageCssClass = value;
+            lastPageCssClass = value;
             return this;
         }
         /// <summary>
@@ -294,7 +291,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="value">Value</param>
         /// <returns>Pager</returns>
         public Pager MainUlCssClass(string value) {
-            this.mainUlCssClass = value;
+            mainUlCssClass = value;
             return this;
         }
 
@@ -475,7 +472,6 @@ namespace Nop.Web.Framework.UI.Paging
             var parametersWithEmptyValues = new List<string>();
 			foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
 			{
-			    //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
                 var value = viewContext.HttpContext.Request.Query[key].ToString();
                 if (renderEmptyParameters && string.IsNullOrEmpty(value))
 			    {

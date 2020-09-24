@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -15,10 +15,11 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.News;
 using Nop.Services.Topics;
 
 namespace Nop.Services.Seo
@@ -31,12 +32,13 @@ namespace Nop.Services.Seo
         #region Fields
 
         private readonly BlogSettings _blogSettings;
-        private readonly CommonSettings _commonSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly ILanguageService _languageService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INewsService _newsService;
         private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IStoreContext _storeContext;
@@ -46,20 +48,20 @@ namespace Nop.Services.Seo
         private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly SecuritySettings _securitySettings;
-
+        private readonly SitemapXmlSettings _sitemapXmlSettings;
 
         #endregion
 
         #region Ctor
 
         public SitemapGenerator(BlogSettings blogSettings,
-            CommonSettings commonSettings,
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
+            IBlogService blogService,
             ICategoryService categoryService,
             ILanguageService languageService,
             IManufacturerService manufacturerService,
+            INewsService newsService,
             IProductService productService,
             IProductTagService productTagService,
             IStoreContext storeContext,
@@ -69,25 +71,26 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SecuritySettings securitySettings)
+            SitemapXmlSettings sitemapSettings)
         {
-            this._blogSettings = blogSettings;
-            this._commonSettings = commonSettings;
-            this._forumSettings = forumSettings;
-            this._actionContextAccessor = actionContextAccessor;
-            this._categoryService = categoryService;
-            this._languageService = languageService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._storeContext = storeContext;
-            this._topicService = topicService;
-            this._urlHelperFactory = urlHelperFactory;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._localizationSettings = localizationSettings;
-            this._newsSettings = newsSettings;
-            this._securitySettings = securitySettings;
+            _blogSettings = blogSettings;
+            _forumSettings = forumSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _blogService = blogService;
+            _categoryService = categoryService;
+            _languageService = languageService;
+            _manufacturerService = manufacturerService;
+            _newsService = newsService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _storeContext = storeContext;
+            _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _localizationSettings = localizationSettings;
+            _newsSettings = newsSettings;
+            _sitemapXmlSettings = sitemapSettings;
         }
 
         #endregion
@@ -167,7 +170,7 @@ namespace Nop.Services.Seo
         /// <returns>Protocol name as string</returns>
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+            return _storeContext.CurrentStore.SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
 
         /// <summary>
@@ -179,7 +182,7 @@ namespace Nop.Services.Seo
             var sitemapUrls = new List<SitemapUrl>
             {
                 //home page
-                GetLocalizedSitemapUrl("HomePage"),
+                GetLocalizedSitemapUrl("Homepage"),
 
                 //search products
                 GetLocalizedSitemapUrl("ProductSearch"),
@@ -190,45 +193,61 @@ namespace Nop.Services.Seo
 
             //news
             if (_newsSettings.Enabled)
-            {
                 sitemapUrls.Add(GetLocalizedSitemapUrl("NewsArchive"));
-            }
 
             //blog
             if (_blogSettings.Enabled)
-            {
                 sitemapUrls.Add(GetLocalizedSitemapUrl("Blog"));
-            }
 
             //forum
             if (_forumSettings.ForumsEnabled)
-            {
                 sitemapUrls.Add(GetLocalizedSitemapUrl("Boards"));
-            }
 
             //categories
-            if (_commonSettings.SitemapIncludeCategories)
+            if (_sitemapXmlSettings.SitemapXmlIncludeCategories)
                 sitemapUrls.AddRange(GetCategoryUrls());
 
             //manufacturers
-            if (_commonSettings.SitemapIncludeManufacturers)
+            if (_sitemapXmlSettings.SitemapXmlIncludeManufacturers)
                 sitemapUrls.AddRange(GetManufacturerUrls());
 
             //products
-            if (_commonSettings.SitemapIncludeProducts)
+            if (_sitemapXmlSettings.SitemapXmlIncludeProducts)
                 sitemapUrls.AddRange(GetProductUrls());
 
             //product tags
-            if (_commonSettings.SitemapIncludeProductTags)
+            if (_sitemapXmlSettings.SitemapXmlIncludeProductTags)
                 sitemapUrls.AddRange(GetProductTagUrls());
 
+            //news
+            if (_sitemapXmlSettings.SitemapXmlIncludeNews && _newsSettings.Enabled)
+                sitemapUrls.AddRange(GetNewsItemUrls());
+
+            //blog posts
+            if (_sitemapXmlSettings.SitemapXmlIncludeBlogPosts && _blogSettings.Enabled)
+                sitemapUrls.AddRange(GetBlogPostUrls());
+
             //topics
-            sitemapUrls.AddRange(GetTopicUrls());
+            if (_sitemapXmlSettings.SitemapXmlIncludeTopics)
+                sitemapUrls.AddRange(GetTopicUrls());
 
             //custom URLs
-            sitemapUrls.AddRange(GetCustomUrls());
+            if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
+                sitemapUrls.AddRange(GetCustomUrls());
 
             return sitemapUrls;
+        }
+
+        /// <summary>
+        /// Get news item URLs for the sitemap
+        /// </summary>
+        /// <returns>Sitemap URLs</returns>
+        protected virtual IEnumerable<SitemapUrl> GetNewsItemUrls()
+        {
+            return _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id)
+                .Select(news => GetLocalizedSitemapUrl("NewsItem",
+                    lang => new { SeName = _urlRecordService.GetSeName(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
+                    news.CreatedOnUtc));
         }
 
         /// <summary>
@@ -283,6 +302,19 @@ namespace Nop.Services.Seo
         }
 
         /// <summary>
+        /// Get blog post URLs for the sitemap
+        /// </summary>
+        /// <returns>Sitemap URLs</returns>
+        protected virtual IEnumerable<SitemapUrl> GetBlogPostUrls()
+        {
+            return _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id)
+                .Where(p => p.IncludeInSitemap)
+                .Select(post => GetLocalizedSitemapUrl("BlogPost",
+                    lang => new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
+                    post.CreatedOnUtc));
+        }
+
+        /// <summary>
         /// Get custom URLs for the sitemap
         /// </summary>
         /// <returns>Sitemap URLs</returns>
@@ -290,7 +322,7 @@ namespace Nop.Services.Seo
         {
             var storeLocation = _webHelper.GetStoreLocation();
 
-            return _commonSettings.SitemapCustomUrls.Select(customUrl =>
+            return _sitemapXmlSettings.SitemapCustomUrls.Select(customUrl =>
                 new SitemapUrl(string.Concat(storeLocation, customUrl), new List<string>(), UpdateFrequency.Weekly, DateTime.UtcNow));
         }
 
@@ -313,13 +345,13 @@ namespace Nop.Services.Seo
         /// <param name="routeParams">Lambda for route params object</param>
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
-        protected virtual SitemapUrl GetLocalizedSitemapUrl(string routeName, 
-            Func<int?, object> routeParams = null, 
+        protected virtual SitemapUrl GetLocalizedSitemapUrl(string routeName,
+            Func<int?, object> routeParams = null,
             DateTime? dateTimeUpdatedOn = null,
             UpdateFrequency updateFreq = UpdateFrequency.Weekly)
         {
             var urlHelper = GetUrlHelper();
-            
+
             //url for current language
             var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), GetHttpProtocol());
 
@@ -367,30 +399,30 @@ namespace Nop.Services.Seo
         {
             var urlHelper = GetUrlHelper();
 
-            using (var writer = new XmlTextWriter(stream, Encoding.UTF8))
+            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartDocument();
-                writer.WriteStartElement("sitemapindex");
-                writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-                writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
-                writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                Formatting = Formatting.Indented
+            };
+            writer.WriteStartDocument();
+            writer.WriteStartElement("sitemapindex");
+            writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+            writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
+            writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
-                //write URLs of all available sitemaps
-                for (var id = 1; id <= sitemapNumber; id++)
-                {
-                    var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, GetHttpProtocol());
-                    var location = XmlHelper.XmlEncode(url);
+            //write URLs of all available sitemaps
+            for (var id = 1; id <= sitemapNumber; id++)
+            {
+                var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, GetHttpProtocol());
+                var location = XmlHelper.XmlEncode(url);
 
-                    writer.WriteStartElement("sitemap");
-                    writer.WriteElementString("loc", location);
-                    writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(NopSeoDefaults.SitemapDateFormat));
-                    writer.WriteEndElement();
-                }
-
+                writer.WriteStartElement("sitemap");
+                writer.WriteElementString("loc", location);
+                writer.WriteElementString("lastmod", DateTime.UtcNow.ToString(NopSeoDefaults.SitemapDateFormat));
                 writer.WriteEndElement();
             }
+
+            writer.WriteEndElement();
         }
 
         /// <summary>
@@ -400,32 +432,32 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual void WriteSitemap(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.UTF8))
+            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
             {
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartDocument();
-                writer.WriteStartElement("urlset");
-                writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-                writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
-                writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                Formatting = Formatting.Indented
+            };
+            writer.WriteStartDocument();
+            writer.WriteStartElement("urlset");
+            writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+            writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            writer.WriteAttributeString("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
+            writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
-                //write URLs from list to the sitemap
-                foreach (var sitemapUrl in sitemapUrls)
+            //write URLs from list to the sitemap
+            foreach (var sitemapUrl in sitemapUrls)
+            {
+                //write base url
+                WriteSitemapUrl(writer, sitemapUrl);
+
+                //write all alternate url if exists
+                foreach (var alternate in sitemapUrl.AlternateLocations
+                    .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    //write base url
-                    WriteSitemapUrl(writer, sitemapUrl);
-
-                    //write all alternate url if exists
-                    foreach (var alternate in sitemapUrl.AlternateLocations
-                        .Where(p => !p.Equals(sitemapUrl.Location, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        WriteSitemapUrl(writer, new SitemapUrl(alternate, sitemapUrl));
-                    }
+                    WriteSitemapUrl(writer, new SitemapUrl(alternate, sitemapUrl));
                 }
-
-                writer.WriteEndElement();
             }
+
+            writer.WriteEndElement();
         }
 
         /// <summary>
@@ -435,6 +467,9 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrl">Sitemap URL</param>
         protected virtual void WriteSitemapUrl(XmlTextWriter writer, SitemapUrl sitemapUrl)
         {
+            if (string.IsNullOrEmpty(sitemapUrl.Location))
+                return;
+
             writer.WriteStartElement("url");
 
             var loc = XmlHelper.XmlEncode(sitemapUrl.Location);
@@ -478,11 +513,9 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap.xml as string</returns>
         public virtual string Generate(int? id)
         {
-            using (var stream = new MemoryStream())
-            {
-                Generate(stream, id);
-                return Encoding.UTF8.GetString(stream.ToArray());
-            }
+            using var stream = new MemoryStream();
+            Generate(stream, id);
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
     [Area(AreaNames.Admin)]
     [AuthorizeAdmin]
-    [AdminAntiForgery]
+    [AutoValidateAntiforgeryToken]
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         #region Fields
@@ -35,11 +35,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion

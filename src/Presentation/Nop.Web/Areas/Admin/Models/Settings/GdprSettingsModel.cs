@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -33,6 +32,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.LogNewsletterConsent")]
         public bool LogNewsletterConsent { get; set; }
         public bool LogNewsletterConsent_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.LogUserProfileChanges")]
+        public bool LogUserProfileChanges { get; set; }
+        public bool LogUserProfileChanges_OverrideForStore { get; set; }
 
         public GdprConsentSearchModel GdprConsentSearchModel { get; set; }
 

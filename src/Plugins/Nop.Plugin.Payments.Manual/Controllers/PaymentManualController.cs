@@ -15,6 +15,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class PaymentManualController : BasePaymentController
     {
         #region Fields
@@ -35,11 +36,11 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -74,7 +75,6 @@ namespace Nop.Plugin.Payments.Manual.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,10 +10,12 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
-using Nop.Services.Plugins;
+using Nop.Services.Tax.Events;
 
 namespace Nop.Services.Tax
 {
@@ -28,12 +30,14 @@ namespace Nop.Services.Tax
         private readonly CustomerSettings _customerSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
-        private readonly IPluginService _pluginService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly ShippingSettings _shippingSettings;
@@ -47,31 +51,35 @@ namespace Nop.Services.Tax
             CustomerSettings customerSettings,
             IAddressService addressService,
             ICountryService countryService,
+            ICustomerService customerService,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILogger logger,
-            IPluginService pluginService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
+            ITaxPluginManager taxPluginManager,
             IWebHelper webHelper,
             IWorkContext workContext,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings)
         {
-            this._addressSettings = addressSettings;
-            this._customerSettings = customerSettings;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._genericAttributeService = genericAttributeService;
-            this._geoLookupService = geoLookupService;
-            this._logger = logger;
-            this._pluginService = pluginService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
+            _addressSettings = addressSettings;
+            _customerSettings = customerSettings;
+            _addressService = addressService;
+            _countryService = countryService;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _genericAttributeService = genericAttributeService;
+            _geoLookupService = geoLookupService;
+            _logger = logger;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _taxPluginManager = taxPluginManager;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
         }
 
         #endregion
@@ -91,13 +99,13 @@ namespace Nop.Services.Tax
             Country country = null;
 
             //get country from billing address
-            if (_addressSettings.CountryEnabled && customer.BillingAddress != null)
-                country = customer.BillingAddress.Country;
+            if (_addressSettings.CountryEnabled && _customerService.GetCustomerShippingAddress(customer) is Address billingAddress)
+                country = _countryService.GetCountryByAddress(billingAddress);
 
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
             {
-                var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var countryId = _genericAttributeService.GetAttribute<Customer, int>(customer.Id, NopCustomerDefaults.CountryIdAttribute);
                 country = _countryService.GetCountryById(countryId);
             }
 
@@ -122,27 +130,59 @@ namespace Nop.Services.Tax
             if (customerVatStatus == VatNumberStatus.Valid)
                 return false;
 
-            //TODO: use specified company name? (both address and registration one)
-
             //consumer
             return true;
         }
 
         /// <summary>
-        /// Create request for tax calculation
+        /// Gets a default tax address
+        /// </summary>
+        /// <returns>Address</returns>
+        protected virtual Address LoadDefaultTaxAddress()
+        {
+            var addressId = _taxSettings.DefaultTaxAddressId;
+
+            return _addressService.GetAddressById(addressId);
+        }
+
+        /// <summary>
+        /// Gets or sets a pickup point address for tax calculation
+        /// </summary>
+        /// <param name="pickupPoint">Pickup point</param>
+        /// <returns>Address</returns>
+        protected virtual Address LoadPickupPointTaxAddress(PickupPoint pickupPoint)
+        {
+            if (pickupPoint == null)
+                throw new ArgumentNullException(nameof(pickupPoint));
+
+            var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
+            var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
+
+            return new Address
+            {
+                CountryId = country?.Id ?? 0,
+                StateProvinceId = state?.Id ?? 0,
+                County = pickupPoint.County,
+                City = pickupPoint.City,
+                Address1 = pickupPoint.Address,
+                ZipPostalCode = pickupPoint.ZipPostalCode
+            };
+        }
+
+        /// <summary>
+        /// Prepare request to get tax rate
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <param name="price">Price</param>
         /// <returns>Package for tax calculation</returns>
-        protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product,
-            int taxCategoryId, Customer customer, decimal price)
+        protected virtual TaxRateRequest PrepareTaxRateRequest(Product product, int taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var calculateTaxRequest = new CalculateTaxRequest
+            var taxRateRequest = new TaxRateRequest
             {
                 Customer = customer,
                 Product = product,
@@ -155,10 +195,15 @@ namespace Nop.Services.Tax
 
             //new EU VAT rules starting January 1st 2015
             //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            var overriddenBasedOn = _taxSettings.EuVatEnabled                                            //EU VAT enabled?
-                && product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices    //telecommunications, broadcasting and electronic services?
-                && DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc)                //January 1st 2015 passed?
-                && IsEuConsumer(customer);                                                              //Europe Union consumer?
+            var overriddenBasedOn =
+                //EU VAT enabled?
+                _taxSettings.EuVatEnabled &&
+                //telecommunications, broadcasting and electronic services?
+                product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices &&
+                //January 1st 2015 passed? Yes, not required anymore
+                //DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc) &&
+                //Europe Union consumer?
+                IsEuConsumer(customer);
             if (overriddenBasedOn)
             {
                 //We must charge VAT in the EU country where the customer belongs (not where the business is based)
@@ -166,53 +211,38 @@ namespace Nop.Services.Tax
             }
 
             //tax is based on pickup point address
-            if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickUpInStore)
+            if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(customer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
                 if (pickupPoint != null)
                 {
-                    var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
-                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
-
-                    calculateTaxRequest.Address = new Address
-                    {
-                        Address1 = pickupPoint.Address,
-                        City = pickupPoint.City,
-                        County = pickupPoint.County,
-                        Country = country,
-                        CountryId = country?.Id ?? 0,
-                        StateProvince = state,
-                        StateProvinceId = state?.Id ?? 0,
-                        ZipPostalCode = pickupPoint.ZipPostalCode,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-
-                    return calculateTaxRequest;
+                    taxRateRequest.Address = LoadPickupPointTaxAddress(pickupPoint);
+                    return taxRateRequest;
                 }
             }
 
-            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddress == null ||
-                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddress == null)
-            {
+            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
+                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
                 basedOn = TaxBasedOn.DefaultAddress;
-            }
 
             switch (basedOn)
             {
                 case TaxBasedOn.BillingAddress:
-                    calculateTaxRequest.Address = customer.BillingAddress;
+                    var billingAddress = _customerService.GetCustomerBillingAddress(customer);
+                    taxRateRequest.Address = billingAddress;
                     break;
                 case TaxBasedOn.ShippingAddress:
-                    calculateTaxRequest.Address = customer.ShippingAddress;
+                    var shippingAddress = _customerService.GetCustomerShippingAddress(customer);
+                    taxRateRequest.Address = shippingAddress;
                     break;
                 case TaxBasedOn.DefaultAddress:
                 default:
-                    calculateTaxRequest.Address = _addressService.GetAddressById(_taxSettings.DefaultTaxAddressId);
+                    taxRateRequest.Address = LoadDefaultTaxAddress();
                     break;
             }
 
-            return calculateTaxRequest;
+            return taxRateRequest;
         }
 
         /// <summary>
@@ -229,13 +259,9 @@ namespace Nop.Services.Tax
 
             decimal result;
             if (increase)
-            {
                 result = price * (1 + percent / 100);
-            }
             else
-            {
                 result = price - price / (100 + percent) * percent;
-            }
 
             return result;
         }
@@ -256,15 +282,15 @@ namespace Nop.Services.Tax
             isTaxable = true;
 
             //active tax provider
-            var activeTaxProvider = LoadActiveTaxProvider(customer);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, _storeContext.CurrentStore.Id);
             if (activeTaxProvider == null)
                 return;
 
             //tax request
-            var calculateTaxRequest = CreateCalculateTaxRequest(product, taxCategoryId, customer, price);
+            var taxRateRequest = PrepareTaxRateRequest(product, taxCategoryId, customer, price);
 
             //tax exempt
-            if (IsTaxExempt(product, calculateTaxRequest.Customer))
+            if (IsTaxExempt(product, taxRateRequest.Customer))
             {
                 isTaxable = false;
             }
@@ -272,26 +298,29 @@ namespace Nop.Services.Tax
             //make EU VAT exempt validation (the European Union Value Added Tax)
             if (isTaxable &&
                 _taxSettings.EuVatEnabled &&
-                IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
+                IsVatExempt(taxRateRequest.Address, taxRateRequest.Customer))
             {
                 //VAT is not chargeable
                 isTaxable = false;
             }
 
             //get tax rate
-            var calculateTaxResult = activeTaxProvider.GetTaxRate(calculateTaxRequest);
-            if (calculateTaxResult.Success)
+            var taxRateResult = activeTaxProvider.GetTaxRate(taxRateRequest);
+
+            //tax rate is calculated, now consumers can adjust it
+            _eventPublisher.Publish(new TaxRateCalculatedEvent(taxRateResult));
+
+            if (taxRateResult.Success)
             {
                 //ensure that tax is equal or greater than zero
-                if (calculateTaxResult.TaxRate < decimal.Zero)
-                    calculateTaxResult.TaxRate = decimal.Zero;
+                if (taxRateResult.TaxRate < decimal.Zero)
+                    taxRateResult.TaxRate = decimal.Zero;
 
-                taxRate = calculateTaxResult.TaxRate;
+                taxRate = taxRateResult.TaxRate;
             }
-            else
-                if (_taxSettings.LogErrors)
+            else if (_taxSettings.LogErrors)
             {
-                foreach (var error in calculateTaxResult.Errors)
+                foreach (var error in taxRateResult.Errors)
                 {
                     _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
                 }
@@ -301,43 +330,6 @@ namespace Nop.Services.Tax
         #endregion
 
         #region Methods
-
-        #region Tax providers
-
-        /// <summary>
-        /// Load active tax provider
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Active tax provider</returns>
-        public virtual ITaxProvider LoadActiveTaxProvider(Customer customer = null)
-        {
-            var taxProvider = LoadTaxProviderBySystemName(_taxSettings.ActiveTaxProviderSystemName) ??
-                              LoadAllTaxProviders(customer).FirstOrDefault();
-            return taxProvider;
-        }
-
-        /// <summary>
-        /// Load tax provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
-        public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
-        {
-            var descriptor = _pluginService.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
-            return descriptor?.Instance<ITaxProvider>();
-        }
-
-        /// <summary>
-        /// Load all tax providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Tax providers</returns>
-        public virtual IList<ITaxProvider> LoadAllTaxProviders(Customer customer = null)
-        {
-            return _pluginService.GetPlugins<ITaxProvider>(customer: customer).ToList();
-        }
-
-        #endregion
 
         #region Product price
 
@@ -567,48 +559,52 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav)
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav)
         {
             var customer = _workContext.CurrentCustomer;
-            return GetCheckoutAttributePrice(cav, customer);
+            return GetCheckoutAttributePrice(ca, cav, customer);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
         {
             var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return GetCheckoutAttributePrice(cav, includingTax, customer);
+            return GetCheckoutAttributePrice(ca, cav, includingTax, customer);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            return GetCheckoutAttributePrice(cav, includingTax, customer, out var _);
+            return GetCheckoutAttributePrice(ca, cav, includingTax, customer, out var _);
         }
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer, out decimal taxRate)
         {
             if (cav == null)
@@ -617,13 +613,13 @@ namespace Nop.Services.Tax
             taxRate = decimal.Zero;
 
             var price = cav.PriceAdjustment;
-            if (cav.CheckoutAttribute.IsTaxExempt)
+            if (ca.IsTaxExempt)
             {
                 return price;
             }
 
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
-            var taxClassId = cav.CheckoutAttribute.TaxCategoryId;
+            var taxClassId = ca.TaxCategoryId;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -788,7 +784,7 @@ namespace Nop.Services.Tax
                 if (customer.IsTaxExempt)
                     return true;
 
-                if (customer.CustomerRoles.Where(cr => cr.Active).Any(cr => cr.TaxExempt))
+                if (_customerService.GetCustomerRoles(customer).Any(cr => cr.TaxExempt))
                     return true;
             }
 
@@ -816,19 +812,64 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatEnabled)
                 return false;
 
-            if (address?.Country == null || customer == null)
+            if (customer == null || address == null)
                 return false;
 
-            if (!address.Country.SubjectToVat)
+            var country = _countryService.GetCountryById(address.CountryId ?? 0);
+            if (country == null)
+                return false;
+
+            if (!country.SubjectToVat)
                 // VAT not chargeable if shipping outside VAT zone
                 return true;
 
             // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
             // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
             var customerVatStatus = (VatNumberStatus)_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
-            return address.CountryId != _taxSettings.EuVatShopCountryId &&
+            return country.Id != _taxSettings.EuVatShopCountryId &&
                    customerVatStatus == VatNumberStatus.Valid &&
                    _taxSettings.EuVatAllowVatExemption;
+        }
+
+        #endregion
+
+        #region Tax total
+
+        /// <summary>
+        /// Get tax total for the passed shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
+        /// <returns>Result</returns>
+        public virtual TaxTotalResult GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
+        {
+            var customer = _customerService.GetShoppingCartCustomer(cart);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, _storeContext.CurrentStore.Id);
+            if (activeTaxProvider == null)
+                return null;
+
+            //get result by using primary tax provider
+            var taxTotalResult = activeTaxProvider.GetTaxTotal(new TaxTotalRequest
+            {
+                ShoppingCart = cart,
+                Customer = customer,
+                StoreId = _storeContext.CurrentStore.Id,
+                UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
+            });
+
+            //tax total is calculated, now consumers can adjust it
+            _eventPublisher.Publish(new TaxTotalCalculatedEvent(taxTotalResult));
+
+            //error logging
+            if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)
+            {
+                foreach (var error in taxTotalResult.Errors)
+                {
+                    _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+                }
+            }
+
+            return taxTotalResult;
         }
 
         #endregion

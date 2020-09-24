@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Payments;
+﻿using Nop.Core.Domain.Payments;
 
 namespace Nop.Plugin.Payments.PayPalStandard
 {
@@ -42,15 +42,11 @@ namespace Nop.Plugin.Payments.PayPalStandard
             switch (paymentStatus.ToLowerInvariant())
             {
                 case "pending":
-                    switch (pendingReason.ToLowerInvariant())
+                    result = (pendingReason.ToLowerInvariant()) switch
                     {
-                        case "authorization":
-                            result = PaymentStatus.Authorized;
-                            break;
-                        default:
-                            result = PaymentStatus.Pending;
-                            break;
-                    }
+                        "authorization" => PaymentStatus.Authorized,
+                        _ => PaymentStatus.Pending,
+                    };
                     break;
                 case "processed":
                 case "completed":
@@ -70,6 +66,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 default:
                     break;
             }
+
             return result;
         }
 

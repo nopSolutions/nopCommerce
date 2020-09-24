@@ -11,8 +11,8 @@ namespace Nop.Services.Shipping
     {
         public GetShippingOptionResponse()
         {
-            this.Errors = new List<string>();
-            this.ShippingOptions = new List<ShippingOption>();
+            Errors = new List<string>();
+            ShippingOptions = new List<ShippingOption>();
         }
 
         /// <summary>

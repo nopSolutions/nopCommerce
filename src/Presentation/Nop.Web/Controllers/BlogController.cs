@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
+using Nop.Core.Events;
+using Nop.Core.Rss;
 using Nop.Services.Blogs;
-using Nop.Services.Events;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -19,14 +20,11 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Mvc.Rss;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
+    [AutoValidateAntiforgeryToken]
     public partial class BlogController : BasePublicController
     {
         #region Fields
@@ -36,6 +34,7 @@ namespace Nop.Web.Controllers
         private readonly IBlogModelFactory _blogModelFactory;
         private readonly IBlogService _blogService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -56,6 +55,7 @@ namespace Nop.Web.Controllers
             IBlogModelFactory blogModelFactory,
             IBlogService blogService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -67,21 +67,22 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings)
         {
-            this._blogSettings = blogSettings;
-            this._captchaSettings = captchaSettings;
-            this._blogModelFactory = blogModelFactory;
-            this._blogService = blogService;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _blogModelFactory = blogModelFactory;
+            _blogService = blogService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -91,7 +92,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
@@ -100,7 +101,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
@@ -109,7 +110,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
@@ -141,19 +142,21 @@ namespace Nop.Web.Controllers
         public virtual IActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
+            var notAvailable =
+                //availability dates
+                !_blogService.BlogPostIsAvailable(blogPost) ||
+                //Store mapping
+                !_storeMappingService.Authorize(blogPost);
+            //Check whether the current user has a "Manage blog" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
-            //access to Blog preview
-            if (!_blogService.BlogPostIsAvailable(blogPost) && !hasAdminAccess)
-                return RedirectToRoute("HomePage");
-
-            //Store mapping
-            if (!_storeMappingService.Authorize(blogPost))
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //display "edit" (manage) link
@@ -166,20 +169,19 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("BlogPost")]
-        [PublicAntiForgery]
+        [HttpPost, ActionName("BlogPost")]        
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }
@@ -187,7 +189,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -201,8 +203,8 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
-                blogPost.BlogComments.Add(comment);
-                _blogService.UpdateBlogPost(blogPost);
+
+                _blogService.InsertBlogComment(comment);
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)

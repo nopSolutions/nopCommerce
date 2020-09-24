@@ -4,7 +4,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -25,12 +25,12 @@ namespace Nop.Web.Areas.Admin.Factories
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService)
         {
-            this._emailAccountSettings = emailAccountSettings;
-            this._emailAccountService = emailAccountService;
+            _emailAccountSettings = emailAccountSettings;
+            _emailAccountService = emailAccountService;
         }
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -60,12 +60,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get email accounts
-            var emailAccounts = _emailAccountService.GetAllEmailAccounts();
+            var emailAccounts = _emailAccountService.GetAllEmailAccounts().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new EmailAccountListModel
+            var model = new EmailAccountListModel().PrepareToGrid(searchModel, emailAccounts, () =>
             {
-                Data = emailAccounts.PaginationByRequestModel(searchModel).Select(emailAccount =>
+                return emailAccounts.Select(emailAccount =>
                 {
                     //fill in model values from the entity
                     var emailAccountModel = emailAccount.ToModel<EmailAccountModel>();
@@ -74,9 +74,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     emailAccountModel.IsDefaultEmailAccount = emailAccount.Id == _emailAccountSettings.DefaultEmailAccountId;
 
                     return emailAccountModel;
-                }),
-                Total = emailAccounts.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -93,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //fill in model values from the entity
             if (emailAccount != null)
-                model = model ?? emailAccount.ToModel<EmailAccountModel>();
+                model ??= emailAccount.ToModel<EmailAccountModel>();
 
             //set default values for the new model
             if (emailAccount == null)

@@ -5,8 +5,8 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Customers;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -29,9 +29,9 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory)
         {
-            this._customerAttributeService = customerAttributeService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
+            _customerAttributeService = customerAttributeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
         }
 
         #endregion
@@ -92,12 +92,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer attributes
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeListModel
+            var model = new CustomerAttributeListModel().PrepareToGrid(searchModel, customerAttributes, () =>
             {
-                Data = customerAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
+                return customerAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
@@ -106,9 +106,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = customerAttributes.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -128,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttribute.ToModel<CustomerAttributeModel>();
+                model ??= customerAttribute.ToModel<CustomerAttributeModel>();
 
                 //prepare nested search model
                 PrepareCustomerAttributeValueSearchModel(model.CustomerAttributeValueSearchModel, customerAttribute);
@@ -163,16 +162,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customerAttribute));
 
             //get customer attribute values
-            var customerAttributeValues = _customerAttributeService.GetCustomerAttributeValues(customerAttribute.Id);
+            var customerAttributeValues = _customerAttributeService
+                .GetCustomerAttributeValues(customerAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeValueListModel
+            var model = new CustomerAttributeValueListModel().PrepareToGrid(searchModel, customerAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = customerAttributeValues.PaginationByRequestModel(searchModel)
-                    .Select(value => value.ToModel<CustomerAttributeValueModel>()),
-                Total = customerAttributeValues.Count
-            };
+                return customerAttributeValues.Select(value => value.ToModel<CustomerAttributeValueModel>());
+            });
 
             return model;
         }
@@ -196,7 +194,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttributeValue.ToModel<CustomerAttributeValueModel>();
+                model ??= customerAttributeValue.ToModel<CustomerAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

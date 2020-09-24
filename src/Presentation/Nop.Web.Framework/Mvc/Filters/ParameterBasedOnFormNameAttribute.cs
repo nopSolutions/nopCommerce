@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that check existence of passed form key and return result as an action parameter 
     /// </summary>
-    public class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
+    public sealed class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -19,7 +19,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
         public ParameterBasedOnFormNameAttribute(string formKeyName, string actionParameterName) : base(typeof(ParameterBasedOnFormNameFilter))
         {
-            this.Arguments = new object[] { formKeyName, actionParameterName };
+            Arguments = new object[] { formKeyName, actionParameterName };
         }
 
         #endregion
@@ -42,8 +42,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public ParameterBasedOnFormNameFilter(string formKeyName, string actionParameterName)
             {
-                this._formKeyName = formKeyName;
-                this._actionParameterName = actionParameterName;
+                _formKeyName = formKeyName;
+                _actionParameterName = actionParameterName;
             }
 
             #endregion

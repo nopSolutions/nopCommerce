@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Security;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Web.Framework.Mvc;
@@ -32,11 +32,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._activityLogModelFactory = activityLogModelFactory;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _activityLogModelFactory = activityLogModelFactory;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _activityLogModelFactory.PrepareActivityLogTypeModels();
+            var model = _activityLogModelFactory.PrepareActivityLogTypeSearchModel(new ActivityLogTypeSearchModel());
 
             return View(model);
         }
@@ -77,10 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.UpdateActivityType(activityType);
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
-
-            //selected tab
-            SaveSelectedTabName();
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.ActivityLogType.Updated"));
 
             return RedirectToAction("ActivityTypes");
         }
@@ -100,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListLogs(ActivityLogSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _activityLogModelFactory.PrepareActivityLogListModel(searchModel);
@@ -108,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        [HttpPost]
         public virtual IActionResult ActivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
@@ -126,6 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
         public virtual IActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))

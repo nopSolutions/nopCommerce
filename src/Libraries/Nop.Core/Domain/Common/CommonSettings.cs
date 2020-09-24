@@ -10,7 +10,6 @@ namespace Nop.Core.Domain.Common
     {
         public CommonSettings()
         {
-            SitemapCustomUrls = new List<string>();
             IgnoreLogWordlist = new List<string>();
         }
 
@@ -23,46 +22,6 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether the contacts form should use system email
         /// </summary>
         public bool UseSystemEmailForContactUsForm { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use stored procedure (if supported) for loading categories (it's much faster in admin area with a large number of categories than the LINQ implementation)
-        /// </summary>
-        public bool UseStoredProcedureForLoadingCategories { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether sitemap is enabled
-        /// </summary>
-        public bool SitemapEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the page size for sitemap
-        /// </summary>
-        public int SitemapPageSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include categories to sitemap
-        /// </summary>
-        public bool SitemapIncludeCategories { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include manufacturers to sitemap
-        /// </summary>
-        public bool SitemapIncludeManufacturers { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include products to sitemap
-        /// </summary>
-        public bool SitemapIncludeProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include product tags to sitemap
-        /// </summary>
-        public bool SitemapIncludeProductTags { get; set; }
-
-        /// <summary>
-        /// A list of custom URLs to be added to sitemap.xml (include page names only)
-        /// </summary>
-        public List<string> SitemapCustomUrls { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display a warning if java-script is disabled
@@ -88,16 +47,6 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a breadcrumb delimiter used on the site
         /// </summary>
         public string BreadcrumbDelimiter { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether we should render <meta http-equiv="X-UA-Compatible" content="IE=edge"/> tag
-        /// </summary>
-        public bool RenderXuaCompatible { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of "X-UA-Compatible" META tag
-        /// </summary>
-        public string XuaCompatibleValue { get; set; }
 
         /// <summary>
         /// Gets or sets ignore words (phrases) to be ignored when logging errors/messages
@@ -131,7 +80,7 @@ namespace Nop.Core.Domain.Common
         public bool UseResponseCompression { get; set; }
 
         /// <summary>
-        /// Gets or sets a value of "Cache-Control" header value for static content
+        /// Gets or sets a value of "Cache-Control" header value for static content (in seconds)
         /// </summary>
         public string StaticFilesCacheControl { get; set; }
 
@@ -139,5 +88,30 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value of favicon and app icons <head/> code
         /// </summary>
         public string FaviconAndAppIconsHeadCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable markup minification
+        /// </summary>
+        public bool EnableHtmlMinification { get; set; }
+
+        /// <summary>
+        /// A value indicating whether JS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableJsBundling { get; set; }
+
+        /// <summary>
+        /// A value indicating whether CSS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableCssBundling { get; set; }
+
+        /// <summary>
+        /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
+        /// </summary>
+        public int? ScheduleTaskRunTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout (in milliseconds) before restarting the application; set null to use default value
+        /// </summary>
+        public int? RestartTimeout { get; set; }
     }
 }

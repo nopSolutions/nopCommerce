@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public AdminHeaderLinksViewComponent(ICommonModelFactory commonModelFactory)
         {
-            this._commonModelFactory = commonModelFactory;
+            _commonModelFactory = commonModelFactory;
         }
 
         public IViewComponentResult Invoke()

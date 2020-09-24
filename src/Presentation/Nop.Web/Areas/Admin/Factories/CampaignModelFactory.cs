@@ -7,6 +7,7 @@ using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -35,12 +36,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IMessageTokenProvider messageTokenProvider)
         {
-            this._catalogSettings = catalogSettings;
-            this._emailAccountSettings = emailAccountSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._campaignService = campaignService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._messageTokenProvider = messageTokenProvider;
+            _catalogSettings = catalogSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _campaignService = campaignService;
+            _dateTimeHelper = dateTimeHelper;
+            _messageTokenProvider = messageTokenProvider;
         }
 
         #endregion
@@ -77,14 +78,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get campaigns
-            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
+            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CampaignListModel
+            var model = new CampaignListModel().PrepareToGrid(searchModel, campaigns, () =>
             {
-                Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
+                return campaigns.Select(campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel<CampaignModel>();
@@ -98,9 +99,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return campaignModel;
-                }),
-                Total = campaigns.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (campaign != null)
             {
-                model = model ?? campaign.ToModel<CampaignModel>();
+                model ??= campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }

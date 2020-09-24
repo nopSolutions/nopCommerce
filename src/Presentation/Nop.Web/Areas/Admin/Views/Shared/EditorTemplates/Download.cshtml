@@ -7,8 +7,8 @@
 
 @{
     //register CSS and JS
-    Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
-    Html.AddScriptParts("~/lib/fineuploader/jquery.fine-uploader.min.js");
+    Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
+    Html.AddScriptParts("~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
 
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
@@ -29,20 +29,23 @@
                 cache: false,
                 type: "POST",
                 url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = AreaNames.Admin }))",
-                data: { "downloadUrl": downloadUrl },
-                success: function (data) {
+                data: {
+                    "downloadUrl": downloadUrl
+                },
+                success: function (data, textStatus, jqXHR) {
                     if (data.success) {
                         $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
                         $("#@(clientId + "value") input").val(data.downloadId);
                     }
                     else {
-                        $('saveDownloadUrlFailed-info').html(data.message);
+                        $('#saveDownloadUrlFailed-info').text(data.message);
                         $("#saveDownloadUrlFailed").click();
                     }
-                    $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     $("#saveDownloadUrlAlert").click();
+                },
+                complete: function (jqXHR, textStatus) {
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
                 }
             });
@@ -175,6 +178,7 @@
                         $("#@(clientId + "remove")").click(function (e) {
                             $("#@(clientId + "downloadurl")").html("");
                             $("#@(clientId + "value") input").val(0);
+                            $("#@(clientId) .qq-upload-list-selector").empty();
                             $(this).hide();
                         });
                     });

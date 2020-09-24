@@ -83,7 +83,7 @@ namespace Nop.Web.Models.Catalog
 
         public int TotalTags { get; set; }
 
-        public IList<ProductTagModel> Tags { get; set; }
+        public List<ProductTagModel> Tags { get; set; }
 
         #endregion
     }

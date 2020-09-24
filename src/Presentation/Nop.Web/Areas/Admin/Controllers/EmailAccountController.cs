@@ -45,16 +45,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._emailAccountSettings = emailAccountSettings;
-            this._customerActivityService = customerActivityService;
-            this._emailAccountModelFactory = emailAccountModelFactory;
-            this._emailAccountService = emailAccountService;
-            this._emailSender = emailSender;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _emailAccountSettings = emailAccountSettings;
+            _customerActivityService = customerActivityService;
+            _emailAccountModelFactory = emailAccountModelFactory;
+            _emailAccountService = emailAccountService;
+            _emailSender = emailSender;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(EmailAccountSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _emailAccountModelFactory.PrepareEmailAccountListModel(searchModel);

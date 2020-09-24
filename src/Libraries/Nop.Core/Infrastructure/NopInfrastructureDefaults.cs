@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Infrastructure
+﻿namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// Represents default values related to core infrastructure

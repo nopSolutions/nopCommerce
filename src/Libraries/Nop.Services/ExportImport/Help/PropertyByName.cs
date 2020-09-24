@@ -20,10 +20,10 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="ignore">Specifies whether the property should be exported</param>
         public PropertyByName(string propertyName, Func<T, object> func = null, bool ignore = false)
         {
-            this.PropertyName = propertyName;
-            this.GetProperty = func;
-            this.PropertyOrderPosition = 1;
-            this.Ignore = ignore;
+            PropertyName = propertyName;
+            GetProperty = func;
+            PropertyOrderPosition = 1;
+            Ignore = ignore;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(int);
+                    return default;
                 return rez;
             }
         }
@@ -71,7 +71,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(bool);
+                    return default;
                 return rez;
             }
         }
@@ -89,7 +89,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(decimal);
+                    return default;
                 return rez;
             }
         }
@@ -115,7 +115,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(double);
+                    return default;
                 return rez;
             }
         }
@@ -150,7 +150,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns>Result</returns>
         public string[] GetDropDownElements()
         {
-            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : new string[0];
+            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : Array.Empty<string>();
         }
 
         /// <summary>

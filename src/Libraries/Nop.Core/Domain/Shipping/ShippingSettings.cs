@@ -32,7 +32,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets a value indicating whether customers can choose "Pick Up in Store" option during checkout (displayed on the "billing address" checkout step)
         /// </summary>
-        public bool AllowPickUpInStore { get; set; }
+        public bool AllowPickupInStore { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether display a pickup points in the map
@@ -42,7 +42,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets a value indicating whether ignore additional shipping charge for pick up in store
         /// </summary>
-        public bool IgnoreAdditionalShippingChargeForPickUpInStore { get; set; }
+        public bool IgnoreAdditionalShippingChargeForPickupInStore { get; set; }
 
         /// <summary>
         /// Gets or sets Google map API key
@@ -77,9 +77,14 @@ namespace Nop.Core.Domain.Shipping
         public bool FreeShippingOverXIncludingTax { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Estimate shipping' option is enabled
+        /// Gets or sets a value indicating whether 'Estimate shipping' is enabled on the shopping cart page
         /// </summary>
-        public bool EstimateShippingEnabled { get; set; }
+        public bool EstimateShippingCartPageEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Estimate shipping' is enabled on the product details pages
+        /// </summary>
+        public bool EstimateShippingProductPageEnabled { get; set; }
 
         /// <summary>
         /// A value indicating whether customers should see shipment events on their order details pages

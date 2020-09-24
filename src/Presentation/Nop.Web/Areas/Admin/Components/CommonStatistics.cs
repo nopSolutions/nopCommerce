@@ -25,9 +25,9 @@ namespace Nop.Web.Areas.Admin.Components
             IPermissionService permissionService,
             IWorkContext workContext)
         {
-            this._commonModelFactory = commonModelFactory;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
+            _commonModelFactory = commonModelFactory;
+            _permissionService = permissionService;
+            _workContext = workContext;
         }
 
         #endregion

@@ -62,20 +62,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             IVendorModelFactory vendorModelFactory,
             IVendorService vendorService)
         {
-            this._addressService = addressService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._vendorModelFactory = vendorModelFactory;
-            this._vendorService = vendorService;
+            _addressService = addressService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _vendorModelFactory = vendorModelFactory;
+            _vendorService = vendorService;
         }
 
         #endregion
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorAttributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in vendorAttributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Vendor}{attribute.Id}";
+                var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
                 StringValues ctrlAttributes;
                 switch (attribute.AttributeControlType)
                 {
@@ -224,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(VendorSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _vendorModelFactory.PrepareVendorListModel(searchModel);
@@ -245,13 +245,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult Create(VendorModel model, bool continueEditing)
+        public virtual IActionResult Create(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             //parse vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -294,10 +294,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendor.Id });
             }
 
@@ -325,7 +322,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public virtual IActionResult Edit(VendorModel model, bool continueEditing)
+        public virtual IActionResult Edit(VendorModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -336,7 +333,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //parse vendor attributes
-            var vendorAttributesXml = ParseVendorAttributes(model.Form);
+            var vendorAttributesXml = ParseVendorAttributes(form);
             _vendorAttributeParser.GetAttributeWarnings(vendorAttributesXml).ToList()
                 .ForEach(warning => ModelState.AddModelError(string.Empty, warning));
 
@@ -404,10 +401,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendor.Id });
             }
 
@@ -457,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult VendorNotesSelect(VendorNoteSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a vendor with the specified id
             var vendor = _vendorService.GetVendorById(searchModel.VendorId)
@@ -474,34 +468,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
+            if (string.IsNullOrEmpty(message))
+                return ErrorJson(_localizationService.GetResource("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
+
             //try to get a vendor with the specified id
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
-                return Json(new { Result = false });
+                return ErrorJson("Vendor cannot be loaded");
 
-            var vendorNote = new VendorNote
+            _vendorService.InsertVendorNote(new VendorNote
             {
                 Note = message,
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            vendor.VendorNotes.Add(vendorNote);
-            _vendorService.UpdateVendor(vendor);
+                CreatedOnUtc = DateTime.UtcNow,
+                VendorId = vendor.Id
+            });
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult VendorNoteDelete(int id, int vendorId)
+        public virtual IActionResult VendorNoteDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
-            //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(vendorId)
-                ?? throw new ArgumentException("No vendor found with the specified id", nameof(vendorId));
-
             //try to get a vendor note with the specified id
-            var vendorNote = vendor.VendorNotes.FirstOrDefault(vn => vn.Id == id)
+            var vendorNote = _vendorService.GetVendorNoteById(id)
                 ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));
 
             _vendorService.DeleteVendorNote(vendorNote);

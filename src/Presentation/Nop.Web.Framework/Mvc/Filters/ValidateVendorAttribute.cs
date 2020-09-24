@@ -3,15 +3,15 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
+using Nop.Data;
+using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents a filter attribute confirming that user with "Vendor" customer role has appropriate vendor account associated (and active)
     /// </summary>
-    public class ValidateVendorAttribute : TypeFilterAttribute
+    public sealed class ValidateVendorAttribute : TypeFilterAttribute
     {
         #region Fields
 
@@ -27,8 +27,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public ValidateVendorAttribute(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         #endregion
@@ -52,16 +52,18 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly bool _ignoreFilter;
+            private readonly ICustomerService _customerService;
             private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext)
+            public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext, ICustomerService customerService)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._workContext = workContext;
+                _ignoreFilter = ignoreFilter;
+                _customerService = customerService;
+                _workContext = workContext;
             }
 
             #endregion
@@ -90,7 +92,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //whether current customer is vendor
-                if (!_workContext.CurrentCustomer.IsVendor())
+                if (!_customerService.IsVendor(_workContext.CurrentCustomer))
                     return;
 
                 //ensure that this user has active vendor record associated

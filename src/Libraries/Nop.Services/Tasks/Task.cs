@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -143,14 +145,20 @@ namespace Nop.Services.Tasks
             catch (Exception exc)
             {
                 var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                var scheduleTaskUrl = $"{storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
 
                 ScheduleTask.Enabled = !ScheduleTask.StopOnError;
                 ScheduleTask.LastEndUtc = DateTime.UtcNow;
                 scheduleTaskService.UpdateTask(ScheduleTask);
 
+                var message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), ScheduleTask.Name,
+                    exc.Message, ScheduleTask.Type, storeContext.CurrentStore.Name, scheduleTaskUrl);
+
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                logger.Error($"Error while running the '{ScheduleTask.Name}' schedule task. {exc.Message}", exc);
+                logger.Error(message, exc);
                 if (throwException)
                     throw;
             }

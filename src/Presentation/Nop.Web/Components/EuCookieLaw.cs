@@ -21,10 +21,10 @@ namespace Nop.Web.Components
             IWorkContext workContext,
             StoreInformationSettings storeInformationSettings)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._storeInformationSettings = storeInformationSettings;
+            _genericAttributeService = genericAttributeService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _storeInformationSettings = storeInformationSettings;
         }
 
         public IViewComponentResult Invoke()
@@ -43,7 +43,7 @@ namespace Nop.Web.Components
 
             //ignore notification?
             //right now it's used during logout so popup window is not displayed twice
-            if (TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] != null && Convert.ToBoolean($"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"))
+            if (TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"] != null && Convert.ToBoolean(TempData[$"{NopCookieDefaults.Prefix}{NopCookieDefaults.IgnoreEuCookieLawWarning}"]))
                 return Content("");
 
             return View();

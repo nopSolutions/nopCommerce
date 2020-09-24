@@ -1,14 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
 using Nop.Services.Helpers;
 
 namespace Nop.Services.Orders
@@ -22,11 +23,15 @@ namespace Nop.Services.Orders
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
+        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
+        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly string _productEntityName;
 
         #endregion
 
@@ -34,18 +39,27 @@ namespace Nop.Services.Orders
 
         public OrderReportService(CatalogSettings catalogSettings,
             IDateTimeHelper dateTimeHelper,
+            IRepository<Address> addressRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
+            IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
+            IRepository<ProductCategory> productCategoryRepository,
+            IRepository<ProductManufacturer> productManufacturerRepository,
+            IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._orderRepository = orderRepository;
-            this._orderItemRepository = orderItemRepository;
-            this._productRepository = productRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._productEntityName = typeof(Product).Name;
+            _catalogSettings = catalogSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _addressRepository = addressRepository;
+            _orderRepository = orderRepository;
+            _orderItemRepository = orderItemRepository;
+            _orderNoteRepository = orderNoteRepository;
+            _productRepository = productRepository;
+            _productCategoryRepository = productCategoryRepository;
+            _productManufacturerRepository = productManufacturerRepository;
+            _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
+            _storeMappingRepository = storeMappingRepository;
         }
 
         #endregion
@@ -93,7 +107,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
             var report = (from oq in query
-                          group oq by oq.BillingAddress.CountryId
+                          join a in _addressRepository.Table on oq.BillingAddressId equals a.Id
+                          group oq by a.CountryId
                           into result
                           select new
                           {
@@ -140,57 +155,76 @@ namespace Nop.Services.Orders
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
             var query = _orderRepository.Table;
+
             query = query.Where(o => !o.Deleted);
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
             if (orderId > 0)
                 query = query.Where(o => o.Id == orderId);
+
             if (vendorId > 0)
-                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    where p.VendorId == vendorId
+                    select o;
+
             if (productId > 0)
-                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    where oi.ProductId == productId
+                    select o;
 
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem =>
+
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
+                    where
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
-                        orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
-                        orderItem.Product.UseMultipleWarehouses &&
-                        orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId)
-                        ||
+                        (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
                         //"Use multiple warehouses" disabled
                         //we use standard "warehouse" property
-                        (orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
-                        !orderItem.Product.UseMultipleWarehouses) &&
-                        orderItem.Product.WarehouseId == warehouseId));
+                        ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
+                    select o;
             }
 
-            if (billingCountryId > 0)
-                query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
+            query = from o in query
+                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                where 
+                    (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
+                    (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
+                    (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))                            
+                select o;
+
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
+
             if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
+
             if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
+
             if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
+
             if (startTimeUtc.HasValue)
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
+
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
-            if (!string.IsNullOrEmpty(billingPhone))
-                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
-            if (!string.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!string.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+
             if (!string.IsNullOrEmpty(orderNotes))
-                query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
+                query = from o in query
+                    join n in _orderNoteRepository.Table on o.Id equals n.OrderId
+                    where n.Note.Contains(orderNotes)
+                    select o;
 
             var item = (from oq in query
                 group oq by 1
@@ -213,7 +247,7 @@ namespace Nop.Services.Orders
                         SumRefundedAmount = r.OrederRefundedAmountSum
                 }).FirstOrDefault();
 
-            item = item ?? new OrderAverageReportLine
+            item ??= new OrderAverageReportLine
             {
                 CountOrders = 0,
                 SumShippingExclTax = decimal.Zero,
@@ -311,7 +345,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             int billingCountryId = 0,
-            int orderBy = 1,
+            OrderByEnum orderBy = OrderByEnum.OrderByQuantity,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
@@ -330,25 +364,44 @@ namespace Nop.Services.Orders
             var query1 = from orderItem in _orderItemRepository.Table
                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         //join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
-                         //join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
+                         join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
                          where (storeId == 0 || storeId == o.StoreId) &&
                                (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                                (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                                (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                                (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                               !o.Deleted &&
+                               //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                               //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
+                               //0) &&
+                               !o.Deleted && 
                                !p.Deleted &&
                                (vendorId == 0 || p.VendorId == vendorId) &&
-                               //(categoryId == 0 || pc.CategoryId == categoryId) &&
-                               //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                               (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                               (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
-                                0) &&
-                               (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
+                               (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
                                (showHidden || p.Published)
                          select orderItem;
+
+            if (categoryId > 0)
+            {
+                query1 = from orderItem in query1
+                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                         join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                            into p_pc
+                         from pc in p_pc.DefaultIfEmpty()
+                         where pc.CategoryId == categoryId
+                         select orderItem;
+            }
+
+            if (manufacturerId > 0)
+            {
+                query1 = from orderItem in query1
+                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                         join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                            into p_pm
+                         from pm in p_pm.DefaultIfEmpty()
+                         where pm.ManufacturerId == manufacturerId
+                         select orderItem;
+            }
 
             var query2 =
                 //group by products
@@ -361,18 +414,12 @@ namespace Nop.Services.Orders
                     TotalQuantity = g.Sum(x => x.Quantity)
                 };
 
-            switch (orderBy)
+            query2 = orderBy switch
             {
-                case 1:
-                    query2 = query2.OrderByDescending(x => x.TotalQuantity);
-                    break;
-                case 2:
-                    query2 = query2.OrderByDescending(x => x.TotalAmount);
-                    break;
-                default:
-                    throw new ArgumentException("Wrong orderBy parameter", "orderBy");
-            }
-
+                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.TotalQuantity),
+                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.TotalAmount),
+                _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
+            };
             var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
             return result;
         }
@@ -399,11 +446,12 @@ namespace Nop.Services.Orders
 
             var query2 = from orderItem in _orderItemRepository.Table
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                          where query1.Contains(orderItem.OrderId) &&
                          p.Id != productId &&
                          (showHidden || p.Published) &&
-                         !orderItem.Order.Deleted &&
-                         (storeId == 0 || orderItem.Order.StoreId == storeId) &&
+                         !o.Deleted &&
+                         (storeId == 0 || o.StoreId == storeId) &&
                          !p.Deleted &&
                          (!visibleIndividuallyOnly || p.VisibleIndividually)
                          select new { orderItem, p };
@@ -458,13 +506,23 @@ namespace Nop.Services.Orders
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var query = from p in _productRepository.Table
+                        join pm in _productManufacturerRepository.Table on p.Id 
+                            equals pm.ProductId 
+                            into p_pm
+                from pm in p_pm.DefaultIfEmpty()
+                        join pc in _productCategoryRepository.Table on p.Id 
+                            equals pc.ProductId 
+                            into p_pc
+                from pc in p_pc.DefaultIfEmpty()
                         where !query_tmp.Contains(p.Id) &&
                               //include only simple products
                               p.ProductTypeId == simpleProductTypeId &&
                               !p.Deleted &&
                               (vendorId == 0 || p.VendorId == vendorId) &&
-                              (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                              (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
+                              //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                              //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
+                              (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
+                              (categoryId == 0 || pc.CategoryId == categoryId) &&
                               (showHidden || p.Published)
                         select p;
 
@@ -472,7 +530,7 @@ namespace Nop.Services.Orders
             {
                 query = from p in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = _productEntityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
                         from sm in p_sm.DefaultIfEmpty()
                         where !p.LimitedToStores || storeId == sm.StoreId
                         select p;
@@ -527,38 +585,41 @@ namespace Nop.Services.Orders
             var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
             var query = from orderItem in _orderItemRepository.Table
-                        join o in orders on orderItem.OrderId equals o.Id
-                        where (storeId == 0 || storeId == o.StoreId) &&
-                              (orderId == 0 || orderId == o.Id) &&
-                              (billingCountryId == 0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
-                              (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
-                              (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
-                              (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
-                              !o.Deleted &&
-                              (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
-                              (productId == 0 || orderItem.ProductId == productId) &&
-                              (
-                                warehouseId == 0
-                                ||
-                                //"Use multiple warehouses" enabled
-                                //we search in each warehouse
-                                orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
-                                orderItem.Product.UseMultipleWarehouses &&
-                                orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId)
-                                ||
-                                //"Use multiple warehouses" disabled
-                                //we use standard "warehouse" property
-                                (orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
-                                !orderItem.Product.UseMultipleWarehouses) &&
-                                orderItem.Product.WarehouseId == warehouseId
-                              ) &&
-                              //we do not ignore deleted products when calculating order reports
-                              //(!p.Deleted)
-                              (dontSearchPhone || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone))) &&
-                              (dontSearchEmail || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
-                              (dontSearchLastName || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName))) &&
-                              (dontSearchOrderNotes || o.OrderNotes.Any(oNote => oNote.Note.Contains(orderNotes)))
-                        select orderItem;
+                join o in orders on orderItem.OrderId equals o.Id
+                join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                where (storeId == 0 || storeId == o.StoreId) &&
+                      (orderId == 0 || orderId == o.Id) &&
+                      (billingCountryId == 0 || (oba.CountryId == billingCountryId)) &&
+                      (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
+                      (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
+                      (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
+                      !o.Deleted &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      (productId == 0 || orderItem.ProductId == productId) &&
+                      (warehouseId == 0 ||
+                          //"Use multiple warehouses" enabled
+                          //we search in each warehouse
+                          p.ManageInventoryMethodId == manageStockInventoryMethodId &&
+                          p.UseMultipleWarehouses &&
+                          _productWarehouseInventoryRepository.Table.Any(pwi =>
+                              pwi.ProductId == orderItem.ProductId && pwi.WarehouseId == warehouseId)
+                          ||
+                          //"Use multiple warehouses" disabled
+                          //we use standard "warehouse" property
+                          (p.ManageInventoryMethodId != manageStockInventoryMethodId ||
+                           !p.UseMultipleWarehouses) &&
+                          p.WarehouseId == warehouseId) &&
+                      //we do not ignore deleted products when calculating order reports
+                      //(!p.Deleted)
+                      (dontSearchPhone || (!string.IsNullOrEmpty(oba.PhoneNumber) &&
+                                           oba.PhoneNumber.Contains(billingPhone))) &&
+                      (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                      (dontSearchLastName ||
+                       (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
+                      (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote =>
+                           oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
+                select orderItem;
 
             var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 

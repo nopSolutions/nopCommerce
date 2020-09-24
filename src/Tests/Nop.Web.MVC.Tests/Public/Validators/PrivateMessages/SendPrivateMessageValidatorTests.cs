@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Tests;
 using Nop.Web.Models.PrivateMessages;
 using Nop.Web.Validators.PrivateMessages;
 using NUnit.Framework;
@@ -6,30 +7,30 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
 {
     [TestFixture]
-    public class SendPrivateMessageValidatorTests : BaseValidatorTests
+    public class SendPrivateMessageValidatorTests : BaseNopTest
     {
         private SendPrivateMessageValidator _validator;
         
         [SetUp]
-        public new void Setup()
+        public void Setup()
         {
-            _validator = new SendPrivateMessageValidator(_localizationService);
+            _validator = GetService<SendPrivateMessageValidator>();
         }
 
         [Test]
-        public void Should_have_error_when_subject_is_null_or_empty()
+        public void ShouldHaveErrorWhenSubjectIsNullOrEmpty()
         {
             var model = new SendPrivateMessageModel
             {
                 Subject = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
-            model.Subject = "";
+            model.Subject = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_subject_is_specified()
+        public void ShouldNotHaveErrorWhenSubjectIsSpecified()
         {
             var model = new SendPrivateMessageModel
             {
@@ -39,19 +40,19 @@ namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
         }
 
         [Test]
-        public void Should_have_error_when_message_is_null_or_empty()
+        public void ShouldHaveErrorWhenMessageIsNullOrEmpty()
         {
             var model = new SendPrivateMessageModel
             {
                 Message = null
             };
             _validator.ShouldHaveValidationErrorFor(x => x.Message, model);
-            model.Message = "";
+            model.Message = string.Empty;
             _validator.ShouldHaveValidationErrorFor(x => x.Message, model);
         }
 
         [Test]
-        public void Should_not_have_error_when_message_is_specified()
+        public void ShouldNotHaveErrorWhenMessageIsSpecified()
         {
             var model = new SendPrivateMessageModel
             {

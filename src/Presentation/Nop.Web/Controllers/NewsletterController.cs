@@ -25,17 +25,18 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService)
         {
-            this._localizationService = localizationService;
-            this._newsletterModelFactory = newsletterModelFactory;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
+            _localizationService = localizationService;
+            _newsletterModelFactory = newsletterModelFactory;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
         }
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
@@ -104,7 +105,7 @@ namespace Nop.Web.Controllers
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (active)
             {

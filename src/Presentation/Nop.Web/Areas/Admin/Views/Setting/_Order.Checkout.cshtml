@@ -1,0 +1,112 @@
+@model OrderSettingsModel
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
+        toggleOnePageCheckoutEnabled();
+    });
+
+    function toggleOnePageCheckoutEnabled() {
+        if ($('#@Html.IdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').show();
+        }
+        else {
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();
+        }
+    }
+</script>
+
+<div class="panel-body">
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CheckoutDisabled_OverrideForStore" asp-input="CheckoutDisabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CheckoutDisabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CheckoutDisabled" />
+            <span asp-validation-for="CheckoutDisabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AnonymousCheckoutAllowed_OverrideForStore" asp-input="AnonymousCheckoutAllowed" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="AnonymousCheckoutAllowed"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AnonymousCheckoutAllowed"/>
+            <span asp-validation-for="AnonymousCheckoutAllowed"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="OnePageCheckoutEnabled_OverrideForStore" asp-input="OnePageCheckoutEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="OnePageCheckoutEnabled"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="OnePageCheckoutEnabled"/>
+            <span asp-validation-for="OnePageCheckoutEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="OnePageCheckoutEnabled">
+        <div class="form-group advanced-setting" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore" asp-input="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                <nop-label asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"/>
+                <span asp-validation-for="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TermsOfServiceOnShoppingCartPage_OverrideForStore" asp-input="TermsOfServiceOnShoppingCartPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="TermsOfServiceOnShoppingCartPage"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="TermsOfServiceOnShoppingCartPage"/>
+            <span asp-validation-for="TermsOfServiceOnShoppingCartPage"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="TermsOfServiceOnOrderConfirmPage_OverrideForStore" asp-input="TermsOfServiceOnOrderConfirmPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="TermsOfServiceOnOrderConfirmPage"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="TermsOfServiceOnOrderConfirmPage"/>
+            <span asp-validation-for="TermsOfServiceOnOrderConfirmPage"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisableBillingAddressCheckoutStep_OverrideForStore" asp-input="DisableBillingAddressCheckoutStep" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="DisableBillingAddressCheckoutStep"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisableBillingAddressCheckoutStep"/>
+            <span asp-validation-for="DisableBillingAddressCheckoutStep"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisableOrderCompletedPage_OverrideForStore" asp-input="DisableOrderCompletedPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="DisableOrderCompletedPage"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisableOrderCompletedPage"/>
+            <span asp-validation-for="DisableOrderCompletedPage"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayPickupInStoreOnShippingMethodPage_OverrideForStore" asp-input="DisplayPickupInStoreOnShippingMethodPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="DisplayPickupInStoreOnShippingMethodPage"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayPickupInStoreOnShippingMethodPage"/>
+            <span asp-validation-for="DisplayPickupInStoreOnShippingMethodPage"></span>
+        </div>
+    </div>
+</div>

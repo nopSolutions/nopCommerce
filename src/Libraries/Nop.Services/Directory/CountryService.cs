@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
-using Nop.Services.Events;
+using Nop.Data;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Directory
@@ -20,34 +19,29 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
-        private readonly string _entityName;
 
         #endregion
 
         #region Ctor
 
         public CountryService(CatalogSettings catalogSettings,
-            ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
+            IStaticCacheManager staticCacheManager,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._countryRepository = countryRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._storeContext = storeContext;
-            this._entityName = typeof(Country).Name;
+            _catalogSettings = catalogSettings;
+            _staticCacheManager = staticCacheManager;
+            _localizationService = localizationService;
+            _countryRepository = countryRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -60,15 +54,7 @@ namespace Nop.Services.Directory
         /// <param name="country">Country</param>
         public virtual void DeleteCountry(Country country)
         {
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
             _countryRepository.Delete(country);
-
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(country);
         }
 
         /// <summary>
@@ -79,29 +65,34 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = _countryRepository.Table;
-                if (!showHidden)
-                    query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
 
-                if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
+            return _staticCacheManager.Get(key, () =>
+            {
+                var countries = _countryRepository.GetAll(query =>
                 {
-                    //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
-                    query = from c in query
+                    if (!showHidden)
+                        query = query.Where(c => c.Published);
+
+                    if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
+                    {
+                        //Store mapping
+                        var currentStoreId = _storeContext.CurrentStore.Id;
+                        query = from c in query
                             join sc in _storeMappingRepository.Table
-                            on new { c1 = c.Id, c2 = _entityName } equals new { c1 = sc.EntityId, c2 = sc.EntityName } into c_sc
+                                on new {c1 = c.Id, c2 = nameof(Country)} equals new
+                                {
+                                    c1 = sc.EntityId, c2 = sc.EntityName
+                                } into c_sc
                             from sc in c_sc.DefaultIfEmpty()
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;
 
-                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
-                }
+                        query = query.Distinct();
+                    }
 
-                var countries = query.ToList();
+                    return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                });
 
                 if (languageId > 0)
                 {
@@ -139,16 +130,23 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
+        /// Gets a country by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        public virtual Country GetCountryByAddress(Address address)
+        {
+            return GetCountryById(address?.CountryId ?? 0);
+        }
+
+        /// <summary>
         /// Gets a country 
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
         public virtual Country GetCountryById(int countryId)
         {
-            if (countryId == 0)
-                return null;
-
-            return _countryRepository.GetById(countryId);
+            return _countryRepository.GetById(countryId, cache => default);
         }
 
         /// <summary>
@@ -158,23 +156,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetCountriesByIds(int[] countryIds)
         {
-            if (countryIds == null || countryIds.Length == 0)
-                return new List<Country>();
-
-            var query = from c in _countryRepository.Table
-                        where countryIds.Contains(c.Id)
-                        select c;
-            var countries = query.ToList();
-            //sort by passed identifiers
-            var sortedCountries = new List<Country>();
-            foreach (var id in countryIds)
-            {
-                var country = countries.Find(x => x.Id == id);
-                if (country != null)
-                    sortedCountries.Add(country);
-            }
-
-            return sortedCountries;
+            return _countryRepository.GetByIds(countryIds);
         }
 
         /// <summary>
@@ -187,11 +169,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
+
             var query = from c in _countryRepository.Table
-                        where c.TwoLetterIsoCode == twoLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+                where c.TwoLetterIsoCode == twoLetterIsoCode
+                select c;
+
+            return _staticCacheManager.Get(key, query.FirstOrDefault);
         }
 
         /// <summary>
@@ -204,11 +188,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
+
             var query = from c in _countryRepository.Table
-                        where c.ThreeLetterIsoCode == threeLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+                where c.ThreeLetterIsoCode == threeLetterIsoCode
+                select c;
+
+            return _staticCacheManager.Get(key, query.FirstOrDefault);
         }
 
         /// <summary>
@@ -217,15 +203,7 @@ namespace Nop.Services.Directory
         /// <param name="country">Country</param>
         public virtual void InsertCountry(Country country)
         {
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
             _countryRepository.Insert(country);
-
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(country);
         }
 
         /// <summary>
@@ -234,15 +212,7 @@ namespace Nop.Services.Directory
         /// <param name="country">Country</param>
         public virtual void UpdateCountry(Country country)
         {
-            if (country == null)
-                throw new ArgumentNullException(nameof(country));
-
             _countryRepository.Update(country);
-
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(country);
         }
 
         #endregion

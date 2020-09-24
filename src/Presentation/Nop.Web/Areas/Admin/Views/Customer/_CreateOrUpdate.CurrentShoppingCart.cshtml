@@ -1,117 +1,83 @@
-﻿@model CustomerModel
-
-@using Nop.Services.Stores
+﻿@using Nop.Services.Stores
+@model CustomerModel
 @inject IStoreService storeService
-@{
-    var stores = storeService.GetAllStores();
-}
-
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsShoppingCartTop, additionalData = Model })
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="col-md-4">
-                            <nop-label asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" />
-                        </div>
-                        <div class="col-md-8">
-                            <nop-select asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" asp-items="@Model.CustomerShoppingCartSearchModel.AvailableShoppingCartTypes" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="CustomerShoppingCartSearchModel.ShoppingCartTypeId" asp-items="@Model.CustomerShoppingCartSearchModel.AvailableShoppingCartTypes" />
         </div>
     </div>
+</div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="currentshoppingcart-grid"></div>
-            <script>
-                $(document).ready(function () {
-                    $("#currentshoppingcart-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("GetCartList", "Customer"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function () {
-                                        var data = {
-                                            CustomerId: '@(Model.Id)',
-                                            ShoppingCartTypeId: $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').val()
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.CustomerShoppingCartSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.CustomerShoppingCartSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "ProductName",
-                            title: "@T("Admin.CurrentCarts.Product")",
-                            width:500,
-                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
-                        }, {
-                            field: "Quantity",
-                            title: "@T("Admin.CurrentCarts.Quantity")",
-                            width:200
-                        },{
-                            field: "UnitPrice",
-                            title: "@T("Admin.CurrentCarts.UnitPrice")",
-                            width:200
-                        },{
-                            field: "Total",
-                            title: "@T("Admin.CurrentCarts.Total")",
-                            width:200
-                        },{
-                            field: "Store",
-                            hidden: @(stores.Count > 1 ? "false" : "true"),
-                            title: "@T("Admin.CurrentCarts.Store")",
-                            width:200
-                        },{
-                            field: "UpdatedOn",
-                            title: "@T("Admin.CurrentCarts.UpdatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }]
-                    });
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "currentshoppingcart-grid",
+        UrlRead = new DataUrl("GetCartList", "Customer", new RouteValueDictionary { [nameof(Model.CustomerShoppingCartSearchModel.CustomerId)] = Model.CustomerShoppingCartSearchModel.CustomerId }),
+        Length = Model.CustomerShoppingCartSearchModel.PageSize,
+        LengthMenu = Model.CustomerShoppingCartSearchModel.AvailablePageSizes,
+        Filters = new List<FilterParameter>
+        {
+            new FilterParameter(nameof(CustomerShoppingCartSearchModel.ShoppingCartTypeId), nameof(CustomerShoppingCartSearchModel))
+        },
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(ShoppingCartItemModel.ProductName))
+            {
+                Title = T("Admin.CurrentCarts.Product").Text,
+                Width = "500",
+                Render = new RenderCustom("renderProductName")
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.Quantity))
+            {
+                Title = T("Admin.CurrentCarts.Quantity").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.UnitPrice))
+            {
+                Title = T("Admin.CurrentCarts.UnitPrice").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.Total))
+            {
+                Title = T("Admin.CurrentCarts.Total").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.Store))
+            {
+                Title = T("Admin.CurrentCarts.Store").Text,
+                Width = "200",
+                Visible = storeService.GetAllStores().Count > 1
+            },
+            new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
+            {
+                Title = T("Admin.CurrentCarts.UpdatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            }
+        }
+    })
 
-                    $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').change(function() {
-                        $("#currentshoppingcart-grid").data('kendoGrid').dataSource.read();
-                    });
-                });
-            </script>
-        </div>
-    </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerDetailsShoppingCartBottom, additionalData = Model })
+    <script>
+        $(document).ready(function() {
+            $('#@Html.IdFor(model => model.CustomerShoppingCartSearchModel.ShoppingCartTypeId)').change(function() {
+                updateTable('#currentshoppingcart-grid');
+            });
+        });
+    </script>
+
+    <script>
+        function renderProductName(data, type, row, meta) {
+            var link = '@Url.Content("~/Admin/Product/Edit/")' + row.ProductId;
+            var div = "";
+
+            if (row.AttributeInfo && row.AttributeInfo.length > 0)
+                div = "<div>" + row.AttributeInfo + "</div>";
+
+            return '<a href="' + link + '">' + data + '</a>'+div;
+        }
+    </script>
 </div>

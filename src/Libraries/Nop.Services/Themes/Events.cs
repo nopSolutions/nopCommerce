@@ -15,7 +15,7 @@ namespace Nop.Services.Themes
         /// <param name="uploadedThemes">Uploaded themes</param>
         public ThemesUploadedEvent(IList<ThemeDescriptor> uploadedThemes)
         {
-            this.UploadedThemes = uploadedThemes;
+            UploadedThemes = uploadedThemes;
         }
 
         #endregion

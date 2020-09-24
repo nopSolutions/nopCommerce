@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that check whether form parameter value equals passed value and return result as an action parameter
     /// </summary>
-    public class ParameterBasedOnFormNameAndValueAttribute : TypeFilterAttribute
+    public sealed class ParameterBasedOnFormNameAndValueAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName) 
             : base(typeof(ParameterBasedOnFormNameAndValueFilter))
         {
-            this.Arguments = new object[] { formKeyName, formValue, actionParameterName };
+            Arguments = new object[] { formKeyName, formValue, actionParameterName };
         }
 
         #endregion
@@ -44,9 +44,9 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public ParameterBasedOnFormNameAndValueFilter(string formKeyName, string formValue, string actionParameterName)
             {
-                this._formKeyName = formKeyName;
-                this._formValue = formValue;
-                this._actionParameterName = actionParameterName;
+                _formKeyName = formKeyName;
+                _formValue = formValue;
+                _actionParameterName = actionParameterName;
             }
 
             #endregion

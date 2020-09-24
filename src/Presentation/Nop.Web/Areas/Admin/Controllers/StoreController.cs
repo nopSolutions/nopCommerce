@@ -42,14 +42,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreModelFactory storeModelFactory,
             IStoreService storeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeModelFactory = storeModelFactory;
-            this._storeService = storeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeModelFactory = storeModelFactory;
+            _storeService = storeService;
         }
 
         #endregion
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(StoreSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _storeModelFactory.PrepareStoreListModel(searchModel);
@@ -146,7 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a store with the specified id
-            var store = _storeService.GetStoreById(id, false);
+            var store = _storeService.GetStoreById(id);
             if (store == null)
                 return RedirectToAction("List");
 
@@ -164,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a store with the specified id
-            var store = _storeService.GetStoreById(model.Id, false);
+            var store = _storeService.GetStoreById(model.Id);
             if (store == null)
                 return RedirectToAction("List");
 
@@ -204,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a store with the specified id
-            var store = _storeService.GetStoreById(id, false);
+            var store = _storeService.GetStoreById(id);
             if (store == null)
                 return RedirectToAction("List");
 
@@ -224,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _settingService.DeleteSettings(settingsToDelete);
 
                 //when we had two stores and now have only one store, we also should delete all "per store" settings
-                var allStores = _storeService.GetAllStores(false);
+                var allStores = _storeService.GetAllStores();
                 if (allStores.Count == 1)
                 {
                     settingsToDelete = _settingService

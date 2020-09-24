@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -21,7 +20,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
@@ -36,7 +34,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public ReturnRequestController(ICustomerActivityService customerActivityService,
-            ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
@@ -46,16 +43,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             IReturnRequestService returnRequestService,
             IWorkflowMessageService workflowMessageService)
         {
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
-            this._returnRequestModelFactory = returnRequestModelFactory;
-            this._returnRequestService = returnRequestService;
-            this._workflowMessageService = workflowMessageService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _orderService = orderService;
+            _permissionService = permissionService;
+            _returnRequestModelFactory = returnRequestModelFactory;
+            _returnRequestService = returnRequestService;
+            _workflowMessageService = workflowMessageService;
         }
 
         #endregion
@@ -108,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ReturnRequestSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _returnRequestModelFactory.PrepareReturnRequestListModel(searchModel);
@@ -148,7 +144,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(returnRequest.Customer);
+                
+                _returnRequestService.UpdateReturnRequest(returnRequest);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditReturnRequest",
@@ -179,13 +176,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            if (orderItem == null)
+            if (orderItem is null)
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
 
-            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+
+            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, order);
             if (queuedEmailIds.Any())
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
 
@@ -221,8 +220,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "return request" tab
-            SaveSelectedTabName("tab-returnrequest");
+            //select an appropriate panel
+            SaveSelectedPanelName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");
@@ -232,7 +231,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _returnRequestModelFactory.PrepareReturnRequestReasonListModel(searchModel);
@@ -318,10 +317,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestReasonList");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("ReturnRequestReasonEdit", new { id = returnRequestReason.Id });
             }
 
@@ -358,8 +354,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select "return request" tab
-            SaveSelectedTabName("tab-returnrequest");
+            //select an appropriate panel
+            SaveSelectedPanelName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");
@@ -369,7 +365,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _returnRequestModelFactory.PrepareReturnRequestActionListModel(searchModel);
@@ -455,10 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("ReturnRequestActionList");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("ReturnRequestActionEdit", new { id = returnRequestAction.Id });
             }
 

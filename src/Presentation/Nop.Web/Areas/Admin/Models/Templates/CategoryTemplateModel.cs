@@ -1,6 +1,4 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Templates;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Templates
@@ -8,7 +6,6 @@ namespace Nop.Web.Areas.Admin.Models.Templates
     /// <summary>
     /// Represents a category template model
     /// </summary>
-    [Validator(typeof(CategoryTemplateValidator))]
     public partial class CategoryTemplateModel : BaseNopEntityModel
     {
         #region Properties

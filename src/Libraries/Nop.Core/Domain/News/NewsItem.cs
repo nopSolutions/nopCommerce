@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Localization;
+﻿using System;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 
@@ -11,8 +9,6 @@ namespace Nop.Core.Domain.News
     /// </summary>
     public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported
     {
-        private ICollection<NewsComment> _newsComments;
-
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
@@ -77,19 +73,5 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the news comments
-        /// </summary>
-        public virtual ICollection<NewsComment> NewsComments
-        {
-            get => _newsComments ?? (_newsComments = new List<NewsComment>());
-            protected set => _newsComments = value;
-        }
-        
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

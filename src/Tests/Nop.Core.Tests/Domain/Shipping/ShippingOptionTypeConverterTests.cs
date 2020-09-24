@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
+using FluentAssertions;
 using Nop.Core.Domain.Shipping;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Shipping
@@ -16,14 +16,14 @@ namespace Nop.Core.Tests.Domain.Shipping
         }
 
         [Test]
-        public void Can_get_type_converter()
+        public void CanGetTypeConverter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(ShippingOption));
-            converter.GetType().ShouldEqual(typeof(ShippingOptionTypeConverter));
+            converter.GetType().Should().Be(typeof(ShippingOptionTypeConverter));
         }
 
         [Test]
-        public void Can_convert_shippingOption_to_string_and_back()
+        public void CanConvertShippingOptionToStringAndBack()
         {
             var shippingOptionInput = new ShippingOption
             {
@@ -36,11 +36,11 @@ namespace Nop.Core.Tests.Domain.Shipping
             var result = converter.ConvertTo(shippingOptionInput, typeof(string)) as string;
 
             var shippingOptionOutput = converter.ConvertFrom(result) as ShippingOption;
-            shippingOptionOutput.ShouldNotBeNull();
-            shippingOptionOutput.Name.ShouldEqual("1");
-            shippingOptionOutput.Description.ShouldEqual("2");
-            shippingOptionOutput.Rate.ShouldEqual(3.57M);
-            shippingOptionOutput.ShippingRateComputationMethodSystemName.ShouldEqual("4");
+            shippingOptionOutput.Should().NotBeNull();
+            shippingOptionOutput.Name.Should().Be("1");
+            shippingOptionOutput.Description.Should().Be("2");
+            shippingOptionOutput.Rate.Should().Be(3.57M);
+            shippingOptionOutput.ShippingRateComputationMethodSystemName.Should().Be("4");
         }
     }
 }

@@ -14,8 +14,6 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -68,32 +66,31 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._aclService = aclService;
-            this._catalogModelFactory = catalogModelFactory;
-            this._categoryService = categoryService;
-            this._customerActivityService = customerActivityService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._permissionService = permissionService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._vendorService = vendorService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _catalogModelFactory = catalogModelFactory;
+            _categoryService = categoryService;
+            _customerActivityService = customerActivityService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _permissionService = permissionService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _productTagService = productTagService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _vendorService = vendorService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
         
         #region Categories
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
@@ -109,7 +106,8 @@ namespace Nop.Web.Controllers
                 !_storeMappingService.Authorize(category);
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories);
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
@@ -134,11 +132,28 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public virtual IActionResult GetCatalogRoot()
+        {
+            var model = _catalogModelFactory.PrepareRootCategories();
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public virtual IActionResult GetCatalogSubCategories(int id)
+        {
+            var model = _catalogModelFactory.PrepareSubCategories(id);
+
+            return Json(model);
+        }
+
         #endregion
 
         #region Manufacturers
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
@@ -154,7 +169,8 @@ namespace Nop.Web.Controllers
                 !_storeMappingService.Authorize(manufacturer);
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            if (notAvailable && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers);
+            if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
@@ -179,7 +195,6 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ManufacturerAll()
         {
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
@@ -190,7 +205,6 @@ namespace Nop.Web.Controllers
 
         #region Vendors
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
@@ -213,12 +227,11 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _catalogModelFactory.PrepareVendorAllModels();
             return View(model);
@@ -228,7 +241,6 @@ namespace Nop.Web.Controllers
 
         #region Product tags
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
@@ -239,7 +251,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductTagsAll()
         {
             var model = _catalogModelFactory.PrepareProductTagsAllModel();
@@ -250,7 +261,6 @@ namespace Nop.Web.Controllers
 
         #region Searching
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL

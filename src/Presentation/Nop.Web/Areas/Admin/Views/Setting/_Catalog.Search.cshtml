@@ -1,0 +1,129 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductSearchEnabled_OverrideForStore" asp-input="ProductSearchEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductSearchEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductSearchEnabled" />
+            <span asp-validation-for="ProductSearchEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteEnabled_OverrideForStore" asp-input="ProductSearchAutoCompleteEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductSearchAutoCompleteEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductSearchAutoCompleteEnabled" />
+            <span asp-validation-for="ProductSearchAutoCompleteEnabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ProductSearchAutoCompleteEnabled">
+        <div class="form-group advanced-setting" id="pnlProductSearchAutoCompleteNumberOfProducts">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteNumberOfProducts_OverrideForStore" asp-input="ProductSearchAutoCompleteNumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting" id="pnlShowLinkToAllResultInSearchAutoComplete">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShowLinkToAllResultInSearchAutoComplete_OverrideForStore" asp-input="ShowLinkToAllResultInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShowLinkToAllResultInSearchAutoComplete" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowLinkToAllResultInSearchAutoComplete" />
+                <span asp-validation-for="ShowLinkToAllResultInSearchAutoComplete"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting" id="pnlShowProductImagesInSearchAutoComplete">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShowProductImagesInSearchAutoComplete_OverrideForStore" asp-input="ShowProductImagesInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShowProductImagesInSearchAutoComplete" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowProductImagesInSearchAutoComplete" />
+                <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductSearchTermMinimumLength_OverrideForStore" asp-input="ProductSearchTermMinimumLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductSearchTermMinimumLength" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductSearchTermMinimumLength" />
+            <span asp-validation-for="ProductSearchTermMinimumLength"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="SearchPageAllowCustomersToSelectPageSize_OverrideForStore" asp-input="SearchPageAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="SearchPageAllowCustomersToSelectPageSize" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="SearchPageAllowCustomersToSelectPageSize" />
+            <span asp-validation-for="SearchPageAllowCustomersToSelectPageSize"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="SearchPageAllowCustomersToSelectPageSize">
+        <div class="form-group advanced-setting" id="pnlSearchPageProductsPerPage">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="SearchPageProductsPerPage_OverrideForStore" asp-input="SearchPageProductsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="SearchPageProductsPerPage" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SearchPageProductsPerPage" />
+                <span asp-validation-for="SearchPageProductsPerPage"></span>
+            </div>
+        </div>
+        <div class="form-group advanced-setting" id="pnlSearchPagePageSizeOptions">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="SearchPagePageSizeOptions_OverrideForStore" asp-input="SearchPagePageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="SearchPagePageSizeOptions" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="SearchPagePageSizeOptions" />
+                <span asp-validation-for="SearchPagePageSizeOptions"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
+        $("#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
+
+        toggleSearchPagePageSize();
+        toggleProductSearchAutoComplete();
+    });
+
+    function toggleSearchPagePageSize() {
+        if ($('#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlSearchPageProductsPerPage').hide();
+            $('#pnlSearchPagePageSizeOptions').show();
+        } else {
+            $('#pnlSearchPageProductsPerPage').show();
+            $('#pnlSearchPagePageSizeOptions').hide();
+        }
+    }
+
+    function toggleProductSearchAutoComplete() {
+        if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+            $('#pnlShowProductImagesInSearchAutoComplete').show();
+            $('#pnlShowLinkToAllResultInSearchAutoComplete').show();
+        } else {
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+            $('#pnlShowProductImagesInSearchAutoComplete').hide();
+            $('#pnlShowLinkToAllResultInSearchAutoComplete').hide();
+        }
+    }
+</script>

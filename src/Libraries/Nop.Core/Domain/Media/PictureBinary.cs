@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Media
+﻿namespace Nop.Core.Domain.Media
 {
     /// <summary>
     /// Represents a picture binary data
@@ -14,10 +14,5 @@ namespace Nop.Core.Domain.Media
         /// Gets or sets the picture identifier
         /// </summary>
         public int PictureId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the picture
-        /// </summary>
-        public virtual Picture Picture { get; set; }
     }
 }
