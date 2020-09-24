@@ -1823,7 +1823,7 @@ namespace Nop.Services.Catalog
             return GetTierPricesByProduct(product.Id)
                 .OrderBy(price => price.Quantity)
                 .FilterByStore(storeId)
-                .FilterByCustomerRole(_catalogSettings.IgnoreAcl ? Array.Empty<int>() : _customerService.GetCustomerRoleIds(customer))
+                .FilterByCustomerRole(_customerService.GetCustomerRoleIds(customer))
                 .FilterByDate()
                 .RemoveDuplicatedQuantities()
                 .ToList();
