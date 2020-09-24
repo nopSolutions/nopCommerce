@@ -152,10 +152,8 @@ namespace Nop.Tests
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            var entities = DataContext.GetTable<TEntity>()
-                .Where(predicate).ToList();
-
-            BulkDeleteEntities(entities);
+            DataContext.GetTable<TEntity>()
+                 .Where(predicate).Delete();
         }
 
         /// <summary>
