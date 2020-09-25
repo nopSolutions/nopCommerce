@@ -3246,7 +3246,7 @@ label, label + * {
 	margin: 0 0 10px;
 	border-top: 1px solid #e6e6e6;
 	background-color: #f9f9f9;
-	padding: 20px;
+    padding: 20px;
 	line-height: 26px;
 	color: #444;
 }
