@@ -2379,7 +2379,7 @@ label, label + * {
 }
 
 .attribute-squares {
-    font-size: 0;
+   font-size: 0;
   display: inline-block;
 }
 .attribute-squares li {
@@ -2799,12 +2799,12 @@ label, label + * {
   color: #444;
 }
 .compare-products-table .remove-button {
-    display: inline-block;
-    border: none;
-    background: url('../images/remove.png') right center no-repeat;
-    padding: 0 18px 0 0;
-    font-size: 12px;
-    color: #666;
+	display: inline-block;
+	border: none;
+	background: url('../images/remove.png') right center no-repeat;
+	padding: 0 18px 0 0;
+	font-size: 12px;
+	color: #666;
 }
 .compare-products-table .remove-button:hover,
 .compare-products-table .remove-button:focus {
