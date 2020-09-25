@@ -74,7 +74,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 return AccessDeniedView();
 
             //prepare model
-            var model = _storePickupPointModelFactory.PrepareStorePickupPointSearchModel(new StorePickupPointSearchModel());
+            var model = await _storePickupPointModelFactory.PrepareStorePickupPointSearchModel(new StorePickupPointSearchModel());
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         }
@@ -86,7 +86,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _storePickupPointModelFactory.PrepareStorePickupPointListModel(searchModel);
+            var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModel(searchModel);
 
             return Json(model);
         }
