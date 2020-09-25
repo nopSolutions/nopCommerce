@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pluginModel.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
+                    pluginModel.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor).Result;
                     if (pluginDescriptor.Installed)
                         PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance<IPlugin>());
 
@@ -226,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model ??= pluginDescriptor.ToPluginModel(model);
 
-                model.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
+                model.LogoUrl = await _pluginService.GetPluginLogoUrl(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
                 model.SelectedCustomerRoleIds = pluginDescriptor.LimitedToCustomerRoles;
                 var plugin = pluginDescriptor.Instance<IPlugin>();

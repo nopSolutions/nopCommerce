@@ -292,7 +292,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <returns>Logo URL</returns>
-        public virtual string GetPluginLogoUrl(PluginDescriptor pluginDescriptor)
+        public virtual async Task<string> GetPluginLogoUrl(PluginDescriptor pluginDescriptor)
         {
             var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
             if (string.IsNullOrEmpty(pluginDirectory))
@@ -304,7 +304,7 @@ namespace Nop.Services.Plugins
             if (string.IsNullOrWhiteSpace(logoExtension))
                 return null;
 
-            var storeLocation = _webHelper.GetStoreLocation();
+            var storeLocation = await _webHelper.GetStoreLocation();
             var logoUrl = $"{storeLocation}{NopPluginDefaults.PathName}/" +
                 $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
 

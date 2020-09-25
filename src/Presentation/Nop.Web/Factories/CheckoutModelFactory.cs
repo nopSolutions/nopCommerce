@@ -470,7 +470,7 @@ namespace Nop.Web.Factories
                     Name = await _localizationService.GetLocalizedFriendlyName(pm, (await _workContext.GetWorkingLanguage()).Id),
                     Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = _paymentPluginManager.GetPluginLogoUrl(pm)
+                    LogoUrl = await _paymentPluginManager.GetPluginLogoUrl(pm)
                 };
                 //payment method additional fee
                 var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);

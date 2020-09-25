@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Plugins
@@ -57,6 +58,6 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <returns>Logo URL</returns>
-        string GetPluginLogoUrl(TPlugin plugin);
+        Task<string> GetPluginLogoUrl(TPlugin plugin);
     }
 }

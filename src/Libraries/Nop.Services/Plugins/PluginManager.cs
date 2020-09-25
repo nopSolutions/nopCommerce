@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 
@@ -150,9 +151,9 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <returns>Logo URL</returns>
-        public virtual string GetPluginLogoUrl(TPlugin plugin)
+        public virtual async Task<string> GetPluginLogoUrl(TPlugin plugin)
         {
-            return _pluginService.GetPluginLogoUrl(plugin.PluginDescriptor);
+            return await _pluginService.GetPluginLogoUrl(plugin.PluginDescriptor);
         }
 
         #endregion

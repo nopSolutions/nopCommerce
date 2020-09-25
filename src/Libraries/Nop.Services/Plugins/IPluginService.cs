@@ -63,7 +63,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <returns>Logo URL</returns>
-        string GetPluginLogoUrl(PluginDescriptor pluginDescriptor);
+        Task<string> GetPluginLogoUrl(PluginDescriptor pluginDescriptor);
 
         /// <summary>
         /// Prepare plugin to the installation
