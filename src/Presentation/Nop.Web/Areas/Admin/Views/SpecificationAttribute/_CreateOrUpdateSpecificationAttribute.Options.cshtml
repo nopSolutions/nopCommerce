@@ -14,17 +14,17 @@
             {
                 new ColumnProperty(nameof(SpecificationAttributeOptionModel.Name))
                 {
-                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name").Text
+                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.Name").Text
                 },
                 new ColumnProperty(nameof(SpecificationAttributeOptionModel.DisplayOrder))
                 {
-                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder").Text,
+                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.DisplayOrder").Text,
                     Width = "100",
                     ClassName =  NopColumnClassDefaults.CenterAll
                 },
                 new ColumnProperty(nameof(SpecificationAttributeOptionModel.NumberOfAssociatedProducts))
                 {
-                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts").Text,
+                    Title = T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.Fields.NumberOfAssociatedProducts").Text,
                     Width = "250",
                     ClassName =  NopColumnClassDefaults.CenterAll
                 },
@@ -54,7 +54,7 @@
     
     <div class="panel-footer">
         <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.AddNew")
         </button>
         <input type="submit" id="btnRefresh" style="display: none" />
         <script>
@@ -73,7 +73,7 @@
 else
 {
     <div class="panel-body">
-        @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")
+        @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.SaveBeforeEdit")
     </div>
 }
 

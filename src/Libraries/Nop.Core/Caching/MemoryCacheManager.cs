@@ -28,7 +28,7 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        public MemoryCacheManager(IMemoryCache memoryCache, NopConfig nopConfig) : base(nopConfig)
+        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache) : base(appSettings)
         {
             _memoryCache = memoryCache;
         }

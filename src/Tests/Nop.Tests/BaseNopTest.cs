@@ -72,7 +72,7 @@ namespace Nop.Tests
     public abstract class BaseNopTest
     {
         private static readonly ServiceProvider _serviceProvider;
-       
+
         static BaseNopTest()
         {
             var services = new ServiceCollection();
@@ -84,26 +84,16 @@ namespace Nop.Tests
             {
                 ConnectionString = "Data Source=nopCommerceTest.sqlite;Mode=Memory;Cache=Shared"
             };
-            
+
             var mAssemblies = typeFinder.FindClassesOfType<AutoReversingMigration>()
                 .Select(t => t.Assembly)
                 .Distinct()
                 .ToArray();
 
-            var nopConfig = new NopConfig
-            {
-                DefaultCacheTime = 60,
-                ShortTermCacheTime = 3,
-                BundledFilesCacheTime = 120
-            };
-
-            //add NopConfig configuration parameters
-            services.AddSingleton(nopConfig);
-
-            Singleton<NopConfig>.Instance = nopConfig;
-
-            //add hosting configuration parameters
-            services.AddSingleton(new HostingConfig());
+            //add configuration parameters
+            var appSettings = new AppSettings();
+            services.AddSingleton(appSettings);
+            Singleton<AppSettings>.Instance = appSettings;
 
             var hostApplicationLifetime = new Mock<IHostApplicationLifetime>();
             services.AddSingleton(hostApplicationLifetime.Object);
@@ -327,7 +317,7 @@ namespace Nop.Tests
 
             _serviceProvider.GetService<INopDataProvider>().CreateDatabase(null);
             _serviceProvider.GetService<INopDataProvider>().InitializeDatabase();
-            
+
             _serviceProvider.GetService<IInstallationService>().InstallRequiredData(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword);
             _serviceProvider.GetService<IInstallationService>().InstallSampleData(NopTestsDefaults.AdminEmail);
         }
@@ -345,7 +335,7 @@ namespace Nop.Tests
         }
 
         #region Nested classes
-        
+
         protected class NopTestConventionSet : NopConventionSet
         {
             public NopTestConventionSet(INopDataProvider dataProvider) : base(dataProvider)

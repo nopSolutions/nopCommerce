@@ -16,5 +16,10 @@ namespace Nop.Services.Configuration
         public static CacheKey SettingsAllAsDictionaryCacheKey => new CacheKey("Nop.setting.all.dictionary.", NopEntityCacheDefaults<Setting>.Prefix);
 
         #endregion
+
+        /// <summary>
+        /// Gets the path to file that contains app settings
+        /// </summary>
+        public static string AppSettingsFilePath => "App_Data/appsettings.json";
     }
 }

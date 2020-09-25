@@ -32,17 +32,17 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        public RedisCacheManager(IHttpContextAccessor httpContextAccessor,
-            IRedisConnectionWrapper connectionWrapper,
-            NopConfig config) : base(config)
+        public RedisCacheManager(AppSettings appSettings,
+            IHttpContextAccessor httpContextAccessor,
+            IRedisConnectionWrapper connectionWrapper) : base(appSettings)
         {
-            if (string.IsNullOrEmpty(config.RedisConnectionString))
+            if (string.IsNullOrEmpty(appSettings.RedisConfig.ConnectionString))
                 throw new Exception("Redis connection string is empty");
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
 
-            _db = _connectionWrapper.GetDatabase(config.RedisDatabaseId ?? (int)RedisDatabaseNumber.Cache);
+            _db = _connectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Cache);
 
             _perRequestCache = new PerRequestCache(httpContextAccessor);
         }
@@ -158,7 +158,7 @@ namespace Nop.Core.Caching
             catch (RedisTimeoutException)
             {
                 //ignore the RedisTimeoutException if specified by settings
-                if (_nopConfig.IgnoreRedisTimeoutException)
+                if (_appSettings.RedisConfig.IgnoreTimeoutException)
                     return (false, default);
 
                 //or rethrow the exception

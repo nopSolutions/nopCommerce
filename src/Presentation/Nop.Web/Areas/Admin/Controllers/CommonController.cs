@@ -366,7 +366,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult RestartApplication()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance) &&
-                !_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                !_permissionService.Authorize(StandardPermissionProvider.ManagePlugins) &&
+                !_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
             {
                 return AccessDeniedView();
             }

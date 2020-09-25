@@ -8,6 +8,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Configuration;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Security
@@ -207,7 +208,7 @@ namespace Nop.Web.Framework.Security
 
                 var filePermission =
                     isOwner ? filePermissions[0] : (isInGroup ? filePermissions[1] : filePermissions[2]);
-                
+
                 return CheckUserFilePermissions(filePermission, checkRead, checkWrite, checkModify, checkDelete);
             }
             catch
@@ -245,7 +246,7 @@ namespace Nop.Web.Framework.Security
 
             return result;
         }
-        
+
         /// <summary>
         /// Gets a list of directories (physical paths) which require write permission
         /// </summary>
@@ -286,7 +287,8 @@ namespace Nop.Web.Framework.Security
             return new List<string>
             {
                 fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath),
-                fileProvider.MapPath(NopDataSettingsDefaults.FilePath)
+                fileProvider.MapPath(NopDataSettingsDefaults.FilePath),
+                fileProvider.MapPath(NopConfigurationDefaults.AppSettingsFilePath)
             };
         }
 

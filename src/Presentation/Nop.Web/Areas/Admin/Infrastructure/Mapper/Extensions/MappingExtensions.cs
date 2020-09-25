@@ -25,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
             //use AutoMapper for mapping objects
             return AutoMapperConfiguration.Mapper.Map<TDestination>(source);
         }
-        
+
         /// <summary>
         /// Execute a mapping from the source object to the existing destination object
         /// </summary>
@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
             //use AutoMapper for mapping objects
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
-        
+
         #endregion
 
         #region Methods
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <param name="entity">Entity to map from</param>
         /// <param name="model">Model to map into</param>
         /// <returns>Mapped model</returns>
-        public static TModel ToModel<TEntity, TModel>(this TEntity entity, TModel model) 
+        public static TModel ToModel<TEntity, TModel>(this TEntity entity, TModel model)
             where TEntity : BaseEntity where TModel : BaseNopEntityModel
         {
             if (entity == null)
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         #endregion
 
         #region Model-Settings mapping
-        
+
         /// <summary>
         /// Execute a mapping from the settings to a new settings model
         /// </summary>
@@ -154,6 +154,44 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
 
         #endregion
 
+        #region Model-Config mapping
+
+        /// <summary>
+        /// Execute a mapping from the configuration to a new config model
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="config">Config to map from</param>
+        /// <returns>Mapped model</returns>
+        public static TModel ToConfigModel<TModel>(this IConfig config) where TModel : BaseNopModel, IConfigModel
+        {
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+
+            return config.Map<TModel>();
+        }
+
+        /// <summary>
+        /// Execute a mapping from the model to the configuration
+        /// </summary>
+        /// <typeparam name="TConfig">Config type</typeparam>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="model">Model to map from</param>
+        /// <param name="config">Config to map into</param>
+        /// <returns>Mapped config</returns>
+        public static TConfig ToConfig<TConfig, TModel>(this TModel model, TConfig config)
+            where TConfig : class, IConfig where TModel : BaseNopModel, IConfigModel
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+
+            return model.MapTo(config);
+        }
+
+        #endregion
+
         #region Model-Plugin mapping
 
         /// <summary>
@@ -177,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions
         /// <param name="pluginDescriptor">Plugin descriptor to map from</param>
         /// <param name="model">Model to map into; pass null to map to the new model</param>
         /// <returns>Mapped model</returns>
-        public static TModel ToPluginModel<TModel>(this PluginDescriptor pluginDescriptor, TModel model = null) 
+        public static TModel ToPluginModel<TModel>(this PluginDescriptor pluginDescriptor, TModel model = null)
             where TModel : BaseNopModel, IPluginModel
         {
             if (pluginDescriptor == null)
