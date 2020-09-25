@@ -3243,12 +3243,12 @@ label, label + * {
 
 .address-list-page .info,
 .order-list-page .info {
-    margin: 0 0 10px;
-    border-top: 1px solid #e6e6e6;
-    background-color: #f9f9f9;
-    padding: 20px;
-    line-height: 26px;
-    color: #444;
+	margin: 0 0 10px;
+	border-top: 1px solid #e6e6e6;
+	background-color: #f9f9f9;
+	padding: 20px;
+	line-height: 26px;
+	color: #444;
 }
 .address-list-page .info .name,
 .order-list-page .info .name {
@@ -3365,7 +3365,7 @@ label, label + * {
 }
 
 .avatar-page .page-title {
-    margin: 0;
+	margin: 0;
 }
 .avatar-page .page-body {
 	margin: 0 0 30px;
@@ -5416,13 +5416,13 @@ label, label + * {
 /* jQuery tabs */
 
 .ui-tabs {
-    /*override jQuery UI styles, do not delete doubled properties*/
-    border: none;
-    border-radius: 0;
-    background: none;
-    padding: 0;
-    font: normal 14px Arial, Helvetica, sans-serif;
-    color: #777;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	border: none;
+	border-radius: 0;
+	background: none;
+	padding: 0;
+	font: normal 14px Arial, Helvetica, sans-serif;
+	color: #777;
 }
 .ui-widget.ui-widget-content.ui-tabs {
     border: none;
@@ -7489,12 +7489,12 @@ pre {
 	width: 600px;
 	height: 250px;
 }
-	.private-message-send-page .bb-code-editor-wrapper {
-		display: inline-block;
-		width: 400px;
-		margin: 10px 0;
-		vertical-align: middle;
-	}
+    .private-message-send-page .bb-code-editor-wrapper {
+        display: inline-block;
+        width: 400px;
+        margin: 10px 0;
+        vertical-align: middle;
+    }
 
 }
 
@@ -7573,7 +7573,6 @@ pre {
     min-width: 375px;
 }
 
-
 /*** REGISTRATION, LOGIN, ACCOUNT ***/
 
 
@@ -7582,7 +7581,6 @@ pre {
 .login-page .returning-wrapper input[type="password"] {
     width: 360px;
 }
-
 .registration-page .vat-note {
     margin-right: 385px;
 }
