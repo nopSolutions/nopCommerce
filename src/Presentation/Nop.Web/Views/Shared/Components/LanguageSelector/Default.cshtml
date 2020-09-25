@@ -6,7 +6,7 @@
 {
     <div class="language-selector">
     @{
-        var returnUrl = webHelper.GetRawUrl(Context.Request);
+        var returnUrl = await webHelper.GetRawUrl(Context.Request);
 
         if (Model.UseImages)
         {
