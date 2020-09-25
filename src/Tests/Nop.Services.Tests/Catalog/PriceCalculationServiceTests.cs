@@ -25,7 +25,7 @@ namespace Nop.Services.Tests.Catalog
 
         #region SetUp
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _customerService = GetService<ICustomerService>();

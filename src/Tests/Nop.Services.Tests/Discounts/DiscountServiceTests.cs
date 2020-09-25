@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Discounts
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _discountPluginManager = GetService<IDiscountPluginManager>();

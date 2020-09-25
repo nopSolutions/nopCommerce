@@ -11,7 +11,7 @@ namespace Nop.Core.Tests
         private HttpContext _httpContext;
         private IWebHelper _webHelper;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _webHelper = GetService<IWebHelper>();

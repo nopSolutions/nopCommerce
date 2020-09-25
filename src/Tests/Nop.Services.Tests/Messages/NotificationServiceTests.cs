@@ -17,7 +17,7 @@ namespace Nop.Services.Tests.Messages
         private ITempDataDictionaryFactory _tempDataDictionaryFactory;
         private HttpContext _httpContext;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _notificationService = GetService<INotificationService>();

@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Catalog
         private IProductAttributeFormatter _productAttributeFormatter;
         private IEnumerable<KeyValuePair<ProductAttributeMapping, IList<ProductAttributeValue>>> _productAttributeMappings;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             var productAttributeService = GetService<IProductAttributeService>();

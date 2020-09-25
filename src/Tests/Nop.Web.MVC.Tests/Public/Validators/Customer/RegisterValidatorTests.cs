@@ -14,7 +14,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
     {
         private RegisterValidator _validator;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _validator = GetService<RegisterValidator>();

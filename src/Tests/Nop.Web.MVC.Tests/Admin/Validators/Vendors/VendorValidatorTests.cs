@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
     {
         private VendorValidator _validator;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<VendorValidator>();

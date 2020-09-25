@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Logging
         private ICustomerActivityService _customerActivityService;
         private ICustomerService _customerService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _customerActivityService = GetService<ICustomerActivityService>();

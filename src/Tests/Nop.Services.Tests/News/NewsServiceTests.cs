@@ -11,7 +11,7 @@ namespace Nop.Services.Tests.News
     {
         private INewsService _newsService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _newsService = GetService<INewsService>();

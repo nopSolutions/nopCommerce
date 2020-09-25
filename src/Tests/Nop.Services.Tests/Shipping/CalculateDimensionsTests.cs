@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Shipping
         private IProductService _productService;
         private IShippingService _shippingService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _productService = GetService<IProductService>();

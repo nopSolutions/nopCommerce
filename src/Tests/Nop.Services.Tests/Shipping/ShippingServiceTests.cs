@@ -21,7 +21,7 @@ namespace Nop.Services.Tests.Shipping
 
         #region Setup
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _shippingPluginManager = GetService<IShippingPluginManager>();

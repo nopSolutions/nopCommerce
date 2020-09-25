@@ -11,7 +11,7 @@ namespace Nop.Core.Tests.Caching
     {
         private MemoryCacheManager _staticCacheManager;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _staticCacheManager = GetService<IStaticCacheManager>() as MemoryCacheManager;

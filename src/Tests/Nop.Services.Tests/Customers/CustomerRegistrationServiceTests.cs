@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Customers
         private IEncryptionService _encryptionService;
         private ICustomerRegistrationService _customerRegistrationService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _customerService = GetService<ICustomerService>();

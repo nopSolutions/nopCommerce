@@ -16,7 +16,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         private ILocalizationService _localizationService;
         private IStateProvinceService _stateProvinceService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _localizationService = GetService<ILocalizationService>();

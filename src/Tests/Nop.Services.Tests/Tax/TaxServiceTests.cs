@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Tax
         private bool _defaultAdminRoleTaxExempt;
         private bool _defaultAdminTaxExempt;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _taxService = GetService<ITaxService>();
@@ -42,7 +42,7 @@ namespace Nop.Services.Tests.Tax
             _defaultAdminTaxExempt = admin.IsTaxExempt;
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _taxSettings.EuVatAssumeValid = _defaultEuVatAssumeValid;

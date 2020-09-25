@@ -90,7 +90,7 @@ namespace Nop.Services.Tests.Orders
 
         #endregion
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             TypeDescriptor.AddAttributes(typeof(List<int>),
@@ -132,7 +132,7 @@ namespace Nop.Services.Tests.Orders
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, "Payments.TestMethod", 1);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             var settingService = GetService<ISettingService>();
@@ -258,6 +258,9 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void ShippingShouldBeFreeWhenAllShoppingCartItemsAreMarkedAsFreeShipping()
         {
+            TearDown();
+            SetUp();
+
             var product = _productService.GetProductBySku("FR_451_RB");
             product.IsFreeShipping = true;
             _productService.UpdateProduct(product);
@@ -469,9 +472,13 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void CanGetShoppingCartTotalWithoutShippingRequired()
         {
+            TearDown();
+            SetUp();
+
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
+
             _settingService.SaveSetting(_taxSettings);
 
             TestPaymentMethod.AdditionalHandlingFee = 20M;

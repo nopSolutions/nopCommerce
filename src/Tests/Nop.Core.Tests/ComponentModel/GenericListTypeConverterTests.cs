@@ -9,7 +9,7 @@ namespace Nop.Core.Tests.ComponentModel
     [TestFixture]
     public class GenericListTypeConverter
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             TypeDescriptor.AddAttributes(typeof(List<int>),

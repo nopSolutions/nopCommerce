@@ -18,7 +18,7 @@ namespace Nop.Services.Tests.Orders
         private CheckoutAttribute _ca1, _ca2, _ca3;
         private CheckoutAttributeValue _cav11, _cav12, _cav21, _cav22;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _checkoutAttributeParser = GetService<ICheckoutAttributeParser>();
@@ -94,7 +94,7 @@ namespace Nop.Services.Tests.Orders
             _checkoutAttributeService.InsertCheckoutAttribute(_ca3);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _checkoutAttributeService.DeleteCheckoutAttributeValue(_cav11);

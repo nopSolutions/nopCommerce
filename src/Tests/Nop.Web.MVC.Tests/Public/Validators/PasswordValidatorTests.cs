@@ -13,7 +13,6 @@ namespace Nop.Web.MVC.Tests.Public.Validators
     [TestFixture]
     public class PasswordValidatorTests : BaseNopTest
     {
-        private TestValidator _validator;
         private Person _person;
         private ChangePasswordValidator _changePasswordValidator;
         private PasswordRecoveryConfirmValidator _passwordRecoveryConfirmValidator;
@@ -22,7 +21,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
         private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _customerSettings = new CustomerSettings
@@ -40,102 +39,111 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             _registerValidator = new RegisterValidator(_localizationService, _stateProvinceService, _customerSettings);
             _passwordRecoveryConfirmValidator = new PasswordRecoveryConfirmValidator(_localizationService, _customerSettings);
 
-            _validator = new TestValidator();
             _person = new Person();
         }
 
         [Test]
         public void IsValidTestsLowercase()
         {
+            var validator = new TestValidator();
+
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
                 PasswordRequireLowercase = true
             };
 
-            _validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
+            validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "NOP123");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "NOP123");
 
             //ShouldNotHaveValidationError
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nop123");
+            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nop123");
         }
 
         [Test]
         public void IsValidTestsUppercase()
         {
+            var validator = new TestValidator();
+
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
                 PasswordRequireUppercase = true                
             };
 
-            _validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
+            validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");           
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");           
 
             //ShouldNotHaveValidationError
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop");
+            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop");
         }
 
         [Test]
         public void IsValidTestsDigit()
         {
+            var validator = new TestValidator();
+
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
                 PasswordRequireDigit = true
             };
 
-            _validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
+            validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
 
             //ShouldHaveValidationError
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
 
             //ShouldNotHaveValidationError
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop1");
+            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop1");
         }
 
         [Test]
         public void IsValidTestsNonAlphanumeric()
         {
+            var validator = new TestValidator();
+
             var cs = new CustomerSettings
             {
                 PasswordMinLength = 3,
                 PasswordRequireNonAlphanumeric = true
             };
 
-            _validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
+            validator.RuleFor(x => x.Password).IsPassword(_localizationService, cs);
             
             //ShouldHaveValidationError
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nop");
 
             //ShouldNotHaveValidationError
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop#");
+            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "Nop#");
         }
 
         [Test]
         public void IsValidTestsAllRules()
         {
+            var validator = new TestValidator();
+
             //Example:  (?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$
-            _validator.RuleFor(x => x.Password).IsPassword(_localizationService, _customerSettings);
+            validator.RuleFor(x => x.Password).IsPassword(_localizationService, _customerSettings);
 
             //ShouldHaveValidationError
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = string.Empty);
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "123");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "12345678");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce123");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce123$");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "NOPCOMMERCE123$");
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123~");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = string.Empty);
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "123");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "12345678");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce123");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopcommerce123$");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "NOPCOMMERCE123$");
+            validator.ShouldHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123~");
 
             //ShouldNotHaveValidationError
-            _validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123$");            
+            validator.ShouldNotHaveValidationErrorFor(x => x.Password, _person.Password = "nopCommerce123$");            
         }
         
         [Test]

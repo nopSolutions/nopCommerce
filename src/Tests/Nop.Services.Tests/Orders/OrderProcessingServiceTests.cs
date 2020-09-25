@@ -16,15 +16,15 @@ namespace Nop.Services.Tests.Orders
     {
         private IOrderService _orderService;
         private OrderProcessingService _orderProcessingService;
-
-        [SetUp]
+        
+        [OneTimeSetUp]
         public void SetUp()
         {
             _orderService = GetService<IOrderService>();
             _orderProcessingService = GetService<OrderProcessingService>();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             TestPaymentMethod.TestSupportRefund = false;

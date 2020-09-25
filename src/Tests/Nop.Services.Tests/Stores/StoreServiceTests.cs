@@ -10,7 +10,7 @@ namespace Nop.Services.Tests.Stores
     {
         private IStoreService _storeService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _storeService = GetService<IStoreService>();

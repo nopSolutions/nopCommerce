@@ -13,7 +13,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
     {
         private LoginValidator _validator;
         
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<LoginValidator>();

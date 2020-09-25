@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Messages
         private MessageTemplatesSettings _messageTemplatesSettings;
         private bool _defaultCaseInvariantReplacement;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _messageTemplatesSettings = GetService<MessageTemplatesSettings>();
@@ -25,7 +25,7 @@ namespace Nop.Services.Tests.Messages
             _tokenizer = GetService<ITokenizer>();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _messageTemplatesSettings.CaseInvariantReplacement = _defaultCaseInvariantReplacement;

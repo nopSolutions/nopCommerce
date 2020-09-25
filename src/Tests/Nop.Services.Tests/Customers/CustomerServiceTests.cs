@@ -11,7 +11,7 @@ namespace Nop.Services.Tests.Customers
     {
         private ICustomerService _customerService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _customerService = GetService<ICustomerService>();
@@ -20,7 +20,7 @@ namespace Nop.Services.Tests.Customers
             _customerService.UpdateCustomerRole(moderator);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             var moderator = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.ForumModeratorsRoleName);

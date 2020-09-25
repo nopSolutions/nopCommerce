@@ -11,7 +11,7 @@ namespace Nop.Services.Tests.Blogs
     {
         private IBlogService _blogService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _blogService = GetService<IBlogService>();

@@ -17,7 +17,7 @@ namespace Nop.Services.Tests.Catalog
 
         #region SetUp
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _productService = GetService<IProductService>();
@@ -44,7 +44,7 @@ namespace Nop.Services.Tests.Catalog
             });
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             var product = _productService.GetProductById(1);

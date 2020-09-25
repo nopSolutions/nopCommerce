@@ -9,7 +9,7 @@ namespace Nop.Services.Tests.Seo
     {
         private IUrlRecordService _urlRecordService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _urlRecordService = GetService<IUrlRecordService>();

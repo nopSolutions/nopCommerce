@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Directory
 
         private Currency _currencyUsd, _currencyRur, _currencyEur;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _currencyService = GetService<ICurrencyService>();

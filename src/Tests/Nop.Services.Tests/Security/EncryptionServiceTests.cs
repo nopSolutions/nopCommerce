@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Security
         private ISettingService _settingService;
         private string _defaultEncryptionKey;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _securitySettings = GetService<SecuritySettings>();
@@ -27,7 +27,7 @@ namespace Nop.Services.Tests.Security
             _encryptionService = GetService<IEncryptionService>();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _securitySettings.EncryptionKey = _defaultEncryptionKey;

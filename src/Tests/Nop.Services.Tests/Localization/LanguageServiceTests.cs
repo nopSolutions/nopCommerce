@@ -10,7 +10,7 @@ namespace Nop.Services.Tests.Localization
     {
         private ILanguageService _languageService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _languageService = GetService<ILanguageService>();

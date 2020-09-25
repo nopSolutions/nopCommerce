@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Catalog
         private Currency _dollar;
         private Currency _pound;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _currencySettings = GetService<CurrencySettings>();

@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
     {
         private CategoryValidator _validator;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<CategoryValidator>();

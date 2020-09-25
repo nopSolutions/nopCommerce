@@ -9,7 +9,7 @@ namespace Nop.Core.Tests.Domain.Shipping
     [TestFixture]
     public class ShippingOptionListTypeConverterTests
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             TypeDescriptor.AddAttributes(typeof(List<ShippingOption>),

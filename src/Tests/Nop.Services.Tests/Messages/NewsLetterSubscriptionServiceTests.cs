@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Messages
     {
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _newsLetterSubscriptionService = GetService<INewsLetterSubscriptionService>();

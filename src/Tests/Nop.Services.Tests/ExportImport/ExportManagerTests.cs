@@ -52,7 +52,7 @@ namespace Nop.Services.Tests.ExportImport
 
         #region Setup
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _catalogSettings = GetService<CatalogSettings>();
@@ -81,7 +81,7 @@ namespace Nop.Services.Tests.ExportImport
                     true);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             GetService<IGenericAttributeService>()

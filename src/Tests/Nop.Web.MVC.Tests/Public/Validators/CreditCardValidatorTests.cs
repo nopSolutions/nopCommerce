@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
     {
         private TestValidator _validator;
         
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");

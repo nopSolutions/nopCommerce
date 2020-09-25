@@ -12,7 +12,7 @@ using NUnit.Framework;
         private GiftCard _giftCard1;
         private GiftCard _giftCard2;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _giftCardService = GetService<IGiftCardService>();
@@ -24,7 +24,7 @@ using NUnit.Framework;
             _giftCardService.InsertGiftCard(_giftCard2);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _giftCardService.DeleteGiftCard(_giftCard1);

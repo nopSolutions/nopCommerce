@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Directory
         private MeasureDimension _measureDimensionInches, _measureDimensionFeet, _measureDimensionMeters, _measureDimensionMillimetres;
         private MeasureWeight _measureWeightOunce, _measureWeightLb, _measureWeightKg, _measureWeightGrams;
         
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _measureService = GetService<IMeasureService>();

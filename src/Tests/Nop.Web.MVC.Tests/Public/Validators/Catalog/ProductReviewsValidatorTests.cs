@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
     {
         private ProductReviewsValidator _validator;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _validator = GetService<ProductReviewsValidator>();

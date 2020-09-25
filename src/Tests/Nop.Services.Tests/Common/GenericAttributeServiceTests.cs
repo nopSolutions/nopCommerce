@@ -9,7 +9,7 @@ namespace Nop.Services.Tests.Common
     {
         private IGenericAttributeService _genericAttributeService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _genericAttributeService = GetService<IGenericAttributeService>();

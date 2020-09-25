@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Payments
         private IPaymentPluginManager _paymentPluginManager;
         private IPaymentService _paymentService;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _paymentService = GetService<IPaymentService>();

@@ -39,7 +39,7 @@ namespace Nop.Services.Tests.Helpers
         private bool _defaultAllowCustomersToSetTimeZone;
         private string _defaultDefaultStoreTimeZoneId;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _genericAttributeService = GetService<IGenericAttributeService>();
@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Helpers
             _gmtPlus7KrasnoyarskTimeZoneId = "Asia/Krasnoyarsk"; //(GMT+07:00) Krasnoyarsk;
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _genericAttributeService.SaveAttribute(_customer, NopCustomerDefaults.TimeZoneIdAttribute, _defaultTimeZone);
