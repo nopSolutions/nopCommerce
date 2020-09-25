@@ -175,30 +175,26 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         }
 
         /// <summary>
-        /// Prepare script to init Facebook Pixel
+        /// Prepare user info (used with Advanced Matching feature)
         /// </summary>
-        /// <param name="configurations">Enabled configurations</param>
-        /// <returns>Script code</returns>
-        private string PrepareInitScript(IList<FacebookPixelConfiguration> configurations)
+        /// <returns>User info</returns>
+        private async Task<string> GetUserObject()
         {
-            //local function to prepare user info (used with Advanced Matching feature)
-            async Task<string> getUserObject()
-            {
-                //prepare user object
-                var email = (await _workContext.GetCurrentCustomer()).Email;
-                var firstName = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.FirstNameAttribute);
-                var lastName = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.LastNameAttribute);
-                var phone = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.PhoneAttribute);
-                var gender = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.GenderAttribute);
-                var birthday = await _genericAttributeService.GetAttribute<DateTime?>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.DateOfBirthAttribute);
-                var city = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CityAttribute);
-                var countryId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CountryIdAttribute);
-                var countryName = (await _countryService.GetCountryById(countryId))?.TwoLetterIsoCode;
-                var stateId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.StateProvinceIdAttribute);
-                var stateName = (await _stateProvinceService.GetStateProvinceById(stateId))?.Abbreviation;
-                var zipcode = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.ZipPostalCodeAttribute);
+            //prepare user object
+            var email = (await _workContext.GetCurrentCustomer()).Email;
+            var firstName = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.FirstNameAttribute);
+            var lastName = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.LastNameAttribute);
+            var phone = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.PhoneAttribute);
+            var gender = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.GenderAttribute);
+            var birthday = await _genericAttributeService.GetAttribute<DateTime?>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.DateOfBirthAttribute);
+            var city = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CityAttribute);
+            var countryId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CountryIdAttribute);
+            var countryName = (await _countryService.GetCountryById(countryId))?.TwoLetterIsoCode;
+            var stateId = await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.StateProvinceIdAttribute);
+            var stateName = (await _stateProvinceService.GetStateProvinceById(stateId))?.Abbreviation;
+            var zipcode = await _genericAttributeService.GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.ZipPostalCodeAttribute);
 
-                var userObject = FormatEventObject(new List<(string Name, object Value)>
+            var userObject = FormatEventObject(new List<(string Name, object Value)>
                 {
                     ("em", email?.ToLower()),
                     ("fn", firstName?.ToLower()),
@@ -213,16 +209,23 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                     ("cn", countryName?.ToLower())
                 });
 
-                return userObject;
-            }
+            return userObject;
+        }
 
+        /// <summary>
+        /// Prepare script to init Facebook Pixel
+        /// </summary>
+        /// <param name="configurations">Enabled configurations</param>
+        /// <returns>Script code</returns>
+        private string PrepareInitScript(IList<FacebookPixelConfiguration> configurations)
+        {
             //prepare init script
             return FormatScript(configurations, configuration =>
             {
                 var additionalParameter = configuration.PassUserProperties
                     ? $", {{uid: '{_workContext.GetCurrentCustomer().Result.CustomerGuid}'}}"
                     : (configuration.UseAdvancedMatching
-                    ? $", {getUserObject()}"
+                    ? $", {GetUserObject().Result}"
                     : null);
                 return $"fbq('init', '{configuration.PixelId}'{additionalParameter});";
             });
@@ -513,7 +516,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             s = b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t, s)
         }}(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-        {PrepareScripts(configurations)}
+        {await PrepareScripts(configurations)}
     </script>
     <!-- End Facebook Pixel Code -->
     ";
