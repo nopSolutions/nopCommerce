@@ -3005,8 +3005,8 @@ label, label + * {
     display: inline;
 } 
 .date-of-birth select {
-     width: 31%; /*always single line*/
-     max-width: 126px;
+	width: 31%; /*always single line*/
+	max-width: 126px;
 }
 .date-of-birth select + select {
 	margin: 0 10px 0 0;
