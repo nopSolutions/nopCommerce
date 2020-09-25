@@ -2359,10 +2359,7 @@ label, label + * {
 
 .attribute-squares {
 	font-size: 0;
-<<<<<<< HEAD
-=======
   display: inline-block;
->>>>>>> 9cfaffae4d6338c78ed3c01a023d42143c84a51e
 }
 .attribute-squares li {
 	display: inline-block;
@@ -2776,21 +2773,12 @@ label, label + * {
   color: #444;
 }
 .compare-products-table .remove-button {
-<<<<<<< HEAD
-	display: inline-block;
-	border: none;
-	background: url('../images/remove.png') left center no-repeat;
-	padding: 0 0 0 18px;
-	font-size: 12px;
-	color: #666;
-=======
   display: inline-block;
   border: none;
   background: url('../images/remove.png') left center no-repeat;
   padding: 0 0 0 18px;
   font-size: 12px;
   color: #666;
->>>>>>> 9cfaffae4d6338c78ed3c01a023d42143c84a51e
 }
 .compare-products-table .remove-button:hover,
 .compare-products-table .remove-button:focus {
