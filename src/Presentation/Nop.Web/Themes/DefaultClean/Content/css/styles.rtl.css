@@ -208,7 +208,7 @@ label, label + * {
 .topic-page ul,
 .post-body ul {
 	margin: 12px 0;
-	padding: 0 0 0 36px;
+	padding: 0 36px 0 0;
 	list-style: disc;
 }
 .category-description ol,
@@ -218,7 +218,7 @@ label, label + * {
 .topic-page ol,
 .post-body ol {
 	margin: 12px 0;
-	padding: 0 0 0 36px;
+	padding: 0 36px 0 0;
 	list-style: decimal;
 }
 .category-description p,
@@ -588,7 +588,7 @@ label, label + * {
 
 .please-wait {
 	background: url('../images/ajax-loader-small.gif') no-repeat;
-	padding-right: 20px;
+    padding-right: 20px;
 	font-size: 14px;
 }
 
@@ -1556,8 +1556,8 @@ label, label + * {
 	margin: 0 0 10px;
 }
 .item-box .rating {
-	background: url('../images/rating1.png') repeat-x;
-	width: 95px;
+    background: url('../images/rating1.png') repeat-x;
+    width: 95px;
     height: 14px;
 	-ms-transform: scaleX(-1);
 	-webkit-transform: scaleX(-1);
@@ -1566,7 +1566,7 @@ label, label + * {
 .item-box .rating div {
 	background: url('../images/rating2.png') repeat-x;
     height: 14px;
-	margin-right: auto;
+    margin-right: auto;
 }
 .item-box .description {
 	display: none;
@@ -1880,7 +1880,7 @@ label, label + * {
 .product-review-box .rating div {
 	height: 14px; 
 	background: url('../images/rating2.png') repeat-x;
-	margin-right: auto;
+    margin-right: auto;
 }
 .product-review-links a {
 	display: inline-block;
@@ -1897,7 +1897,7 @@ label, label + * {
 }
 .overview .value,
 .variant-overview .value {
-    color: #444;
+	color: #444;
 }
 .overview .value a,
 .variant-overview .value a {
@@ -1987,12 +1987,12 @@ label, label + * {
 }
 .overview .free-shipping, 
 .variant-overview .free-shipping {
-	display: inline-block;
-	margin: 0 0 10px;
-	background: url('../images/shipping.png') right center no-repeat;
-	padding: 2px 28px 2px 0;
-	font-weight: bold;
-	color: #444;
+    display: inline-block;
+    margin: 0 0 10px;
+    background: url('../images/shipping.png') right center no-repeat;
+    padding: 2px 28px 2px 0;
+    font-weight: bold;
+    color: #444;
 }
 .overview .free-shipping.invisible,
 .variant-overview .free-shipping.invisible {
@@ -2379,7 +2379,7 @@ label, label + * {
 }
 
 .attribute-squares {
-	font-size: 0;
+    font-size: 0;
   display: inline-block;
 }
 .attribute-squares li {
@@ -2534,7 +2534,7 @@ label, label + * {
     width: auto;
     background: #f0f0f0 no-repeat 100% 5%;
     border: #c0c0c0 1px dotted;
-    text-align: right;	
+    text-align: right;    
     padding: 10px 10px 5px 5px;
     position: absolute;
     z-index: 1;    
@@ -2799,12 +2799,12 @@ label, label + * {
   color: #444;
 }
 .compare-products-table .remove-button {
-  display: inline-block;
-  border: none;
-  background: url('../images/remove.png') right center no-repeat;
-  padding: 0 18px 0 0;
-  font-size: 12px;
-  color: #666;
+    display: inline-block;
+    border: none;
+    background: url('../images/remove.png') right center no-repeat;
+    padding: 0 18px 0 0;
+    font-size: 12px;
+    color: #666;
 }
 .compare-products-table .remove-button:hover,
 .compare-products-table .remove-button:focus {
@@ -3005,8 +3005,8 @@ label, label + * {
     display: inline;
 } 
 .date-of-birth select {
-    width: 31%; /*always single line*/
-    max-width: 126px;
+     width: 31%; /*always single line*/
+     max-width: 126px;
 }
 .date-of-birth select + select {
 	margin: 0 10px 0 0;
