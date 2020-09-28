@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
@@ -26,13 +32,22 @@ namespace Nop.Services.Customers
 
         private readonly CustomerSettings _customerSettings;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly INopDataProvider _dataProvider;
         private readonly IRepository<Address> _customerAddressRepository;
+        private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
+        private readonly IRepository<ForumPost> _forumPostRepository;
+        private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
+        private readonly IRepository<NewsComment> _newsCommentRepository;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<ProductReview> _productReviewRepository;
+        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
+        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
         private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
@@ -44,13 +59,22 @@ namespace Nop.Services.Customers
 
         public CustomerService(CustomerSettings customerSettings,
             IGenericAttributeService genericAttributeService,
+            INopDataProvider dataProvider,
             IRepository<Address> customerAddressRepository,
+            IRepository<BlogComment> blogCommentRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerAddressMapping> customerAddressMappingRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<ForumPost> forumPostRepository,
+            IRepository<ForumTopic> forumTopicRepository,
             IRepository<GenericAttribute> gaRepository,
+            IRepository<NewsComment> newsCommentRepository,
+            IRepository<Order> orderRepository,
+            IRepository<ProductReview> productReviewRepository,
+            IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
+            IRepository<PollVotingRecord> pollVotingRecordRepository,
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
@@ -58,13 +82,22 @@ namespace Nop.Services.Customers
         {
             _customerSettings = customerSettings;
             _genericAttributeService = genericAttributeService;
+            _dataProvider = dataProvider;
             _customerAddressRepository = customerAddressRepository;
+            _blogCommentRepository = blogCommentRepository;
             _customerRepository = customerRepository;
             _customerAddressMappingRepository = customerAddressMappingRepository;
             _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             _customerPasswordRepository = customerPasswordRepository;
             _customerRoleRepository = customerRoleRepository;
+            _forumPostRepository = forumPostRepository;
+            _forumTopicRepository = forumTopicRepository;
             _gaRepository = gaRepository;
+            _newsCommentRepository = newsCommentRepository;
+            _orderRepository = orderRepository;
+            _productReviewRepository = productReviewRepository;
+            _productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
+            _pollVotingRecordRepository = pollVotingRecordRepository;
             _shoppingCartRepository = shoppingCartRepository;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -319,14 +352,14 @@ namespace Nop.Services.Customers
             //filter customers by billing country
             if (countryId > 0)
                 customers = from c in customers
-                    join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
-                    where a.CountryId == countryId
-                    select c;
+                            join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
+                            where a.CountryId == countryId
+                            select c;
 
             var customersWithCarts = from c in customers
-                join item in items on c.Id equals item.CustomerId
-                orderby c.Id
-                select c;
+                                     join item in items on c.Id equals item.CustomerId
+                                     orderby c.Id
+                                     select c;
 
             return new PagedList<Customer>(customersWithCarts.Distinct(), pageIndex, pageSize);
         }
@@ -646,19 +679,47 @@ namespace Nop.Services.Customers
         /// <returns>Number of deleted customers</returns>
         public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
-            //prepare parameters
-            var pOnlyWithoutShoppingCart = SqlParameterHelper.GetBooleanParameter("OnlyWithoutShoppingCart", onlyWithoutShoppingCart);
-            var pCreatedFromUtc = SqlParameterHelper.GetDateTimeParameter("CreatedFromUtc", createdFromUtc);
-            var pCreatedToUtc = SqlParameterHelper.GetDateTimeParameter("CreatedToUtc", createdToUtc);
-            var pTotalRecordsDeleted = SqlParameterHelper.GetOutputInt32Parameter("TotalRecordsDeleted");
+            var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
-            //invoke stored procedure
-            _customerRepository.EntityFromSql("DeleteGuests", pOnlyWithoutShoppingCart,
-                pCreatedFromUtc,
-                pCreatedToUtc,
-                pTotalRecordsDeleted);
+            var allGuestCustomers = from guest in _customerRepository.Table
+                                    join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
+                                    where ccm.CustomerRoleId == guestRole.Id
+                                    select guest;
 
-            var totalRecordsDeleted = pTotalRecordsDeleted.Value != DBNull.Value ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
+            var guestsToDelete = from guest in _customerRepository.Table
+                                 join g in allGuestCustomers on guest.Id equals g.Id
+                                 from sCart in _shoppingCartRepository.Table.Where(sci => sci.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from order in _orderRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from blogComment in _blogCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from newsComment in _newsCommentRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from productReview in _productReviewRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from productReviewHelpfulness in _productReviewHelpfulnessRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from pollVotingRecord in _pollVotingRecordRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from forumTopic in _forumTopicRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 from forumPost in _forumPostRepository.Table.Where(o => o.CustomerId == guest.Id).DefaultIfEmpty()
+                                 where (!onlyWithoutShoppingCart || sCart == null) &&
+                                     order == null && blogComment == null && newsComment == null && productReview == null && productReviewHelpfulness == null &&
+                                     pollVotingRecord == null && forumTopic == null && forumPost == null &&
+                                     !guest.IsSystemAccount &&
+                                     (createdFromUtc == null || guest.CreatedOnUtc > createdFromUtc) &&
+                                     (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
+                                 select new { CustomerId = guest.Id };
+
+            using var tmpGuests = _dataProvider.CreateTempDataStorage("tmp_guestsToDelete", guestsToDelete);
+            using var tmpAddresses = _dataProvider.CreateTempDataStorage("tmp_guestsAddressesToDelete",
+                _customerAddressMappingRepository.Table
+                    .Where(ca => tmpGuests.Any(c => c.CustomerId == ca.CustomerId))
+                    .Select(ca => new { AddressId = ca.AddressId }));
+
+            //delete guests
+            var totalRecordsDeleted = _customerRepository.Table.Where(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id)).Delete();
+
+            //delete attributes
+            _gaRepository.Table.Where(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer)).Delete();
+
+            //delete m -> m addresses
+            _customerAddressRepository.Table.Where(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id)).Delete();
+
             return totalRecordsDeleted;
         }
 
@@ -1073,9 +1134,9 @@ namespace Nop.Services.Customers
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
 
             var query = from cr in _customerRoleRepository.Table
-                orderby cr.Id
-                where cr.SystemName == systemName
-                select cr;
+                        orderby cr.Id
+                        where cr.SystemName == systemName
+                        select cr;
             var customerRole = _staticCacheManager.Get(key, query.FirstOrDefault);
 
             return customerRole;
@@ -1117,10 +1178,10 @@ namespace Nop.Services.Customers
             return _customerRoleRepository.GetAll(query =>
             {
                 return from cr in query
-                    join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                    where crm.CustomerId == customer.Id &&
-                          (showHidden || cr.Active)
-                    select cr;
+                       join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+                       where crm.CustomerId == customer.Id &&
+                             (showHidden || cr.Active)
+                       select cr;
             }, cache => cache.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRolesCacheKey, customer, showHidden));
         }
 
@@ -1134,9 +1195,9 @@ namespace Nop.Services.Customers
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesAllCacheKey, showHidden);
 
             var query = from cr in _customerRoleRepository.Table
-                orderby cr.Name
-                where showHidden || cr.Active
-                select cr;
+                        orderby cr.Name
+                        where showHidden || cr.Active
+                        select cr;
 
             var customerRoles = _staticCacheManager.Get(key, query.ToList);
 
@@ -1441,9 +1502,9 @@ namespace Nop.Services.Customers
         public virtual IList<Address> GetAddressesByCustomerId(int customerId)
         {
             var query = from address in _customerAddressRepository.Table
-                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId
-                select address;
+                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                        where cam.CustomerId == customerId
+                        select address;
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
 
@@ -1462,9 +1523,9 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from address in _customerAddressRepository.Table
-                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId && address.Id == addressId
-                select address;
+                        join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                        where cam.CustomerId == customerId && address.Id == addressId
+                        select address;
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
 

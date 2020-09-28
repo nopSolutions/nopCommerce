@@ -423,33 +423,7 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                //We cache a value indicating whether we have featured products
-                IPagedList<Product> featuredProducts = null;
-                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category,
-                    _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), _storeContext.CurrentStore);
-                var hasFeaturedProductsCache = _staticCacheManager.Get(cacheKey, () =>
-                {
-                    //no value in the cache yet
-                    //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
-                       categoryIds: new List<int> { category.Id },
-                       storeId: _storeContext.CurrentStore.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true);
-
-                    return featuredProducts.TotalCount > 0;
-                });
-
-                if (hasFeaturedProductsCache && featuredProducts == null)
-                {
-                    //cache indicates that the category has featured products
-                    //let's load them
-                    featuredProducts = _productService.SearchProducts(
-                       categoryIds: new List<int> { category.Id },
-                       storeId: _storeContext.CurrentStore.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true);
-                }
+                var featuredProducts = _productService.GetCategoryFeaturedProducts(category.Id, _storeContext.CurrentStore.Id);
 
                 if (featuredProducts != null)
                 {
@@ -470,7 +444,7 @@ namespace Nop.Web.Factories
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
+                excludeFeaturedProducts: _catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
@@ -815,36 +789,7 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                IPagedList<Product> featuredProducts = null;
-
-                //We cache a value indicating whether we have featured products
-                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey, 
-                    manufacturer,
-                    _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                    _storeContext.CurrentStore);
-                var hasFeaturedProductsCache = _staticCacheManager.Get(cacheKey, () =>
-                {
-                    //no value in the cache yet
-                    //let's load products and cache the result (true/false)
-                    featuredProducts = _productService.SearchProducts(
-                       manufacturerId: manufacturer.Id,
-                       storeId: _storeContext.CurrentStore.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true);
-
-                    return featuredProducts.TotalCount > 0;
-                });
-
-                if (hasFeaturedProductsCache && featuredProducts == null)
-                {
-                    //cache indicates that the manufacturer has featured products
-                    //let's load them
-                    featuredProducts = _productService.SearchProducts(
-                       manufacturerId: manufacturer.Id,
-                       storeId: _storeContext.CurrentStore.Id,
-                       visibleIndividuallyOnly: true,
-                       featuredProducts: true);
-                }
+                var featuredProducts = _manufacturerService.GetFeaturedProducts(manufacturer.Id, _storeContext.CurrentStore.Id);
 
                 if (featuredProducts != null)
                 {
@@ -853,11 +798,11 @@ namespace Nop.Web.Factories
             }
 
             //products
-            var products = _productService.SearchProducts(out _, true,
+            var products = _productService.SearchProducts(
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
+                excludeFeaturedProducts: _catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
                 orderBy: (ProductSortingEnum)command.OrderBy,
@@ -1011,8 +956,7 @@ namespace Nop.Web.Factories
                 vendor.PageSize);
 
             //products
-            var products = _productService.SearchProducts(out _,
-                true,
+            var products = _productService.SearchProducts(
                 vendorId: vendor.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,

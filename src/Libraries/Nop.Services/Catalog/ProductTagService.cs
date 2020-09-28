@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Data.DataProviders.SQL;
 using Nop.Services.Customers;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -19,10 +24,13 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
+        protected readonly IRepository<AclRecord> _aclRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
+        protected readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
 
@@ -32,19 +40,25 @@ namespace Nop.Services.Catalog
 
         public ProductTagService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            INopDataProvider dataProvider,
+            IRepository<AclRecord> aclRepository,
+            IRepository<Product> productRepository,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
+            IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager,
+            IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
-            _dataProvider = dataProvider;
+            _aclRepository = aclRepository;
+            _productRepository = productRepository;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
+            _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
+            _storeService = storeService;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
         }
@@ -76,29 +90,30 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
         {
-            var allowedCustomerRolesIds = string.Empty;
-            if (!showHidden && !_catalogSettings.IgnoreAcl)
-            {
-                //Access control list. Allowed customer roles
-                //pass customer role identifiers as comma-delimited string
-                allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
-            }
-
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
                 showHidden);
-           
+
             return _staticCacheManager.Get(key, () =>
             {
-                //prepare input parameters
-                var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", storeId);
-                var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
+                var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+                var countStores = _storeService.GetAllStores().Count;
 
-                //invoke stored procedure
-                return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
-                        pStoreId,
-                        pAllowedCustomerRoleIds)
-                    .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+                var pTagCount = from pt in _productTagRepository.Table
+                    from ptm in _productProductTagMappingRepository.Table.Where(m => m.ProductTagId == pt.Id).DefaultIfEmpty()
+                    from p in _productRepository.Table.Where(p => p.Id == ptm.ProductId).DefaultIfEmpty()
+                    where !p.Deleted && p.Published && 
+                        (
+                            (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
+                            (storeId == 0 || countStores > 1 || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                        )
+                    group pt by pt.Id into ptGrouped
+                    select new {
+                        ProductTagId = ptGrouped.Key,
+                        ProductCount = ptGrouped.Count()
+                    };
+
+                return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
 
@@ -327,28 +342,6 @@ namespace Nop.Services.Catalog
 
             //cache
             _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<ProductTag>.Prefix);
-        }
-
-        #endregion
-
-        #region MyRegion
-
-        protected partial class ProductTagWithCount
-        {
-            /// <summary>
-            /// Gets or sets the entity identifier
-            /// </summary>
-            public int Id { get; set; }
-
-            /// <summary>
-            /// Gets or sets the product tag ID
-            /// </summary>
-            public int ProductTagId { get; set; }
-
-            /// <summary>
-            /// Gets or sets the count
-            /// </summary>
-            public int ProductCount { get; set; }
         }
 
         #endregion

@@ -382,6 +382,8 @@ namespace Nop.Web.Models.Catalog
                 var cacheKey = staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, workContext.WorkingLanguage);
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
+
+                
                 var allFilters = staticCacheManager.Get(cacheKey, () => allOptions.Select(sao =>
                 {
                     var specAttribute = specificationAttributeService.GetSpecificationAttributeById(sao.SpecificationAttributeId);

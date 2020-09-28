@@ -281,15 +281,9 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
 
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
-                visibleIndividuallyOnly: true,
-                markedAsNewOnly: true,
-                orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.NewProductsNumber);
-
-            var model = new List<ProductOverviewModel>();
-            model.AddRange(_productModelFactory.PrepareProductOverviewModels(products));
+            var model = _productModelFactory
+                .PrepareProductOverviewModels(_productService.GetProductsMarkedAsNew(_storeContext.CurrentStore.Id))
+                .ToList();
 
             return View(model);
         }
@@ -307,12 +301,8 @@ namespace Nop.Web.Controllers
 
             var items = new List<RssItem>();
 
-            var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
-                visibleIndividuallyOnly: true,
-                markedAsNewOnly: true,
-                orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.NewProductsNumber);
+            var products = _productService.GetProductsMarkedAsNew(_storeContext.CurrentStore.Id);
+            
             foreach (var product in products)
             {
                 var productUrl = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) }, _webHelper.CurrentRequestProtocol);

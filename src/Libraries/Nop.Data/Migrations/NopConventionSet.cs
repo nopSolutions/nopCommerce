@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 
@@ -12,34 +13,38 @@ namespace Nop.Data.Migrations
         #region Ctor
 
         public NopConventionSet(INopDataProvider dataProvider)
-            : this(new DefaultConventionSet(), new NopForeignKeyConvention(dataProvider), new NopIndexConvention(dataProvider))
         {
-        }
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
 
-        public NopConventionSet(IConventionSet innerConventionSet, NopForeignKeyConvention foreignKeyConvention, NopIndexConvention indexConvention)
-        {
-            ForeignKeyConventions = new List<IForeignKeyConvention>
+            var defaultConventionSet = new DefaultConventionSet();
+
+            ForeignKeyConventions = new List<IForeignKeyConvention>() 
             {
-                foreignKeyConvention,
-                innerConventionSet.SchemaConvention,
+                new NopForeignKeyConvention(dataProvider),
+                defaultConventionSet.SchemaConvention,
             };
 
-            IndexConventions = new List<IIndexConvention>
+            IndexConventions = new List<IIndexConvention>() 
             {
-                indexConvention
+                new NopIndexConvention(dataProvider),
+                defaultConventionSet.SchemaConvention
             };
-            
-            ColumnsConventions = innerConventionSet.ColumnsConventions;
-            ConstraintConventions = innerConventionSet.ConstraintConventions;
-            
-            SequenceConventions = innerConventionSet.SequenceConventions;
-            AutoNameConventions = innerConventionSet.AutoNameConventions;
-            SchemaConvention = innerConventionSet.SchemaConvention;
-            RootPathConvention = innerConventionSet.RootPathConvention;
+
+            ColumnsConventions = new List<IColumnsConvention>() 
+            {
+                new NopColumnsConvention(dataProvider)
+            };
+
+            ConstraintConventions = defaultConventionSet.ConstraintConventions;
+            SequenceConventions = defaultConventionSet.SequenceConventions;
+            AutoNameConventions = defaultConventionSet.AutoNameConventions;
+            SchemaConvention = defaultConventionSet.SchemaConvention;
+            RootPathConvention = defaultConventionSet.RootPathConvention;
         }
 
         #endregion
-        
+
         #region Properties
 
         /// <summary>

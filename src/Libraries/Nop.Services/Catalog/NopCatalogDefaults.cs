@@ -201,6 +201,33 @@ namespace Nop.Services.Catalog
         public static CacheKey ProductsHomepageCacheKey => new CacheKey("Nop.product.homepage.");
 
         /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        public static CacheKey ProductsMarkedAsNewCacheKey => new CacheKey("Nop.product.markedasnew.");
+
+        /// <summary>
+        /// Key for caching identifiers of category featured products
+        /// </summary>
+        /// <remarks>
+        /// {0} : category id
+        /// {1} : current store ID
+        /// {2} : roles of the current user
+        /// </remarks>
+        public static CacheKey CategoryFeaturedProductsIdsKey => new CacheKey("Nop.pres.category.featuredproducts-{0}-{1}-{2}", CategoryFeaturedProductsIdsPrefixCacheKeyById);
+        public static string CategoryFeaturedProductsIdsPrefixCacheKeyById => "Nop.pres.category.featuredproducts-{0}-";
+
+        /// <summary>
+        /// Key for caching of a value indicating whether a manufacturer has featured products
+        /// </summary>
+        /// <remarks>
+        /// {0} : manufacturer id
+        /// {1} : current store ID
+        /// {2} : roles of the current user
+        /// </remarks>
+        public static CacheKey ManufacturerFeaturedProductsKey => new CacheKey("Nop.pres.manufacturer.featuredproducts-{0}-{1}-{2}", ManufacturerFeaturedProductsPrefixCacheKeyById);
+        public static string ManufacturerFeaturedProductsPrefixCacheKeyById => "Nop.pres.manufacturer.featuredproducts-{0}-";
+
+        /// <summary>
         /// Gets a key for product prices
         /// </summary>
         /// <remarks>

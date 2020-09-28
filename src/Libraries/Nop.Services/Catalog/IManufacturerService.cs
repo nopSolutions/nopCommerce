@@ -35,6 +35,8 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturers">Manufacturers</param>
         void DeleteManufacturers(IList<Manufacturer> manufacturers);
 
+        IList<Product> GetFeaturedProducts(int manufacturerId, int storeId = 0);
+
         /// <summary>
         /// Gets all manufacturers
         /// </summary>

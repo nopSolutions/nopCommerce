@@ -392,6 +392,11 @@ namespace Nop.Tests
             }
         }
 
+        public DataConnection CreateDataConnection()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Properties

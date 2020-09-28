@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
+using Nop.Data.DataProviders;
 
 namespace Nop.Data
 {
@@ -29,6 +31,9 @@ namespace Nop.Data
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
         IDbConnection CreateDbConnection(string connectionString);
+
+        TempDataStorage<TItem> CreateTempDataStorage<TItem>(string storageKey, IQueryable<TItem> query)
+            where TItem : class;
 
         /// <summary>
         /// Initialize database

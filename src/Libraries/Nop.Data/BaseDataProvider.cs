@@ -12,6 +12,7 @@ using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Data.DataProviders;
 using Nop.Data.Mapping;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Data;
@@ -128,6 +129,12 @@ namespace Nop.Data
             return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
         }
 
+        public virtual TempDataStorage<TItem> CreateTempDataStorage<TItem>(string storeKey, IQueryable<TItem> query)
+            where TItem : class
+        {
+            return new TempDataStorage<TItem>(storeKey, query, CreateDataConnection);
+        }
+
         /// <summary>
         /// Returns mapped entity descriptor.
         /// </summary>
@@ -156,7 +163,7 @@ namespace Nop.Data
         /// <param name="entity"></param>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns>Inserted entity</returns>
-        public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public virtual TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
             entity.Id = dataContext.InsertWithInt32Identity(entity);
@@ -169,7 +176,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public virtual void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
             dataContext.Update(entity);
@@ -181,7 +188,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public virtual void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
             dataContext.Delete(entity);
@@ -192,7 +199,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        public virtual void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
             if (entities.All(entity => entity.Id == 0))
@@ -209,7 +216,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        public virtual void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
             dataContext.GetTable<TEntity>()
@@ -222,7 +229,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        public virtual void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection(LinqToDbDataProvider);
             dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
@@ -234,7 +241,7 @@ namespace Nop.Data
         /// <param name="sqlStatement">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        public virtual int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
         {
             using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
@@ -253,7 +260,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Resulting value</returns>
-        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
+        public virtual T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
         {
             using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
@@ -271,7 +278,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
+        public virtual int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
         {
             using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
@@ -290,7 +297,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
+        public virtual IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
             using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
@@ -306,7 +313,7 @@ namespace Nop.Data
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
         /// <returns>Collection of values of specified type</returns>
-        public IList<T> Query<T>(string sql, params DataParameter[] parameters)
+        public virtual IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = CreateDataConnection();
             return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();

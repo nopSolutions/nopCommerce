@@ -9,6 +9,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Data.DataProviders.SQL;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 
@@ -264,6 +265,25 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             _productManufacturerRepository.Delete(productManufacturer);
+        }
+
+        public virtual IList<Product> GetFeaturedProducts(int manufacturerId, int storeId = 0)
+        {
+            var allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+
+            var query = from p in _productRepository.Table
+                    join pc in _productManufacturerRepository.Table on p.Id equals pc.ProductId
+                    where p.VisibleIndividually && pc.IsFeaturedProduct && manufacturerId == pc.ManufacturerId &&
+                    (
+                        (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
+                        (storeId == 0 || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                    )
+                    select p;
+            
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductsKey, manufacturerId,  storeId, customerRolesIds);
+
+            return _staticCacheManager.Get(cacheKey, query.ToList);
         }
 
         /// <summary>

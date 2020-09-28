@@ -22,17 +22,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static CacheKey VendorNavigationModelKey => new CacheKey("Nop.pres.vendor.navigation");
 
         /// <summary>
-        /// Key for caching of a value indicating whether a manufacturer has featured products
-        /// </summary>
-        /// <remarks>
-        /// {0} : manufacturer id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public static CacheKey ManufacturerHasFeaturedProductsKey => new CacheKey("Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}", ManufacturerHasFeaturedProductsPrefixCacheKeyById);
-        public static string ManufacturerHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-";
-
-        /// <summary>
         /// Key for list of CategorySimpleModel caching
         /// </summary>
         /// <remarks>
@@ -43,17 +32,6 @@ namespace Nop.Web.Infrastructure.Cache
         public static CacheKey CategoryAllModelKey => new CacheKey("Nop.pres.category.all-{0}-{1}-{2}", CategoryAllPrefixCacheKey);
         public static string CategoryAllPrefixCacheKey => "Nop.pres.category.all";
 
-        /// <summary>
-        /// Key for caching of a value indicating whether a category has featured products
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public static CacheKey CategoryHasFeaturedProductsKey => new CacheKey("Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}", CategoryHasFeaturedProductsPrefixCacheKeyById);
-        public static string CategoryHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
-        
         /// <summary>
         /// Key for caching of categories displayed on home page
         /// </summary>
