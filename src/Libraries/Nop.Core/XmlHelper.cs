@@ -45,7 +45,7 @@ namespace Nop.Core
                 ConformanceLevel = ConformanceLevel.Auto
             };
 
-            var sw = new StringWriter();
+            await using var sw = new StringWriter();
             using (var xwr = XmlWriter.Create(sw, settings))
             {
                 await xwr.WriteStringAsync(str);
