@@ -63,24 +63,4 @@
             <span asp-validation-for="PictureId"></span>
         </div>
     </div>
-
-    <!--scripts -->
-    <script>
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
-            togglePageSize();
-        });
-
-        function togglePageSize() {
-            if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
-                $('#pnlPageSize').hide();
-                $('#pnlPageSizeOptions').show();
-            } else {
-                $('#pnlPageSize').show();
-                $('#pnlPageSizeOptions').hide();
-            }
-        }
-    </script>
-
-
 </div>
