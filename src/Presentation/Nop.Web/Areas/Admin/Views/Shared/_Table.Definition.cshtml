@@ -316,7 +316,7 @@ columns: [
                             }
                             return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
                             '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
-                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                         },                         
                     </text>
                     break;
