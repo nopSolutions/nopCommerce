@@ -1720,7 +1720,7 @@
     <Value>Attribute values</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew">
-    <Value>Add a new checkout value</Value>
+    <Value>Add a new checkout attribute value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails">
     <Value>Edit checkout value details</Value>
