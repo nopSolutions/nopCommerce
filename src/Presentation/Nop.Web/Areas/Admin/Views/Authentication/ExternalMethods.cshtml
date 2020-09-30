@@ -25,8 +25,8 @@
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "authenticationmethods-grid",
-                        UrlRead = new DataUrl("Methods", "ExternalAuthentication", null),
-                        UrlUpdate = new DataUrl("MethodUpdate", "ExternalAuthentication", null),
+                        UrlRead = new DataUrl("ExternalMethods", "Authentication", null),
+                        UrlUpdate = new DataUrl("ExternalMethodUpdate", "Authentication", null),
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
                         ColumnCollection = new List<ColumnProperty>

@@ -11,7 +11,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
-    public partial class ExternalAuthenticationController : BaseAdminController
+    public partial class AuthenticationController : BaseAdminController
     {
         #region Fields
 
@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public ExternalAuthenticationController(ExternalAuthenticationSettings externalAuthenticationSettings,
+        public AuthenticationController(ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationPluginManager authenticationPluginManager,
             IEventPublisher eventPublisher,
             IExternalAuthenticationMethodModelFactory externalAuthenticationMethodModelFactory,
@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public virtual IActionResult Methods()
+        public virtual IActionResult ExternalMethods()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
@@ -58,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Methods(ExternalAuthenticationMethodSearchModel searchModel)
+        public virtual IActionResult ExternalMethods(ExternalAuthenticationMethodSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedDataTablesJson();
@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult MethodUpdate(ExternalAuthenticationMethodModel model)
+        public virtual IActionResult ExternalMethodUpdate(ExternalAuthenticationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
