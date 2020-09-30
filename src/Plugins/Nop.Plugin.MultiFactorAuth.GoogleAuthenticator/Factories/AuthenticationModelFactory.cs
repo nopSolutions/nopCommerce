@@ -9,28 +9,25 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
     {
         #region Fields
 
-        private readonly IStoreContext _storeContext;
-        private readonly IWorkContext _workContext;
         private readonly GoogleAuthenticatorService _googleAuthenticatorService;
         private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public AuthenticationModelFactory(IStoreContext storeContext,
+        public AuthenticationModelFactory(IWorkContext workContext,
             GoogleAuthenticatorService googleAuthenticatorService,
-            IWorkContext workContext,
             GoogleAuthenticatorSettings googleAuthenticatorSettings)
         {
-            _storeContext = storeContext;
             _workContext = workContext;
             _googleAuthenticatorService = googleAuthenticatorService;
             _googleAuthenticatorSettings = googleAuthenticatorSettings;
         }
 
         #endregion
-        
+
         #region Methods
 
         public AuthModel PrepareAuthModel(AuthModel model)
