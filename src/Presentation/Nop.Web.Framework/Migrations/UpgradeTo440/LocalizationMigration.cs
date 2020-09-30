@@ -108,7 +108,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "RewardPoints.Message.Expired",
                 "ShoppingCart.AddToWishlist.Update",
                 "ShoppingCart.UpdateCartItem",
-                "Tax.SelectType"
+                "Tax.SelectType",
             });
 
             localizationService.AddLocaleResource(new Dictionary<string, string>
@@ -209,6 +209,31 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.Updated"] = "The attribute group has been updated successfully.",
                 ["Admin.Catalog.Products.SpecificationAttributes.NameFormat"] = "{0} >> {1}",
                 ["Admin.System.Warnings.PluginsOverrideSameService"] = "The \"{0}\" interface/class has been overridden in those assemblies: {1}. This situation may cause errors because there is only one of them will be used (Please contact the assembly(ies) developers to solve this problem.)",
+                ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
+
+                //<MFA #475>
+                ["Admin.Configuration.Authentication"] = "Authentication",
+                ["Admin.Configuration.Authentication.MultiFactorMethods"] = "Multi-factor authentication",
+                ["Admin.Configuration.Authentication.MultiFactorMethods.BackToList"] = "back to multi-factor authentication method list",
+                ["Admin.Configuration.Authentication.MultiFactorMethods.Configure"] = "Configure",
+                ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.DisplayOrder"] = "Display order",
+                ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.FriendlyName"] = "Friendly name",
+                ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.IsActive"] = "Is active",
+                ["Admin.Configuration.Authentication.MultiFactorMethods.Fields.SystemName"] = "System name",
+
+                ["Permission.Authentication.ManageMultifactorMethods"] = "Admin area. Manage Multi-factor Authentication Methods",
+
+                ["MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"] = "The multi-factor authentication provider specified in your account settings has been deactivated. Please contact your administrator.",
+
+                ["PageTitle.MultiFactorAuthentication"] = "Multi-factor authentication",
+                ["PageTitle.MultiFactorVerification"] = "Multi-factor verification",
+                ["Account.MultiFactorAuthentication.Fields.IsEnabled"] = "Is enabled",
+                ["Account.MultiFactorAuthentication.Settings"] = "Settings",
+                ["Account.MultiFactorAuthentication.Providers"] = "Authentication providers",
+                ["Account.MultiFactorAuthentication.Providers.NoActive"] = "No active providers",
+                ["Account.MultiFactorAuthentication.Description"] = "<p>To activate multi-factor authentication for your account, you need: </p></br><ol><li>1. Activate the 'Is enabled' setting.</li><li>2. Choose one of the multi-factor authentication providers.</li><li>3. Save.</li><li>4. Configure the selected multi-factor authentication provider by following the instructions on the individual settings page of the selected provider.</li></ol></br><p> WARNING. After saving the selected provider, be sure to configure it, otherwise you will be denied access the next time you try to enter your account.</p>",
+                //</MFA #475>
+
                 ["Admin.Configuration.Plugins.Description.DownloadMorePlugins"] = "You can download more nopCommerce plugins in our <a href=\"https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=all-plugins\" target=\"_blank\">marketplace</a>",
                 ["Admin.Configuration.Payment.Methods.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"https://www.nopcommerce.com/extensions?category=payment-modules&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=payment-plugins\" target=\"_blank\">marketplace</a>",
                 ["Admin.Configuration.Shipping.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"https://www.nopcommerce.com/extensions?category=shipping-delivery&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=shipping-plugins\" target=\"_blank\">marketplace</a>",
@@ -249,6 +274,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Product", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Product" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts.Published", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.UsedByProducts.Published" },
+                //<MFA #475>
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder"},
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName"},
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive"},
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName", NewName = "Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName"},
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.BackToList", NewName = "Admin.Configuration.Authentication.ExternalMethods.BackToList"},
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods.Configure", NewName = "Admin.Configuration.Authentication.ExternalMethods.Configure"},
+                new { Name = "Admin.Configuration.ExternalAuthenticationMethods", NewName = "Admin.Configuration.Authentication.ExternalMethods"},
+                new { Name = "Permission.ManageExternalAuthenticationMethods", NewName = "Permission.Authentication.ManageExternalMethods"},
+                //</MFA #475>
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();

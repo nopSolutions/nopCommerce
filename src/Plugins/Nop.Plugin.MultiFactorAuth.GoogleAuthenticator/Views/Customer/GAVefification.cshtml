@@ -1,0 +1,14 @@
+﻿@model Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models.TokenModel
+
+<form asp-controller="Authentication" asp-action="VerifyGoogleAuthenticator" method="post">
+    <div class="inputs">
+        <label asp-for="Token" asp-postfix=":"></label>
+        <input asp-for="Token" class="username" autofocus="autofocus" />
+        <span asp-validation-for="Token"></span>
+    </div>
+    <div class="form-group">    
+        <div class="buttons">
+            <input id="googleAuthSendCode_submit" type="submit" value="@T("Plugins.MultiFactorAuth.GoogleAuthenticator.Customer.SendCode")" name="save-info-button" class="button-1 save-customer-info-button" />
+        </div>
+    </div>
+</form>

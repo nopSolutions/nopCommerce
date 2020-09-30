@@ -18,6 +18,7 @@ using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -234,6 +235,7 @@ namespace Nop.Web.Framework.Infrastructure
             //plugin managers
             builder.RegisterGeneric(typeof(PluginManager<>)).As(typeof(IPluginManager<>)).InstancePerLifetimeScope();
             builder.RegisterType<AuthenticationPluginManager>().As<IAuthenticationPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<MultiFactorAuthenticationPluginManager>().As<IMultiFactorAuthenticationPluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetPluginManager>().As<IWidgetPluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<ExchangeRatePluginManager>().As<IExchangeRatePluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountPluginManager>().As<IDiscountPluginManager>().InstancePerLifetimeScope();

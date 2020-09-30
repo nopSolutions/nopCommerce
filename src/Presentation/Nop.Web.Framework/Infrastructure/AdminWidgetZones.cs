@@ -134,6 +134,7 @@
         public static string MessageTemplateDetailsTop => "admin_message_template_details_top";
         public static string MessageTemplateListButtons => "admin_message_template_list_buttons";
         public static string MessageTemplateTestButtons => "admin_message_template_test_buttons";
+        public static string MultiFactorAuthenticationListButtons => "admin_multifactor_authentication_list_buttons";
         public static string NewsCommentListButtons => "admin_news_comment_list_buttons";
         public static string NewsDetailsBlock => "admin_news_details_block";
         public static string NewsDetailsButtons => "admin_news_details_buttons";

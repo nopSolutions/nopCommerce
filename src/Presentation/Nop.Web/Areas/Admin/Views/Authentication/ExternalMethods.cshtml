@@ -2,14 +2,14 @@
 
 @{
     //page title
-    ViewBag.PageTitle = T("Admin.Configuration.ExternalAuthenticationMethods").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Authentication.ExternalMethods").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("External authentication methods");
 }
 
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.Configuration.ExternalAuthenticationMethods")
+        @T("Admin.Configuration.Authentication.ExternalMethods")
     </h1>
     <div class="pull-right">
         &nbsp;
@@ -25,25 +25,25 @@
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "authenticationmethods-grid",
-                        UrlRead = new DataUrl("Methods", "ExternalAuthentication", null),
-                        UrlUpdate = new DataUrl("MethodUpdate", "ExternalAuthentication", null),
+                        UrlRead = new DataUrl("ExternalMethods", "Authentication", null),
+                        UrlUpdate = new DataUrl("ExternalMethodUpdate", "Authentication", null),
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
                         ColumnCollection = new List<ColumnProperty>
                             {
                                 new ColumnProperty(nameof(ExternalAuthenticationMethodModel.FriendlyName))
                                 {
-                                    Title = T("Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName").Text,
+                                    Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.FriendlyName").Text,
                                     Width = "250"
                                 },
                                 new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
                                 {
-                                    Title = T("Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName").Text,
+                                    Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.SystemName").Text,
                                     Width = "250"
                                 },
                                 new ColumnProperty(nameof(ExternalAuthenticationMethodModel.DisplayOrder))
                                 {
-                                    Title = T("Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder").Text,
+                                    Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.DisplayOrder").Text,
                                     Width = "100",
                                     ClassName = NopColumnClassDefaults.CenterAll,
                                     Editable = true,
@@ -51,7 +51,7 @@
                                 },
                                 new ColumnProperty(nameof(ExternalAuthenticationMethodModel.IsActive))
                                 {
-                                    Title = T("Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive").Text,
+                                    Title = T("Admin.Configuration.Authentication.ExternalMethods.Fields.IsActive").Text,
                                     Width = "100",
                                     ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean(),
@@ -60,7 +60,7 @@
                                 },
                                 new ColumnProperty(nameof(ExternalAuthenticationMethodModel.SystemName))
                                 {
-                                    Title = T("Admin.Configuration.ExternalAuthenticationMethods.Configure").Text,
+                                    Title = T("Admin.Configuration.Authentication.ExternalMethods.Configure").Text,
                                     Width = "150",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
@@ -78,7 +78,7 @@
                     <script>
                         function renderColumnConfigure(data, type, row, meta) {
                             if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.ExternalAuthenticationMethods.Configure").Text</a>';
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Authentication.ExternalMethods.Configure").Text</a>';
                             } else {
                                 return '';
                             }

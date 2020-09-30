@@ -29,6 +29,7 @@ using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -268,6 +269,7 @@ namespace Nop.Tests
             //plugin managers
             services.AddTransient(typeof(IPluginManager<>), typeof(PluginManager<>));
             services.AddTransient<IAuthenticationPluginManager, AuthenticationPluginManager>();
+            services.AddTransient<IMultiFactorAuthenticationPluginManager, MultiFactorAuthenticationPluginManager>();
             services.AddTransient<IWidgetPluginManager, WidgetPluginManager>();
             services.AddTransient<IExchangeRatePluginManager, ExchangeRatePluginManager>();
             services.AddTransient<IDiscountPluginManager, DiscountPluginManager>();

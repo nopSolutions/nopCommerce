@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -20,11 +22,13 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -40,9 +44,6 @@ using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Autofac;
-using Nop.Services.Events;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -71,6 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IMeasureService _measureService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
@@ -116,6 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IMeasureService measureService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
@@ -155,6 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizationService = localizationService;
             _maintenanceService = maintenanceService;
             _measureService = measureService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _fileProvider = fileProvider;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
@@ -411,7 +415,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
             });
         }
-        
+
         /// <summary>
         /// Prepare plugins warning model
         /// </summary>
@@ -456,7 +460,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         !s.Description.StartsWith(typeof(IConsumer<>).FullName?.Replace("~1", string.Empty) ?? string.Empty,
                             StringComparison.InvariantCulture))).SelectMany(p => p.Services.Select(x =>
                     KeyValuePair.Create(x.Description, p.Target.Activator.LimitType.Assembly.GetName().Name)))
-                .Where(p => baseLibraries.All(library=> !p.Value.StartsWith(library, StringComparison.InvariantCultureIgnoreCase)))
+                .Where(p => baseLibraries.All(library => !p.Value.StartsWith(library, StringComparison.InvariantCultureIgnoreCase)))
                 .GroupBy(p => p.Key, p => p.Value)
                 .Where(p => p.Count() > 1)
                 .ToDictionary(p => p.Key, p => p.ToList());
@@ -615,6 +619,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     case IExternalAuthenticationMethod externalAuthenticationMethod:
                         isEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
+                        break;
+
+                    case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
+                        isEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
                         break;
 
                     case IWidgetPlugin widgetPlugin:
@@ -788,7 +796,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //plugins
             PreparePluginsWarningModel(models);
-            
+
             //performance settings
             PreparePerformanceSettingsWarningModel(models);
 
