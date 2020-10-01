@@ -16,6 +16,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Events;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -49,6 +50,7 @@ namespace Nop.Services.Seo
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -71,7 +73,8 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SitemapXmlSettings sitemapSettings)
+            SitemapXmlSettings sitemapSettings,
+            IEventPublisher eventPublisher)
         {
             _blogSettings = blogSettings;
             _forumSettings = forumSettings;
@@ -91,6 +94,7 @@ namespace Nop.Services.Seo
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
             _sitemapXmlSettings = sitemapSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -563,6 +567,8 @@ namespace Nop.Services.Seo
                     WriteSitemap(stream, sitemaps.First());
                 }
             }
+            
+            _eventPublisher.Publish(new SitemapCreatedEvent());
         }
 
         #endregion
