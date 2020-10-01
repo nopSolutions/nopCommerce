@@ -199,7 +199,7 @@ namespace Nop.Data
         public async Task ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             foreach (var command in sqlCommands)
                 await currentConnection.ExecuteAsync(command);
         }
@@ -271,7 +271,7 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             var tableName = currentConnection.GetTable<T>().TableName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
@@ -299,7 +299,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task ReIndexTables()
         {
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
             if (tables.Count > 0) 

@@ -182,7 +182,7 @@ namespace Nop.Data
         {
             var sqlCommands = GetCommandsFromScript(sql);
 
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             foreach (var command in sqlCommands)
                 await currentConnection.ExecuteAsync(command);
         }
@@ -223,7 +223,7 @@ namespace Nop.Data
         /// <param name="ident">Identity value</param>
         public virtual async Task SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             var currentIdent = GetTableIdent<T>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
@@ -238,7 +238,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task BackupDatabase(string fileName)
         {
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
             await currentConnection.ExecuteAsync(commandText);
         }
@@ -249,7 +249,7 @@ namespace Nop.Data
         /// <param name="backupFileName">The name of the backup file</param>
         public virtual async Task RestoreDatabase(string backupFileName)
         {
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             var commandText = string.Format(
                 "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
                 "ALTER DATABASE [{0}] SET OFFLINE WITH ROLLBACK IMMEDIATE\n" +
@@ -275,7 +275,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task ReIndexTables()
         {
-            await using var currentConnection = CreateDataConnection();
+            using var currentConnection = CreateDataConnection();
             var commandText = $@"
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR

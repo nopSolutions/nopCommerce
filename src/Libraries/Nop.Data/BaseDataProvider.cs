@@ -137,7 +137,7 @@ namespace Nop.Data
         /// <returns>Inserted entity</returns>
         public async Task<TEntity> InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
         }
@@ -150,7 +150,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             await dataContext.UpdateAsync(entity);
         }
 
@@ -162,7 +162,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             await dataContext.DeleteAsync(entity);
         }
 
@@ -173,7 +173,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             if (entities.All(entity => entity.Id == 0))
                 foreach (var entity in entities)
                     await dataContext.DeleteAsync(entity);
@@ -190,7 +190,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             await dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .DeleteAsync();
@@ -215,7 +215,7 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public async Task<int> ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
             var affectedRecords = await command.ExecuteAsync();
 
@@ -234,7 +234,7 @@ namespace Nop.Data
         /// <returns>Resulting value</returns>
         public async Task<T> ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
 
             var result = await command.ExecuteProcAsync<T>();
@@ -252,7 +252,7 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public async Task<int> ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
 
             var affectedRecords = await command.ExecuteProcAsync();
