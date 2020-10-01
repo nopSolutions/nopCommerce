@@ -20,10 +20,10 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.ExportImport;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
-using Formatting = System.Xml.Formatting;
 
 namespace Nop.Plugin.Shipping.ShipStation.Services
 {
@@ -299,27 +299,27 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return services.ToList();
         }
 
-        protected virtual async Task WriteAddressToXml(XmlTextWriter writer, bool isBillingAddress, Address address)
+        protected virtual async Task WriteAddressToXml(XmlWriter writer, bool isBillingAddress, Address address)
         {
-            writer.WriteElementString("Name", $"{address.FirstName} {address.LastName}");
+            await writer.WriteElementStringAsync("Name", $"{address.FirstName} {address.LastName}");
 
-            writer.WriteElementString("Company", address.Company);
-            writer.WriteElementString("Phone", address.PhoneNumber);
+            await writer.WriteElementStringAsync("Company", address.Company);
+            await writer.WriteElementStringAsync("Phone", address.PhoneNumber);
 
             if (isBillingAddress)
                 return;
 
-            writer.WriteElementString("Address1", address.Address1);
-            writer.WriteElementString("Address2", address.Address2);
-            writer.WriteElementString("City", address.City);
-            writer.WriteElementString("State", (await _stateProvinceService.GetStateProvinceByAddress(address))?.Name ?? string.Empty);
-            writer.WriteElementString("PostalCode ", address.ZipPostalCode);
-            writer.WriteElementString("Country", (await _countryService.GetCountryByAddress(address)).TwoLetterIsoCode);
+            await writer.WriteElementStringAsync("Address1", address.Address1);
+            await writer.WriteElementStringAsync("Address2", address.Address2);
+            await writer.WriteElementStringAsync("City", address.City);
+            await writer.WriteElementStringAsync("State", (await _stateProvinceService.GetStateProvinceByAddress(address))?.Name ?? string.Empty);
+            await writer.WriteElementStringAsync("PostalCode ", address.ZipPostalCode);
+            await writer.WriteElementStringAsync("Country", (await _countryService.GetCountryByAddress(address)).TwoLetterIsoCode);
         }
 
-        protected virtual async Task WriteOrderItemsToXml(XmlTextWriter writer, ICollection<OrderItem> orderItems)
+        protected virtual async Task WriteOrderItemsToXml(XmlWriter writer, ICollection<OrderItem> orderItems)
         {
-            writer.WriteStartElement("Items");
+            await writer.WriteStartElementAsync("Items");
 
             foreach (var orderItem in orderItems)
             {
@@ -330,37 +330,37 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 if (!product.IsShipEnabled)
                     continue;
 
-                writer.WriteStartElement("Item");
+                await writer.WriteStartElementAsync("Item");
 
                 var sku = product.Sku;
 
-                writer.WriteElementString("SKU", string.IsNullOrEmpty(sku) ? product.Id.ToString() : sku);
-                writer.WriteElementString("Name", product.Name);
-                writer.WriteElementString("Quantity", orderItem.Quantity.ToString());
-                writer.WriteElementString("UnitPrice", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? orderItem.UnitPriceInclTax : orderItem.UnitPriceExclTax).ToString(CultureInfo.InvariantCulture));
+                await writer.WriteElementStringAsync("SKU", string.IsNullOrEmpty(sku) ? product.Id.ToString() : sku);
+                await writer.WriteElementStringAsync("Name", product.Name);
+                await writer.WriteElementStringAsync("Quantity", orderItem.Quantity.ToString());
+                await writer.WriteElementStringAsync("UnitPrice", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? orderItem.UnitPriceInclTax : orderItem.UnitPriceExclTax).ToString(CultureInfo.InvariantCulture));
 
-                writer.WriteEndElement();
-                writer.Flush();
+                await writer.WriteEndElementAsync();
+                await writer.FlushAsync();
             }
 
-            writer.WriteEndElement();
-            writer.Flush();
+            await writer.WriteEndElementAsync();
+            await writer.FlushAsync();
         }
 
-        protected virtual async Task WriteCustomerToXml(XmlTextWriter writer, Order order, Core.Domain.Customers.Customer customer)
+        protected virtual async Task WriteCustomerToXml(XmlWriter writer, Order order, Core.Domain.Customers.Customer customer)
         {
-            writer.WriteStartElement("Customer");
+            await writer.WriteStartElementAsync("Customer");
 
-            writer.WriteElementString("CustomerCode", customer.Email);
-            writer.WriteStartElement("BillTo");
+            await writer.WriteElementStringAsync("CustomerCode", customer.Email);
+            await writer.WriteStartElementAsync("BillTo");
             await WriteAddressToXml(writer, true, await _addressService.GetAddressById(order.BillingAddressId));
-            writer.WriteEndElement();
-            writer.WriteStartElement("ShipTo");
+            await writer.WriteEndElementAsync();
+            await writer.WriteStartElementAsync("ShipTo");
             await WriteAddressToXml(writer, false, await _addressService.GetAddressById(order.ShippingAddressId ?? order.BillingAddressId));
-            writer.WriteEndElement();
+            await writer.WriteEndElementAsync();
 
-            writer.WriteEndElement();
-            writer.Flush();
+            await writer.WriteEndElementAsync();
+            await writer.FlushAsync();
         }
 
         protected virtual string GetOrderStatus(Order order)
@@ -380,22 +380,22 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             }
         }
 
-        protected virtual async Task WriteOrderToXml(XmlTextWriter writer, Order order)
+        protected virtual async Task WriteOrderToXml(XmlWriter writer, Order order)
         {
-            writer.WriteStartElement("Order");
-            writer.WriteElementString("OrderID", order.Id.ToString());
-            writer.WriteElementString("OrderNumber", order.OrderGuid.ToString());
-            writer.WriteElementString("OrderDate", order.CreatedOnUtc.ToString(DATE_FORMAT));
-            writer.WriteElementString("OrderStatus ", GetOrderStatus(order));
-            writer.WriteElementString("LastModified", DateTime.Now.ToString(DATE_FORMAT));
-            writer.WriteElementString("OrderTotal", order.OrderTotal.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString("ShippingAmount", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax).ToString(CultureInfo.InvariantCulture));
+            await writer.WriteStartElementAsync("Order");
+            await writer.WriteElementStringAsync("OrderID", order.Id.ToString());
+            await writer.WriteElementStringAsync("OrderNumber", order.OrderGuid.ToString());
+            await writer.WriteElementStringAsync("OrderDate", order.CreatedOnUtc.ToString(DATE_FORMAT));
+            await writer.WriteElementStringAsync("OrderStatus ", GetOrderStatus(order));
+            await writer.WriteElementStringAsync("LastModified", DateTime.Now.ToString(DATE_FORMAT));
+            await writer.WriteElementStringAsync("OrderTotal", order.OrderTotal.ToString(CultureInfo.InvariantCulture));
+            await writer.WriteElementStringAsync("ShippingAmount", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax).ToString(CultureInfo.InvariantCulture));
 
             await WriteCustomerToXml(writer, order, await _customerService.GetCustomerById(order.CustomerId));
             await WriteOrderItemsToXml(writer, await _orderService.GetOrderItems(order.Id));
 
-            writer.WriteEndElement();
-            writer.Flush();
+            await writer.WriteEndElementAsync();
+            await writer.FlushAsync();
         }
 
         #endregion
@@ -520,24 +520,28 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         {
             string xml;
 
-            await using (var stream = new MemoryStream())
+            var settings = new XmlWriterSettings
             {
-                using (var writer = new XmlTextWriter(stream, Encoding.UTF8))
-                {
-                    writer.Formatting = Formatting.Indented;
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("Orders");
+                Async = true,
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
 
-                    foreach (var order in await _orderService.SearchOrders(createdFromUtc: startDate, createdToUtc: endDate, storeId: (await _storeContext.GetCurrentStore()).Id, pageIndex: pageIndex, pageSize: 200))
-                    {
-                        await WriteOrderToXml(writer, order);
-                    }
+            await using var stream = new MemoryStream();
+            using var writer = XmlWriter.Create(stream, settings);
 
-                    writer.WriteEndElement();
-                }
+            await writer.WriteStartDocumentAsync();
+            await writer.WriteStartElementAsync("Orders");
 
-                xml = Encoding.UTF8.GetString(stream.ToArray());
+            foreach (var order in await _orderService.SearchOrders(createdFromUtc: startDate, createdToUtc: endDate, storeId: (await _storeContext.GetCurrentStore()).Id, pageIndex: pageIndex, pageSize: 200))
+            {
+                await WriteOrderToXml(writer, order);
             }
+
+            writer.WriteEndElement();
+
+            xml = Encoding.UTF8.GetString(stream.ToArray());
 
             return xml;
         }

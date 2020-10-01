@@ -18,6 +18,7 @@ using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
+using Nop.Services.ExportImport;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
 
@@ -399,26 +400,34 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-            await using var stream = new MemoryStream();
-            using (var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8))
+
+            var settings = new XmlWriterSettings
             {
-                xmlWriter.WriteStartDocument();
-                xmlWriter.WriteStartElement("Language");
-                xmlWriter.WriteAttributeString("Name", language.Name);
-                xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CURRENT_VERSION);
+                Async = true,
+                Encoding = Encoding.UTF8,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
 
-                var resources = await GetAllResources(language.Id);
-                foreach (var resource in resources)
-                {
-                    xmlWriter.WriteStartElement("LocaleResource");
-                    xmlWriter.WriteAttributeString("Name", resource.ResourceName);
-                    xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
-                    xmlWriter.WriteEndElement();
-                }
+            await using var stream = new MemoryStream();
+            using var xmlWriter = XmlWriter.Create(stream, settings);
+            
+            await xmlWriter.WriteStartDocumentAsync();
+            await xmlWriter.WriteStartElementAsync("Language");
+            await xmlWriter.WriteAttributeStringAsync("Name", language.Name);
+            await xmlWriter.WriteAttributeStringAsync("SupportedVersion", NopVersion.CURRENT_VERSION);
 
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteEndDocument();
+            var resources = await GetAllResources(language.Id);
+            foreach (var resource in resources)
+            {
+                await xmlWriter.WriteStartElementAsync("LocaleResource");
+                await xmlWriter.WriteAttributeStringAsync("Name", resource.ResourceName);
+                await xmlWriter.WriteElementStringAsync("Value", null, resource.ResourceValue);
+                await xmlWriter.WriteEndElementAsync();
             }
+
+            await xmlWriter.WriteEndElementAsync();
+            await xmlWriter.WriteEndDocumentAsync();
+            await xmlWriter.FlushAsync();
 
             return Encoding.UTF8.GetString(stream.ToArray());
         }

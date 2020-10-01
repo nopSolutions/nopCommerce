@@ -174,7 +174,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
-        protected virtual async Task WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
+        protected virtual async Task WriteCategoriesAsync(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = await _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
             if (categories == null || !categories.Any())
@@ -182,32 +182,32 @@ namespace Nop.Services.ExportImport
 
             foreach (var category in categories)
             {
-                xmlWriter.WriteStartElement("Category");
+                await xmlWriter.WriteStartElementAsync("Category");
 
-                xmlWriter.WriteString("Id", category.Id);
+                await xmlWriter.WriteStringAsync("Id", category.Id);
 
-                xmlWriter.WriteString("Name", category.Name);
-                xmlWriter.WriteString("Description", category.Description);
-                xmlWriter.WriteString("CategoryTemplateId", category.CategoryTemplateId);
-                xmlWriter.WriteString("MetaKeywords", category.MetaKeywords, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("MetaDescription", category.MetaDescription, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("MetaTitle", category.MetaTitle, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("SeName", await _urlRecordService.GetSeName(category, 0), await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("ParentCategoryId", category.ParentCategoryId);
-                xmlWriter.WriteString("PictureId", category.PictureId);
-                xmlWriter.WriteString("PageSize", category.PageSize, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("AllowCustomersToSelectPageSize", category.AllowCustomersToSelectPageSize, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("PageSizeOptions", category.PageSizeOptions, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("PriceRanges", category.PriceRanges, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("ShowOnHomepage", category.ShowOnHomepage, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("IncludeInTopMenu", category.IncludeInTopMenu, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("Published", category.Published, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("Deleted", category.Deleted, true);
-                xmlWriter.WriteString("DisplayOrder", category.DisplayOrder);
-                xmlWriter.WriteString("CreatedOnUtc", category.CreatedOnUtc, await IgnoreExportCategoryProperty());
-                xmlWriter.WriteString("UpdatedOnUtc", category.UpdatedOnUtc, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("Name", category.Name);
+                await xmlWriter.WriteStringAsync("Description", category.Description);
+                await xmlWriter.WriteStringAsync("CategoryTemplateId", category.CategoryTemplateId);
+                await xmlWriter.WriteStringAsync("MetaKeywords", category.MetaKeywords, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("MetaDescription", category.MetaDescription, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("MetaTitle", category.MetaTitle, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("SeName", await _urlRecordService.GetSeName(category, 0), await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("ParentCategoryId", category.ParentCategoryId);
+                await xmlWriter.WriteStringAsync("PictureId", category.PictureId);
+                await xmlWriter.WriteStringAsync("PageSize", category.PageSize, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("AllowCustomersToSelectPageSize", category.AllowCustomersToSelectPageSize, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("PageSizeOptions", category.PageSizeOptions, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("PriceRanges", category.PriceRanges, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("ShowOnHomepage", category.ShowOnHomepage, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("IncludeInTopMenu", category.IncludeInTopMenu, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("Published", category.Published, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("Deleted", category.Deleted, true);
+                await xmlWriter.WriteStringAsync("DisplayOrder", category.DisplayOrder);
+                await xmlWriter.WriteStringAsync("CreatedOnUtc", category.CreatedOnUtc, await IgnoreExportCategoryProperty());
+                await xmlWriter.WriteStringAsync("UpdatedOnUtc", category.UpdatedOnUtc, await IgnoreExportCategoryProperty());
 
-                xmlWriter.WriteStartElement("Products");
+                await xmlWriter.WriteStartElementAsync("Products");
                 var productCategories = await _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
                 foreach (var productCategory in productCategories)
                 {
@@ -215,21 +215,21 @@ namespace Nop.Services.ExportImport
                     if (product == null || product.Deleted)
                         continue;
 
-                    xmlWriter.WriteStartElement("ProductCategory");
-                    xmlWriter.WriteString("ProductCategoryId", productCategory.Id);
-                    xmlWriter.WriteString("ProductId", productCategory.ProductId);
-                    xmlWriter.WriteString("ProductName", product.Name);
-                    xmlWriter.WriteString("IsFeaturedProduct", productCategory.IsFeaturedProduct);
-                    xmlWriter.WriteString("DisplayOrder", productCategory.DisplayOrder);
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteStartElementAsync("ProductCategory");
+                    await xmlWriter.WriteStringAsync("ProductCategoryId", productCategory.Id);
+                    await xmlWriter.WriteStringAsync("ProductId", productCategory.ProductId);
+                    await xmlWriter.WriteStringAsync("ProductName", product.Name);
+                    await xmlWriter.WriteStringAsync("IsFeaturedProduct", productCategory.IsFeaturedProduct);
+                    await xmlWriter.WriteStringAsync("DisplayOrder", productCategory.DisplayOrder);
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
 
-                xmlWriter.WriteStartElement("SubCategories");
-                await WriteCategories(xmlWriter, category.Id);
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteStartElementAsync("SubCategories");
+                await WriteCategoriesAsync(xmlWriter, category.Id);
+                await xmlWriter.WriteEndElementAsync();
+                await xmlWriter.WriteEndElementAsync();
             }
         }
 
@@ -704,37 +704,43 @@ namespace Nop.Services.ExportImport
         /// <returns>Result in XML format</returns>
         public virtual async Task<string> ExportManufacturersToXml(IList<Manufacturer> manufacturers)
         {
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Manufacturers");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+            await xmlWriter.WriteStartDocumentAsync();
+            await xmlWriter.WriteStartElementAsync("Manufacturers");
+            await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var manufacturer in manufacturers)
             {
-                xmlWriter.WriteStartElement("Manufacturer");
+                await xmlWriter.WriteStartElementAsync("Manufacturer");
 
-                xmlWriter.WriteString("ManufacturerId", manufacturer.Id);
-                xmlWriter.WriteString("Name", manufacturer.Name);
-                xmlWriter.WriteString("Description", manufacturer.Description);
-                xmlWriter.WriteString("ManufacturerTemplateId", manufacturer.ManufacturerTemplateId);
-                xmlWriter.WriteString("MetaKeywords", manufacturer.MetaKeywords, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("MetaDescription", manufacturer.MetaDescription, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("MetaTitle", manufacturer.MetaTitle, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("SEName", await _urlRecordService.GetSeName(manufacturer, 0), await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("PictureId", manufacturer.PictureId);
-                xmlWriter.WriteString("PageSize", manufacturer.PageSize, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("AllowCustomersToSelectPageSize", manufacturer.AllowCustomersToSelectPageSize, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("PageSizeOptions", manufacturer.PageSizeOptions, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("PriceRanges", manufacturer.PriceRanges, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("Published", manufacturer.Published, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("Deleted", manufacturer.Deleted, true);
-                xmlWriter.WriteString("DisplayOrder", manufacturer.DisplayOrder);
-                xmlWriter.WriteString("CreatedOnUtc", manufacturer.CreatedOnUtc, await IgnoreExportManufacturerProperty());
-                xmlWriter.WriteString("UpdatedOnUtc", manufacturer.UpdatedOnUtc, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("ManufacturerId", manufacturer.Id.ToString());
+                await xmlWriter.WriteStringAsync("Name", manufacturer.Name);
+                await xmlWriter.WriteStringAsync("Description", manufacturer.Description);
+                await xmlWriter.WriteStringAsync("ManufacturerTemplateId", manufacturer.ManufacturerTemplateId);
+                await xmlWriter.WriteStringAsync("MetaKeywords", manufacturer.MetaKeywords, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("MetaDescription", manufacturer.MetaDescription, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("MetaTitle", manufacturer.MetaTitle, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("SEName", await _urlRecordService.GetSeName(manufacturer, 0), await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("PictureId", manufacturer.PictureId);
+                await xmlWriter.WriteStringAsync("PageSize", manufacturer.PageSize, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("AllowCustomersToSelectPageSize", manufacturer.AllowCustomersToSelectPageSize, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("PageSizeOptions", manufacturer.PageSizeOptions, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("PriceRanges", manufacturer.PriceRanges, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("Published", manufacturer.Published, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("Deleted", manufacturer.Deleted, true);
+                await xmlWriter.WriteStringAsync("DisplayOrder", manufacturer.DisplayOrder);
+                await xmlWriter.WriteStringAsync("CreatedOnUtc", manufacturer.CreatedOnUtc, await IgnoreExportManufacturerProperty());
+                await xmlWriter.WriteStringAsync("UpdatedOnUtc", manufacturer.UpdatedOnUtc, await IgnoreExportManufacturerProperty());
 
-                xmlWriter.WriteStartElement("Products");
+                await xmlWriter.WriteStartElementAsync("Products");
                 var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, showHidden: true);
                 if (productManufacturers != null)
                 {
@@ -744,23 +750,24 @@ namespace Nop.Services.ExportImport
                         if (product == null || product.Deleted)
                             continue;
 
-                        xmlWriter.WriteStartElement("ProductManufacturer");
-                        xmlWriter.WriteString("ProductManufacturerId", productManufacturer.Id);
-                        xmlWriter.WriteString("ProductId", productManufacturer.ProductId);
-                        xmlWriter.WriteString("ProductName", product.Name);
-                        xmlWriter.WriteString("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
-                        xmlWriter.WriteString("DisplayOrder", productManufacturer.DisplayOrder);
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("ProductManufacturer");
+                        await xmlWriter.WriteStringAsync("ProductManufacturerId", productManufacturer.Id);
+                        await xmlWriter.WriteStringAsync("ProductId", productManufacturer.ProductId);
+                        await xmlWriter.WriteStringAsync("ProductName", product.Name);
+                        await xmlWriter.WriteStringAsync("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
+                        await xmlWriter.WriteStringAsync("DisplayOrder", productManufacturer.DisplayOrder);
+                        await xmlWriter.WriteEndElementAsync();
                     }
                 }
 
-                xmlWriter.WriteEndElement();
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
+                await xmlWriter.WriteEndElementAsync();
             }
 
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
+            await xmlWriter.WriteEndElementAsync();
+            await xmlWriter.WriteEndDocumentAsync();
+            await xmlWriter.FlushAsync();
+
             return stringWriter.ToString();
         }
 
@@ -799,16 +806,22 @@ namespace Nop.Services.ExportImport
         /// <returns>Result in XML format</returns>
         public virtual async Task<string> ExportCategoriesToXml()
         {
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Categories");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
-            await WriteCategories(xmlWriter, 0);
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+            await xmlWriter.WriteStartDocumentAsync();
+            await xmlWriter.WriteStartElementAsync("Categories");
+            await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
+            await WriteCategoriesAsync(xmlWriter, 0);
+            await xmlWriter.WriteEndElementAsync();
+            await xmlWriter.WriteEndDocumentAsync();
+            await xmlWriter.FlushAsync();
 
             return stringWriter.ToString();
         }
@@ -862,320 +875,326 @@ namespace Nop.Services.ExportImport
         /// <returns>Result in XML format</returns>
         public virtual async Task<string> ExportProductsToXml(IList<Product> products)
         {
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Products");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+            await xmlWriter.WriteStartDocumentAsync();
+            await xmlWriter.WriteStartElementAsync("Products");
+            await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var product in products)
             {
-                xmlWriter.WriteStartElement("Product");
+                await xmlWriter.WriteStartElementAsync("Product");
 
-                xmlWriter.WriteString("ProductId", product.Id);
-                xmlWriter.WriteString("ProductTypeId", product.ProductTypeId, await IgnoreExportProductProperty(p => p.ProductType));
-                xmlWriter.WriteString("ParentGroupedProductId", product.ParentGroupedProductId, await IgnoreExportProductProperty(p => p.ProductType));
-                xmlWriter.WriteString("VisibleIndividually", product.VisibleIndividually, await IgnoreExportProductProperty(p => p.VisibleIndividually));
-                xmlWriter.WriteString("Name", product.Name);
-                xmlWriter.WriteString("ShortDescription", product.ShortDescription);
-                xmlWriter.WriteString("FullDescription", product.FullDescription);
-                xmlWriter.WriteString("AdminComment", product.AdminComment, await IgnoreExportProductProperty(p => p.AdminComment));
+                await xmlWriter.WriteStringAsync("ProductId", product.Id);
+                await xmlWriter.WriteStringAsync("ProductTypeId", product.ProductTypeId, await IgnoreExportProductProperty(p => p.ProductType));
+                await xmlWriter.WriteStringAsync("ParentGroupedProductId", product.ParentGroupedProductId, await IgnoreExportProductProperty(p => p.ProductType));
+                await xmlWriter.WriteStringAsync("VisibleIndividually", product.VisibleIndividually, await IgnoreExportProductProperty(p => p.VisibleIndividually));
+                await xmlWriter.WriteStringAsync("Name", product.Name);
+                await xmlWriter.WriteStringAsync("ShortDescription", product.ShortDescription);
+                await xmlWriter.WriteStringAsync("FullDescription", product.FullDescription);
+                await xmlWriter.WriteStringAsync("AdminComment", product.AdminComment, await IgnoreExportProductProperty(p => p.AdminComment));
                 //vendor can't change this field
-                xmlWriter.WriteString("VendorId", product.VendorId, await IgnoreExportProductProperty(p => p.Vendor) || await _workContext.GetCurrentVendor() != null);
-                xmlWriter.WriteString("ProductTemplateId", product.ProductTemplateId, await IgnoreExportProductProperty(p => p.ProductTemplate));
+                await xmlWriter.WriteStringAsync("VendorId", product.VendorId, await IgnoreExportProductProperty(p => p.Vendor) || await _workContext.GetCurrentVendor() != null);
+                await xmlWriter.WriteStringAsync("ProductTemplateId", product.ProductTemplateId, await IgnoreExportProductProperty(p => p.ProductTemplate));
                 //vendor can't change this field
-                xmlWriter.WriteString("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductProperty(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendor() != null);
+                await xmlWriter.WriteStringAsync("ShowOnHomepage", product.ShowOnHomepage, await IgnoreExportProductProperty(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendor() != null);
                 //vendor can't change this field
-                xmlWriter.WriteString("DisplayOrder", product.DisplayOrder, await IgnoreExportProductProperty(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendor() != null);
-                xmlWriter.WriteString("MetaKeywords", product.MetaKeywords, await IgnoreExportProductProperty(p => p.Seo));
-                xmlWriter.WriteString("MetaDescription", product.MetaDescription, await IgnoreExportProductProperty(p => p.Seo));
-                xmlWriter.WriteString("MetaTitle", product.MetaTitle, await IgnoreExportProductProperty(p => p.Seo));
-                xmlWriter.WriteString("SEName", await _urlRecordService.GetSeName(product, 0), await IgnoreExportProductProperty(p => p.Seo));
-                xmlWriter.WriteString("AllowCustomerReviews", product.AllowCustomerReviews, await IgnoreExportProductProperty(p => p.AllowCustomerReviews));
-                xmlWriter.WriteString("SKU", product.Sku);
-                xmlWriter.WriteString("ManufacturerPartNumber", product.ManufacturerPartNumber, await IgnoreExportProductProperty(p => p.ManufacturerPartNumber));
-                xmlWriter.WriteString("Gtin", product.Gtin, await IgnoreExportProductProperty(p => p.GTIN));
-                xmlWriter.WriteString("IsGiftCard", product.IsGiftCard, await IgnoreExportProductProperty(p => p.IsGiftCard));
-                xmlWriter.WriteString("GiftCardType", product.GiftCardType, await IgnoreExportProductProperty(p => p.IsGiftCard));
-                xmlWriter.WriteString("OverriddenGiftCardAmount", product.OverriddenGiftCardAmount, await IgnoreExportProductProperty(p => p.IsGiftCard));
-                xmlWriter.WriteString("RequireOtherProducts", product.RequireOtherProducts, await IgnoreExportProductProperty(p => p.RequireOtherProductsAddedToCart));
-                xmlWriter.WriteString("RequiredProductIds", product.RequiredProductIds, await IgnoreExportProductProperty(p => p.RequireOtherProductsAddedToCart));
-                xmlWriter.WriteString("AutomaticallyAddRequiredProducts", product.AutomaticallyAddRequiredProducts, await IgnoreExportProductProperty(p => p.RequireOtherProductsAddedToCart));
-                xmlWriter.WriteString("IsDownload", product.IsDownload, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("DownloadId", product.DownloadId, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("UnlimitedDownloads", product.UnlimitedDownloads, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("MaxNumberOfDownloads", product.MaxNumberOfDownloads, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("DownloadExpirationDays", product.DownloadExpirationDays, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("DownloadActivationType", product.DownloadActivationType, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("HasSampleDownload", product.HasSampleDownload, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("SampleDownloadId", product.SampleDownloadId, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("HasUserAgreement", product.HasUserAgreement, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("UserAgreementText", product.UserAgreementText, await IgnoreExportProductProperty(p => p.DownloadableProduct));
-                xmlWriter.WriteString("IsRecurring", product.IsRecurring, await IgnoreExportProductProperty(p => p.RecurringProduct));
-                xmlWriter.WriteString("RecurringCycleLength", product.RecurringCycleLength, await IgnoreExportProductProperty(p => p.RecurringProduct));
-                xmlWriter.WriteString("RecurringCyclePeriodId", product.RecurringCyclePeriodId, await IgnoreExportProductProperty(p => p.RecurringProduct));
-                xmlWriter.WriteString("RecurringTotalCycles", product.RecurringTotalCycles, await IgnoreExportProductProperty(p => p.RecurringProduct));
-                xmlWriter.WriteString("IsRental", product.IsRental, await IgnoreExportProductProperty(p => p.IsRental));
-                xmlWriter.WriteString("RentalPriceLength", product.RentalPriceLength, await IgnoreExportProductProperty(p => p.IsRental));
-                xmlWriter.WriteString("RentalPricePeriodId", product.RentalPricePeriodId, await IgnoreExportProductProperty(p => p.IsRental));
-                xmlWriter.WriteString("IsShipEnabled", product.IsShipEnabled);
-                xmlWriter.WriteString("IsFreeShipping", product.IsFreeShipping, await IgnoreExportProductProperty(p => p.FreeShipping));
-                xmlWriter.WriteString("ShipSeparately", product.ShipSeparately, await IgnoreExportProductProperty(p => p.ShipSeparately));
-                xmlWriter.WriteString("AdditionalShippingCharge", product.AdditionalShippingCharge, await IgnoreExportProductProperty(p => p.AdditionalShippingCharge));
-                xmlWriter.WriteString("DeliveryDateId", product.DeliveryDateId, await IgnoreExportProductProperty(p => p.DeliveryDate));
-                xmlWriter.WriteString("IsTaxExempt", product.IsTaxExempt);
-                xmlWriter.WriteString("TaxCategoryId", product.TaxCategoryId);
-                xmlWriter.WriteString("IsTelecommunicationsOrBroadcastingOrElectronicServices", product.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductProperty(p => p.TelecommunicationsBroadcastingElectronicServices));
-                xmlWriter.WriteString("ManageInventoryMethodId", product.ManageInventoryMethodId);
-                xmlWriter.WriteString("ProductAvailabilityRangeId", product.ProductAvailabilityRangeId, await IgnoreExportProductProperty(p => p.ProductAvailabilityRange));
-                xmlWriter.WriteString("UseMultipleWarehouses", product.UseMultipleWarehouses, await IgnoreExportProductProperty(p => p.UseMultipleWarehouses));
-                xmlWriter.WriteString("WarehouseId", product.WarehouseId, await IgnoreExportProductProperty(p => p.Warehouse));
-                xmlWriter.WriteString("StockQuantity", product.StockQuantity);
-                xmlWriter.WriteString("DisplayStockAvailability", product.DisplayStockAvailability, await IgnoreExportProductProperty(p => p.DisplayStockAvailability));
-                xmlWriter.WriteString("DisplayStockQuantity", product.DisplayStockQuantity, await IgnoreExportProductProperty(p => p.DisplayStockAvailability));
-                xmlWriter.WriteString("MinStockQuantity", product.MinStockQuantity, await IgnoreExportProductProperty(p => p.MinimumStockQuantity));
-                xmlWriter.WriteString("LowStockActivityId", product.LowStockActivityId, await IgnoreExportProductProperty(p => p.LowStockActivity));
-                xmlWriter.WriteString("NotifyAdminForQuantityBelow", product.NotifyAdminForQuantityBelow, await IgnoreExportProductProperty(p => p.NotifyAdminForQuantityBelow));
-                xmlWriter.WriteString("BackorderModeId", product.BackorderModeId, await IgnoreExportProductProperty(p => p.Backorders));
-                xmlWriter.WriteString("AllowBackInStockSubscriptions", product.AllowBackInStockSubscriptions, await IgnoreExportProductProperty(p => p.AllowBackInStockSubscriptions));
-                xmlWriter.WriteString("OrderMinimumQuantity", product.OrderMinimumQuantity, await IgnoreExportProductProperty(p => p.MinimumCartQuantity));
-                xmlWriter.WriteString("OrderMaximumQuantity", product.OrderMaximumQuantity, await IgnoreExportProductProperty(p => p.MaximumCartQuantity));
-                xmlWriter.WriteString("AllowedQuantities", product.AllowedQuantities, await IgnoreExportProductProperty(p => p.AllowedQuantities));
-                xmlWriter.WriteString("AllowAddingOnlyExistingAttributeCombinations", product.AllowAddingOnlyExistingAttributeCombinations, await IgnoreExportProductProperty(p => p.AllowAddingOnlyExistingAttributeCombinations));
-                xmlWriter.WriteString("NotReturnable", product.NotReturnable, await IgnoreExportProductProperty(p => p.NotReturnable));
-                xmlWriter.WriteString("DisableBuyButton", product.DisableBuyButton, await IgnoreExportProductProperty(p => p.DisableBuyButton));
-                xmlWriter.WriteString("DisableWishlistButton", product.DisableWishlistButton, await IgnoreExportProductProperty(p => p.DisableWishlistButton));
-                xmlWriter.WriteString("AvailableForPreOrder", product.AvailableForPreOrder, await IgnoreExportProductProperty(p => p.AvailableForPreOrder));
-                xmlWriter.WriteString("PreOrderAvailabilityStartDateTimeUtc", product.PreOrderAvailabilityStartDateTimeUtc, await IgnoreExportProductProperty(p => p.AvailableForPreOrder));
-                xmlWriter.WriteString("CallForPrice", product.CallForPrice, await IgnoreExportProductProperty(p => p.CallForPrice));
-                xmlWriter.WriteString("Price", product.Price);
-                xmlWriter.WriteString("OldPrice", product.OldPrice, await IgnoreExportProductProperty(p => p.OldPrice));
-                xmlWriter.WriteString("ProductCost", product.ProductCost, await IgnoreExportProductProperty(p => p.ProductCost));
-                xmlWriter.WriteString("CustomerEntersPrice", product.CustomerEntersPrice, await IgnoreExportProductProperty(p => p.CustomerEntersPrice));
-                xmlWriter.WriteString("MinimumCustomerEnteredPrice", product.MinimumCustomerEnteredPrice, await IgnoreExportProductProperty(p => p.CustomerEntersPrice));
-                xmlWriter.WriteString("MaximumCustomerEnteredPrice", product.MaximumCustomerEnteredPrice, await IgnoreExportProductProperty(p => p.CustomerEntersPrice));
-                xmlWriter.WriteString("BasepriceEnabled", product.BasepriceEnabled, await IgnoreExportProductProperty(p => p.PAngV));
-                xmlWriter.WriteString("BasepriceAmount", product.BasepriceAmount, await IgnoreExportProductProperty(p => p.PAngV));
-                xmlWriter.WriteString("BasepriceUnitId", product.BasepriceUnitId, await IgnoreExportProductProperty(p => p.PAngV));
-                xmlWriter.WriteString("BasepriceBaseAmount", product.BasepriceBaseAmount, await IgnoreExportProductProperty(p => p.PAngV));
-                xmlWriter.WriteString("BasepriceBaseUnitId", product.BasepriceBaseUnitId, await IgnoreExportProductProperty(p => p.PAngV));
-                xmlWriter.WriteString("MarkAsNew", product.MarkAsNew, await IgnoreExportProductProperty(p => p.MarkAsNew));
-                xmlWriter.WriteString("MarkAsNewStartDateTimeUtc", product.MarkAsNewStartDateTimeUtc, await IgnoreExportProductProperty(p => p.MarkAsNew));
-                xmlWriter.WriteString("MarkAsNewEndDateTimeUtc", product.MarkAsNewEndDateTimeUtc, await IgnoreExportProductProperty(p => p.MarkAsNew));
-                xmlWriter.WriteString("Weight", product.Weight, await IgnoreExportProductProperty(p => p.Weight));
-                xmlWriter.WriteString("Length", product.Length, await IgnoreExportProductProperty(p => p.Dimensions));
-                xmlWriter.WriteString("Width", product.Width, await IgnoreExportProductProperty(p => p.Dimensions));
-                xmlWriter.WriteString("Height", product.Height, await IgnoreExportProductProperty(p => p.Dimensions));
-                xmlWriter.WriteString("Published", product.Published, await IgnoreExportProductProperty(p => p.Published));
-                xmlWriter.WriteString("CreatedOnUtc", product.CreatedOnUtc);
-                xmlWriter.WriteString("UpdatedOnUtc", product.UpdatedOnUtc);
+                await xmlWriter.WriteStringAsync("DisplayOrder", product.DisplayOrder, await IgnoreExportProductProperty(p => p.ShowOnHomepage) || await _workContext.GetCurrentVendor() != null);
+                await xmlWriter.WriteStringAsync("MetaKeywords", product.MetaKeywords, await IgnoreExportProductProperty(p => p.Seo));
+                await xmlWriter.WriteStringAsync("MetaDescription", product.MetaDescription, await IgnoreExportProductProperty(p => p.Seo));
+                await xmlWriter.WriteStringAsync("MetaTitle", product.MetaTitle, await IgnoreExportProductProperty(p => p.Seo));
+                await xmlWriter.WriteStringAsync("SEName", await _urlRecordService.GetSeName(product, 0), await IgnoreExportProductProperty(p => p.Seo));
+                await xmlWriter.WriteStringAsync("AllowCustomerReviews", product.AllowCustomerReviews, await IgnoreExportProductProperty(p => p.AllowCustomerReviews));
+                await xmlWriter.WriteStringAsync("SKU", product.Sku);
+                await xmlWriter.WriteStringAsync("ManufacturerPartNumber", product.ManufacturerPartNumber, await IgnoreExportProductProperty(p => p.ManufacturerPartNumber));
+                await xmlWriter.WriteStringAsync("Gtin", product.Gtin, await IgnoreExportProductProperty(p => p.GTIN));
+                await xmlWriter.WriteStringAsync("IsGiftCard", product.IsGiftCard, await IgnoreExportProductProperty(p => p.IsGiftCard));
+                await xmlWriter.WriteStringAsync("GiftCardType", product.GiftCardType, await IgnoreExportProductProperty(p => p.IsGiftCard));
+                await xmlWriter.WriteStringAsync("OverriddenGiftCardAmount", product.OverriddenGiftCardAmount, await IgnoreExportProductProperty(p => p.IsGiftCard));
+                await xmlWriter.WriteStringAsync("RequireOtherProducts", product.RequireOtherProducts, await IgnoreExportProductProperty(p => p.RequireOtherProductsAddedToCart));
+                await xmlWriter.WriteStringAsync("RequiredProductIds", product.RequiredProductIds, await IgnoreExportProductProperty(p => p.RequireOtherProductsAddedToCart));
+                await xmlWriter.WriteStringAsync("AutomaticallyAddRequiredProducts", product.AutomaticallyAddRequiredProducts, await IgnoreExportProductProperty(p => p.RequireOtherProductsAddedToCart));
+                await xmlWriter.WriteStringAsync("IsDownload", product.IsDownload, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("DownloadId", product.DownloadId, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("UnlimitedDownloads", product.UnlimitedDownloads, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("MaxNumberOfDownloads", product.MaxNumberOfDownloads, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("DownloadExpirationDays", product.DownloadExpirationDays, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("DownloadActivationType", product.DownloadActivationType, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("HasSampleDownload", product.HasSampleDownload, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("SampleDownloadId", product.SampleDownloadId, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("HasUserAgreement", product.HasUserAgreement, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("UserAgreementText", product.UserAgreementText, await IgnoreExportProductProperty(p => p.DownloadableProduct));
+                await xmlWriter.WriteStringAsync("IsRecurring", product.IsRecurring, await IgnoreExportProductProperty(p => p.RecurringProduct));
+                await xmlWriter.WriteStringAsync("RecurringCycleLength", product.RecurringCycleLength, await IgnoreExportProductProperty(p => p.RecurringProduct));
+                await xmlWriter.WriteStringAsync("RecurringCyclePeriodId", product.RecurringCyclePeriodId, await IgnoreExportProductProperty(p => p.RecurringProduct));
+                await xmlWriter.WriteStringAsync("RecurringTotalCycles", product.RecurringTotalCycles, await IgnoreExportProductProperty(p => p.RecurringProduct));
+                await xmlWriter.WriteStringAsync("IsRental", product.IsRental, await IgnoreExportProductProperty(p => p.IsRental));
+                await xmlWriter.WriteStringAsync("RentalPriceLength", product.RentalPriceLength, await IgnoreExportProductProperty(p => p.IsRental));
+                await xmlWriter.WriteStringAsync("RentalPricePeriodId", product.RentalPricePeriodId, await IgnoreExportProductProperty(p => p.IsRental));
+                await xmlWriter.WriteStringAsync("IsShipEnabled", product.IsShipEnabled);
+                await xmlWriter.WriteStringAsync("IsFreeShipping", product.IsFreeShipping, await IgnoreExportProductProperty(p => p.FreeShipping));
+                await xmlWriter.WriteStringAsync("ShipSeparately", product.ShipSeparately, await IgnoreExportProductProperty(p => p.ShipSeparately));
+                await xmlWriter.WriteStringAsync("AdditionalShippingCharge", product.AdditionalShippingCharge, await IgnoreExportProductProperty(p => p.AdditionalShippingCharge));
+                await xmlWriter.WriteStringAsync("DeliveryDateId", product.DeliveryDateId, await IgnoreExportProductProperty(p => p.DeliveryDate));
+                await xmlWriter.WriteStringAsync("IsTaxExempt", product.IsTaxExempt);
+                await xmlWriter.WriteStringAsync("TaxCategoryId", product.TaxCategoryId);
+                await xmlWriter.WriteStringAsync("IsTelecommunicationsOrBroadcastingOrElectronicServices", product.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductProperty(p => p.TelecommunicationsBroadcastingElectronicServices));
+                await xmlWriter.WriteStringAsync("ManageInventoryMethodId", product.ManageInventoryMethodId);
+                await xmlWriter.WriteStringAsync("ProductAvailabilityRangeId", product.ProductAvailabilityRangeId, await IgnoreExportProductProperty(p => p.ProductAvailabilityRange));
+                await xmlWriter.WriteStringAsync("UseMultipleWarehouses", product.UseMultipleWarehouses, await IgnoreExportProductProperty(p => p.UseMultipleWarehouses));
+                await xmlWriter.WriteStringAsync("WarehouseId", product.WarehouseId, await IgnoreExportProductProperty(p => p.Warehouse));
+                await xmlWriter.WriteStringAsync("StockQuantity", product.StockQuantity);
+                await xmlWriter.WriteStringAsync("DisplayStockAvailability", product.DisplayStockAvailability, await IgnoreExportProductProperty(p => p.DisplayStockAvailability));
+                await xmlWriter.WriteStringAsync("DisplayStockQuantity", product.DisplayStockQuantity, await IgnoreExportProductProperty(p => p.DisplayStockAvailability));
+                await xmlWriter.WriteStringAsync("MinStockQuantity", product.MinStockQuantity, await IgnoreExportProductProperty(p => p.MinimumStockQuantity));
+                await xmlWriter.WriteStringAsync("LowStockActivityId", product.LowStockActivityId, await IgnoreExportProductProperty(p => p.LowStockActivity));
+                await xmlWriter.WriteStringAsync("NotifyAdminForQuantityBelow", product.NotifyAdminForQuantityBelow, await IgnoreExportProductProperty(p => p.NotifyAdminForQuantityBelow));
+                await xmlWriter.WriteStringAsync("BackorderModeId", product.BackorderModeId, await IgnoreExportProductProperty(p => p.Backorders));
+                await xmlWriter.WriteStringAsync("AllowBackInStockSubscriptions", product.AllowBackInStockSubscriptions, await IgnoreExportProductProperty(p => p.AllowBackInStockSubscriptions));
+                await xmlWriter.WriteStringAsync("OrderMinimumQuantity", product.OrderMinimumQuantity, await IgnoreExportProductProperty(p => p.MinimumCartQuantity));
+                await xmlWriter.WriteStringAsync("OrderMaximumQuantity", product.OrderMaximumQuantity, await IgnoreExportProductProperty(p => p.MaximumCartQuantity));
+                await xmlWriter.WriteStringAsync("AllowedQuantities", product.AllowedQuantities, await IgnoreExportProductProperty(p => p.AllowedQuantities));
+                await xmlWriter.WriteStringAsync("AllowAddingOnlyExistingAttributeCombinations", product.AllowAddingOnlyExistingAttributeCombinations, await IgnoreExportProductProperty(p => p.AllowAddingOnlyExistingAttributeCombinations));
+                await xmlWriter.WriteStringAsync("NotReturnable", product.NotReturnable, await IgnoreExportProductProperty(p => p.NotReturnable));
+                await xmlWriter.WriteStringAsync("DisableBuyButton", product.DisableBuyButton, await IgnoreExportProductProperty(p => p.DisableBuyButton));
+                await xmlWriter.WriteStringAsync("DisableWishlistButton", product.DisableWishlistButton, await IgnoreExportProductProperty(p => p.DisableWishlistButton));
+                await xmlWriter.WriteStringAsync("AvailableForPreOrder", product.AvailableForPreOrder, await IgnoreExportProductProperty(p => p.AvailableForPreOrder));
+                await xmlWriter.WriteStringAsync("PreOrderAvailabilityStartDateTimeUtc", product.PreOrderAvailabilityStartDateTimeUtc, await IgnoreExportProductProperty(p => p.AvailableForPreOrder));
+                await xmlWriter.WriteStringAsync("CallForPrice", product.CallForPrice, await IgnoreExportProductProperty(p => p.CallForPrice));
+                await xmlWriter.WriteStringAsync("Price", product.Price);
+                await xmlWriter.WriteStringAsync("OldPrice", product.OldPrice, await IgnoreExportProductProperty(p => p.OldPrice));
+                await xmlWriter.WriteStringAsync("ProductCost", product.ProductCost, await IgnoreExportProductProperty(p => p.ProductCost));
+                await xmlWriter.WriteStringAsync("CustomerEntersPrice", product.CustomerEntersPrice, await IgnoreExportProductProperty(p => p.CustomerEntersPrice));
+                await xmlWriter.WriteStringAsync("MinimumCustomerEnteredPrice", product.MinimumCustomerEnteredPrice, await IgnoreExportProductProperty(p => p.CustomerEntersPrice));
+                await xmlWriter.WriteStringAsync("MaximumCustomerEnteredPrice", product.MaximumCustomerEnteredPrice, await IgnoreExportProductProperty(p => p.CustomerEntersPrice));
+                await xmlWriter.WriteStringAsync("BasepriceEnabled", product.BasepriceEnabled, await IgnoreExportProductProperty(p => p.PAngV));
+                await xmlWriter.WriteStringAsync("BasepriceAmount", product.BasepriceAmount, await IgnoreExportProductProperty(p => p.PAngV));
+                await xmlWriter.WriteStringAsync("BasepriceUnitId", product.BasepriceUnitId, await IgnoreExportProductProperty(p => p.PAngV));
+                await xmlWriter.WriteStringAsync("BasepriceBaseAmount", product.BasepriceBaseAmount, await IgnoreExportProductProperty(p => p.PAngV));
+                await xmlWriter.WriteStringAsync("BasepriceBaseUnitId", product.BasepriceBaseUnitId, await IgnoreExportProductProperty(p => p.PAngV));
+                await xmlWriter.WriteStringAsync("MarkAsNew", product.MarkAsNew, await IgnoreExportProductProperty(p => p.MarkAsNew));
+                await xmlWriter.WriteStringAsync("MarkAsNewStartDateTimeUtc", product.MarkAsNewStartDateTimeUtc, await IgnoreExportProductProperty(p => p.MarkAsNew));
+                await xmlWriter.WriteStringAsync("MarkAsNewEndDateTimeUtc", product.MarkAsNewEndDateTimeUtc, await IgnoreExportProductProperty(p => p.MarkAsNew));
+                await xmlWriter.WriteStringAsync("Weight", product.Weight, await IgnoreExportProductProperty(p => p.Weight));
+                await xmlWriter.WriteStringAsync("Length", product.Length, await IgnoreExportProductProperty(p => p.Dimensions));
+                await xmlWriter.WriteStringAsync("Width", product.Width, await IgnoreExportProductProperty(p => p.Dimensions));
+                await xmlWriter.WriteStringAsync("Height", product.Height, await IgnoreExportProductProperty(p => p.Dimensions));
+                await xmlWriter.WriteStringAsync("Published", product.Published, await IgnoreExportProductProperty(p => p.Published));
+                await xmlWriter.WriteStringAsync("CreatedOnUtc", product.CreatedOnUtc);
+                await xmlWriter.WriteStringAsync("UpdatedOnUtc", product.UpdatedOnUtc);
 
                 if (!await IgnoreExportProductProperty(p => p.Discounts))
                 {
-                    xmlWriter.WriteStartElement("ProductDiscounts");
+                    await xmlWriter.WriteStartElementAsync("ProductDiscounts");
 
                     foreach (var discount in await _discountService.GetAppliedDiscounts(product))
                     {
-                        xmlWriter.WriteStartElement("Discount");
-                        xmlWriter.WriteString("DiscountId", discount.Id);
-                        xmlWriter.WriteString("Name", discount.Name);
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("Discount");
+                        await xmlWriter.WriteStringAsync("DiscountId", discount.Id);
+                        await xmlWriter.WriteStringAsync("Name", discount.Name);
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
                 if (!await IgnoreExportProductProperty(p => p.TierPrices))
                 {
-                    xmlWriter.WriteStartElement("TierPrices");
+                    await  xmlWriter.WriteStartElementAsync("TierPrices");
                     var tierPrices = await _productService.GetTierPricesByProduct(product.Id);
                     foreach (var tierPrice in tierPrices)
                     {
-                        xmlWriter.WriteStartElement("TierPrice");
-                        xmlWriter.WriteString("TierPriceId", tierPrice.Id);
-                        xmlWriter.WriteString("StoreId", tierPrice.StoreId);
-                        xmlWriter.WriteString("CustomerRoleId", tierPrice.CustomerRoleId, defaulValue: "0");
-                        xmlWriter.WriteString("Quantity", tierPrice.Quantity);
-                        xmlWriter.WriteString("Price", tierPrice.Price);
-                        xmlWriter.WriteString("StartDateTimeUtc", tierPrice.StartDateTimeUtc);
-                        xmlWriter.WriteString("EndDateTimeUtc", tierPrice.EndDateTimeUtc);
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("TierPrice");
+                        await xmlWriter.WriteStringAsync("TierPriceId", tierPrice.Id);
+                        await xmlWriter.WriteStringAsync("StoreId", tierPrice.StoreId);
+                        await xmlWriter.WriteStringAsync("CustomerRoleId", tierPrice.CustomerRoleId, defaulValue: "0");
+                        await xmlWriter.WriteStringAsync("Quantity", tierPrice.Quantity);
+                        await xmlWriter.WriteStringAsync("Price", tierPrice.Price);
+                        await xmlWriter.WriteStringAsync("StartDateTimeUtc", tierPrice.StartDateTimeUtc);
+                        await xmlWriter.WriteStringAsync("EndDateTimeUtc", tierPrice.EndDateTimeUtc);
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
                 if (!await IgnoreExportProductProperty(p => p.ProductAttributes))
                 {
-                    xmlWriter.WriteStartElement("ProductAttributes");
+                    await  xmlWriter.WriteStartElementAsync("ProductAttributes");
                     var productAttributMappings =
                         await _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
                     foreach (var productAttributeMapping in productAttributMappings)
                     {
                         var productAttribute = await _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
 
-                        xmlWriter.WriteStartElement("ProductAttributeMapping");
-                        xmlWriter.WriteString("ProductAttributeMappingId", productAttributeMapping.Id);
-                        xmlWriter.WriteString("ProductAttributeId", productAttributeMapping.ProductAttributeId);
-                        xmlWriter.WriteString("ProductAttributeName", productAttribute.Name);
-                        xmlWriter.WriteString("TextPrompt", productAttributeMapping.TextPrompt);
-                        xmlWriter.WriteString("IsRequired", productAttributeMapping.IsRequired);
-                        xmlWriter.WriteString("AttributeControlTypeId", productAttributeMapping.AttributeControlTypeId);
-                        xmlWriter.WriteString("DisplayOrder", productAttributeMapping.DisplayOrder);
+                        await xmlWriter.WriteStartElementAsync("ProductAttributeMapping");
+                        await xmlWriter.WriteStringAsync("ProductAttributeMappingId", productAttributeMapping.Id);
+                        await xmlWriter.WriteStringAsync("ProductAttributeId", productAttributeMapping.ProductAttributeId);
+                        await xmlWriter.WriteStringAsync("ProductAttributeName", productAttribute.Name);
+                        await xmlWriter.WriteStringAsync("TextPrompt", productAttributeMapping.TextPrompt);
+                        await xmlWriter.WriteStringAsync("IsRequired", productAttributeMapping.IsRequired);
+                        await xmlWriter.WriteStringAsync("AttributeControlTypeId", productAttributeMapping.AttributeControlTypeId);
+                        await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeMapping.DisplayOrder);
                         //validation rules
                         if (productAttributeMapping.ValidationRulesAllowed())
                         {
                             if (productAttributeMapping.ValidationMinLength.HasValue)
                             {
-                                xmlWriter.WriteString("ValidationMinLength",
+                                await xmlWriter.WriteStringAsync("ValidationMinLength",
                                     productAttributeMapping.ValidationMinLength.Value);
                             }
 
                             if (productAttributeMapping.ValidationMaxLength.HasValue)
                             {
-                                xmlWriter.WriteString("ValidationMaxLength",
+                                await xmlWriter.WriteStringAsync("ValidationMaxLength",
                                     productAttributeMapping.ValidationMaxLength.Value);
                             }
 
                             if (string.IsNullOrEmpty(productAttributeMapping.ValidationFileAllowedExtensions))
                             {
-                                xmlWriter.WriteString("ValidationFileAllowedExtensions",
+                                await xmlWriter.WriteStringAsync("ValidationFileAllowedExtensions",
                                     productAttributeMapping.ValidationFileAllowedExtensions);
                             }
 
                             if (productAttributeMapping.ValidationFileMaximumSize.HasValue)
                             {
-                                xmlWriter.WriteString("ValidationFileMaximumSize",
+                                await xmlWriter.WriteStringAsync("ValidationFileMaximumSize",
                                     productAttributeMapping.ValidationFileMaximumSize.Value);
                             }
 
-                            xmlWriter.WriteString("DefaultValue", productAttributeMapping.DefaultValue);
+                            await xmlWriter.WriteStringAsync("DefaultValue", productAttributeMapping.DefaultValue);
                         }
                         //conditions
-                        xmlWriter.WriteElementString("ConditionAttributeXml",
-                            productAttributeMapping.ConditionAttributeXml);
+                        await xmlWriter.WriteElementStringAsync("ConditionAttributeXml", productAttributeMapping.ConditionAttributeXml);
 
-                        xmlWriter.WriteStartElement("ProductAttributeValues");
+                        await xmlWriter.WriteStartElementAsync("ProductAttributeValues");
                         var productAttributeValues = await _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
                         foreach (var productAttributeValue in productAttributeValues)
                         {
-                            xmlWriter.WriteStartElement("ProductAttributeValue");
-                            xmlWriter.WriteString("ProductAttributeValueId", productAttributeValue.Id);
-                            xmlWriter.WriteString("Name", productAttributeValue.Name);
-                            xmlWriter.WriteString("AttributeValueTypeId", productAttributeValue.AttributeValueTypeId);
-                            xmlWriter.WriteString("AssociatedProductId", productAttributeValue.AssociatedProductId);
-                            xmlWriter.WriteString("ColorSquaresRgb", productAttributeValue.ColorSquaresRgb);
-                            xmlWriter.WriteString("ImageSquaresPictureId", productAttributeValue.ImageSquaresPictureId);
-                            xmlWriter.WriteString("PriceAdjustment", productAttributeValue.PriceAdjustment);
-                            xmlWriter.WriteString("PriceAdjustmentUsePercentage", productAttributeValue.PriceAdjustmentUsePercentage);
-                            xmlWriter.WriteString("WeightAdjustment", productAttributeValue.WeightAdjustment);
-                            xmlWriter.WriteString("Cost", productAttributeValue.Cost);
-                            xmlWriter.WriteString("CustomerEntersQty", productAttributeValue.CustomerEntersQty);
-                            xmlWriter.WriteString("Quantity", productAttributeValue.Quantity);
-                            xmlWriter.WriteString("IsPreSelected", productAttributeValue.IsPreSelected);
-                            xmlWriter.WriteString("DisplayOrder", productAttributeValue.DisplayOrder);
-                            xmlWriter.WriteString("PictureId", productAttributeValue.PictureId);
-                            xmlWriter.WriteEndElement();
+                            await xmlWriter.WriteStartElementAsync("ProductAttributeValue");
+                            await xmlWriter.WriteStringAsync("ProductAttributeValueId", productAttributeValue.Id);
+                            await xmlWriter.WriteStringAsync("Name", productAttributeValue.Name);
+                            await xmlWriter.WriteStringAsync("AttributeValueTypeId", productAttributeValue.AttributeValueTypeId);
+                            await xmlWriter.WriteStringAsync("AssociatedProductId", productAttributeValue.AssociatedProductId);
+                            await xmlWriter.WriteStringAsync("ColorSquaresRgb", productAttributeValue.ColorSquaresRgb);
+                            await xmlWriter.WriteStringAsync("ImageSquaresPictureId", productAttributeValue.ImageSquaresPictureId);
+                            await xmlWriter.WriteStringAsync("PriceAdjustment", productAttributeValue.PriceAdjustment);
+                            await xmlWriter.WriteStringAsync("PriceAdjustmentUsePercentage", productAttributeValue.PriceAdjustmentUsePercentage);
+                            await xmlWriter.WriteStringAsync("WeightAdjustment", productAttributeValue.WeightAdjustment);
+                            await xmlWriter.WriteStringAsync("Cost", productAttributeValue.Cost);
+                            await xmlWriter.WriteStringAsync("CustomerEntersQty", productAttributeValue.CustomerEntersQty);
+                            await xmlWriter.WriteStringAsync("Quantity", productAttributeValue.Quantity);
+                            await xmlWriter.WriteStringAsync("IsPreSelected", productAttributeValue.IsPreSelected);
+                            await xmlWriter.WriteStringAsync("DisplayOrder", productAttributeValue.DisplayOrder);
+                            await xmlWriter.WriteStringAsync("PictureId", productAttributeValue.PictureId);
+                            await xmlWriter.WriteEndElementAsync();
                         }
 
-                        xmlWriter.WriteEndElement();
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteEndElementAsync();
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
-                xmlWriter.WriteStartElement("ProductPictures");
+                await xmlWriter.WriteStartElementAsync("ProductPictures");
                 var productPictures = await _productService.GetProductPicturesByProductId(product.Id);
                 foreach (var productPicture in productPictures)
                 {
-                    xmlWriter.WriteStartElement("ProductPicture");
-                    xmlWriter.WriteString("ProductPictureId", productPicture.Id);
-                    xmlWriter.WriteString("PictureId", productPicture.PictureId);
-                    xmlWriter.WriteString("DisplayOrder", productPicture.DisplayOrder);
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteStartElementAsync("ProductPicture");
+                    await xmlWriter.WriteStringAsync("ProductPictureId", productPicture.Id);
+                    await xmlWriter.WriteStringAsync("PictureId", productPicture.PictureId);
+                    await xmlWriter.WriteStringAsync("DisplayOrder", productPicture.DisplayOrder);
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
 
-                xmlWriter.WriteStartElement("ProductCategories");
+                await xmlWriter.WriteStartElementAsync("ProductCategories");
                 var productCategories = await _categoryService.GetProductCategoriesByProductId(product.Id);
                 if (productCategories != null)
                 {
                     foreach (var productCategory in productCategories)
                     {
-                        xmlWriter.WriteStartElement("ProductCategory");
-                        xmlWriter.WriteString("ProductCategoryId", productCategory.Id);
-                        xmlWriter.WriteString("CategoryId", productCategory.CategoryId);
-                        xmlWriter.WriteString("IsFeaturedProduct", productCategory.IsFeaturedProduct);
-                        xmlWriter.WriteString("DisplayOrder", productCategory.DisplayOrder);
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("ProductCategory");
+                        await xmlWriter.WriteStringAsync("ProductCategoryId", productCategory.Id);
+                        await xmlWriter.WriteStringAsync("CategoryId", productCategory.CategoryId);
+                        await xmlWriter.WriteStringAsync("IsFeaturedProduct", productCategory.IsFeaturedProduct);
+                        await xmlWriter.WriteStringAsync("DisplayOrder", productCategory.DisplayOrder);
+                        await xmlWriter.WriteEndElementAsync();
                     }
                 }
 
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
 
                 if (!await IgnoreExportProductProperty(p => p.Manufacturers))
                 {
-                    xmlWriter.WriteStartElement("ProductManufacturers");
+                    await xmlWriter.WriteStartElementAsync("ProductManufacturers");
                     var productManufacturers = await _manufacturerService.GetProductManufacturersByProductId(product.Id);
                     if (productManufacturers != null)
                     {
                         foreach (var productManufacturer in productManufacturers)
                         {
-                            xmlWriter.WriteStartElement("ProductManufacturer");
-                            xmlWriter.WriteString("ProductManufacturerId", productManufacturer.Id);
-                            xmlWriter.WriteString("ManufacturerId", productManufacturer.ManufacturerId);
-                            xmlWriter.WriteString("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
-                            xmlWriter.WriteString("DisplayOrder", productManufacturer.DisplayOrder);
-                            xmlWriter.WriteEndElement();
+                            await xmlWriter.WriteStartElementAsync("ProductManufacturer");
+                            await xmlWriter.WriteStringAsync("ProductManufacturerId", productManufacturer.Id);
+                            await xmlWriter.WriteStringAsync("ManufacturerId", productManufacturer.ManufacturerId);
+                            await xmlWriter.WriteStringAsync("IsFeaturedProduct", productManufacturer.IsFeaturedProduct);
+                            await xmlWriter.WriteStringAsync("DisplayOrder", productManufacturer.DisplayOrder);
+                            await xmlWriter.WriteEndElementAsync();
                         }
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
                 if (!await IgnoreExportProductProperty(p => p.SpecificationAttributes))
                 {
-                    xmlWriter.WriteStartElement("ProductSpecificationAttributes");
+                    await xmlWriter.WriteStartElementAsync("ProductSpecificationAttributes");
                     var productSpecificationAttributes = await _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
                     foreach (var productSpecificationAttribute in productSpecificationAttributes)
                     {
-                        xmlWriter.WriteStartElement("ProductSpecificationAttribute");
-                        xmlWriter.WriteString("ProductSpecificationAttributeId", productSpecificationAttribute.Id);
-                        xmlWriter.WriteString("SpecificationAttributeOptionId", productSpecificationAttribute.SpecificationAttributeOptionId);
-                        xmlWriter.WriteString("CustomValue", productSpecificationAttribute.CustomValue);
-                        xmlWriter.WriteString("AllowFiltering", productSpecificationAttribute.AllowFiltering);
-                        xmlWriter.WriteString("ShowOnProductPage", productSpecificationAttribute.ShowOnProductPage);
-                        xmlWriter.WriteString("DisplayOrder", productSpecificationAttribute.DisplayOrder);
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("ProductSpecificationAttribute");
+                        await xmlWriter.WriteStringAsync("ProductSpecificationAttributeId", productSpecificationAttribute.Id);
+                        await xmlWriter.WriteStringAsync("SpecificationAttributeOptionId", productSpecificationAttribute.SpecificationAttributeOptionId);
+                        await xmlWriter.WriteStringAsync("CustomValue", productSpecificationAttribute.CustomValue);
+                        await xmlWriter.WriteStringAsync("AllowFiltering", productSpecificationAttribute.AllowFiltering);
+                        await xmlWriter.WriteStringAsync("ShowOnProductPage", productSpecificationAttribute.ShowOnProductPage);
+                        await xmlWriter.WriteStringAsync("DisplayOrder", productSpecificationAttribute.DisplayOrder);
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
                 if (!await IgnoreExportProductProperty(p => p.ProductTags))
                 {
-                    xmlWriter.WriteStartElement("ProductTags");
+                    await xmlWriter.WriteStartElementAsync("ProductTags");
                     var productTags = await _productTagService.GetAllProductTagsByProductId(product.Id);
                     foreach (var productTag in productTags)
                     {
-                        xmlWriter.WriteStartElement("ProductTag");
-                        xmlWriter.WriteString("Id", productTag.Id);
-                        xmlWriter.WriteString("Name", productTag.Name);
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("ProductTag");
+                        await xmlWriter.WriteStringAsync("Id", productTag.Id);
+                        await xmlWriter.WriteStringAsync("Name", productTag.Name);
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
             }
 
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
+            await xmlWriter.WriteEndElementAsync();
+            await xmlWriter.WriteEndDocumentAsync();
+            await xmlWriter.FlushAsync();
+
             return stringWriter.ToString();
         }
 
@@ -1373,65 +1392,71 @@ namespace Nop.Services.ExportImport
             //a vendor should have access only to part of order information
             var ignore = await _workContext.GetCurrentVendor() != null;
 
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Orders");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+            await xmlWriter.WriteStartDocumentAsync();
+            await xmlWriter.WriteStartElementAsync("Orders");
+            await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var order in orders)
             {
-                xmlWriter.WriteStartElement("Order");
+                await xmlWriter.WriteStartElementAsync("Order");
 
-                xmlWriter.WriteString("OrderId", order.Id);
-                xmlWriter.WriteString("OrderGuid", order.OrderGuid, ignore);
-                xmlWriter.WriteString("StoreId", order.StoreId);
-                xmlWriter.WriteString("CustomerId", order.CustomerId, ignore);
-                xmlWriter.WriteString("OrderStatusId", order.OrderStatusId, ignore);
-                xmlWriter.WriteString("PaymentStatusId", order.PaymentStatusId, ignore);
-                xmlWriter.WriteString("ShippingStatusId", order.ShippingStatusId, ignore);
-                xmlWriter.WriteString("CustomerLanguageId", order.CustomerLanguageId, ignore);
-                xmlWriter.WriteString("CustomerTaxDisplayTypeId", order.CustomerTaxDisplayTypeId, ignore);
-                xmlWriter.WriteString("CustomerIp", order.CustomerIp, ignore);
-                xmlWriter.WriteString("OrderSubtotalInclTax", order.OrderSubtotalInclTax, ignore);
-                xmlWriter.WriteString("OrderSubtotalExclTax", order.OrderSubtotalExclTax, ignore);
-                xmlWriter.WriteString("OrderSubTotalDiscountInclTax", order.OrderSubTotalDiscountInclTax, ignore);
-                xmlWriter.WriteString("OrderSubTotalDiscountExclTax", order.OrderSubTotalDiscountExclTax, ignore);
-                xmlWriter.WriteString("OrderShippingInclTax", order.OrderShippingInclTax, ignore);
-                xmlWriter.WriteString("OrderShippingExclTax", order.OrderShippingExclTax, ignore);
-                xmlWriter.WriteString("PaymentMethodAdditionalFeeInclTax", order.PaymentMethodAdditionalFeeInclTax, ignore);
-                xmlWriter.WriteString("PaymentMethodAdditionalFeeExclTax", order.PaymentMethodAdditionalFeeExclTax, ignore);
-                xmlWriter.WriteString("TaxRates", order.TaxRates, ignore);
-                xmlWriter.WriteString("OrderTax", order.OrderTax, ignore);
-                xmlWriter.WriteString("OrderTotal", order.OrderTotal, ignore);
-                xmlWriter.WriteString("RefundedAmount", order.RefundedAmount, ignore);
-                xmlWriter.WriteString("OrderDiscount", order.OrderDiscount, ignore);
-                xmlWriter.WriteString("CurrencyRate", order.CurrencyRate);
-                xmlWriter.WriteString("CustomerCurrencyCode", order.CustomerCurrencyCode);
-                xmlWriter.WriteString("AffiliateId", order.AffiliateId, ignore);
-                xmlWriter.WriteString("AllowStoringCreditCardNumber", order.AllowStoringCreditCardNumber, ignore);
-                xmlWriter.WriteString("CardType", order.CardType, ignore);
-                xmlWriter.WriteString("CardName", order.CardName, ignore);
-                xmlWriter.WriteString("CardNumber", order.CardNumber, ignore);
-                xmlWriter.WriteString("MaskedCreditCardNumber", order.MaskedCreditCardNumber, ignore);
-                xmlWriter.WriteString("CardCvv2", order.CardCvv2, ignore);
-                xmlWriter.WriteString("CardExpirationMonth", order.CardExpirationMonth, ignore);
-                xmlWriter.WriteString("CardExpirationYear", order.CardExpirationYear, ignore);
-                xmlWriter.WriteString("PaymentMethodSystemName", order.PaymentMethodSystemName, ignore);
-                xmlWriter.WriteString("AuthorizationTransactionId", order.AuthorizationTransactionId, ignore);
-                xmlWriter.WriteString("AuthorizationTransactionCode", order.AuthorizationTransactionCode, ignore);
-                xmlWriter.WriteString("AuthorizationTransactionResult", order.AuthorizationTransactionResult, ignore);
-                xmlWriter.WriteString("CaptureTransactionId", order.CaptureTransactionId, ignore);
-                xmlWriter.WriteString("CaptureTransactionResult", order.CaptureTransactionResult, ignore);
-                xmlWriter.WriteString("SubscriptionTransactionId", order.SubscriptionTransactionId, ignore);
-                xmlWriter.WriteString("PaidDateUtc", order.PaidDateUtc == null ? string.Empty : order.PaidDateUtc.Value.ToString(CultureInfo.InvariantCulture), ignore);
-                xmlWriter.WriteString("ShippingMethod", order.ShippingMethod);
-                xmlWriter.WriteString("ShippingRateComputationMethodSystemName", order.ShippingRateComputationMethodSystemName, ignore);
-                xmlWriter.WriteString("CustomValuesXml", order.CustomValuesXml, ignore);
-                xmlWriter.WriteString("VatNumber", order.VatNumber, ignore);
-                xmlWriter.WriteString("Deleted", order.Deleted, ignore);
-                xmlWriter.WriteString("CreatedOnUtc", order.CreatedOnUtc);
+                await xmlWriter.WriteStringAsync("OrderId", order.Id);
+                await xmlWriter.WriteStringAsync("OrderGuid", order.OrderGuid, ignore);
+                await xmlWriter.WriteStringAsync("StoreId", order.StoreId);
+                await xmlWriter.WriteStringAsync("CustomerId", order.CustomerId, ignore);
+                await xmlWriter.WriteStringAsync("OrderStatusId", order.OrderStatusId, ignore);
+                await xmlWriter.WriteStringAsync("PaymentStatusId", order.PaymentStatusId, ignore);
+                await xmlWriter.WriteStringAsync("ShippingStatusId", order.ShippingStatusId, ignore);
+                await xmlWriter.WriteStringAsync("CustomerLanguageId", order.CustomerLanguageId, ignore);
+                await xmlWriter.WriteStringAsync("CustomerTaxDisplayTypeId", order.CustomerTaxDisplayTypeId, ignore);
+                await xmlWriter.WriteStringAsync("CustomerIp", order.CustomerIp, ignore);
+                await xmlWriter.WriteStringAsync("OrderSubtotalInclTax", order.OrderSubtotalInclTax, ignore);
+                await xmlWriter.WriteStringAsync("OrderSubtotalExclTax", order.OrderSubtotalExclTax, ignore);
+                await xmlWriter.WriteStringAsync("OrderSubTotalDiscountInclTax", order.OrderSubTotalDiscountInclTax, ignore);
+                await xmlWriter.WriteStringAsync("OrderSubTotalDiscountExclTax", order.OrderSubTotalDiscountExclTax, ignore);
+                await xmlWriter.WriteStringAsync("OrderShippingInclTax", order.OrderShippingInclTax, ignore);
+                await xmlWriter.WriteStringAsync("OrderShippingExclTax", order.OrderShippingExclTax, ignore);
+                await xmlWriter.WriteStringAsync("PaymentMethodAdditionalFeeInclTax", order.PaymentMethodAdditionalFeeInclTax, ignore);
+                await xmlWriter.WriteStringAsync("PaymentMethodAdditionalFeeExclTax", order.PaymentMethodAdditionalFeeExclTax, ignore);
+                await xmlWriter.WriteStringAsync("TaxRates", order.TaxRates, ignore);
+                await xmlWriter.WriteStringAsync("OrderTax", order.OrderTax, ignore);
+                await xmlWriter.WriteStringAsync("OrderTotal", order.OrderTotal, ignore);
+                await xmlWriter.WriteStringAsync("RefundedAmount", order.RefundedAmount, ignore);
+                await xmlWriter.WriteStringAsync("OrderDiscount", order.OrderDiscount, ignore);
+                await xmlWriter.WriteStringAsync("CurrencyRate", order.CurrencyRate);
+                await xmlWriter.WriteStringAsync("CustomerCurrencyCode", order.CustomerCurrencyCode);
+                await xmlWriter.WriteStringAsync("AffiliateId", order.AffiliateId, ignore);
+                await xmlWriter.WriteStringAsync("AllowStoringCreditCardNumber", order.AllowStoringCreditCardNumber, ignore);
+                await xmlWriter.WriteStringAsync("CardType", order.CardType, ignore);
+                await xmlWriter.WriteStringAsync("CardName", order.CardName, ignore);
+                await xmlWriter.WriteStringAsync("CardNumber", order.CardNumber, ignore);
+                await xmlWriter.WriteStringAsync("MaskedCreditCardNumber", order.MaskedCreditCardNumber, ignore);
+                await xmlWriter.WriteStringAsync("CardCvv2", order.CardCvv2, ignore);
+                await xmlWriter.WriteStringAsync("CardExpirationMonth", order.CardExpirationMonth, ignore);
+                await xmlWriter.WriteStringAsync("CardExpirationYear", order.CardExpirationYear, ignore);
+                await xmlWriter.WriteStringAsync("PaymentMethodSystemName", order.PaymentMethodSystemName, ignore);
+                await xmlWriter.WriteStringAsync("AuthorizationTransactionId", order.AuthorizationTransactionId, ignore);
+                await xmlWriter.WriteStringAsync("AuthorizationTransactionCode", order.AuthorizationTransactionCode, ignore);
+                await xmlWriter.WriteStringAsync("AuthorizationTransactionResult", order.AuthorizationTransactionResult, ignore);
+                await xmlWriter.WriteStringAsync("CaptureTransactionId", order.CaptureTransactionId, ignore);
+                await xmlWriter.WriteStringAsync("CaptureTransactionResult", order.CaptureTransactionResult, ignore);
+                await xmlWriter.WriteStringAsync("SubscriptionTransactionId", order.SubscriptionTransactionId, ignore);
+                await xmlWriter.WriteStringAsync("PaidDateUtc", order.PaidDateUtc == null ? string.Empty : order.PaidDateUtc.Value.ToString(CultureInfo.InvariantCulture), ignore);
+                await xmlWriter.WriteStringAsync("ShippingMethod", order.ShippingMethod);
+                await xmlWriter.WriteStringAsync("ShippingRateComputationMethodSystemName", order.ShippingRateComputationMethodSystemName, ignore);
+                await xmlWriter.WriteStringAsync("CustomValuesXml", order.CustomValuesXml, ignore);
+                await xmlWriter.WriteStringAsync("VatNumber", order.VatNumber, ignore);
+                await xmlWriter.WriteStringAsync("Deleted", order.Deleted, ignore);
+                await xmlWriter.WriteStringAsync("CreatedOnUtc", order.CreatedOnUtc);
 
                 if (_orderSettings.ExportWithProducts)
                 {
@@ -1440,27 +1465,27 @@ namespace Nop.Services.ExportImport
 
                     if (orderItems.Any())
                     {
-                        xmlWriter.WriteStartElement("OrderItems");
+                        await xmlWriter.WriteStartElementAsync("OrderItems");
                         foreach (var orderItem in orderItems)
                         {
                             var product = await _productService.GetProductById(orderItem.ProductId);
 
-                            xmlWriter.WriteStartElement("OrderItem");
-                            xmlWriter.WriteString("Id", orderItem.Id);
-                            xmlWriter.WriteString("OrderItemGuid", orderItem.OrderItemGuid);
-                            xmlWriter.WriteString("Name", product.Name);
-                            xmlWriter.WriteString("Sku", product.Sku);
-                            xmlWriter.WriteString("PriceExclTax", orderItem.UnitPriceExclTax);
-                            xmlWriter.WriteString("PriceInclTax", orderItem.UnitPriceInclTax);
-                            xmlWriter.WriteString("Quantity", orderItem.Quantity);
-                            xmlWriter.WriteString("DiscountExclTax", orderItem.DiscountAmountExclTax);
-                            xmlWriter.WriteString("DiscountInclTax", orderItem.DiscountAmountInclTax);
-                            xmlWriter.WriteString("TotalExclTax", orderItem.PriceExclTax);
-                            xmlWriter.WriteString("TotalInclTax", orderItem.PriceInclTax);
-                            xmlWriter.WriteEndElement();
+                            await xmlWriter.WriteStartElementAsync("OrderItem");
+                            await xmlWriter.WriteStringAsync("Id", orderItem.Id);
+                            await xmlWriter.WriteStringAsync("OrderItemGuid", orderItem.OrderItemGuid);
+                            await xmlWriter.WriteStringAsync("Name", product.Name);
+                            await xmlWriter.WriteStringAsync("Sku", product.Sku);
+                            await xmlWriter.WriteStringAsync("PriceExclTax", orderItem.UnitPriceExclTax);
+                            await xmlWriter.WriteStringAsync("PriceInclTax", orderItem.UnitPriceInclTax);
+                            await xmlWriter.WriteStringAsync("Quantity", orderItem.Quantity);
+                            await xmlWriter.WriteStringAsync("DiscountExclTax", orderItem.DiscountAmountExclTax);
+                            await xmlWriter.WriteStringAsync("DiscountInclTax", orderItem.DiscountAmountInclTax);
+                            await xmlWriter.WriteStringAsync("TotalExclTax", orderItem.PriceExclTax);
+                            await xmlWriter.WriteStringAsync("TotalInclTax", orderItem.PriceInclTax);
+                            await xmlWriter.WriteEndElementAsync();
                         }
 
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteEndElementAsync();
                     }
                 }
 
@@ -1468,28 +1493,29 @@ namespace Nop.Services.ExportImport
                 var shipments = (await _shipmentService.GetShipmentsByOrderId(order.Id)).OrderBy(x => x.CreatedOnUtc).ToList();
                 if (shipments.Any())
                 {
-                    xmlWriter.WriteStartElement("Shipments");
+                    await xmlWriter.WriteStartElementAsync("Shipments");
                     foreach (var shipment in shipments)
                     {
-                        xmlWriter.WriteStartElement("Shipment");
-                        xmlWriter.WriteElementString("ShipmentId", null, shipment.Id.ToString());
-                        xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
-                        xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight?.ToString() ?? string.Empty);
-                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? shipment.ShippedDateUtc.ToString() : string.Empty);
-                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc?.ToString() ?? string.Empty);
-                        xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
-                        xmlWriter.WriteEndElement();
+                        await xmlWriter.WriteStartElementAsync("Shipment");
+                        await xmlWriter.WriteElementStringAsync("ShipmentId", null, shipment.Id.ToString());
+                        await xmlWriter.WriteElementStringAsync("TrackingNumber", null, shipment.TrackingNumber);
+                        await xmlWriter.WriteElementStringAsync("TotalWeight", null, shipment.TotalWeight?.ToString() ?? string.Empty);
+                        await xmlWriter.WriteElementStringAsync("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? shipment.ShippedDateUtc.ToString() : string.Empty);
+                        await xmlWriter.WriteElementStringAsync("DeliveryDateUtc", null, shipment.DeliveryDateUtc?.ToString() ?? string.Empty);
+                        await xmlWriter.WriteElementStringAsync("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
+                        await xmlWriter.WriteEndElementAsync();
                     }
 
-                    xmlWriter.WriteEndElement();
+                    await xmlWriter.WriteEndElementAsync();
                 }
 
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
             }
 
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
+            await xmlWriter.WriteEndElementAsync();
+            await xmlWriter.WriteEndDocumentAsync();
+            await xmlWriter.FlushAsync();
+
             return stringWriter.ToString();
         }
 
@@ -1630,65 +1656,71 @@ namespace Nop.Services.ExportImport
         /// <returns>Result in XML format</returns>
         public virtual async Task<string> ExportCustomersToXml(IList<Customer> customers)
         {
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Customers");
-            xmlWriter.WriteAttributeString("Version", NopVersion.CURRENT_VERSION);
+            var settings = new XmlWriterSettings
+            {
+                Async = true,
+                ConformanceLevel = ConformanceLevel.Auto
+            };
+
+            await using var stringWriter = new StringWriter();
+            using var xmlWriter = XmlWriter.Create(stringWriter, settings);
+
+            await xmlWriter.WriteStartDocumentAsync();
+            await xmlWriter.WriteStartElementAsync("Customers");
+            await xmlWriter.WriteAttributeStringAsync("Version", NopVersion.CURRENT_VERSION);
 
             foreach (var customer in customers)
             {
-                xmlWriter.WriteStartElement("Customer");
-                xmlWriter.WriteElementString("CustomerId", null, customer.Id.ToString());
-                xmlWriter.WriteElementString("CustomerGuid", null, customer.CustomerGuid.ToString());
-                xmlWriter.WriteElementString("Email", null, customer.Email);
-                xmlWriter.WriteElementString("Username", null, customer.Username);
+                await xmlWriter.WriteStartElementAsync("Customer");
+                await xmlWriter.WriteElementStringAsync("CustomerId", null, customer.Id.ToString());
+                await xmlWriter.WriteElementStringAsync("CustomerGuid", null, customer.CustomerGuid.ToString());
+                await xmlWriter.WriteElementStringAsync("Email", null, customer.Email);
+                await xmlWriter.WriteElementStringAsync("Username", null, customer.Username);
 
                 var customerPassword = await _customerService.GetCurrentPassword(customer.Id);
-                xmlWriter.WriteElementString("Password", null, customerPassword?.Password);
-                xmlWriter.WriteElementString("PasswordFormatId", null, (customerPassword?.PasswordFormatId ?? 0).ToString());
-                xmlWriter.WriteElementString("PasswordSalt", null, customerPassword?.PasswordSalt);
+                await xmlWriter.WriteElementStringAsync("Password", null, customerPassword?.Password);
+                await xmlWriter.WriteElementStringAsync("PasswordFormatId", null, (customerPassword?.PasswordFormatId ?? 0).ToString());
+                await xmlWriter.WriteElementStringAsync("PasswordSalt", null, customerPassword?.PasswordSalt);
 
-                xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
-                xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
-                xmlWriter.WriteElementString("VendorId", null, customer.VendorId.ToString());
-                xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
+                await xmlWriter.WriteElementStringAsync("IsTaxExempt", null, customer.IsTaxExempt.ToString());
+                await xmlWriter.WriteElementStringAsync("AffiliateId", null, customer.AffiliateId.ToString());
+                await xmlWriter.WriteElementStringAsync("VendorId", null, customer.VendorId.ToString());
+                await xmlWriter.WriteElementStringAsync("Active", null, customer.Active.ToString());
 
-                xmlWriter.WriteElementString("IsGuest", null, (await _customerService.IsGuest(customer)).ToString());
-                xmlWriter.WriteElementString("IsRegistered", null, (await _customerService.IsRegistered(customer)).ToString());
-                xmlWriter.WriteElementString("IsAdministrator", null, (await _customerService.IsAdmin(customer)).ToString());
-                xmlWriter.WriteElementString("IsForumModerator", null, (await _customerService.IsForumModerator(customer)).ToString());
-                xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
+                await xmlWriter.WriteElementStringAsync("IsGuest", null, (await _customerService.IsGuest(customer)).ToString());
+                await xmlWriter.WriteElementStringAsync("IsRegistered", null, (await _customerService.IsRegistered(customer)).ToString());
+                await xmlWriter.WriteElementStringAsync("IsAdministrator", null, (await _customerService.IsAdmin(customer)).ToString());
+                await xmlWriter.WriteElementStringAsync("IsForumModerator", null, (await _customerService.IsForumModerator(customer)).ToString());
+                await xmlWriter.WriteElementStringAsync("CreatedOnUtc", null, customer.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
 
-                xmlWriter.WriteElementString("FirstName", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute));
-                xmlWriter.WriteElementString("LastName", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute));
-                xmlWriter.WriteElementString("Gender", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute));
-                xmlWriter.WriteElementString("Company", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute));
+                await xmlWriter.WriteElementStringAsync("FirstName", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute));
+                await xmlWriter.WriteElementStringAsync("LastName", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute));
+                await xmlWriter.WriteElementStringAsync("Gender", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute));
+                await xmlWriter.WriteElementStringAsync("Company", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute));
 
-                xmlWriter.WriteElementString("CountryId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute)).ToString());
-                xmlWriter.WriteElementString("StreetAddress", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute));
-                xmlWriter.WriteElementString("StreetAddress2", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute));
-                xmlWriter.WriteElementString("ZipPostalCode", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute));
-                xmlWriter.WriteElementString("City", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute));
-                xmlWriter.WriteElementString("County", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute));
-                xmlWriter.WriteElementString("StateProvinceId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)).ToString());
-                xmlWriter.WriteElementString("Phone", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute));
-                xmlWriter.WriteElementString("Fax", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute));
-                xmlWriter.WriteElementString("VatNumber", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute));
-                xmlWriter.WriteElementString("VatNumberStatusId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString());
-                xmlWriter.WriteElementString("TimeZoneId", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute));
+                await xmlWriter.WriteElementStringAsync("CountryId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute)).ToString());
+                await xmlWriter.WriteElementStringAsync("StreetAddress", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute));
+                await xmlWriter.WriteElementStringAsync("StreetAddress2", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute));
+                await xmlWriter.WriteElementStringAsync("ZipPostalCode", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute));
+                await xmlWriter.WriteElementStringAsync("City", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute));
+                await xmlWriter.WriteElementStringAsync("County", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute));
+                await xmlWriter.WriteElementStringAsync("StateProvinceId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)).ToString());
+                await xmlWriter.WriteElementStringAsync("Phone", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute));
+                await xmlWriter.WriteElementStringAsync("Fax", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute));
+                await xmlWriter.WriteElementStringAsync("VatNumber", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute));
+                await xmlWriter.WriteElementStringAsync("VatNumberStatusId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute)).ToString());
+                await xmlWriter.WriteElementStringAsync("TimeZoneId", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute));
 
                 foreach (var store in await _storeService.GetAllStores())
                 {
                     var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
                     var subscribedToNewsletters = newsletter != null && newsletter.Active;
-                    xmlWriter.WriteElementString($"Newsletter-in-store-{store.Id}", null, subscribedToNewsletters.ToString());
+                    await xmlWriter.WriteElementStringAsync($"Newsletter-in-store-{store.Id}", null, subscribedToNewsletters.ToString());
                 }
 
-                xmlWriter.WriteElementString("AvatarPictureId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute)).ToString());
-                xmlWriter.WriteElementString("ForumPostCount", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.ForumPostCountAttribute)).ToString());
-                xmlWriter.WriteElementString("Signature", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SignatureAttribute));
+                await xmlWriter.WriteElementStringAsync("AvatarPictureId", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute)).ToString());
+                await xmlWriter.WriteElementStringAsync("ForumPostCount", null, (await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.ForumPostCountAttribute)).ToString());
+                await xmlWriter.WriteElementStringAsync("Signature", null, await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SignatureAttribute));
 
                 var selectedCustomerAttributesString = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
 
@@ -1696,15 +1728,16 @@ namespace Nop.Services.ExportImport
                 {
                     var selectedCustomerAttributes = new StringReader(selectedCustomerAttributesString);
                     var selectedCustomerAttributesXmlReader = XmlReader.Create(selectedCustomerAttributes);
-                    xmlWriter.WriteNode(selectedCustomerAttributesXmlReader, false);
+                    await xmlWriter.WriteNodeAsync(selectedCustomerAttributesXmlReader, false);
                 }
 
-                xmlWriter.WriteEndElement();
+                await xmlWriter.WriteEndElementAsync();
             }
 
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
+            await xmlWriter.WriteEndElementAsync();
+            await xmlWriter.WriteEndDocumentAsync();
+            await xmlWriter.FlushAsync();
+
             return stringWriter.ToString();
         }
 
