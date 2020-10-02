@@ -172,7 +172,7 @@ namespace Nop.Services.ExportImport.Help
                 }
                 else
                 {
-                    cell.Value = prop.GetProperty(CurrentObject);
+                    cell.Value = await prop.GetProperty(CurrentObject);
                 }
             }
         }

@@ -38,7 +38,7 @@ namespace Nop.Services.ExportImport.Help
             PropertyName = propertyName;
             
             if(func != null)
-                GetProperty = obj=> Task.FromResult(func(obj));
+                GetProperty = obj => Task.FromResult(func(obj));
 
             PropertyOrderPosition = 1;
             Ignore = ignore;
