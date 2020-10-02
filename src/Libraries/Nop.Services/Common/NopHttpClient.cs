@@ -75,7 +75,7 @@ namespace Nop.Services.Common
             var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
             var url = string.Format(NopCommonDefaults.NopCopyrightWarningPath,
                 (await _storeContext.GetCurrentStore()).Url,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                await _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 language).ToLowerInvariant();
 
             //get the message
@@ -92,9 +92,9 @@ namespace Nop.Services.Common
             var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
             var url = string.Format(NopCommonDefaults.NopNewsRssPath,
                 NopVersion.CURRENT_VERSION,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                await _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                _webHelper.GetStoreLocation(),
+                await _webHelper.GetStoreLocation(),
                 language).ToLowerInvariant();
 
             //get news feed
@@ -113,9 +113,9 @@ namespace Nop.Services.Common
             //prepare URL to request
             var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
                 NopVersion.CURRENT_VERSION,
-                _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                await _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 WebUtility.UrlEncode(email),
-                _webHelper.GetStoreLocation(),
+                await _webHelper.GetStoreLocation(),
                 languageCode)
                 .ToLowerInvariant();
 

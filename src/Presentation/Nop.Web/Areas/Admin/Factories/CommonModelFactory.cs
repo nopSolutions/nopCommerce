@@ -205,7 +205,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Level = SystemWarningLevel.Fail,
                 Text = string.Format(await _localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"),
-                    currentStoreUrl, _webHelper.GetStoreLocation(false))
+                    currentStoreUrl, await _webHelper.GetStoreLocation(false))
             });
         }
 

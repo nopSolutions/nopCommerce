@@ -234,7 +234,7 @@ namespace Nop.Services.Seo
 
             //custom URLs
             if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
-                sitemapUrls.AddRange(GetCustomUrls());
+                sitemapUrls.AddRange(await GetCustomUrls());
 
             return sitemapUrls;
         }
@@ -319,9 +319,9 @@ namespace Nop.Services.Seo
         /// Get custom URLs for the sitemap
         /// </summary>
         /// <returns>Sitemap URLs</returns>
-        protected virtual IEnumerable<SitemapUrl> GetCustomUrls()
+        protected virtual async Task<IEnumerable<SitemapUrl>> GetCustomUrls()
         {
-            var storeLocation = _webHelper.GetStoreLocation();
+            var storeLocation = await _webHelper.GetStoreLocation();
 
             return _sitemapXmlSettings.SitemapCustomUrls.Select(customUrl =>
                 new SitemapUrl(string.Concat(storeLocation, customUrl), new List<string>(), UpdateFrequency.Weekly, DateTime.UtcNow));

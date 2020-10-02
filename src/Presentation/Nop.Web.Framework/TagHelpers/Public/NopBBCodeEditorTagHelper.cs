@@ -52,7 +52,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "bb-code-editor-wrapper");
 
-            var storeLocation = _webHelper.GetStoreLocation();
+            var storeLocation = _webHelper.GetStoreLocation().Result;
             var bbEditorWebRoot = $"{storeLocation}js/";
 
             var script1 = new TagBuilder("script");

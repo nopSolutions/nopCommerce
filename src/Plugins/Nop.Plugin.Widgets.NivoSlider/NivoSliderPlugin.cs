@@ -49,7 +49,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return _webHelper.GetStoreLocation() + "Admin/WidgetsNivoSlider/Configure";
+            return _webHelper.GetStoreLocation().Result + "Admin/WidgetsNivoSlider/Configure";
         }
 
         /// <summary>

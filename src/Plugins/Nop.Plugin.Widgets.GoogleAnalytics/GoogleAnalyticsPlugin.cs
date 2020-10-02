@@ -51,7 +51,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return _webHelper.GetStoreLocation() + "Admin/WidgetsGoogleAnalytics/Configure";
+            return _webHelper.GetStoreLocation().Result + "Admin/WidgetsGoogleAnalytics/Configure";
         }
 
         /// <summary>

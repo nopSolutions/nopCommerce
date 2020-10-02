@@ -46,7 +46,7 @@ namespace Nop.Web.Framework.Globalization
             if (await webHelper.IsStaticResource())
                 return;
 
-            var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";
+            var adminAreaUrl = $"{await webHelper.GetStoreLocation()}admin";
             if ((await webHelper.GetThisPageUrl(false)).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 //set work context to admin mode
