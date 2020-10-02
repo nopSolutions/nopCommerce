@@ -18,13 +18,13 @@
     }
     else
     {
-        <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/admin-lte/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
     }
-    <script src="@Url.Content("~/lib/jquery/jquery-3.4.1.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery/jquery.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js")"></script>
     <script src="@Url.Content("~/js/public.common.js")"></script>
 </head>
 <body class="skin-blue">
@@ -72,7 +72,7 @@
                     $(document).ready(function () {
                         $('#restart-form').submit(function () {
                             $("html, body").animate({ scrollTop: 0 }, 400);
-                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting..."))');
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
                             $('input[type=submit]', this).attr('disabled', 'disabled');
                         });
                     });
@@ -92,7 +92,7 @@
                             if(!integratedSecurityProviders.includes($(this).val())) {
                                 $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('checked', false);
                                 $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', true)
-                                
+
                                 toggleSqlAuthenticationType();
                             } else {
                                 $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', false)
@@ -112,7 +112,7 @@
                     }
 
                     function toggleCollation() {
-                        
+
                         var connectionStringRaw = $("#@Html.IdFor(x => x.UseCustomCollation)").is(':checked');
                         var collationInput = $("#@Html.IdFor(x => x.Collation)")
                         if (connectionStringRaw) {
@@ -120,6 +120,24 @@
                         } else {
                             collationInput.hide();
                         }
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.RestartUrl))
+                    {
+                        <text>
+                            $(document).ready(function () {
+                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("RestartProgress")))');
+                                $.ajax({
+                                    type: "GET",
+                                    url: "@Url.Action("RestartApplication", "Install")",
+                                    complete: function() {
+                                        window.setTimeout(function () {
+                                            window.location.replace('@Model.RestartUrl');
+                                        }, @NopCommonDefaults.RestartTimeout);
+                                    }
+                                });
+                            });
+                        </text>
                     }
                 </script>
 

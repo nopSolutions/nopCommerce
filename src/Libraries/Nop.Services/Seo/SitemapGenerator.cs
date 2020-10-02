@@ -15,7 +15,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
@@ -49,7 +48,6 @@ namespace Nop.Services.Seo
         private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly SecuritySettings _securitySettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
 
         #endregion
@@ -73,7 +71,6 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SecuritySettings securitySettings,
             SitemapXmlSettings sitemapSettings)
         {
             _blogSettings = blogSettings;
@@ -93,7 +90,6 @@ namespace Nop.Services.Seo
             _webHelper = webHelper;
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
-            _securitySettings = securitySettings;
             _sitemapXmlSettings = sitemapSettings;
         }
 
@@ -249,7 +245,9 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetNewsItemUrls()
         {
             return _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id)
-                .Select(news => GetLocalizedSitemapUrl("NewsItem", GetSeoRouteParams(news), news.CreatedOnUtc));
+                .Select(news => GetLocalizedSitemapUrl("NewsItem",
+                    lang => new { SeName = _urlRecordService.GetSeName(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
+                    news.CreatedOnUtc));
         }
 
         /// <summary>
@@ -311,7 +309,9 @@ namespace Nop.Services.Seo
         {
             return _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id)
                 .Where(p => p.IncludeInSitemap)
-                .Select(post => GetLocalizedSitemapUrl("BlogPost", GetSeoRouteParams(post)));
+                .Select(post => GetLocalizedSitemapUrl("BlogPost",
+                    lang => new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
+                    post.CreatedOnUtc));
         }
 
         /// <summary>

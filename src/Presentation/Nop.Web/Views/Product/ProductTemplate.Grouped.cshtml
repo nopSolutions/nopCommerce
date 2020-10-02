@@ -164,6 +164,12 @@
                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{variant.Id}";
                                         @await Html.PartialAsync("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                     }
+                                    <!--estimate shipping-->
+                                    @{
+                                        var dataDictEstimateShipping = new ViewDataDictionary(ViewData);
+                                        dataDictEstimateShipping.TemplateInfo.HtmlFieldPrefix = $"estimate_shipping_{variant.Id}";
+                                        @await Html.PartialAsync("_ProductEstimateShipping", variant.ProductEstimateShipping, dataDictEstimateShipping)
+                                    }
                                     <!--wishlist-->
                                     @{
                                         var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
@@ -180,7 +186,7 @@
                             </div>
                         }
                     </div>
-                    @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)
+                    @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecificationModel)
                     @await Html.PartialAsync("_ProductTags", Model.ProductTags)
                 </div>
                 @*we do not display "also purchased" for grouped products

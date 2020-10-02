@@ -9,6 +9,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Messages;
 using Nop.Plugin.Misc.SendinBlue.Models;
 using Nop.Plugin.Misc.SendinBlue.Services;
+using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -38,7 +39,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly INotificationService _notificationService;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -58,7 +59,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             IMessageTokenProvider messageTokenProvider,
             INotificationService notificationService,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
@@ -74,7 +75,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             _messageTokenProvider = messageTokenProvider;
             _notificationService = notificationService;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
@@ -127,6 +128,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(_localizationService.GetResource("Plugins.Misc.SendinBlue.MyPhone"), "0"));
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(_localizationService.GetResource("Plugins.Misc.SendinBlue.CustomerPhone"), "1"));
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(_localizationService.GetResource("Plugins.Misc.SendinBlue.BillingAddressPhone"), "2"));
+            model.AddSms.DefaultSelectedPhoneTypeId = model.AddSms.AvailablePhoneTypes.First().Value;
+
             model.AddSms.AvailableMessages = _messageTemplateService.GetAllMessageTemplates(storeId).Select(messageTemplate =>
             {
                 var name = messageTemplate.Name;
@@ -139,6 +142,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
                 return new SelectListItem(name, messageTemplate.Id.ToString());
             }).ToList();
+            var defaultSelectedMessage = model.AddSms.AvailableMessages.FirstOrDefault();
+            model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
             //check whether email account exists
             if (sendinBlueSettings.UseSmtp && _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) != null)
@@ -224,7 +229,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
@@ -236,7 +241,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [AuthorizeAdmin]
@@ -246,7 +251,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult SaveSynchronization(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
@@ -264,7 +269,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [AuthorizeAdmin]
@@ -274,7 +279,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult Synchronization(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             //synchronize contacts of selected store
             var messages = _sendinBlueEmailManager.Synchronize(false, _storeContext.ActiveStoreScopeConfiguration);
@@ -288,15 +293,15 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Misc.SendinBlue.ImportProcess"));
             }
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public string GetSynchronizationInfo()
         {
-            var res = _cacheManager.Get(SendinBlueDefaults.SyncKeyCache, () => string.Empty);
-            _cacheManager.Remove(SendinBlueDefaults.SyncKeyCache);
+            var res = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), () => string.Empty);
+            _staticCacheManager.Remove(SendinBlueDefaults.SyncKeyCache);
             return res;
         }
 
@@ -307,7 +312,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult ConfigureSMTP(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
@@ -356,7 +361,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [HttpPost]
@@ -442,7 +447,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult ConfigureSMS(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
@@ -459,7 +464,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [HttpPost]
@@ -570,7 +575,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult SubmitCampaign(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             var campaignErrors = _sendinBlueEmailManager.SendSMSCampaign(model.CampaignListId, model.CampaignSenderName, model.CampaignText);
             if (!string.IsNullOrEmpty(campaignErrors))
@@ -578,7 +583,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             else
                 _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Misc.SendinBlue.SMS.Campaigns.Sent"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [AuthorizeAdmin]
@@ -588,7 +593,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         public IActionResult ConfigureMA(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var sendinBlueSettings = _settingService.LoadSetting<SendinBlueSettings>(storeId);
@@ -610,7 +615,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         public IActionResult ImportContacts(BaseNopModel model, IFormCollection form)
@@ -623,12 +628,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 _logger.Information(logInfo);
 
                 //display info on configuration page in case of the manually synchronization
-                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, logInfo);
+                _staticCacheManager.Set(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), logInfo);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, ex.Message);
+                _staticCacheManager.Set(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), ex.Message);
             }
 
             return Ok();

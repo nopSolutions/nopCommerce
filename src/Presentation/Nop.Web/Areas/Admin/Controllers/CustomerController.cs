@@ -1685,8 +1685,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            var xml = _exportManager.ExportCustomersToXml(customers);
-            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
+            try
+            {
+                var xml = _exportManager.ExportCustomersToXml(customers);
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

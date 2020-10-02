@@ -1,0 +1,52 @@
+@model AppSettingsModel
+
+@{
+    ViewBag.PageTitle = T("Admin.Configuration.AppSettings").Text;
+    Html.SetActiveMenuItemSystemName("App settings");
+
+    const string hideCacheBlockAttributeName = "AppSettingsPage.HideCacheBlock";
+    var hideCacheBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCacheBlockAttributeName);
+    const string hideHostingBlockAttributeName = "AppSettingsPage.HideHostingBlock";
+    var hideHostingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideHostingBlockAttributeName);
+    const string hideRedisBlockAttributeName = "AppSettingsPage.HideRedisBlock";
+    var hideRedisBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRedisBlockAttributeName);
+    const string hideAzureBlobBlockAttributeName = "AppSettingsPage.HideAzureBlobBlock";
+    var hideAzureBlobBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAzureBlobBlockAttributeName);
+    const string hideInstallationBlockAttributeName = "AppSettingsPage.HideInstallationBlock";
+    var hideInstallationBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInstallationBlockAttributeName);
+    const string hidePluginBlockAttributeName = "AppSettingsPage.HidePluginBlock";
+    var hidePluginBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePluginBlockAttributeName);
+    const string hideCommonBlockAttributeName = "AppSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="AppSettings" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.AppSettings")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsButtons })
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+            <nop-panels id="app-settings-panels">
+                <nop-panel asp-name="app-settings-cache" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Cache")" asp-hide-block-attribute-name="@hideCacheBlockAttributeName" asp-hide="@hideCacheBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Cache", Model)</nop-panel>
+                <nop-panel asp-name="app-settings-hosting" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Hosting")" asp-hide-block-attribute-name="@hideHostingBlockAttributeName" asp-hide="@hideHostingBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Hosting", Model)</nop-panel>
+                <nop-panel asp-name="app-settings-redis" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Redis")" asp-hide-block-attribute-name="@hideRedisBlockAttributeName" asp-hide="@hideRedisBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Redis", Model)</nop-panel>
+                <nop-panel asp-name="app-settings-azure-blob" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.AzureBlob")" asp-hide-block-attribute-name="@hideAzureBlobBlockAttributeName" asp-hide="@hideAzureBlobBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.AzureBlob", Model)</nop-panel>
+                <nop-panel asp-name="app-settings-installation" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Installation")" asp-hide-block-attribute-name="@hideInstallationBlockAttributeName" asp-hide="@hideInstallationBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Installation", Model)</nop-panel>
+                <nop-panel asp-name="app-settings-plugin" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Plugin")" asp-hide-block-attribute-name="@hidePluginBlockAttributeName" asp-hide="@hidePluginBlock" asp-advanced="true">@await Html.PartialAsync("_AppSettings.Plugin", Model)</nop-panel>
+                <nop-panel asp-name="app-settings-common" asp-icon="fa fa-gears" asp-title="@T("Admin.Configuration.AppSettings.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_AppSettings.Common", Model)</nop-panel>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AppSettingsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</form>

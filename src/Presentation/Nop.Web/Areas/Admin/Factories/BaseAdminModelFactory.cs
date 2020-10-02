@@ -12,7 +12,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -53,9 +52,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPluginService _pluginService;
         private readonly IProductTemplateService _productTemplateService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITopicTemplateService _topicTemplateService;
@@ -80,9 +80,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IManufacturerTemplateService manufacturerTemplateService,
             IPluginService pluginService,
             IProductTemplateService productTemplateService,
+            ISpecificationAttributeService specificationAttributeService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreService storeService,
             ITaxCategoryService taxCategoryService,
             ITopicTemplateService topicTemplateService,
@@ -103,9 +104,10 @@ namespace Nop.Web.Areas.Admin.Factories
             _manufacturerTemplateService = manufacturerTemplateService;
             _pluginService = pluginService;
             _productTemplateService = productTemplateService;
+            _specificationAttributeService = specificationAttributeService;
             _shippingService = shippingService;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeService = storeService;
             _taxCategoryService = taxCategoryService;
             _topicTemplateService = topicTemplateService;
@@ -122,7 +124,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Available items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use "All" text</param>
-        protected virtual void PrepareDefaultItem(IList<SelectListItem> items, bool withSpecialDefaultItem, string defaultItemText = null)
+        /// <param name="defaultItemValue">Default item value; defaults 0</param>
+        protected virtual void PrepareDefaultItem(IList<SelectListItem> items, bool withSpecialDefaultItem, string defaultItemText = null, string defaultItemValue = "0")
         {
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
@@ -131,14 +134,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!withSpecialDefaultItem)
                 return;
 
-            //at now we use "0" as the default value
-            const string value = "0";
-
             //prepare item text
             defaultItemText ??= _localizationService.GetResource("Admin.Common.All");
 
             //insert this default item at first
-            items.Insert(0, new SelectListItem { Text = defaultItemText, Value = value });
+            items.Insert(0, new SelectListItem { Text = defaultItemText, Value = defaultItemValue });
         }
 
         /// <summary>
@@ -148,8 +148,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Category list</returns>
         protected virtual List<SelectListItem> GetCategoryList(bool showHidden = true)
         {
-            var cacheKey =NopModelCacheDefaults.CategoriesListKey.FillCacheKey(showHidden);
-            var listItems = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoriesListKey, showHidden);
+            var listItems = _staticCacheManager.Get(cacheKey, () =>
             {
                 var categories = _categoryService.GetAllCategories(showHidden: showHidden);
                 return categories.Select(c => new SelectListItem
@@ -180,8 +180,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Manufacturer list</returns>
         protected virtual List<SelectListItem> GetManufacturerList(bool showHidden = true)
         {
-            var cacheKey = NopModelCacheDefaults.ManufacturersListKey.FillCacheKey(showHidden);
-            var listItems = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturersListKey, showHidden);
+            var listItems = _staticCacheManager.Get(cacheKey, () =>
             {
                 var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: showHidden);
                 return manufacturers.Select(m => new SelectListItem
@@ -212,8 +212,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Vendor list</returns>
         protected virtual List<SelectListItem> GetVendorList(bool showHidden = true)
         {
-            var cacheKey = NopModelCacheDefaults.VendorsListKey.FillCacheKey(showHidden);
-            var listItems = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorsListKey, showHidden);
+            var listItems = _staticCacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(showHidden: showHidden);
                 return vendors.Select(v => new SelectListItem
@@ -380,7 +380,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //insert special item for the default value
             if (!items.Any())
-                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.OtherNonUS"));
+                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText ?? _localizationService.GetResource("Admin.Address.Other"));
         }
 
         /// <summary>
@@ -959,6 +959,32 @@ namespace Nop.Web.Areas.Admin.Factories
             //insert special item for the default value
             PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
         }
+
+        /// <summary>
+        /// Prepare available specification attribute groups
+        /// </summary>
+        /// <param name="items">Specification attributes</param>
+        /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
+        /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
+        public virtual void PrepareSpecificationAttributeGroups(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            //prepare available specification attribute groups
+            var availableSpecificationAttributeGroups = _specificationAttributeService.GetSpecificationAttributeGroups();
+            foreach (var group in availableSpecificationAttributeGroups)
+            {
+                items.Add(new SelectListItem { Value = group.Id.ToString(), Text = group.Name });
+            }
+
+            // use empty string for nullable field
+            var defaultItemValue = string.Empty;
+
+            //insert special item for the default value
+            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText, defaultItemValue);
+        }
+
         #endregion
     }
 }

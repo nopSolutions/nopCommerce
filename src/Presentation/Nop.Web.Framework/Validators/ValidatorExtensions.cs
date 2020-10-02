@@ -46,6 +46,19 @@ namespace Nop.Web.Framework.Validators
         }
 
         /// <summary>
+        /// Set phone number validator
+        /// </summary>
+        /// <typeparam name="TModel">Type of model being validated</typeparam>
+        /// <param name="ruleBuilder">Rule builder</param>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <returns>Result</returns>
+        public static IRuleBuilderOptions<TModel, string> IsPhoneNumber<TModel>(this IRuleBuilder<TModel, string> ruleBuilder,
+            CustomerSettings customerSettings)
+        {
+            return ruleBuilder.SetValidator(new PhoneNumberPropertyValidator(customerSettings));
+        }
+
+        /// <summary>
         /// Implement password validator
         /// </summary>
         /// <typeparam name="TModel">Type of model being validated</typeparam>

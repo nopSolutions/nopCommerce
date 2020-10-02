@@ -1,0 +1,141 @@
+﻿@model ProductDetailsModel.ProductEstimateShippingModel
+
+@if (Model.Enabled)
+{
+    <div class="product-estimate-shipping">
+        <a href="#estimate-shipping-popup-@Model.ProductId"
+           id="open-estimate-shipping-popup-@Model.ProductId"
+           class="open-estimate-shipping-popup"
+           data-effect="estimate-shipping-popup-zoom-in">
+        </a>
+        <div id="estimate-shipping-popup-@Model.ProductId" class="estimate-shipping-popup mfp-with-anim mfp-hide">
+            @await Html.PartialAsync("_EstimateShippingPopUp", Model)
+        </div>
+    </div>
+
+    <script asp-location="Footer">
+
+        $(document).ready(function () {
+            var popUp = {};
+            var reloadPopUp = false;
+            var initialized = false;
+
+            var settings = {
+                opener: '#open-estimate-shipping-popup-@Model.ProductId',
+                form: '#product-details-form',
+                contentEl: '#estimate-shipping-popup-@Model.ProductId',
+                countryEl: '#@Html.IdFor(model => model.CountryId)',
+                stateProvinceEl: '#@Html.IdFor(model => model.StateProvinceId)',
+                zipPostalCodeEl: '#@Html.IdFor(model => model.ZipPostalCode)',
+                localizedData: {
+                    noShippingOptionsMessage: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")',
+                    countryErrorMessage: '@T("Shipping.EstimateShipping.Country.Required")',
+                    zipPostalCodeErrorMessage: '@T("Shipping.EstimateShipping.ZipPostalCode.Required")',
+                },
+                urlFactory: function (address) {
+                    var params = $.param({
+                        CountryId: address.countryId,
+                        StateProvinceId: address.stateProvinceId,
+                        ZipPostalCode: address.zipPostalCode
+                    });
+
+                    return `@Html.Raw(Url.Action("estimateshipping", "product", new { ProductId = Model.ProductId }))&${params}`;
+                },
+                handlers: {
+                    openPopUp: function () {
+                        if (reloadPopUp) {
+                            var address = popUp.getShippingAddress();
+                            if (popUp.validateAddress(address)) {
+                                popUp.getShippingOptions(address);
+                            } else {
+                                popUp.clearShippingOptions();
+                            }
+
+                            reloadPopUp = false;
+                        }
+                    },
+                    load: function () {
+                        if (!$.magnificPopup.instance.isOpen) {
+                            var shippingTitle = $('<div/>').addClass('shipping-title')
+                                .append($('<span/>').addClass('shipping-price-title').text('@T("Products.EstimateShipping.PriceTitle")'))
+                                .append($('<span/>').addClass('shipping-loading'));
+                            $('#open-estimate-shipping-popup-@Model.ProductId').html(shippingTitle);
+                        }
+                    },
+                    success: function (address, response) {
+                        // initialize on load only once
+                        var option = popUp.getActiveShippingOption();
+                        popUp.selectShippingOption(option);
+
+                        initialized = true;
+                        popUp.settings.handlers.success = undefined;
+                    },
+                    error: function () {
+                        popUp.selectShippingOption();
+                    },
+                    selectedOption: function (option) {
+                        if (option && option.provider && option.price && popUp.validateAddress(option.address)) {
+                            var shippingContent = $('#open-estimate-shipping-popup-@Model.ProductId');
+
+                            var shippingTitle = $('<div/>').addClass('shipping-title')
+                                .append($('<span/>').addClass('shipping-price-title').text('@T("Products.EstimateShipping.PriceTitle")'))
+                                .append($('<span/>').addClass('shipping-price').text(option.price));
+                            shippingContent.html(shippingTitle);
+
+                            var estimatedDelivery = $('<div/>').addClass('estimated-delivery')
+                                .append($('<div/>').addClass('shipping-address')
+                                    .append($('<span/>').text(`@T("Products.EstimateShipping.ToAddress") ${option.address.countryName}, ${(option.address.stateProvinceName ? option.address.stateProvinceName + ',' : '')} ${option.address.zipPostalCode} @T("Products.EstimateShipping.ViaProvider") ${option.provider}`))
+                                    .append($('<i/>').addClass('arrow-down')));
+
+                            if (option.deliveryDate && option.deliveryDate !== '-')
+                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text(`@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ${option.deliveryDate}`));
+
+                            shippingContent.append(estimatedDelivery);
+                        } else {
+                            $('#open-estimate-shipping-popup-@Model.ProductId')
+                                .html($('<span/>').text('@T("Products.EstimateShipping.NoSelectedShippingOption")'))
+                                .append($('<i/>').addClass('arrow-down'));
+                        }
+                    }
+                }
+            };
+            popUp = createEstimateShippingPopUp(settings);
+            popUp.init();
+
+            var initialLoad = function () {
+                var address = popUp.getShippingAddress();
+                if (popUp.validateAddress(address))
+                    popUp.getShippingOptions(address);
+                else
+                    popUp.selectShippingOption();
+            };
+            initialLoad();
+
+            var attributeChangedHandler = function (e) {
+                var productId = e.changedData.productId;
+                if (productId === @Model.ProductId) {
+                    if (popUp.params.selectedShippingOption) {
+                        var address = popUp.params.selectedShippingOption.address;
+                        var enteredAddress = popUp.getShippingAddress();
+
+                        if (!popUp.addressesAreEqual(address, enteredAddress))
+                            reloadPopUp = true;
+
+                        popUp.getShippingOptions(address);
+                    } else {
+                        if (!initialized)
+                            initialLoad();
+                        else
+                            reloadPopUp = true;
+                    }
+                }
+            };
+            // Prevent double init on load. If product has attributes then trigger is fires when page is loaded and attributes are loaded.
+            setTimeout(function () {
+                $(document).on('product_attributes_changed', attributeChangedHandler);
+            }, 500);
+            $(document).on('product_quantity_changed', attributeChangedHandler);
+        });
+
+    </script>
+}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -8,6 +9,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -21,21 +23,21 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly IInstallationLocalizationService _locService;
         private readonly INopFileProvider _fileProvider;
-        private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService,
-            INopFileProvider fileProvider,
-            NopConfig config)
+        public InstallController(AppSettings appSettings,
+            IInstallationLocalizationService locService,
+            INopFileProvider fileProvider)
         {
+            _appSettings = appSettings;
             _locService = locService;
             _fileProvider = fileProvider;
-            _config = config;
         }
 
         #endregion
@@ -53,12 +55,20 @@ namespace Nop.Web.Controllers
                 InstallSampleData = false,
 
                 //fast installation service does not support SQL compact
-                DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
+                DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
-                DataProvider = DataProviderType.SqlServer,
-                AvailableDataProviders = _locService.GetAvailableProviderTypes()?.ToList()
+                DataProvider = DataProviderType.SqlServer
             };
+
+            model.AvailableDataProviders.AddRange(
+                _locService.GetAvailableProviderTypes()
+                .OrderBy(v => v.Value)
+                .Select(pt => new SelectListItem
+                {
+                    Value = pt.Key.ToString(),
+                    Text = pt.Value
+                }));
 
             foreach (var lang in _locService.GetAvailableLanguages())
             {
@@ -75,7 +85,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult Index(InstallModel model)
+        public virtual async Task<IActionResult> Index(InstallModel model)
         {
             if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("Homepage");
@@ -89,11 +99,18 @@ namespace Nop.Web.Controllers
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code
                 });
-
-                model.AvailableDataProviders = _locService.GetAvailableProviderTypes()?.ToList();
             }
 
-            model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
+            model.AvailableDataProviders.AddRange(
+                _locService.GetAvailableProviderTypes()
+                    .OrderBy(v => v.Value)
+                    .Select(pt => new SelectListItem
+                    {
+                        Value = pt.Key.ToString(),
+                        Text = pt.Value
+                    }));
+
+            model.DisableSampleDataOption = _appSettings.InstallationConfig.DisableSampleData;
 
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
@@ -152,7 +169,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //check whether database exists
-                    if (!dataProvider.IsDatabaseExists())
+                    if (!dataProvider.DatabaseExists())
                         throw new Exception(_locService.GetResource("DatabaseNotExists"));
                 }
 
@@ -170,9 +187,9 @@ namespace Nop.Web.Controllers
                 pluginService.ClearInstalledPluginsList();
 
                 var pluginsIgnoredDuringInstallation = new List<string>();
-                if (!string.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation))
+                if (!string.IsNullOrEmpty(_appSettings.InstallationConfig.DisabledPlugins))
                 {
-                    pluginsIgnoredDuringInstallation = _config.PluginsIgnoredDuringInstallation
+                    pluginsIgnoredDuringInstallation = _appSettings.InstallationConfig.DisabledPlugins
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 
@@ -195,11 +212,16 @@ namespace Nop.Web.Controllers
                     EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
                 }
 
-                //restart application
-                webHelper.RestartAppDomain();
+                //installation completed notification
+                try
+                {
+                    var languageCode = _locService.GetCurrentLanguage().Code?.Substring(0, 2);
+                    var client = EngineContext.Current.Resolve<NopHttpClient>();
+                    await client.InstallationCompletedAsync(model.AdminEmail, languageCode);
+                }
+                catch { }
 
-                //Redirect to home page
-                return RedirectToRoute("Homepage");
+                return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
             }
             catch (Exception exception)
@@ -207,8 +229,8 @@ namespace Nop.Web.Controllers
                 //reset cache
                 DataSettingsManager.ResetCache();
 
-                var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-                cacheManager.Clear();
+                var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+                staticCacheManager.Clear();
 
                 //clear provider settings if something got wrong
                 DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);
@@ -237,12 +259,18 @@ namespace Nop.Web.Controllers
             if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("Homepage");
 
-            //restart application
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            webHelper.RestartAppDomain();
+            return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
+        }
 
-            //Redirect to home page
-            return RedirectToRoute("Homepage");
+        public virtual IActionResult RestartApplication()
+        {
+            if (DataSettingsManager.DatabaseIsInstalled)
+                return RedirectToRoute("Homepage");
+
+            //restart application
+            EngineContext.Current.Resolve<IWebHelper>().RestartAppDomain();
+
+            return new EmptyResult();
         }
 
         #endregion

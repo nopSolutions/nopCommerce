@@ -1,13 +1,10 @@
 ﻿@model ConfigurationModel
 
-@using Nop.Plugin.Tax.Avalara
-@using Nop.Plugin.Tax.Avalara.Models.Configuration
-
 @{
     Layout = "_ConfigurePlugin";
 }
 
-<form asp-controller="AvalaraTax" asp-action="Configure" method="post">
+<form asp-controller="Avalara" asp-action="Configure" method="post">
     <div class="content">
         <div class="form-horizontal">
             <nop-panels id="avalara-panels">

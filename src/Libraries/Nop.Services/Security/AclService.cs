@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 
 namespace Nop.Services.Security
 {
@@ -22,8 +20,8 @@ namespace Nop.Services.Security
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRecordRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -32,14 +30,14 @@ namespace Nop.Services.Security
 
         public AclService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRecordRepository,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
-            _eventPublisher = eventPublisher;
             _aclRecordRepository = aclRecordRepository;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
         }
 
@@ -53,13 +51,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual void DeleteAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             _aclRecordRepository.Delete(aclRecord);
-
-            //event notification
-            _eventPublisher.EntityDeleted(aclRecord);
         }
 
         /// <summary>
@@ -69,10 +61,7 @@ namespace Nop.Services.Security
         /// <returns>ACL record</returns>
         public virtual AclRecord GetAclRecordById(int aclRecordId)
         {
-            if (aclRecordId == 0)
-                return null;
-
-            return _aclRecordRepository.ToCachedGetById(aclRecordId);
+            return _aclRecordRepository.GetById(aclRecordId, cache => default);
         }
 
         /// <summary>
@@ -103,13 +92,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual void InsertAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             _aclRecordRepository.Insert(aclRecord);
-
-            //event notification
-            _eventPublisher.EntityInserted(aclRecord);
         }
 
         /// <summary>
@@ -145,13 +128,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual void UpdateAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             _aclRecordRepository.Update(aclRecord);
-
-            //event notification
-            _eventPublisher.EntityUpdated(aclRecord);
         }
 
         /// <summary>
@@ -168,14 +145,14 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopSecurityDefaults.AclRecordByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
 
             var query = from ur in _aclRecordRepository.Table
                 where ur.EntityId == entityId &&
                       ur.EntityName == entityName
                 select ur.CustomerRoleId;
 
-            return query.ToCachedArray(key);
+            return _staticCacheManager.Get(key, query.ToArray);
         }
 
         /// <summary>

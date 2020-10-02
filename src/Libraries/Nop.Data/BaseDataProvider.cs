@@ -10,7 +10,7 @@ using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Nop.Core;
-using Nop.Core.Domain;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using StackExchange.Profiling;
@@ -21,6 +21,35 @@ namespace Nop.Data
     public abstract class BaseDataProvider
     {
         #region Utils
+
+        /// <summary>
+        /// Gets an additional mapping schema
+        /// </summary>
+        private MappingSchema GetMappingSchema()
+        {
+            if (Singleton<MappingSchema>.Instance is null)
+            {
+                Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName)
+                {
+                    MetadataReader = new FluentMigratorMetadataReader()
+                };
+            }
+
+            if (MiniProfillerEnabled)
+            {
+                var mpMappingSchema = new MappingSchema(new[] { Singleton<MappingSchema>.Instance });
+
+                mpMappingSchema.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
+                mpMappingSchema.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
+                mpMappingSchema.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
+                mpMappingSchema.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
+
+                return mpMappingSchema;
+            }
+
+            return Singleton<MappingSchema>.Instance;
+
+        }
 
         private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
         {
@@ -75,8 +104,10 @@ namespace Nop.Data
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            var dataContext = new DataConnection(dataProvider, CreateDbConnection());
-            dataContext.AddMappingSchema(AdditionalSchema);
+            var dataContext = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+            {
+                CommandTimeout = DataSettingsManager.SQLCommandTimeout
+            };
 
             return dataContext;
         }
@@ -90,18 +121,11 @@ namespace Nop.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public virtual IDbConnection CreateDbConnection(string connectionString = null) 
+        public virtual IDbConnection CreateDbConnection(string connectionString = null)
         {
             var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
 
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return dbConnection;
-
-            var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-
-            LinqToDB.Common.Configuration.AvoidSpecificDataProviderAPI = storeSettings.DisplayMiniProfilerInPublicStore;
-
-            return storeSettings.DisplayMiniProfilerInPublicStore ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+            return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
         }
 
         /// <summary>
@@ -111,7 +135,7 @@ namespace Nop.Data
         /// <returns>Mapping descriptor</returns>
         public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
-            return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
+            return GetMappingSchema()?.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>
@@ -122,7 +146,7 @@ namespace Nop.Data
         /// <returns>Queryable source</returns>
         public virtual ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) {MappingSchema = AdditionalSchema}
+            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = GetMappingSchema() }
                 .GetTable<TEntity>();
         }
 
@@ -297,22 +321,11 @@ namespace Nop.Data
         /// </summary>
         protected abstract IDataProvider LinqToDbDataProvider { get; }
 
+
         /// <summary>
-        /// Additional mapping schema
+        /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
         /// </summary>
-        protected MappingSchema AdditionalSchema
-        {
-            get
-            {
-                if (!(Singleton<MappingSchema>.Instance is null))
-                    return Singleton<MappingSchema>.Instance;
-
-                Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) {MetadataReader = new FluentMigratorMetadataReader()};
-
-                return Singleton<MappingSchema>.Instance;
-            }
-        }
+        protected bool MiniProfillerEnabled => EngineContext.Current.Resolve<AppSettings>().CommonConfig.MiniProfilerEnabled;
 
         /// <summary>
         /// Database connection string

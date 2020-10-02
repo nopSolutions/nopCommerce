@@ -49,16 +49,6 @@ namespace Nop.Core.Domain.Common
         public string BreadcrumbDelimiter { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should render <meta http-equiv="X-UA-Compatible" content="IE=edge"/> tag
-        /// </summary>
-        public bool RenderXuaCompatible { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of "X-UA-Compatible" META tag
-        /// </summary>
-        public string XuaCompatibleValue { get; set; }
-
-        /// <summary>
         /// Gets or sets ignore words (phrases) to be ignored when logging errors/messages
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }
@@ -118,5 +108,10 @@ namespace Nop.Core.Domain.Common
         /// The length of time, in milliseconds, before the running schedule task times out. Set null to use default value
         /// </summary>
         public int? ScheduleTaskRunTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout (in milliseconds) before restarting the application; set null to use default value
+        /// </summary>
+        public int? RestartTimeout { get; set; }
     }
 }

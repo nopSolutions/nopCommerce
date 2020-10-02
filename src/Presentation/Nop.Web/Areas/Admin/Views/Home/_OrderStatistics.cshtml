@@ -1,7 +1,7 @@
 ﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
-    Html.AppendScriptParts("~/lib/chartjs/Chart.min.js");
+    Html.AppendScriptParts("~/lib_npm/chart.js/Chart.min.js");
 
     const string prefix = "order-statistics";
     const string hidePanelAttributeName = "Reports.HideOrderStatisticsPanel";

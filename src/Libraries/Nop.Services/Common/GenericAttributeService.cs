@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -17,18 +15,18 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public GenericAttributeService(IEventPublisher eventPublisher,
-            IRepository<GenericAttribute> genericAttributeRepository)
+        public GenericAttributeService(IRepository<GenericAttribute> genericAttributeRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
             _genericAttributeRepository = genericAttributeRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -41,13 +39,7 @@ namespace Nop.Services.Common
         /// <param name="attribute">Attribute</param>
         public virtual void DeleteAttribute(GenericAttribute attribute)
         {
-            if (attribute == null)
-                throw new ArgumentNullException(nameof(attribute));
-
             _genericAttributeRepository.Delete(attribute);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(attribute);
         }
 
         /// <summary>
@@ -56,16 +48,7 @@ namespace Nop.Services.Common
         /// <param name="attributes">Attributes</param>
         public virtual void DeleteAttributes(IList<GenericAttribute> attributes)
         {
-            if (attributes == null)
-                throw new ArgumentNullException(nameof(attributes));
-
             _genericAttributeRepository.Delete(attributes);
-            
-            //event notification
-            foreach (var attribute in attributes)
-            {
-                _eventPublisher.EntityDeleted(attribute);
-            }
         }
 
         /// <summary>
@@ -75,10 +58,7 @@ namespace Nop.Services.Common
         /// <returns>An attribute</returns>
         public virtual GenericAttribute GetAttributeById(int attributeId)
         {
-            if (attributeId == 0)
-                return null;
-
-            return _genericAttributeRepository.ToCachedGetById(attributeId);
+            return _genericAttributeRepository.GetById(attributeId);
         }
 
         /// <summary>
@@ -92,9 +72,6 @@ namespace Nop.Services.Common
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Insert(attribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(attribute);
         }
 
         /// <summary>
@@ -108,9 +85,6 @@ namespace Nop.Services.Common
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Update(attribute);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(attribute);
         }
 
         /// <summary>
@@ -121,13 +95,13 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = NopCommonDefaults.GenericAttributeCacheKey.FillCacheKey(entityId, keyGroup);
-
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+            
             var query = from ga in _genericAttributeRepository.Table
                 where ga.EntityId == entityId &&
                       ga.KeyGroup == keyGroup
                 select ga;
-            var attributes = query.ToCachedList(key);
+            var attributes = _staticCacheManager.Get(key, query.ToList);
 
             return attributes;
         }

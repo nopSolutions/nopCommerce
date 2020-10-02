@@ -558,7 +558,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         //update existing record
                         existingPwI.StockQuantity = stockQuantity;
                         existingPwI.ReservedQuantity = reservedQuantity;
-                        _productService.UpdateProduct(product);
+                        _productService.UpdateProductWarehouseInventory(existingPwI);
 
                         //quantity change history
                         _productService.AddStockQuantityHistoryEntry(product, existingPwI.StockQuantity - previousStockQuantity, existingPwI.StockQuantity,
@@ -588,8 +588,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     };
 
                     _productService.InsertProductWarehouseInventory(existingPwI);
-
-                    _productService.UpdateProduct(product);
 
                     //quantity change history
                     _productService.AddStockQuantityHistoryEntry(product, existingPwI.StockQuantity, existingPwI.StockQuantity,
@@ -1329,7 +1327,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var selectedProducts = _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
-                var existingRelatedProducts = _productService.GetRelatedProductsByProductId1(model.ProductId);
+                var existingRelatedProducts = _productService.GetRelatedProductsByProductId1(model.ProductId, showHidden: true);
                 foreach (var product in selectedProducts)
                 {
                     //a vendor should have access only to his products
@@ -1433,7 +1431,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var selectedProducts = _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
-                var existingCrossSellProducts = _productService.GetCrossSellProductsByProductId1(model.ProductId);
+                var existingCrossSellProducts = _productService.GetCrossSellProductsByProductId1(model.ProductId, showHidden: true);
                 foreach (var product in selectedProducts)
                 {
                     //a vendor should have access only to his products
@@ -1998,7 +1996,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product tag found with the specified id");
 
             _productTagService.DeleteProductTag(tag);
-            
+
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductTags.Deleted"));
 
             return RedirectToAction("ProductTags");
@@ -2222,9 +2220,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            var xml = _exportManager.ExportProductsToXml(products);
-
-            return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
+            try
+            {
+                var xml = _exportManager.ExportProductsToXml(products);
+                return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost, ActionName("ExportToExcel")]
@@ -2268,7 +2273,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var bytes = _exportManager.ExportProductsToXlsx(products);
-
                 return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
             }
             catch (Exception exc)
@@ -2299,9 +2303,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            var bytes = _exportManager.ExportProductsToXlsx(products);
-
-            return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
+            try
+            {
+                var bytes = _exportManager.ExportProductsToXlsx(products);
+                return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost]

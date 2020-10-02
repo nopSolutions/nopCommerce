@@ -185,7 +185,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             }
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
-            return RedirectToAction("Configure");
+            return Configure();
         }
     }
 }

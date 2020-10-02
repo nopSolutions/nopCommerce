@@ -16,28 +16,7 @@ namespace Nop.Data.Migrations
 
         public NopProcessorAccessor(IEnumerable<IMigrationProcessor> processors)
         {
-            var dataSettings = DataSettingsManager.LoadSettings();
-
-            var procs = processors.ToList();
-            if (procs.Count == 0)
-                throw new ProcessorFactoryNotFoundException("No migration processor registered.");
-
-            if (dataSettings is null)
-                Processor = procs.FirstOrDefault();
-            else
-            {
-                switch (dataSettings.DataProvider)
-                {
-                    case DataProviderType.SqlServer:
-                        Processor = FindGenerator(procs, "SqlServer");
-                        break;
-                    case DataProviderType.MySql:
-                        Processor = FindGenerator(procs, "MySQL");
-                        break;
-                    default:
-                        throw new ProcessorFactoryNotFoundException($@"A migration generator for Data provider type {dataSettings.DataProvider} couldn't be found.");
-                }
-            }
+            ConfigureProcessor(processors.ToList());
         }
 
         #endregion
@@ -45,12 +24,35 @@ namespace Nop.Data.Migrations
         #region Utils
 
         /// <summary>
+        /// Configure processor
+        /// </summary>
+        /// <param name="processors">Collection of migration processors</param>
+        protected virtual void ConfigureProcessor(IList<IMigrationProcessor> processors)
+        {
+            var dataSettings = DataSettingsManager.LoadSettings();
+
+            if (processors.Count == 0)
+                throw new ProcessorFactoryNotFoundException("No migration processor registered.");
+
+            if (dataSettings is null)
+                Processor = processors.FirstOrDefault();
+            else
+                Processor = dataSettings.DataProvider switch
+                {
+                    DataProviderType.SqlServer => FindGenerator(processors, "SqlServer"),
+                    DataProviderType.MySql => FindGenerator(processors, "MySQL"),
+                    _ => throw new ProcessorFactoryNotFoundException(
+                        $@"A migration generator for Data provider type {dataSettings.DataProvider} couldn't be found.")
+                };
+        }
+
+        /// <summary>
         /// Gets single processor by DatabaseType or DatabaseTypeAlias
         /// </summary>
         /// <param name="processors">Collection of migration processors</param>
         /// <param name="processorsId">DatabaseType or DatabaseTypeAlias</param>
         /// <returns></returns>
-        private IMigrationProcessor FindGenerator(IReadOnlyCollection<IMigrationProcessor> processors,
+        protected IMigrationProcessor FindGenerator(IList<IMigrationProcessor> processors,
             string processorsId)
         {
             if (processors.FirstOrDefault(p =>
@@ -70,7 +72,7 @@ namespace Nop.Data.Migrations
 
         #region  Properties
 
-        public IMigrationProcessor Processor { get; }
+        public IMigrationProcessor Processor { get; protected set; }
 
         #endregion
     }

@@ -135,7 +135,7 @@
                     <script>
                         function renderColumnComments(data, type, row, meta) {
                             var link = "BlogComments?filterByBlogPostId=" + data;
-                            var title = '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")';
+                            var title = '@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text';
                             var countComments = row.ApprovedComments + row.NotApprovedComments;
                             return '<a class="btn btn-default" href="' + link + '">' + title + ' - ' + countComments + ' (' + row.NotApprovedComments + ')' + '</a>';
                             }

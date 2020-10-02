@@ -11,10 +11,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Media
@@ -28,22 +26,23 @@ namespace Nop.Services.Media
 
         private static bool _azureBlobStorageAppendContainerName;
         private static bool _isInitialized;
-        private static CloudBlobContainer _container;
         private static string _azureBlobStorageConnectionString;
         private static string _azureBlobStorageContainerName;
         private static string _azureBlobStorageEndPoint;
+        private static CloudBlobContainer _container;
 
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly MediaSettings _mediaSettings;
+
         private readonly object _locker = new object();
 
         #endregion
 
         #region Ctor
 
-        public AzurePictureService(INopDataProvider dataProvider,
+        public AzurePictureService(AppSettings appSettings,
+            INopDataProvider dataProvider,
             IDownloadService downloadService,
-            IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
@@ -51,14 +50,12 @@ namespace Nop.Services.Media
             IRepository<PictureBinary> pictureBinaryRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
-            MediaSettings mediaSettings,
-            NopConfig config)
+            MediaSettings mediaSettings)
             : base(dataProvider,
                   downloadService,
-                  eventPublisher,
                   httpContextAccessor,
                   fileProvider,
                   productAttributeParser,
@@ -70,39 +67,43 @@ namespace Nop.Services.Media
                   webHelper,
                   mediaSettings)
         {
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _mediaSettings = mediaSettings;
 
-            OneTimeInit(config);
+            OneTimeInit(appSettings);
         }
 
         #endregion
 
         #region Utilities
 
-        protected void OneTimeInit(NopConfig config)
+        /// <summary>
+        /// Initialize cloud container
+        /// </summary>
+        /// <param name="appSettings">App settings</param>
+        protected void OneTimeInit(AppSettings appSettings)
         {
             if (_isInitialized)
                 return;
 
-            if (string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
-                throw new Exception("Azure connection string for BLOB is not specified");
+            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.ConnectionString))
+                throw new Exception("Azure connection string for Blob is not specified");
 
-            if (string.IsNullOrEmpty(config.AzureBlobStorageContainerName))
-                throw new Exception("Azure container name for BLOB is not specified");
+            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.ContainerName))
+                throw new Exception("Azure container name for Blob is not specified");
 
-            if (string.IsNullOrEmpty(config.AzureBlobStorageEndPoint))
-                throw new Exception("Azure end point for BLOB is not specified");
+            if (string.IsNullOrEmpty(appSettings.AzureBlobConfig.EndPoint))
+                throw new Exception("Azure end point for Blob is not specified");
 
             lock (_locker)
             {
                 if (_isInitialized)
                     return;
 
-                _azureBlobStorageAppendContainerName = config.AzureBlobStorageAppendContainerName;
-                _azureBlobStorageConnectionString = config.AzureBlobStorageConnectionString;
-                _azureBlobStorageContainerName = config.AzureBlobStorageContainerName.Trim().ToLower();
-                _azureBlobStorageEndPoint = config.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
+                _azureBlobStorageAppendContainerName = appSettings.AzureBlobConfig.AppendContainerName;
+                _azureBlobStorageConnectionString = appSettings.AzureBlobConfig.ConnectionString;
+                _azureBlobStorageContainerName = appSettings.AzureBlobConfig.ContainerName.Trim().ToLower();
+                _azureBlobStorageEndPoint = appSettings.AzureBlobConfig.EndPoint.Trim().ToLower().TrimEnd('/');
 
                 CreateCloudBlobContainer();
 
@@ -111,13 +112,13 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Create cloud blob container
+        /// Create cloud Blob container
         /// </summary>
         protected virtual async void CreateCloudBlobContainer()
         {
             var storageAccount = CloudStorageAccount.Parse(_azureBlobStorageConnectionString);
             if (storageAccount == null)
-                throw new Exception("Azure connection string for BLOB is not working");
+                throw new Exception("Azure connection string for Blob is not working");
 
             //should we do it for each HTTP request?
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -193,7 +194,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual async Task DeletePictureThumbsAsync(Picture picture)
         {
-            //create a string containing the blob name prefix
+            //create a string containing the Blob name prefix
             var prefix = $"{picture.Id:0000000}";
 
             BlobContinuationToken continuationToken = null;
@@ -211,7 +212,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
 
         /// <summary>
@@ -224,8 +225,9 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = NopMediaDefaults.ThumbExistsCacheKey.FillCacheKey(thumbFileName);
-                return await _cacheManager.GetAsync(key, async () =>
+                var key = _staticCacheManager.PrepareKeyForDefaultCache(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+
+                return await _staticCacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
                     var blockBlob = _container.GetBlockBlobReference(thumbFileName);
@@ -261,7 +263,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
 
         #endregion

@@ -13,7 +13,6 @@ namespace Nop.Web.Areas.Admin.Validators.Templates
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.Templates.Topic.Name.Required"));
             RuleFor(x => x.ViewPath).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.Templates.Topic.ViewPath.Required"));
-            RuleFor(x => x.DisplayOrder).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.Templates.Topic.DisplayOrder.Required"));
 
             SetDatabaseValidationRules<TopicTemplate>(dataProvider);
         }

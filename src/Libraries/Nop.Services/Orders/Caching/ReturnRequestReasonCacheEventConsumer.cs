@@ -8,9 +8,5 @@ namespace Nop.Services.Orders.Caching
     /// </summary>
     public partial class ReturnRequestReasonCacheEventConsumer : CacheEventConsumer<ReturnRequestReason>
     {
-        protected override void ClearCache(ReturnRequestReason entity)
-        {
-            Remove(NopOrderDefaults.ReturnRequestReasonAllCacheKey);
-        }
     }
 }

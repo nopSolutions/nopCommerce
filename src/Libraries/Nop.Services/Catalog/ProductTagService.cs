@@ -5,10 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Catalog
@@ -23,7 +20,6 @@ namespace Nop.Services.Catalog
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -37,7 +33,6 @@ namespace Nop.Services.Catalog
         public ProductTagService(CatalogSettings catalogSettings,
             ICustomerService customerService,
             INopDataProvider dataProvider,
-            IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IStaticCacheManager staticCacheManager,
@@ -47,7 +42,6 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _customerService = customerService;
             _dataProvider = dataProvider;
-            _eventPublisher = eventPublisher;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
             _staticCacheManager = staticCacheManager;
@@ -69,12 +63,9 @@ namespace Nop.Services.Catalog
             var mappitngRecord = _productProductTagMappingRepository.Table.FirstOrDefault(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
 
             if (mappitngRecord is null)
-                throw new Exception("Mppaing record not found");
+                throw new Exception("Mapping record not found");
 
             _productProductTagMappingRepository.Delete(mappitngRecord);
-
-            //event notification
-            _eventPublisher.EntityDeleted(mappitngRecord);
         }
 
         /// <summary>
@@ -93,7 +84,7 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
-            var key = NopCatalogDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, 
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
                 showHidden);
            
@@ -121,13 +112,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTag">Product tag</param>
         public virtual void DeleteProductTag(ProductTag productTag)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
-
             _productTagRepository.Delete(productTag);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(productTag);
         }
 
         /// <summary>
@@ -152,15 +137,11 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTags(string tagName = null)
         {
-            var query = _productTagRepository.Table;
-            
-            var allProductTags = query.ToCachedList(NopCatalogDefaults.ProductTagAllCacheKey);
+            var allProductTags = _productTagRepository.GetAll(getCacheKey: cache => default);
 
-            if(!string.IsNullOrEmpty(tagName))
-            {
+            if (!string.IsNullOrEmpty(tagName)) 
                 allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();
-            }
-            
+
             return allProductTags;
         }
 
@@ -171,15 +152,14 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = NopCatalogDefaults.ProductTagAllByProductIdCacheKey.FillCacheKey(productId);
-
-            var query = from pt in _productTagRepository.Table
-                join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                where ppt.ProductId == productId
-                orderby pt.Id
-                select pt;
-
-            var productTags = query.ToCachedList(key);
+            var productTags = _productTagRepository.GetAll(query =>
+            {
+                return from pt in query
+                    join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                    where ppt.ProductId == productId
+                    orderby pt.Id
+                    select pt;
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId));
 
             return productTags;
         }
@@ -191,10 +171,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tag</returns>
         public virtual ProductTag GetProductTagById(int productTagId)
         {
-            if (productTagId == 0)
-                return null;
-
-            return _productTagRepository.ToCachedGetById(productTagId);
+            return _productTagRepository.GetById(productTagId, cache => default);
         }
 
         /// <summary>
@@ -204,14 +181,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetProductTagsByIds(int[] productTagIds)
         {
-            if (productTagIds == null || productTagIds.Length == 0)
-                return new List<ProductTag>();
-
-            var query = from p in _productTagRepository.Table
-                        where productTagIds.Contains(p.Id)
-                        select p;
-
-            return query.ToList();
+            return _productTagRepository.GetByIds(productTagIds);
         }
 
         /// <summary>
@@ -235,13 +205,7 @@ namespace Nop.Services.Catalog
         /// <param name="tagMapping">Product-product tag mapping</param>
         public virtual void InsertProductProductTagMapping(ProductProductTagMapping tagMapping)
         {
-            if (tagMapping is null)
-                throw new ArgumentNullException(nameof(tagMapping));
-
             _productProductTagMappingRepository.Insert(tagMapping);
-
-            //event notification
-            _eventPublisher.EntityInserted(tagMapping);
         }
 
         /// <summary>
@@ -250,13 +214,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTag">Product tag</param>
         public virtual void InsertProductTag(ProductTag productTag)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
-
             _productTagRepository.Insert(productTag);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productTag);
         }
 
         /// <summary>
@@ -286,9 +244,6 @@ namespace Nop.Services.Catalog
 
             var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
             _urlRecordService.SaveSlug(productTag, seName, 0);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>
@@ -371,7 +326,7 @@ namespace Nop.Services.Catalog
             }
 
             //cache
-            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<ProductTag>.Prefix);
         }
 
         #endregion

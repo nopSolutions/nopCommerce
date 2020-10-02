@@ -13,7 +13,7 @@ namespace Nop.Services.Common
         public static string KeepAlivePath => "keepalive/index";
 
         #region Address attributes
-        
+
         /// <summary>
         /// Gets a name of the custom address attribute control
         /// </summary>
@@ -23,8 +23,13 @@ namespace Nop.Services.Common
         public static string AddressAttributeControlName => "address_attribute_{0}";
 
         #endregion
-        
+
         #region Maintenance
+
+        /// <summary>
+        /// Gets a default timeout (in milliseconds) before restarting the application
+        /// </summary>
+        public static int RestartTimeout => 3000;
 
         /// <summary>
         /// Gets a path to the database backup files
@@ -106,6 +111,18 @@ namespace Nop.Services.Common
         public static string NopNewsRssPath => "nopcommerce-news-rss?version={0}&localhost={1}&hideAdvertisements={2}&storeUrl={3}&language={4}";
 
         /// <summary>
+        /// Gets a path to request the nopCommerce official site to notify about successful installation
+        /// </summary>
+        /// <remarks>
+        /// {0} : nopCommerce version
+        /// {1} : whether the store based is on the localhost
+        /// {2} : admin email
+        /// {3} : store URL
+        /// {4} : language code
+        /// </remarks>
+        public static string NopInstallationCompletedPath => "installation-completed?version={0}&local={1}&email={2}&url={3}&language={4}";
+
+        /// <summary>
         /// Gets a path to request the nopCommerce official site for available categories of marketplace extensions
         /// </summary>
         /// <remarks>
@@ -144,15 +161,10 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static CacheKey AddressAttributesAllCacheKey => new CacheKey("Nop.addressattribute.all");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        public static CacheKey AddressAttributeValuesAllCacheKey => new CacheKey("Nop.addressattributevalue.all-{0}");
+        public static CacheKey AddressAttributeValuesByAttributeCacheKey => new CacheKey("Nop.addressattributevalue.byattribute.{0}");
 
         #endregion
 

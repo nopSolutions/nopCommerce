@@ -15,23 +15,14 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Category entity)
         {
-            var prefix = NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey.ToCacheKey(entity);
-            RemoveByPrefix(prefix);
-            prefix = NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey.ToCacheKey(entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
-
-            prefix = NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey.ToCacheKey(entity);
-            RemoveByPrefix(prefix);
-            prefix = NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey.ToCacheKey(entity.ParentCategoryId);
-            RemoveByPrefix(prefix);
-            
-            RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoriesAllPrefixCacheKey);
-            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefixCacheKey);
-            
-            RemoveByPrefix(NopCatalogDefaults.CategoryNumberOfProductsPrefixCacheKey);
-
-            RemoveByPrefix(NopDiscountDefaults.DiscountCategoryIdsPrefixCacheKey);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, entity.ParentCategoryId);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, entity.ParentCategoryId);
+            RemoveByPrefix(NopCatalogDefaults.CategoriesHomepagePrefix);
+            RemoveByPrefix(NopCatalogDefaults.CategoryBreadcrumbPrefix);
+            RemoveByPrefix(NopCatalogDefaults.CategoryProductsNumberPrefix);
+            RemoveByPrefix(NopDiscountDefaults.CategoryIdsPrefix);
         }
     }
 }

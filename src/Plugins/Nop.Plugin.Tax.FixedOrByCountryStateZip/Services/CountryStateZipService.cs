@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
-using Nop.Services.Caching;
-using Nop.Services.Events;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
 {
@@ -17,26 +14,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxRate> _taxRateRepository;
-        private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="taxRateRepository">Tax rate repository</param>
-        public CountryStateZipService(IEventPublisher eventPublisher,
-            ICacheManager cacheManager,
-            IRepository<TaxRate> taxRateRepository)
+        public CountryStateZipService(IRepository<TaxRate> taxRateRepository)
         {
-            _eventPublisher = eventPublisher;
-            _cacheManager = cacheManager;
             _taxRateRepository = taxRateRepository;
         }
 
@@ -50,13 +35,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <param name="taxRate">Tax rate</param>
         public virtual void DeleteTaxRate(TaxRate taxRate)
         {
-            if (taxRate == null)
-                throw new ArgumentNullException(nameof(taxRate));
-
             _taxRateRepository.Delete(taxRate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(taxRate);
         }
 
         /// <summary>
@@ -65,15 +44,12 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <returns>Tax rates</returns>
         public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = ModelCacheEventConsumer.TAXRATE_ALL_KEY.FillCacheKey();
-            var rez = _cacheManager.Get(key, () =>
+            var rez = _taxRateRepository.GetAll(query =>
             {
-                var query = from tr in _taxRateRepository.Table
-                            orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
-                            select tr;
-
-                return query.ToList();
-            });
+                return from tr in query
+                    orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
+                    select tr;
+            }, cache => cache.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY));
 
             var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);
 
@@ -87,10 +63,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <returns>Tax rate</returns>
         public virtual TaxRate GetTaxRateById(int taxRateId)
         {
-            if (taxRateId == 0)
-                return null;
-
-           return _taxRateRepository.GetById(taxRateId);
+            return _taxRateRepository.GetById(taxRateId);
         }
 
         /// <summary>
@@ -99,13 +72,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <param name="taxRate">Tax rate</param>
         public virtual void InsertTaxRate(TaxRate taxRate)
         {
-            if (taxRate == null)
-                throw new ArgumentNullException(nameof(taxRate));
-
             _taxRateRepository.Insert(taxRate);
-
-            //event notification
-            _eventPublisher.EntityInserted(taxRate);
         }
 
         /// <summary>
@@ -114,13 +81,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <param name="taxRate">Tax rate</param>
         public virtual void UpdateTaxRate(TaxRate taxRate)
         {
-            if (taxRate == null)
-                throw new ArgumentNullException(nameof(taxRate));
-
             _taxRateRepository.Update(taxRate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(taxRate);
         }
 
         #endregion

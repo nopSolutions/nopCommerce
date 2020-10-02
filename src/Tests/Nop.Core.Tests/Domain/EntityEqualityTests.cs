@@ -8,8 +8,8 @@ namespace Nop.Core.Tests.Domain
     public class EntityEqualityTests
     {
         [Test]
-        public void Two_transient_entities_should_not_be_equal() {
-            
+        public void TwoTransientEntitiesShouldNotBeEqual()
+        {
             var p1 = new Product();
             var p2 = new Product();
 
@@ -17,8 +17,8 @@ namespace Nop.Core.Tests.Domain
         }
 
         [Test]
-        public void Two_references_to_same_transient_entity_should_be_equal() {
-            
+        public void TwoReferencesToSameTransientEntityShouldBeEqual()
+        {
             var p1 = new Product();
             var p2 = p1;
 
@@ -26,8 +26,8 @@ namespace Nop.Core.Tests.Domain
         }
 
         [Test]
-        public void Entities_with_different_id_should_not_be_equal() {
-            
+        public void EntitiesWithDifferentIdShouldNotBeEqual()
+        {
             var p1 = new Product { Id = 2 };
             var p2 = new Product { Id = 5 };
 
@@ -35,8 +35,8 @@ namespace Nop.Core.Tests.Domain
         }
 
         [Test]
-        public void Entity_should_not_equal_transient_entity() {
-            
+        public void EntityShouldNotEqualTransientEntity()
+        {
             var p1 = new Product { Id = 1 };
             var p2 = new Product();
 
@@ -44,15 +44,14 @@ namespace Nop.Core.Tests.Domain
         }
 
         [Test]
-        public void Entities_with_same_id_but_different_type_should_not_be_equal() {
-            var id = 10;
+        public void EntitiesWithSameIdButDifferentTypeShouldNotBeEqual()
+        {
+            const int id = 10;
             var p1 = new Product { Id = id };
 
             var c1 = new Category { Id = id };
 
             p1.Should().NotBe(c1, "Entities of different types should not be equal, even if they have the same id");
         }
-
     }
-
 }

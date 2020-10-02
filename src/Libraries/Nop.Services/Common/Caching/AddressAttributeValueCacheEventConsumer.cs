@@ -14,10 +14,7 @@ namespace Nop.Services.Common.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(AddressAttributeValue entity)
         {
-            Remove(NopCommonDefaults.AddressAttributesAllCacheKey);
-
-            var cacheKey = NopCommonDefaults.AddressAttributeValuesAllCacheKey.FillCacheKey(entity.AddressAttributeId);
-            Remove(cacheKey);
+            Remove(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, entity.AddressAttributeId);
         }
     }
 }

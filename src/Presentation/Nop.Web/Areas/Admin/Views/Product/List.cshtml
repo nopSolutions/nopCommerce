@@ -378,13 +378,20 @@
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-            $('#export-xml-selected-form #selectedIds').val(ids);
-            $('#export-xml-selected-form').submit();
-            updateTable('#products-grid');
+            if (!ids) {
+                $('#exportXmlSelected-info').text("@T("Admin.Products.NoProducts")");
+                $("#exportXmlSelected").click();
+            }
+            else {
+                $('#export-xml-selected-form #selectedIds').val(ids);
+                $('#export-xml-selected-form').submit();
+                updateTable('#products-grid');
+            }
             return false;
         });
     });
 </script>
+<nop-alert asp-alert-id="exportXmlSelected" />
 
     @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
     <form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
@@ -396,10 +403,17 @@
             $('#exportexcel-selected').click(function (e) {
                 e.preventDefault();
                 var ids = selectedIds.join(",");
-                $('#export-excel-selected-form #selectedIds').val(ids);
-                $('#export-excel-selected-form').submit();
-                updateTable('#products-grid');
+                if (!ids) {
+                    $('#exportExcelSelected-info').text("@T("Admin.Products.NoProducts")");
+                    $("#exportExcelSelected").click();
+                }
+                else {
+                    $('#export-excel-selected-form #selectedIds').val(ids);
+                    $('#export-excel-selected-form').submit();
+                    updateTable('#products-grid');
+                }
                 return false;
             });
         });
     </script>
+<nop-alert asp-alert-id="exportExcelSelected" />

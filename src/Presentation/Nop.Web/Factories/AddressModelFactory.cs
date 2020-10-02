@@ -211,9 +211,6 @@ namespace Nop.Web.Factories
                 model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
                 model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
                 model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                //TODO: ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
-                //model.CountryId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                //model.StateProvinceId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                 model.PhoneNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
                 model.FaxNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
             }
@@ -267,7 +264,7 @@ namespace Nop.Web.Factories
                         var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }

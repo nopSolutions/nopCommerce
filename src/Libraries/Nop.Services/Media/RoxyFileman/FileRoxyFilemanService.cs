@@ -716,7 +716,11 @@ namespace Nop.Services.Media.RoxyFileman
 
             using var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare);
             GetHttpContext().Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
-            cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(GetHttpContext().Response.Body, ImageFormat.Png);
+
+            using var thumbnailImageStream = new MemoryStream();
+            cropImg.GetThumbnailImage(width, height, () => false, IntPtr.Zero).Save(thumbnailImageStream, ImageFormat.Png);
+            var thumbnailImageBinary = thumbnailImageStream.ToArray();
+            GetHttpContext().Response.Body.WriteAsync(thumbnailImageBinary);
             GetHttpContext().Response.Body.Close();
         }
 

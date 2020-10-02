@@ -128,7 +128,7 @@
                 })
                 <script>
                     function renderColumnSelectProduct(data, type, row, meta) {
-                        return '<button type="button" onclick="selectRequiredProduct(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                        return '<button type="button" onclick="selectRequiredProduct(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select").Text</button>';
                     }
                     function selectRequiredProduct(productid) {
                         try {

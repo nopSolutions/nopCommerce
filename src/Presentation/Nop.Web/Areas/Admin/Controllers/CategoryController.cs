@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -45,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
@@ -68,6 +70,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IPictureService pictureService,
             IProductService productService,
+            IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
@@ -87,6 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _permissionService = permissionService;
             _pictureService = pictureService;
             _productService = productService;
+            _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
             _urlRecordService = urlRecordService;
@@ -324,6 +328,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var prevPictureId = category.PictureId;
+
+                //if parent category changes, we need to clear cache for previous parent category
+                if (category.ParentCategoryId != model.ParentCategoryId)
+                {
+                    _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
+                    _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
+                }
 
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
@@ -28,16 +29,17 @@ namespace Nop.Web.Framework.UI
 
         private static readonly object _lock = new object();
 
-        private readonly BundleFileProcessor _processor;
+        private readonly AppSettings _appSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly INopFileProvider _fileProvider;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly SeoSettings _seoSettings;
 
+        private readonly BundleFileProcessor _processor;
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
@@ -50,34 +52,31 @@ namespace Nop.Web.Framework.UI
         private string _activeAdminMenuSystemName;
         private string _editPageUrl;
 
-        //in minutes
-        private const int RECHECK_BUNDLED_FILES_PERIOD = 120;
-
         #endregion
 
         #region Ctor
-        
-        public PageHeadBuilder(
+
+        public PageHeadBuilder(AppSettings appSettings,
             CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
-            IWebHostEnvironment webHostEnvironment,
             INopFileProvider fileProvider,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
-            SeoSettings seoSettings         
-            )
+            IWebHostEnvironment webHostEnvironment,
+            SeoSettings seoSettings)
         {
-            _processor = new BundleFileProcessor();
+            _appSettings = appSettings;
             _commonSettings = commonSettings;
             _actionContextAccessor = actionContextAccessor;
-            _webHostEnvironment = webHostEnvironment;
             _fileProvider = fileProvider;
-            _cacheManager = cacheManager;            
+            _staticCacheManager = staticCacheManager;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
+            _webHostEnvironment = webHostEnvironment;
             _seoSettings = seoSettings;
 
+            _processor = new BundleFileProcessor();
             _titleParts = new List<string>();
             _metaDescriptionParts = new List<string>();
             _metaKeywordParts = new List<string>();
@@ -385,9 +384,9 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}")
                     {
-                        CacheTime = RECHECK_BUNDLED_FILES_PERIOD
+                        CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
+                    var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => true);
 
                     if (shouldRebuild)
                     {
@@ -397,10 +396,10 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _cacheManager.Set(cacheKey, false);
+                        _staticCacheManager.Set(cacheKey, false);
                     }
 
                     //render
@@ -445,6 +444,9 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(script))
                 return;
 
+            if (_inlineScriptParts[location].Contains(script))
+                return;
+
             _inlineScriptParts[location].Add(script);
         }
         /// <summary>
@@ -458,6 +460,9 @@ namespace Nop.Web.Framework.UI
                 _inlineScriptParts.Add(location, new List<string>());
 
             if (string.IsNullOrEmpty(script))
+                return;
+
+            if (_inlineScriptParts[location].Contains(script))
                 return;
 
             _inlineScriptParts[location].Insert(0, script);
@@ -608,9 +613,9 @@ namespace Nop.Web.Framework.UI
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                     var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}")
                     {
-                        CacheTime = RECHECK_BUNDLED_FILES_PERIOD
+                        CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
+                    var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => true);
 
                     if (shouldRebuild)
                     {
@@ -620,10 +625,10 @@ namespace Nop.Web.Framework.UI
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _cacheManager.Set(cacheKey, false);
+                        _staticCacheManager.Set(cacheKey, false);
                     }
 
                     //render

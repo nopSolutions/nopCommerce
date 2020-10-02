@@ -7,9 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
+
 
 namespace Nop.Services.Localization
 {
@@ -20,23 +18,20 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
         #region Ctor
 
-        public LocalizedEntityService(IEventPublisher eventPublisher,
-            IRepository<LocalizedProperty> localizedPropertyRepository,
-            IStaticCacheManager cacheManager,
+        public LocalizedEntityService(IRepository<LocalizedProperty> localizedPropertyRepository,
+            IStaticCacheManager staticCacheManager,
             LocalizationSettings localizationSettings)
         {
-            _eventPublisher = eventPublisher;
             _localizedPropertyRepository = localizedPropertyRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _localizationSettings = localizationSettings;
         }
 
@@ -72,10 +67,11 @@ namespace Nop.Services.Localization
         /// <returns>Cached localized properties</returns>
         protected virtual IList<LocalizedProperty> GetAllLocalizedProperties()
         {
-            var query = from lp in _localizedPropertyRepository.Table
-                select lp;
-
-            return query.ToCachedList(NopLocalizationDefaults.LocalizedPropertyAllCacheKey);
+            return _localizedPropertyRepository.GetAll(query =>
+            {
+                return from lp in query
+                    select lp;
+            }, cache => default);
         }
 
         #endregion
@@ -88,13 +84,7 @@ namespace Nop.Services.Localization
         /// <param name="localizedProperty">Localized property</param>
         public virtual void DeleteLocalizedProperty(LocalizedProperty localizedProperty)
         {
-            if (localizedProperty == null)
-                throw new ArgumentNullException(nameof(localizedProperty));
-
             _localizedPropertyRepository.Delete(localizedProperty);
-
-            //event notification
-            _eventPublisher.EntityDeleted(localizedProperty);
         }
 
         /// <summary>
@@ -104,10 +94,7 @@ namespace Nop.Services.Localization
         /// <returns>Localized property</returns>
         public virtual LocalizedProperty GetLocalizedPropertyById(int localizedPropertyId)
         {
-            if (localizedPropertyId == 0)
-                return null;
-
-            return _localizedPropertyRepository.ToCachedGetById(localizedPropertyId);
+            return _localizedPropertyRepository.GetById(localizedPropertyId);
         }
 
         /// <summary>
@@ -120,10 +107,10 @@ namespace Nop.Services.Localization
         /// <returns>Found localized value</returns>
         public virtual string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
-            var key = NopLocalizationDefaults.LocalizedPropertyCacheKey
-                .FillCacheKey(languageId, entityId, localeKeyGroup, localeKey);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyCacheKey
+                , languageId, entityId, localeKeyGroup, localeKey);
 
-            return _cacheManager.Get(key, () =>
+            return _staticCacheManager.Get(key, () =>
             {
                 var source = _localizationSettings.LoadAllLocalizedPropertiesOnStartup
                     //load all records (we know they are cached)
@@ -151,13 +138,7 @@ namespace Nop.Services.Localization
         /// <param name="localizedProperty">Localized property</param>
         public virtual void InsertLocalizedProperty(LocalizedProperty localizedProperty)
         {
-            if (localizedProperty == null)
-                throw new ArgumentNullException(nameof(localizedProperty));
-
             _localizedPropertyRepository.Insert(localizedProperty);
-
-            //event notification
-            _eventPublisher.EntityInserted(localizedProperty);
         }
 
         /// <summary>
@@ -166,13 +147,7 @@ namespace Nop.Services.Localization
         /// <param name="localizedProperty">Localized property</param>
         public virtual void UpdateLocalizedProperty(LocalizedProperty localizedProperty)
         {
-            if (localizedProperty == null)
-                throw new ArgumentNullException(nameof(localizedProperty));
-
             _localizedPropertyRepository.Update(localizedProperty);
-
-            //event notification
-            _eventPublisher.EntityUpdated(localizedProperty);
         }
 
         /// <summary>

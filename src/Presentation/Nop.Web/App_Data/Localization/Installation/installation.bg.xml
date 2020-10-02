@@ -116,9 +116,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Вход с SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>SQL Server Compact</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>Парола за вход в SQL Server</Value>
   </LocaleResource>

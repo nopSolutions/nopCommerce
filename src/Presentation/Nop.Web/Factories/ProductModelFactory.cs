@@ -12,8 +12,8 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -63,8 +63,9 @@ namespace Nop.Web.Factories
         private readonly IProductTemplateService _productTemplateService;
         private readonly IReviewTypeService _reviewTypeService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly ITaxService _taxService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -73,6 +74,7 @@ namespace Nop.Web.Factories
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
+        private readonly ShippingSettings _shippingSettings;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -102,8 +104,9 @@ namespace Nop.Web.Factories
             IProductTemplateService productTemplateService,
             IReviewTypeService reviewTypeService,
             ISpecificationAttributeService specificationAttributeService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IShoppingCartModelFactory shoppingCartModelFactory,
             ITaxService taxService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
@@ -112,6 +115,7 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
             SeoSettings seoSettings,
+            ShippingSettings shippingSettings,
             VendorSettings vendorSettings)
         {
             _captchaSettings = captchaSettings;
@@ -137,8 +141,9 @@ namespace Nop.Web.Factories
             _productTemplateService = productTemplateService;
             _reviewTypeService = reviewTypeService;
             _specificationAttributeService = specificationAttributeService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
             _taxService = taxService;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
@@ -147,12 +152,65 @@ namespace Nop.Web.Factories
             _mediaSettings = mediaSettings;
             _orderSettings = orderSettings;
             _seoSettings = seoSettings;
+            _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
         }
 
         #endregion
 
         #region Utilities
+
+        /// <summary>
+        /// Prepare the product specification models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="group">Specification attribute group</param>
+        /// <returns>List of product specification model</returns>
+        protected virtual IList<ProductSpecificationAttributeModel> PrepareProductSpecificationAttributeModel(Product product, SpecificationAttributeGroup group)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var productSpecificationAttributes = _specificationAttributeService.GetProductSpecificationAttributes(
+                    product.Id, specificationAttributeGroupId: group?.Id, showOnProductPage: true);
+
+            var result = new List<ProductSpecificationAttributeModel>();
+
+            foreach (var psa in productSpecificationAttributes)
+            {
+                var option = _specificationAttributeService.GetSpecificationAttributeOptionById(psa.SpecificationAttributeOptionId);
+
+                var model = result.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
+                if (model == null)
+                {
+                    var attribute = _specificationAttributeService.GetSpecificationAttributeById(option.SpecificationAttributeId);
+                    model = new ProductSpecificationAttributeModel
+                    {
+                        Id = attribute.Id,
+                        Name = _localizationService.GetLocalized(attribute, x => x.Name)
+                    };
+                    result.Add(model);
+                }
+
+                var value = new ProductSpecificationAttributeValueModel
+                {
+                    AttributeTypeId = psa.AttributeTypeId,
+                    ColorSquaresRgb = option.ColorSquaresRgb,
+                    ValueRaw = psa.AttributeType switch
+                    {
+                        SpecificationAttributeType.Option => WebUtility.HtmlEncode(_localizationService.GetLocalized(option, x => x.Name)),
+                        SpecificationAttributeType.CustomText => WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue)),
+                        SpecificationAttributeType.CustomHtmlText => _localizationService.GetLocalized(psa, x => x.CustomValue),
+                        SpecificationAttributeType.Hyperlink => $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>",
+                        _ => null
+                    }
+                };
+
+                model.Values.Add(value);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Prepare the product review overview model
@@ -165,9 +223,9 @@ namespace Nop.Web.Factories
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                var cacheKey = NopModelCacheDefaults.ProductReviewsModelKey.FillCacheKey(product, _storeContext.CurrentStore);
+                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductReviewsModelKey, product, _storeContext.CurrentStore);
 
-                productReview = _cacheManager.Get(cacheKey, () =>
+                productReview = _staticCacheManager.Get(cacheKey, () =>
                 {
                     var productReviews = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id);
                     
@@ -441,11 +499,11 @@ namespace Nop.Web.Factories
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
             //prepare picture model
-            var cacheKey = NopModelCacheDefaults.ProductDefaultPictureModelKey.FillCacheKey(
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey, 
                 product, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(),
                 _storeContext.CurrentStore);
 
-            var defaultPictureModel = _cacheManager.Get(cacheKey, () =>
+            var defaultPictureModel = _staticCacheManager.Get(cacheKey, () =>
             {
                 var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                 var pictureModel = new PictureModel
@@ -782,11 +840,11 @@ namespace Nop.Web.Factories
                         //"image square" picture (with with "image squares" attribute type only)
                         if (attributeValue.ImageSquaresPictureId > 0)
                         {
-                            var productAttributeImageSquarePictureCacheKey = NopModelCacheDefaults.ProductAttributeImageSquarePictureModelKey
-                                .FillCacheKey(attributeValue.ImageSquaresPictureId,
+                            var productAttributeImageSquarePictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributeImageSquarePictureModelKey
+                                , attributeValue.ImageSquaresPictureId,
                                     _webHelper.IsCurrentConnectionSecured(),
                                     _storeContext.CurrentStore);
-                            valueModel.ImageSquaresPictureModel = _cacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
+                            valueModel.ImageSquaresPictureModel = _staticCacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
                             {
                                 var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
 
@@ -986,10 +1044,10 @@ namespace Nop.Web.Factories
                 _mediaSettings.ProductDetailsPictureSize;
 
             //prepare picture models
-            var productPicturesCacheKey = NopModelCacheDefaults.ProductDetailsPicturesModelKey
-                .FillCacheKey(product, defaultPictureSize, isAssociatedProduct, 
+            var productPicturesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDetailsPicturesModelKey
+                , product, defaultPictureSize, isAssociatedProduct, 
                 _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-            var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
+            var cachedPictures = _staticCacheManager.Get(productPicturesCacheKey, () =>
             {
                 var productName = _localizationService.GetLocalized(product, x => x.Name);
 
@@ -1114,7 +1172,7 @@ namespace Nop.Web.Factories
                 //specs
                 if (prepareSpecificationAttributes)
                 {
-                    model.SpecificationAttributeModels = PrepareProductSpecificationModel(product);
+                    model.ProductSpecificationModel = PrepareProductSpecificationModel(product);
                 }
 
                 //reviews
@@ -1289,7 +1347,7 @@ namespace Nop.Web.Factories
             //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
             {
-                model.ProductSpecifications = PrepareProductSpecificationModel(product);
+                model.ProductSpecificationModel = PrepareProductSpecificationModel(product);
             }
 
             //product review overview
@@ -1315,6 +1373,31 @@ namespace Nop.Web.Factories
                     model.RentalEndDate = updatecartitem.RentalEndDateUtc;
                 }
             }
+
+            //estimate shipping
+            if (_shippingSettings.EstimateShippingProductPageEnabled && !model.IsFreeShipping)
+            {
+                var wrappedProduct = new ShoppingCartItem()
+                {
+                    StoreId = _storeContext.CurrentStore.Id,
+                    ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    ProductId = product.Id,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+
+                var estimateShippingModel = _shoppingCartModelFactory.PrepareEstimateShippingModel(new[] { wrappedProduct });
+
+                model.ProductEstimateShipping.ProductId = product.Id;
+                model.ProductEstimateShipping.Enabled = estimateShippingModel.Enabled;
+                model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
+                model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
+                model.ProductEstimateShipping.ZipPostalCode = estimateShippingModel.ZipPostalCode;
+                model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
+                model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
+            }
+            else
+                model.ProductEstimateShipping.Enabled = false;
 
             //associated products
             if (product.ProductType == ProductType.GroupedProduct)
@@ -1570,56 +1653,36 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Prepare the product specification models
+        /// Prepare the product specification model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of product specification model</returns>
-        public virtual IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product)
+        /// <returns>The product specification model</returns>
+        public virtual ProductSpecificationModel PrepareProductSpecificationModel(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            return _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
-                .Select(psa =>
+            var model = new ProductSpecificationModel();
+
+            // Add non-grouped attributes first
+            model.Groups.Add(new ProductSpecificationAttributeGroupModel
+            {
+                Attributes = PrepareProductSpecificationAttributeModel(product, null)
+            });
+
+            // Add grouped attributes
+            var groups = _specificationAttributeService.GetProductSpecificationAttributeGroups(product.Id);
+            foreach (var group in groups)
+            {
+                model.Groups.Add(new ProductSpecificationAttributeGroupModel
                 {
-                    var specAttributeOption =
-                        _specificationAttributeService.GetSpecificationAttributeOptionById(
-                            psa.SpecificationAttributeOptionId);
-                    var specAttribute =
-                        _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption
-                            .SpecificationAttributeId);
+                    Id = group.Id,
+                    Name = _localizationService.GetLocalized(group, x => x.Name),
+                    Attributes = PrepareProductSpecificationAttributeModel(product, group)
+                });
+            }
 
-                    var m = new ProductSpecificationModel
-                    {
-                        SpecificationAttributeId = specAttribute.Id,
-                        SpecificationAttributeName = _localizationService.GetLocalized(specAttribute, x => x.Name),
-                        ColorSquaresRgb = specAttributeOption.ColorSquaresRgb,
-                        AttributeTypeId = psa.AttributeTypeId
-                    };
-
-                    switch (psa.AttributeType)
-                    {
-                        case SpecificationAttributeType.Option:
-                            m.ValueRaw =
-                                WebUtility.HtmlEncode(
-                                    _localizationService.GetLocalized(specAttributeOption, x => x.Name));
-                            break;
-                        case SpecificationAttributeType.CustomText:
-                            m.ValueRaw =
-                                WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
-                            break;
-                        case SpecificationAttributeType.CustomHtmlText:
-                            m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
-                            break;
-                        case SpecificationAttributeType.Hyperlink:
-                            m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    return m;
-                }).ToList();
+            return model;
         }
 
         #endregion

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
-using Nop.Services.Caching;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Services
 {
@@ -23,13 +21,13 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// </remarks>
         private readonly CacheKey _pickupPointAllKey = new CacheKey("Nop.pickuppoint.all-{0}");
         private const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
-       
+
         #endregion
 
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly IRepository<StorePickupPoint> _storePickupPointRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -38,13 +36,13 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
         /// <param name="storePickupPointRepository">Store pickup point repository</param>
-        public StorePickupPointService(ICacheManager cacheManager,
-            IRepository<StorePickupPoint> storePickupPointRepository)
+        /// <param name="staticCacheManager">Cache manager</param>
+        public StorePickupPointService(IRepository<StorePickupPoint> storePickupPointRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheManager = cacheManager;
             _storePickupPointRepository = storePickupPointRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -60,16 +58,14 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <returns>Pickup points</returns>
         public virtual IPagedList<StorePickupPoint> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = _pickupPointAllKey.FillCacheKey(storeId);
-            var rez = _cacheManager.Get(key, () =>
+            var rez = _storePickupPointRepository.GetAll(query =>
             {
-                var query = _storePickupPointRepository.Table;
                 if (storeId > 0)
                     query = query.Where(point => point.StoreId == storeId || point.StoreId == 0);
                 query = query.OrderBy(point => point.DisplayOrder).ThenBy(point => point.Name);
 
-                return query.ToList();
-            });
+                return query;
+            }, cache => cache.PrepareKeyForShortTermCache(_pickupPointAllKey, storeId));
 
             return new PagedList<StorePickupPoint>(rez, pageIndex, pageSize);
         }
@@ -81,9 +77,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <returns>Pickup point</returns>
         public virtual StorePickupPoint GetStorePickupPointById(int pickupPointId)
         {
-            if (pickupPointId == 0)
-                return null;
-
             return _storePickupPointRepository.GetById(pickupPointId);
         }
 
@@ -93,11 +86,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <param name="pickupPoint">Pickup point</param>
         public virtual void InsertStorePickupPoint(StorePickupPoint pickupPoint)
         {
-            if (pickupPoint == null)
-                throw new ArgumentNullException(nameof(pickupPoint));
-
-            _storePickupPointRepository.Insert(pickupPoint);
-            _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            _storePickupPointRepository.Insert(pickupPoint, false);
+            _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -106,11 +96,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <param name="pickupPoint">Pickup point</param>
         public virtual void UpdateStorePickupPoint(StorePickupPoint pickupPoint)
         {
-            if (pickupPoint == null)
-                throw new ArgumentNullException(nameof(pickupPoint));
-
-            _storePickupPointRepository.Update(pickupPoint);
-            _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            _storePickupPointRepository.Update(pickupPoint, false);
+            _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -119,11 +106,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <param name="pickupPoint">Pickup point</param>
         public virtual void DeleteStorePickupPoint(StorePickupPoint pickupPoint)
         {
-            if (pickupPoint == null)
-                throw new ArgumentNullException(nameof(pickupPoint));
-
-            _storePickupPointRepository.Delete(pickupPoint);
-            _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            _storePickupPointRepository.Delete(pickupPoint, false);
+            _staticCacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         #endregion

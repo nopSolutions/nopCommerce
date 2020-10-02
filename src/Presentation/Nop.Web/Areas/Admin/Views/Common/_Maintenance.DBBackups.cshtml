@@ -74,14 +74,12 @@
     function renderDownload(data, type, row, meta) {
         var link = row.Link;
         
-        return '<a class="btn btn-default" href="' + link + '">@T("Admin.System.Maintenance.BackupDatabase.Download")</a>';
+        return '<a class="btn btn-default" href="' + link + '">@T("Admin.System.Maintenance.BackupDatabase.Download").Text</a>';
     }
     function renderRestore(data, type, row, meta) {
-        return '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'' + row.Name +'\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>';
+        return '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'' + row.Name +'\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore").Text</button>';
     }
     function renderDelete(data, type, row, meta) {
-        var link = row.Link;
-
-        return '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'' + row.Name + '\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>';
+        return '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'' + row.Name + '\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete").Text</button>';
     }
 </script>

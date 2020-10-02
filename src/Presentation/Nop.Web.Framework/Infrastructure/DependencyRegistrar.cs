@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Redis;
@@ -17,6 +18,7 @@ using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -69,8 +71,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        /// <param name="appSettings">App settings</param>
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings)
         {
             //file provider
             builder.RegisterType<NopFileProvider>().As<INopFileProvider>().InstancePerLifetimeScope();
@@ -92,11 +94,8 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
-            //cache manager
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();            
-
             //redis connection wrapper
-            if (config.RedisEnabled)
+            if (appSettings.RedisConfig.Enabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>()
                     .As<ILocker>()
@@ -105,7 +104,7 @@ namespace Nop.Web.Framework.Infrastructure
             }
 
             //static cache manager
-            if (config.RedisEnabled && config.UseRedisForCaching)
+            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.UseCaching)
             {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
@@ -236,6 +235,7 @@ namespace Nop.Web.Framework.Infrastructure
             //plugin managers
             builder.RegisterGeneric(typeof(PluginManager<>)).As(typeof(IPluginManager<>)).InstancePerLifetimeScope();
             builder.RegisterType<AuthenticationPluginManager>().As<IAuthenticationPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<MultiFactorAuthenticationPluginManager>().As<IMultiFactorAuthenticationPluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetPluginManager>().As<IWidgetPluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<ExchangeRatePluginManager>().As<IExchangeRatePluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountPluginManager>().As<IDiscountPluginManager>().InstancePerLifetimeScope();
@@ -250,7 +250,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterSource(new SettingsSource());
 
             //picture service
-            if (config.AzureBlobStorageEnabled)
+            if (appSettings.AzureBlobConfig.Enabled)
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
@@ -306,7 +306,7 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="registrations">Registrations</param>
         /// <returns>Registrations</returns>
         public IEnumerable<IComponentRegistration> RegistrationsFor(Service service,
-            Func<Service, IEnumerable<IComponentRegistration>> registrations)
+            Func<Service, IEnumerable<ServiceRegistration>> registrations)
         {
             var ts = service as TypedService;
             if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))

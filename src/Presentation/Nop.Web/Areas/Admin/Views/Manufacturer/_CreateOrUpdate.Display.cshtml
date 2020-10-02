@@ -20,7 +20,6 @@
             <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
         </div>
     </div>
-
     <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
         <div id="pnlPageSize" class="form-group advanced-setting">
             <div class="col-md-3">
@@ -72,3 +71,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        togglePageSize();
+    });
+
+    function togglePageSize() {
+        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlPageSize').hide();
+            $('#pnlPageSizeOptions').show();
+        } else {
+            $('#pnlPageSize').show();
+            $('#pnlPageSizeOptions').hide();
+        }
+    }
+</script>

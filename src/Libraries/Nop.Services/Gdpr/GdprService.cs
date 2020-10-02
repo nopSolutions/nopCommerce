@@ -4,14 +4,13 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
+using Nop.Core.Events;
 using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Forums;
 using Nop.Services.Messages;
 using Nop.Services.News;
@@ -93,10 +92,7 @@ namespace Nop.Services.Gdpr
         /// <returns>GDPR consent</returns>
         public virtual GdprConsent GetConsentById(int gdprConsentId)
         {
-            if (gdprConsentId == 0)
-                return null;
-
-            return _gdprConsentRepository.ToCachedGetById(gdprConsentId);
+            return _gdprConsentRepository.GetById(gdprConsentId, cache => default);
         }
 
         /// <summary>
@@ -105,11 +101,12 @@ namespace Nop.Services.Gdpr
         /// <returns>GDPR consent</returns>
         public virtual IList<GdprConsent> GetAllConsents()
         {
-            var query = from c in _gdprConsentRepository.Table
-                        orderby c.DisplayOrder, c.Id
-                        select c;
-
-            var gdprConsents = query.ToCachedList(NopGdprDefaults.ConsentsAllCacheKey);
+            var gdprConsents = _gdprConsentRepository.GetAll(query =>
+            {
+                return from c in query
+                    orderby c.DisplayOrder, c.Id
+                    select c;
+            }, cache => default);
 
             return gdprConsents;
         }
@@ -120,13 +117,7 @@ namespace Nop.Services.Gdpr
         /// <param name="gdprConsent">GDPR consent</param>
         public virtual void InsertConsent(GdprConsent gdprConsent)
         {
-            if (gdprConsent == null)
-                throw new ArgumentNullException(nameof(gdprConsent));
-
             _gdprConsentRepository.Insert(gdprConsent);
-
-            //event notification
-            _eventPublisher.EntityInserted(gdprConsent);
         }
 
         /// <summary>
@@ -135,13 +126,7 @@ namespace Nop.Services.Gdpr
         /// <param name="gdprConsent">GDPR consent</param>
         public virtual void UpdateConsent(GdprConsent gdprConsent)
         {
-            if (gdprConsent == null)
-                throw new ArgumentNullException(nameof(gdprConsent));
-
             _gdprConsentRepository.Update(gdprConsent);
-
-            //event notification
-            _eventPublisher.EntityUpdated(gdprConsent);
         }
 
         /// <summary>
@@ -150,13 +135,7 @@ namespace Nop.Services.Gdpr
         /// <param name="gdprConsent">GDPR consent</param>
         public virtual void DeleteConsent(GdprConsent gdprConsent)
         {
-            if (gdprConsent == null)
-                throw new ArgumentNullException(nameof(gdprConsent));
-
             _gdprConsentRepository.Delete(gdprConsent);
-
-            //event notification
-            _eventPublisher.EntityDeleted(gdprConsent);
         }
 
         /// <summary>
@@ -190,9 +169,6 @@ namespace Nop.Services.Gdpr
         /// <returns>GDPR log</returns>
         public virtual GdprLog GetLogById(int gdprLogId)
         {
-            if (gdprLogId == 0)
-                return null;
-
             return _gdprLogRepository.GetById(gdprLogId);
         }
 
@@ -210,31 +186,27 @@ namespace Nop.Services.Gdpr
             string customerInfo = "", GdprRequestType? requestType = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _gdprLogRepository.Table;
-            if (customerId > 0)
+            return _gdprLogRepository.GetAllPaged(query =>
             {
-                query = query.Where(log => log.CustomerId == customerId);
-            }
+                if (customerId > 0) 
+                    query = query.Where(log => log.CustomerId == customerId);
 
-            if (consentId > 0)
-            {
-                query = query.Where(log => log.ConsentId == consentId);
-            }
+                if (consentId > 0) 
+                    query = query.Where(log => log.ConsentId == consentId);
 
-            if (!string.IsNullOrEmpty(customerInfo))
-            {
-                query = query.Where(log => log.CustomerInfo == customerInfo);
-            }
+                if (!string.IsNullOrEmpty(customerInfo)) 
+                    query = query.Where(log => log.CustomerInfo == customerInfo);
 
-            if (requestType != null)
-            {
-                var requestTypeId = (int)requestType;
-                query = query.Where(log => log.RequestTypeId == requestTypeId);
-            }
+                if (requestType != null)
+                {
+                    var requestTypeId = (int)requestType;
+                    query = query.Where(log => log.RequestTypeId == requestTypeId);
+                }
 
-            query = query.OrderByDescending(log => log.CreatedOnUtc).ThenByDescending(log => log.Id);
+                query = query.OrderByDescending(log => log.CreatedOnUtc).ThenByDescending(log => log.Id);
 
-            return new PagedList<GdprLog>(query, pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -243,13 +215,7 @@ namespace Nop.Services.Gdpr
         /// <param name="gdprLog">GDPR log</param>
         public virtual void InsertLog(GdprLog gdprLog)
         {
-            if (gdprLog == null)
-                throw new ArgumentNullException(nameof(gdprLog));
-
             _gdprLogRepository.Insert(gdprLog);
-
-            //event notification
-            _eventPublisher.EntityInserted(gdprLog);
         }
 
         /// <summary>
@@ -282,13 +248,7 @@ namespace Nop.Services.Gdpr
         /// <param name="gdprLog">GDPR log</param>
         public virtual void UpdateLog(GdprLog gdprLog)
         {
-            if (gdprLog == null)
-                throw new ArgumentNullException(nameof(gdprLog));
-
             _gdprLogRepository.Update(gdprLog);
-
-            //event notification
-            _eventPublisher.EntityUpdated(gdprLog);
         }
 
         /// <summary>
@@ -297,13 +257,7 @@ namespace Nop.Services.Gdpr
         /// <param name="gdprLog">GDPR log</param>
         public virtual void DeleteLog(GdprLog gdprLog)
         {
-            if (gdprLog == null)
-                throw new ArgumentNullException(nameof(gdprLog));
-
             _gdprLogRepository.Delete(gdprLog);
-
-            //event notification
-            _eventPublisher.EntityDeleted(gdprLog);
         }
 
         #endregion
@@ -417,6 +371,7 @@ namespace Nop.Services.Gdpr
             customer.Username = string.Empty;
             customer.Active = false;
             customer.Deleted = true;
+            
             _customerService.UpdateCustomer(customer);
 
             //raise event

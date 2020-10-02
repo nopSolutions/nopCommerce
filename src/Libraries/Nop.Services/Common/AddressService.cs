@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -20,7 +19,6 @@ namespace Nop.Services.Common
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ICountryService _countryService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Address> _addressRepository;
         private readonly IStateProvinceService _stateProvinceService;
 
@@ -32,7 +30,6 @@ namespace Nop.Services.Common
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             ICountryService countryService,
-            IEventPublisher eventPublisher,
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
@@ -40,7 +37,6 @@ namespace Nop.Services.Common
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
             _countryService = countryService;
-            _eventPublisher = eventPublisher;
             _addressRepository = addressRepository;
             _stateProvinceService = stateProvinceService;
         }
@@ -55,13 +51,7 @@ namespace Nop.Services.Common
         /// <param name="address">Address</param>
         public virtual void DeleteAddress(Address address)
         {
-            if (address == null)
-                throw new ArgumentNullException(nameof(address));
-
             _addressRepository.Delete(address);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(address);
         }
 
         /// <summary>
@@ -94,6 +84,7 @@ namespace Nop.Services.Common
             var query = from a in _addressRepository.Table
                         where a.StateProvinceId == stateProvinceId
                         select a;
+
             return query.Count();
         }
 
@@ -104,10 +95,8 @@ namespace Nop.Services.Common
         /// <returns>Address</returns>
         public virtual Address GetAddressById(int addressId)
         {
-            if (addressId == 0)
-                return null;
-            
-            return _addressRepository.ToCachedGetById(addressId);
+            return _addressRepository.GetById(addressId,
+                cache => cache.PrepareKeyForShortTermCache(NopEntityCacheDefaults<Address>.ByIdCacheKey, addressId));
         }
 
         /// <summary>
@@ -128,9 +117,6 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
-            
-            //event notification
-            _eventPublisher.EntityInserted(address);
         }
 
         /// <summary>
@@ -149,9 +135,6 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(address);
         }
 
         /// <summary>

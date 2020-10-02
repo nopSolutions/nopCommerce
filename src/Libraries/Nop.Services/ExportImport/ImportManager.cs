@@ -23,7 +23,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
@@ -348,6 +347,7 @@ namespace Nop.Services.ExportImport
         {
             //performance optimization, load all pictures hashes
             //it will only be used if the images are stored in the SQL Server database (not compact)
+            var trimByteCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = _productService.GetProductsImagesIds(allProductsBySku.Select(p => p.Id).ToArray());
             var allPicturesHashes = _pictureService.GetPicturesHash(productsImagesIds.SelectMany(p => p.Value).ToArray());
 
@@ -367,12 +367,12 @@ namespace Nop.Services.ExportImport
                             var newImageHash = HashHelper.CreateHash(
                                 newPictureBinary,
                                 IMAGE_HASH_ALGORITHM,
-                                _dataProvider.SupportedLengthOfBinaryHash);
-                                    
+                                trimByteCount);
+
                             var newValidatedImageHash = HashHelper.CreateHash(
                                 _pictureService.ValidatePicture(newPictureBinary, mimeType), 
                                 IMAGE_HASH_ALGORITHM,
-                                _dataProvider.SupportedLengthOfBinaryHash);
+                                trimByteCount);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                                 ? productsImagesIds[product.ProductItem.Id]
@@ -1792,7 +1792,6 @@ namespace Nop.Services.ExportImport
         {
             var count = 0;
             using (var reader = new StreamReader(stream))
-            {
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
@@ -1800,30 +1799,25 @@ namespace Nop.Services.ExportImport
                         continue;
                     var tmp = line.Split(',');
 
-                    string email;
+                    if (tmp.Length > 3)
+                        throw new NopException("Wrong file format");
+
                     var isActive = true;
                     var storeId = _storeContext.CurrentStore.Id;
-                    //parse
-                    if (tmp.Length == 1)
-                    {
-                        //"email" only
-                        email = tmp[0].Trim();
-                    }
-                    else if (tmp.Length == 2)
-                    {
-                        //"email" and "active" fields specified
-                        email = tmp[0].Trim();
+
+                    //"email" field specified
+                    var email = tmp[0].Trim();
+
+                    if (!CommonHelper.IsValidEmail(email))
+                        continue;
+
+                    //"active" field specified
+                    if (tmp.Length >= 2)
                         isActive = bool.Parse(tmp[1].Trim());
-                    }
-                    else if (tmp.Length == 3)
-                    {
-                        //"email" and "active" and "storeId" fields specified
-                        email = tmp[0].Trim();
-                        isActive = bool.Parse(tmp[1].Trim());
+
+                    //"storeId" field specified
+                    if (tmp.Length == 3)
                         storeId = int.Parse(tmp[2].Trim());
-                    }
-                    else
-                        throw new NopException("Wrong file format");
 
                     //import
                     var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId);
@@ -1848,7 +1842,6 @@ namespace Nop.Services.ExportImport
 
                     count++;
                 }
-            }
 
             return count;
         }

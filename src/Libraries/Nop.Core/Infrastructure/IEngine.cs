@@ -19,8 +19,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        /// <param name="nopConfig">Nop configuration parameters</param>
-        void ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig);
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Configure HTTP request pipeline
@@ -60,7 +59,7 @@ namespace Nop.Core.Infrastructure
         /// Register dependencies
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
-        /// <param name="nopConfig">Nop configuration parameters</param>
-        void RegisterDependencies(ContainerBuilder containerBuilder, NopConfig nopConfig);
+        /// <param name="appSettings">App settings</param>
+        void RegisterDependencies(ContainerBuilder containerBuilder, AppSettings appSettings);
     }
 }

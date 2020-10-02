@@ -9,7 +9,7 @@ namespace Nop.Core.Tests.Domain.Shipping
     [TestFixture]
     public class ShippingOptionListTypeConverterTests
     {
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             TypeDescriptor.AddAttributes(typeof(List<ShippingOption>),
@@ -17,14 +17,14 @@ namespace Nop.Core.Tests.Domain.Shipping
         }
 
         [Test]
-        public void Can_get_type_converter()
+        public void CanGetTypeConverter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(List<ShippingOption>));
             converter.GetType().Should().Be(typeof(ShippingOptionListTypeConverter));
         }
 
         [Test]
-        public void Can_convert_shippingOptionList_to_string_and_back()
+        public void CanConvertShippingOptionListToStringAndBack()
         {
             var shippingOptionsInput = new List<ShippingOption>
             {

@@ -32,7 +32,7 @@ namespace Nop.Data.Migrations
         private readonly IMigrationRunnerConventions _migrationRunnerConventions;
         private readonly IMigrationContext _migrationContext;
         private readonly ITypeFinder _typeFinder;
-        private readonly IVersionLoader _versionLoader;
+        private readonly Lazy<IVersionLoader> _versionLoader;
 
         #endregion
 
@@ -43,12 +43,14 @@ namespace Nop.Data.Migrations
             IMigrationRunner migrationRunner,
             IMigrationRunnerConventions migrationRunnerConventions,
             IMigrationContext migrationContext,
-            ITypeFinder typeFinder,
-            IVersionLoader versionLoader)
+            ITypeFinder typeFinder)
         {
-            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
+            _versionLoader = new Lazy<IVersionLoader>(() => EngineContext.Current.Resolve<IVersionLoader>());
+            
+            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>
             {
                 [typeof(int)] = c => c.AsInt32(),
+                [typeof(long)] = c => c.AsInt64(),
                 [typeof(string)] = c => c.AsString(int.MaxValue).Nullable(),
                 [typeof(bool)] = c => c.AsBoolean(),
                 [typeof(decimal)] = c => c.AsDecimal(18, 4),
@@ -62,7 +64,6 @@ namespace Nop.Data.Migrations
             _migrationRunnerConventions = migrationRunnerConventions;
             _migrationContext = migrationContext;
             _typeFinder = typeFinder;
-            _versionLoader = versionLoader;
         }
 
         #endregion
@@ -172,14 +173,22 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration;
         /// leave null to search migration on the whole application pull</param>
-        public void ApplyUpMigrations(Assembly assembly = null)
+        /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
+        public void ApplyUpMigrations(Assembly assembly = null, bool isUpdateProcess = false)
         {
             var migrations = GetMigrations(assembly);
 
-            foreach (var migrationInfo in migrations)
+            bool needToExecute(IMigrationInfo migrationInfo1)
             {
-                _migrationRunner.MigrateUp(migrationInfo.Version);
+                var skip = migrationInfo1.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any() || isUpdateProcess && migrationInfo1.Migration.GetType()
+                    .GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any() || !isUpdateProcess && migrationInfo1.Migration.GetType()
+                    .GetCustomAttributes(typeof(SkipMigrationOnInstallAttribute)).Any();
+
+                return !skip;
             }
+
+            foreach (var migrationInfo in migrations.Where(needToExecute))
+                    _migrationRunner.MigrateUp(migrationInfo.Version);
         }
 
         /// <summary>
@@ -193,8 +202,11 @@ namespace Nop.Data.Migrations
 
             foreach (var migrationInfo in migrations)
             {
+                if (migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationAttribute)).Any())
+                    continue;
+
                 _migrationRunner.Down(migrationInfo.Migration);
-                _versionLoader.DeleteVersion(migrationInfo.Version);
+                _versionLoader.Value.DeleteVersion(migrationInfo.Version);
             }
         }
 

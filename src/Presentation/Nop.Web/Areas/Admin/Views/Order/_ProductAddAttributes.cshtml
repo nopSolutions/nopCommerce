@@ -144,8 +144,8 @@
                                 case AttributeControlType.FileUpload:
                                     {
                                         //register CSS and JS
-                                        Html.AddCssFileParts("~/lib/fineuploader/fine-uploader.min.css");
-                                        Html.AddScriptParts("~/lib/fineuploader/jquery.fine-uploader.min.js");
+                                        Html.AddCssFileParts("~/lib_npm/fine-uploader/fine-uploader/fine-uploader.min.css");
+                                        Html.AddScriptParts("~/lib_npm/fine-uploader/jquery.fine-uploader/jquery.fine-uploader.min.js");
 
                                         //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                         var allowedFileExtensions = attribute.AllowedFileExtensions != null && attribute.AllowedFileExtensions.Any()

@@ -35,7 +35,6 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -54,197 +53,101 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
         private readonly INopDataProvider _dataProvider;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
-        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
-        private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
-        private readonly IRepository<RelatedProduct> _relatedProductRepository;
-        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
-        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
-        private readonly IRepository<SearchTerm> _searchTermRepository;
-        private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IRepository<ShipmentItem> _shipmentItemRepository;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IRepository<TierPrice> _tierPriceRepository;
-        private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public CodeFirstInstallationService(IAddressService addressService,
-            INopDataProvider dataProvider,
-            IGenericAttributeService genericAttributeService,
+        public CodeFirstInstallationService(INopDataProvider dataProvider,
             INopFileProvider fileProvider,
-            IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<Address> addressRepository,
-            IRepository<Affiliate> affiliateRepository,
-            IRepository<BlogPost> blogPostRepository,
             IRepository<Category> categoryRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<Country> countryRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
-            IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
-            IRepository<Discount> discountRepository,
             IRepository<EmailAccount> emailAccountRepository,
-            IRepository<Forum> forumRepository,
-            IRepository<ForumGroup> forumGroupRepository,
-            IRepository<GiftCard> giftCardRepository,
             IRepository<Language> languageRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
-            IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<NewsItem> newsItemRepository,
-            IRepository<Order> orderRepository,
-            IRepository<OrderItem> orderItemRepository,
-            IRepository<OrderNote> orderNoteRepository,
-            IRepository<PollAnswer> pollAnswerRepository,
-            IRepository<Poll> pollRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
-            IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
-            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
-            IRepository<RelatedProduct> relatedProductRepository,
-            IRepository<ReturnRequestAction> returnRequestActionRepository,
-            IRepository<ReturnRequestReason> returnRequestReasonRepository,
-            IRepository<ScheduleTask> scheduleTaskRepository,
-            IRepository<SearchTerm> searchTermRepository,
-            IRepository<Shipment> shipmentRepository,
-            IRepository<ShipmentItem> shipmentItemRepository,
-            IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<StateProvince> stateProvinceRepository,
-            IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<Store> storeRepository,
             IRepository<TaxCategory> taxCategoryRepository,
-            IRepository<TierPrice> tierPriceRepository,
-            IRepository<Topic> topicRepository,
             IRepository<TopicTemplate> topicTemplateRepository,
             IRepository<UrlRecord> urlRecordRepository,
-            IRepository<Vendor> vendorRepository,
-            IRepository<Warehouse> warehouseRepository,
             IWebHelper webHelper)
         {
-            _addressService = addressService;
             _dataProvider = dataProvider;
-            _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
-            _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
             _addressRepository = addressRepository;
-            _affiliateRepository = affiliateRepository;
-            _blogPostRepository = blogPostRepository;
             _categoryRepository = categoryRepository;
             _categoryTemplateRepository = categoryTemplateRepository;
             _countryRepository = countryRepository;
             _currencyRepository = currencyRepository;
-            _customerPasswordRepository = customerPasswordRepository;
             _customerRepository = customerRepository;
             _customerRoleRepository = customerRoleRepository;
             _deliveryDateRepository = deliveryDateRepository;
-            _discountRepository = discountRepository;
             _emailAccountRepository = emailAccountRepository;
-            _forumGroupRepository = forumGroupRepository;
-            _forumRepository = forumRepository;
-            _giftCardRepository = giftCardRepository;
             _languageRepository = languageRepository;
             _manufacturerRepository = manufacturerRepository;
             _manufacturerTemplateRepository = manufacturerTemplateRepository;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
-            _messageTemplateRepository = messageTemplateRepository;
-            _newsItemRepository = newsItemRepository;
-            _orderItemRepository = orderItemRepository;
-            _orderNoteRepository = orderNoteRepository;
-            _orderRepository = orderRepository;
-            _pollAnswerRepository = pollAnswerRepository;
-            _pollRepository = pollRepository;
             _productAttributeRepository = productAttributeRepository;
-            _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
-            _productProductTagMappingRepository = productProductTagMappingRepository;
             _productRepository = productRepository;
             _productTagRepository = productTagRepository;
             _productTemplateRepository = productTemplateRepository;
-            _relatedProductRepository = relatedProductRepository;
-            _returnRequestActionRepository = returnRequestActionRepository;
-            _returnRequestReasonRepository = returnRequestReasonRepository;
-            _scheduleTaskRepository = scheduleTaskRepository;
-            _searchTermRepository = searchTermRepository;
-            _shipmentItemRepository = shipmentItemRepository;
-            _shipmentRepository = shipmentRepository;
-            _shippingMethodRepository = shippingMethodRepository;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _stateProvinceRepository = stateProvinceRepository;
-            _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _storeRepository = storeRepository;
             _taxCategoryRepository = taxCategoryRepository;
-            _tierPriceRepository = tierPriceRepository;
-            _topicRepository = topicRepository;
             _topicTemplateRepository = topicTemplateRepository;
             _urlRecordRepository = urlRecordRepository;
-            _vendorRepository = vendorRepository;
-            _warehouseRepository = warehouseRepository;
             _webHelper = webHelper;
         }
 
@@ -263,6 +166,28 @@ namespace Nop.Services.Installation
             {
                 InsertInstallationData(entity);
             }
+        }
+
+        protected virtual void InsertInstallationData<T>(IList<T> entities) where T : BaseEntity
+        {
+            if (!entities.Any())
+                return;
+
+            InsertInstallationData(entities.ToArray());
+        }
+
+        protected virtual void UpdateInstallationData<T>(T entity) where T : BaseEntity
+        {
+            _dataProvider.UpdateEntity(entity);
+        }
+
+        protected virtual void UpdateInstallationData<T>(IList<T> entities) where T : BaseEntity
+        {
+            if (!entities.Any())
+                return;
+
+            foreach (var entity in entities)
+                _dataProvider.UpdateEntity(entity);
         }
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
@@ -363,15 +288,14 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallStores()
         {
-            //var storeUrl = "http://www.yourStore.com/";
-            var storeUrl = _webHelper.GetStoreLocation(false);
+            var storeUrl = _webHelper.GetStoreLocation();
             var stores = new List<Store>
             {
                 new Store
                 {
                     Name = "Your store name",
                     Url = storeUrl,
-                    SslEnabled = false,
+                    SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                     //should we set some default company info?
@@ -382,7 +306,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _storeRepository.Insert(stores);
+            InsertInstallationData(stores);
         }
 
         protected virtual void InstallMeasures()
@@ -419,7 +343,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _measureDimensionRepository.Insert(measureDimensions);
+            InsertInstallationData(measureDimensions);
 
             var measureWeights = new List<MeasureWeight>
             {
@@ -453,7 +377,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _measureWeightRepository.Insert(measureWeights);
+            InsertInstallationData(measureWeights);
         }
 
         protected virtual void InstallTaxCategories()
@@ -486,7 +410,7 @@ namespace Nop.Services.Installation
                                            DisplayOrder = 20
                                        }
                                };
-            _taxCategoryRepository.Insert(taxCategories);
+            InsertInstallationData(taxCategories);
         }
 
         protected virtual void InstallLanguages()
@@ -500,7 +424,7 @@ namespace Nop.Services.Installation
                 Published = true,
                 DisplayOrder = 1
             };
-            _languageRepository.Insert(language);
+            InsertInstallationData(language);
         }
 
         protected virtual void InstallLocaleResources()
@@ -668,7 +592,7 @@ namespace Nop.Services.Installation
                     RoundingType = RoundingType.Rounding001
                 }
             };
-            _currencyRepository.Insert(currencies);
+            InsertInstallationData(currencies);
         }
 
         protected virtual void InstallCountriesAndStates()
@@ -704,1026 +628,6 @@ namespace Nop.Services.Installation
                 cUsa,
                 cCanada,
                 //other countries
-                new Country
-                {
-                    Name = "Argentina",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AR",
-                    ThreeLetterIsoCode = "ARG",
-                    NumericIsoCode = 32,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Armenia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AM",
-                    ThreeLetterIsoCode = "ARM",
-                    NumericIsoCode = 51,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Aruba",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AW",
-                    ThreeLetterIsoCode = "ABW",
-                    NumericIsoCode = 533,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Australia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AU",
-                    ThreeLetterIsoCode = "AUS",
-                    NumericIsoCode = 36,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Austria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AT",
-                    ThreeLetterIsoCode = "AUT",
-                    NumericIsoCode = 40,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Azerbaijan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AZ",
-                    ThreeLetterIsoCode = "AZE",
-                    NumericIsoCode = 31,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bahamas",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BS",
-                    ThreeLetterIsoCode = "BHS",
-                    NumericIsoCode = 44,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bangladesh",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BD",
-                    ThreeLetterIsoCode = "BGD",
-                    NumericIsoCode = 50,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belarus",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BY",
-                    ThreeLetterIsoCode = "BLR",
-                    NumericIsoCode = 112,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belgium",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BE",
-                    ThreeLetterIsoCode = "BEL",
-                    NumericIsoCode = 56,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Belize",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BZ",
-                    ThreeLetterIsoCode = "BLZ",
-                    NumericIsoCode = 84,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bermuda",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BM",
-                    ThreeLetterIsoCode = "BMU",
-                    NumericIsoCode = 60,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bolivia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BO",
-                    ThreeLetterIsoCode = "BOL",
-                    NumericIsoCode = 68,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bosnia and Herzegowina",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BA",
-                    ThreeLetterIsoCode = "BIH",
-                    NumericIsoCode = 70,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Brazil",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BR",
-                    ThreeLetterIsoCode = "BRA",
-                    NumericIsoCode = 76,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Bulgaria",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "BG",
-                    ThreeLetterIsoCode = "BGR",
-                    NumericIsoCode = 100,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cayman Islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KY",
-                    ThreeLetterIsoCode = "CYM",
-                    NumericIsoCode = 136,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Chile",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CL",
-                    ThreeLetterIsoCode = "CHL",
-                    NumericIsoCode = 152,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "China",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CN",
-                    ThreeLetterIsoCode = "CHN",
-                    NumericIsoCode = 156,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Colombia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CO",
-                    ThreeLetterIsoCode = "COL",
-                    NumericIsoCode = 170,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Costa Rica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CR",
-                    ThreeLetterIsoCode = "CRI",
-                    NumericIsoCode = 188,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Croatia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HR",
-                    ThreeLetterIsoCode = "HRV",
-                    NumericIsoCode = 191,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cuba",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CU",
-                    ThreeLetterIsoCode = "CUB",
-                    NumericIsoCode = 192,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Cyprus",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CY",
-                    ThreeLetterIsoCode = "CYP",
-                    NumericIsoCode = 196,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Czech Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CZ",
-                    ThreeLetterIsoCode = "CZE",
-                    NumericIsoCode = 203,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Denmark",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DK",
-                    ThreeLetterIsoCode = "DNK",
-                    NumericIsoCode = 208,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Dominican Republic",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DO",
-                    ThreeLetterIsoCode = "DOM",
-                    NumericIsoCode = 214,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "East Timor",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TL",
-                    ThreeLetterIsoCode = "TLS",
-                    NumericIsoCode = 626,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ecuador",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EC",
-                    ThreeLetterIsoCode = "ECU",
-                    NumericIsoCode = 218,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Egypt",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "EG",
-                    ThreeLetterIsoCode = "EGY",
-                    NumericIsoCode = 818,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Finland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FI",
-                    ThreeLetterIsoCode = "FIN",
-                    NumericIsoCode = 246,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "France",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "FR",
-                    ThreeLetterIsoCode = "FRA",
-                    NumericIsoCode = 250,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Georgia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GE",
-                    ThreeLetterIsoCode = "GEO",
-                    NumericIsoCode = 268,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Germany",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "DE",
-                    ThreeLetterIsoCode = "DEU",
-                    NumericIsoCode = 276,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Gibraltar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GI",
-                    ThreeLetterIsoCode = "GIB",
-                    NumericIsoCode = 292,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Greece",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GR",
-                    ThreeLetterIsoCode = "GRC",
-                    NumericIsoCode = 300,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Guatemala",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GT",
-                    ThreeLetterIsoCode = "GTM",
-                    NumericIsoCode = 320,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Hong Kong",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HK",
-                    ThreeLetterIsoCode = "HKG",
-                    NumericIsoCode = 344,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Hungary",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "HU",
-                    ThreeLetterIsoCode = "HUN",
-                    NumericIsoCode = 348,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "India",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IN",
-                    ThreeLetterIsoCode = "IND",
-                    NumericIsoCode = 356,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Indonesia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ID",
-                    ThreeLetterIsoCode = "IDN",
-                    NumericIsoCode = 360,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ireland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IE",
-                    ThreeLetterIsoCode = "IRL",
-                    NumericIsoCode = 372,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Israel",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IL",
-                    ThreeLetterIsoCode = "ISR",
-                    NumericIsoCode = 376,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Italy",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "IT",
-                    ThreeLetterIsoCode = "ITA",
-                    NumericIsoCode = 380,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Jamaica",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JM",
-                    ThreeLetterIsoCode = "JAM",
-                    NumericIsoCode = 388,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Japan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JP",
-                    ThreeLetterIsoCode = "JPN",
-                    NumericIsoCode = 392,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Jordan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "JO",
-                    ThreeLetterIsoCode = "JOR",
-                    NumericIsoCode = 400,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kazakhstan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KZ",
-                    ThreeLetterIsoCode = "KAZ",
-                    NumericIsoCode = 398,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Korea, Democratic People's Republic of",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KP",
-                    ThreeLetterIsoCode = "PRK",
-                    NumericIsoCode = 408,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Kuwait",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "KW",
-                    ThreeLetterIsoCode = "KWT",
-                    NumericIsoCode = 414,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Malaysia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MY",
-                    ThreeLetterIsoCode = "MYS",
-                    NumericIsoCode = 458,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Mexico",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "MX",
-                    ThreeLetterIsoCode = "MEX",
-                    NumericIsoCode = 484,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Netherlands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NL",
-                    ThreeLetterIsoCode = "NLD",
-                    NumericIsoCode = 528,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "New Zealand",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NZ",
-                    ThreeLetterIsoCode = "NZL",
-                    NumericIsoCode = 554,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Norway",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "NO",
-                    ThreeLetterIsoCode = "NOR",
-                    NumericIsoCode = 578,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Pakistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PK",
-                    ThreeLetterIsoCode = "PAK",
-                    NumericIsoCode = 586,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Palestine",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PS",
-                    ThreeLetterIsoCode = "PSE",
-                    NumericIsoCode = 275,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Paraguay",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PY",
-                    ThreeLetterIsoCode = "PRY",
-                    NumericIsoCode = 600,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Peru",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PE",
-                    ThreeLetterIsoCode = "PER",
-                    NumericIsoCode = 604,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Philippines",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PH",
-                    ThreeLetterIsoCode = "PHL",
-                    NumericIsoCode = 608,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Poland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PL",
-                    ThreeLetterIsoCode = "POL",
-                    NumericIsoCode = 616,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Portugal",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PT",
-                    ThreeLetterIsoCode = "PRT",
-                    NumericIsoCode = 620,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Puerto Rico",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "PR",
-                    ThreeLetterIsoCode = "PRI",
-                    NumericIsoCode = 630,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Qatar",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "QA",
-                    ThreeLetterIsoCode = "QAT",
-                    NumericIsoCode = 634,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Romania",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RO",
-                    ThreeLetterIsoCode = "ROM",
-                    NumericIsoCode = 642,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Russian Federation",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RU",
-                    ThreeLetterIsoCode = "RUS",
-                    NumericIsoCode = 643,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Saudi Arabia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SA",
-                    ThreeLetterIsoCode = "SAU",
-                    NumericIsoCode = 682,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Singapore",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SG",
-                    ThreeLetterIsoCode = "SGP",
-                    NumericIsoCode = 702,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Slovakia (Slovak Republic)",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SK",
-                    ThreeLetterIsoCode = "SVK",
-                    NumericIsoCode = 703,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Slovenia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SI",
-                    ThreeLetterIsoCode = "SVN",
-                    NumericIsoCode = 705,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "South Africa",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ZA",
-                    ThreeLetterIsoCode = "ZAF",
-                    NumericIsoCode = 710,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Spain",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "ES",
-                    ThreeLetterIsoCode = "ESP",
-                    NumericIsoCode = 724,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Sweden",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "SE",
-                    ThreeLetterIsoCode = "SWE",
-                    NumericIsoCode = 752,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Switzerland",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "CH",
-                    ThreeLetterIsoCode = "CHE",
-                    NumericIsoCode = 756,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Taiwan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TW",
-                    ThreeLetterIsoCode = "TWN",
-                    NumericIsoCode = 158,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Thailand",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TH",
-                    ThreeLetterIsoCode = "THA",
-                    NumericIsoCode = 764,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Turkey",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "TR",
-                    ThreeLetterIsoCode = "TUR",
-                    NumericIsoCode = 792,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Ukraine",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UA",
-                    ThreeLetterIsoCode = "UKR",
-                    NumericIsoCode = 804,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United Arab Emirates",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AE",
-                    ThreeLetterIsoCode = "ARE",
-                    NumericIsoCode = 784,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United Kingdom",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "GB",
-                    ThreeLetterIsoCode = "GBR",
-                    NumericIsoCode = 826,
-                    SubjectToVat = true,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "United States minor outlying islands",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UM",
-                    ThreeLetterIsoCode = "UMI",
-                    NumericIsoCode = 581,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uruguay",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UY",
-                    ThreeLetterIsoCode = "URY",
-                    NumericIsoCode = 858,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Uzbekistan",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "UZ",
-                    ThreeLetterIsoCode = "UZB",
-                    NumericIsoCode = 860,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Venezuela",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "VE",
-                    ThreeLetterIsoCode = "VEN",
-                    NumericIsoCode = 862,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
-                    Name = "Serbia",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "RS",
-                    ThreeLetterIsoCode = "SRB",
-                    NumericIsoCode = 688,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
                 new Country
                 {
                     Name = "Afghanistan",
@@ -1834,12 +738,108 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Argentina",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AR",
+                    ThreeLetterIsoCode = "ARG",
+                    NumericIsoCode = 32,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Armenia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AM",
+                    ThreeLetterIsoCode = "ARM",
+                    NumericIsoCode = 51,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Aruba",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AW",
+                    ThreeLetterIsoCode = "ABW",
+                    NumericIsoCode = 533,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Australia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AU",
+                    ThreeLetterIsoCode = "AUS",
+                    NumericIsoCode = 36,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Austria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AT",
+                    ThreeLetterIsoCode = "AUT",
+                    NumericIsoCode = 40,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Azerbaijan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AZ",
+                    ThreeLetterIsoCode = "AZE",
+                    NumericIsoCode = 31,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bahamas",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BS",
+                    ThreeLetterIsoCode = "BHS",
+                    NumericIsoCode = 44,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Bahrain",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "BH",
                     ThreeLetterIsoCode = "BHR",
                     NumericIsoCode = 48,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bangladesh",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BD",
+                    ThreeLetterIsoCode = "BGD",
+                    NumericIsoCode = 50,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -1858,6 +858,42 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Belarus",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BY",
+                    ThreeLetterIsoCode = "BLR",
+                    NumericIsoCode = 112,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belgium",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BE",
+                    ThreeLetterIsoCode = "BEL",
+                    NumericIsoCode = 56,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Belize",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BZ",
+                    ThreeLetterIsoCode = "BLZ",
+                    NumericIsoCode = 84,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Benin",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -1870,12 +906,48 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Bermuda",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BM",
+                    ThreeLetterIsoCode = "BMU",
+                    NumericIsoCode = 60,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Bhutan",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "BT",
                     ThreeLetterIsoCode = "BTN",
                     NumericIsoCode = 64,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bolivia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BO",
+                    ThreeLetterIsoCode = "BOL",
+                    NumericIsoCode = 68,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bosnia and Herzegowina",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BA",
+                    ThreeLetterIsoCode = "BIH",
+                    NumericIsoCode = 70,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -1906,6 +978,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Brazil",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BR",
+                    ThreeLetterIsoCode = "BRA",
+                    NumericIsoCode = 76,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "British Indian Ocean Territory",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -1925,6 +1009,18 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "BRN",
                     NumericIsoCode = 96,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Bulgaria",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "BG",
+                    ThreeLetterIsoCode = "BGR",
+                    NumericIsoCode = 100,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -1990,6 +1086,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Cayman Islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KY",
+                    ThreeLetterIsoCode = "CYM",
+                    NumericIsoCode = 136,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Central African Republic",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2014,6 +1122,30 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Chile",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CL",
+                    ThreeLetterIsoCode = "CHL",
+                    NumericIsoCode = 152,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "China",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CN",
+                    ThreeLetterIsoCode = "CHN",
+                    NumericIsoCode = 156,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Christmas Island",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2032,6 +1164,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "CC",
                     ThreeLetterIsoCode = "CCK",
                     NumericIsoCode = 166,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Colombia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CO",
+                    ThreeLetterIsoCode = "COL",
+                    NumericIsoCode = 170,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2086,6 +1230,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Costa Rica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CR",
+                    ThreeLetterIsoCode = "CRI",
+                    NumericIsoCode = 188,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Cote D'Ivoire",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2093,6 +1249,66 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "CIV",
                     NumericIsoCode = 384,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Croatia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HR",
+                    ThreeLetterIsoCode = "HRV",
+                    NumericIsoCode = 191,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cuba",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CU",
+                    ThreeLetterIsoCode = "CUB",
+                    NumericIsoCode = 192,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Cyprus",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CY",
+                    ThreeLetterIsoCode = "CYP",
+                    NumericIsoCode = 196,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Czech Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CZ",
+                    ThreeLetterIsoCode = "CZE",
+                    NumericIsoCode = 203,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Denmark",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DK",
+                    ThreeLetterIsoCode = "DNK",
+                    NumericIsoCode = 208,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2116,6 +1332,54 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "DM",
                     ThreeLetterIsoCode = "DMA",
                     NumericIsoCode = 212,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Dominican Republic",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DO",
+                    ThreeLetterIsoCode = "DOM",
+                    NumericIsoCode = 214,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "East Timor",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TL",
+                    ThreeLetterIsoCode = "TLS",
+                    NumericIsoCode = 626,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ecuador",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EC",
+                    ThreeLetterIsoCode = "ECU",
+                    NumericIsoCode = 218,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Egypt",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "EG",
+                    ThreeLetterIsoCode = "EGY",
+                    NumericIsoCode = 818,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2170,6 +1434,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Eswatini",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SZ",
+                    ThreeLetterIsoCode = "SWZ",
+                    NumericIsoCode = 748,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Ethiopia",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2213,6 +1489,30 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "FJI",
                     NumericIsoCode = 242,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Finland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FI",
+                    ThreeLetterIsoCode = "FIN",
+                    NumericIsoCode = 246,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "France",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "FR",
+                    ThreeLetterIsoCode = "FRA",
+                    NumericIsoCode = 250,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2278,6 +1578,30 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Georgia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GE",
+                    ThreeLetterIsoCode = "GEO",
+                    NumericIsoCode = 268,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Germany",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "DE",
+                    ThreeLetterIsoCode = "DEU",
+                    NumericIsoCode = 276,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Ghana",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2285,6 +1609,30 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "GHA",
                     NumericIsoCode = 288,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Gibraltar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GI",
+                    ThreeLetterIsoCode = "GIB",
+                    NumericIsoCode = 292,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Greece",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GR",
+                    ThreeLetterIsoCode = "GRC",
+                    NumericIsoCode = 300,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2332,6 +1680,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "GU",
                     ThreeLetterIsoCode = "GUM",
                     NumericIsoCode = 316,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Guatemala",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GT",
+                    ThreeLetterIsoCode = "GTM",
+                    NumericIsoCode = 320,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2410,12 +1770,60 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Hong Kong",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HK",
+                    ThreeLetterIsoCode = "HKG",
+                    NumericIsoCode = 344,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Hungary",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "HU",
+                    ThreeLetterIsoCode = "HUN",
+                    NumericIsoCode = 348,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Iceland",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "IS",
                     ThreeLetterIsoCode = "ISL",
                     NumericIsoCode = 352,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "India",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IN",
+                    ThreeLetterIsoCode = "IND",
+                    NumericIsoCode = 356,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Indonesia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ID",
+                    ThreeLetterIsoCode = "IDN",
+                    NumericIsoCode = 360,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2440,6 +1848,90 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "IQ",
                     ThreeLetterIsoCode = "IRQ",
                     NumericIsoCode = 368,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Ireland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IE",
+                    ThreeLetterIsoCode = "IRL",
+                    NumericIsoCode = 372,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Israel",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IL",
+                    ThreeLetterIsoCode = "ISR",
+                    NumericIsoCode = 376,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Italy",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "IT",
+                    ThreeLetterIsoCode = "ITA",
+                    NumericIsoCode = 380,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Jamaica",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JM",
+                    ThreeLetterIsoCode = "JAM",
+                    NumericIsoCode = 388,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Japan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JP",
+                    ThreeLetterIsoCode = "JPN",
+                    NumericIsoCode = 392,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Jordan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "JO",
+                    ThreeLetterIsoCode = "JOR",
+                    NumericIsoCode = 400,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kazakhstan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KZ",
+                    ThreeLetterIsoCode = "KAZ",
+                    NumericIsoCode = 398,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2476,6 +1968,30 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "KR",
                     ThreeLetterIsoCode = "KOR",
                     NumericIsoCode = 410,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Korea, Democratic People's Republic of",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KP",
+                    ThreeLetterIsoCode = "PRK",
+                    NumericIsoCode = 408,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Kuwait",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "KW",
+                    ThreeLetterIsoCode = "KWT",
+                    NumericIsoCode = 414,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2650,6 +2166,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Malaysia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MY",
+                    ThreeLetterIsoCode = "MYS",
+                    NumericIsoCode = 458,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Maldives",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2740,6 +2268,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "YT",
                     ThreeLetterIsoCode = "MYT",
                     NumericIsoCode = 175,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Mexico",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "MX",
+                    ThreeLetterIsoCode = "MEX",
+                    NumericIsoCode = 484,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2890,13 +2430,13 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
-                    Name = "Netherlands Antilles",
+                    Name = "Netherlands",
                     AllowsBilling = true,
                     AllowsShipping = true,
-                    TwoLetterIsoCode = "AN",
-                    ThreeLetterIsoCode = "ANT",
-                    NumericIsoCode = 530,
-                    SubjectToVat = false,
+                    TwoLetterIsoCode = "NL",
+                    ThreeLetterIsoCode = "NLD",
+                    NumericIsoCode = 528,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -2908,6 +2448,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "NC",
                     ThreeLetterIsoCode = "NCL",
                     NumericIsoCode = 540,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "New Zealand",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NZ",
+                    ThreeLetterIsoCode = "NZL",
+                    NumericIsoCode = 554,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -2986,6 +2538,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Norway",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "NO",
+                    ThreeLetterIsoCode = "NOR",
+                    NumericIsoCode = 578,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Oman",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -2998,12 +2562,36 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Pakistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PK",
+                    ThreeLetterIsoCode = "PAK",
+                    NumericIsoCode = 586,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Palau",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "PW",
                     ThreeLetterIsoCode = "PLW",
                     NumericIsoCode = 585,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Palestine",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PS",
+                    ThreeLetterIsoCode = "PSE",
+                    NumericIsoCode = 275,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3034,6 +2622,42 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Paraguay",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PY",
+                    ThreeLetterIsoCode = "PRY",
+                    NumericIsoCode = 600,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Peru",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PE",
+                    ThreeLetterIsoCode = "PER",
+                    NumericIsoCode = 604,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Philippines",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PH",
+                    ThreeLetterIsoCode = "PHL",
+                    NumericIsoCode = 608,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Pitcairn",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3046,12 +2670,84 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Poland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PL",
+                    ThreeLetterIsoCode = "POL",
+                    NumericIsoCode = 616,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Portugal",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PT",
+                    ThreeLetterIsoCode = "PRT",
+                    NumericIsoCode = 620,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Puerto Rico",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "PR",
+                    ThreeLetterIsoCode = "PRI",
+                    NumericIsoCode = 630,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Qatar",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "QA",
+                    ThreeLetterIsoCode = "QAT",
+                    NumericIsoCode = 634,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Reunion",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "RE",
                     ThreeLetterIsoCode = "REU",
                     NumericIsoCode = 638,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Romania",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RO",
+                    ThreeLetterIsoCode = "ROU",
+                    NumericIsoCode = 642,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Russian Federation",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RU",
+                    ThreeLetterIsoCode = "RUS",
+                    NumericIsoCode = 643,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3142,12 +2838,36 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Saudi Arabia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SA",
+                    ThreeLetterIsoCode = "SAU",
+                    NumericIsoCode = 682,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Senegal",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "SN",
                     ThreeLetterIsoCode = "SEN",
                     NumericIsoCode = 686,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Serbia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "RS",
+                    ThreeLetterIsoCode = "SRB",
+                    NumericIsoCode = 688,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3178,6 +2898,42 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Singapore",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SG",
+                    ThreeLetterIsoCode = "SGP",
+                    NumericIsoCode = 702,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Slovakia (Slovak Republic)",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SK",
+                    ThreeLetterIsoCode = "SVK",
+                    NumericIsoCode = 703,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Slovenia",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "SI",
+                    ThreeLetterIsoCode = "SVN",
+                    NumericIsoCode = 705,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Solomon Islands",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3196,6 +2952,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "SO",
                     ThreeLetterIsoCode = "SOM",
                     NumericIsoCode = 706,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "South Africa",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ZA",
+                    ThreeLetterIsoCode = "ZAF",
+                    NumericIsoCode = 710,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3221,6 +2989,18 @@ namespace Nop.Services.Installation
                     ThreeLetterIsoCode = "SSD",
                     NumericIsoCode = 728,
                     SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Spain",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "ES",
+                    ThreeLetterIsoCode = "ESP",
+                    NumericIsoCode = 724,
+                    SubjectToVat = true,
                     DisplayOrder = 100,
                     Published = true
                 },
@@ -3298,12 +3078,24 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
-                    Name = "Swaziland",
+                    Name = "Sweden",
                     AllowsBilling = true,
                     AllowsShipping = true,
-                    TwoLetterIsoCode = "SZ",
-                    ThreeLetterIsoCode = "SWZ",
-                    NumericIsoCode = 748,
+                    TwoLetterIsoCode = "SE",
+                    ThreeLetterIsoCode = "SWE",
+                    NumericIsoCode = 752,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Switzerland",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "CH",
+                    ThreeLetterIsoCode = "CHE",
+                    NumericIsoCode = 756,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3316,6 +3108,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "SY",
                     ThreeLetterIsoCode = "SYR",
                     NumericIsoCode = 760,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Taiwan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TW",
+                    ThreeLetterIsoCode = "TWN",
+                    NumericIsoCode = 158,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3340,6 +3144,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "TZ",
                     ThreeLetterIsoCode = "TZA",
                     NumericIsoCode = 834,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Thailand",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TH",
+                    ThreeLetterIsoCode = "THA",
+                    NumericIsoCode = 764,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3406,6 +3222,18 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Turkey",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "TR",
+                    ThreeLetterIsoCode = "TUR",
+                    NumericIsoCode = 792,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Turkmenistan",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3454,6 +3282,78 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
+                    Name = "Ukraine",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UA",
+                    ThreeLetterIsoCode = "UKR",
+                    NumericIsoCode = 804,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United Arab Emirates",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "AE",
+                    ThreeLetterIsoCode = "ARE",
+                    NumericIsoCode = 784,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United Kingdom",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "GB",
+                    ThreeLetterIsoCode = "GBR",
+                    NumericIsoCode = 826,
+                    SubjectToVat = true,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "United States minor outlying islands",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UM",
+                    ThreeLetterIsoCode = "UMI",
+                    NumericIsoCode = 581,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uruguay",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UY",
+                    ThreeLetterIsoCode = "URY",
+                    NumericIsoCode = 858,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Uzbekistan",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "UZ",
+                    ThreeLetterIsoCode = "UZB",
+                    NumericIsoCode = 860,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
                     Name = "Vanuatu",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3472,6 +3372,18 @@ namespace Nop.Services.Installation
                     TwoLetterIsoCode = "VA",
                     ThreeLetterIsoCode = "VAT",
                     NumericIsoCode = 336,
+                    SubjectToVat = false,
+                    DisplayOrder = 100,
+                    Published = true
+                },
+                new Country
+                {
+                    Name = "Venezuela",
+                    AllowsBilling = true,
+                    AllowsShipping = true,
+                    TwoLetterIsoCode = "VE",
+                    ThreeLetterIsoCode = "VEN",
+                    NumericIsoCode = 862,
                     SubjectToVat = false,
                     DisplayOrder = 100,
                     Published = true
@@ -3573,7 +3485,7 @@ namespace Nop.Services.Installation
                     Published = true
                 }
             };
-            _countryRepository.Insert(countries);
+            InsertInstallationData(countries.ToArray());
 
             var statesUsa = new List<StateProvince>
             {
@@ -4015,7 +3927,7 @@ namespace Nop.Services.Installation
             };
 
             statesUsa.ForEach(x => x.CountryId = cUsa.Id);
-            _stateProvinceRepository.Insert(statesUsa);
+            InsertInstallationData(statesUsa);
 
             var statesCanada = new List<StateProvince>
             {
@@ -4113,7 +4025,7 @@ namespace Nop.Services.Installation
             };
 
             statesCanada.ForEach(x => x.CountryId = cCanada.Id);
-            _stateProvinceRepository.Insert(statesCanada);
+            InsertInstallationData(statesCanada);
         }
 
         protected virtual void InstallShippingMethods()
@@ -4140,7 +4052,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _shippingMethodRepository.Insert(shippingMethods);
+            InsertInstallationData(shippingMethods);
         }
 
         protected virtual void InstallDeliveryDates()
@@ -4163,7 +4075,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 10
                 }
             };
-            _deliveryDateRepository.Insert(deliveryDates);
+            InsertInstallationData(deliveryDates);
         }
 
         protected virtual void InstallProductAvailabilityRanges()
@@ -4186,7 +4098,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
+            InsertInstallationData(productAvailabilityRanges);
         }
 
         protected virtual void InstallSampleCustomers()
@@ -4238,17 +4150,33 @@ namespace Nop.Services.Installation
             secondUser.BillingAddressId = defaultSecondUserAddress.Id;
             secondUser.ShippingAddressId = defaultSecondUserAddress.Id;
 
-            _customerRepository.Insert(secondUser);
+            InsertInstallationData(secondUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = secondUser.Id, AddressId = defaultSecondUserAddress.Id });
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            InsertInstallationData(new CustomerPassword
             {
                 CustomerId = secondUser.Id,
                 Password = "123456",
@@ -4290,17 +4218,33 @@ namespace Nop.Services.Installation
             thirdUser.BillingAddressId = defaultThirdUserAddress.Id;
             thirdUser.ShippingAddressId = defaultThirdUserAddress.Id;
 
-            _customerRepository.Insert(thirdUser);
+            InsertInstallationData(thirdUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = thirdUser.Id, AddressId = defaultThirdUserAddress.Id });
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            InsertInstallationData(new CustomerPassword
             {
                 CustomerId = thirdUser.Id,
                 Password = "123456",
@@ -4341,17 +4285,33 @@ namespace Nop.Services.Installation
             fourthUser.BillingAddressId = defaultFourthUserAddress.Id;
             fourthUser.ShippingAddressId = defaultFourthUserAddress.Id;
 
-            _customerRepository.Insert(fourthUser);
+            InsertInstallationData(fourthUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = fourthUser.Id, AddressId = defaultFourthUserAddress.Id });
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            InsertInstallationData(new CustomerPassword
             {
                 CustomerId = fourthUser.Id,
                 Password = "123456",
@@ -4393,19 +4353,33 @@ namespace Nop.Services.Installation
             fifthUser.BillingAddressId = defaultFifthUserAddress.Id;
             fifthUser.ShippingAddressId = defaultFifthUserAddress.Id;
 
-            _customerRepository.Insert(fifthUser);
+            InsertInstallationData(fifthUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = fifthUser.Id, AddressId = defaultFifthUserAddress.Id });
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute,
-                defaultFifthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute,
-                defaultFifthUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            InsertInstallationData(new CustomerPassword
             {
                 CustomerId = fifthUser.Id,
                 Password = "123456",
@@ -4447,17 +4421,33 @@ namespace Nop.Services.Installation
             sixthUser.BillingAddressId = defaultSixthUserAddress.Id;
             sixthUser.ShippingAddressId = defaultSixthUserAddress.Id;
 
-            _customerRepository.Insert(sixthUser);
+            InsertInstallationData(sixthUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
-            _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            _customerPasswordRepository.Insert(new CustomerPassword
+            InsertInstallationData(new CustomerPassword
             {
                 CustomerId = sixthUser.Id,
                 Password = "123456",
@@ -4512,7 +4502,7 @@ namespace Nop.Services.Installation
                 crGuests,
                 crVendors
             };
-            _customerRoleRepository.Insert(customerRoles);
+            InsertInstallationData(customerRoles);
 
             //default store 
             var defaultStore = _storeRepository.Table.FirstOrDefault();
@@ -4555,7 +4545,7 @@ namespace Nop.Services.Installation
             adminUser.BillingAddressId = defaultAdminUserAddress.Id;
             adminUser.ShippingAddressId = defaultAdminUserAddress.Id;
 
-            _customerRepository.Insert(adminUser);
+            InsertInstallationData(adminUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = adminUser.Id, AddressId = defaultAdminUserAddress.Id });
 
@@ -4565,8 +4555,24 @@ namespace Nop.Services.Installation
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.FirstNameAttribute, "John");
-            _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.LastNameAttribute, "Smith");
+            InsertInstallationData(new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "John",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "Smith",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -4587,7 +4593,7 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            _customerRepository.Insert(searchEngineUser);
+            InsertInstallationData(searchEngineUser);
 
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerRoleId = crGuests.Id, CustomerId = searchEngineUser.Id });
 
@@ -4605,13 +4611,37 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            _customerRepository.Insert(backgroundTaskUser);
+            InsertInstallationData(backgroundTaskUser);
 
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = backgroundTaskUser.Id, CustomerRoleId = crGuests.Id });
         }
 
         protected virtual void InstallOrders()
         {
+            Address cloneAddress(Address address)
+            {
+                var addr = new Address
+                {
+                    FirstName = address.FirstName,
+                    LastName = address.LastName,
+                    Email = address.Email,
+                    Company = address.Company,
+                    CountryId = address.CountryId,
+                    StateProvinceId = address.StateProvinceId,
+                    County = address.County,
+                    City = address.City,
+                    Address1 = address.Address1,
+                    Address2 = address.Address2,
+                    ZipPostalCode = address.ZipPostalCode,
+                    PhoneNumber = address.PhoneNumber,
+                    FaxNumber = address.FaxNumber,
+                    CustomAttributes = address.CustomAttributes,
+                    CreatedOnUtc = address.CreatedOnUtc
+                };
+
+                return addr;
+            }
+
             //default store
             var defaultStore = _storeRepository.Table.FirstOrDefault();
             if (defaultStore == null)
@@ -4620,8 +4650,8 @@ namespace Nop.Services.Installation
             //first order
             var firstCustomer = _customerRepository.Table.First(c => c.Email == "steve_gates@nopCommerce.com");
 
-            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.BillingAddressId)));
-            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.ShippingAddressId)));
+            var firstCustomerBillingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4677,9 +4707,9 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(firstOrder);
+            InsertInstallationData(firstOrder);
             firstOrder.CustomOrderNumber = firstOrder.Id.ToString();
-            _orderRepository.Update(firstOrder);
+            UpdateInstallationData(firstOrder);
 
             //item Apple iCam
             var firstOrderItem1 = new OrderItem
@@ -4704,7 +4734,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(firstOrderItem1);
+            InsertInstallationData(firstOrderItem1);
 
             //item Leica T Mirrorless Digital Camera
             var fierstOrderItem2 = new OrderItem
@@ -4729,7 +4759,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fierstOrderItem2);
+            InsertInstallationData(fierstOrderItem2);
 
             //item $25 Virtual Gift Card
             var firstOrderItem3 = new OrderItem
@@ -4754,7 +4784,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(firstOrderItem3);
+            InsertInstallationData(firstOrderItem3);
 
             var firstOrderGiftcard = new GiftCard
             {
@@ -4771,16 +4801,16 @@ namespace Nop.Services.Installation
                 IsRecipientNotified = false,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _giftCardRepository.Insert(firstOrderGiftcard);
+            InsertInstallationData(firstOrderGiftcard);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = firstOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
@@ -4790,8 +4820,8 @@ namespace Nop.Services.Installation
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email == "arthur_holmes@nopCommerce.com");
 
-            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.BillingAddressId)));
-            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.ShippingAddressId)));
+            var secondCustomerBillingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4847,12 +4877,12 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(secondOrder);
+            InsertInstallationData(secondOrder);
             secondOrder.CustomOrderNumber = secondOrder.Id.ToString();
-            _orderRepository.Update(secondOrder);
+            UpdateInstallationData(secondOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
@@ -4882,7 +4912,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(secondOrderItem1);
+            InsertInstallationData(secondOrderItem1);
 
             //item Flower Girl Bracelet
             var secondOrderItem2 = new OrderItem
@@ -4907,12 +4937,12 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(secondOrderItem2);
+            InsertInstallationData(secondOrderItem2);
 
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email == "james_pan@nopCommerce.com");
 
-            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(thirdCustomer.BillingAddressId)));
+            var thirdCustomerBillingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
@@ -4967,12 +4997,12 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(thirdOrder);
+            InsertInstallationData(thirdOrder);
             thirdOrder.CustomOrderNumber = thirdOrder.Id.ToString();
-            _orderRepository.Update(thirdOrder);
+            UpdateInstallationData(thirdOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
@@ -5002,7 +5032,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(thirdOrderItem1);
+            InsertInstallationData(thirdOrderItem1);
 
             //item Night Visions
             var thirdOrderItem2 = new OrderItem
@@ -5027,7 +5057,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(thirdOrderItem2);
+            InsertInstallationData(thirdOrderItem2);
 
             //item Science & Faith
             var thirdOrderItem3 = new OrderItem
@@ -5052,15 +5082,15 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(thirdOrderItem3);
+            InsertInstallationData(thirdOrderItem3);
 
             //fourth order
             var fourthCustomer = _customerRepository.Table.First(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
-            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
-            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            
+            var fourthCustomerBillingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+
             var fourthOrder = new Order
             {
                 StoreId = defaultStore.Id,
@@ -5116,24 +5146,24 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(fourthOrder);
+            InsertInstallationData(fourthOrder);
             fourthOrder.CustomOrderNumber = fourthOrder.Id.ToString();
-            _orderRepository.Update(fourthOrder);
+            UpdateInstallationData(fourthOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = fourthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 OrderId = fourthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
@@ -5163,7 +5193,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fourthOrderItem1);
+            InsertInstallationData(fourthOrderItem1);
 
             //item First Prize Pies
             var fourthOrderItem2 = new OrderItem
@@ -5188,7 +5218,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fourthOrderItem2);
+            InsertInstallationData(fourthOrderItem2);
 
             //item Fahrenheit 451 by Ray Bradbury
             var fourthOrderItem3 = new OrderItem
@@ -5213,7 +5243,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fourthOrderItem3);
+            InsertInstallationData(fourthOrderItem3);
 
             //shipments
             //shipment 1
@@ -5227,7 +5257,7 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _shipmentRepository.Insert(fourthOrderShipment1);
+            InsertInstallationData(fourthOrderShipment1);
 
             var fourthOrderShipment1Item1 = new ShipmentItem
             {
@@ -5236,7 +5266,7 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment1.Id
             };
-            _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
+            InsertInstallationData(fourthOrderShipment1Item1);
 
             var fourthOrderShipment1Item2 = new ShipmentItem
             {
@@ -5245,7 +5275,7 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment1.Id
             };
-            _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
+            InsertInstallationData(fourthOrderShipment1Item2);
 
             //shipment 2
             var fourthOrderShipment2 = new Shipment
@@ -5258,7 +5288,7 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _shipmentRepository.Insert(fourthOrderShipment2);
+            InsertInstallationData(fourthOrderShipment2);
 
             var fourthOrderShipment2Item1 = new ShipmentItem
             {
@@ -5267,13 +5297,13 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment2.Id
             };
-            _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
+            InsertInstallationData(fourthOrderShipment2Item1);
 
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
-            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.BillingAddressId)));
-            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.ShippingAddressId)));
+            var fifthCustomerBillingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = InsertInstallationData(cloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
@@ -5329,30 +5359,30 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            _orderRepository.Insert(fifthOrder);
+            InsertInstallationData(fifthOrder);
             fifthOrder.CustomOrderNumber = fifthOrder.Id.ToString();
-            _orderRepository.Update(fifthOrder);
+            UpdateInstallationData(fifthOrder);
 
             //order notes
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = fifthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 OrderId = fifthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
                 OrderId = fifthOrder.Id
             });
-            _orderNoteRepository.Insert(new OrderNote
+            InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order delivered",
@@ -5382,7 +5412,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(fifthOrderItem1);
+            InsertInstallationData(fifthOrderItem1);
 
             //shipment 1
             var fifthOrderShipment1 = new Shipment
@@ -5395,7 +5425,7 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _shipmentRepository.Insert(fifthOrderShipment1);
+            InsertInstallationData(fifthOrderShipment1);
 
             var fifthOrderShipment1Item1 = new ShipmentItem
             {
@@ -5404,7 +5434,7 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fifthOrderShipment1.Id
             };
-            _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
+            InsertInstallationData(fifthOrderShipment1Item1);
         }
 
         protected virtual void InstallActivityLog(string defaultUserEmail)
@@ -5414,7 +5444,7 @@ namespace Nop.Services.Installation
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
 
-            _activityLogRepository.Insert(new ActivityLog
+            InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
@@ -5423,7 +5453,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
@@ -5432,7 +5462,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
@@ -5441,7 +5471,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
@@ -5450,7 +5480,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            _activityLogRepository.Insert(new ActivityLog
+            InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
@@ -5467,37 +5497,37 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-            _searchTermRepository.Insert(new SearchTerm
+            InsertInstallationData(new SearchTerm
             {
                 Count = 34,
                 Keyword = "computer",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+            InsertInstallationData(new SearchTerm
             {
                 Count = 30,
                 Keyword = "camera",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+            InsertInstallationData(new SearchTerm
             {
                 Count = 27,
                 Keyword = "jewelry",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+            InsertInstallationData(new SearchTerm
             {
                 Count = 26,
                 Keyword = "shoes",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+            InsertInstallationData(new SearchTerm
             {
                 Count = 19,
                 Keyword = "jeans",
                 StoreId = defaultStore.Id
             });
-            _searchTermRepository.Insert(new SearchTerm
+            InsertInstallationData(new SearchTerm
             {
                 Count = 10,
                 Keyword = "gift",
@@ -5521,7 +5551,7 @@ namespace Nop.Services.Installation
                     UseDefaultCredentials = false
                 }
             };
-            _emailAccountRepository.Insert(emailAccounts);
+            InsertInstallationData(emailAccounts);
         }
 
         protected virtual void InstallMessageTemplates()
@@ -5909,7 +5939,7 @@ namespace Nop.Services.Installation
                     EmailAccountId = eaGeneral.Id
                 }
             };
-            _messageTemplateRepository.Insert(messageTemplates);
+            InsertInstallationData(messageTemplates);
         }
 
         protected virtual void InstallTopics()
@@ -6065,12 +6095,12 @@ namespace Nop.Services.Installation
                     TopicTemplateId = defaultTopicTemplate.Id
                 }
             };
-            _topicRepository.Insert(topics);
+            InsertInstallationData(topics);
 
             //search engine names
             foreach (var topic in topics)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = topic.Id,
                     EntityName = nameof(Topic),
@@ -6129,8 +6159,6 @@ namespace Nop.Services.Installation
                 FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
                 PopupForTermsOfServiceLinks = true,
                 JqueryMigrateScriptLoggingActive = false,
@@ -6141,7 +6169,8 @@ namespace Nop.Services.Installation
                 EnableHtmlMinification = true,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
-                EnableCssBundling = false
+                EnableCssBundling = false,
+                RestartTimeout = NopCommonDefaults.RestartTimeout
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -6190,6 +6219,7 @@ namespace Nop.Services.Installation
                     "config",
                     "eucookielawaccept",
                     "page-not-found",
+                    "products",
                     //system names are not allowed (anyway they will cause a runtime error),
                     "con",
                     "lpt1",
@@ -6408,7 +6438,10 @@ namespace Nop.Services.Installation
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
                 AllowCustomersToCheckGiftCardBalance = false,
-                DeleteGuestTaskOlderThanMinutes = 1440
+                DeleteGuestTaskOlderThanMinutes = 1440,
+                PhoneNumberValidationEnabled = false,
+                PhoneNumberValidationUseRegex = false,
+                PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
             settingService.SaveSetting(new AddressSettings
@@ -6458,8 +6491,6 @@ namespace Nop.Services.Installation
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
-                DisplayMiniProfilerInPublicStore = false,
-                DisplayMiniProfilerForAdminOnly = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
@@ -6470,6 +6501,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ExternalAuthenticationSettings
             {
                 RequireEmailValidation = false,
+                LogErrors = false,
                 AllowCustomersToRemoveAssociations = true
             });
 
@@ -6595,7 +6627,8 @@ namespace Nop.Services.Installation
                 FreeShippingOverXEnabled = false,
                 FreeShippingOverXValue = decimal.Zero,
                 FreeShippingOverXIncludingTax = false,
-                EstimateShippingEnabled = true,
+                EstimateShippingProductPageEnabled = true,
+                EstimateShippingCartPageEnabled = true,
                 DisplayShipmentEventsToCustomers = false,
                 DisplayShipmentEventsToStoreOwner = false,
                 HideShippingTotal = false,
@@ -6818,8 +6851,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new CookieSettings
             {
-                CompareProductsCookieExpires = 24 *10,
-                RecentlyViewedProductsCookieExpires = 24 *10,
+                CompareProductsCookieExpires = 24 * 10,
+                RecentlyViewedProductsCookieExpires = 24 * 10,
                 CustomerCookieExpires = 24 * 365
             });
         }
@@ -6855,6 +6888,12 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallSpecificationAttributes()
         {
+            var sag1 = InsertInstallationData(
+                new SpecificationAttributeGroup
+                {
+                    Name = "System unit"
+                });
+
             var sa1 = InsertInstallationData(
                 new SpecificationAttribute
                 {
@@ -6898,7 +6937,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "CPU Type",
-                    DisplayOrder = 2
+                    DisplayOrder = 2,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             InsertInstallationData(
@@ -6919,7 +6959,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "Memory",
-                    DisplayOrder = 3
+                    DisplayOrder = 3,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             InsertInstallationData(
@@ -6946,7 +6987,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "Hard drive",
-                    DisplayOrder = 5
+                    DisplayOrder = 5,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             InsertInstallationData(
@@ -7041,7 +7083,7 @@ namespace Nop.Services.Installation
                     Name = "Software"
                 }
             };
-            _productAttributeRepository.Insert(productAttributes);
+            InsertInstallationData(productAttributes);
         }
 
         protected virtual void InstallCategories()
@@ -7072,7 +7114,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryComputers);
-            _categoryRepository.Insert(categoryComputers);
+            InsertInstallationData(categoryComputers);
 
             var categoryDesktops = new Category
             {
@@ -7091,7 +7133,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryDesktops);
-            _categoryRepository.Insert(categoryDesktops);
+            InsertInstallationData(categoryDesktops);
 
             var categoryNotebooks = new Category
             {
@@ -7109,7 +7151,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryNotebooks);
-            _categoryRepository.Insert(categoryNotebooks);
+            InsertInstallationData(categoryNotebooks);
 
             var categorySoftware = new Category
             {
@@ -7127,7 +7169,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categorySoftware);
-            _categoryRepository.Insert(categorySoftware);
+            InsertInstallationData(categorySoftware);
 
             var categoryElectronics = new Category
             {
@@ -7145,7 +7187,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryElectronics);
-            _categoryRepository.Insert(categoryElectronics);
+            InsertInstallationData(categoryElectronics);
 
             var categoryCameraPhoto = new Category
             {
@@ -7164,7 +7206,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryCameraPhoto);
-            _categoryRepository.Insert(categoryCameraPhoto);
+            InsertInstallationData(categoryCameraPhoto);
 
             var categoryCellPhones = new Category
             {
@@ -7182,7 +7224,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryCellPhones);
-            _categoryRepository.Insert(categoryCellPhones);
+            InsertInstallationData(categoryCellPhones);
 
             var categoryOthers = new Category
             {
@@ -7201,7 +7243,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryOthers);
-            _categoryRepository.Insert(categoryOthers);
+            InsertInstallationData(categoryOthers);
 
             var categoryApparel = new Category
             {
@@ -7219,7 +7261,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryApparel);
-            _categoryRepository.Insert(categoryApparel);
+            InsertInstallationData(categoryApparel);
 
             var categoryShoes = new Category
             {
@@ -7238,7 +7280,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryShoes);
-            _categoryRepository.Insert(categoryShoes);
+            InsertInstallationData(categoryShoes);
 
             var categoryClothing = new Category
             {
@@ -7256,7 +7298,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryClothing);
-            _categoryRepository.Insert(categoryClothing);
+            InsertInstallationData(categoryClothing);
 
             var categoryAccessories = new Category
             {
@@ -7275,7 +7317,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryAccessories);
-            _categoryRepository.Insert(categoryAccessories);
+            InsertInstallationData(categoryAccessories);
 
             var categoryDigitalDownloads = new Category
             {
@@ -7293,7 +7335,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryDigitalDownloads);
-            _categoryRepository.Insert(categoryDigitalDownloads);
+            InsertInstallationData(categoryDigitalDownloads);
 
             var categoryBooks = new Category
             {
@@ -7313,7 +7355,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryBooks);
-            _categoryRepository.Insert(categoryBooks);
+            InsertInstallationData(categoryBooks);
 
             var categoryJewelry = new Category
             {
@@ -7331,7 +7373,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryJewelry);
-            _categoryRepository.Insert(categoryJewelry);
+            InsertInstallationData(categoryJewelry);
 
             var categoryGiftCards = new Category
             {
@@ -7348,12 +7390,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryGiftCards);
-            _categoryRepository.Insert(categoryGiftCards);
+            InsertInstallationData(categoryGiftCards);
 
             //search engine names
             foreach (var category in allCategories)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = category.Id,
                     EntityName = nameof(Category),
@@ -7388,7 +7430,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerAsus);
+            InsertInstallationData(manufacturerAsus);
             allManufacturers.Add(manufacturerAsus);
 
             var manufacturerHp = new Manufacturer
@@ -7404,7 +7446,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerHp);
+            InsertInstallationData(manufacturerHp);
             allManufacturers.Add(manufacturerHp);
 
             var manufacturerNike = new Manufacturer
@@ -7420,13 +7462,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _manufacturerRepository.Insert(manufacturerNike);
+            InsertInstallationData(manufacturerNike);
             allManufacturers.Add(manufacturerNike);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
                     EntityName = nameof(Manufacturer),
@@ -7476,7 +7518,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productBuildComputer);
 
-            _productRepository.Insert(productBuildComputer);
+            InsertInstallationData(productBuildComputer);
 
             InsertInstallationData(new ProductCategory
             {
@@ -7685,7 +7727,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productDigitalStorm);
 
-            _productRepository.Insert(productDigitalStorm);
+            InsertInstallationData(productDigitalStorm);
 
             InsertInstallationData(new ProductCategory
             {
@@ -7739,7 +7781,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoIdeaCentre);
 
-            _productRepository.Insert(productLenovoIdeaCentre);
+            InsertInstallationData(productLenovoIdeaCentre);
 
             InsertInstallationData(new ProductCategory
             {
@@ -7795,7 +7837,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleMacBookPro);
 
-            _productRepository.Insert(productAppleMacBookPro);
+            InsertInstallationData(productAppleMacBookPro);
 
             InsertInstallationData(new ProductCategory
             {
@@ -7890,7 +7932,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productAsusN551JK);
 
-            _productRepository.Insert(productAsusN551JK);
+            InsertInstallationData(productAsusN551JK);
 
             InsertInstallationData(new ProductCategory
             {
@@ -7980,7 +8022,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSamsungSeries);
 
-            _productRepository.Insert(productSamsungSeries);
+            InsertInstallationData(productSamsungSeries);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8069,7 +8111,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHpSpectre);
 
-            _productRepository.Insert(productHpSpectre);
+            InsertInstallationData(productHpSpectre);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8171,7 +8213,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHpEnvy);
 
-            _productRepository.Insert(productHpEnvy);
+            InsertInstallationData(productHpEnvy);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8267,7 +8309,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoThinkpad);
 
-            _productRepository.Insert(productLenovoThinkpad);
+            InsertInstallationData(productLenovoThinkpad);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8340,7 +8382,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAdobePhotoshop);
 
-            _productRepository.Insert(productAdobePhotoshop);
+            InsertInstallationData(productAdobePhotoshop);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8387,7 +8429,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productWindows8Pro);
 
-            _productRepository.Insert(productWindows8Pro);
+            InsertInstallationData(productWindows8Pro);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8438,7 +8480,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSoundForge);
 
-            _productRepository.Insert(productSoundForge);
+            InsertInstallationData(productSoundForge);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8654,7 +8696,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DSLR);
 
-            _productRepository.Insert(productNikonD5500DSLR);
+            InsertInstallationData(productNikonD5500DSLR);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8701,7 +8743,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DSLR_associated_1);
 
-            _productRepository.Insert(productNikonD5500DSLR_associated_1);
+            InsertInstallationData(productNikonD5500DSLR_associated_1);
 
             InsertProductPicture(productNikonD5500DSLR_associated_1, "product_NikonCamera_black.jpeg");
 
@@ -8737,7 +8779,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DSLR_associated_2);
 
-            _productRepository.Insert(productNikonD5500DSLR_associated_2);
+            InsertInstallationData(productNikonD5500DSLR_associated_2);
 
             InsertProductPicture(productNikonD5500DSLR_associated_2, "product_NikonCamera_red.jpeg");
 
@@ -8774,7 +8816,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLeica);
 
-            _productRepository.Insert(productLeica);
+            InsertInstallationData(productLeica);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8821,7 +8863,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleICam);
 
-            _productRepository.Insert(productAppleICam);
+            InsertInstallationData(productAppleICam);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8874,7 +8916,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHtcOne);
 
-            _productRepository.Insert(productHtcOne);
+            InsertInstallationData(productHtcOne);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8923,7 +8965,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHtcOneMini);
 
-            _productRepository.Insert(productHtcOneMini);
+            InsertInstallationData(productHtcOneMini);
 
             InsertInstallationData(new ProductCategory
             {
@@ -8972,7 +9014,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNokiaLumia);
 
-            _productRepository.Insert(productNokiaLumia);
+            InsertInstallationData(productNokiaLumia);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9023,7 +9065,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productBeatsPill);
 
-            _productRepository.Insert(productBeatsPill);
+            InsertInstallationData(productBeatsPill);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9035,7 +9077,7 @@ namespace Nop.Services.Installation
             InsertProductPicture(productBeatsPill, "product_PillBeats_1.jpeg");
             InsertProductPicture(productBeatsPill, "product_PillBeats_2.jpeg", 2);
 
-            _tierPriceRepository.Insert(new List<TierPrice>
+            InsertInstallationData(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9095,7 +9137,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productUniversalTabletCover);
 
-            _productRepository.Insert(productUniversalTabletCover);
+            InsertInstallationData(productUniversalTabletCover);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9142,7 +9184,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productPortableSoundSpeakers);
 
-            _productRepository.Insert(productPortableSoundSpeakers);
+            InsertInstallationData(productPortableSoundSpeakers);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9273,7 +9315,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikeFloral);
 
-            _productRepository.Insert(productNikeFloral);
+            InsertInstallationData(productNikeFloral);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9398,7 +9440,7 @@ namespace Nop.Services.Installation
             AddProductTag(productNikeFloral, "shoes");
             AddProductTag(productNikeFloral, "apparel");
 
-            _productRepository.Update(productNikeFloral);
+            UpdateInstallationData(productNikeFloral);
 
             var productAdidas = new Product
             {
@@ -9434,7 +9476,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAdidas);
 
-            _productRepository.Insert(productAdidas);
+            InsertInstallationData(productAdidas);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9555,7 +9597,7 @@ namespace Nop.Services.Installation
             AddProductTag(productAdidas, "shoes");
             AddProductTag(productAdidas, "apparel");
 
-            _productRepository.Update(productAdidas);
+            UpdateInstallationData(productAdidas);
 
             var productNikeZoom = new Product
             {
@@ -9591,7 +9633,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productNikeZoom);
 
-            _productRepository.Insert(productNikeZoom);
+            InsertInstallationData(productNikeZoom);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9655,7 +9697,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikeTailwind);
 
-            _productRepository.Insert(productNikeTailwind);
+            InsertInstallationData(productNikeTailwind);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9765,7 +9807,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productOversizedWomenTShirt);
 
-            _productRepository.Insert(productOversizedWomenTShirt);
+            InsertInstallationData(productOversizedWomenTShirt);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9776,7 +9818,7 @@ namespace Nop.Services.Installation
 
             InsertProductPicture(productOversizedWomenTShirt, "product_WomenTShirt.jpg");
 
-            _tierPriceRepository.Insert(new List<TierPrice>
+            InsertInstallationData(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9835,7 +9877,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productCustomTShirt);
 
-            _productRepository.Insert(productCustomTShirt);
+            InsertInstallationData(productCustomTShirt);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9846,7 +9888,7 @@ namespace Nop.Services.Installation
 
             InsertProductPicture(productCustomTShirt, "product_CustomTShirt.jpeg");
 
-            _productAttributeMappingRepository.Insert(
+            InsertInstallationData(
                 new ProductAttributeMapping
                 {
                     ProductId = productCustomTShirt.Id,
@@ -9895,7 +9937,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLeviJeans);
 
-            _productRepository.Insert(productLeviJeans);
+            InsertInstallationData(productLeviJeans);
 
             InsertInstallationData(new ProductCategory
             {
@@ -9907,7 +9949,7 @@ namespace Nop.Services.Installation
             InsertProductPicture(productLeviJeans, "product_LeviJeans_1.jpg");
             InsertProductPicture(productLeviJeans, "product_LeviJeans_2.jpg", 2);
 
-            _tierPriceRepository.Insert(new List<TierPrice>
+            InsertInstallationData(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9966,7 +10008,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productObeyHat);
 
-            _productRepository.Insert(productObeyHat);
+            InsertInstallationData(productObeyHat);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10053,7 +10095,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productBelt);
 
-            _productRepository.Insert(productBelt);
+            InsertInstallationData(productBelt);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10097,7 +10139,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSunglasses);
 
-            _productRepository.Insert(productSunglasses);
+            InsertInstallationData(productSunglasses);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10234,7 +10276,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNightVision);
 
-            _productRepository.Insert(productNightVision);
+            InsertInstallationData(productNightVision);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10305,7 +10347,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productIfYouWait);
 
-            _productRepository.Insert(productIfYouWait);
+            InsertInstallationData(productIfYouWait);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10365,7 +10407,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productScienceAndFaith);
 
-            _productRepository.Insert(productScienceAndFaith);
+            InsertInstallationData(productScienceAndFaith);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10441,7 +10483,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFahrenheit);
 
-            _productRepository.Insert(productFahrenheit);
+            InsertInstallationData(productFahrenheit);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10490,7 +10532,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFirstPrizePies);
 
-            _productRepository.Insert(productFirstPrizePies);
+            InsertInstallationData(productFirstPrizePies);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10537,7 +10579,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productPrideAndPrejudice);
 
-            _productRepository.Insert(productPrideAndPrejudice);
+            InsertInstallationData(productPrideAndPrejudice);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10624,7 +10666,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productElegantGemstoneNecklace);
 
-            _productRepository.Insert(productElegantGemstoneNecklace);
+            InsertInstallationData(productElegantGemstoneNecklace);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10672,7 +10714,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFlowerGirlBracelet);
 
-            _productRepository.Insert(productFlowerGirlBracelet);
+            InsertInstallationData(productFlowerGirlBracelet);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10719,7 +10761,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productEngagementRing);
 
-            _productRepository.Insert(productEngagementRing);
+            InsertInstallationData(productEngagementRing);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10797,7 +10839,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product25GiftCard);
 
-            _productRepository.Insert(product25GiftCard);
+            InsertInstallationData(product25GiftCard);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10845,7 +10887,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product50GiftCard);
 
-            _productRepository.Insert(product50GiftCard);
+            InsertInstallationData(product50GiftCard);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10888,7 +10930,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product100GiftCard);
 
-            _productRepository.Insert(product100GiftCard);
+            InsertInstallationData(product100GiftCard);
 
             InsertInstallationData(new ProductCategory
             {
@@ -10961,7 +11003,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var product in allProducts)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = product.Id,
                     EntityName = nameof(Product),
@@ -10972,7 +11014,7 @@ namespace Nop.Services.Installation
             }
 
             //related products
-            _relatedProductRepository.Insert(relatedProducts);
+            InsertInstallationData(relatedProducts);
 
             //reviews
             using (var random = new SecureRandomNumberGenerator())
@@ -11009,13 +11051,13 @@ namespace Nop.Services.Installation
                 }
             }
 
-            _productRepository.Update(allProducts);
+            UpdateInstallationData(allProducts);
 
             //stock quantity history
             foreach (var product in allProducts)
             {
                 if (product.StockQuantity > 0)
-                    _stockQuantityHistoryRepository.Insert(new StockQuantityHistory
+                    InsertInstallationData(new StockQuantityHistory
                     {
                         ProductId = product.Id,
                         WarehouseId = product.WarehouseId > 0 ? (int?)product.WarehouseId : null,
@@ -11037,7 +11079,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
 
-            _forumGroupRepository.Insert(forumGroup);
+            InsertInstallationData(forumGroup);
 
             var newProductsForum = new Forum
             {
@@ -11052,7 +11094,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _forumRepository.Insert(newProductsForum);
+            InsertInstallationData(newProductsForum);
 
             var mobileDevicesForum = new Forum
             {
@@ -11067,7 +11109,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _forumRepository.Insert(mobileDevicesForum);
+            InsertInstallationData(mobileDevicesForum);
 
             var packagingShippingForum = new Forum
             {
@@ -11081,7 +11123,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            _forumRepository.Insert(packagingShippingForum);
+            InsertInstallationData(packagingShippingForum);
         }
 
         protected virtual void InstallDiscounts()
@@ -11111,7 +11153,7 @@ namespace Nop.Services.Installation
                     CouponCode = "456"
                 }
             };
-            _discountRepository.Insert(discounts);
+            InsertInstallationData(discounts);
         }
 
         protected virtual void InstallBlogPosts(string defaultUserEmail)
@@ -11147,12 +11189,12 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _blogPostRepository.Insert(blogPosts);
+            InsertInstallationData(blogPosts);
 
             //search engine names
             foreach (var blogPost in blogPosts)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = nameof(BlogPost),
@@ -11185,7 +11227,7 @@ namespace Nop.Services.Installation
                 });
             }
 
-            _blogPostRepository.Update(blogPosts);
+            UpdateInstallationData(blogPosts);
         }
 
         protected virtual void InstallNews(string defaultUserEmail)
@@ -11230,12 +11272,12 @@ namespace Nop.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(2)
                 }
             };
-            _newsItemRepository.Insert(news);
+            InsertInstallationData(news);
 
             //search engine names
             foreach (var newsItem in news)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = newsItem.Id,
                     EntityName = nameof(NewsItem),
@@ -11269,7 +11311,7 @@ namespace Nop.Services.Installation
                 });
             }
 
-            _newsItemRepository.Update(news);
+            UpdateInstallationData(news);
         }
 
         protected virtual void InstallPolls()
@@ -11289,7 +11331,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             };
 
-            _pollRepository.Insert(poll1);
+            InsertInstallationData(poll1);
 
             var answers = new List<PollAnswer>()
             {
@@ -11319,7 +11361,7 @@ namespace Nop.Services.Installation
             }
             };
 
-            _pollAnswerRepository.Insert(answers);
+            InsertInstallationData(answers);
         }
 
         protected virtual void InstallActivityLogTypes()
@@ -11476,6 +11518,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "AddNewSpecAttribute",
                     Enabled = true,
                     Name = "Add a new specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Add a new specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -11734,6 +11782,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "DeleteSpecAttribute",
                     Enabled = true,
                     Name = "Delete a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Delete a specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -12007,6 +12061,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "EditSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Edit a specification attribute group"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "EditVendor",
                     Enabled = true,
                     Name = "Edit a vendor"
@@ -12229,7 +12289,7 @@ namespace Nop.Services.Installation
                     Name = "Upload a favicon and app icons"
                 }
             };
-            _activityLogTypeRepository.Insert(activityLogTypes);
+            InsertInstallationData(activityLogTypes);
         }
 
         protected virtual void InstallProductTemplates()
@@ -12251,7 +12311,7 @@ namespace Nop.Services.Installation
                     IgnoredProductTypes = ((int)ProductType.SimpleProduct).ToString()
                 }
             };
-            _productTemplateRepository.Insert(productTemplates);
+            InsertInstallationData(productTemplates);
         }
 
         protected virtual void InstallCategoryTemplates()
@@ -12265,7 +12325,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            _categoryTemplateRepository.Insert(categoryTemplates);
+            InsertInstallationData(categoryTemplates);
         }
 
         protected virtual void InstallManufacturerTemplates()
@@ -12279,7 +12339,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            _manufacturerTemplateRepository.Insert(manufacturerTemplates);
+            InsertInstallationData(manufacturerTemplates);
         }
 
         protected virtual void InstallTopicTemplates()
@@ -12293,7 +12353,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            _topicTemplateRepository.Insert(topicTemplates);
+            InsertInstallationData(topicTemplates);
         }
 
         protected virtual void InstallScheduleTasks()
@@ -12352,7 +12412,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _scheduleTaskRepository.Insert(tasks);
+            InsertInstallationData(tasks);
         }
 
         protected virtual void InstallReturnRequestReasons()
@@ -12375,7 +12435,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _returnRequestReasonRepository.Insert(returnRequestReasons);
+            InsertInstallationData(returnRequestReasons);
         }
 
         protected virtual void InstallReturnRequestActions()
@@ -12398,7 +12458,7 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            _returnRequestActionRepository.Insert(returnRequestActions);
+            InsertInstallationData(returnRequestActions);
         }
 
         protected virtual void InstallWarehouses()
@@ -12412,7 +12472,7 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressRepository.Insert(warehouse1address);
+            InsertInstallationData(warehouse1address);
             var warehouse2address = new Address
             {
                 Address1 = "300 South Spring Stree",
@@ -12422,7 +12482,7 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressRepository.Insert(warehouse2address);
+            InsertInstallationData(warehouse2address);
             var warehouses = new List<Warehouse>
             {
                 new Warehouse
@@ -12437,7 +12497,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _warehouseRepository.Insert(warehouses);
+            InsertInstallationData(warehouses);
         }
 
         protected virtual void InstallVendors()
@@ -12472,12 +12532,12 @@ namespace Nop.Services.Installation
                 }
             };
 
-            _vendorRepository.Insert(vendors);
+            InsertInstallationData(vendors);
 
             //search engine names
             foreach (var vendor in vendors)
             {
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = vendor.Id,
                     EntityName = nameof(Vendor),
@@ -12504,13 +12564,13 @@ namespace Nop.Services.Installation
                 CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            _addressRepository.Insert(affiliateAddress);
+            InsertInstallationData(affiliateAddress);
             var affilate = new Affiliate
             {
                 Active = true,
                 AddressId = affiliateAddress.Id
             };
-            _affiliateRepository.Insert(affilate);
+            InsertInstallationData(affilate);
         }
 
         private void AddProductTag(Product product, string tag)
@@ -12523,10 +12583,10 @@ namespace Nop.Services.Installation
                 {
                     Name = tag
                 };
-                _productTagRepository.Insert(productTag);
+                InsertInstallationData(productTag);
 
                 //search engine name
-                _urlRecordRepository.Insert(new UrlRecord
+                InsertInstallationData(new UrlRecord
                 {
                     EntityId = productTag.Id,
                     EntityName = nameof(ProductTag),
@@ -12536,7 +12596,7 @@ namespace Nop.Services.Installation
                 });
             }
 
-            _productProductTagMappingRepository.Insert(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
+            InsertInstallationData(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
         }
 
         #endregion

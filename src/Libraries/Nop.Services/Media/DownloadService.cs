@@ -4,8 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Media
 {
@@ -16,16 +14,14 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPubisher;
         private readonly IRepository<Download> _downloadRepository;
+
         #endregion
 
         #region Ctor
 
-        public DownloadService(IEventPublisher eventPubisher,
-            IRepository<Download> downloadRepository)
+        public DownloadService(IRepository<Download> downloadRepository)
         {
-            _eventPubisher = eventPubisher;
             _downloadRepository = downloadRepository;
         }
 
@@ -40,10 +36,7 @@ namespace Nop.Services.Media
         /// <returns>Download</returns>
         public virtual Download GetDownloadById(int downloadId)
         {
-            if (downloadId == 0)
-                return null;
-
-            return _downloadRepository.ToCachedGetById(downloadId);
+            return _downloadRepository.GetById(downloadId);
         }
 
         /// <summary>
@@ -69,13 +62,7 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         public virtual void DeleteDownload(Download download)
         {
-            if (download == null)
-                throw new ArgumentNullException(nameof(download));
-
             _downloadRepository.Delete(download);
-
-            //event notification
-            _eventPubisher.EntityDeleted(download);
         }
 
         /// <summary>
@@ -84,13 +71,7 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         public virtual void InsertDownload(Download download)
         {
-            if (download == null)
-                throw new ArgumentNullException(nameof(download));
-
             _downloadRepository.Insert(download);
-
-            //event notification
-            _eventPubisher.EntityInserted(download);
         }
 
         /// <summary>
@@ -99,13 +80,7 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         public virtual void UpdateDownload(Download download)
         {
-            if (download == null)
-                throw new ArgumentNullException(nameof(download));
-
             _downloadRepository.Update(download);
-
-            //event notification
-            _eventPubisher.EntityUpdated(download);
         }
 
         /// <summary>

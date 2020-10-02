@@ -7,9 +7,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -24,10 +21,9 @@ namespace Nop.Services.Seo
         private static readonly object _lock = new object();
         private static Dictionary<string, string> _seoCharacterTable;
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly SeoSettings _seoSettings;
@@ -36,18 +32,16 @@ namespace Nop.Services.Seo
 
         #region Ctor
 
-        public UrlRecordService(IEventPublisher eventPublisher,
-            ILanguageService languageService,
+        public UrlRecordService(ILanguageService languageService,
             IRepository<UrlRecord> urlRecordRepository,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
-            _eventPublisher = eventPublisher;
             _languageService = languageService;
             _urlRecordRepository = urlRecordRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
             _localizationSettings = localizationSettings;
             _seoSettings = seoSettings;
@@ -1132,13 +1126,7 @@ namespace Nop.Services.Seo
         /// <param name="urlRecord">URL record</param>
         public virtual void DeleteUrlRecord(UrlRecord urlRecord)
         {
-            if (urlRecord == null)
-                throw new ArgumentNullException(nameof(urlRecord));
-
             _urlRecordRepository.Delete(urlRecord);
-
-            //event notification
-            _eventPublisher.EntityDeleted(urlRecord);
         }
 
         /// <summary>
@@ -1147,14 +1135,7 @@ namespace Nop.Services.Seo
         /// <param name="urlRecords">URL records</param>
         public virtual void DeleteUrlRecords(IList<UrlRecord> urlRecords)
         {
-            if (urlRecords == null)
-                throw new ArgumentNullException(nameof(urlRecords));
-
             _urlRecordRepository.Delete(urlRecords);
-            
-            //event notification
-            foreach (var urlRecord in urlRecords) 
-                _eventPublisher.EntityDeleted(urlRecord);
         }
 
         /// <summary>
@@ -1164,11 +1145,7 @@ namespace Nop.Services.Seo
         /// <returns>URL record</returns>
         public virtual IList<UrlRecord> GetUrlRecordsByIds(int[] urlRecordIds)
         {
-            var query = _urlRecordRepository.Table;
-
-            var key = NopSeoDefaults.UrlRecordByIdsCacheKey.FillCacheKey(urlRecordIds);
-
-            return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
+            return _urlRecordRepository.GetByIds(urlRecordIds, cache => default);
         }
 
         /// <summary>
@@ -1178,10 +1155,7 @@ namespace Nop.Services.Seo
         /// <returns>URL record</returns>
         public virtual UrlRecord GetUrlRecordById(int urlRecordId)
         {
-            if (urlRecordId == 0)
-                return null;
-
-            return _urlRecordRepository.ToCachedGetById(urlRecordId);
+            return _urlRecordRepository.GetById(urlRecordId, cache => default);
         }
 
         /// <summary>
@@ -1190,13 +1164,7 @@ namespace Nop.Services.Seo
         /// <param name="urlRecord">URL record</param>
         public virtual void InsertUrlRecord(UrlRecord urlRecord)
         {
-            if (urlRecord == null)
-                throw new ArgumentNullException(nameof(urlRecord));
-
             _urlRecordRepository.Insert(urlRecord);
-
-            //event notification
-            _eventPublisher.EntityInserted(urlRecord);
         }
 
         /// <summary>
@@ -1205,13 +1173,7 @@ namespace Nop.Services.Seo
         /// <param name="urlRecord">URL record</param>
         public virtual void UpdateUrlRecord(UrlRecord urlRecord)
         {
-            if (urlRecord == null)
-                throw new ArgumentNullException(nameof(urlRecord));
-
             _urlRecordRepository.Update(urlRecord);
-
-            //event notification
-            _eventPublisher.EntityUpdated(urlRecord);
         }
 
         /// <summary>
@@ -1224,10 +1186,11 @@ namespace Nop.Services.Seo
             if (string.IsNullOrEmpty(slug))
                 return null;
             
-            var key = NopSeoDefaults.UrlRecordBySlugCacheKey.FillCacheKey(slug);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
+
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return _cacheManager.Get(key, () =>
+                return _staticCacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecords();
@@ -1249,7 +1212,7 @@ namespace Nop.Services.Seo
                 orderby ur.IsActive descending, ur.Id
                 select ur;
 
-            var urlRecord = query.ToCachedFirstOrDefault(key);
+            var urlRecord = _staticCacheManager.Get(key, query.FirstOrDefault);
 
             return urlRecord;
         }
@@ -1258,20 +1221,33 @@ namespace Nop.Services.Seo
         /// Gets all URL records
         /// </summary>
         /// <param name="slug">Slug</param>
+        /// <param name="languageId">Language ID; "null" to load records with any language; "0" to load records with standard language only; otherwise to load records with specify language ID only</param>
+        /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<UrlRecord> GetAllUrlRecords(
+            string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _urlRecordRepository.Table;
-            query = query.OrderBy(ur => ur.Slug);
+            var urlRecords = _urlRecordRepository.GetAll(query =>
+            {
+                query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = query.ToCachedList(NopSeoDefaults.UrlRecordAllCacheKey);
+                return query;
+            }, cache => default).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(slug))
-                urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug)).ToList();
+                urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug));
 
-            return new PagedList<UrlRecord>(urlRecords, pageIndex, pageSize);
+            if (languageId.HasValue)
+                urlRecords = urlRecords.Where(ur => ur.LanguageId == languageId);
+
+            if (isActive.HasValue)
+                urlRecords = urlRecords.Where(ur => ur.IsActive == isActive);
+
+            var result = urlRecords.ToList();
+
+            return new PagedList<UrlRecord>(result, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -1284,11 +1260,11 @@ namespace Nop.Services.Seo
         public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
         {
             //gradual loading
-            var key = NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entityId, entityName, languageId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordCacheKey, entityId, entityName, languageId);
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return _cacheManager.Get(key, () =>
+                return _staticCacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecords();
@@ -1315,7 +1291,7 @@ namespace Nop.Services.Seo
                 orderby ur.Id descending
                 select ur.Slug;
 
-            var rezSlug = query.ToCachedFirstOrDefault(key) ?? string.Empty;
+            var rezSlug = _staticCacheManager.Get(key, query.FirstOrDefault) ?? string.Empty;
 
             return rezSlug;
         }

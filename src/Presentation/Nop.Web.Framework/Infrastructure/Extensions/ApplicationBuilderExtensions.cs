@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +18,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Migrations;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Installation;
@@ -59,12 +61,31 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 engine.Resolve<ILogger>().Information("Application started");
 
                 var pluginService = engine.Resolve<IPluginService>();
-                
+
                 //install plugins
                 pluginService.InstallPlugins();
 
                 //update plugins
                 pluginService.UpdatePlugins();
+
+                //update nopCommerce core
+                var migrationManager = engine.Resolve<IMigrationManager>();
+                var assembly = Assembly.GetAssembly(typeof(ApplicationBuilderExtensions));
+                migrationManager.ApplyUpMigrations(assembly, true);
+                //update nopCommerce database
+                assembly = Assembly.GetAssembly(typeof(IMigrationManager));
+                migrationManager.ApplyUpMigrations(assembly, true);
+
+#if DEBUG
+
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                //prevent save the update migrations into the DB during the developing process  
+                var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
+                versions.Delete(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
+
+#endif
             }
         }
 
@@ -74,9 +95,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopExceptionHandler(this IApplicationBuilder application)
         {
-            var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+            var appSettings = EngineContext.Current.Resolve<AppSettings>();
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
-            var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || webHostEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = appSettings.CommonConfig.DisplayFullErrorStack || webHostEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes
@@ -345,7 +366,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.SupportedCultures = cultures;
                 options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
             });
-        }       
+        }
 
         /// <summary>
         /// Set current culture info

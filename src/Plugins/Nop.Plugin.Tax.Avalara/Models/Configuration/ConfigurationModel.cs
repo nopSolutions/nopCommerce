@@ -18,6 +18,7 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
         {
             TestAddress = new AddressModel();
             Companies = new List<SelectListItem>();
+            TaxOriginAddressTypes = new List<SelectListItem>();
             TaxTransactionLogSearchModel = new TaxTransactionLogSearchModel();
         }
 
@@ -47,6 +48,13 @@ namespace Nop.Plugin.Tax.Avalara.Models.Configuration
 
         [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.ValidateAddress")]
         public bool ValidateAddress { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.TaxOriginAddressType")]
+        public int TaxOriginAddressTypeId { get; set; }
+        public IList<SelectListItem> TaxOriginAddressTypes { get; set; }
+
+        [NopResourceDisplayName("Plugins.Tax.Avalara.Fields.EnableLogging")]
+        public bool EnableLogging { get; set; }
 
         public AddressModel TestAddress { get; set; }
 

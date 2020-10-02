@@ -34,7 +34,11 @@
                     <script asp-location="Footer">
                         $(document).ready(function () {
                             $("#product_enteredQuantity_@Model.ProductId").on("change", function () {
-                                $(document).trigger({ type: "product_quantity_changed", quantity: $('#product_enteredQuantity_@Model.ProductId').find(":selected").text() });
+                                var data = {
+                                    productId: @Model.ProductId,
+                                    quantity: $('#product_enteredQuantity_@Model.ProductId').find(":selected").text()
+                                };
+                                $(document).trigger({ type: "product_quantity_changed", changedData: data });
                             });
                         });
                     </script>
@@ -53,7 +57,11 @@
                             });
 
                             $("#product_enteredQuantity_@Model.ProductId").on("input propertychange paste", function () {
-                                $(document).trigger({ type: "product_quantity_changed", quantity: $('#product_enteredQuantity_@Model.ProductId').val() });
+                                var data = {
+                                    productId: @Model.ProductId,
+                                    quantity: $('#product_enteredQuantity_@Model.ProductId').val()
+                                };
+                                $(document).trigger({ type: "product_quantity_changed", changedData: data });
                             });
                         });
                     </script>

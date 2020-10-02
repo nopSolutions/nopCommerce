@@ -9,14 +9,14 @@ namespace Nop.Core.Tests.Infrastructure
     public class SingletonTests
     {
         [Test]
-        public void Singleton_IsNullByDefault()
+        public void SingletonIsNullByDefault()
         {
             var instance = Singleton<SingletonTests>.Instance;
             instance.Should().BeNull();
         }
 
         [Test]
-        public void Singletons_ShareSame_SingletonsDictionary()
+        public void SingletonsShareSameSingletonsDictionary()
         {
             Singleton<int>.Instance = 1;
             Singleton<double>.Instance = 2.0;
@@ -27,14 +27,14 @@ namespace Nop.Core.Tests.Infrastructure
         }
 
         [Test]
-        public void SingletonDictionary_IsCreatedByDefault()
+        public void SingletonDictionaryIsCreatedByDefault()
         {
             var instance = SingletonDictionary<SingletonTests, object>.Instance;
             instance.Should().NotBeNull();
         }
 
         [Test]
-        public void SingletonDictionary_CanStoreStuff()
+        public void SingletonDictionaryCanStoreStuff()
         {
             var instance = SingletonDictionary<Type, SingletonTests>.Instance;
             instance[typeof(SingletonTests)] = this;
@@ -42,14 +42,14 @@ namespace Nop.Core.Tests.Infrastructure
         }
 
         [Test]
-        public void SingletonList_IsCreatedByDefault()
+        public void SingletonListIsCreatedByDefault()
         {
             var instance = SingletonList<SingletonTests>.Instance;
             instance.Should().NotBeNull();
         }
 
         [Test]
-        public void SingletonList_CanStoreItems()
+        public void SingletonListCanStoreItems()
         {
             var instance = SingletonList<SingletonTests>.Instance;
             instance.Insert(0, this);

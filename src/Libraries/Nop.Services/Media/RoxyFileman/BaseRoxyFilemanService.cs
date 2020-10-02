@@ -112,7 +112,28 @@ namespace Nop.Services.Media.RoxyFileman
             if (fileExtension == ".swf" || fileExtension == ".flv")
                 fileType = "flash";
 
-            return fileType;
+            // Media file types supported by HTML5
+            if (fileExtension == ".mp4" || fileExtension == ".webm" // video
+                || fileExtension == ".ogg") // audio
+                fileType = "media";
+
+            // These media extensions are supported by tinyMCE
+            if (fileExtension == ".mov" // video
+                || fileExtension == ".m4a" || fileExtension == ".mp3" || fileExtension == ".wav") // audio
+                fileType = "media";
+
+            /* These media extensions are not supported by HTML5 or tinyMCE out of the box
+             * but may possibly be supported if You find players for them.
+             * if (fileExtension == ".3gp" || fileExtension == ".flv" 
+             *     || fileExtension == ".rmvb" || fileExtension == ".wmv" || fileExtension == ".divx"
+             *     || fileExtension == ".divx" || fileExtension == ".mpg" || fileExtension == ".rmvb"
+             *     || fileExtension == ".vob" // video
+             *     || fileExtension == ".aif" || fileExtension == ".aiff" || fileExtension == ".amr"
+             *     || fileExtension == ".asf" || fileExtension == ".asx" || fileExtension == ".wma"
+             *     || fileExtension == ".mid" || fileExtension == ".mp2") // audio
+             *     fileType = "media"; */
+
+             return fileType;
         }
 
         /// <summary>
@@ -378,7 +399,7 @@ namespace Nop.Services.Media.RoxyFileman
                 OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
 
                 //no need user to configure
-                INTEGRATION = "tinymce4",
+                INTEGRATION = "custom",
                 RETURN_URL_PREFIX = currentPathBase,
                 DIRLIST = $"{currentPathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
                 CREATEDIR = $"{currentPathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Events;
+using Nop.Services.Authentication;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
-using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -20,13 +24,19 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IEncryptionService _encryptionService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly INotificationService _notificationService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -37,26 +47,38 @@ namespace Nop.Services.Customers
         #region Ctor
 
         public CustomerRegistrationService(CustomerSettings customerSettings,
+            IAuthenticationService authenticationService,
+            ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IEncryptionService encryptionService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INotificationService notificationService,
             IRewardPointService rewardPointService,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings)
         {
             _customerSettings = customerSettings;
+            _authenticationService = authenticationService;
+            _customerActivityService = customerActivityService;
             _customerService = customerService;
             _encryptionService = encryptionService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
             _rewardPointService = rewardPointService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
             _storeService = storeService;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
@@ -143,6 +165,15 @@ namespace Nop.Services.Customers
                 _customerService.UpdateCustomer(customer);
 
                 return CustomerLoginResults.WrongPassword;
+            }
+
+            var selectedProvider = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var methodIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(selectedProvider, customer, _storeContext.CurrentStore.Id);
+            if (methodIsActive)
+                return CustomerLoginResults.MultiFactorAuthenticationRequired;
+            else if (!string.IsNullOrEmpty(selectedProvider))
+            {
+                _notificationService.WarningNotification(_localizationService.GetResource("MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"));
             }
 
             //update login details
@@ -361,6 +392,36 @@ namespace Nop.Services.Customers
             _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));
 
             return result;
+        }
+
+        /// <summary>
+        /// Login passed user
+        /// </summary>
+        /// <param name="customer">User to login</param>
+        /// <param name="returnUrl">URL to which the user will return after authentication</param>
+        /// <param name="isPersist">Is remember me</param>
+        /// <returns>Result of an authentication</returns>
+        public virtual IActionResult SignInCustomer(Customer customer, string returnUrl, bool isPersist = false)
+        {
+            //migrate shopping cart
+            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+
+            //sign in new customer
+            _authenticationService.SignIn(customer, isPersist);
+
+            //raise event       
+            _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
+
+            //activity log
+            _customerActivityService.InsertActivity(customer, "PublicStore.Login",
+                _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+
+
+            //redirect to the return URL if it's specified
+            if (!string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult(returnUrl);
+
+            return new RedirectToRouteResult("Homepage", null);
         }
 
         /// <summary>

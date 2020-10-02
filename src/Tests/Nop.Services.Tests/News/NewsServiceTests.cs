@@ -11,14 +11,14 @@ namespace Nop.Services.Tests.News
     {
         private INewsService _newsService;
 
-        [SetUp]
-        public new void SetUp()
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            _newsService = new NewsService(null, null, null, null, null);
+            _newsService = GetService<INewsService>();
         }
 
         [Test]
-        public void Should_be_available_when_startdate_is_not_set()
+        public void ShouldBeAvailableWhenStartDateIsNotSet()
         {
             var newsItem = new NewsItem
             {
@@ -29,7 +29,7 @@ namespace Nop.Services.Tests.News
         }
 
         [Test]
-        public void Should_be_available_when_startdate_is_less_than_somedate()
+        public void ShouldBeAvailableWhenStartDateIsLessThanSomeDate()
         {
             var newsItem = new NewsItem
             {
@@ -40,7 +40,7 @@ namespace Nop.Services.Tests.News
         }
 
         [Test]
-        public void Should_not_be_available_when_startdate_is_greater_than_somedate()
+        public void ShouldNotBeAvailableWhenStartDateIsGreaterThanSomeDate()
         {
             var newsItem = new NewsItem
             {
@@ -51,7 +51,7 @@ namespace Nop.Services.Tests.News
         }
 
         [Test]
-        public void Should_be_available_when_enddate_is_not_set()
+        public void ShouldBeAvailableWhenEndDateIsNotSet()
         {
             var newsItem = new NewsItem
             {
@@ -62,7 +62,7 @@ namespace Nop.Services.Tests.News
         }
 
         [Test]
-        public void Should_be_available_when_enddate_is_greater_than_somedate()
+        public void ShouldBeAvailableWhenEndDateIsGreaterThanSomeDate()
         {
             var newsItem = new NewsItem
             {
@@ -73,7 +73,7 @@ namespace Nop.Services.Tests.News
         }
 
         [Test]
-        public void Should_not_be_available_when_enddate_is_less_than_somedate()
+        public void ShouldNotBeAvailableWhenEndDateIsLessThanSomeDate()
         {
             var newsItem = new NewsItem
             {

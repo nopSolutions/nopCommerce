@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Customers
@@ -28,6 +29,15 @@ namespace Nop.Services.Customers
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
         ChangePasswordResult ChangePassword(ChangePasswordRequest request);
+
+        /// <summary>
+        /// Login passed user
+        /// </summary>
+        /// <param name="customer">User to login</param>
+        /// <param name="returnUrl">URL to which the user will return after authentication</param>
+        /// <param name="isPersist">Is remember me</param>
+        /// <returns>Result of an authentication</returns>
+        IActionResult SignInCustomer(Customer customer, string returnUrl, bool isPersist = false);
 
         /// <summary>
         /// Sets a user email

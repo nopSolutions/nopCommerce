@@ -29,8 +29,6 @@ WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalSmartPaymentButtons
 RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalStandard
 RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj -c Release
-WORKDIR /src/Plugins/Nop.Plugin.Payments.Square
-RUN dotnet build Nop.Plugin.Payments.Square.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
 RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal

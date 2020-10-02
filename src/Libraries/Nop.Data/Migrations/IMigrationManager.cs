@@ -15,7 +15,8 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration;
         /// leave null to search migration on the whole application pull</param>
-        void ApplyUpMigrations(Assembly assembly = null);
+        /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
+        void ApplyUpMigrations(Assembly assembly = null, bool isUpdateProcess = false);
 
         /// <summary>
         /// Executes an Down migration

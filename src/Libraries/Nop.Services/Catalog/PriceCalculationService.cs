@@ -7,7 +7,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Services.Caching;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -30,7 +29,7 @@ namespace Nop.Services.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
@@ -47,7 +46,7 @@ namespace Nop.Services.Catalog
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
@@ -60,7 +59,7 @@ namespace Nop.Services.Catalog
             _manufacturerService = manufacturerService;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _workContext = workContext;
         }
@@ -349,7 +348,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = NopCatalogDefaults.ProductPriceCacheKey.FillCacheKey(
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductPriceCacheKey, 
                 product,
                 overriddenProductPrice,
                 additionalCharge,
@@ -358,16 +357,13 @@ namespace Nop.Services.Catalog
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
 
-            var cacheTime = _catalogSettings.CacheProductPrices ? NopCachingDefaults.CacheTime : 0;
-            //we do not cache price for rental products
+            //we do not cache price if this not allowed by settings or if the product is rental product
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
-            if (product.IsRental)
-                cacheTime = 0;
-
-            cacheKey.CacheTime = cacheTime;
+            if (!_catalogSettings.CacheProductPrices || product.IsRental)
+                cacheKey.CacheTime = 0;
 
             decimal rezPrice;
-            (rezPrice, discountAmount, appliedDiscounts) = _cacheManager.Get(cacheKey, () =>
+            (rezPrice, discountAmount, appliedDiscounts) = _staticCacheManager.Get(cacheKey, () =>
             {
                 var discounts = new List<Discount>();
                 var appliedDiscountAmount = decimal.Zero;

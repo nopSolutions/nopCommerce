@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Avalara.AvaTax.RestClient;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
@@ -14,7 +13,6 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Infrastructure;
@@ -35,7 +33,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxPluginManager _taxPluginManager;
@@ -52,7 +49,6 @@ namespace Nop.Plugin.Tax.Avalara.Components
             ICountryService countryService,
             ICustomerService customerService,
             ILocalizationService localizationService,
-            ILogger logger,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             ITaxPluginManager taxPluginManager,
@@ -65,32 +61,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
             _countryService = countryService;
             _customerService = customerService;
             _localizationService = localizationService;
-            _logger = logger;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _taxPluginManager = taxPluginManager;
             _workContext = workContext;
             _taxSettings = taxSettings;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Get address line
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <returns>Address line</returns>
-        private string GetAddressLine(Address address)
-        {
-            return WebUtility.HtmlEncode($"{(!string.IsNullOrEmpty(address.Address1) ? $"{address.Address1}, " : string.Empty)}" +
-                $"{(!string.IsNullOrEmpty(address.Address2) ? $"{address.Address2}, " : string.Empty)}" +
-                $"{(!string.IsNullOrEmpty(address.City) ? $"{address.City}, " : string.Empty)}" +
-                $"{(_stateProvinceService.GetStateProvinceByAddress(address) is StateProvince stateProvince ? $"{stateProvince.Name}, " : string.Empty)}" +
-                $"{(_countryService.GetCountryByAddress(address) is Country country ? $"{country.Name}, " : string.Empty)}" +
-                $"{(!string.IsNullOrEmpty(address.ZipPostalCode) ? $"{address.ZipPostalCode}, " : string.Empty)}"
-                .TrimEnd(' ').TrimEnd(','));
         }
 
         #endregion
@@ -125,43 +100,30 @@ namespace Nop.Plugin.Tax.Avalara.Components
                 : null;
 
             var address = _addressService.GetAddressById(addressId ?? 0);
-
             if (address == null)
                 return Content(string.Empty);
 
             //validate address
-            var validationResult = _avalaraTaxManager.ValidateAddress(new AddressValidationInfo
-            {
-                city = CommonHelper.EnsureMaximumLength(address.City, 50),
-                country = CommonHelper.EnsureMaximumLength(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, 2),
-                line1 = CommonHelper.EnsureMaximumLength(address.Address1, 50),
-                line2 = CommonHelper.EnsureMaximumLength(address.Address2, 100),
-                postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
-                region = CommonHelper.EnsureMaximumLength(_stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation, 3),
-                textCase = TextCase.Mixed
-            });
+            var validationResult = _avalaraTaxManager.ValidateAddress(address);
 
             //whether there are errors in validation result
-            var errorDetails = validationResult.messages?
+            var errorDetails = validationResult?.messages?
                 .Where(message => message.severity.Equals("Error", StringComparison.InvariantCultureIgnoreCase))
-                .Select(message => message.details) ?? new List<string>();
+                .Select(message => message.details)
+                ?? new List<string>();
             if (errorDetails.Any())
             {
-                var errorMessage = errorDetails.Aggregate(string.Empty, (message, errorDetail) => $"{message}{errorDetail}; ");
-
-                //log errors
-                _logger.Error($"Avalara tax provider error. {errorMessage}", customer: _workContext.CurrentCustomer);
-
-                //and display error message to customer
+                //display error message to customer
                 return View("~/Plugins/Tax.Avalara/Views/Checkout/AddressValidation.cshtml", new AddressValidationModel
                 {
-                    Message = string.Format(_localizationService.GetResource("Plugins.Tax.Avalara.AddressValidation.Error"), WebUtility.HtmlEncode(errorMessage)),
+                    Message = string.Format(_localizationService.GetResource("Plugins.Tax.Avalara.AddressValidation.Error"),
+                        WebUtility.HtmlEncode(string.Join("; ", errorDetails))),
                     IsError = true
                 });
             }
 
             //if there are no errors and no validated addresses, nothing to display
-            if (!validationResult.validatedAddresses?.Any() ?? true)
+            if (!validationResult?.validatedAddresses?.Any() ?? true)
                 return Content(string.Empty);
 
             //get validated address info
@@ -199,8 +161,17 @@ namespace Nop.Plugin.Tax.Avalara.Components
             else
                 model.AddressId = existingAddress.Id;
 
+            string getAddressLine(Address address) =>
+                WebUtility.HtmlEncode($"{(!string.IsNullOrEmpty(address.Address1) ? $"{address.Address1}, " : string.Empty)}" +
+                    $"{(!string.IsNullOrEmpty(address.Address2) ? $"{address.Address2}, " : string.Empty)}" +
+                    $"{(!string.IsNullOrEmpty(address.City) ? $"{address.City}, " : string.Empty)}" +
+                    $"{(_stateProvinceService.GetStateProvinceByAddress(address) is StateProvince stateProvince ? $"{stateProvince.Name}, " : string.Empty)}" +
+                    $"{(_countryService.GetCountryByAddress(address) is Country country ? $"{country.Name}, " : string.Empty)}" +
+                    $"{(!string.IsNullOrEmpty(address.ZipPostalCode) ? $"{address.ZipPostalCode}, " : string.Empty)}"
+                    .TrimEnd(' ').TrimEnd(','));
+
             model.Message = string.Format(_localizationService.GetResource("Plugins.Tax.Avalara.AddressValidation.Confirm"),
-                GetAddressLine(address), GetAddressLine(existingAddress ?? validatedAddress));
+                getAddressLine(address), getAddressLine(existingAddress ?? validatedAddress));
 
             return View("~/Plugins/Tax.Avalara/Views/Checkout/AddressValidation.cshtml", model);
         }

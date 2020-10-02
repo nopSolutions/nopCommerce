@@ -173,7 +173,6 @@ namespace Nop.Web.Controllers
         }
 
         //contact us page
-        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUs()
@@ -219,7 +218,6 @@ namespace Nop.Web.Controllers
         }
 
         //contact vendor page
-        [HttpsRequirement]
         public virtual IActionResult ContactVendor(int vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)

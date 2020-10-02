@@ -45,9 +45,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             {
                 //add address to customer collection if it's a new
                 if (isNewAddress)
-                {
                     _customerService.InsertCustomerAddress(_workContext.CurrentCustomer, address);
-                }   
 
                 //and update appropriate customer address
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress)

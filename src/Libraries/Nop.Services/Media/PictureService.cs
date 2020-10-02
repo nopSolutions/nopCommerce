@@ -10,11 +10,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Seo;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -24,7 +21,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
 
 namespace Nop.Services.Media
@@ -38,7 +34,6 @@ namespace Nop.Services.Media
 
         private readonly INopDataProvider _dataProvider;
         private readonly IDownloadService _downloadService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -56,7 +51,6 @@ namespace Nop.Services.Media
 
         public PictureService(INopDataProvider dataProvider,
             IDownloadService downloadService,
-            IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
@@ -70,7 +64,6 @@ namespace Nop.Services.Media
         {
             _dataProvider = dataProvider;
             _downloadService = downloadService;
-            _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
             _productAttributeParser = productAttributeParser;
@@ -364,19 +357,9 @@ namespace Nop.Services.Media
             pictureBinary.BinaryData = binaryData;
 
             if (isNew)
-            {
                 _pictureBinaryRepository.Insert(pictureBinary);
-
-                //event notification
-                _eventPublisher.EntityInserted(pictureBinary);
-            }
             else
-            {
                 _pictureBinaryRepository.Update(pictureBinary);
-
-                //event notification
-                _eventPublisher.EntityUpdated(pictureBinary);
-            }
 
             return pictureBinary;
         }
@@ -384,12 +367,13 @@ namespace Nop.Services.Media
         /// <summary>
         /// Encode the image into a byte array in accordance with the specified image format
         /// </summary>
-        /// <typeparam name="T">Pixel data type</typeparam>
+        /// <typeparam name="TPixel">Pixel data type</typeparam>
         /// <param name="image">Image data</param>
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<T>(Image<T> image, IImageFormat imageFormat, int? quality = null) where T : struct, IPixel<T>
+        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+            where TPixel : unmanaged, IPixel<TPixel>
         {
             using var stream = new MemoryStream();
             var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
@@ -510,7 +494,7 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using var image = Image.Load(filePath, out var imageFormat);
+                    using var image = Image.Load<Rgba32>(filePath, out var imageFormat);
                     image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                     {
                         Mode = ResizeMode.Max,
@@ -622,7 +606,7 @@ namespace Nop.Services.Media
                     if (targetSize != 0)
                     {
                         //resizing required
-                        using var image = Image.Load(pictureBinary, out var imageFormat);
+                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
                         image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                         {
                             Mode = ResizeMode.Max,
@@ -673,10 +657,7 @@ namespace Nop.Services.Media
         /// <returns>Picture</returns>
         public virtual Picture GetPictureById(int pictureId)
         {
-            if (pictureId == 0)
-                return null;
-
-            return _pictureRepository.ToCachedGetById(pictureId);
+            return _pictureRepository.GetById(pictureId, cache => default);
         }
 
         /// <summary>
@@ -697,9 +678,6 @@ namespace Nop.Services.Media
 
             //delete from database
             _pictureRepository.Delete(picture);
-
-            //event notification
-            _eventPublisher.EntityDeleted(picture);
         }
 
         /// <summary>
@@ -781,9 +759,6 @@ namespace Nop.Services.Media
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
-
-            //event notification
-            _eventPublisher.EntityInserted(picture);
 
             return picture;
         }
@@ -915,10 +890,7 @@ namespace Nop.Services.Media
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
-
-            //event notification
-            _eventPublisher.EntityUpdated(picture);
-
+            
             return picture;
         }
 
@@ -945,10 +917,7 @@ namespace Nop.Services.Media
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
-
-            //event notification
-            _eventPublisher.EntityUpdated(picture);
-
+            
             return picture;
         }
 
@@ -999,7 +968,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using var image = Image.Load(pictureBinary, out var imageFormat);
+            using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
             {
@@ -1129,12 +1098,10 @@ namespace Nop.Services.Media
                             //update appropriate properties
                             UpdatePictureBinary(picture, value ? pictureBinary : Array.Empty<byte>());
                             picture.IsNew = true;
-                            //raise event?
-                            //_eventPublisher.EntityUpdated(picture);
                         }
 
                         //save all at once
-                        _pictureRepository.Update(pictures);
+                        _pictureRepository.Update(pictures, false);
                     }
                 }
                 catch

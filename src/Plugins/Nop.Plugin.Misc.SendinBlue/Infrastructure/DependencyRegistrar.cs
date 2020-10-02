@@ -17,8 +17,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        /// <param name="config">Config</param>
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        /// <param name="appSettings">App settings</param>
+        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings)
         {
             //register custom services
             builder.RegisterType<SendinBlueManager>().AsSelf().InstancePerLifetimeScope();

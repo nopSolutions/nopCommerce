@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
