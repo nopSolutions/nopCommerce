@@ -7,9 +7,9 @@ using Nop.Web.Framework.Infrastructure.Extensions;
 namespace Nop.Web.Framework.Infrastructure
 {
     /// <summary>
-    /// Represents object for the configuring MVC on application startup
+    /// Represents object for the configuring routing on application startup
     /// </summary>
-    public class NopMvcStartup : INopStartup
+    public class NopRoutingStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -18,17 +18,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add MiniProfiler services
-            services.AddNopMiniProfiler();
-
-            //add WebMarkupMin services to the services container
-            services.AddNopWebMarkupMin();
-
-            //add and configure MVC feature
-            services.AddNopMvc();
-
-            //add custom redirect result executor
-            services.AddNopRedirectResultExecutor();
         }
 
         /// <summary>
@@ -37,19 +26,13 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use MiniProfiler
-            application.UseMiniProfiler();
-
-            //use WebMarkupMin
-            application.UseNopWebMarkupMin();
-
-            //Endpoints routing
-            application.UseNopEndpoints();
+            //Add the RoutingMiddleware
+            application.UseRouting();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 1000; //MVC should be loaded last
+        public int Order => 400; // Routing should be loaded before authentication
     }
 }
