@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Install
             AvailableDataProviders = new List<SelectListItem>();
         }
 
+        [DataType(DataType.EmailAddress)]
         public string AdminEmail { get; set; }
         [NoTrim]
         [DataType(DataType.Password)]
