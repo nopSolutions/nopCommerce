@@ -104,8 +104,6 @@ namespace Nop.Services.News
                     query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
                 }
 
-                query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
-
                 //Store mapping
                 if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
@@ -117,10 +115,10 @@ namespace Nop.Services.News
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
 
-                    query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
+                    query = query.Distinct();
                 }
 
-                return query;
+                return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }, pageIndex, pageSize);
 
             return news;

@@ -9,6 +9,12 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ISettingModelFactory
     {
         /// <summary>
+        /// Prepare app settings model
+        /// </summary>
+        /// <returns>App settings model</returns>
+        AppSettingsModel PrepareAppSettingsModel();
+
+        /// <summary>
         /// Prepare blog settings model
         /// </summary>
         /// <returns>Blog settings model</returns>
@@ -49,7 +55,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>Catalog settings model</returns>
         CatalogSettingsModel PrepareCatalogSettingsModel();
-        
+
         /// <summary>
         /// Prepare paged sort option list model
         /// </summary>
@@ -98,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">GDPR search model</param>
         /// <returns>GDPR consent list model</returns>
-       GdprConsentListModel PrepareGdprConsentListModel(GdprConsentSearchModel searchModel);
+        GdprConsentListModel PrepareGdprConsentListModel(GdprConsentSearchModel searchModel);
 
         /// <summary>
         /// Prepare GDPR consent model
@@ -114,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>General and common settings model</returns>
         GeneralCommonSettingsModel PrepareGeneralCommonSettingsModel();
-        
+
         /// <summary>
         /// Prepare product editor settings model
         /// </summary>

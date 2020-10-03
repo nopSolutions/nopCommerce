@@ -12,11 +12,15 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(SpecificationAttributeOption entity)
+        /// <param name="entityEventType">Entity event type</param>
+        protected override void ClearCache(SpecificationAttributeOption entity, EntityEventType entityEventType)
         {
             Remove(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
             Remove(NopCatalogDefaults.SpecificationAttributeOptionsCacheKey, entity.SpecificationAttributeId);
             RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
+
+            if (entityEventType == EntityEventType.Delete)
+                RemoveByPrefix(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
         }
     }
 }

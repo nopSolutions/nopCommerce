@@ -14,10 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BundlerMinifier.Core" Version="3.2.447" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
-    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.2" />
-    <PackageReference Include="WebMarkupMin.NUglify" Version="2.8.1" />
+    <PackageReference Include="BundlerMinifier.Core" Version="3.2.449" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.11" />
+    <PackageReference Include="WebMarkupMin.NUglify" Version="2.8.11" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
         private TestValidator _validator;
         private CustomerSettings _customerSettings;
         
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             _customerSettings = new CustomerSettings

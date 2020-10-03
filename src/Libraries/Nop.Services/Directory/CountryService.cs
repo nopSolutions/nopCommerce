@@ -73,7 +73,6 @@ namespace Nop.Services.Directory
                 {
                     if (!showHidden)
                         query = query.Where(c => c.Published);
-                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
 
                     if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                     {
@@ -89,10 +88,10 @@ namespace Nop.Services.Directory
                             where !c.LimitedToStores || currentStoreId == sc.StoreId
                             select c;
 
-                        query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                        query = query.Distinct();
                     }
 
-                    return query;
+                    return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 });
 
                 if (languageId > 0)

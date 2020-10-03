@@ -2158,6 +2158,12 @@ label, label + * {
 	border: 1px solid #ddd;
 	padding: 10px;
 }
+.product-specs-box td.spec-group-name {
+  border: 0;
+  padding-top: 20px;
+  font-size: 16px;
+  color: #444;
+}
 
 .product-tags-list {
 	font-size: 0;
@@ -2320,7 +2326,8 @@ label, label + * {
 }
 
 .attribute-squares {
-	font-size: 0;
+  font-size: 0;
+  display: inline-block;
 }
 .attribute-squares li {
 	display: inline-block;
@@ -2719,6 +2726,14 @@ label, label + * {
 .compare-products-table td label {
 	font-weight: normal;
     color: #777;
+}
+.compare-products-table .specification-group td {
+  border: 0;
+  padding: 20px 10px 10px 10px;
+}
+.compare-products-table .specification-group td label {
+  font-size: 16px;
+  color: #444;
 }
 .compare-products-table .remove-button {
 	display: inline-block;

@@ -13,8 +13,8 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        /// <param name="config">Config</param>
-        void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config);
+        /// <param name="appSettings">App settings</param>
+        void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings);
 
         /// <summary>
         /// Gets order of this dependency registrar implementation

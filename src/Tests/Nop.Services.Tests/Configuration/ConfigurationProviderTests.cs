@@ -10,8 +10,8 @@ namespace Nop.Services.Tests.Configuration
     {
         ISettingService _settingService;
 
-        [SetUp]
-        public new void SetUp()
+        [OneTimeSetUp]
+        public void SetUp()
         {
             _settingService = new ConfigFileSettingService(null, null);
         }

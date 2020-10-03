@@ -11,6 +11,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPaymentPluginManager _paymentPluginManager;
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
+        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -65,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INotificationService notificationService,
             IPermissionService permissionService,
             IPaymentPluginManager paymentPluginManager,
@@ -77,6 +81,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
+            MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
@@ -87,6 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService = customerActivityService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _paymentPluginManager = paymentPluginManager;
@@ -99,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _webHelper = webHelper;
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
+            _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
@@ -495,6 +502,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //mark as enabled
                             _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
                             _settingService.SaveSetting(_externalAuthenticationSettings);
+                        }
+
+                        break;
+                    case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
+                        pluginIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
+                        if (pluginIsActive && !model.IsEnabled)
+                        {
+                            //mark as disabled
+                            _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
+                            _settingService.SaveSetting(_multiFactorAuthenticationSettings);
+                            break;
+                        }
+
+                        if (!pluginIsActive && model.IsEnabled)
+                        {
+                            //mark as enabled
+                            _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
+                            _settingService.SaveSetting(_multiFactorAuthenticationSettings);
                         }
 
                         break;

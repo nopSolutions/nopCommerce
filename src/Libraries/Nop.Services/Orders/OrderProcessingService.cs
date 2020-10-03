@@ -1392,9 +1392,8 @@ namespace Nop.Services.Orders
         {
             //process payment
             ProcessPaymentResult processPaymentResult;
-            //skip payment workflow if order total equals zero
-            var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
-            if (!skipPaymentWorkflow)
+            //check if is payment workflow required
+            if (IsPaymentWorkflowRequired(details.Cart))
             {
                 var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
                 var paymentMethod = _paymentPluginManager

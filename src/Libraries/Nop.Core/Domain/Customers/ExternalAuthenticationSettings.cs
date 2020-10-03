@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Customers
         public bool RequireEmailValidation { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether need to logging errors on authentication process 
+        /// </summary>
+        public bool LogErrors { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the user is allowed to remove external authentication associations
         /// </summary>
         public bool AllowCustomersToRemoveAssociations { get; set; }

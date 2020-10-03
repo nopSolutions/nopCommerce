@@ -3,7 +3,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
 using Nop.Services.Events;
-using Nop.Services.Orders;
 
 namespace Nop.Services.Customers.Caching
 {
@@ -32,6 +31,11 @@ namespace Nop.Services.Customers.Caching
             RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
             RemoveByPrefix(NopCustomerServicesDefaults.CustomerAddressesPrefix);
             RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+
+            if (string.IsNullOrEmpty(entity.SystemName))
+                return;
+
+            Remove(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
         }
 
         #endregion

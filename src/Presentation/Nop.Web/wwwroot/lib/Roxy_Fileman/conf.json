@@ -15,7 +15,7 @@
   "LANG": "en",
   "DATEFORMAT": "dd/MM/yyyy HH:mm",
   "OPEN_LAST_DIR": "yes",
-  "INTEGRATION": "tinymce4",
+  "INTEGRATION": "custom",
   "RETURN_URL_PREFIX": "",
   "DIRLIST": "/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
   "CREATEDIR": "/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",

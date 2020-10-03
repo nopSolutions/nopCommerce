@@ -42,6 +42,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageSettings = new PermissionRecord { Name = "Admin area. Manage Settings", SystemName = "ManageSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManagePaymentMethods = new PermissionRecord { Name = "Admin area. Manage Payment Methods", SystemName = "ManagePaymentMethods", Category = "Configuration" };
         public static readonly PermissionRecord ManageExternalAuthenticationMethods = new PermissionRecord { Name = "Admin area. Manage External Authentication Methods", SystemName = "ManageExternalAuthenticationMethods", Category = "Configuration" };
+        public static readonly PermissionRecord ManageMultifactorAuthenticationMethods = new PermissionRecord { Name = "Admin area. Manage Multi-factor Authentication Methods", SystemName = "ManageMultifactorAuthenticationMethods", Category = "Configuration" };
         public static readonly PermissionRecord ManageTaxSettings = new PermissionRecord { Name = "Admin area. Manage Tax Settings", SystemName = "ManageTaxSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManageShippingSettings = new PermissionRecord { Name = "Admin area. Manage Shipping Settings", SystemName = "ManageShippingSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManageCurrencies = new PermissionRecord { Name = "Admin area. Manage Currencies", SystemName = "ManageCurrencies", Category = "Configuration" };
@@ -62,6 +63,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public store. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicStore" };
         public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
+        public static readonly PermissionRecord AccessProfiling = new PermissionRecord { Name = "Public store. Access MiniProfiler results", SystemName = "AccessProfiling", Category = "PublicStore" };
 
         /// <summary>
         /// Get permissions
@@ -103,6 +105,7 @@ namespace Nop.Services.Security
                 ManageSettings,
                 ManagePaymentMethods,
                 ManageExternalAuthenticationMethods,
+                ManageMultifactorAuthenticationMethods,
                 ManageTaxSettings,
                 ManageShippingSettings,
                 ManageCurrencies,
@@ -120,7 +123,8 @@ namespace Nop.Services.Security
                 EnableShoppingCart,
                 EnableWishlist,
                 PublicStoreAllowNavigation,
-                AccessClosedStore
+                AccessClosedStore,
+                AccessProfiling
             };
         }
 
@@ -168,6 +172,7 @@ namespace Nop.Services.Security
                         ManageSettings,
                         ManagePaymentMethods,
                         ManageExternalAuthenticationMethods,
+                        ManageMultifactorAuthenticationMethods,
                         ManageTaxSettings,
                         ManageShippingSettings,
                         ManageCurrencies,
@@ -185,7 +190,8 @@ namespace Nop.Services.Security
                         EnableShoppingCart,
                         EnableWishlist,
                         PublicStoreAllowNavigation,
-                        AccessClosedStore
+                        AccessClosedStore,
+                        AccessProfiling
                     }
                 ),
                 (
