@@ -35,7 +35,7 @@ namespace Nop.Services.Directory
         /// {0} : language ID
         /// {1} : show hidden records?
         /// </remarks>
-        public static CacheKey CountriesAllCacheKey => new CacheKey("Nop.country.all.{0}-{1}", NopEntityCacheDefaults<Country>.Prefix);
+        public static CacheKey CountriesAllCacheKey => new CacheKey("Nop.country.all.{0}-{1}-{2}", NopEntityCacheDefaults<Country>.Prefix);
 
         #endregion
 
