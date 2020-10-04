@@ -8,7 +8,7 @@ namespace Nop.Core.Tests.Domain.Configuration
     public class SettingTestFixture
     {
         [Test]
-        public void Can_create_setting()
+        public void CanCreateSetting()
         {
             var setting = new Setting("Setting1", "Value1");
             setting.Name.Should().Be("Setting1");

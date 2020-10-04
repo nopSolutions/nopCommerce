@@ -22,12 +22,10 @@ using Nop.Services.Shipping;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Checkout;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement]
     [AutoValidateAntiforgeryToken]
     public partial class CheckoutController : BasePublicController
     {
@@ -609,6 +607,15 @@ namespace Nop.Web.Controllers
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
+            }
+
+            //check if pickup point is selected on the shipping address step
+            if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            {
+                var selectedPickUpPoint = _genericAttributeService
+                    .GetAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
+                if (selectedPickUpPoint != null)
+                    return RedirectToRoute("CheckoutPaymentMethod");
             }
 
             //model

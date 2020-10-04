@@ -97,7 +97,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         public override void Install()
         {
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole"] = "Required customer role",
                 ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint"] = "Discount will be applied if customer is in the selected customer role.",
@@ -123,7 +123,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             }
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.DiscountRules.CustomerRoles");
+            _localizationService.DeleteLocaleResources("Plugins.DiscountRules.CustomerRoles");
 
             base.Uninstall();
         }

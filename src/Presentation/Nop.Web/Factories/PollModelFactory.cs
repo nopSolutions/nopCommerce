@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Polls;
-using Nop.Services.Caching;
 using Nop.Services.Polls;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Polls;
@@ -18,7 +17,6 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IPollService _pollService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
@@ -28,13 +26,11 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public PollModelFactory(ICacheKeyService cacheKeyService,
-            IPollService pollService,
+        public PollModelFactory(IPollService pollService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            _cacheKeyService = cacheKeyService;
             _pollService = pollService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
@@ -90,7 +86,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey, 
                 systemKeyword, _workContext.WorkingLanguage, _storeContext.CurrentStore);
 
             var cachedModel = _staticCacheManager.Get(cacheKey, () =>
@@ -123,7 +119,7 @@ namespace Nop.Web.Factories
         /// <returns>List of the poll model</returns>
         public virtual List<PollModel> PrepareHomepagePollModels()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey, 
                 _workContext.WorkingLanguage, _storeContext.CurrentStore);
 
             var cachedPolls = _staticCacheManager.Get(cacheKey, () =>

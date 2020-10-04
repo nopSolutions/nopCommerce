@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>אימות מול שרת  SQL </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>SQL Server Compact</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>סיסמה עבור חשבון שרת הSQL</Value>
   </LocaleResource>

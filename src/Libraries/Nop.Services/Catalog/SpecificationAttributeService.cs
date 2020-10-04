@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -17,30 +15,27 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public SpecificationAttributeService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<Product> productRepository,
+        public SpecificationAttributeService(IRepository<Product> productRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
-            IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository)
+            IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _productRepository = productRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -56,10 +51,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute</returns>
         public virtual SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
         {
-            if (specificationAttributeId == 0)
-                return null;
-
-            return _specificationAttributeRepository.ToCachedGetById(specificationAttributeId);
+            return _specificationAttributeRepository.GetById(specificationAttributeId, cache => default);
         }
 
         /// <summary>
@@ -69,14 +61,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attributes</returns>
         public virtual IList<SpecificationAttribute> GetSpecificationAttributeByIds(int[] specificationAttributeIds)
         {
-            if (specificationAttributeIds == null || specificationAttributeIds.Length == 0)
-                return new List<SpecificationAttribute>();
-
-            var query = from p in _specificationAttributeRepository.Table
-                        where specificationAttributeIds.Contains(p.Id)
-                        select p;
-
-            return query.ToList();
+            return _specificationAttributeRepository.GetByIds(specificationAttributeIds);
         }
 
         /// <summary>
@@ -102,9 +87,10 @@ namespace Nop.Services.Catalog
         {
             var query = from sa in _specificationAttributeRepository.Table
                         where _specificationAttributeOptionRepository.Table.Any(o => o.SpecificationAttributeId == sa.Id)
+                        orderby sa.DisplayOrder, sa.Id
                         select sa;
 
-            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey));
+            return _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey), query.ToList);
         }
 
         /// <summary>
@@ -113,13 +99,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttribute">The specification attribute</param>
         public virtual void DeleteSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
-
             _specificationAttributeRepository.Delete(specificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(specificationAttribute);
         }
 
         /// <summary>
@@ -143,13 +123,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttribute">The specification attribute</param>
         public virtual void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
-
             _specificationAttributeRepository.Insert(specificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(specificationAttribute);
         }
 
         /// <summary>
@@ -158,13 +132,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttribute">The specification attribute</param>
         public virtual void UpdateSpecificationAttribute(SpecificationAttribute specificationAttribute)
         {
-            if (specificationAttribute == null)
-                throw new ArgumentNullException(nameof(specificationAttribute));
-
             _specificationAttributeRepository.Update(specificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(specificationAttribute);
         }
 
         #endregion
@@ -178,10 +146,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute option</returns>
         public virtual SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOptionId)
         {
-            if (specificationAttributeOptionId == 0)
-                return null;
-
-            return _specificationAttributeOptionRepository.ToCachedGetById(specificationAttributeOptionId);
+            return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId, cache => default);
         }
 
         /// <summary>
@@ -191,23 +156,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute options</returns>
         public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsByIds(int[] specificationAttributeOptionIds)
         {
-            if (specificationAttributeOptionIds == null || specificationAttributeOptionIds.Length == 0)
-                return new List<SpecificationAttributeOption>();
-
-            var query = from sao in _specificationAttributeOptionRepository.Table
-                        where specificationAttributeOptionIds.Contains(sao.Id)
-                        select sao;
-            var specificationAttributeOptions = query.ToList();
-            //sort by passed identifiers
-            var sortedSpecificationAttributeOptions = new List<SpecificationAttributeOption>();
-            foreach (var id in specificationAttributeOptionIds)
-            {
-                var sao = specificationAttributeOptions.Find(x => x.Id == id);
-                if (sao != null)
-                    sortedSpecificationAttributeOptions.Add(sao);
-            }
-
-            return sortedSpecificationAttributeOptions;
+            return _specificationAttributeOptionRepository.GetByIds(specificationAttributeOptionIds);
         }
 
         /// <summary>
@@ -222,7 +171,7 @@ namespace Nop.Services.Catalog
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
 
-            var specificationAttributeOptions = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecAttributesOptionsCacheKey, specificationAttributeId));
+            var specificationAttributeOptions = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributeOptionsCacheKey, specificationAttributeId), query.ToList);
 
             return specificationAttributeOptions;
         }
@@ -233,13 +182,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOption">The specification attribute option</param>
         public virtual void DeleteSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
-            if (specificationAttributeOption == null)
-                throw new ArgumentNullException(nameof(specificationAttributeOption));
-
             _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
-
-            //event notification
-            _eventPublisher.EntityDeleted(specificationAttributeOption);
         }
 
         /// <summary>
@@ -248,13 +191,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOption">The specification attribute option</param>
         public virtual void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
-            if (specificationAttributeOption == null)
-                throw new ArgumentNullException(nameof(specificationAttributeOption));
-
             _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
-            
-            //event notification
-            _eventPublisher.EntityInserted(specificationAttributeOption);
         }
 
         /// <summary>
@@ -263,13 +200,7 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOption">The specification attribute option</param>
         public virtual void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
         {
-            if (specificationAttributeOption == null)
-                throw new ArgumentNullException(nameof(specificationAttributeOption));
-
             _specificationAttributeOptionRepository.Update(specificationAttributeOption);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(specificationAttributeOption);
         }
 
         /// <summary>
@@ -298,13 +229,7 @@ namespace Nop.Services.Catalog
         /// <param name="productSpecificationAttribute">Product specification attribute</param>
         public virtual void DeleteProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
-            if (productSpecificationAttribute == null)
-                throw new ArgumentNullException(nameof(productSpecificationAttribute));
-
             _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(productSpecificationAttribute);
         }
 
         /// <summary>
@@ -321,7 +246,7 @@ namespace Nop.Services.Catalog
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey, 
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductSpecificationAttributeByProductCacheKey, 
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;
@@ -335,7 +260,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(psa => psa.ShowOnProductPage == showOnProductPage.Value);
             query = query.OrderBy(psa => psa.DisplayOrder).ThenBy(psa => psa.Id);
 
-            var productSpecificationAttributes = query.ToCachedList(key);
+            var productSpecificationAttributes = _staticCacheManager.Get(key, query.ToList);
 
             return productSpecificationAttributes;
         }
@@ -347,9 +272,6 @@ namespace Nop.Services.Catalog
         /// <returns>Product specification attribute mapping</returns>
         public virtual ProductSpecificationAttribute GetProductSpecificationAttributeById(int productSpecificationAttributeId)
         {
-            if (productSpecificationAttributeId == 0)
-                return null;
-
             return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
         }
 
@@ -359,13 +281,7 @@ namespace Nop.Services.Catalog
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
         public virtual void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
-            if (productSpecificationAttribute == null)
-                throw new ArgumentNullException(nameof(productSpecificationAttribute));
-
             _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productSpecificationAttribute);
         }
 
         /// <summary>
@@ -374,13 +290,7 @@ namespace Nop.Services.Catalog
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
         public virtual void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
         {
-            if (productSpecificationAttribute == null)
-                throw new ArgumentNullException(nameof(productSpecificationAttribute));
-
             _productSpecificationAttributeRepository.Update(productSpecificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(productSpecificationAttribute);
         }
 
         /// <summary>

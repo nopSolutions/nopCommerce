@@ -61,7 +61,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
             _settingService.SaveSetting(new FacebookExternalAuthSettings());
 
             //locales
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier"] = "App ID/API Key",
                 ["Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint"] = "Enter your app ID/API key here. You can find it on your FaceBook application page.",
@@ -82,7 +82,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
             _settingService.DeleteSetting<FacebookExternalAuthSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.ExternalAuth.Facebook");
+            _localizationService.DeleteLocaleResources("Plugins.ExternalAuth.Facebook");
 
             base.Uninstall();
         }

@@ -2,8 +2,8 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Events;
 using Nop.Services.Common;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Orders;

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using LinqToDB.Mapping;
 using System.Linq;
 using System.Reflection;
 using FluentMigrator.Expressions;
+using LinqToDB.Mapping;
 using LinqToDB.Metadata;
-using Nop.Data.Migrations;
-using Nop.Core.Infrastructure;
 using LinqToDB.SqlQuery;
 using Nop.Core;
+using Nop.Core.Infrastructure;
+using Nop.Data.Migrations;
 
 namespace Nop.Data.Mapping
 {
@@ -51,6 +51,8 @@ namespace Nop.Data.Mapping
                 if (column is null)
                     return null;
 
+                var columnSystemType = (memberInfo as PropertyInfo)?.PropertyType ?? typeof(string);
+
                 return new ColumnAttribute
                 {
                     Name = column.Name,
@@ -60,7 +62,7 @@ namespace Nop.Data.Mapping
                     Length = column.Size ?? 0,
                     Precision = column.Precision ?? 0,
                     IsIdentity = column.IsIdentity,
-                    DataType = new SqlDataType((memberInfo as PropertyInfo)?.PropertyType ?? typeof(string)).DataType
+                    DataType = SqlDataType.GetDataType(columnSystemType).Type.DataType
                 };
             });
 
@@ -121,8 +123,8 @@ namespace Nop.Data.Mapping
 
         #region Properties
 
-        protected static ConcurrentDictionary<(Type, MemberInfo), Attribute> Types => new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
-        protected static ConcurrentDictionary<Type, CreateTableExpression> Expressions => new ConcurrentDictionary<Type, CreateTableExpression>();
+        protected static ConcurrentDictionary<(Type, MemberInfo), Attribute> Types { get; } = new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
+        protected static ConcurrentDictionary<Type, CreateTableExpression> Expressions { get; } = new ConcurrentDictionary<Type, CreateTableExpression>();
 
         #endregion
     }

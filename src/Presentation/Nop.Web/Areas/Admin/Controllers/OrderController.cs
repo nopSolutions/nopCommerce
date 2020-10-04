@@ -187,57 +187,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber), order);
         }
 
-        protected virtual string AddGiftCards(IFormCollection form, Product product, string attributesXml,
-           out string recipientName, out string recipientEmail, out string senderName, out string senderEmail,
-           out string giftCardMessage)
-        {
-            recipientName = string.Empty;
-            recipientEmail = string.Empty;
-            senderName = string.Empty;
-            senderEmail = string.Empty;
-            giftCardMessage = string.Empty;
-
-            if (!product.IsGiftCard)
-                return attributesXml;
-
-            foreach (var formKey in form.Keys)
-            {
-                if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    recipientName = form[formKey];
-                    continue;
-                }
-
-                if (formKey.Equals("giftcard.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    recipientEmail = form[formKey];
-                    continue;
-                }
-
-                if (formKey.Equals("giftcard.SenderName", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    senderName = form[formKey];
-                    continue;
-                }
-
-                if (formKey.Equals("giftcard.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    senderEmail = form[formKey];
-                    continue;
-                }
-
-                if (formKey.Equals("giftcard.Message", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    giftCardMessage = form[formKey];
-                }
-            }
-
-            attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
-                recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
-
-            return attributesXml;
-        }
-
         #endregion
 
         #region Order list
@@ -1724,9 +1673,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //attributes
             var attributesXml = _productAttributeParser.ParseProductAttributes(product, form, warnings);
 
-            //gift cards
-            attributesXml = AddGiftCards(form, product, attributesXml, out var recipientName, out var recipientEmail, out var senderName, out var senderEmail, out var giftCardMessage);
-
             //rental product
             _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
 
@@ -1799,6 +1745,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //gift cards
                 if (product.IsGiftCard)
                 {
+                    _productAttributeParser.GetGiftCardAttribute(
+                        attributesXml, out var recipientName, out var recipientEmail, out var senderName, out var senderEmail, out var giftCardMessage);
+
                     for (var i = 0; i < orderItem.Quantity; i++)
                     {
                         var gc = new GiftCard
@@ -2111,17 +2060,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Quantity = qtyToAdd,
                     WarehouseId = warehouseId
                 });
-
-                var quantityWithReserved = _productService.GetTotalStockQuantity(product, true, warehouseId);
-                var quantityTotal = _productService.GetTotalStockQuantity(product, false, warehouseId);
-
-                //currently reserved in current stock
-                var quantityReserved = quantityTotal - quantityWithReserved;
-
-                //If the quantity of the reserve product in the warehouse does not coincide with the total quantity of goods in the basket, 
-                //it is necessary to redistribute the reserve to the warehouse
-                if (!(quantityReserved == qtyToAdd && quantityReserved == maxQtyToAdd))
-                    _productService.BalanceInventory(product, warehouseId, qtyToAdd);
             }
 
             //if we have at least one item in the shipment, then save it

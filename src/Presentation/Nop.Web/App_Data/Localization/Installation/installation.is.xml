@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Nota SQL Server notanda</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Nota innbyggðan gagnagrunn (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL lykilorð</Value>
   </LocaleResource>

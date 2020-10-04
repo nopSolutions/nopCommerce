@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.News
 {
@@ -20,29 +18,26 @@ namespace Nop.Services.News
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
         public NewsService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
             IRepository<NewsComment> newsCommentRepository,
             IRepository<NewsItem> newsItemRepository,
-            IRepository<StoreMapping> storeMappingRepository)
+            IRepository<StoreMapping> storeMappingRepository,
+            IStaticCacheManager staticCacheManager)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _newsCommentRepository = newsCommentRepository;
             _newsItemRepository = newsItemRepository;
             _storeMappingRepository = storeMappingRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -57,13 +52,7 @@ namespace Nop.Services.News
         /// <param name="newsItem">News item</param>
         public virtual void DeleteNews(NewsItem newsItem)
         {
-            if (newsItem == null)
-                throw new ArgumentNullException(nameof(newsItem));
-
             _newsItemRepository.Delete(newsItem);
-
-            //event notification
-            _eventPublisher.EntityDeleted(newsItem);
         }
 
         /// <summary>
@@ -73,10 +62,7 @@ namespace Nop.Services.News
         /// <returns>News</returns>
         public virtual NewsItem GetNewsById(int newsId)
         {
-            if (newsId == 0)
-                return null;
-
-            return _newsItemRepository.ToCachedGetById(newsId);
+            return _newsItemRepository.GetById(newsId, cache => default);
         }
 
         /// <summary>
@@ -86,8 +72,7 @@ namespace Nop.Services.News
         /// <returns>News</returns>
         public virtual IList<NewsItem> GetNewsByIds(int[] newsIds)
         {
-            var query = _newsItemRepository.Table;
-            return query.Where(p => newsIds.Contains(p.Id)).ToList();
+            return _newsItemRepository.GetByIds(newsIds);
         }
 
         /// <summary>
@@ -103,37 +88,38 @@ namespace Nop.Services.News
         public virtual IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            var query = _newsItemRepository.Table;
-            if (languageId > 0)
-                query = query.Where(n => languageId == n.LanguageId);
-
-            if (!string.IsNullOrEmpty(title))
-                query = query.Where(n => n.Title.Contains(title));
-
-            if (!showHidden)
+            var news = _newsItemRepository.GetAllPaged(query =>
             {
-                var utcNow = DateTime.UtcNow;
-                query = query.Where(n => n.Published);
-                query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
-                query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
-            }
+                if (languageId > 0)
+                    query = query.Where(n => languageId == n.LanguageId);
 
-            query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
+                if (!string.IsNullOrEmpty(title))
+                    query = query.Where(n => n.Title.Contains(title));
 
-            //Store mapping
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-            {
-                query = from n in query
+                if (!showHidden)
+                {
+                    var utcNow = DateTime.UtcNow;
+                    query = query.Where(n => n.Published);
+                    query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
+                    query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
+                }
+
+                //Store mapping
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    query = from n in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = n.Id, c2 = nameof(NewsItem) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into n_sm
+                            on new {c1 = n.Id, c2 = nameof(NewsItem)} equals new {c1 = sm.EntityId, c2 = sm.EntityName}
+                            into n_sm
                         from sm in n_sm.DefaultIfEmpty()
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
 
-                query = query.Distinct().OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
-            }
+                    query = query.Distinct();
+                }
 
-            var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
+                return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
+            }, pageIndex, pageSize);
 
             return news;
         }
@@ -144,13 +130,7 @@ namespace Nop.Services.News
         /// <param name="news">News item</param>
         public virtual void InsertNews(NewsItem news)
         {
-            if (news == null)
-                throw new ArgumentNullException(nameof(news));
-
             _newsItemRepository.Insert(news);
-
-            //event notification
-            _eventPublisher.EntityInserted(news);
         }
 
         /// <summary>
@@ -159,13 +139,7 @@ namespace Nop.Services.News
         /// <param name="news">News item</param>
         public virtual void UpdateNews(NewsItem news)
         {
-            if (news == null)
-                throw new ArgumentNullException(nameof(news));
-
             _newsItemRepository.Update(news);
-
-            //event notification
-            _eventPublisher.EntityUpdated(news);
         }
 
         /// <summary>
@@ -205,32 +179,34 @@ namespace Nop.Services.News
         public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            var query = _newsCommentRepository.Table;
+            return _newsCommentRepository.GetAll(query =>
+            {
+                if (approved.HasValue)
+                    query = query.Where(comment => comment.IsApproved == approved);
 
-            if (approved.HasValue)
-                query = query.Where(comment => comment.IsApproved == approved);
+                if (newsItemId > 0)
+                    query = query.Where(comment => comment.NewsItemId == newsItemId);
 
-            if (newsItemId > 0)
-                query = query.Where(comment => comment.NewsItemId == newsItemId);
+                if (customerId > 0)
+                    query = query.Where(comment => comment.CustomerId == customerId);
 
-            if (customerId > 0)
-                query = query.Where(comment => comment.CustomerId == customerId);
+                if (storeId > 0)
+                    query = query.Where(comment => comment.StoreId == storeId);
 
-            if (storeId > 0)
-                query = query.Where(comment => comment.StoreId == storeId);
+                if (fromUtc.HasValue)
+                    query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
 
-            if (fromUtc.HasValue)
-                query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
+                if (toUtc.HasValue)
+                    query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
 
-            if (toUtc.HasValue)
-                query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
+                if (!string.IsNullOrEmpty(commentText))
+                    query = query.Where(
+                        c => c.CommentText.Contains(commentText) || c.CommentTitle.Contains(commentText));
 
-            if (!string.IsNullOrEmpty(commentText))
-                query = query.Where(c => c.CommentText.Contains(commentText) || c.CommentTitle.Contains(commentText));
+                query = query.OrderBy(nc => nc.CreatedOnUtc);
 
-            query = query.OrderBy(nc => nc.CreatedOnUtc);
-
-            return query.ToList();
+                return query;
+            });
         }
 
         /// <summary>
@@ -240,10 +216,7 @@ namespace Nop.Services.News
         /// <returns>News comment</returns>
         public virtual NewsComment GetNewsCommentById(int newsCommentId)
         {
-            if (newsCommentId == 0)
-                return null;
-
-            return _newsCommentRepository.ToCachedGetById(newsCommentId);
+            return _newsCommentRepository.GetById(newsCommentId, cache => default);
         }
 
         /// <summary>
@@ -253,23 +226,7 @@ namespace Nop.Services.News
         /// <returns>News comments</returns>
         public virtual IList<NewsComment> GetNewsCommentsByIds(int[] commentIds)
         {
-            if (commentIds == null || commentIds.Length == 0)
-                return new List<NewsComment>();
-
-            var query = from nc in _newsCommentRepository.Table
-                        where commentIds.Contains(nc.Id)
-                        select nc;
-            var comments = query.ToList();
-            //sort by passed identifiers
-            var sortedComments = new List<NewsComment>();
-            foreach (var id in commentIds)
-            {
-                var comment = comments.Find(x => x.Id == id);
-                if (comment != null)
-                    sortedComments.Add(comment);
-            }
-
-            return sortedComments;
+            return _newsCommentRepository.GetByIds(commentIds);
         }
 
         /// <summary>
@@ -289,9 +246,9 @@ namespace Nop.Services.News
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
-            return query.ToCachedCount(cacheKey);
+            return _staticCacheManager.Get(cacheKey, query.Count);
         }
 
         /// <summary>
@@ -300,13 +257,7 @@ namespace Nop.Services.News
         /// <param name="newsComment">News comment</param>
         public virtual void DeleteNewsComment(NewsComment newsComment)
         {
-            if (newsComment == null)
-                throw new ArgumentNullException(nameof(newsComment));
-
             _newsCommentRepository.Delete(newsComment);
-
-            //event notification
-            _eventPublisher.EntityDeleted(newsComment);
         }
 
         /// <summary>
@@ -330,13 +281,7 @@ namespace Nop.Services.News
         /// <param name="comment">News comment</param>
         public virtual void InsertNewsComment(NewsComment comment)
         {
-            if (comment == null)
-                throw new ArgumentNullException(nameof(comment));
-
             _newsCommentRepository.Insert(comment);
-
-            //event notification
-            _eventPublisher.EntityInserted(comment);
         }
 
         /// <summary>
@@ -345,13 +290,7 @@ namespace Nop.Services.News
         /// <param name="comment">News comment</param>
         public virtual void UpdateNewsComment(NewsComment comment)
         {
-            if (comment == null)
-                throw new ArgumentNullException(nameof(comment));
-
             _newsCommentRepository.Update(comment);
-
-            //event notification
-            _eventPublisher.EntityUpdated(comment);
         }
 
         #endregion

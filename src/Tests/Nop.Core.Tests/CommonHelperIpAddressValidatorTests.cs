@@ -7,33 +7,33 @@ namespace Nop.Core.Tests
     public class CommonHelperIpAddressValidatorTests
     {
         [Test]
-        public void When_the_text_is_a_valid_ipv4_address_then_the_validator_should_pass()
+        public void WhenTheTextIsAValidIpv4AddressThenTheValidatorShouldPass()
         {
-            var ip = "123.123.123.123";
+            const string ip = "123.123.123.123";
             var result = CommonHelper.IsValidIpAddress(ip);
             result.Should().BeTrue();
         }
 
         [Test]
-        public void When_the_text_is_a_valid_ipv6_address_then_the_validator_should_pass()
+        public void WhenTheTextIsAValidIpv6AddressThenTheValidatorShouldPass()
         {
-            var ip = "FE80:0000:0000:0000:0202:B3FF:FE1E:8329";
+            const string ip = "FE80:0000:0000:0000:0202:B3FF:FE1E:8329";
             var result = CommonHelper.IsValidIpAddress(ip);
             result.Should().BeTrue();
         }
 
         [Test]
-        public void When_the_text_is_not_a_valid_ip_address_then_the_validator_should_fail()
+        public void WhenTheTextIsNotAValidIpAddressThenTheValidatorShouldFail()
         {
-            var ip = "abc";
+            const string ip = "abc";
             var result = CommonHelper.IsValidIpAddress(ip);
             result.Should().BeFalse();
         }
 
         [Test]
-        public void When_the_text_is_an_ip_address_but_with_wrong_range_then_the_validator_should_fail()
+        public void WhenTheTextIsAnIpAddressButWithWrongRangeThenTheValidatorShouldFail()
         {
-            var ip = "999.999.999.999";
+            const string ip = "999.999.999.999";
             var result = CommonHelper.IsValidIpAddress(ip);
             result.Should().BeFalse();
         }

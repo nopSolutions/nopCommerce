@@ -86,7 +86,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             };
             _settingService.SaveSetting(settings);
 
-            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            _localizationService.AddLocaleResource(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.GoogleAnalytics.GoogleId"] = "ID",
                 ["Plugins.Widgets.GoogleAnalytics.GoogleId.Hint"] = "Enter Google Analytics ID.",
@@ -115,7 +115,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             _settingService.DeleteSetting<GoogleAnalyticsSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResources("Plugins.Widgets.GoogleAnalytics");
+            _localizationService.DeleteLocaleResources("Plugins.Widgets.GoogleAnalytics");
 
             base.Uninstall();
         }

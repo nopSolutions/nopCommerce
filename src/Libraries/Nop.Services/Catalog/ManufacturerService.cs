@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -24,15 +22,14 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
@@ -41,28 +38,26 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ManufacturerService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
-            IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRepository,
             IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<StoreMapping> storeMappingRepository,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
-            _eventPublisher = eventPublisher;
             _aclRepository = aclRepository;
             _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
             _manufacturerRepository = manufacturerRepository;
             _productRepository = productRepository;
             _productManufacturerRepository = productManufacturerRepository;
             _storeMappingRepository = storeMappingRepository;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _workContext = workContext;
         }
@@ -82,10 +77,7 @@ namespace Nop.Services.Catalog
 
             var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-            if (!mappings.Any())
-                return;
-
-            _discountManufacturerMappingRepository.Delete(mappings);
+            _discountManufacturerMappingRepository.Delete(mappings.ToList());
         }
 
         /// <summary>
@@ -94,14 +86,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturer">Manufacturer</param>
         public virtual void DeleteManufacturer(Manufacturer manufacturer)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
-
-            manufacturer.Deleted = true;
-            UpdateManufacturer(manufacturer);
-
-            //event notification
-            _eventPublisher.EntityDeleted(manufacturer);
+            _manufacturerRepository.Delete(manufacturer);
         }
 
         /// <summary>
@@ -110,13 +95,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturers">Manufacturers</param>
         public virtual void DeleteManufacturers(IList<Manufacturer> manufacturers)
         {
-            if (manufacturers == null)
-                throw new ArgumentNullException(nameof(manufacturers));
-
-            foreach (var manufacturer in manufacturers)
-            {
-                DeleteManufacturer(manufacturer);
-            }
+            _manufacturerRepository.Delete(manufacturers);
         }
 
         /// <summary>
@@ -140,45 +119,53 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            var query = _manufacturerRepository.Table;
-            if (!showHidden)
-                query = query.Where(m => m.Published);
-            if (!string.IsNullOrWhiteSpace(manufacturerName))
-                query = query.Where(m => m.Name.Contains(manufacturerName));
-            query = query.Where(m => !m.Deleted);
-            if (overridePublished.HasValue)
-                query = query.Where(m => m.Published == overridePublished.Value);
-            query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
-
-            if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
-                return new PagedList<Manufacturer>(query, pageIndex, pageSize);
-
-            if (!showHidden && !_catalogSettings.IgnoreAcl)
+            return _manufacturerRepository.GetAllPaged(query =>
             {
-                //ACL (access control list)
-                var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-                query = from m in query
+                if (!showHidden)
+                    query = query.Where(m => m.Published);
+                if (!string.IsNullOrWhiteSpace(manufacturerName))
+                    query = query.Where(m => m.Name.Contains(manufacturerName));
+                query = query.Where(m => !m.Deleted);
+                if (overridePublished.HasValue)
+                    query = query.Where(m => m.Published == overridePublished.Value);
+
+                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
+
+                if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) &&
+                    (showHidden || _catalogSettings.IgnoreAcl))
+                    return query;
+
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
+                {
+                    //ACL (access control list)
+                    var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+                    query = from m in query
                         join acl in _aclRepository.Table
-                            on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
+                            on new {c1 = m.Id, c2 = nameof(Manufacturer)} equals new
+                            {
+                                c1 = acl.EntityId, c2 = acl.EntityName
+                            } into m_acl
                         from acl in m_acl.DefaultIfEmpty()
                         where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select m;
-            }
+                }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-            {
-                //store mapping
-                query = from m in query
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //store mapping
+                    query = from m in query
                         join sm in _storeMappingRepository.Table
-                            on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                            on new {c1 = m.Id, c2 = nameof(Manufacturer)} equals new
+                            {
+                                c1 = sm.EntityId, c2 = sm.EntityName
+                            } into m_sm
                         from sm in m_sm.DefaultIfEmpty()
                         where !m.LimitedToStores || storeId == sm.StoreId
                         select m;
-            }
+                }
 
-            query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
-
-            return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+                return query.Distinct();
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -192,13 +179,15 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.ManufacturerIdsByDiscountCacheKey, 
                 discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
 
-            var result = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)
-                .Select(dmm => dmm.EntityId).ToCachedList(cacheKey);
+            var query = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)
+                .Select(dmm => dmm.EntityId);
+
+            var result = _staticCacheManager.Get(cacheKey, query.ToList);
 
             return result;
         }
@@ -210,10 +199,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer</returns>
         public virtual Manufacturer GetManufacturerById(int manufacturerId)
         {
-            if (manufacturerId == 0)
-                return null;
-
-            return _manufacturerRepository.ToCachedGetById(manufacturerId);
+            return _manufacturerRepository.GetById(manufacturerId, cache => default);
         }
 
         /// <summary>
@@ -248,16 +234,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerIds">manufacturer identifiers</param>
         /// <returns>Manufacturers</returns>
-        public virtual List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds)
+        public virtual IList<Manufacturer> GetManufacturersByIds(int[] manufacturerIds)
         {
-            if (manufacturerIds == null || manufacturerIds.Length == 0)
-                return new List<Manufacturer>();
-
-            var query = from p in _manufacturerRepository.Table
-                        where manufacturerIds.Contains(p.Id) && !p.Deleted
-                        select p;
-
-            return query.ToList();
+            return _manufacturerRepository.GetByIds(manufacturerIds);
         }
 
         /// <summary>
@@ -266,13 +245,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturer">Manufacturer</param>
         public virtual void InsertManufacturer(Manufacturer manufacturer)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
-
             _manufacturerRepository.Insert(manufacturer);
-            
-            //event notification
-            _eventPublisher.EntityInserted(manufacturer);
         }
 
         /// <summary>
@@ -281,13 +254,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturer">Manufacturer</param>
         public virtual void UpdateManufacturer(Manufacturer manufacturer)
         {
-            if (manufacturer == null)
-                throw new ArgumentNullException(nameof(manufacturer));
-
             _manufacturerRepository.Update(manufacturer);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(manufacturer);
         }
 
         /// <summary>
@@ -296,13 +263,7 @@ namespace Nop.Services.Catalog
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
-            if (productManufacturer == null)
-                throw new ArgumentNullException(nameof(productManufacturer));
-
             _productManufacturerRepository.Delete(productManufacturer);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(productManufacturer);
         }
 
         /// <summary>
@@ -375,7 +336,7 @@ namespace Nop.Services.Catalog
                         select pm;
                 }
 
-                query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                query = query.Distinct();
             }
 
             var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -395,7 +356,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersAllByProductIdCacheKey, productId,
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId,
                 showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = from pm in _productManufacturerRepository.Table
@@ -454,10 +415,10 @@ namespace Nop.Services.Catalog
                         select pm;
                 }
 
-                query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                query = query.Distinct();
             }
 
-            var productManufacturers = query.ToCachedList(key);
+            var productManufacturers = _staticCacheManager.Get(key, query.ToList);
 
             return productManufacturers;
         }
@@ -469,10 +430,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product manufacturer mapping</returns>
         public virtual ProductManufacturer GetProductManufacturerById(int productManufacturerId)
         {
-            if (productManufacturerId == 0)
-                return null;
-
-            return _productManufacturerRepository.ToCachedGetById(productManufacturerId);
+            return _productManufacturerRepository.GetById(productManufacturerId, cache => default);
         }
 
         /// <summary>
@@ -481,13 +439,7 @@ namespace Nop.Services.Catalog
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
-            if (productManufacturer == null)
-                throw new ArgumentNullException(nameof(productManufacturer));
-
             _productManufacturerRepository.Insert(productManufacturer);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productManufacturer);
         }
 
         /// <summary>
@@ -496,13 +448,7 @@ namespace Nop.Services.Catalog
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         public virtual void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
-            if (productManufacturer == null)
-                throw new ArgumentNullException(nameof(productManufacturer));
-
             _productManufacturerRepository.Update(productManufacturer);
-            
-            //event notification
-            _eventPublisher.EntityUpdated(productManufacturer);
         }
 
         /// <summary>
@@ -580,13 +526,7 @@ namespace Nop.Services.Catalog
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         public void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
         {
-            if (discountManufacturerMapping is null)
-                throw new ArgumentNullException(nameof(discountManufacturerMapping));
-
             _discountManufacturerMappingRepository.Insert(discountManufacturerMapping);
-
-            //event notification
-            _eventPublisher.EntityInserted(discountManufacturerMapping);
         }
 
         /// <summary>
@@ -595,13 +535,7 @@ namespace Nop.Services.Catalog
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         public void DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
         {
-            if (discountManufacturerMapping is null)
-                throw new ArgumentNullException(nameof(discountManufacturerMapping));
-
             _discountManufacturerMappingRepository.Delete(discountManufacturerMapping);
-
-            //event notification
-            _eventPublisher.EntityDeleted(discountManufacturerMapping);
         }
 
         #endregion

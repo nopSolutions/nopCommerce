@@ -14,7 +14,6 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -65,7 +64,6 @@ namespace Nop.Web.Controllers
         #region Methods
 
         //My account / Orders
-        [HttpsRequirement]
         public virtual IActionResult CustomerOrders()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -141,7 +139,6 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Reward points
-        [HttpsRequirement]
         public virtual IActionResult CustomerRewardPoints(int? pageNumber)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -155,7 +152,6 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page
-        [HttpsRequirement]
         public virtual IActionResult Details(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -167,7 +163,6 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / Print
-        [HttpsRequirement]
         public virtual IActionResult PrintOrderDetails(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -240,7 +235,6 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / Shipment details page
-        [HttpsRequirement]
         public virtual IActionResult ShipmentDetails(int shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);

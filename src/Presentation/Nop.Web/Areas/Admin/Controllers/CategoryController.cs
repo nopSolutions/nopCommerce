@@ -8,7 +8,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -34,7 +33,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IAclService _aclService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryModelFactory _categoryModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -59,7 +57,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public CategoryController(IAclService aclService,
-            ICacheKeyService cacheKeyService,
             ICategoryModelFactory categoryModelFactory,
             ICategoryService categoryService,
             ICustomerActivityService customerActivityService,
@@ -80,7 +77,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkContext workContext)
         {
             _aclService = aclService;
-            _cacheKeyService = cacheKeyService;
             _categoryModelFactory = categoryModelFactory;
             _categoryService = categoryService;
             _customerActivityService = customerActivityService;
@@ -336,10 +332,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //if parent category changes, we need to clear cache for previous parent category
                 if (category.ParentCategoryId != model.ParentCategoryId)
                 {
-                    var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, category.ParentCategoryId);
-                    _staticCacheManager.RemoveByPrefix(prefix);
-                    prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, category.ParentCategoryId);
-                    _staticCacheManager.RemoveByPrefix(prefix);
+                    _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
+                    _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
                 }
 
                 category = model.ToEntity(category);

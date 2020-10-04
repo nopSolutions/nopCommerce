@@ -76,7 +76,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerIds">manufacturer identifiers</param>
         /// <returns>Manufacturers</returns>
-        List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds);
+        IList<Manufacturer> GetManufacturersByIds(int[] manufacturerIds);
 
         /// <summary>
         /// Get manufacturers for which a discount is applied

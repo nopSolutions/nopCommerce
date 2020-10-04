@@ -21,7 +21,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Gets the Avalara tax provider version (used a nopCommerce version here)
         /// </summary>
-        public static string ApplicationVersion => $"v{NopVersion.CurrentVersion}";
+        public static string ApplicationVersion => $"v{NopVersion.CURRENT_VERSION}";
 
         /// <summary>
         /// Gets the configuration route name

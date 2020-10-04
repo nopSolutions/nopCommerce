@@ -105,9 +105,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL Server 계정 사용</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>기본 제공 데이터 저장소 사용 (SQL Server Compact)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlServer">
     <Value>Microsoft SQL Server</Value>
   </LocaleResource>

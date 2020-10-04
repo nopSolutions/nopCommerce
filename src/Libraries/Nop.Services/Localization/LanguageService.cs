@@ -5,10 +5,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Localization
@@ -20,8 +17,6 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Language> _languageRepository;
         private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -32,16 +27,12 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LanguageService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<Language> languageRepository,
+        public LanguageService(IRepository<Language> languageRepository,
             ISettingService settingService,
             IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService,
             LocalizationSettings localizationSettings)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _languageRepository = languageRepository;
             _settingService = settingService;
             _staticCacheManager = staticCacheManager;
@@ -77,9 +68,6 @@ namespace Nop.Services.Localization
             }
 
             _languageRepository.Delete(language);
-            
-            //event notification
-            _eventPublisher.EntityDeleted(language);
         }
 
         /// <summary>
@@ -90,24 +78,25 @@ namespace Nop.Services.Localization
         /// <returns>Languages</returns>
         public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
-            var query = _languageRepository.Table;
-            if (!showHidden) query = query.Where(l => l.Published);
-            query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
-
             //cacheable copy
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
             
             var languages = _staticCacheManager.Get(key, () =>
             {
-                var allLanguages = query.ToList();
+                var allLanguages = _languageRepository.GetAll(query =>
+                {
+                    if (!showHidden)
+                        query = query.Where(l => l.Published);
+                    query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
+
+                    return query;
+                });
 
                 //store mapping
                 if (storeId > 0)
-                {
                     allLanguages = allLanguages
                         .Where(l => _storeMappingService.Authorize(l, storeId))
                         .ToList();
-                }
 
                 return allLanguages;
             });
@@ -122,10 +111,7 @@ namespace Nop.Services.Localization
         /// <returns>Language</returns>
         public virtual Language GetLanguageById(int languageId)
         {
-            if (languageId == 0)
-                return null;
-
-            return _languageRepository.ToCachedGetById(languageId);
+            return _languageRepository.GetById(languageId, cache => default);
         }
 
         /// <summary>
@@ -134,13 +120,7 @@ namespace Nop.Services.Localization
         /// <param name="language">Language</param>
         public virtual void InsertLanguage(Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-
             _languageRepository.Insert(language);
-
-            //event notification
-            _eventPublisher.EntityInserted(language);
         }
 
         /// <summary>
@@ -149,14 +129,8 @@ namespace Nop.Services.Localization
         /// <param name="language">Language</param>
         public virtual void UpdateLanguage(Language language)
         {
-            if (language == null)
-                throw new ArgumentNullException(nameof(language));
-
             //update language
             _languageRepository.Update(language);
-
-            //event notification
-            _eventPublisher.EntityUpdated(language);
         }
 
         /// <summary>

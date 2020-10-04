@@ -570,7 +570,7 @@ BEGIN
 		SET  @sql_command = concat(@sql_command, '
 			AND (not p.SubjectToAcl OR EXISTS (
 					SELECT 1 
-					from aclRecord as acl 
+					from AclRecord as acl 
 					where acl.CustomerRoleId in (', `AllowedCustomerRoleIds` ,') 
 						and acl.`EntityId` = p.`Id` AND acl.`EntityName` = ''Product''
 					)
@@ -611,12 +611,8 @@ BEGIN
 		SET  @sql_command = concat(@sql_command, '
 			AND (p.Id in (
 					select psa.ProductId 
-					from `Product_SpecificationAttribute_Mapping` as psa 
-                    INNER JOIN (
-						select sao.SpecificationAttributeId 
-						from `SpecificationAttributeOption` as sao 
-						where sao.Id in (', `FilteredSpecs`, ')
-						) as sa on sa.SpecificationAttributeId = psa.Id
+                    from `Product_SpecificationAttribute_Mapping` as psa 
+                    where psa.SpecificationAttributeOptionId in (', `FilteredSpecs`, ') and psa.AllowFiltering
                 )
 			)');
     end if;

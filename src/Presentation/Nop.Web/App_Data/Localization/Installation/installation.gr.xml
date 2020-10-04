@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Χρησιμοποιήστε SQL λογαριασμό</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>Χρησιμοποιήστε την ενσωματωμένη αποθήκευση δεδομένων (SQL Server Compact Edition)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL κωδικός</Value>
   </LocaleResource>

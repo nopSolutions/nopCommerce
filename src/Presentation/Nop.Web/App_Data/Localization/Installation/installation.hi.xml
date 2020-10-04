@@ -114,9 +114,6 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL सर्वर खाते का उपयोग करें</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlCompact">
-    <Value>आंकड़ा भंडारण का निर्माण का उपयोग करें (SQL सर्वर संकुचित)</Value>
-  </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL पासवर्ड</Value>
   </LocaleResource>

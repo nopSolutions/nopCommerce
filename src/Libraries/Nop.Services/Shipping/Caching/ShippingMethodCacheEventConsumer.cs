@@ -8,9 +8,5 @@ namespace Nop.Services.Shipping.Caching
     /// </summary>
     public partial class ShippingMethodCacheEventConsumer : CacheEventConsumer<ShippingMethod>
     {
-        protected override void ClearCache(ShippingMethod entity)
-        {
-            RemoveByPrefix(NopShippingDefaults.ShippingMethodsAllPrefixCacheKey);
-        }
     }
 }

@@ -438,7 +438,7 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyCategoriesMapping(Product product, Product productCopy)
         {
-            foreach (var productCategory in _categoryService.GetProductCategoriesByProductId(product.Id))
+            foreach (var productCategory in _categoryService.GetProductCategoriesByProductId(product.Id, showHidden: true))
             {
                 var productCategoryCopy = new ProductCategory
                 {
