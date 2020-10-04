@@ -221,7 +221,7 @@ namespace Nop.Services.Tests.ExportImport
             });
 
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
-            PropertiesShouldEqual(order, manager, replacePairse, "OrderStatusId", "PaymentStatusId", "ShippingStatusId");
+            PropertiesShouldEqual(order, manager, replacePairs, "OrderStatusId", "PaymentStatusId", "ShippingStatusId");
 
             var addressFields = new List<string>
             {
