@@ -4354,7 +4354,7 @@
     <Value>Use session state for TempData</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UseSessionStateTempDataProvider.Hint">
-    <Value>Enable this seting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
+    <Value>Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Hosting">
     <Value>Hosting configuration</Value>
@@ -4405,19 +4405,19 @@
     <Value>Copy locked plugins to subdirectories on startup</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.CopyLockedPluginAssembilesToSubdirectoriesOnStartup.Hint">
-    <Value>Enable this seting to copy 'locked' assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.</Value>
+    <Value>Enable this setting to copy 'locked' assemblies from the plugin shadow directory (/Plugins/bin) to temporary subdirectories on application startup.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly">
     <Value>Use unsafe load assembly</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UseUnsafeLoadAssembly.Hint">
-    <Value>Enable this seting to load an assembly into the load-from context, bypassing some security checks.</Value>
+    <Value>Enable this setting to load an assembly into the load-from context, bypassing some security checks.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy">
     <Value>Use plugins shadow copy</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin.UsePluginsShadowCopy.Hint">
-    <Value>Enable this seting to copy plugins to the shadow directory (/Plugins/bin) on application startup.</Value>
+    <Value>Enable this setting to copy plugins to the shadow directory (/Plugins/bin) on application startup.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Redis">
     <Value>Redis configuration</Value>
