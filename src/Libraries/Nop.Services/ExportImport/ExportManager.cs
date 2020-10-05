@@ -14,6 +14,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
@@ -1514,9 +1515,18 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("StoreId", p => p.StoreId),
                 new PropertyByName<Order>("OrderGuid", p => p.OrderGuid, ignore),
                 new PropertyByName<Order>("CustomerId", p => p.CustomerId, ignore),
-                new PropertyByName<Order>("OrderStatusId", p => p.OrderStatusId, ignore),
-                new PropertyByName<Order>("PaymentStatusId", p => p.PaymentStatusId),
-                new PropertyByName<Order>("ShippingStatusId", p => p.ShippingStatusId, ignore),
+                new PropertyByName<Order>("OrderStatus", p => p.OrderStatusId, !_catalogSettings.ExportImportRelatedEntitiesByName)
+                {
+                    DropDownElements = OrderStatus.Pending.ToSelectList(useLocalization: false)
+                },
+                new PropertyByName<Order>("PaymentStatus", p => p.PaymentStatusId, !_catalogSettings.ExportImportRelatedEntitiesByName)
+                {
+                    DropDownElements = PaymentStatus.Pending.ToSelectList(useLocalization: false)
+                },
+                new PropertyByName<Order>("ShippingStatus", p => p.ShippingStatusId, !_catalogSettings.ExportImportRelatedEntitiesByName)
+                {
+                    DropDownElements = ShippingStatus.ShippingNotRequired.ToSelectList(useLocalization: false)
+                },
                 new PropertyByName<Order>("OrderSubtotalInclTax", p => p.OrderSubtotalInclTax, ignore),
                 new PropertyByName<Order>("OrderSubtotalExclTax", p => p.OrderSubtotalExclTax, ignore),
                 new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p => p.OrderSubTotalDiscountInclTax, ignore),
@@ -1847,7 +1857,7 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
-            { 
+            {
                 new PropertyByName<OrderItem>("SKU", oi => _productService.GetProductById(oi.ProductId).Sku),
                 new PropertyByName<OrderItem>("Name", oi => _localizationService.GetLocalized(_productService.GetProductById(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage.Id)),

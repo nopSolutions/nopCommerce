@@ -192,9 +192,6 @@ namespace Nop.Services.Tests.ExportImport
             var replacePairs = new Dictionary<string, string>
                 {
                     { "OrderId", "Id" },
-                    { "OrderStatusId", "OrderStatus" },
-                    { "PaymentStatusId", "PaymentStatus" },
-                    { "ShippingStatusId", "ShippingStatus" },
                     { "ShippingPickupInStore", "PickupInStore" }
                 };
 
@@ -213,18 +210,19 @@ namespace Nop.Services.Tests.ExportImport
                 "AuthorizationTransactionId", "AuthorizationTransactionCode", "AuthorizationTransactionResult",
                 "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
                 "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
-                "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus ",
+                "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus",
                 "CustomerTaxDisplayType", "CustomOrderNumber"
             });
 
             //fields tested individually
             ignore.AddRange(new[]
             {
-               "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey"
+               "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey",
+               "OrderStatusId", "PaymentStatusId", "ShippingStatusId"
             });
 
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
-            PropertiesShouldEqual(order, manager, replacePairs);
+            PropertiesShouldEqual(order, manager, replacePairs, "OrderStatusId", "PaymentStatusId", "ShippingStatusId");
 
             var addressFields = new List<string>
             {
