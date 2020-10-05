@@ -41,6 +41,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly ICustomNumberFormatter _customNumberFormatter;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductService _productService;
+        private readonly IRepository<Product> _productRepository;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IProductAttributeService _productAttributeService;
@@ -60,7 +61,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             ICurrencyService currencyService,
             IOrderService orderService,
             CurrencySettings currencySettings,
-            IProductService productService, 
+            IProductService productService,
+            IRepository<Product> productRepository,
             IProductAttributeService productAttributeService)
         {
             _orderRepository = orderRepository;
@@ -74,6 +76,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             _countryService = countryService;
             _logger = logger;
             _orderService = orderService;
+            _productRepository = productRepository;
             _customNumberFormatter = customNumberFormatter;
             _eventPublisher = eventPublisher;
             _productService = productService;
@@ -99,9 +102,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
                 return Ok(new { CurrencyCode = primaryStoreCurrency.CurrencyCode });
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Error("Error while fetching Store Currency", ex);
                 return BadRequest(ex.Message);
@@ -110,7 +113,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
         [HttpPost]
         [Route("api/polycommerce/orders/add")]
-        public async Task<IActionResult> AddOrder([FromBody]PolyCommerceOrder model)
+        public async Task<IActionResult> AddOrder([FromBody] PolyCommerceOrder model)
         {
             Order order = null;
             try
@@ -199,7 +202,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                         _genericAttributeService.SaveAttribute(customer, "LastName", model.Address.LastName);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.Warning("Could not save generic attributes: FirstName, LastName", ex);
                 }
@@ -277,7 +280,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
                     var productId = productCombination?.ProductId ?? (int)orderItem.ExternalProductId;
 
-                    var product = _productService.GetProductById(productId);
+                    var product = _productRepository.GetById(productId);
 
                     var newItem = new OrderItem
                     {
@@ -300,11 +303,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     };
 
                     _orderItemRepository.Insert(newItem);
-                    _productService.AdjustInventory(product, orderItem.Quantity * -1, productCombination?.AttributesXml ?? string.Empty);                
-
-                    // NopCommerce Core does not update UpdatedOnUtc date inside AdjustInventory() method
-                    product.UpdatedOnUtc = DateTime.UtcNow;
-                    _productService.UpdateProduct(product);
+                    _productService.AdjustInventory(product, orderItem.Quantity * -1, productCombination?.AttributesXml ?? string.Empty);
                 }
 
                 try
@@ -323,7 +322,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.Warning("Could not save order notes", ex);
                 }
@@ -333,7 +332,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     _customerActivityService.InsertActivity("PublicStore.PlaceOrder", string.Format(_localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.Warning("Could not publish order events", ex);
                 }
@@ -355,7 +354,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
         [HttpPost]
         [Route("api/polycommerce/orders/check_for_shipped_orders")]
-        public async Task<IActionResult> CheckForShippedOrders([FromBody]PolyCommerceCheckForShippedOrdersModel model)
+        public async Task<IActionResult> CheckForShippedOrders([FromBody] PolyCommerceCheckForShippedOrdersModel model)
         {
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 

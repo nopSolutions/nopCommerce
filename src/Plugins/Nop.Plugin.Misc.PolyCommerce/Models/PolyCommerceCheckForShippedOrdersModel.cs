@@ -6,6 +6,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
 {
     public class PolyCommerceCheckForShippedOrdersModel
     {
-        public int[] OrderIds { get; set; }
+        public long[] OrderIds { get; set; }
     }
 }

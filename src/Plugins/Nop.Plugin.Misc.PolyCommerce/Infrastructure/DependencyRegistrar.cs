@@ -5,6 +5,7 @@ using Autofac;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
+using Nop.Plugin.Misc.PolyCommerce.Consumers;
 using Nop.Plugin.Misc.PolyCommerce.Factories;
 using Nop.Plugin.Misc.PolyCommerce.Services;
 using Nop.Services.Catalog;
