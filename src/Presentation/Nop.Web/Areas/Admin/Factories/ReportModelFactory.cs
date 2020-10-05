@@ -274,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
-        /// Get bestsellers total amount
+        /// Get a formatted bestsellers total amount
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller total amount</returns>
@@ -282,12 +282,31 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
+            
+            //get parameters to filter bestsellers
+            var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
+            var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
+            if (_workContext.CurrentVendor != null)
+                searchModel.VendorId = _workContext.CurrentVendor.Id;
+            var startDateValue = !searchModel.StartDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = !searchModel.EndDate.HasValue ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var bestsellers = GetBestsellersReport(searchModel);
+            //get a total amount
+            var totalAmount = _orderReportService.BestSellersReportTotalAmount(
+                showHidden: true,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: searchModel.BillingCountryId,
+                vendorId: searchModel.VendorId,
+                categoryId: searchModel.CategoryId,
+                manufacturerId: searchModel.ManufacturerId,
+                storeId: searchModel.StoreId);
 
-            var totalAmount = _priceFormatter.FormatPrice(bestsellers.Sum(bestseller => bestseller.TotalAmount), true, false);
-
-            return totalAmount;
+            return _priceFormatter.FormatPrice(totalAmount, true, false);
         }
 
         #endregion

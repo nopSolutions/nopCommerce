@@ -64,6 +64,95 @@ namespace Nop.Services.Orders
 
         #endregion
 
+        #region Utils
+
+        /// <summary>
+        /// Search order items
+        /// </summary>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Result query</returns>
+        private IQueryable<OrderItem> SearchOrderItems(
+            int categoryId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            ShippingStatus? ss = null,
+            int billingCountryId = 0,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue,
+            bool showHidden = false)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            int? shippingStatusId = null;
+            if (ss.HasValue)
+                shippingStatusId = (int)ss.Value;
+
+            var bestSellers = from orderItem in _orderItemRepository.Table
+                    join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                    join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                    where (storeId == 0 || storeId == o.StoreId) &&
+                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                        (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                        (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                        (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                        !o.Deleted && !p.Deleted &&
+                        (vendorId == 0 || p.VendorId == vendorId) &&
+                        (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
+                        (showHidden || p.Published)
+                    select orderItem;
+
+            if (categoryId > 0)
+            {
+                bestSellers = from orderItem in bestSellers
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
+                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                    into p_pc
+                    from pc in p_pc.DefaultIfEmpty()
+                    where pc.CategoryId == categoryId
+                    select orderItem;
+            }
+
+            if (manufacturerId > 0)
+            {
+                bestSellers = from orderItem in bestSellers
+                    join p in _productRepository.Table on orderItem.ProductId equals p.Id 
+                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                    into p_pm
+                    from pm in p_pm.DefaultIfEmpty()
+                    where pm.ManufacturerId == manufacturerId
+                    select orderItem;
+            }
+
+            return bestSellers;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -340,72 +429,27 @@ namespace Nop.Services.Orders
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
         public virtual IPagedList<BestsellersReportLine> BestSellersReport(
-            int categoryId = 0, int manufacturerId = 0,
-            int storeId = 0, int vendorId = 0,
-            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            int categoryId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            ShippingStatus? ss = null,
             int billingCountryId = 0,
             OrderByEnum orderBy = OrderByEnum.OrderByQuantity,
-            int pageIndex = 0, int pageSize = int.MaxValue,
+            int pageIndex = 0,
+            int pageSize = int.MaxValue,
             bool showHidden = false)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
 
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
+            var bestSellers = SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, pageIndex, pageSize, showHidden);
 
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
-            var query1 = from orderItem in _orderItemRepository.Table
-                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                         where (storeId == 0 || storeId == o.StoreId) &&
-                               (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                               (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                               (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                               (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                               //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                               //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
-                               //0) &&
-                               !o.Deleted && 
-                               !p.Deleted &&
-                               (vendorId == 0 || p.VendorId == vendorId) &&
-                               (billingCountryId == 0 || oba.CountryId == billingCountryId) &&
-                               (showHidden || p.Published)
-                         select orderItem;
-
-            if (categoryId > 0)
-            {
-                query1 = from orderItem in query1
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                            into p_pc
-                         from pc in p_pc.DefaultIfEmpty()
-                         where pc.CategoryId == categoryId
-                         select orderItem;
-            }
-
-            if (manufacturerId > 0)
-            {
-                query1 = from orderItem in query1
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                            into p_pm
-                         from pm in p_pm.DefaultIfEmpty()
-                         where pm.ManufacturerId == manufacturerId
-                         select orderItem;
-            }
-
-            var query2 =
+            var bsReport =
                 //group by products
-                from orderItem in query1
+                from orderItem in bestSellers
                 group orderItem by orderItem.ProductId into g
                 select new BestsellersReportLine
                 {
@@ -414,14 +458,46 @@ namespace Nop.Services.Orders
                     TotalQuantity = g.Sum(x => x.Quantity)
                 };
 
-            query2 = orderBy switch
+            bsReport = orderBy switch
             {
-                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.TotalQuantity),
-                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.TotalAmount),
+                OrderByEnum.OrderByQuantity => bsReport.OrderByDescending(x => x.TotalQuantity),
+                OrderByEnum.OrderByTotalAmount => bsReport.OrderByDescending(x => x.TotalAmount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
+            var result = new PagedList<BestsellersReportLine>(bsReport, pageIndex, pageSize);
             return result;
+        }
+
+        /// <summary>
+        /// Get best sellers total amount
+        /// </summary>
+        /// <param name="storeId">Store identifier (orders placed in a specific store); 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Result</returns>
+        public virtual decimal BestSellersReportTotalAmount(
+            int categoryId = 0,
+            int manufacturerId = 0,
+            int storeId = 0,
+            int vendorId = 0,
+            DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null,
+            OrderStatus? os = null,
+            PaymentStatus? ps = null,
+            ShippingStatus? ss = null,
+            int billingCountryId = 0,
+            bool showHidden = false)
+        {            
+            return SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden)
+                .Sum(bestseller => bestseller.Quantity * bestseller.PriceExclTax);
         }
 
         /// <summary>
