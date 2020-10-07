@@ -34,8 +34,9 @@ namespace Nop.Services.Directory
         /// <remarks>
         /// {0} : language ID
         /// {1} : show hidden records?
+        /// {2} : current store ID
         /// </remarks>
-        public static CacheKey CountriesAllCacheKey => new CacheKey("Nop.country.all.{0}-{1}", NopEntityCacheDefaults<Country>.Prefix);
+        public static CacheKey CountriesAllCacheKey => new CacheKey("Nop.country.all.{0}-{1}-{2}", NopEntityCacheDefaults<Country>.Prefix);
 
         #endregion
 
