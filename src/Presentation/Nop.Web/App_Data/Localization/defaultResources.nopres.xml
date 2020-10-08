@@ -5146,7 +5146,7 @@
     <Value>Search by author.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.ChangesApplyAfterReboot">
-    <Value>Changes will be apply after restart application</Value>
+    <Value>Changes will be applied after restart application</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
