@@ -246,6 +246,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer.Hint"] = "Check to restrict customer to add just 1 review per product.",
                 ["Reviews.AlreadyAddedProductReviews"] = "Product review is already added for this product",
                 ["Admin.Configuration.Plugins.ChangesApplyAfterReboot"] = "Changes will be applied after restart application",
+                ["Admin.Configuration.Plugins.Fields.IsEnabled"] = "Enabled",
             });
 
             // rename locales
