@@ -5,7 +5,7 @@
 @await Html.PartialAsync("_Notifications")
 @await Html.PartialAsync("_JavaScriptDisabledWarning")
 @await Html.PartialAsync("_OldInternetExplorerWarning")
-<div class="master-wrapper-page">
+<div class="master-wrapper-page" id="main" role="main">
     @await Component.InvokeAsync("AdminHeaderLinks")
     @await Html.PartialAsync("_Header")
     <script asp-location="Footer">
