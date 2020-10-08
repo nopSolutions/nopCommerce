@@ -30,13 +30,16 @@ namespace Nop.Data
         #region Utils
 
         /// <summary>
-        /// Configures the data context
+        /// Creates the database connection
         /// </summary>
-        /// <param name="dataContext">Data context to configure</param>
-        private void ConfigureDataContext(IDataContext dataContext)
+        protected override DataConnection CreateDataConnection()
         {
+            var dataContext = CreateDataConnection(LinqToDbDataProvider);
+
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+
+            return dataContext;
         }
 
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -85,18 +88,6 @@ namespace Nop.Data
                 return;
 
             ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        protected override DataConnection CreateDataConnection()
-        {
-            var dataContext = CreateDataConnection(LinqToDbDataProvider);
-
-            ConfigureDataContext(dataContext);
-
-            return dataContext;
         }
 
         #endregion

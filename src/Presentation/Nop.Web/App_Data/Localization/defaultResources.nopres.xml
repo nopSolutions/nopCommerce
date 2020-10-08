@@ -6810,9 +6810,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FooterItems">
     <Value>Footer items</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText">
-    <Value>Full-Text</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.Localization">
     <Value>Localization</Value>
   </LocaleResource>
@@ -7166,39 +7163,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.Hint">
     <Value>Upload single icon or archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "/icons/icons_{0}"</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled">
-    <Value>Full-Text is disabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled">
-    <Value>Full-Text is enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable">
-    <Value>Disable Full-Text</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled">
-    <Value>Full-Text support has been disabled successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable">
-    <Value>Enable Full-Text</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled">
-    <Value>Full-Text support has been enabled successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords">
-    <Value>To prevent a full-text index from becoming bloated, Microsoft SQL Server has a mechanism that discards commonly occurring words that do not help the search. These words are called noise words, or stop words. Noise words are listed in the locale specific noise word files. For example, in the English locale, words such as "a," "and," "is," and "the" are in the English noise word file and are left out of the full-text index since they are empirically known to be useless to a search. Please contact your SQL Server administrator to get more information about it.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported">
-    <Value>Full-Text is not supported by your database</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode">
-    <Value>Search mode</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode.Hint">
-    <Value>Choose Full-Text search mode.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported">
-    <Value>Full-Text is supported by your database</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription">
     <Value>Generate product META description</Value>
@@ -15608,15 +15572,6 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Option">
     <Value>Option</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.And">
-    <Value>Using CONTAINS and AND with prefix_term</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.ExactMatch">
-    <Value>Exact match (using CONTAINS with prefix_term)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.Or">
-    <Value>Using CONTAINS and OR with prefix_term</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Customers.CustomerNameFormat.ShowEmails">
     <Value>Show emails</Value>

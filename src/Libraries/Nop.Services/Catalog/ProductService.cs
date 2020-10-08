@@ -730,8 +730,7 @@ namespace Nop.Services.Catalog
                     (productType == null || p.ProductTypeId == (int)productType) &&
                     (showHidden == false || Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
                     (priceMin == null || p.Price >= priceMin) &&
-                    (priceMax == null || p.Price <= priceMax) &&
-                    p.Id > pageSize * pageIndex
+                    (priceMax == null || p.Price <= priceMax)
                 select p;
 
             if(storeId > 0 && _storeService.GetAllStores().Count > 1)
@@ -771,19 +770,7 @@ namespace Nop.Services.Catalog
             {
                 IQueryable<int> productsByKeywords;
 
-                if (_commonSettings.UseFullTextSearch)
-                {
-                    productsByKeywords = from p in _productRepository.Table
-                        where Sql.Ext.FullTextSearch(_commonSettings.FullTextMode, keywords, p.Name) ||
-                        (searchDescriptions && Sql.Ext.FullTextSearch(_commonSettings.FullTextMode, keywords, p.ShortDescription, p.FullDescription)) ||
-                        (searchManufacturerPartNumber && p.ManufacturerPartNumber == keywords) ||
-                        (searchSku && p.Sku == keywords)
-                        select p.Id;
-
-                }
-                else
-                {
-                    productsByKeywords =
+                productsByKeywords =
                         from p in _productRepository.Table
                         where p.Name.Contains(keywords) ||
                             (searchDescriptions &&
@@ -791,7 +778,6 @@ namespace Nop.Services.Catalog
                             (searchManufacturerPartNumber && p.ManufacturerPartNumber == keywords) ||
                             (searchSku && p.Sku == keywords)
                         select p.Id;
-                }
 
                 if (searchProductTags)
                 {

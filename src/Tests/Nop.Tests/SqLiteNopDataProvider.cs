@@ -16,6 +16,7 @@ using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.DataProviders;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 
@@ -392,7 +393,7 @@ namespace Nop.Tests
             }
         }
 
-        public DataConnection CreateDataConnection()
+        public TempDataStorage<TItem> CreateTempDataStorage<TItem>(string storageKey, IQueryable<TItem> query) where TItem : class
         {
             throw new NotImplementedException();
         }

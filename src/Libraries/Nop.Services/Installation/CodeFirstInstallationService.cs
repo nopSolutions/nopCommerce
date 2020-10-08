@@ -6155,8 +6155,6 @@ namespace Nop.Services.Installation
                 UseSystemEmailForContactUsForm = true,
 
                 DisplayJavaScriptDisabledWarning = false,
-                UseFullTextSearch = false,
-                FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 BbcodeEditorOpenLinksInNewWindow = false,

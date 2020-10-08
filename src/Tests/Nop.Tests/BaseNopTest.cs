@@ -187,7 +187,6 @@ namespace Nop.Tests
             services.AddTransient<IVendorAttributeService, VendorAttributeService>();
             services.AddTransient<ISearchTermService, SearchTermService>();
             services.AddTransient<IGenericAttributeService, GenericAttributeService>();
-            services.AddTransient<IFulltextService, FulltextService>();
             services.AddTransient<IMaintenanceService, MaintenanceService>();
             services.AddTransient<ICustomerAttributeFormatter, CustomerAttributeFormatter>();
             services.AddTransient<ICustomerAttributeParser, CustomerAttributeParser>();

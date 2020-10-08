@@ -31,11 +31,7 @@ namespace Nop.Data.Migrations
                 defaultConventionSet.SchemaConvention
             };
 
-            ColumnsConventions = new List<IColumnsConvention>() 
-            {
-                new NopColumnsConvention(dataProvider)
-            };
-
+            ColumnsConventions = defaultConventionSet.ColumnsConventions;
             ConstraintConventions = defaultConventionSet.ConstraintConventions;
             SequenceConventions = defaultConventionSet.SequenceConventions;
             AutoNameConventions = defaultConventionSet.AutoNameConventions;
