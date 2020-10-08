@@ -24,6 +24,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Infrastructure.Permissions.ProductReview;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
@@ -58,6 +59,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly IProductReviewPermissionService _productReviewPermissionService;
 
         #endregion
 
@@ -87,7 +89,8 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings, 
+            IProductReviewPermissionService productReviewPermissionService)
         {
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
@@ -114,6 +117,7 @@ namespace Nop.Web.Controllers
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
             _shoppingCartSettings = shoppingCartSettings;
+            _productReviewPermissionService = productReviewPermissionService;
         }
 
         #endregion
@@ -366,6 +370,10 @@ namespace Nop.Web.Controllers
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
 
+            model.AddProductReview.CanAddNewReview =
+                _productReviewPermissionService.CanAdd(_workContext.CurrentCustomer, product,
+                    _storeContext.CurrentStore);
+
             //default value for all additional review types
             if (model.ReviewTypeList.Count > 0)
                 foreach (var additionalProductReview in model.AddAdditionalProductReviewList)
@@ -382,7 +390,10 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
-            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
+            
+            if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
+                !_productReviewPermissionService.CanAdd(_workContext.CurrentCustomer, product,
+                    _storeContext.CurrentStore))
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA

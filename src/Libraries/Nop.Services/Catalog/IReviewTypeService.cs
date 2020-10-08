@@ -14,7 +14,7 @@ namespace Nop.Services.Catalog
         /// Delete the review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        void DeleteReiewType(ReviewType reviewType);
+        void DeleteReviewType(ReviewType reviewType);
 
         /// <summary>
         /// Get all review types

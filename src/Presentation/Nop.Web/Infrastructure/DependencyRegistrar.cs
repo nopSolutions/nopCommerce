@@ -5,6 +5,8 @@ using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Infrastructure.Installation;
+using Nop.Web.Infrastructure.Permissions;
+using Nop.Web.Infrastructure.Permissions.ProductReview;
 
 namespace Nop.Web.Infrastructure
 {
@@ -107,7 +109,10 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<Factories.TopicModelFactory>().As<Factories.ITopicModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<Factories.VendorModelFactory>().As<Factories.IVendorModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<Factories.WidgetModelFactory>().As<Factories.IWidgetModelFactory>().InstancePerLifetimeScope();
-        }
+            
+            //permissions
+            builder.RegisterType<ProductReviewPermissionService>().As<IProductReviewPermissionService>().InstancePerLifetimeScope();
+;        }
 
         /// <summary>
         /// Gets order of this dependency registrar implementation

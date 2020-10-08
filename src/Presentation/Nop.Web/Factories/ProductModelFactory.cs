@@ -27,6 +27,7 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Infrastructure.Cache;
+using Nop.Web.Infrastructure.Permissions.ProductReview;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
@@ -76,6 +77,7 @@ namespace Nop.Web.Factories
         private readonly SeoSettings _seoSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly IProductReviewPermissionService _productReviewPermissionService;
 
         #endregion
 
@@ -116,7 +118,8 @@ namespace Nop.Web.Factories
             OrderSettings orderSettings,
             SeoSettings seoSettings,
             ShippingSettings shippingSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings, 
+            IProductReviewPermissionService productReviewPermissionService)
         {
             _captchaSettings = captchaSettings;
             _catalogSettings = catalogSettings;
@@ -154,6 +157,7 @@ namespace Nop.Web.Factories
             _seoSettings = seoSettings;
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
+            _productReviewPermissionService = productReviewPermissionService;
         }
 
         #endregion
@@ -232,9 +236,10 @@ namespace Nop.Web.Factories
                     return new ProductReviewOverviewModel
                     {
                         RatingSum = productReviews.Sum(pr => pr.Rating),
-                        TotalReviews = productReviews.Count
+                        TotalReviews = productReviews.Count,
                     };
                 });
+
             }
             else
             {
@@ -249,6 +254,8 @@ namespace Nop.Web.Factories
             {
                 productReview.ProductId = product.Id;
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
+                productReview.CanAddNewReview = _productReviewPermissionService.CanAdd(_workContext.CurrentCustomer,
+                    product, _storeContext.CurrentStore);
             }
 
             return productReview;
