@@ -2197,6 +2197,22 @@ namespace Nop.Services.Catalog
             _productReviewRepository.Update(productReview);
         }
 
+        /// <summary>
+        /// Check possibility added review for current customer
+        /// </summary>
+        /// <param name="productId">Current product</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <returns></returns>
+        public virtual bool CanAddReview(int productId, int storeId = 0)
+        {
+            if (_catalogSettings.OneReviewPerProductFromCustomer)
+            {
+                return GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, productId: productId, storeId: storeId).TotalCount == 0;
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region Product warehouses

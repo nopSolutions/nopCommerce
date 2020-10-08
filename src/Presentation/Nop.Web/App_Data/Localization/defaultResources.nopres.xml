@@ -5751,15 +5751,15 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved.Hint">
     <Value>Check if product reviews must be approved by administrator.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer">
-        <Value>One review per product from customer</Value>
-    </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer.Hint">
-        <Value>Check to restrict customer to add just 1 review per product</Value>
-    </LocaleResource>
-    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
-        <Value>Product reviews page size</Value>
-    </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer">
+      <Value>One review per product from customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer.Hint">
+      <Value>Check to restrict customer to add just 1 review per product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage">
+      <Value>Product reviews page size</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage.Hint">
     <Value>Set the page size for product reviews e.g. '10' reviews per page.</Value>
   </LocaleResource>

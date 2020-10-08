@@ -240,7 +240,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Tax.Providers.DownloadMorePlugins"] = "You can download more plugins in our <a href=\"https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=tax-plugins\" target=\"_blank\">marketplace</a>",
                 ["Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore"] = "You can get more themes in our <a href=\"https://www.nopcommerce.com/themes?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=general-common-theme\" target=\"_blank\">marketplace</a>",
                 ["Admin.Configuration.Plugins.OfficialFeed.Instructions"] = "Here you can find third-party extensions and themes which are developed by our community and partners. They are also available in our <a href=\"https://www.nopcommerce.com/marketplace?utm_source=admin-panel&utm_medium=menu&utm_campaign=marketplace&utm_content=official-plugins\" target=\"_blank\">marketplace</a>",
-                ["Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew"] = "Add a new checkout attribute value"
+                ["Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew"] = "Add a new checkout attribute value",
+
+                ["Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer"] = "One review per product from customer",
+                ["Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer.Hint"] = "Check to restrict customer to add just 1 review per product.",
+                ["Reviews.AlreadyAddedProductReviews"] = "Product review is already added for this product",
             });
 
             // rename locales
