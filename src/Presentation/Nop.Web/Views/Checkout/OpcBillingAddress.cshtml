@@ -1,4 +1,7 @@
-﻿@model CheckoutBillingAddressModel
+﻿@using Nop.Core
+@using Nop.Core.Domain.Customers
+@model CheckoutBillingAddressModel
+@inject IWorkContext workContext
 <div class="checkout-data">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutBillingAddressTop })
     @if (Model.ShipToSameAddressAllowed)
