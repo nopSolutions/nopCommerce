@@ -75,7 +75,7 @@ namespace Nop.Web.Factories
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly VendorSettings _vendorSettings;
+        private readonly VendorSettings _vendorSettings;        
 
         #endregion
 
@@ -154,6 +154,7 @@ namespace Nop.Web.Factories
             _seoSettings = seoSettings;
             _shippingSettings = shippingSettings;
             _vendorSettings = vendorSettings;
+            
         }
 
         #endregion
@@ -249,6 +250,7 @@ namespace Nop.Web.Factories
             {
                 productReview.ProductId = product.Id;
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
+                productReview.CanAddNewReview = _productService.CanAddReview(product.Id, _storeContext.CurrentStore.Id);
             }
 
             return productReview;

@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new { Result = true });
 
             //filter not approved reviews
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => !review.IsApproved);
+            var productReviews = _productService.GetProductReviewsByIds(selectedIds.ToArray()).Where(review => !review.IsApproved);
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = true;
@@ -264,7 +264,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new { Result = true });
 
             //filter approved reviews
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray()).Where(review => review.IsApproved);
+            var productReviews = _productService.GetProductReviewsByIds(selectedIds.ToArray()).Where(review => review.IsApproved);
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = false;
@@ -292,7 +292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null)
                 return Json(new { Result = true });
 
-            var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
+            var productReviews = _productService.GetProductReviewsByIds(selectedIds.ToArray());
             var products = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
 
             _productService.DeleteProductReviews(productReviews);

@@ -23,6 +23,12 @@
                 @Model.AddProductReview.Result
             </div>
         }
+        else if (!Model.AddProductReview.CanAddNewReview)
+        {
+            <div class="result review-already-added">
+                @T("Reviews.AlreadyAddedProductReviews")
+            </div>
+        }
         else
         {
             <div class="write-review" id="review-form">

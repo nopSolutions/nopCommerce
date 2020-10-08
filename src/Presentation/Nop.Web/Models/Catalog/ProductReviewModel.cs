@@ -11,8 +11,10 @@ namespace Nop.Web.Models.Catalog
         public int RatingSum { get; set; }
 
         public int TotalReviews { get; set; }
-
+        
         public bool AllowCustomerReviews { get; set; }
+
+        public bool CanAddNewReview { get; set; }
     }
 
     public partial class ProductReviewsModel : BaseNopModel
@@ -110,6 +112,8 @@ namespace Nop.Web.Models.Catalog
         public bool CanCurrentCustomerLeaveReview { get; set; }
 
         public bool SuccessfullyAdded { get; set; }
+
+        public bool CanAddNewReview { get; set; }
 
         public string Result { get; set; }
     }

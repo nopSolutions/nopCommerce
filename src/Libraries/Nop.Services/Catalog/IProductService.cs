@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -689,7 +689,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds);
+        IList<ProductReview> GetProductReviewsByIds(int[] productReviewIds);
 
         /// <summary>
         /// Inserts a product review
@@ -741,6 +741,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         void UpdateProductReview(ProductReview productReview);
+
+        /// <summary>
+        /// Check possibility added review for current customer
+        /// </summary>
+        /// <param name="productId">Current product</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <returns></returns>
+        bool CanAddReview(int productId, int storeId = 0);
 
         #endregion
 

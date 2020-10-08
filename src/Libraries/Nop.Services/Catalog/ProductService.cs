@@ -2085,7 +2085,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        public virtual IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds)
+        public virtual IList<ProductReview> GetProductReviewsByIds(int[] productReviewIds)
         {
             return _productReviewRepository.GetByIds(productReviewIds);
         }
@@ -2195,6 +2195,22 @@ namespace Nop.Services.Catalog
             (productReview.HelpfulYesTotal, productReview.HelpfulNoTotal) = GetHelpfulnessCounts(productReview);
 
             _productReviewRepository.Update(productReview);
+        }
+
+        /// <summary>
+        /// Check possibility added review for current customer
+        /// </summary>
+        /// <param name="productId">Current product</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <returns></returns>
+        public virtual bool CanAddReview(int productId, int storeId = 0)
+        {
+            if (_catalogSettings.OneReviewPerProductFromCustomer)
+            {
+                return GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, productId: productId, storeId: storeId).TotalCount == 0;
+            }
+
+            return true;
         }
 
         #endregion
