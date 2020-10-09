@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -289,6 +290,120 @@ namespace Nop.Web.Controllers
             //model
             var model = _checkoutModelFactory.PrepareCheckoutCompletedModel(order);
             return View(model);
+        }
+
+        /// <summary>
+        /// Get specified Address by addresId
+        /// </summary>
+        /// <param name="addressId"></param>
+        /// <returns></returns>
+        public virtual IActionResult GetAddressById(int addressId)
+        {
+            var address = _customerService.GetCustomerAddress(_workContext.CurrentCustomer.Id, addressId);
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            var json = JsonConvert.SerializeObject(address, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+
+            return Content(json, "application/json");
+        }
+
+        /// <summary>
+        /// Save edited address
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="opc"></param>
+        /// <returns></returns>
+        [IgnoreAntiforgeryToken]        
+        public virtual IActionResult SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
+        {
+            try
+            {
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                if (!cart.Any())
+                    throw new Exception("Your cart is empty");
+
+                var customer = _workContext.CurrentCustomer;
+                //find address (ensure that it belongs to the current customer)
+                var address = _customerService.GetCustomerAddress(customer.Id, model.BillingNewAddress.Id);
+                if (address == null)
+                    throw new Exception("Address can't be loaded");
+
+                address = model.BillingNewAddress.ToEntity(address);
+                _addressService.UpdateAddress(address);
+
+                _workContext.CurrentCustomer.BillingAddressId = address.Id;
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                if (!opc)
+                {
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("CheckoutBillingAddress")
+                    });
+                }
+
+                var billingAddressModel = _checkoutModelFactory.PrepareBillingAddressModel(cart, address.CountryId);
+                return Json(new
+                {
+                    selected_id = model.BillingNewAddress.Id,
+                    update_section = new UpdateSectionJsonModel
+                    {
+                        name = "billing",
+                        html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                    }
+                });
+            }
+            catch (Exception exc)
+            {
+                _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
+                return Json(new { error = 1, message = exc.Message });
+            }
+        }
+
+        /// <summary>
+        /// Delete edited address
+        /// </summary>
+        /// <param name="addressId"></param>
+        /// <param name="opc"></param>
+        /// <returns></returns>
+        public virtual IActionResult DeleteEditAddress(int addressId, bool opc = false)
+        {
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            if (!cart.Any())
+                throw new Exception("Your cart is empty");
+
+            var customer = _workContext.CurrentCustomer;
+
+            var address = _customerService.GetCustomerAddress(customer.Id, addressId);
+            if (address != null)
+            {
+                _customerService.RemoveCustomerAddress(customer, address);
+                _customerService.UpdateCustomer(customer);
+                _addressService.DeleteAddress(address);
+            }
+
+            if (!opc)
+            {
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("CheckoutBillingAddress")
+                });
+            }
+
+            var billingAddressModel = _checkoutModelFactory.PrepareBillingAddressModel(cart);
+            return Json(new
+            {
+                update_section = new UpdateSectionJsonModel
+                {
+                    name = "billing",
+                    html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                }
+            });
         }
 
         #endregion
