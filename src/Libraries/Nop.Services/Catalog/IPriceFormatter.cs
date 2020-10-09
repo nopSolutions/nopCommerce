@@ -1,6 +1,5 @@
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 
 namespace Nop.Services.Catalog
 {
@@ -41,10 +40,10 @@ namespace Nop.Services.Catalog
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <returns>Price</returns>
         string FormatPrice(decimal price, bool showCurrency,
-            string currencyCode, bool showTax, Language language);
+            string currencyCode, bool showTax, int languageId);
 
         /// <summary>
         /// Formats the price
@@ -52,11 +51,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         string FormatPrice(decimal price, bool showCurrency,
-            string currencyCode, Language language, bool priceIncludesTax);
+            string currencyCode, int languageId, bool priceIncludesTax);
 
         /// <summary>
         /// Formats the price
@@ -64,11 +63,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         string FormatPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax);
+            Currency targetCurrency, int languageId, bool priceIncludesTax);
 
         /// <summary>
         /// Formats the price
@@ -76,12 +75,12 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
         string FormatPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax);
+            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax);
 
         /// <summary>
         /// Formats the price of rental product (with rental period)
@@ -105,11 +104,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         string FormatShippingPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax);
+            Currency targetCurrency, int languageId, bool priceIncludesTax);
 
         /// <summary>
         /// Formats the shipping price
@@ -117,12 +116,12 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
         string FormatShippingPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax);
+            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax);
 
         /// <summary>
         /// Formats the shipping price
@@ -130,11 +129,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         string FormatShippingPrice(decimal price, bool showCurrency,
-            string currencyCode, Language language, bool priceIncludesTax);
+            string currencyCode, int languageId, bool priceIncludesTax);
 
         /// <summary>
         /// Formats the payment method additional fee
@@ -150,11 +149,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax);
+            Currency targetCurrency, int languageId, bool priceIncludesTax);
 
         /// <summary>
         /// Formats the payment method additional fee
@@ -162,12 +161,12 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
         string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax);
+            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax);
 
         /// <summary>
         /// Formats the payment method additional fee
@@ -175,11 +174,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
-            string currencyCode, Language language, bool priceIncludesTax);
+            string currencyCode, int languageId, bool priceIncludesTax);
 
         /// <summary>
         /// Formats a tax rate

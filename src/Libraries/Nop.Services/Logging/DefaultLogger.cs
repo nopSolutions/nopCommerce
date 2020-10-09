@@ -1,13 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Data.Extensions;
 
 namespace Nop.Services.Logging
 {
@@ -19,7 +17,7 @@ namespace Nop.Services.Logging
         #region Fields
 
         private readonly CommonSettings _commonSettings;
-        private readonly IDbContext _dbContext;
+        
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
 
@@ -28,12 +26,10 @@ namespace Nop.Services.Logging
         #region Ctor
 
         public DefaultLogger(CommonSettings commonSettings,
-            IDbContext dbContext,
             IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
             _commonSettings = commonSettings;
-            _dbContext = dbContext;
             _logRepository = logRepository;
             _webHelper = webHelper;
         }
@@ -71,13 +67,11 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         public virtual bool IsEnabled(LogLevel level)
         {
-            switch (level)
+            return level switch
             {
-                case LogLevel.Debug:
-                    return false;
-                default:
-                    return true;
-            }
+                LogLevel.Debug => false,
+                _ => true,
+            };
         }
 
         /// <summary>
@@ -89,7 +83,7 @@ namespace Nop.Services.Logging
             if (log == null)
                 throw new ArgumentNullException(nameof(log));
 
-            _logRepository.Delete(log);
+            _logRepository.Delete(log, false);
         }
 
         /// <summary>
@@ -98,10 +92,7 @@ namespace Nop.Services.Logging
         /// <param name="logs">Log items</param>
         public virtual void DeleteLogs(IList<Log> logs)
         {
-            if (logs == null)
-                throw new ArgumentNullException(nameof(logs));
-
-            _logRepository.Delete(logs);
+            _logRepository.Delete(logs, false);
         }
 
         /// <summary>
@@ -109,13 +100,7 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearLog()
         {
-            //do all databases support "Truncate command"?
-            var logTableName = _dbContext.GetTableName<Log>();
-            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
-
-            //var log = _logRepository.Table.ToList();
-            //foreach (var logItem in log)
-            //    _logRepository.Delete(logItem);
+            _logRepository.Truncate();
         }
 
         /// <summary>
@@ -132,23 +117,26 @@ namespace Nop.Services.Logging
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _logRepository.Table;
-            if (fromUtc.HasValue)
-                query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
-            if (toUtc.HasValue)
-                query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
-            if (logLevel.HasValue)
+            var logs = _logRepository.GetAllPaged(query =>
             {
-                var logLevelId = (int)logLevel.Value;
-                query = query.Where(l => logLevelId == l.LogLevelId);
-            }
+                if (fromUtc.HasValue)
+                    query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
+                if (toUtc.HasValue)
+                    query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
+                if (logLevel.HasValue)
+                {
+                    var logLevelId = (int)logLevel.Value;
+                    query = query.Where(l => logLevelId == l.LogLevelId);
+                }
 
-            if (!string.IsNullOrEmpty(message))
-                query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
-            query = query.OrderByDescending(l => l.CreatedOnUtc);
+                if (!string.IsNullOrEmpty(message))
+                    query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
+                query = query.OrderByDescending(l => l.CreatedOnUtc);
 
-            var log = new PagedList<Log>(query, pageIndex, pageSize);
-            return log;
+                return query;
+            }, pageIndex, pageSize);
+
+            return logs;
         }
 
         /// <summary>
@@ -158,9 +146,6 @@ namespace Nop.Services.Logging
         /// <returns>Log item</returns>
         public virtual Log GetLogById(int logId)
         {
-            if (logId == 0)
-                return null;
-
             return _logRepository.GetById(logId);
         }
 
@@ -171,23 +156,7 @@ namespace Nop.Services.Logging
         /// <returns>Log items</returns>
         public virtual IList<Log> GetLogByIds(int[] logIds)
         {
-            if (logIds == null || logIds.Length == 0)
-                return new List<Log>();
-
-            var query = from l in _logRepository.Table
-                        where logIds.Contains(l.Id)
-                        select l;
-            var logItems = query.ToList();
-            //sort by passed identifiers
-            var sortedLogItems = new List<Log>();
-            foreach (var id in logIds)
-            {
-                var log = logItems.Find(x => x.Id == id);
-                if (log != null)
-                    sortedLogItems.Add(log);
-            }
-
-            return sortedLogItems;
+            return _logRepository.GetByIds(logIds);
         }
 
         /// <summary>
@@ -210,13 +179,13 @@ namespace Nop.Services.Logging
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                Customer = customer,
+                CustomerId = customer?.Id,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            _logRepository.Insert(log);
+            _logRepository.Insert(log, false);
 
             return log;
         }

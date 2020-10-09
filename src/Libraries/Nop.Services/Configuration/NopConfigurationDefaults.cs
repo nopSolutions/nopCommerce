@@ -1,18 +1,25 @@
-﻿namespace Nop.Services.Configuration
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Configuration;
+
+namespace Nop.Services.Configuration
 {
     /// <summary>
     /// Represents default values related to configuration services
     /// </summary>
     public static partial class NopConfigurationDefaults
     {
+        #region Caching defaults
+
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string SettingsAllCacheKey => "Nop.setting.all";
+        public static CacheKey SettingsAllAsDictionaryCacheKey => new CacheKey("Nop.setting.all.dictionary.", NopEntityCacheDefaults<Setting>.Prefix);
+
+        #endregion
 
         /// <summary>
-        /// Gets a key pattern to clear cache
+        /// Gets the path to file that contains app settings
         /// </summary>
-        public static string SettingsPrefixCacheKey => "Nop.setting.";
+        public static string AppSettingsFilePath => "App_Data/appsettings.json";
     }
 }

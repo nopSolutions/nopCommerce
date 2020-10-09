@@ -1,7 +1,8 @@
 ﻿using FluentValidation.TestHelper;
-using Moq;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
+using Nop.Tests;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
@@ -9,30 +10,36 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
     [TestFixture]
-    public class CustomerInfoValidatorTests : BaseValidatorTests
+    public class CustomerInfoValidatorTests : BaseNopTest
     {
+        private ILocalizationService _localizationService;
         private IStateProvinceService _stateProvinceService;
 
-        [Test]
-        public void Should_have_error_when_email_is_null_or_empty()
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            _stateProvinceService = new Mock<IStateProvinceService>().Object;
+            _localizationService = GetService<ILocalizationService>();
+            _stateProvinceService = GetService<IStateProvinceService>();
+        }
 
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, new CustomerSettings());
+        [Test]
+        public void ShouldHaveErrorWhenEmailIsNullOrEmpty()
+        {
+            var validator = GetService<CustomerInfoValidator>();
 
             var model = new CustomerInfoModel
             {
                 Email = null
             };
             validator.ShouldHaveValidationErrorFor(x => x.Email, model);
-            model.Email = "";
+            model.Email = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
+
         [Test]
-        public void Should_have_error_when_email_is_wrong_format()
+        public void ShouldHaveErrorWhenEmailIsWrongFormat()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = GetService<CustomerInfoValidator>();
 
             var model = new CustomerInfoModel
             {
@@ -40,11 +47,11 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             };
             validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_email_is_correct_format()
+        public void ShouldNotHaveErrorWhenEmailIsCorrectFormat()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings());
+            var validator = GetService<CustomerInfoValidator>();
 
             var model = new CustomerInfoModel
             {
@@ -54,24 +61,33 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_firstName_is_null_or_empty()
+        public void ShouldHaveErrorWhenFirstNameIsNullOrEmpty()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    FirstNameEnabled = true,
+                    FirstNameRequired = true
+                });
 
             var model = new CustomerInfoModel
             {
                 FirstName = null
             };
             validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
-            model.FirstName = "";
+            model.FirstName = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_firstName_is_specified()
+        public void ShouldNotHaveErrorWhenFirstNameIsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    FirstNameEnabled = true,
+                    FirstNameRequired = true
+                });
 
             var model = new CustomerInfoModel
             {
@@ -81,24 +97,43 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_lastName_is_null_or_empty()
+        public void ShouldHaveErrorWhenLastNameIsNullOrEmpty()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var model = new CustomerInfoModel();
 
-            var model = new CustomerInfoModel
-            {
-                LastName = null
-            };
+            //required
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true,
+                    LastNameRequired = true
+                });
+            model.LastName = null;
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
-            model.LastName = "";
+            model.LastName = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
+            
+            //not required
+            validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true,
+                    LastNameRequired = false
+                });
+            model.LastName = null;
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
+            model.LastName = string.Empty;
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_lastName_is_specified()
+        public void ShouldNotHaveErrorWhenLastNameIsSpecified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true
+                });
 
             var model = new CustomerInfoModel
             {
@@ -108,7 +143,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_company_is_null_or_empty_based_on_required_setting()
+        public void ShouldHaveErrorWhenCompanyIsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -121,10 +156,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.Company = null;
             validator.ShouldHaveValidationErrorFor(x => x.Company, model);
-            model.Company = "";
+            model.Company = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.Company, model);
-
-
+            
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -134,11 +168,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.Company = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.Company, model);
-            model.Company = "";
+            model.Company = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.Company, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_company_is_specified()
+        public void ShouldNotHaveErrorWhenCompanyIsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings
@@ -154,7 +189,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_streetaddress_is_null_or_empty_based_on_required_setting()
+        public void ShouldHaveErrorWhenStreetAddressIsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -167,7 +202,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.StreetAddress = null;
             validator.ShouldHaveValidationErrorFor(x => x.StreetAddress, model);
-            model.StreetAddress = "";
+            model.StreetAddress = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.StreetAddress, model);
 
             //not required
@@ -179,11 +214,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.StreetAddress = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.StreetAddress, model);
-            model.StreetAddress = "";
+            model.StreetAddress = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.StreetAddress, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_streetaddress_is_specified()
+        public void ShouldNotHaveErrorWhenStreetAddressIsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -199,7 +235,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_streetaddress2_is_null_or_empty_based_on_required_setting()
+        public void PublicVoidShouldHaveErrorWhenStreetAddress2IsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -212,7 +248,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.StreetAddress2 = null;
             validator.ShouldHaveValidationErrorFor(x => x.StreetAddress2, model);
-            model.StreetAddress2 = "";
+            model.StreetAddress2 = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.StreetAddress2, model);
 
             //not required
@@ -224,11 +260,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.StreetAddress2 = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.StreetAddress2, model);
-            model.StreetAddress2 = "";
+            model.StreetAddress2 = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.StreetAddress2, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_streetaddress2_is_specified()
+        public void ShouldNotHaveErrorWhenStreetAddress2IsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings
@@ -244,7 +281,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_zippostalcode_is_null_or_empty_based_on_required_setting()
+        public void ShouldHaveErrorWhenZipPostalCodeIsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -257,10 +294,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.ZipPostalCode = null;
             validator.ShouldHaveValidationErrorFor(x => x.ZipPostalCode, model);
-            model.ZipPostalCode = "";
+            model.ZipPostalCode = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.ZipPostalCode, model);
-
-
+            
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -270,11 +306,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.ZipPostalCode = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.ZipPostalCode, model);
-            model.ZipPostalCode = "";
+            model.ZipPostalCode = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.ZipPostalCode, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_zippostalcode_is_specified()
+        public void ShouldNotHaveErrorWhenZipPostalCodeIsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings
@@ -290,7 +327,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_city_is_null_or_empty_based_on_required_setting()
+        public void ShouldHaveErrorWhenCityIsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -303,10 +340,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.City = null;
             validator.ShouldHaveValidationErrorFor(x => x.City, model);
-            model.City = "";
+            model.City = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.City, model);
-
-
+            
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -316,11 +352,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.City = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.City, model);
-            model.City = "";
+            model.City = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.City, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_city_is_specified()
+        public void ShouldNotHaveErrorWhenCityIsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings
@@ -336,7 +373,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_phone_is_null_or_empty_based_on_required_setting()
+        public void ShouldHaveErrorWhenPhoneIsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -349,7 +386,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.Phone = null;
             validator.ShouldHaveValidationErrorFor(x => x.Phone, model);
-            model.Phone = "";
+            model.Phone = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.Phone, model);
 
             //not required
@@ -361,11 +398,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.Phone = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.Phone, model);
-            model.Phone = "";
+            model.Phone = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.Phone, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_phone_is_specified()
+        public void ShouldNotHaveErrorWhenPhoneIsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings
@@ -381,7 +419,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         }
 
         [Test]
-        public void Should_have_error_when_fax_is_null_or_empty_based_on_required_setting()
+        public void ShouldHaveErrorWhenFaxIsNullOrEmptyBasedOnRequiredSetting()
         {
             var model = new CustomerInfoModel();
 
@@ -394,10 +432,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.Fax = null;
             validator.ShouldHaveValidationErrorFor(x => x.Fax, model);
-            model.Fax = "";
+            model.Fax = string.Empty;
             validator.ShouldHaveValidationErrorFor(x => x.Fax, model);
-
-
+            
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
@@ -407,11 +444,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                 });
             model.Fax = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.Fax, model);
-            model.Fax = "";
+            model.Fax = string.Empty;
             validator.ShouldNotHaveValidationErrorFor(x => x.Fax, model);
         }
+
         [Test]
-        public void Should_not_have_error_when_fax_is_specified()
+        public void ShouldNotHaveErrorWhenFaxIsSpecified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings

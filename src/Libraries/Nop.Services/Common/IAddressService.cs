@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common
@@ -76,5 +76,11 @@ namespace Nop.Services.Common
         Address FindAddress(List<Address> source, string firstName, string lastName, string phoneNumber, string email,
             string faxNumber, string company, string address1, string address2, string city, string county, int? stateProvinceId,
             string zipPostalCode, int? countryId, string customAttributes);
+
+        /// <summary>
+        /// Clone address
+        /// </summary>
+        /// <returns>A deep copy of address</returns>
+        Address CloneAddress(Address address);
     }
 }

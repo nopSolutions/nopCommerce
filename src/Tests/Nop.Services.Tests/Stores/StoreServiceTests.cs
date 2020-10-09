@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Stores;
+﻿using FluentAssertions;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Stores;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Stores
@@ -10,14 +10,14 @@ namespace Nop.Services.Tests.Stores
     {
         private IStoreService _storeService;
 
-        [SetUp]
-        public new void SetUp()
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            _storeService = new StoreService(null, null, null);
+            _storeService = GetService<IStoreService>();
         }
 
         [Test]
-        public void Can_parse_host_values()
+        public void CanParseHostValues()
         {
             var store = new Store
             {
@@ -25,25 +25,25 @@ namespace Nop.Services.Tests.Stores
             };
 
             var hosts = _storeService.ParseHostValues(store);
-            hosts.Length.ShouldEqual(2);
-            hosts[0].ShouldEqual("yourstore.com");
-            hosts[1].ShouldEqual("www.yourstore.com");
+            hosts.Length.Should().Be(2);
+            hosts[0].Should().Be("yourstore.com");
+            hosts[1].Should().Be("www.yourstore.com");
         }
 
         [Test]
-        public void Can_find_host_value()
+        public void CanFindHostValue()
         {
             var store = new Store
             {
                 Hosts = "yourstore.com, www.yourstore.com, "
             };
 
-            _storeService.ContainsHostValue(store, null).ShouldEqual(false);
-            _storeService.ContainsHostValue(store, "").ShouldEqual(false);
-            _storeService.ContainsHostValue(store, "store.com").ShouldEqual(false);
-            _storeService.ContainsHostValue(store, "yourstore.com").ShouldEqual(true);
-            _storeService.ContainsHostValue(store, "yoursTore.com").ShouldEqual(true);
-            _storeService.ContainsHostValue(store, "www.yourstore.com").ShouldEqual(true);
+            _storeService.ContainsHostValue(store, null).Should().BeFalse();
+            _storeService.ContainsHostValue(store, string.Empty).Should().BeFalse();
+            _storeService.ContainsHostValue(store, "store.com").Should().BeFalse();
+            _storeService.ContainsHostValue(store, "yourstore.com").Should().BeTrue();
+            _storeService.ContainsHostValue(store, "yoursTore.com").Should().BeTrue();
+            _storeService.ContainsHostValue(store, "www.yourstore.com").Should().BeTrue();
         }
     }
 }

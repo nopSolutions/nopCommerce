@@ -14,12 +14,18 @@
                 {
                     new ColumnProperty(nameof(FixedRateModel.ShippingMethodName))
                     {
-                        Title = T("Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod").Text,
-                        Width = "400"
+                        Title = T("Plugins.Shipping.FixedByWeightByTotal.Fields.ShippingMethod").Text
                     },
                     new ColumnProperty(nameof(FixedRateModel.Rate))
                     {
                         Title = T("Plugins.Shipping.FixedByWeightByTotal.Fields.Rate").Text,
+                        Width = "200",
+                        Editable = true,
+                        EditType = EditType.Number	 
+                    },
+                    new ColumnProperty(nameof(FixedRateModel.TransitDays))
+                    {
+                        Title = T("Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays").Text,
                         Width = "200",
                         Editable = true,
                         EditType = EditType.Number	 

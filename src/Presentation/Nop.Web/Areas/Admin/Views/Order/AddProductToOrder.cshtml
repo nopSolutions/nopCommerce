@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
+    ViewBag.PageTitle = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Orders");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
@@ -126,7 +125,7 @@
                     
                     <script>
                         function renderColumnSelectProduct(data, type, row, meta) {
-                            return '<button type="button" onclick="addProductToOrder(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                            return '<button type="button" onclick="addProductToOrder(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select").Text</button>';
                         }
                         function addProductToOrder(productId) {
                             //load "product details page" block

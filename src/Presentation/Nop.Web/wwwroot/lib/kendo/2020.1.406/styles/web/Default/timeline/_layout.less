@@ -1,0 +1,436 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Timeline
+
+.k-timeline {
+
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li {
+            list-style-type: none;
+        }
+    }
+
+    .k-timeline-flag {
+        display: inline-block;
+        text-align: center;
+        padding: @timeline-flag-padding-y @timeline-flag-padding-x;
+        border-radius: @timeline-border-radius;
+        line-height: @timeline-flag-line-height;
+        min-width: @timeline-flag-min-width;
+        max-width: @timeline-flag-max-width;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 1;
+    }
+
+    .k-timeline-circle {
+        width: @timeline-circle-width;
+        height: @timeline-circle-height;
+        border-radius: 50%;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    &.k-timeline-dates-hidden {
+        .k-timeline-date {
+            display: none;
+        }
+    }
+
+    .k-event-collapse {
+        display: none;
+    }
+
+    &.k-timeline-collapsible {
+        .k-card-header {
+            cursor: pointer;
+        }
+
+        .k-event-collapse {
+            display: flex;
+        }
+    }
+
+    .k-timeline-arrow {
+        width: @timeline-track-arrow-width;
+        height: @timeline-track-arrow-height;
+        padding: 0;
+        border-radius: 50%;
+        position: absolute;
+        bottom: calc(@timeline-track-size + 2 * @timeline-track-border-width);
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .k-timeline-arrow-left {
+        left: 0;
+    }
+
+    .k-timeline-arrow-right {
+        right: 0;
+    }
+}
+
+.k-timeline-card {
+    .k-card {
+        position: relative;
+        overflow: visible;
+
+        .k-card-header {
+            overflow: visible;
+            border-bottom: 0;
+            border-radius: @timeline-border-radius-lg;
+        }
+
+        .k-card-header + .k-card-body {
+            padding-top: 0;
+        }
+
+        .k-card-body {
+            overflow-y: auto;
+
+            // Scrollbar styles for Mozilla
+            scrollbar-width: thin;
+
+            // Scrollbar styles for Chrome, Safari and Opera
+            &::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: @timeline-border-radius;
+            }
+        }
+    }
+
+    .k-timeline-card-callout {
+        &.k-callout-w,
+        &.k-callout-e {
+            top: @timeline-track-event-offset;
+        }
+    }
+
+}
+
+.k-timeline-vertical,
+.k-timeline-horizontal {
+    width: 100%;
+    padding: 0 @timeline-spacing-x;
+    margin: @timeline-spacing-y 0;
+    position: relative;
+    box-sizing: border-box;
+    border: 0;
+}
+
+.k-timeline-vertical,
+.k-timeline-horizontal .k-timeline-track-wrap  {
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        border-width: @timeline-track-border-width;
+        border-style: solid;
+        background-clip: padding-box;
+    }
+}
+
+.k-timeline-vertical {
+    padding-left: @timeline-vertical-padding-with-dates-calc;
+
+    &.k-timeline-dates-hidden {
+        padding-left: @timeline-vertical-padding-calc;
+    }
+
+    &::after  {
+        height: 100%;
+        width: @timeline-track-size;
+        transform: translateX(-50%);
+        border-radius: @timeline-border-radius-lg;
+    }
+
+    .k-timeline-flag-wrap {
+        display: flex;
+        align-items: center;
+
+        &:first-child {
+            padding-top: @timeline-spacing-y;
+        }
+    }
+
+    .k-timeline-flag {
+        transform: translateX(-50%);
+    }
+
+    .k-timeline-date-wrap {
+        position: absolute;
+        padding-right: @timeline-items-padding;
+        margin-top: @timeline-track-event-offset;
+        transform: translate(-100%, -50%);
+        text-align: right;
+    }
+
+    .k-timeline-event {
+        display: flex;
+        align-items: flex-start;
+        padding: @timeline-spacing-y 0;
+    }
+
+    .k-timeline-card {
+        padding-left: @timeline-items-padding;
+
+        .k-card {
+            margin-left: @timeline-items-padding;
+            min-height: @timeline-event-min-height-calc;
+            width: @timeline-event-width;
+            max-width: 100%;
+
+            .k-card-title {
+                display: flex;
+                justify-content: space-between;
+
+                .k-event-title {
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+
+            }
+        }
+
+        .k-event-collapse {
+            margin: -@button-padding-y 0;
+            transform: rotate(90deg);
+            transition: transform .2s ease-in-out;
+        }
+
+        &.k-collapsed {
+            .k-card-body,
+            .k-card-actions {
+                display: none;
+            }
+
+            .k-event-collapse {
+                transform: rotate(0deg);
+            }
+        }
+
+    }
+
+    .k-timeline-circle {
+        margin-top: @timeline-track-event-offset;
+        transform: translate(-50%, -50%);
+        margin-right: calc(-@timeline-circle-width / 2);
+    }
+
+    &.k-timeline-alternating {
+        padding-left: @timeline-spacing-x;
+
+        &::after  {
+            left: 50%;
+        }
+
+        .k-timeline-flag-wrap {
+            justify-content: center;
+        }
+
+        .k-timeline-flag {
+            transform: translateX(0);
+        }
+
+        .k-timeline-event {
+            justify-content: space-between;
+
+            &.k-reverse {
+                flex-direction: row-reverse;
+
+                .k-timeline-date-wrap {
+                    text-align: left;
+                    padding-right: 0;
+                    padding-left: @timeline-items-padding;
+                }
+
+                .k-timeline-card {
+                    padding-left: 0;
+                    padding-right: @timeline-items-padding;
+
+                    .k-card {
+                        margin-right: @timeline-items-padding;
+                        margin-left: auto;
+                    }
+                }
+            }
+        }
+
+        .k-timeline-card,
+        .k-timeline-date-wrap {
+            flex-basis: 50%;
+            min-width: 0;
+        }
+
+        .k-timeline-date-wrap {
+            position: static;
+            transform: translateY(-50%);
+        }
+
+        .k-timeline-circle {
+            transform: translateY(-50%);
+            margin-right: 0;
+        }
+    }
+}
+
+.k-timeline-horizontal {
+
+    .k-timeline-track-item {
+        flex: 1 0 20%; // 20% are default, this will be calculated when rendered
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        flex-direction: column;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &.k-timeline-flag-wrap:hover {
+            cursor: default;
+        }
+    }
+
+    .k-timeline-date-wrap {
+        margin-top: auto;
+        margin-bottom: @timeline-date-margin-bottom;
+    }
+
+    .k-timeline-card {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .k-card {
+        max-height: 100%;
+        box-sizing: border-box;
+    }
+
+    .k-timeline-events-list {
+        overflow-x: hidden;
+        padding-top: @timeline-track-margin-bottom;
+
+        .k-timeline-scrollable-wrap {
+            position: relative;
+            height: @timeline-event-height;
+
+            .k-timeline-event {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+
+    .k-timeline-track-wrap {
+        position: relative;
+        padding: (@timeline-track-arrow-height / 2) 0;
+
+        &::after {
+            top: auto;
+            bottom: calc(@timeline-track-arrow-height / 2);
+            left: @timeline-track-start-calc;
+            right: @timeline-track-end-calc;
+            transform: translateY(-50%);
+            height: @timeline-track-size;
+        }
+
+        .k-timeline-track {
+            overflow: hidden;
+            margin: 0 @timeline-track-arrow-width;
+            position: relative;
+            z-index: 2;
+
+            .k-timeline-scrollable-wrap {
+                transition: transform 1s ease-in-out;
+            }
+        }
+
+        .k-timeline-flag  {
+            margin-bottom: @timeline-flag-margin-bottom-calc;
+            position: relative;
+            min-width: @timeline-horizontal-flag-min-width;
+
+            &::after {
+                content: "";
+                width: @timeline-flag-callout-width;
+                height: @timeline-flag-callout-height;
+                position: absolute;
+                left: 50%;
+                bottom: 0;
+                transform: translate(-50%, 50%) rotate(45deg);
+            }
+        }
+    }
+
+    .k-timeline-scrollable-wrap {
+        display: flex;
+    }
+}
+
+.k-timeline-mobile {
+    padding: 0 @timeline-mobile-spacing-x;
+    margin: @timeline-mobile-spacing-y 0;
+
+    .k-timeline-flag {
+        max-width: @timeline-mobile-flag-max-width;
+    }
+
+    &.k-timeline-horizontal {
+        .k-timeline-flag-wrap {
+            display: none;
+        }
+    }
+
+    &.k-timeline-vertical {
+        padding-left: @timeline-mobile-vertical-padding-with-dates-calc;
+
+        &.k-timeline-dates-hidden {
+            padding-left: @timeline-mobile-vertical-padding-calc;
+        }
+
+        &.k-timeline-alternating {
+            padding-left: @timeline-mobile-spacing-x;
+        }
+
+        .k-timeline-card {
+            width: 100%;
+
+            .k-card {
+                width: auto;
+            }
+        }
+
+        .k-card-actions > .k-button.k-flat:first-child {
+            margin-left: 0;
+        }
+    }
+}

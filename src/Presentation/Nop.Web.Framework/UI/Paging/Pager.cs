@@ -1,4 +1,4 @@
-//Contributor : MVCContrib
+﻿//Contributor : MVCContrib
 
 using System;
 using System.Collections.Generic;
@@ -118,10 +118,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <summary>
         /// ViewContext
         /// </summary>
-		protected ViewContext ViewContext 
-		{
-			get { return viewContext; }
-		}
+		protected ViewContext ViewContext => viewContext;
 
         /// <summary>
         /// Set 
@@ -475,7 +472,6 @@ namespace Nop.Web.Framework.UI.Paging
             var parametersWithEmptyValues = new List<string>();
 			foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
 			{
-			    //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
                 var value = viewContext.HttpContext.Request.Query[key].ToString();
                 if (renderEmptyParameters && string.IsNullOrEmpty(value))
 			    {

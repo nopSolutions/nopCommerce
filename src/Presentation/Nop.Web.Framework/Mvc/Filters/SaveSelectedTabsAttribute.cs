@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -13,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that saves a selected tabs for tabs
     /// </summary>
-    public class SaveSelectedTabAttribute : TypeFilterAttribute
+    public sealed class SaveSelectedTabAttribute : TypeFilterAttribute
     {
         #region Fields
 

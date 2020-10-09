@@ -55,7 +55,7 @@ namespace Nop.Services.Tests.Payments
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return decimal.Zero;
+            return AdditionalHandlingFee;
         }
 
         /// <summary>
@@ -161,7 +161,6 @@ namespace Nop.Services.Tests.Payments
             return null;
         }
 
-
         #endregion
 
         #region Properties
@@ -169,70 +168,62 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
-        {
-            get { return false; }
-        }
+        public bool SupportCapture => TestSupportCapture;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
-        {
-            get { return false; }
-        }
+        public bool SupportPartiallyRefund => TestSupportPartiallyRefund;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
-        {
-            get { return false; }
-        }
+        public bool SupportRefund => TestSupportRefund;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
-        {
-            get { return false; }
-        }
+        public bool SupportVoid => TestSupportVoid;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
         /// <returns>A recurring payment type of payment method</returns>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get { return RecurringPaymentType.NotSupported; }
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.NotSupported;
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
         /// <returns>A payment method type</returns>
-        public PaymentMethodType PaymentMethodType
-        {
-            get { return PaymentMethodType.Standard; }
-        }
+        public PaymentMethodType PaymentMethodType => PaymentMethodType.Standard;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get { return false; }
-        }
+        public bool SkipPaymentInfo => false;
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return string.Empty; }
-        }
+        /// <remarks>
+        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+        /// </remarks>
+        public string PaymentMethodDescription => string.Empty;
+
+        #endregion
+
+        #region Test data
+
+        public static bool TestSupportCapture { get; set; } = false;
+
+        public static bool TestSupportRefund { get; set; } = false;
+
+        public static bool TestSupportPartiallyRefund { get; set; } = false;
+
+        public static bool TestSupportVoid { get; set; } = false;
+
+        public static decimal AdditionalHandlingFee { get; set; } = decimal.Zero;
 
         #endregion
     }

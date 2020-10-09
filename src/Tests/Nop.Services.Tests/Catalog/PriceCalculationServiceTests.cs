@@ -1,28 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
-using Moq;
-using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Stores;
-using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Discounts;
-using Nop.Services.Events;
-using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Services.Shipping.Date;
-using Nop.Services.Stores;
+using Nop.Services.Customers;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -31,342 +15,131 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class PriceCalculationServiceTests : ServiceTest
     {
-        private Mock<IStoreContext> _storeContext;
-        private IDiscountService _discountService;
-        private Mock<ICategoryService> _categoryService;
-        private Mock<IManufacturerService> _manufacturerService;
-        private Mock<IProductAttributeParser> _productAttributeParser;
+        #region Fields
+
+        private ICustomerService _customerService;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
-        private ShoppingCartSettings _shoppingCartSettings;
-        private CatalogSettings _catalogSettings;
-        private IStaticCacheManager _cacheManager;
-        private Mock<IWorkContext> _workContext;
-        private Store _store;
-        private TestServiceProvider _serviceProvider;
 
-        [SetUp]
-        public new void SetUp()
+        #endregion
+
+        #region SetUp
+
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            _serviceProvider = new TestServiceProvider();
-            _store = new Store { Id = 1 };
-            _storeContext = new Mock<IStoreContext>();
-            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-            
-            _categoryService = new Mock<ICategoryService>();
-            _manufacturerService = new Mock<IManufacturerService>();
-            _productService = TestProductService.Init();
-            
-            _productAttributeParser = new Mock<IProductAttributeParser>();
-
-            _shoppingCartSettings = new ShoppingCartSettings();
-            _catalogSettings = new CatalogSettings();
-
-            _cacheManager = new TestCacheManager();
-            _workContext = new Mock<IWorkContext>();
-
-            _discountService = TestDiscountService.Init();
-
-            _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings{ PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
-                _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
-                _productService, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
-
-            var nopEngine = new Mock<NopEngine>();
-
-            nopEngine.Setup(x => x.ServiceProvider).Returns(_serviceProvider);
-            EngineContext.Replace(nopEngine.Object);
+            _customerService = GetService<ICustomerService>();
+            _productService = GetService<IProductService>();
+            _priceCalcService = GetService<IPriceCalculationService>();
         }
 
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            EngineContext.Replace(null);
-        }
+        #endregion
+        
+        #region Tests
 
         [Test]
-        public void Can_get_final_product_price()
+        public void CanGetFinalProductPrice()
         {
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+            var product = _productService.GetProductBySku("BP_20_WSP");
 
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(79.99M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(19M);
         }
 
         [Test]
-        public void Can_get_final_product_price_with_tier_prices()
+        public void CanGetFinalProductPriceWithTierPrices()
         {
-            var product = new Product
+            var product = _productService.GetProductBySku("BP_20_WSP");
+
+            //customer
+            var customer = new Customer();
+
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(79.99M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(19);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).Should().Be(19);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).Should().Be(17);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 7).Should().Be(17);
+        }
+
+        [Test]
+        public void CanGetFinalProductPriceWithTierPricesByCustomerRole()
+        {
+            var product = _productService.GetProductBySku("NK_ZSJ_MM");
+
+            //customer
+            var customer = _customerService.GetCustomerByEmail(NopTestsDefaults.AdminEmail);
+            var customerRole = _customerService.GetAllCustomerRoles().FirstOrDefault();
+
+            customerRole.Should().NotBeNull();
+
+            var tierPrices = new List<TierPrice>
             {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
+                new TierPrice { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 2, Price = 25 },
+                new TierPrice { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 5, Price = 20 },
+                new TierPrice { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 10, Price = 15 }
             };
 
-            //add tier prices
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 10,
-                Quantity = 2,
-                Product = product
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 9,
-                Quantity = 5,
-                Product = product,
-                StartDateTimeUtc = new DateTime(2010, 01, 03)
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 8,
-                Quantity = 5,
-                Product = product,
-                StartDateTimeUtc = new DateTime(2027, 01, 03)
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 5,
-                Quantity = 10,
-                Product = product,
-                StartDateTimeUtc = new DateTime(2010, 01, 03),
-                EndDateTimeUtc = new DateTime(2012, 01, 03)
-            });
-            //set HasTierPrices property
+            foreach (var tierPrice in tierPrices) 
+                _productService.InsertTierPrice(tierPrice);
+
             product.HasTierPrices = true;
 
-            //customer
-            var customer = new Customer();
+            var rez1 = _priceCalcService.GetFinalPrice(product, customer, 0, false);
+            var rez2 = _priceCalcService.GetFinalPrice(product, customer, 0, false, 2);
+            var rez3 = _priceCalcService.GetFinalPrice(product, customer, 0, false, 3);
+            var rez4 = _priceCalcService.GetFinalPrice(product, customer, 0, false, 5);
+            var rez5 = _priceCalcService.GetFinalPrice(product, customer, 0, false, 10);
+            var rez6 = _priceCalcService.GetFinalPrice(product, customer, 0, false, 15);
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(9);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(9);
+            foreach (var tierPrice in tierPrices)
+                _productService.DeleteTierPrice(tierPrice);
+
+            rez1.Should().Be(30M);
+            rez2.Should().Be(25);
+            rez3.Should().Be(25);
+            rez4.Should().Be(20);
+            rez5.Should().Be(15);
+            rez6.Should().Be(15);
         }
 
         [Test]
-        public void Can_get_final_product_price_with_tier_prices_by_customerRole()
+        public void CanGetFinalProductPriceWithAdditionalFee()
         {
-            var product = new TestProduct
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-
-            //customer roles
-            var customerRole1 = new CustomerRole
-            {
-                Id = 1,
-                Name = "Some role 1",
-                Active = true
-            };
-            var customerRole2 = new CustomerRole
-            {
-                Id = 2,
-                Name = "Some role 2",
-                Active = true
-            };
-
-            //add tier prices
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 10,
-                Quantity = 2,
-                Product= product,
-                CustomerRole = customerRole1,
-                CustomerRoleId = customerRole1.Id
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 9,
-                Quantity = 2,
-                Product = product,
-                CustomerRole = customerRole2,
-                CustomerRoleId = customerRole2.Id
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 8,
-                Quantity = 5,
-                Product= product,
-                CustomerRole = customerRole1,
-                CustomerRoleId = customerRole1.Id
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 5,
-                Quantity = 10,
-                Product = product,
-                CustomerRole = customerRole2,
-                CustomerRoleId = customerRole2.Id
-            });
-            //set HasTierPrices property
-            product.HasTierPrices = true;
+            var product = _productService.GetProductBySku("BP_20_WSP");
 
             //customer
             var customer = new Customer();
-            customer.CustomerRoles.Add(customerRole1);
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(8);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(8);
+            _priceCalcService.GetFinalPrice(product, customer, 5, false).Should().Be(84.99M);
         }
 
         [Test]
-        public void Can_get_final_product_price_with_additionalFee()
+        public void CanGetFinalProductPriceWithDiscount()
         {
-            var product = new Product
+            var product = _productService.GetProductBySku("BP_20_WSP");
+            var customer = _customerService.GetCustomerByEmail(NopTestsDefaults.AdminEmail);
+
+            var mapping = new DiscountProductMapping
             {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
+                DiscountId = 1,
+                EntityId = product.Id
             };
 
-            //customer
-            var customer = new Customer();
+            _productService.InsertDiscountProductMapping(mapping);
+            _customerService.ApplyDiscountCouponCode(customer, "123");
 
-            _priceCalcService.GetFinalPrice(product, customer, 5, false).ShouldEqual(17.34M);
-        }
-
-        [Test]
-        public void Can_get_final_product_price_with_discount()
-        {
-            var product = new TestProduct
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-
-            //customer
-            var customer = new Customer();
-
-            //discounts
-            var discount1 = new Discount
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToSkus,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
-            //discount1.AppliedToProducts.Add(product);
-            product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
            
-            _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
-        }
+            var finalPrice = _priceCalcService.GetFinalPrice(product, customer);
 
-        [Test]
-        public void Can_get_shopping_cart_item_unitPrice()
-        {
-            //customer
-            var customer = new Customer();
+            _productService.DeleteDiscountProductMapping(mapping);
+            _customerService.RemoveDiscountCouponCode(customer, "123");
 
-            //shopping cart
-            var product1 = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-            var sci1 = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product= product1,
-                ProductId = product1.Id,
-                Quantity = 2
-            };
-
-            _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
-        }
-
-        [Test]
-        public void Can_get_shopping_cart_item_subTotal()
-        {
-            //customer
-            var customer = new Customer();
-
-            //shopping cart
-            var product1 = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-            var sci1 = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product= product1,
-                ProductId = product1.Id,
-                Quantity = 2
-            };
-
-            _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
-        }
-
-        [Test]
-        [TestCase(12.00009, 12.00)]
-        [TestCase(12.119, 12.12)]
-        [TestCase(12.115, 12.12)]
-        [TestCase(12.114, 12.11)]        
-        public void Test_GetUnitPrice_WhenRoundPricesDuringCalculationIsTrue_PriceMustBeRounded(decimal inputPrice, decimal expectedPrice)
-        {
-            // arrange
-            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
-
-            // act
-            _shoppingCartSettings.RoundPricesDuringCalculation = true;
-            var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
-
-            // assert
-            resultPrice.ShouldEqual(expectedPrice);
-        }
-
-        [Test]
-        [TestCase(12.00009, 12.00009)]
-        [TestCase(12.119, 12.119)]
-        [TestCase(12.115, 12.115)]
-        [TestCase(12.114, 12.114)]
-        public void Test_GetUnitPrice_WhenNotRoundPricesDuringCalculationIsFalse_PriceMustNotBeRounded(decimal inputPrice, decimal expectedPrice)
-        {
-            // arrange            
-            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
-
-            // act
-            _shoppingCartSettings.RoundPricesDuringCalculation = false;
-            var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
-
-            // assert
-            resultPrice.ShouldEqual(expectedPrice);
+            finalPrice.Should().Be(69.99M);
         }
 
         [TestCase(12.366, 12.37, RoundingType.Rounding001)]
@@ -405,88 +178,11 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.01, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.99, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
-        public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
+        public void CanRound(decimal valueToRounding, decimal roundedValue, RoundingType roundingType)
         {
-            _priceCalcService.Round(valueToRoundig, roundingType).ShouldEqual(roundedValue);
+            _priceCalcService.Round(valueToRounding, roundingType).Should().Be(roundedValue);
         }
 
-        private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
-        {
-            //customer
-            var customer = new Customer();
-
-            //shopping cart
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = productPrice,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-
-            var shoppingCartItem = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product = product,
-                ProductId = product.Id,
-                Quantity = quantity
-            };
-
-            return shoppingCartItem;
-        }
-
-        class TestProduct:Product
-        {
-            public TestProduct()
-            {
-                _discountProductMappings = new List<DiscountProductMapping>();
-                _tierPrices = new List<TierPrice>();
-            }
-
-            public void AddAppliedDiscounts(Discount discount)
-            {
-                _discountProductMappings.Add(new DiscountProductMapping
-                {
-                    Discount = discount,
-                    DiscountId = discount.Id,
-                    Id=1,
-                    Product = this
-                });
-            }
-        }
-
-        class TestProductService : ProductService
-        {
-            private TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings,
-                IAclService aclService, ICacheManager cacheManager, IDataProvider dataProvider,
-                IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher,
-                ILanguageService languageService, ILocalizationService localizationService,
-                IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
-                IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository,
-                IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository,
-                IRepository<ProductReview> productReviewRepository,
-                IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
-                IRepository<RelatedProduct> relatedProductRepository,
-                IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
-                IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
-                IStoreService storeService, IStoreMappingService storeMappingService, IWorkContext workContext,
-                LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
-                cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
-                localizationService, productAttributeParser, productAttributeService, aclRepository,
-                crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
-                productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
-                storeMappingRepository,  tierPriceRepository, storeService, storeMappingService, workContext, localizationSettings)
-            {
-            }
-
-            public static TestProductService Init()
-            {
-                return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, null, new LocalizationSettings());
-            }
-        }
+        #endregion
     }
 }

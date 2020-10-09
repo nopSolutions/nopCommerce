@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Events;
+using Nop.Data;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 
@@ -18,7 +17,6 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<RewardPointsHistory> _rewardPointsHistoryRepository;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -28,13 +26,11 @@ namespace Nop.Services.Orders
         #region Ctor
 
         public RewardPointService(IDateTimeHelper dateTimeHelper,
-            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
         {
             _dateTimeHelper = dateTimeHelper;
-            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _rewardPointsHistoryRepository = rewardPointsHistoryRepository;
             _rewardPointsSettings = rewardPointsSettings;
@@ -92,7 +88,7 @@ namespace Nop.Services.Orders
             {
                 InsertRewardPointsHistoryEntry(new RewardPointsHistory
                 {
-                    Customer = historyEntry.Customer,
+                    CustomerId = historyEntry.CustomerId,
                     StoreId = historyEntry.StoreId,
                     Points = -historyEntry.ValidPoints.Value,
                     Message = string.Format(_localizationService.GetResource("RewardPoints.Expired"),
@@ -137,14 +133,20 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
+        /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
         public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue)
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated)
-                .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
+            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated);
+
+            if (orderGuid.HasValue)
+                query = query.Where(historyEntry => historyEntry.UsedWithOrder == orderGuid.Value);
+
+            query = query.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc)
+                .ThenByDescending(historyEntry => historyEntry.Id);
 
             //return paged reward points history
             return new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
@@ -206,16 +208,16 @@ namespace Nop.Services.Orders
             //insert new history entry
             var newHistoryEntry = new RewardPointsHistory
             {
-                Customer = customer,
+                CustomerId = customer.Id,
                 StoreId = storeId,
-                UsedWithOrder = usedWithOrder,
                 Points = points,
                 PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId) + points),
                 UsedAmount = usedAmount,
                 Message = message,
                 CreatedOnUtc = activatingDate ?? DateTime.UtcNow,
                 EndDateUtc = endDate,
-                ValidPoints = points > 0 ? (int?)points : null
+                ValidPoints = points > 0 ? (int?)points : null,
+                UsedWithOrder = usedWithOrder?.OrderGuid
             };
             InsertRewardPointsHistoryEntry(newHistoryEntry);
 
@@ -246,9 +248,6 @@ namespace Nop.Services.Orders
         /// <returns>Reward point history entry</returns>
         public virtual RewardPointsHistory GetRewardPointsHistoryEntryById(int rewardPointsHistoryId)
         {
-            if (rewardPointsHistoryId == 0)
-                return null;
-
             return _rewardPointsHistoryRepository.GetById(rewardPointsHistoryId);
         }
 
@@ -258,13 +257,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         public virtual void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
             _rewardPointsHistoryRepository.Insert(rewardPointsHistory);
-
-            //event notification
-            _eventPublisher.EntityInserted(rewardPointsHistory);
         }
 
         /// <summary>
@@ -273,13 +266,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         public virtual void UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
             _rewardPointsHistoryRepository.Update(rewardPointsHistory);
-
-            //event notification
-            _eventPublisher.EntityUpdated(rewardPointsHistory);
         }
 
         /// <summary>
@@ -288,13 +275,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         public virtual void DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
             _rewardPointsHistoryRepository.Delete(rewardPointsHistory);
-
-            //event notification
-            _eventPublisher.EntityDeleted(rewardPointsHistory);
         }
 
         #endregion

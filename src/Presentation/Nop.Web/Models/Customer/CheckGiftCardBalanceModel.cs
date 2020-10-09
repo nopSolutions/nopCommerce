@@ -1,6 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Web.Models.Customer
 {

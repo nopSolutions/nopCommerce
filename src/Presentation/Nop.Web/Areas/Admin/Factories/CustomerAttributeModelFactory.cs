@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttribute.ToModel<CustomerAttributeModel>();
+                model ??= customerAttribute.ToModel<CustomerAttributeModel>();
 
                 //prepare nested search model
                 PrepareCustomerAttributeValueSearchModel(model.CustomerAttributeValueSearchModel, customerAttribute);
@@ -194,7 +194,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerAttributeValue.ToModel<CustomerAttributeValueModel>();
+                model ??= customerAttributeValue.ToModel<CustomerAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

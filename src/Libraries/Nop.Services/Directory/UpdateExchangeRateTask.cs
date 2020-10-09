@@ -40,7 +40,7 @@ namespace Nop.Services.Directory
             var exchangeRates = _currencyService.GetCurrencyLiveRates();
             foreach (var exchageRate in exchangeRates)
             {
-                var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode, false);
+                var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
                 if (currency == null)
                     continue;
 

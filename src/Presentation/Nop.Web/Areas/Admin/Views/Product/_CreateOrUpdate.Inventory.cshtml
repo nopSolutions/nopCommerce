@@ -197,10 +197,10 @@
                                     </script>
                                 </td>
                                 <td style="width: 18%;">
-                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="form-control" />
+                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="number" value="@item.StockQuantity" class="form-control" />
                                 </td>
                                 <td style="width: 18%;">
-                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="form-control" />
+                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="number" value="@item.ReservedQuantity" class="form-control" />
                                 </td>
                                 <td style="width: 18%;">
                                     @item.PlannedQuantity
@@ -234,15 +234,17 @@
             <span asp-validation-for="DisplayStockAvailability"></span>
         </div>
     </div>
-    <div class="form-group @(Model.ProductEditorSettingsModel.DisplayStockQuantity ? null : "advanced-setting")" id="pnlDisplayStockQuantity">
-        <div class="col-md-3">
-            <nop-label asp-for="DisplayStockQuantity" />
+    <nop-nested-setting asp-for="DisplayStockAvailability">
+        <div class="form-group @(Model.ProductEditorSettingsModel.DisplayStockAvailability ? null : "advanced-setting")" id="pnlDisplayStockQuantity">
+            <div class="col-md-3">
+                <nop-label asp-for="DisplayStockQuantity" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DisplayStockQuantity" />
+                <span asp-validation-for="DisplayStockQuantity"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="DisplayStockQuantity" />
-            <span asp-validation-for="DisplayStockQuantity"></span>
-        </div>
-    </div>
+    </nop-nested-setting>
     <div class="form-group @(Model.ProductEditorSettingsModel.MinimumStockQuantity ? null : "advanced-setting")" id="pnlMinStockQuantity">
         <div class="col-md-3">
             <nop-label asp-for="MinStockQuantity" />

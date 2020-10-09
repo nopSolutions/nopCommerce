@@ -20,7 +20,7 @@ namespace Nop.Web.Components
         private readonly IOrderReportService _orderReportService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
 
@@ -29,7 +29,7 @@ namespace Nop.Web.Components
             IOrderReportService orderReportService,
             IProductModelFactory productModelFactory,
             IProductService productService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService)
         {
@@ -38,7 +38,7 @@ namespace Nop.Web.Components
             _orderReportService = orderReportService;
             _productModelFactory = productModelFactory;
             _productService = productService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
         }
@@ -49,7 +49,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var report = _cacheManager.Get(string.Format(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore.Id),
+            var report = _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore),
                 () => _orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Media;
+using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -24,10 +25,11 @@ namespace Nop.Web.Models.Catalog
             VendorModel = new VendorBriefInfoModel();
             Breadcrumb = new ProductBreadcrumbModel();
             ProductTags = new List<ProductTagModel>();
-            ProductSpecifications= new List<ProductSpecificationModel>();
+            ProductSpecificationModel = new ProductSpecificationModel();
             ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
+            ProductEstimateShipping = new ProductEstimateShippingModel();
         }
 
         //picture(s)
@@ -70,6 +72,8 @@ namespace Nop.Web.Models.Catalog
         public DateTime? RentalStartDate { get; set; }
         public DateTime? RentalEndDate { get; set; }
 
+        public DateTime? AvailableEndDate { get; set; }
+
         public ManageInventoryMethod ManageInventoryMethod { get; set; }
 
         public string StockAvailability { get; set; }
@@ -91,11 +95,13 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
 
-        public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
+        public ProductSpecificationModel ProductSpecificationModel { get; set; }
 
         public IList<ManufacturerBriefInfoModel> ProductManufacturers { get; set; }
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
+
+        public ProductEstimateShippingModel ProductEstimateShipping { get; set; }
 
         public IList<TierPriceModel> TierPrices { get; set; }
 
@@ -305,6 +311,11 @@ namespace Nop.Web.Models.Catalog
             public bool CustomerEntersQty { get; set; }
 
             public int Quantity { get; set; }
+        }
+
+        public partial class ProductEstimateShippingModel : EstimateShippingModel
+        {
+            public int ProductId { get; set; }
         }
 
         #endregion

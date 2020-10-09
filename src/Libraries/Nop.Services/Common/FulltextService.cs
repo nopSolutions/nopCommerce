@@ -1,6 +1,4 @@
-using System.Linq;
-using Nop.Core.Domain.Common;
-using Nop.Data;
+﻿using Nop.Data;
 
 namespace Nop.Services.Common
 {
@@ -11,15 +9,15 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IDbContext _dbContext;
+        private INopDataProvider _dataProvider;
 
         #endregion
 
         #region Ctor
 
-        public FulltextService(IDbContext dbContext)
+        public FulltextService(INopDataProvider dataProvider)
         {
-            _dbContext = dbContext;
+            _dataProvider = dataProvider;
         }
 
         #endregion
@@ -32,10 +30,7 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsFullTextSupported()
         {
-            var result = _dbContext
-                .QueryFromSql<IntQueryType>("EXEC [FullText_IsSupported]")
-                .Select(intValue => intValue.Value).FirstOrDefault();
-            return result > 0;
+            return _dataProvider.ExecuteStoredProcedure<bool>("FullText_IsSupported");
         }
 
         /// <summary>
@@ -43,7 +38,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void EnableFullText()
         {
-            _dbContext.ExecuteSqlCommand("EXEC [FullText_Enable]", true);
+            _dataProvider.ExecuteStoredProcedure("FullText_Enable");
         }
 
         /// <summary>
@@ -51,7 +46,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void DisableFullText()
         {
-            _dbContext.ExecuteSqlCommand("EXEC [FullText_Disable]", true);
+            _dataProvider.ExecuteStoredProcedure("FullText_Disable");
         }
 
         #endregion

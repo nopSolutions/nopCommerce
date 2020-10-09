@@ -1,4 +1,6 @@
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -87,6 +89,40 @@ namespace Nop.Services.Catalog
         /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
         /// <returns>Attribute combinations in XML format</returns>
         IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
+
+        /// <summary>
+        /// Parse a customer entered price of the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <returns>Customer entered price of the product</returns>
+        decimal ParseCustomerEnteredPrice(Product product, IFormCollection form);
+
+        /// <summary>
+        /// Parse a entered quantity of the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <returns>Customer entered price of the product</returns>
+        int ParseEnteredQuantity(Product product, IFormCollection form);
+
+        /// <summary>
+        /// Parse product rental dates on the product details page
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        void ParseRentalDates(Product product, IFormCollection form, out DateTime? startDate, out DateTime? endDate);
+
+        /// <summary>
+        /// Get product attributes from the passed form
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form values</param>
+        /// <param name="errors">Errors</param>
+        /// <returns>Attributes in XML format</returns>
+        string ParseProductAttributes(Product product, IFormCollection form, List<string> errors);
 
         #endregion
 

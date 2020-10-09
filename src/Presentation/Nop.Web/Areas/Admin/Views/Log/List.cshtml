@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.System.Log").Text;
+    ViewBag.PageTitle = T("Admin.System.Log").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Log");
 }
@@ -18,7 +18,7 @@
             @T("Admin.System.Log")
         </h1>
         <div class="pull-right">
-            <button type="button" id="delete-selected" class="btn bg-red">
+            <button type="button" id="delete-selected" name="delete-selected" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.DeleteSelected")
             </button>
@@ -118,7 +118,7 @@
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_log"),
                                     ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Width = "50",
+                                    Width = "50"
                                 },
                                 new ColumnProperty(nameof(LogModel.LogLevel))
                                 {

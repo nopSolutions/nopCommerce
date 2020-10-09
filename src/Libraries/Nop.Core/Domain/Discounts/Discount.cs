@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -8,15 +7,15 @@ namespace Nop.Core.Domain.Discounts
     /// </summary>
     public partial class Discount : BaseEntity
     {
-        private ICollection<DiscountRequirement> _discountRequirements;
-        private ICollection<DiscountCategoryMapping> _discountCategoryMappings;
-        private ICollection<DiscountManufacturerMapping> _discountManufacturerMappings;
-        private ICollection<DiscountProductMapping> _discountProductMappings;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the admin comment
+        /// </summary>
+        public string AdminComment { get; set; }
 
         /// <summary>
         /// Gets or sets the discount type identifier
@@ -106,42 +105,6 @@ namespace Nop.Core.Domain.Discounts
         {
             get => (DiscountLimitationType)DiscountLimitationId;
             set => DiscountLimitationId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets or sets the discount requirement
-        /// </summary>
-        public virtual ICollection<DiscountRequirement> DiscountRequirements
-        {
-            get => _discountRequirements ?? (_discountRequirements = new List<DiscountRequirement>());
-            protected set => _discountRequirements = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the discount-category mappings
-        /// </summary>
-        public virtual ICollection<DiscountCategoryMapping> DiscountCategoryMappings
-        {
-            get => _discountCategoryMappings ?? (_discountCategoryMappings = new List<DiscountCategoryMapping>());
-            protected set => _discountCategoryMappings = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the discount-manufacturer mappings
-        /// </summary>
-        public virtual ICollection<DiscountManufacturerMapping> DiscountManufacturerMappings
-        {
-            get => _discountManufacturerMappings ?? (_discountManufacturerMappings = new List<DiscountManufacturerMapping>());
-            protected set => _discountManufacturerMappings = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the discount-product mappings
-        /// </summary>
-        public virtual ICollection<DiscountProductMapping> DiscountProductMappings
-        {
-            get => _discountProductMappings ?? (_discountProductMappings = new List<DiscountProductMapping>());
-            protected set => _discountProductMappings = value;
         }
     }
 }

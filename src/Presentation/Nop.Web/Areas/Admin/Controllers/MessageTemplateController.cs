@@ -92,6 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
             messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();
+            _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(messageTemplate);
             var allStores = _storeService.GetAllStores();

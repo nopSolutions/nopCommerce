@@ -1,7 +1,7 @@
-namespace Nop.Core
+﻿namespace Nop.Core
 {
     /// <summary>
-    /// Base class for entities
+    /// Represents the base class for entities
     /// </summary>
     public abstract partial class BaseEntity
     {

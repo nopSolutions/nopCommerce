@@ -33,8 +33,8 @@ namespace Nop.Web.Framework.Security.Captcha
             _webHelper = webHelper;
 
             //configure client
-            client.BaseAddress = new Uri(NopSecurityDefaults.RecaptchaApiUrl);
-            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
+            client.BaseAddress = new Uri(captchaSettings.ReCaptchaApiUrl);
+            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CURRENT_VERSION}");
 
             if (captchaSettings.ReCaptchaRequestTimeout is int timeout && timeout > 0)
                 client.Timeout = TimeSpan.FromSeconds(timeout);

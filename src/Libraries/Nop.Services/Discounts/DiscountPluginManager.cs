@@ -1,4 +1,5 @@
-﻿using Nop.Services.Plugins;
+﻿using Nop.Services.Customers;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Discounts
 {
@@ -9,7 +10,8 @@ namespace Nop.Services.Discounts
     {
         #region Ctor
 
-        public DiscountPluginManager(IPluginService pluginService) : base(pluginService)
+        public DiscountPluginManager(ICustomerService customerService,
+            IPluginService pluginService) : base(customerService, pluginService)
         {
         }
 

@@ -2,12 +2,11 @@
 
 @{    
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Widgets").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Widgets").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Widgets");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Widgets")
@@ -79,7 +78,7 @@
                     <script>
                         function renderColumnConfigure(data, type, row, meta) {
                             if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.ContentManagement.Widgets.Configure")</a>';
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.ContentManagement.Widgets.Configure").Text</a>';
                             } else {
                                 return '';
                             }

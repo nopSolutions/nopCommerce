@@ -3,7 +3,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Plugins.Local").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Local plugins");
 }
@@ -13,15 +13,11 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Plugins.Local")
         </h1>
-    </div>
-
-    <div class="content-header clearfix">
         <div class="pull-right">
             @if (Model.NeedToRestart)
             {
@@ -118,6 +114,7 @@
                                     <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
                                     <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
                                     <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                    <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
                                 </ol>
                             </p>
                             <p>
@@ -125,6 +122,14 @@
                             </p>
                             <div class="row">
                                 <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchFriendlyName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchFriendlyName" />
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchGroup" />
@@ -141,6 +146,16 @@
                                         </div>
                                         <div class="col-md-8">
                                             <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchAuthor" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchAuthor" />
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +184,9 @@
                             Filters = new List<FilterParameter>
                             {
                                 new FilterParameter(nameof(Model.SearchLoadModeId)),
-                                new FilterParameter(nameof(Model.SearchGroup))
+                                 new FilterParameter(nameof(Model.SearchFriendlyName)),
+                                new FilterParameter(nameof(Model.SearchGroup)),
+                                new FilterParameter(nameof(Model.SearchAuthor))
                             },
                             ColumnCollection = new List<ColumnProperty>
                             {
@@ -218,17 +235,17 @@
                                 res = res + '<br />';
                                 //allow configuration only when a plugin has a configuration URL specified
                                 if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
-                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>';
+                                    res = res + '<a class="btn btn-default margin-r-5" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure").Text</a>';
                                 }
                                 if (row.Installed) {
-                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                                    res = res + '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=' + row.SystemName + '&btnId=btnRefreshList&formId=plugins-form-local\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                                 }
 
                                 return res;
                             }
 
                             function renderColumnFriendlyName(data, type, row, meta) {
-                                var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed"): ';
+                                var isInstall = '<li>@T("Admin.Configuration.Plugins.Fields.Installed").Text: ';
                                 if (row.Installed) {
                                     isInstall = isInstall + '<i class="fa fa-check true-icon"></i></li>';
                                 }
@@ -238,7 +255,7 @@
 
                                 var canChange = '';
                                 if (row.CanChangeEnabled) {
-                                    canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): ';
+                                    canChange = canChange + '<li>@T("Admin.Configuration.Plugins.Fields.IsEnabled").Text: ';
                                     if (row.IsEnabled) {
                                         canChange = canChange + '<i class="fa fa-check true-icon"></i>';
                                     }
@@ -249,19 +266,19 @@
                                 };
 
                                 return '<ul class="common-list">' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.Version"): ' +  row.Version + '</li>' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.Author"): ' + row.Author + '</li>' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): ' + row.SystemName + '</li>' +
-                                    '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): ' + row.DisplayOrder + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.Version").Text: ' +  row.Version + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.Author").Text: ' + row.Author + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.SystemName").Text: ' + row.SystemName + '</li>' +
+                                    '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text: ' + row.DisplayOrder + '</li>' +
                                     isInstall + 
                                     canChange;
                             }
 
                             function renderColumnInstalled(data, type, row, meta) {
                                 if (row.Installed) {
-                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button>';
+                                    return '<button type="submit" name="uninstall-plugin-link-' + row.SystemName + '" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall").Text</button>';
                                 } else {
-                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button>';
+                                    return '<button type="submit" name="install-plugin-link-' + row.SystemName + '" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install").Text</button> <button type="button" name="delete-plugin-link-' + row.SystemName + '" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete").Text</button>';
                                 }
                             }
                         </script>

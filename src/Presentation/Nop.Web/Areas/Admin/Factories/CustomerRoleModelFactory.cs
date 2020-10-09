@@ -6,7 +6,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
@@ -24,7 +23,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -35,14 +33,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public CustomerRoleModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             ICustomerService customerService,
-            ILocalizationService localizationService,
             IProductService productService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
             _customerService = customerService;
-            _localizationService = localizationService;
             _productService = productService;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -112,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerRole != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerRole.ToModel<CustomerRoleModel>();
+                model ??= customerRole.ToModel<CustomerRoleModel>();
                 model.PurchasedWithProductName = _productService.GetProductById(customerRole.PurchasedWithProductId)?.Name;
             }
 

@@ -124,6 +124,11 @@ BEGIN
 					set @fulltext_keywords = ' "' + @Keywords + '*" '
 				ELSE
 				BEGIN		
+                    DECLARE @len_keywords INT
+					DECLARE @len_nvarchar INT
+					SET @len_keywords = 0
+					SET @len_nvarchar = DATALENGTH(CONVERT(NVARCHAR(MAX), 'a'))
+
 					DECLARE @first BIT
 					SET  @first = 1			
 					WHILE @index > 0
@@ -133,14 +138,19 @@ BEGIN
 						ELSE
 							SET @first = 0
 
+                        --LEN excludes trailing spaces. That is why we use DATALENGTH
+						--see https://docs.microsoft.com/sql/t-sql/functions/len-transact-sql?view=sqlallproducts-allversions for more ditails
+						SET @len_keywords = DATALENGTH(@Keywords) / @len_nvarchar
+
 						SET @fulltext_keywords = @fulltext_keywords + '"' + SUBSTRING(@Keywords, 1, @index - 1) + '*"'					
-						SET @Keywords = SUBSTRING(@Keywords, @index + 1, LEN(@Keywords) - @index)						
+						SET @Keywords = SUBSTRING(@Keywords, @index + 1, @len_keywords - @index)						
 						SET @index = CHARINDEX(' ', @Keywords, 0)
 					end
 					
 					-- add the last field
+                    SET @len_keywords = DATALENGTH(@Keywords) / @len_nvarchar
 					IF LEN(@fulltext_keywords) > 0
-						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, LEN(@Keywords)) + '*"'	
+						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, @len_keywords) + '*"'	
 				END
 				SET @Keywords = @fulltext_keywords
 			END
@@ -163,6 +173,32 @@ BEGIN
 		ELSE
 			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Name]) > 0 '
 
+		IF @SearchDescriptions = 1
+		BEGIN
+			--product short description
+			IF @UseFullTextSearch = 1
+			BEGIN
+				SET @sql = @sql + 'OR CONTAINS(p.[ShortDescription], @Keywords) '
+				SET @sql = @sql + 'OR CONTAINS(p.[FullDescription], @Keywords) '
+			END
+			ELSE
+			BEGIN
+				SET @sql = @sql + 'OR PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
+				SET @sql = @sql + 'OR PATINDEX(@Keywords, p.[FullDescription]) > 0 '
+			END
+		END
+
+		--manufacturer part number (exact match)
+		IF @SearchManufacturerPartNumber = 1
+		BEGIN
+			SET @sql = @sql + 'OR p.[ManufacturerPartNumber] = @OriginalKeywords '
+		END
+
+		--SKU (exact match)
+		IF @SearchSku = 1
+		BEGIN
+			SET @sql = @sql + 'OR p.[Sku] = @OriginalKeywords '
+		END
 
 		--localized product name
 		SET @sql = @sql + '
@@ -172,89 +208,32 @@ BEGIN
 		WHERE
 			lp.LocaleKeyGroup = N''Product''
 			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-			AND lp.LocaleKey = N''Name'''
+			AND ( (lp.LocaleKey = N''Name'''
 		IF @UseFullTextSearch = 1
-			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 		ELSE
-			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
-	
+			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
 		IF @SearchDescriptions = 1
 		BEGIN
-			--product short description
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE '
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + 'CONTAINS(p.[ShortDescription], @Keywords) '
-			ELSE
-				SET @sql = @sql + 'PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
-
-
-			--product full description
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE '
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + 'CONTAINS(p.[FullDescription], @Keywords) '
-			ELSE
-				SET @sql = @sql + 'PATINDEX(@Keywords, p.[FullDescription]) > 0 '
-
-
-
 			--localized product short description
 			SET @sql = @sql + '
-			UNION
-			SELECT lp.EntityId
-			FROM LocalizedProperty lp with (NOLOCK)
-			WHERE
-				lp.LocaleKeyGroup = N''Product''
-				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-				AND lp.LocaleKey = N''ShortDescription'''
+				OR (lp.LocaleKey = N''ShortDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
-				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
-				
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
 			--localized product full description
 			SET @sql = @sql + '
-			UNION
-			SELECT lp.EntityId
-			FROM LocalizedProperty lp with (NOLOCK)
-			WHERE
-				lp.LocaleKeyGroup = N''Product''
-				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-				AND lp.LocaleKey = N''FullDescription'''
+				OR (lp.LocaleKey = N''FullDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
-				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 		END
 
-		--manufacturer part number (exact match)
-		IF @SearchManufacturerPartNumber = 1
-		BEGIN
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE p.[ManufacturerPartNumber] = @OriginalKeywords '
-		END
-
-		--SKU (exact match)
-		IF @SearchSku = 1
-		BEGIN
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE p.[Sku] = @OriginalKeywords '
-		END
+		SET @sql = @sql + ' ) '
 
 		IF @SearchProductTags = 1
 		BEGIN
@@ -793,72 +772,6 @@ END
 GO
 
 
-CREATE PROCEDURE [LanguagePackImport]
-(
-	@LanguageId int,
-	@XmlPackage xml,
-	@UpdateExistingResources bit
-)
-AS
-BEGIN
-	IF EXISTS(SELECT * FROM [Language] WHERE [Id] = @LanguageId)
-	BEGIN
-		CREATE TABLE #LocaleStringResourceTmp
-			(
-				[LanguageId] [int] NOT NULL,
-				[ResourceName] [nvarchar](200) NOT NULL,
-				[ResourceValue] [nvarchar](MAX) NOT NULL
-			)
-
-		INSERT INTO #LocaleStringResourceTmp (LanguageId, ResourceName, ResourceValue)
-		SELECT	@LanguageId, nref.value('@Name', 'nvarchar(200)'), nref.value('Value[1]', 'nvarchar(MAX)')
-		FROM	@XmlPackage.nodes('//Language/LocaleResource') AS R(nref)
-
-		DECLARE @ResourceName nvarchar(200)
-		DECLARE @ResourceValue nvarchar(MAX)
-		DECLARE cur_localeresource CURSOR FOR
-		SELECT LanguageId, ResourceName, ResourceValue
-		FROM #LocaleStringResourceTmp
-		OPEN cur_localeresource
-		FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
-		WHILE @@FETCH_STATUS = 0
-		BEGIN
-			IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName))
-			BEGIN
-				IF (@UpdateExistingResources = 1)
-				BEGIN
-					UPDATE [LocaleStringResource]
-					SET [ResourceValue]=@ResourceValue
-					WHERE LanguageId=@LanguageId AND ResourceName=@ResourceName
-				END
-			END
-			ELSE 
-			BEGIN
-				INSERT INTO [LocaleStringResource]
-				(
-					[LanguageId],
-					[ResourceName],
-					[ResourceValue]
-				)
-				VALUES
-				(
-					@LanguageId,
-					@ResourceName,
-					@ResourceValue
-				)
-			END
-			
-			
-			FETCH NEXT FROM cur_localeresource INTO @LanguageId, @ResourceName, @ResourceValue
-			END
-		CLOSE cur_localeresource
-		DEALLOCATE cur_localeresource
-
-		DROP TABLE #LocaleStringResourceTmp
-	END
-END
-GO
-
 
 CREATE PROCEDURE [DeleteGuests]
 (
@@ -870,49 +783,56 @@ CREATE PROCEDURE [DeleteGuests]
 AS
 BEGIN
 	CREATE TABLE #tmp_guests (CustomerId int)
+	CREATE TABLE #tmp_adresses (AddressId int)
 		
 	INSERT #tmp_guests (CustomerId)
-	SELECT [Id] FROM [Customer] c with (NOLOCK)
-	WHERE
-	--created from
-	((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
-	AND
-	--created to
-	((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
-	AND
-	--shopping cart items
-	((@OnlyWithoutShoppingCart=0) OR (NOT EXISTS(SELECT 1 FROM [ShoppingCartItem] sci with (NOLOCK) inner join [Customer] with (NOLOCK) on sci.[CustomerId]=c.[Id])))
-	AND
-	--guests only
-	(EXISTS(SELECT 1 FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK) inner join [Customer] with (NOLOCK) on ccrm.[Customer_Id]=c.[Id] inner join [CustomerRole] cr with (NOLOCK) on cr.[Id]=ccrm.[CustomerRole_Id] WHERE cr.[SystemName] = N'Guests'))
-	AND
-	--no orders
-	(NOT EXISTS(SELECT 1 FROM [Order] o with (NOLOCK) inner join [Customer] with (NOLOCK) on o.[CustomerId]=c.[Id]))
-	AND
-	--no blog comments
-	(NOT EXISTS(SELECT 1 FROM [BlogComment] bc with (NOLOCK) inner join [Customer] with (NOLOCK) on bc.[CustomerId]=c.[Id]))
-	AND
-	--no news comments
-	(NOT EXISTS(SELECT 1 FROM [NewsComment] nc  with (NOLOCK)inner join [Customer] with (NOLOCK) on nc.[CustomerId]=c.[Id]))
-	AND
-	--no product reviews
-	(NOT EXISTS(SELECT 1 FROM [ProductReview] pr with (NOLOCK) inner join [Customer] with (NOLOCK) on pr.[CustomerId]=c.[Id]))
-	AND
-	--no product reviews helpfulness
-	(NOT EXISTS(SELECT 1 FROM [ProductReviewHelpfulness] prh with (NOLOCK) inner join [Customer] with (NOLOCK) on prh.[CustomerId]=c.[Id]))
-	AND
-	--no poll voting
-	(NOT EXISTS(SELECT 1 FROM [PollVotingRecord] pvr with (NOLOCK) inner join [Customer] with (NOLOCK) on pvr.[CustomerId]=c.[Id]))
-	AND
-	--no forum topics 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Topic] ft with (NOLOCK) inner join [Customer] with (NOLOCK) on ft.[CustomerId]=c.[Id]))
-	AND
-	--no forum posts 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Post] fp with (NOLOCK) inner join [Customer] with (NOLOCK) on fp.[CustomerId]=c.[Id]))
-	AND
-	--no system accounts
-	(c.IsSystemAccount = 0)
-	
+	SELECT c.[Id] 
+	FROM [Customer] c with (NOLOCK)
+		LEFT JOIN [ShoppingCartItem] sci with (NOLOCK) ON sci.[CustomerId] = c.[Id]
+		INNER JOIN (
+			--guests only
+			SELECT ccrm.[Customer_Id] 
+			FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK)
+				INNER JOIN [CustomerRole] cr with (NOLOCK) ON cr.[Id] = ccrm.[CustomerRole_Id]
+			WHERE cr.[SystemName] = N'Guests'
+		) g ON g.[Customer_Id] = c.[Id]
+		LEFT JOIN [Order] o with (NOLOCK) ON o.[CustomerId] = c.[Id]
+		LEFT JOIN [BlogComment] bc with (NOLOCK) ON bc.[CustomerId] = c.[Id]
+		LEFT JOIN [NewsComment] nc with (NOLOCK) ON nc.[CustomerId] = c.[Id]
+		LEFT JOIN [ProductReview] pr with (NOLOCK) ON pr.[CustomerId] = c.[Id]
+		LEFT JOIN [ProductReviewHelpfulness] prh with (NOLOCK) ON prh.[CustomerId] = c.[Id]
+		LEFT JOIN [PollVotingRecord] pvr with (NOLOCK) ON pvr.[CustomerId] = c.[Id]
+		LEFT JOIN [Forums_Topic] ft with (NOLOCK) ON ft.[CustomerId] = c.[Id]
+		LEFT JOIN [Forums_Post] fp with (NOLOCK) ON fp.[CustomerId] = c.[Id]
+	WHERE 1 = 1
+		--no orders
+		AND (o.Id is null)
+		--no blog comments
+		AND (bc.Id is null)
+		--no news comments
+		AND (nc.Id is null)
+		--no product reviews
+		AND (pr.Id is null)
+		--no product reviews helpfulness
+		AND (prh.Id is null)
+		--no poll voting
+		AND (pvr.Id is null)
+		--no forum topics
+		AND (ft.Id is null)
+		--no forum topics
+		AND (fp.Id is null)
+		--no system accounts
+		AND (c.IsSystemAccount = 0)
+		--created from
+		AND ((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
+		--created to
+		AND ((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
+		--shopping cart items
+		AND ((@OnlyWithoutShoppingCart = 0) OR (sci.Id is null))
+
+	INSERT #tmp_adresses (AddressId)
+	SELECT [Address_Id] FROM [CustomerAddresses] WHERE [Customer_Id] IN (SELECT [CustomerId] FROM #tmp_guests)
+
 	--delete guests
 	DELETE [Customer]
 	WHERE [Id] IN (SELECT [CustomerId] FROM #tmp_guests)
@@ -922,90 +842,15 @@ BEGIN
 	WHERE ([EntityId] IN (SELECT [CustomerId] FROM #tmp_guests))
 	AND
 	([KeyGroup] = N'Customer')
+
+	--delete addresses
+	DELETE [Address]
+	WHERE [Id] IN (SELECT [AddressId] FROM #tmp_adresses)
 	
 	--total records
 	SELECT @TotalRecordsDeleted = COUNT(1) FROM #tmp_guests
 	
 	DROP TABLE #tmp_guests
-END
-GO
-
-
-CREATE PROCEDURE [CategoryLoadAllPaged]
-(
-    @ShowHidden         BIT = 0,
-    @Name               NVARCHAR(MAX) = NULL,
-    @StoreId            INT = 0,
-    @CustomerRoleIds	NVARCHAR(MAX) = NULL,
-    @PageIndex			INT = 0,
-	@PageSize			INT = 2147483644,
-    @TotalRecords		INT = NULL OUTPUT
-)
-AS
-BEGIN
-	SET NOCOUNT ON
-
-    --filter by customer role IDs (access control list)
-	SET @CustomerRoleIds = ISNULL(@CustomerRoleIds, '')
-	CREATE TABLE #FilteredCustomerRoleIds
-	(
-		CustomerRoleId INT NOT NULL
-	)
-	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
-	SELECT CAST(data AS INT) FROM [nop_splitstring_to_table](@CustomerRoleIds, ',')
-	DECLARE @FilteredCustomerRoleIdsCount INT = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
-
-    --ordered categories
-    CREATE TABLE #OrderedCategoryIds
-	(
-		[Id] int IDENTITY (1, 1) NOT NULL,
-		[CategoryId] int NOT NULL
-	)
-    
-    --get max length of DisplayOrder and Id columns (used for padding Order column)
-    DECLARE @lengthId INT = (SELECT LEN(MAX(Id)) FROM [Category])
-    DECLARE @lengthOrder INT = (SELECT LEN(MAX(DisplayOrder)) FROM [Category])
-
-    --get category tree
-    ;WITH [CategoryTree]
-    AS (SELECT [Category].[Id] AS [Id], 
-		(select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
-        FROM [Category] WHERE [Category].[ParentCategoryId] = 0
-        UNION ALL
-        SELECT [Category].[Id] AS [Id], 
-		[CategoryTree].[Order] + '|' + (select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
-        FROM [Category]
-        INNER JOIN [CategoryTree] ON [CategoryTree].[Id] = [Category].[ParentCategoryId])
-    INSERT INTO #OrderedCategoryIds ([CategoryId])
-    SELECT [Category].[Id]
-    FROM [CategoryTree]
-    RIGHT JOIN [Category] ON [CategoryTree].[Id] = [Category].[Id]
-
-    --filter results
-    WHERE [Category].[Deleted] = 0
-    AND (@ShowHidden = 1 OR [Category].[Published] = 1)
-    AND (@Name IS NULL OR @Name = '' OR [Category].[Name] LIKE ('%' + @Name + '%'))
-    AND (@ShowHidden = 1 OR @FilteredCustomerRoleIdsCount  = 0 OR [Category].[SubjectToAcl] = 0
-        OR EXISTS (SELECT 1 FROM #FilteredCustomerRoleIds [roles] WHERE [roles].[CustomerRoleId] IN
-            (SELECT [acl].[CustomerRoleId] FROM [AclRecord] acl WITH (NOLOCK) WHERE [acl].[EntityId] = [Category].[Id] AND [acl].[EntityName] = 'Category')
-        )
-    )
-    AND (@StoreId = 0 OR [Category].[LimitedToStores] = 0
-        OR EXISTS (SELECT 1 FROM [StoreMapping] sm WITH (NOLOCK)
-			WHERE [sm].[EntityId] = [Category].[Id] AND [sm].[EntityName] = 'Category' AND [sm].[StoreId] = @StoreId
-		)
-    )
-    ORDER BY ISNULL([CategoryTree].[Order], 1)
-
-    --total records
-    SET @TotalRecords = @@ROWCOUNT
-
-    --paging
-    SELECT [Category].* FROM #OrderedCategoryIds AS [Result] INNER JOIN [Category] ON [Result].[CategoryId] = [Category].[Id]
-    WHERE ([Result].[Id] > @PageSize * @PageIndex AND [Result].[Id] <= @PageSize * (@PageIndex + 1))
-    ORDER BY [Result].[Id]
-
-    DROP TABLE #FilteredCustomerRoleIds
-    DROP TABLE #OrderedCategoryIds
+	DROP TABLE #tmp_adresses
 END
 GO

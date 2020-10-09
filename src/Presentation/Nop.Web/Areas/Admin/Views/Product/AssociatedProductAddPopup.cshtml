@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.AssociatedProducts.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.AssociatedProducts.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -129,7 +129,7 @@
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox(nameof(AddAssociatedProductModel.SelectedProductIds)),
                                     ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Width = "50",
+                                    Width = "50"
                                 },
                                 new ColumnProperty(nameof(ProductModel.Name))
                                 {
@@ -150,7 +150,7 @@
                                 var textRenderer = $.fn.dataTable.render.text().display;
                                 var associatedProductBlock = '';
                                 if (row.AssociatedToProductName !== null) {
-                                    associatedProductBlock = '<div><i>@T("Admin.Catalog.Products.Fields.AssociatedToProductName") ' + textRenderer(row.AssociatedToProductName) + '</i></div>';
+                                    associatedProductBlock = '<div><i>@T("Admin.Catalog.Products.Fields.AssociatedToProductName").Text ' + textRenderer(row.AssociatedToProductName) + '</i></div>';
                                 }
                                 return textRenderer(row.Name) + associatedProductBlock;
                             }

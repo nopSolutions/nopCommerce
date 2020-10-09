@@ -3,27 +3,32 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Autofac;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -50,12 +55,16 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly AppSettings _appSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
+        private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly IComponentContext _componentContext;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -63,6 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IMeasureService _measureService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INopFileProvider _fileProvider;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
@@ -72,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
         private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxPluginManager _taxPluginManager;
@@ -82,7 +92,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
-        private readonly NopConfig _nopConfig;
         private readonly NopHttpClient _nopHttpClient;
         private readonly ProxySettings _proxySettings;
 
@@ -91,12 +100,16 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public CommonModelFactory(AdminAreaSettings adminAreaSettings,
+            AppSettings appSettings,
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAuthenticationPluginManager authenticationPluginManager,
+            IBaseAdminModelFactory baseAdminModelFactory,
+            IComponentContext componentContext,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             INopFileProvider fileProvider,
             IExchangeRatePluginManager exchangeRatePluginManager,
@@ -105,6 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IMaintenanceService maintenanceService,
             IMeasureService measureService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
@@ -113,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
             IShippingPluginManager shippingPluginManager,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxPluginManager taxPluginManager,
@@ -123,17 +137,20 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MeasureSettings measureSettings,
-            NopConfig nopConfig,
             NopHttpClient nopHttpClient,
             ProxySettings proxySettings)
         {
             _adminAreaSettings = adminAreaSettings;
+            _appSettings = appSettings;
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
             _authenticationPluginManager = authenticationPluginManager;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _componentContext = componentContext;
             _currencyService = currencyService;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _exchangeRatePluginManager = exchangeRatePluginManager;
             _httpContextAccessor = httpContextAccessor;
@@ -141,6 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizationService = localizationService;
             _maintenanceService = maintenanceService;
             _measureService = measureService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _fileProvider = fileProvider;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
@@ -150,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _returnRequestService = returnRequestService;
             _searchTermService = searchTermService;
             _shippingPluginManager = shippingPluginManager;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeService = storeService;
             _taxPluginManager = taxPluginManager;
@@ -160,7 +178,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
-            _nopConfig = nopConfig;
             _nopHttpClient = nopHttpClient;
             _proxySettings = proxySettings;
         }
@@ -434,6 +451,31 @@ namespace Nop.Web.Areas.Admin.Factories
                         assembly.ShortName, assembly.AssemblyFullNameInMemory, message)
                 });
             }
+
+            //check whether there are different plugins which try to override the same interface
+            var baseLibraries = new[] { "Nop.Core", "Nop.Data", "Nop.Services", "Nop.Web", "Nop.Web.Framework" };
+            var overridenServices = _componentContext.ComponentRegistry.Registrations.Where(p =>
+                    p.Services.Any(s =>
+                        s.Description.StartsWith("Nop.", StringComparison.InvariantCulture) &&
+                        !s.Description.StartsWith(typeof(IConsumer<>).FullName?.Replace("~1", string.Empty) ?? string.Empty,
+                            StringComparison.InvariantCulture))).SelectMany(p => p.Services.Select(x =>
+                    KeyValuePair.Create(x.Description, p.Target.Activator.LimitType.Assembly.GetName().Name)))
+                .Where(p => baseLibraries.All(library => !p.Value.StartsWith(library, StringComparison.InvariantCultureIgnoreCase)))
+                .GroupBy(p => p.Key, p => p.Value)
+                .Where(p => p.Count() > 1)
+                .ToDictionary(p => p.Key, p => p.ToList());
+
+            foreach (var overridenService in overridenServices)
+            {
+                var assemblies = overridenService.Value
+                    .Aggregate("", (current, all) => all + ", " + current).TrimEnd(',', ' ');
+
+                models.Add(new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginsOverrideSameService"), overridenService.Key, assemblies)
+                });
+            }
         }
 
         /// <summary>
@@ -551,6 +593,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var plugins = _pluginService.GetPlugins<IPlugin>();
 
             var notEnabled = new List<string>();
+            var notEnabledSystemNames = new List<string>();
 
             foreach (var plugin in plugins)
             {
@@ -578,6 +621,10 @@ namespace Nop.Web.Areas.Admin.Factories
                         isEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                         break;
 
+                    case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
+                        isEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
+                        break;
+
                     case IWidgetPlugin widgetPlugin:
                         isEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
                         break;
@@ -591,18 +638,23 @@ namespace Nop.Web.Areas.Admin.Factories
                     continue;
 
                 notEnabled.Add(plugin.PluginDescriptor.FriendlyName);
+                notEnabledSystemNames.Add(plugin.PluginDescriptor.SystemName);
             }
 
             if (notEnabled.Any())
             {
+                //get URL helper
+                var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
                 models.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)}"
+                    DontEncode = true,
+                    Text = $"{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled")}: {string.Join(", ", notEnabled)} (<a href=\"{urlHelper.Action("UninstallAndDeleteUnusedPlugins", "Plugin", new { names = notEnabledSystemNames.ToArray() })}\">{_localizationService.GetResource("Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart")}</a>)"
                 });
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -617,7 +669,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.NopVersion = NopVersion.CurrentVersion;
+            model.NopVersion = NopVersion.FULL_VERSION;
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
@@ -665,15 +717,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
-            
-            model.CurrentStaticCacheManager = _cacheManager.GetType().Name;
 
-            model.RedisEnabled = _nopConfig.RedisEnabled;
-            model.UseRedisToStoreDataProtectionKeys = _nopConfig.UseRedisToStoreDataProtectionKeys;
-            model.UseRedisForCaching = _nopConfig.UseRedisForCaching;
-            model.UseRedisToStorePluginsInfo = _nopConfig.UseRedisToStorePluginsInfo;
+            model.CurrentStaticCacheManager = _staticCacheManager.GetType().Name;
 
-            model.AzureBlobStorageEnabled = _nopConfig.AzureBlobStorageEnabled;
+            model.RedisEnabled = _appSettings.RedisConfig.Enabled;
+            model.UseRedisToStoreDataProtectionKeys = _appSettings.RedisConfig.StoreDataProtectionKeys;
+            model.UseRedisForCaching = _appSettings.RedisConfig.UseCaching;
+            model.UseRedisToStorePluginsInfo = _appSettings.RedisConfig.StorePluginsInfo;
+
+            model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
 
             return model;
         }
@@ -742,7 +794,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //payment methods
             PreparePaymentMethodsWarningModel(models);
 
-            //incompatible plugins
+            //plugins
             PreparePluginsWarningModel(models);
 
             //performance settings
@@ -774,6 +826,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
 
+            model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
+
+            model.BackupSupported = _dataProvider.BackupSupported;
+
             //prepare nested search model
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 
@@ -794,7 +850,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, ()=>
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
             {
                 return backupFiles.Select(file => new BackupFileModel
                 {
@@ -818,6 +874,32 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            //prepare available languages
+            //we insert 0 as 'Standard' language.
+            //let's insert -1 for 'All' language selection.
+            _baseAdminModelFactory.PrepareLanguages(searchModel.AvailableLanguages,
+                defaultItemText: _localizationService.GetResource("Admin.System.SeNames.List.Language.Standard"));
+            searchModel.AvailableLanguages.Insert(0,
+                new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
+            searchModel.LanguageId = -1;
+
+            //prepare "is active" filter (0 - all; 1 - active only; 2 - inactive only)
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.All")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.ActiveOnly")
+            });
+            searchModel.AvailableActiveOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.System.SeNames.List.IsActive.InactiveOnly")
+            });
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -834,8 +916,12 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            var isActive = searchModel.IsActiveId == 0 ? null : (bool?)(searchModel.IsActiveId == 1);
+            var languageId = searchModel.LanguageId < 0 ? null : (int?)(searchModel.LanguageId);
+
             //get URL records
             var urlRecords = _urlRecordService.GetAllUrlRecords(slug: searchModel.SeName,
+                languageId: languageId, isActive: isActive,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //get URL helper

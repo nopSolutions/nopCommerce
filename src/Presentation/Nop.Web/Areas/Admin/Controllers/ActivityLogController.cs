@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.UpdateActivityType(activityType);
             }
 
-            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.ActivityLogType.Updated"));
 
             return RedirectToAction("ActivityTypes");
         }
@@ -124,6 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
         public virtual IActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))

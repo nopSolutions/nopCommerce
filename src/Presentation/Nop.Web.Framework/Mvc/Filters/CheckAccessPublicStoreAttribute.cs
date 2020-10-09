@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that confirms access to public store
     /// </summary>
-    public class CheckAccessPublicStoreAttribute : TypeFilterAttribute
+    public sealed class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
         #region Fields
 

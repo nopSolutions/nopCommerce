@@ -15,6 +15,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult RunTask(string taskType)
         {
             var scheduleTask = _scheduleTaskService.GetTaskByType(taskType);

@@ -10,13 +10,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     {
         public int LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name")]
         public string Name { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
-        public string ValueRaw { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
-        public string Value { get; set; }
     }
 }

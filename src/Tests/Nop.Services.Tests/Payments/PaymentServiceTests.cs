@@ -1,17 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Moq;
-using Nop.Core;
-using Nop.Core.Domain.Catalog;
+using FluentAssertions;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Services.Configuration;
-using Nop.Services.Customers;
-using Nop.Services.Events;
-using Nop.Services.Logging;
 using Nop.Services.Payments;
-using Nop.Services.Plugins;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Payments
@@ -19,101 +10,77 @@ namespace Nop.Services.Tests.Payments
     [TestFixture]
     public class PaymentServiceTests : ServiceTest
     {
-        private PaymentSettings _paymentSettings;
-        private ShoppingCartSettings _shoppingCartSettings;
-        private Mock<IEventPublisher> _eventPublisher;
-        private Mock<ISettingService> _settingService;
         private IPaymentPluginManager _paymentPluginManager;
         private IPaymentService _paymentService;
-        private CatalogSettings _catalogSettings;
 
-        [SetUp]
-        public new void SetUp()
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            _paymentSettings = new PaymentSettings
-            {
-                ActivePaymentMethodSystemNames = new List<string>()
-            };
-            _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
-
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            var customerService = new Mock<ICustomerService>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-
-            _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
-
-            _shoppingCartSettings = new ShoppingCartSettings();
-            _settingService = new Mock<ISettingService>();
-            _paymentPluginManager = new PaymentPluginManager(pluginService, _settingService.Object, _paymentSettings);
-            _paymentService = new PaymentService(_paymentPluginManager, _paymentSettings, _shoppingCartSettings);
+            _paymentService = GetService<IPaymentService>();
+            _paymentPluginManager = GetService<IPaymentPluginManager>();
         }
 
         [Test]
-        public void Can_load_paymentMethods()
+        public void CanLoadPaymentMethods()
         {
-            var srcm = _paymentPluginManager.LoadAllPlugins();
-            srcm.ShouldNotBeNull();
-            srcm.Any().ShouldBeTrue();
+            var paymentMethods = _paymentPluginManager.LoadAllPlugins();
+            paymentMethods.Should().NotBeNull();
         }
 
         [Test]
-        public void Can_load_paymentMethod_by_systemKeyword()
+        public void CanLoadPaymentMethodBySystemKeyword()
         {
-            var srcm = _paymentPluginManager.LoadPluginBySystemName("Payments.TestMethod");
-            srcm.ShouldNotBeNull();
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName("Payments.TestMethod");
+            paymentMethod.Should().NotBeNull();
         }
 
         [Test]
-        public void Can_load_active_paymentMethods()
+        public void CanLoadActivePaymentMethods()
         {
-            var srcm = _paymentPluginManager.LoadActivePlugins();
-            srcm.ShouldNotBeNull();
-            srcm.Any().ShouldBeTrue();
+            var paymentMethods = _paymentPluginManager.LoadActivePlugins(new List<string> { "Payments.TestMethod" });
+            paymentMethods.Should().NotBeNull();
+            paymentMethods.Any().Should().BeTrue();
         }
 
         [Test]
-        public void Can_get_masked_credit_card_number()
+        public void CanGetMaskedCreditCardNumber()
         {
-            _paymentService.GetMaskedCreditCardNumber("").ShouldEqual("");
-            _paymentService.GetMaskedCreditCardNumber("123").ShouldEqual("123");
-            _paymentService.GetMaskedCreditCardNumber("1234567890123456").ShouldEqual("************3456");
+            _paymentService.GetMaskedCreditCardNumber(string.Empty).Should().Be(string.Empty);
+            _paymentService.GetMaskedCreditCardNumber("123").Should().Be("123");
+            _paymentService.GetMaskedCreditCardNumber("1234567890123456").Should().Be("************3456");
         }
 
         [Test]
-        public void Can_deserialize_empty_string()
+        public void CanDeserializeEmptyString()
         {
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = string.Empty });
 
-            deserialized.ShouldNotBeNull();
-            deserialized.Count.ShouldEqual(0);
+            deserialized.Should().NotBeNull();
+            deserialized.Count.Should().Be(0);
         }
 
         [Test]
-        public void Can_deserialize_null_string()
+        public void CanDeserializeNullString()
         {
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = null });
 
-            deserialized.ShouldNotBeNull();
-            deserialized.Count.ShouldEqual(0);
+            deserialized.Should().NotBeNull();
+            deserialized.Count.Should().Be(0);
         }
 
         [Test]
-        public void Can_serialize_and_deserialize_empty_CustomValues()
+        public void CanSerializeAndDeserializeEmptyCustomValues()
         {
             var processPaymentRequest = new ProcessPaymentRequest();
             var serializedXml = _paymentService.SerializeCustomValues(processPaymentRequest);
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = serializedXml });
 
-            deserialized.ShouldNotBeNull();
-            deserialized.Count.ShouldEqual(0);
+            deserialized.Should().NotBeNull();
+            deserialized.Count.Should().Be(0);
         }
 
         [Test]
-        public void Can_serialize_and_deserialize_CustomValues()
+        public void CanSerializeAndDeserializeCustomValues()
         {
             var processPaymentRequest = new ProcessPaymentRequest();
             processPaymentRequest.CustomValues.Add("key1", "value1");
@@ -123,21 +90,21 @@ namespace Nop.Services.Tests.Payments
             var serializedXml = _paymentService.SerializeCustomValues(processPaymentRequest);
             var deserialized = _paymentService.DeserializeCustomValues(new Order { CustomValuesXml = serializedXml });
 
-            deserialized.ShouldNotBeNull();
-            deserialized.Count.ShouldEqual(4);
+            deserialized.Should().NotBeNull();
+            deserialized.Count.Should().Be(4);
 
-            deserialized.ContainsKey("key1").ShouldEqual(true);
-            deserialized["key1"].ShouldEqual("value1");
+            deserialized.ContainsKey("key1").Should().BeTrue();
+            deserialized["key1"].Should().Be("value1");
 
-            deserialized.ContainsKey("key2").ShouldEqual(true);
-            //deserialized["key2"].ShouldEqual(null);
-            deserialized["key2"].ShouldEqual("");
+            deserialized.ContainsKey("key2").Should().BeTrue();
+            //deserialized["key2"].Should().Be(null);
+            deserialized["key2"].Should().Be(string.Empty);
 
-            deserialized.ContainsKey("key3").ShouldEqual(true);
-            deserialized["key3"].ShouldEqual("3");
+            deserialized.ContainsKey("key3").Should().BeTrue();
+            deserialized["key3"].Should().Be("3");
 
-            deserialized.ContainsKey("<test key4>").ShouldEqual(true);
-            deserialized["<test key4>"].ShouldEqual("<test value 4>");
+            deserialized.ContainsKey("<test key4>").Should().BeTrue();
+            deserialized["<test key4>"].Should().Be("<test value 4>");
         }
     }
 }

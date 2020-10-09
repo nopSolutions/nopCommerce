@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product review helpfulness
@@ -19,10 +19,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the customer identifier
         /// </summary>
         public int CustomerId { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual ProductReview ProductReview { get; set; }
     }
 }

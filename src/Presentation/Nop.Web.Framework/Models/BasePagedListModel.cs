@@ -25,9 +25,6 @@ namespace Nop.Web.Framework.Models
         /// <summary>
         /// Gets or sets a number of total data records
         /// </summary>
-        public int RecordsTotal { get; set; }
-
-        //TODO: remove after moving to DataTables grids
-        public int Total { get; set; }
+        public int RecordsTotal { get; set; }        
     }
 }

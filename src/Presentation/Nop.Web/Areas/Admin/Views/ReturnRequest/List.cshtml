@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.ReturnRequests").Text;
+    ViewBag.PageTitle = T("Admin.ReturnRequests").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Return requests");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ReturnRequests")
@@ -99,8 +98,8 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.StartDate)),
-                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.CustomNumber)),
                             new FilterParameter(nameof(Model.ReturnRequestStatusId))
                         },
@@ -179,7 +178,7 @@
                         function renderColumnOrderInfo(data, type, row, meta) {
                             if (row.OrderId > 0) {
                                 var textRenderer = $.fn.dataTable.render.text().display;
-                                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View")</a>';
+                                return '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")' + row.OrderId + '"><i class="fa fa-eye"></i>' + textRenderer(row.CustomOrderNumber) + ' - @T("Admin.Common.View").Text</a>';
                             } else {
                                 return 'order item is deleted';
                             }

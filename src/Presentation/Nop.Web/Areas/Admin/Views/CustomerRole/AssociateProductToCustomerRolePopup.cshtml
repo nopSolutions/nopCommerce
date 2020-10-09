@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
     
     //page title
-    ViewBag.Title = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
+    ViewBag.PageTitle = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
 }
 
 <form asp-controller="CustomerRole" asp-action="AssociateProductToCustomerRolePopup"
@@ -147,7 +147,7 @@
                             })
                             <script>
                                 function renderColumnSelectProduct(data, type, row, meta) {
-                                    return '<button type="button" onclick="selectAssociatedProduct(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select")</button>';
+                                    return '<button type="button" onclick="selectAssociatedProduct(' + row.Id + ' )" class="btn btn-default">@T("Admin.Common.Select").Text</button>';
                                 }
                                 function selectAssociatedProduct(productid) {
                                     $("#@Html.IdFor(model => model.AddProductToCustomerRoleModel.AssociatedToProductId)").val(productid);

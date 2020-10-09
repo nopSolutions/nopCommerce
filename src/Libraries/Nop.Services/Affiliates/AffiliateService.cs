@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
-using Nop.Services.Events;
+using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Affiliates
@@ -17,7 +18,8 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IAddressService _addressService;
+        private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IUrlRecordService _urlRecordService;
@@ -28,14 +30,16 @@ namespace Nop.Services.Affiliates
 
         #region Ctor
 
-        public AffiliateService(IEventPublisher eventPublisher,
+        public AffiliateService(IAddressService addressService,
+            IRepository<Address> addressRepository,
             IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             SeoSettings seoSettings)
         {
-            _eventPublisher = eventPublisher;
+            _addressService = addressService;
+            _addressRepository = addressRepository;
             _affiliateRepository = affiliateRepository;
             _orderRepository = orderRepository;
             _urlRecordService = urlRecordService;
@@ -54,10 +58,7 @@ namespace Nop.Services.Affiliates
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateById(int affiliateId)
         {
-            if (affiliateId == 0)
-                return null;
-
-            return _affiliateRepository.GetById(affiliateId);
+            return _affiliateRepository.GetById(affiliateId, cache => default);
         }
 
         /// <summary>
@@ -84,14 +85,7 @@ namespace Nop.Services.Affiliates
         /// <param name="affiliate">Affiliate</param>
         public virtual void DeleteAffiliate(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
-            affiliate.Deleted = true;
-            UpdateAffiliate(affiliate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(affiliate);
+            _affiliateRepository.Delete(affiliate);
         }
 
         /// <summary>
@@ -114,36 +108,45 @@ namespace Nop.Services.Affiliates
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
-            var query = _affiliateRepository.Table;
-            if (!string.IsNullOrWhiteSpace(friendlyUrlName))
-                query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
-            if (!string.IsNullOrWhiteSpace(firstName))
-                query = query.Where(a => a.Address.FirstName.Contains(firstName));
-            if (!string.IsNullOrWhiteSpace(lastName))
-                query = query.Where(a => a.Address.LastName.Contains(lastName));
-            if (!showHidden)
-                query = query.Where(a => a.Active);
-            query = query.Where(a => !a.Deleted);
-
-            if (loadOnlyWithOrders)
+            return _affiliateRepository.GetAllPaged(query =>
             {
-                var ordersQuery = _orderRepository.Table;
-                if (ordersCreatedFromUtc.HasValue)
-                    ordersQuery = ordersQuery.Where(o => ordersCreatedFromUtc.Value <= o.CreatedOnUtc);
-                if (ordersCreatedToUtc.HasValue)
-                    ordersQuery = ordersQuery.Where(o => ordersCreatedToUtc.Value >= o.CreatedOnUtc);
-                ordersQuery = ordersQuery.Where(o => !o.Deleted);
+                if (!string.IsNullOrWhiteSpace(friendlyUrlName))
+                    query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
 
-                query = from a in query
-                        join o in ordersQuery on a.Id equals o.AffiliateId into a_o
-                        where a_o.Any()
+                if (!string.IsNullOrWhiteSpace(firstName))
+                    query = from aff in query
+                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                        where addr.FirstName.Contains(firstName)
+                        select aff;
+
+                if (!string.IsNullOrWhiteSpace(lastName))
+                    query = from aff in query
+                        join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                        where addr.LastName.Contains(lastName)
+                        select aff;
+
+                if (!showHidden)
+                    query = query.Where(a => a.Active);
+                query = query.Where(a => !a.Deleted);
+
+                if (loadOnlyWithOrders)
+                {
+                    var ordersQuery = _orderRepository.Table;
+                    if (ordersCreatedFromUtc.HasValue)
+                        ordersQuery = ordersQuery.Where(o => ordersCreatedFromUtc.Value <= o.CreatedOnUtc);
+                    if (ordersCreatedToUtc.HasValue)
+                        ordersQuery = ordersQuery.Where(o => ordersCreatedToUtc.Value >= o.CreatedOnUtc);
+                    ordersQuery = ordersQuery.Where(o => !o.Deleted);
+
+                    query = from a in query
+                        join o in ordersQuery on a.Id equals o.AffiliateId
                         select a;
-            }
+                }
 
-            query = query.OrderByDescending(a => a.Id);
+                query = query.Distinct().OrderByDescending(a => a.Id);
 
-            var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
-            return affiliates;
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -152,13 +155,7 @@ namespace Nop.Services.Affiliates
         /// <param name="affiliate">Affiliate</param>
         public virtual void InsertAffiliate(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
             _affiliateRepository.Insert(affiliate);
-
-            //event notification
-            _eventPublisher.EntityInserted(affiliate);
         }
 
         /// <summary>
@@ -167,13 +164,7 @@ namespace Nop.Services.Affiliates
         /// <param name="affiliate">Affiliate</param>
         public virtual void UpdateAffiliate(Affiliate affiliate)
         {
-            if (affiliate == null)
-                throw new ArgumentNullException(nameof(affiliate));
-
             _affiliateRepository.Update(affiliate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(affiliate);
         }
 
         /// <summary>
@@ -186,20 +177,12 @@ namespace Nop.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var firstName = affiliate.Address.FirstName;
-            var lastName = affiliate.Address.LastName;
+            var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
 
-            var fullName = string.Empty;
-            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
-                fullName = $"{firstName} {lastName}";
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(firstName))
-                    fullName = firstName;
+            if (affiliateAddress == null)
+                return string.Empty;
 
-                if (!string.IsNullOrWhiteSpace(lastName))
-                    fullName = lastName;
-            }
+            var fullName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
             return fullName;
         }

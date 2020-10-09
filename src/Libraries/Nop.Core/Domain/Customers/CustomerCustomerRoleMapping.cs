@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents a customer-customer role mapping class
@@ -14,15 +14,5 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the customer role identifier
         /// </summary>
         public int CustomerRoleId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer role
-        /// </summary>
-        public virtual CustomerRole CustomerRole { get; set; }
     }
 }

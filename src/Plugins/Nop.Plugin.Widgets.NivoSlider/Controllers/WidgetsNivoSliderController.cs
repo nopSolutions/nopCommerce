@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -14,6 +13,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 {
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class WidgetsNivoSliderController : BasePluginController
     {
         private readonly ILocalizationService _localizationService;

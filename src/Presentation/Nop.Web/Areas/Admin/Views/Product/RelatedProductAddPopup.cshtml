@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.RelatedProducts.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.RelatedProducts.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -124,7 +124,7 @@ else
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddRelatedProductModel.SelectedProductIds)),
                                         ClassName =  NopColumnClassDefaults.CenterAll,
-                                        Width = "50",
+                                        Width = "50"
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
                                     {

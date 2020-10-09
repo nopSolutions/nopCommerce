@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (reviewType != null)
             {
                 //fill in model values from the entity
-                model = model ?? reviewType.ToModel<ReviewTypeModel>();
+                model ??= reviewType.ToModel<ReviewTypeModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
