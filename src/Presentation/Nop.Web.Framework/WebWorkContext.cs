@@ -109,7 +109,7 @@ namespace Nop.Web.Framework
         /// <param name="customerGuid">Guid of the customer</param>
         protected virtual void SetCustomerCookie(Guid customerGuid)
         {
-            if (_httpContextAccessor.HttpContext?.Response == null)
+            if (_httpContextAccessor.HttpContext?.Response == null || _httpContextAccessor.HttpContext.Response.HasStarted)
                 return;
 
             //delete current cookie value
