@@ -318,6 +318,7 @@ namespace Nop.Web.Controllers
         /// <param name="model"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
+        [IgnoreAntiforgeryToken]        
         public virtual IActionResult SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
         {
             try
