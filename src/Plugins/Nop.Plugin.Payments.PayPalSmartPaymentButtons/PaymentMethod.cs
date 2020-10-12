@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Http.Extensions;
@@ -17,6 +18,7 @@ using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services;
 using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
@@ -33,11 +35,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         #region Fields
 
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly CurrencySettings _currencySettings;
         private readonly PayPalSmartPaymentButtonsSettings _settings;
         private readonly ServiceManager _serviceManager;
         private readonly WidgetSettings _widgetSettings;
@@ -47,21 +51,25 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         #region Ctor
 
         public PaymentMethod(IActionContextAccessor actionContextAccessor,
+            ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
+            CurrencySettings currencySettings,
             PayPalSmartPaymentButtonsSettings settings,
             ServiceManager serviceManager,
             WidgetSettings widgetSettings)
         {
             _actionContextAccessor = actionContextAccessor;
+            _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _settingService = settingService;
             _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
+            _currencySettings = currencySettings;
             _settings = settings;
             _serviceManager = serviceManager;
             _widgetSettings = widgetSettings;
@@ -174,8 +182,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             var amount = refundPaymentRequest.AmountToRefund != refundPaymentRequest.Order.OrderTotal
                 ? (decimal?)refundPaymentRequest.AmountToRefund
                 : null;
-            var (refund, error) = _serviceManager.Refund(_settings, refundPaymentRequest.Order.CaptureTransactionId,
-                refundPaymentRequest.Order.CustomerCurrencyCode, amount);
+
+            //get the primary store currency
+            var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            if (currency == null)
+                throw new NopException("Primary store currency cannot be loaded");
+
+            var (refund, error) = _serviceManager.Refund(
+                _settings, refundPaymentRequest.Order.CaptureTransactionId, currency.CurrencyCode, amount);
 
             if (!string.IsNullOrEmpty(error))
                 return new RefundPaymentResult { Errors = new[] { error } };
