@@ -5,7 +5,6 @@
 
 * {
   margin: 0;
-  outline: none;
   padding: 0;
   text-decoration: none;
 }
@@ -27,14 +26,6 @@ ol, ul {
 
 a img {
   border: none;
-}
-
-a:active {
-  outline: none;
-}
-
-*:focus {
-  outline: 3px dotted #333;
 }
 
 input[type="button"]::-moz-focus-inner,
@@ -1724,7 +1715,6 @@ label, label + * {
 
 .item-box .picture {
   z-index: 1;
-  overflow: hidden;
   background-color: #fff;
   margin: 0 0 20px;
 }
@@ -1732,6 +1722,10 @@ label, label + * {
 .item-box .picture a {
   display: block;
   position: relative;
+}
+
+.item-box .picture a:focus {
+  opacity: 0.85;
 }
 
 .item-box .picture a:before {
@@ -1758,18 +1752,12 @@ label, label + * {
   opacity: 0.85;
 }
 
-.item-box .picture a:focus {
-  opacity: 0.85;
-  border: 3px dotted;
-}
-
 .item-box .details {
   padding: 0 10px;
 }
 
 .item-box .product-title {
   margin: 0 0 10px;
-  overflow: hidden;
   font-size: 17px;
   line-height: 1.2;
   font-weight: normal;
