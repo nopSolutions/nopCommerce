@@ -1602,11 +1602,13 @@ span.grid-report-item {
 }
 
 .onoffswitch {
-  position: relative;
-  width: 130px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+    display: table;
+    position: relative;
+    min-width: 130px;
+    max-width: 100%;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select: none;
 }
 
 .onoffswitch-checkbox {
@@ -1614,11 +1616,13 @@ span.grid-report-item {
 }
 
 .onoffswitch-label {
-  display: block;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid #367fa9;
-  border-radius: 3px;
+    display: table;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #367fa9;
+    border-radius: 3px;
+    min-width: 130px;
 }
 
 .onoffswitch-inner {
@@ -1632,22 +1636,18 @@ span.grid-report-item {
     display: block;
     float: left;
     width: 50%;
-    height: 34px;
     padding: 0;
-    padding-top: 3px;
-    line-height: 32px;
-    font-size: 14px;
     color: white;
-    font-family: Trebuchet, Arial, sans-serif;
-    font-weight: bold;
-  }
-
-  .onoffswitch-inner:before {
+    font-weight: 400;
+    white-space: nowrap;
+    height: 37px;
+    line-height: 37px;
+}
+.onoffswitch-inner:before {
     content: attr(data-locale-advanced);
     padding-left: 10px;
     background-color: #3c8dbc;
     color: #FFFFFF;
-    height: 36px;
   }
 
   .onoffswitch-inner:after {
@@ -1659,17 +1659,18 @@ span.grid-report-item {
   }
 
 .onoffswitch-switch {
-  display: block;
-  width: 16px;
-  margin: 6.5px;
-  background: #FFFFFF;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 95px;
-  border: 1px solid #367fa9;
-  border-radius: 15px;
-  transition: all 0.3s ease-in 0s;
+    display: block;
+    width: 16px;
+    margin: 4px 0;
+    background: #FFFFFF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    margin-right: -25px;
+    border: 1px solid #367fa9;
+    border-radius: 15px;
+    transition: all 0.3s ease-in 0s;
 }
 
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
@@ -1677,7 +1678,9 @@ span.grid-report-item {
 }
 
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-  right: 0px;
+    right: 0px;
+    margin-right: 7px;
+    transition: all 0.3s ease-in 0s;
 }
 
 /*bootstrap touchspin*/
