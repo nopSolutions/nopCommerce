@@ -1384,21 +1384,25 @@ span.grid-report-item.red {
 }
 
 .onoffswitch {
-    position: relative; 
-    width: 130px;
-    -webkit-user-select:none; 
-    -moz-user-select:none; 
+    display: table;
+    position: relative;
+    min-width: 130px;
+    max-width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
     -ms-user-select: none;
 }
 .onoffswitch-checkbox {
     display: none;
 }
 .onoffswitch-label {
-    display: block; 
-    overflow: hidden; 
+    display: table;
+    position: relative;
+    overflow: hidden;
     cursor: pointer;
     border: 1px solid #367fa9;
     border-radius: 3px;
+    min-width: 130px;
 }
 .onoffswitch-inner {
     display: block; 
@@ -1410,13 +1414,14 @@ span.grid-report-item.red {
     display: block;
     float: right;
     width: 50%;
-    height: 32px;
+    height: 34px;
     padding: 0;
-    line-height: 32px;
+    line-height: 34px;
     font-size: 14px;
     color: white;
     font-family: Trebuchet, Arial, sans-serif;
     font-weight: bold;
+    white-space: nowrap;
 }
 .onoffswitch-inner:before {
     content: attr(data-locale-advanced);
@@ -1432,14 +1437,15 @@ span.grid-report-item.red {
     text-align: left;
 }
 .onoffswitch-switch {
-    display: block; 
+    display: block;
     width: 16px;
-    margin: 6.5px;
+    margin: 4px 0;
     background: #FFFFFF;
-    position: absolute; 
-    top: 0; 
+    position: absolute;
+    top: 0;
     bottom: 0;
-    left: 95px;
+    left: 100%;
+    margin-left: -25px;
     border: 1px solid #367fa9;
     border-radius: 15px;
     transition: all 0.3s ease-in 0s;
@@ -1448,7 +1454,9 @@ span.grid-report-item.red {
     margin-right: 0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    left: 0px; 
+    left: 0px;
+    margin-left: 7px;
+    transition: all 0.3s ease-in 0s;
 }
 
 
