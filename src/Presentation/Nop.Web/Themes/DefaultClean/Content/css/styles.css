@@ -3533,6 +3533,7 @@ label, label + * {
 
 .return-request-page .return-request-file .uploadedfileinput {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .registration-page .message-error,
