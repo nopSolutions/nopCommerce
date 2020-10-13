@@ -9,13 +9,5 @@ namespace Nop.Services.Messages.Caching
     /// </summary>
     public partial class EmailAccountCacheEventConsumer : CacheEventConsumer<EmailAccount>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(EmailAccount entity)
-        {
-            await Remove(NopMessageDefaults.EmailAccountsAllCacheKey);
-        }
     }
 }

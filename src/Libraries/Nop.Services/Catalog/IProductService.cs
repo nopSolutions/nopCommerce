@@ -699,7 +699,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        Task<IList<ProductReview>> GetProducReviewsByIds(int[] productReviewIds);
+        Task<IList<ProductReview>> GetProductReviewsByIds(int[] productReviewIds);
 
         /// <summary>
         /// Inserts a product review
@@ -751,6 +751,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         Task UpdateProductReview(ProductReview productReview);
+
+        /// <summary>
+        /// Check possibility added review for current customer
+        /// </summary>
+        /// <param name="productId">Current product</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <returns></returns>
+        Task<bool> CanAddReview(int productId, int storeId = 0);
 
         #endregion
 

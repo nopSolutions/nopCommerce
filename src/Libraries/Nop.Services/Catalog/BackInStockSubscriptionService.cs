@@ -6,9 +6,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
-using Nop.Services.Events;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
@@ -20,7 +18,6 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -31,14 +28,12 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public BackInStockSubscriptionService(IEventPublisher eventPublisher,
-            IGenericAttributeService genericAttributeService,
+        public BackInStockSubscriptionService(IGenericAttributeService genericAttributeService,
             IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IRepository<Customer> customerRepository,
             IRepository<Product> productRepository,
             IWorkflowMessageService workflowMessageService)
         {
-            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             _customerRepository = customerRepository;
@@ -56,13 +51,7 @@ namespace Nop.Services.Catalog
         /// <param name="subscription">Subscription</param>
         public virtual async Task DeleteSubscription(BackInStockSubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
-
             await _backInStockSubscriptionRepository.Delete(subscription);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(subscription);
         }
 
         /// <summary>
@@ -76,24 +65,25 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerId(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _backInStockSubscriptionRepository.Table;
+            return await _backInStockSubscriptionRepository.GetAllPaged(query =>
+            {
+                //customer
+                query = query.Where(biss => biss.CustomerId == customerId);
 
-            //customer
-            query = query.Where(biss => biss.CustomerId == customerId);
+                //store
+                if (storeId > 0)
+                    query = query.Where(biss => biss.StoreId == storeId);
 
-            //store
-            if (storeId > 0)
-                query = query.Where(biss => biss.StoreId == storeId);
+                //product
+                query = from q in query
+                    join p in _productRepository.Table on q.ProductId equals p.Id
+                    where !p.Deleted
+                    select q;
 
-            //product
-            query = from q in query
-                join p in _productRepository.Table on q.ProductId equals p.Id
-                where !p.Deleted
-                select q;
+                query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
-            query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-
-            return await query.ToPagedList(pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -107,21 +97,23 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _backInStockSubscriptionRepository.Table;
-            //product
-            query = query.Where(biss => biss.ProductId == productId);
-            //store
-            if (storeId > 0)
-                query = query.Where(biss => biss.StoreId == storeId);
-            //customer
-            query = from biss in query
-                join c in _customerRepository.Table on biss.CustomerId equals c.Id
-                where c.Active && !c.Deleted
-                select biss;
+            return await _backInStockSubscriptionRepository.GetAllPaged(query =>
+            {
+                //product
+                query = query.Where(biss => biss.ProductId == productId);
+                //store
+                if (storeId > 0)
+                    query = query.Where(biss => biss.StoreId == storeId);
+                //customer
+                query = from biss in query
+                    join c in _customerRepository.Table on biss.CustomerId equals c.Id
+                    where c.Active && !c.Deleted
+                    select biss;
 
-            query = query.OrderByDescending(biss => biss.CreatedOnUtc);
-            
-            return await query.ToPagedList(pageIndex, pageSize);
+                query = query.OrderByDescending(biss => biss.CreatedOnUtc);
+
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -152,12 +144,7 @@ namespace Nop.Services.Catalog
         /// <returns>Subscription</returns>
         public virtual async Task<BackInStockSubscription> GetSubscriptionById(int subscriptionId)
         {
-            if (subscriptionId == 0)
-                return null;
-
-            var subscription = await _backInStockSubscriptionRepository.ToCachedGetById(subscriptionId);
-            
-            return subscription;
+            return await _backInStockSubscriptionRepository.GetById(subscriptionId, cache => default);
         }
 
         /// <summary>
@@ -166,13 +153,7 @@ namespace Nop.Services.Catalog
         /// <param name="subscription">Subscription</param>
         public virtual async Task InsertSubscription(BackInStockSubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
-
             await _backInStockSubscriptionRepository.Insert(subscription);
-
-            //event notification
-            await _eventPublisher.EntityInserted(subscription);
         }
 
         /// <summary>
@@ -181,13 +162,7 @@ namespace Nop.Services.Catalog
         /// <param name="subscription">Subscription</param>
         public virtual async Task UpdateSubscription(BackInStockSubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
-
             await _backInStockSubscriptionRepository.Update(subscription);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(subscription);
         }
 
         /// <summary>

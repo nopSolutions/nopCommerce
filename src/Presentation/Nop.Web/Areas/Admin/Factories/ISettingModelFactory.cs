@@ -10,6 +10,12 @@ namespace Nop.Web.Areas.Admin.Factories
     public partial interface ISettingModelFactory
     {
         /// <summary>
+        /// Prepare app settings model
+        /// </summary>
+        /// <returns>App settings model</returns>
+        AppSettingsModel PrepareAppSettingsModel();
+
+        /// <summary>
         /// Prepare blog settings model
         /// </summary>
         /// <returns>Blog settings model</returns>

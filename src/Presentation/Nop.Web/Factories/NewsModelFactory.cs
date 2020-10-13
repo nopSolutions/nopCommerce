@@ -7,7 +7,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
-using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -28,7 +27,6 @@ namespace Nop.Web.Factories
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -47,7 +45,6 @@ namespace Nop.Web.Factories
 
         public NewsModelFactory(CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
@@ -62,7 +59,6 @@ namespace Nop.Web.Factories
         {
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
@@ -168,7 +164,7 @@ namespace Nop.Web.Factories
         /// <returns>Home page news items model</returns>
         public virtual async Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModel()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguage(), await _storeContext.GetCurrentStore());
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguage(), await _storeContext.GetCurrentStore());
             var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
             {
                 var newsItems = await _newsService.GetAllNews((await _workContext.GetWorkingLanguage()).Id, (await _storeContext.GetCurrentStore()).Id, 0, _newsSettings.MainPageNewsCount);

@@ -9,7 +9,14 @@ namespace Nop.Services.Stores
     {
         #region Caching defaults
 
-        #region Store mappings
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : entity name
+        /// </remarks>
+        public static CacheKey StoreMappingIdsCacheKey => new CacheKey("Nop.storemapping.ids.{0}-{1}");
 
         /// <summary>
         /// Gets a key for caching
@@ -18,27 +25,7 @@ namespace Nop.Services.Stores
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static CacheKey StoreMappingIdsByEntityIdNameCacheKey => new CacheKey("Nop.storemapping.ids.entityid-name-{0}-{1}");
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : entity name
-        /// </remarks>
-        public static CacheKey StoreMappingsByEntityIdNameCacheKey => new CacheKey("Nop.storemapping.entityid-name-{0}-{1}");
-
-        #endregion
-
-        #region Stores
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static CacheKey StoresAllCacheKey => new CacheKey("Nop.stores.all");
-
-        #endregion
+        public static CacheKey StoreMappingsCacheKey => new CacheKey("Nop.storemapping.{0}-{1}");
 
         #endregion
     }

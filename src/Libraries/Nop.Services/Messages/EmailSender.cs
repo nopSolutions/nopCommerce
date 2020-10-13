@@ -146,7 +146,7 @@ namespace Nop.Services.Messages
             {
                 foreach (var address in bcc.Where(bccValue => !string.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(new MailboxAddress(address.Trim()));
+                    message.Bcc.Add(new MailboxAddress("", address.Trim()));
                 }
             }
 
@@ -155,7 +155,7 @@ namespace Nop.Services.Messages
             {
                 foreach (var address in cc.Where(ccValue => !string.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.Cc.Add(new MailboxAddress(address.Trim()));
+                    message.Cc.Add(new MailboxAddress("", address.Trim()));
                 }
             }
 

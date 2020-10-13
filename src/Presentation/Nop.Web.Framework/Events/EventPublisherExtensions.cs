@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Nop.Services.Events;
+ using Nop.Core.Events;
 
 namespace Nop.Web.Framework.Events
 {

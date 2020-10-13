@@ -237,7 +237,7 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = (await _customerService.GetAddressesByCustomerId((await _workContext.GetCurrentCustomer()).Id))
-                .Where(a => _countryService.GetCountryByAddress(a).Result is Country country &&
+                .Where(a => !a.CountryId.HasValue || _countryService.GetCountryByAddress(a).Result is Country country &&
                     (//published
                     country.Published &&
                     //allow billing
@@ -297,7 +297,7 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = (await _customerService.GetAddressesByCustomerId((await _workContext.GetCurrentCustomer()).Id))
-                .Where(a => _countryService.GetCountryByAddress(a).Result is Country country &&
+                .Where(a => !a.CountryId.HasValue || _countryService.GetCountryByAddress(a).Result is Country country &&
                     (//published
                     country.Published &&
                     //allow shipping

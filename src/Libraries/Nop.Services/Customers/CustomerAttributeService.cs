@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Customers
 {
@@ -17,24 +14,21 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly IRepository<CustomerAttributeValue> _customerAttributeValueRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public CustomerAttributeService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<CustomerAttribute> customerAttributeRepository,
-            IRepository<CustomerAttributeValue> customerAttributeValueRepository)
+        public CustomerAttributeService(IRepository<CustomerAttribute> customerAttributeRepository,
+            IRepository<CustomerAttributeValue> customerAttributeValueRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _customerAttributeRepository = customerAttributeRepository;
             _customerAttributeValueRepository = customerAttributeValueRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -47,13 +41,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttribute">Customer attribute</param>
         public virtual async Task DeleteCustomerAttribute(CustomerAttribute customerAttribute)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
             await _customerAttributeRepository.Delete(customerAttribute);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(customerAttribute);
         }
 
         /// <summary>
@@ -62,11 +50,12 @@ namespace Nop.Services.Customers
         /// <returns>Customer attributes</returns>
         public virtual async Task<IList<CustomerAttribute>> GetAllCustomerAttributes()
         {
-            var query = from ca in _customerAttributeRepository.Table
-                orderby ca.DisplayOrder, ca.Id
-                select ca;
-
-            return await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey));
+            return await _customerAttributeRepository.GetAll(query =>
+            {
+                return from ca in query
+                    orderby ca.DisplayOrder, ca.Id
+                    select ca;
+            }, cache => default);
         }
 
         /// <summary>
@@ -76,10 +65,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute</returns>
         public virtual async Task<CustomerAttribute> GetCustomerAttributeById(int customerAttributeId)
         {
-            if (customerAttributeId == 0)
-                return null;
-
-            return await _customerAttributeRepository.ToCachedGetById(customerAttributeId);
+            return await _customerAttributeRepository.GetById(customerAttributeId, cache => default);
         }
 
         /// <summary>
@@ -88,13 +74,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttribute">Customer attribute</param>
         public virtual async Task InsertCustomerAttribute(CustomerAttribute customerAttribute)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
             await _customerAttributeRepository.Insert(customerAttribute);
-            
-            //event notification
-            await _eventPublisher.EntityInserted(customerAttribute);
         }
 
         /// <summary>
@@ -103,13 +83,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttribute">Customer attribute</param>
         public virtual async Task UpdateCustomerAttribute(CustomerAttribute customerAttribute)
         {
-            if (customerAttribute == null)
-                throw new ArgumentNullException(nameof(customerAttribute));
-
             await _customerAttributeRepository.Update(customerAttribute);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(customerAttribute);
         }
 
         /// <summary>
@@ -118,13 +92,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeValue">Customer attribute value</param>
         public virtual async Task DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
-            if (customerAttributeValue == null)
-                throw new ArgumentNullException(nameof(customerAttributeValue));
-
             await _customerAttributeValueRepository.Delete(customerAttributeValue);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(customerAttributeValue);
         }
 
         /// <summary>
@@ -134,13 +102,14 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual async Task<IList<CustomerAttributeValue>> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id
                 where cav.CustomerAttributeId == customerAttributeId
                 select cav;
-            var customerAttributeValues = await query.ToCachedList(key);
+
+            var customerAttributeValues = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return customerAttributeValues;
         }
@@ -152,10 +121,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute value</returns>
         public virtual async Task<CustomerAttributeValue> GetCustomerAttributeValueById(int customerAttributeValueId)
         {
-            if (customerAttributeValueId == 0)
-                return null;
-
-            return await _customerAttributeValueRepository.ToCachedGetById(customerAttributeValueId);
+            return await _customerAttributeValueRepository.GetById(customerAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -164,13 +130,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeValue">Customer attribute value</param>
         public virtual async Task InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
-            if (customerAttributeValue == null)
-                throw new ArgumentNullException(nameof(customerAttributeValue));
-
             await _customerAttributeValueRepository.Insert(customerAttributeValue);
-
-            //event notification
-            await _eventPublisher.EntityInserted(customerAttributeValue);
         }
 
         /// <summary>
@@ -179,13 +139,7 @@ namespace Nop.Services.Customers
         /// <param name="customerAttributeValue">Customer attribute value</param>
         public virtual async Task UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
-            if (customerAttributeValue == null)
-                throw new ArgumentNullException(nameof(customerAttributeValue));
-
             await _customerAttributeValueRepository.Update(customerAttributeValue);
-            
-            //event notification
-            await _eventPublisher.EntityUpdated(customerAttributeValue);
         }
 
         #endregion

@@ -1,7 +1,7 @@
 ﻿@model ProductDetailsModel
 @{
-    Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
-    Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib_npm/magnific-popup/jquery.magnific-popup.min.js");
+    Html.AddCssFileParts("~/lib_npm/magnific-popup/magnific-popup.css");
 }
 <div class="gallery">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })

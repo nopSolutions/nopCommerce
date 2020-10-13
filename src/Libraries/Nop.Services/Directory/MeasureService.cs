@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Directory
 {
@@ -18,8 +15,6 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
         private readonly MeasureSettings _measureSettings;
@@ -28,14 +23,10 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        public MeasureService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<MeasureDimension> measureDimensionRepository,
+        public MeasureService(IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
             MeasureSettings measureSettings)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
             _measureSettings = measureSettings;
@@ -53,13 +44,7 @@ namespace Nop.Services.Directory
         /// <param name="measureDimension">Measure dimension</param>
         public virtual async Task DeleteMeasureDimension(MeasureDimension measureDimension)
         {
-            if (measureDimension == null)
-                throw new ArgumentNullException(nameof(measureDimension));
-
             await _measureDimensionRepository.Delete(measureDimension);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(measureDimension);
         }
 
         /// <summary>
@@ -69,10 +54,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure dimension</returns>
         public virtual async Task<MeasureDimension> GetMeasureDimensionById(int measureDimensionId)
         {
-            if (measureDimensionId == 0)
-                return null;
-
-            return await _measureDimensionRepository.ToCachedGetById(measureDimensionId);
+            return await _measureDimensionRepository.GetById(measureDimensionId, cache => default);
         }
 
         /// <summary>
@@ -98,10 +80,12 @@ namespace Nop.Services.Directory
         /// <returns>Measure dimensions</returns>
         public virtual async Task<IList<MeasureDimension>> GetAllMeasureDimensions()
         {
-            var query = from md in _measureDimensionRepository.Table
-                orderby md.DisplayOrder, md.Id
-                select md;
-            var measureDimensions = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
+            var measureDimensions = await _measureDimensionRepository.GetAll(query =>
+            {
+                return from md in query
+                    orderby md.DisplayOrder, md.Id
+                    select md;
+            }, cache => default);
 
             return measureDimensions;
         }
@@ -112,13 +96,7 @@ namespace Nop.Services.Directory
         /// <param name="measure">Measure dimension</param>
         public virtual async Task InsertMeasureDimension(MeasureDimension measure)
         {
-            if (measure == null)
-                throw new ArgumentNullException(nameof(measure));
-
             await _measureDimensionRepository.Insert(measure);
-
-            //event notification
-            await _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -127,13 +105,7 @@ namespace Nop.Services.Directory
         /// <param name="measure">Measure dimension</param>
         public virtual async Task UpdateMeasureDimension(MeasureDimension measure)
         {
-            if (measure == null)
-                throw new ArgumentNullException(nameof(measure));
-
             await _measureDimensionRepository.Update(measure);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(measure);
         }
 
         /// <summary>
@@ -226,13 +198,7 @@ namespace Nop.Services.Directory
         /// <param name="measureWeight">Measure weight</param>
         public virtual async Task DeleteMeasureWeight(MeasureWeight measureWeight)
         {
-            if (measureWeight == null)
-                throw new ArgumentNullException(nameof(measureWeight));
-
             await _measureWeightRepository.Delete(measureWeight);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(measureWeight);
         }
 
         /// <summary>
@@ -242,10 +208,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure weight</returns>
         public virtual async Task<MeasureWeight> GetMeasureWeightById(int measureWeightId)
         {
-            if (measureWeightId == 0)
-                return null;
-
-            return await _measureWeightRepository.ToCachedGetById(measureWeightId);
+            return await _measureWeightRepository.GetById(measureWeightId, cache => default);
         }
 
         /// <summary>
@@ -271,11 +234,13 @@ namespace Nop.Services.Directory
         /// <returns>Measure weights</returns>
         public virtual async Task<IList<MeasureWeight>> GetAllMeasureWeights()
         {
-            var query = from mw in _measureWeightRepository.Table
-                orderby mw.DisplayOrder, mw.Id
-                select mw;
-            var measureWeights = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
-
+            var measureWeights = await _measureWeightRepository.GetAll(query =>
+            {
+                return from mw in query
+                    orderby mw.DisplayOrder, mw.Id
+                    select mw;
+            }, cache => default);
+            
             return measureWeights;
         }
 
@@ -285,13 +250,7 @@ namespace Nop.Services.Directory
         /// <param name="measure">Measure weight</param>
         public virtual async Task InsertMeasureWeight(MeasureWeight measure)
         {
-            if (measure == null)
-                throw new ArgumentNullException(nameof(measure));
-
             await _measureWeightRepository.Insert(measure);
-
-            //event notification
-            await _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -300,13 +259,7 @@ namespace Nop.Services.Directory
         /// <param name="measure">Measure weight</param>
         public virtual async Task UpdateMeasureWeight(MeasureWeight measure)
         {
-            if (measure == null)
-                throw new ArgumentNullException(nameof(measure));
-
             await _measureWeightRepository.Update(measure);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(measure);
         }
 
         /// <summary>

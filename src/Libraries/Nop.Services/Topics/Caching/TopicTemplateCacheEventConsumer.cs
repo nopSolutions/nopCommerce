@@ -9,14 +9,5 @@ namespace Nop.Services.Topics.Caching
     /// </summary>
     public partial class TopicTemplateCacheEventConsumer : CacheEventConsumer<TopicTemplate>
     {
-        /// <summary>
-        /// entity
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        /// <param name="entityEventType">Entity event type</param>
-        protected override async Task ClearCache(TopicTemplate entity, EntityEventType entityEventType)
-        {
-            await Remove(NopTopicDefaults.TopicTemplatesAllCacheKey);
-        }
     }
 }

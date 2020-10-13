@@ -5,13 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
-    public partial class MemoryCacheManager : ILocker, IStaticCacheManager
+    public partial class MemoryCacheManager : CacheKeyService, ILocker, IStaticCacheManager
     {
         #region Fields
 
@@ -27,7 +28,7 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        public MemoryCacheManager(IMemoryCache memoryCache)
+        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache) : base(appSettings)
         {
             _memoryCache = memoryCache;
         }
@@ -63,14 +64,42 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Methods
-        
+
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
-        /// <param name="key">Key of cached item</param>
-        public Task Remove(CacheKey key)
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public T Get<T>(CacheKey key, Func<T> acquire)
         {
-            _memoryCache.Remove(key.Key);
+            if ((key?.CacheTime ?? 0) <= 0)
+                return acquire();
+
+            var result = _memoryCache.GetOrCreate(key.Key, entry =>
+            {
+                entry.SetOptions(PrepareEntryOptions(key));
+
+                return acquire();
+            });
+
+            //do not cache null value
+            if (result == null)
+                Remove(key);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Remove the value with the specified key from the cache
+        /// </summary>
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        public Task Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
+            _memoryCache.Remove(cacheKey.Key);
 
             return Task.CompletedTask;
         }
@@ -84,7 +113,7 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public async Task<T> Get<T>(CacheKey key, Func<Task<T>> acquire)
         {
-            if (key.CacheTime <= 0)
+            if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
             var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
@@ -102,13 +131,13 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Adds the specified key and object to the cache
+        /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         public Task Set(CacheKey key, object data)
         {
-            if (key.CacheTime <= 0 || data == null)
+            if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return Task.CompletedTask;
 
             _memoryCache.Set(key.Key, data, PrepareEntryOptions(key));
@@ -117,7 +146,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// Get a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
@@ -156,7 +185,7 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Remove the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         public Task Remove(string key)
@@ -167,11 +196,14 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Removes items by key prefix
+        /// Remove items by cache key prefix
         /// </summary>
-        /// <param name="prefix">String key prefix</param>
-        public Task RemoveByPrefix(string prefix)
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        public Task RemoveByPrefix(string prefix, params object[] prefixParameters)
         {
+            prefix = PrepareKeyPrefix(prefix, prefixParameters);
+
             _prefixes.TryRemove(prefix, out var tokenSource);
             tokenSource?.Cancel();
             tokenSource?.Dispose();
@@ -213,10 +245,8 @@ namespace Nop.Core.Caching
             if (_disposed)
                 return;
 
-            if (disposing)
-            {
+            if (disposing) 
                 _memoryCache.Dispose();
-            }
 
             _disposed = true;
         }

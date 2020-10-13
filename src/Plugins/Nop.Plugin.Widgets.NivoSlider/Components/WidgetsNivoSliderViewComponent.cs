@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache;
 using Nop.Plugin.Widgets.NivoSlider.Models;
-using Nop.Services.Caching;
 using Nop.Services.Configuration;
 using Nop.Services.Media;
 using Nop.Web.Framework.Components;
@@ -15,21 +14,18 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
     [ViewComponent(Name = "WidgetsNivoSlider")]
     public class WidgetsNivoSliderViewComponent : NopViewComponent
     {
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IStoreContext _storeContext;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ISettingService _settingService;
         private readonly IPictureService _pictureService;
         private readonly IWebHelper _webHelper;
 
-        public WidgetsNivoSliderViewComponent(ICacheKeyService cacheKeyService,
-            IStoreContext storeContext, 
+        public WidgetsNivoSliderViewComponent(IStoreContext storeContext, 
             IStaticCacheManager staticCacheManager, 
             ISettingService settingService, 
             IPictureService pictureService,
             IWebHelper webHelper)
         {
-            _cacheKeyService = cacheKeyService;
             _storeContext = storeContext;
             _staticCacheManager = staticCacheManager;
             _settingService = settingService;
@@ -80,7 +76,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 
         protected async Task<string> GetPictureUrl(int pictureId)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
                 pictureId, await _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
             return await _staticCacheManager.Get(cacheKey, async () =>

@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -38,7 +37,6 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -57,197 +55,101 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IAddressService _addressService;
         private readonly INopDataProvider _dataProvider;
-        private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
-        private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<Address> _addressRepository;
-        private readonly IRepository<Affiliate> _affiliateRepository;
-        private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
-        private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly IRepository<Forum> _forumRepository;
-        private readonly IRepository<ForumGroup> _forumGroupRepository;
-        private readonly IRepository<GiftCard> _giftCardRepository;
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
-        private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderItem> _orderItemRepository;
-        private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<PollAnswer> _pollAnswerRepository;
-        private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAvailabilityRange> _productAvailabilityRangeRepository;
-        private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
-        private readonly IRepository<RelatedProduct> _relatedProductRepository;
-        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
-        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
-        private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
-        private readonly IRepository<SearchTerm> _searchTermRepository;
-        private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IRepository<ShipmentItem> _shipmentItemRepository;
-        private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
-        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IRepository<TierPrice> _tierPriceRepository;
-        private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IRepository<Vendor> _vendorRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
-        public CodeFirstInstallationService(IAddressService addressService,
-            INopDataProvider dataProvider,
-            IGenericAttributeService genericAttributeService,
+        public CodeFirstInstallationService(INopDataProvider dataProvider,
             INopFileProvider fileProvider,
-            IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<Address> addressRepository,
-            IRepository<Affiliate> affiliateRepository,
-            IRepository<BlogPost> blogPostRepository,
             IRepository<Category> categoryRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<Country> countryRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
-            IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
-            IRepository<Discount> discountRepository,
             IRepository<EmailAccount> emailAccountRepository,
-            IRepository<Forum> forumRepository,
-            IRepository<ForumGroup> forumGroupRepository,
-            IRepository<GiftCard> giftCardRepository,
             IRepository<Language> languageRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
-            IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<NewsItem> newsItemRepository,
-            IRepository<Order> orderRepository,
-            IRepository<OrderItem> orderItemRepository,
-            IRepository<OrderNote> orderNoteRepository,
-            IRepository<PollAnswer> pollAnswerRepository,
-            IRepository<Poll> pollRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
-            IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository,
-            IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
-            IRepository<RelatedProduct> relatedProductRepository,
-            IRepository<ReturnRequestAction> returnRequestActionRepository,
-            IRepository<ReturnRequestReason> returnRequestReasonRepository,
-            IRepository<ScheduleTask> scheduleTaskRepository,
-            IRepository<SearchTerm> searchTermRepository,
-            IRepository<Shipment> shipmentRepository,
-            IRepository<ShipmentItem> shipmentItemRepository,
-            IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<StateProvince> stateProvinceRepository,
-            IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<Store> storeRepository,
             IRepository<TaxCategory> taxCategoryRepository,
-            IRepository<TierPrice> tierPriceRepository,
-            IRepository<Topic> topicRepository,
             IRepository<TopicTemplate> topicTemplateRepository,
             IRepository<UrlRecord> urlRecordRepository,
-            IRepository<Vendor> vendorRepository,
-            IRepository<Warehouse> warehouseRepository,
             IWebHelper webHelper)
         {
-            _addressService = addressService;
             _dataProvider = dataProvider;
-            _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
-            _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
             _addressRepository = addressRepository;
-            _affiliateRepository = affiliateRepository;
-            _blogPostRepository = blogPostRepository;
             _categoryRepository = categoryRepository;
             _categoryTemplateRepository = categoryTemplateRepository;
             _countryRepository = countryRepository;
             _currencyRepository = currencyRepository;
-            _customerPasswordRepository = customerPasswordRepository;
             _customerRepository = customerRepository;
             _customerRoleRepository = customerRoleRepository;
             _deliveryDateRepository = deliveryDateRepository;
-            _discountRepository = discountRepository;
             _emailAccountRepository = emailAccountRepository;
-            _forumGroupRepository = forumGroupRepository;
-            _forumRepository = forumRepository;
-            _giftCardRepository = giftCardRepository;
             _languageRepository = languageRepository;
             _manufacturerRepository = manufacturerRepository;
             _manufacturerTemplateRepository = manufacturerTemplateRepository;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
-            _messageTemplateRepository = messageTemplateRepository;
-            _newsItemRepository = newsItemRepository;
-            _orderItemRepository = orderItemRepository;
-            _orderNoteRepository = orderNoteRepository;
-            _orderRepository = orderRepository;
-            _pollAnswerRepository = pollAnswerRepository;
-            _pollRepository = pollRepository;
             _productAttributeRepository = productAttributeRepository;
-            _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
-            _productProductTagMappingRepository = productProductTagMappingRepository;
             _productRepository = productRepository;
             _productTagRepository = productTagRepository;
             _productTemplateRepository = productTemplateRepository;
-            _relatedProductRepository = relatedProductRepository;
-            _returnRequestActionRepository = returnRequestActionRepository;
-            _returnRequestReasonRepository = returnRequestReasonRepository;
-            _scheduleTaskRepository = scheduleTaskRepository;
-            _searchTermRepository = searchTermRepository;
-            _shipmentItemRepository = shipmentItemRepository;
-            _shipmentRepository = shipmentRepository;
-            _shippingMethodRepository = shippingMethodRepository;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _stateProvinceRepository = stateProvinceRepository;
-            _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _storeRepository = storeRepository;
             _taxCategoryRepository = taxCategoryRepository;
-            _tierPriceRepository = tierPriceRepository;
-            _topicRepository = topicRepository;
             _topicTemplateRepository = topicTemplateRepository;
             _urlRecordRepository = urlRecordRepository;
-            _vendorRepository = vendorRepository;
-            _warehouseRepository = warehouseRepository;
             _webHelper = webHelper;
         }
 
@@ -263,6 +165,28 @@ namespace Nop.Services.Installation
         protected virtual async Task InsertInstallationData<T>(params T[] entities) where T : BaseEntity
         {
             await _dataProvider.BulkInsertEntities(entities);
+        }
+
+        protected virtual async Task InsertInstallationData<T>(IList<T> entities) where T : BaseEntity
+        {
+            if (!entities.Any())
+                return;
+
+            await InsertInstallationData(entities.ToArray());
+        }
+
+        protected virtual async Task UpdateInstallationData<T>(T entity) where T : BaseEntity
+        {
+            await _dataProvider.UpdateEntity(entity);
+        }
+
+        protected virtual async Task UpdateInstallationData<T>(IList<T> entities) where T : BaseEntity
+        {
+            if (!entities.Any())
+                return;
+
+            foreach (var entity in entities)
+                await _dataProvider.UpdateEntity(entity);
         }
 
         protected virtual async Task<int> GetSpecificationAttributeOptionId(string specAttributeName, string specAttributeOptionName)
@@ -379,7 +303,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _storeRepository.Insert(stores);
+            await InsertInstallationData(stores);
         }
 
         protected virtual async Task InstallMeasures()
@@ -416,7 +340,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _measureDimensionRepository.Insert(measureDimensions);
+            await InsertInstallationData(measureDimensions);
 
             var measureWeights = new List<MeasureWeight>
             {
@@ -450,7 +374,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _measureWeightRepository.Insert(measureWeights);
+            await InsertInstallationData(measureWeights);
         }
 
         protected virtual async Task InstallTaxCategories()
@@ -464,7 +388,7 @@ namespace Nop.Services.Installation
                 new TaxCategory {Name = "Apparel", DisplayOrder = 20}
             };
 
-            await _taxCategoryRepository.Insert(taxCategories);
+            await InsertInstallationData(taxCategories);
         }
 
         protected virtual async Task InstallLanguages()
@@ -479,7 +403,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             };
 
-            await _languageRepository.Insert(language);
+            await InsertInstallationData(language);
         }
 
         protected virtual async Task InstallLocaleResources()
@@ -647,7 +571,8 @@ namespace Nop.Services.Installation
                     RoundingType = RoundingType.Rounding001
                 }
             };
-            await _currencyRepository.Insert(currencies);
+
+            await InsertInstallationData(currencies);
         }
 
         protected virtual async Task InstallCountriesAndStates()
@@ -3540,7 +3465,8 @@ namespace Nop.Services.Installation
                     Published = true
                 }
             };
-            await _countryRepository.Insert(countries);
+
+            await InsertInstallationData(countries.ToArray());
 
             var statesUsa = new List<StateProvince>
             {
@@ -3982,7 +3908,8 @@ namespace Nop.Services.Installation
             };
 
             statesUsa.ForEach(x => x.CountryId = cUsa.Id);
-            await _stateProvinceRepository.Insert(statesUsa);
+
+            await InsertInstallationData(statesUsa);
 
             var statesCanada = new List<StateProvince>
             {
@@ -4080,7 +4007,8 @@ namespace Nop.Services.Installation
             };
 
             statesCanada.ForEach(x => x.CountryId = cCanada.Id);
-            await _stateProvinceRepository.Insert(statesCanada);
+
+            await InsertInstallationData(statesCanada);
         }
 
         protected virtual async Task InstallShippingMethods()
@@ -4107,7 +4035,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            await _shippingMethodRepository.Insert(shippingMethods);
+
+            await InsertInstallationData(shippingMethods);
         }
 
         protected virtual async Task InstallDeliveryDates()
@@ -4130,7 +4059,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 10
                 }
             };
-            await _deliveryDateRepository.Insert(deliveryDates);
+
+            await InsertInstallationData(deliveryDates);
         }
 
         protected virtual async Task InstallProductAvailabilityRanges()
@@ -4153,7 +4083,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            await _productAvailabilityRangeRepository.Insert(productAvailabilityRanges);
+
+            await InsertInstallationData(productAvailabilityRanges);
         }
 
         protected virtual async Task InstallSampleCustomers()
@@ -4205,17 +4136,33 @@ namespace Nop.Services.Installation
             secondUser.BillingAddressId = defaultSecondUserAddress.Id;
             secondUser.ShippingAddressId = defaultSecondUserAddress.Id;
 
-            await _customerRepository.Insert(secondUser);
+            await InsertInstallationData(secondUser);
 
             await InsertInstallationData(new CustomerAddressMapping { CustomerId = secondUser.Id, AddressId = defaultSecondUserAddress.Id });
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = secondUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            await _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.FirstNameAttribute, defaultSecondUserAddress.FirstName);
-            await _genericAttributeService.SaveAttribute(secondUser, NopCustomerDefaults.LastNameAttribute, defaultSecondUserAddress.LastName);
+            await InsertInstallationData(new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = secondUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSecondUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            await _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationData(new CustomerPassword
             {
                 CustomerId = secondUser.Id,
                 Password = "123456",
@@ -4257,17 +4204,33 @@ namespace Nop.Services.Installation
             thirdUser.BillingAddressId = defaultThirdUserAddress.Id;
             thirdUser.ShippingAddressId = defaultThirdUserAddress.Id;
 
-            await _customerRepository.Insert(thirdUser);
+            await InsertInstallationData(thirdUser);
 
             await InsertInstallationData(new CustomerAddressMapping { CustomerId = thirdUser.Id, AddressId = defaultThirdUserAddress.Id });
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = thirdUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            await _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.FirstNameAttribute, defaultThirdUserAddress.FirstName);
-            await _genericAttributeService.SaveAttribute(thirdUser, NopCustomerDefaults.LastNameAttribute, defaultThirdUserAddress.LastName);
+            await InsertInstallationData(new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = thirdUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultThirdUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            await _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationData(new CustomerPassword
             {
                 CustomerId = thirdUser.Id,
                 Password = "123456",
@@ -4308,17 +4271,33 @@ namespace Nop.Services.Installation
             fourthUser.BillingAddressId = defaultFourthUserAddress.Id;
             fourthUser.ShippingAddressId = defaultFourthUserAddress.Id;
 
-            await _customerRepository.Insert(fourthUser);
+            await InsertInstallationData(fourthUser);
 
             await InsertInstallationData(new CustomerAddressMapping { CustomerId = fourthUser.Id, AddressId = defaultFourthUserAddress.Id });
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fourthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            await _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.FirstNameAttribute, defaultFourthUserAddress.FirstName);
-            await _genericAttributeService.SaveAttribute(fourthUser, NopCustomerDefaults.LastNameAttribute, defaultFourthUserAddress.LastName);
+            await InsertInstallationData(new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fourthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFourthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            await _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationData(new CustomerPassword
             {
                 CustomerId = fourthUser.Id,
                 Password = "123456",
@@ -4360,19 +4339,33 @@ namespace Nop.Services.Installation
             fifthUser.BillingAddressId = defaultFifthUserAddress.Id;
             fifthUser.ShippingAddressId = defaultFifthUserAddress.Id;
 
-            await _customerRepository.Insert(fifthUser);
+            await InsertInstallationData(fifthUser);
 
             await InsertInstallationData(new CustomerAddressMapping { CustomerId = fifthUser.Id, AddressId = defaultFifthUserAddress.Id });
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = fifthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            await _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.FirstNameAttribute,
-                defaultFifthUserAddress.FirstName);
-            await _genericAttributeService.SaveAttribute(fifthUser, NopCustomerDefaults.LastNameAttribute,
-                defaultFifthUserAddress.LastName);
+            await InsertInstallationData(new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = fifthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultFifthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            await _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationData(new CustomerPassword
             {
                 CustomerId = fifthUser.Id,
                 Password = "123456",
@@ -4414,17 +4407,33 @@ namespace Nop.Services.Installation
             sixthUser.BillingAddressId = defaultSixthUserAddress.Id;
             sixthUser.ShippingAddressId = defaultSixthUserAddress.Id;
 
-            await _customerRepository.Insert(sixthUser);
+            await InsertInstallationData(sixthUser);
 
             await InsertInstallationData(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            await _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.FirstNameAttribute, defaultSixthUserAddress.FirstName);
-            await _genericAttributeService.SaveAttribute(sixthUser, NopCustomerDefaults.LastNameAttribute, defaultSixthUserAddress.LastName);
+            await InsertInstallationData(new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.FirstName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = sixthUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = defaultSixthUserAddress.LastName,
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set customer password
-            await _customerPasswordRepository.Insert(new CustomerPassword
+            await InsertInstallationData(new CustomerPassword
             {
                 CustomerId = sixthUser.Id,
                 Password = "123456",
@@ -4479,7 +4488,8 @@ namespace Nop.Services.Installation
                 crGuests,
                 crVendors
             };
-            await _customerRoleRepository.Insert(customerRoles);
+
+            await InsertInstallationData(customerRoles);
 
             //default store 
             var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
@@ -4522,7 +4532,7 @@ namespace Nop.Services.Installation
             adminUser.BillingAddressId = defaultAdminUserAddress.Id;
             adminUser.ShippingAddressId = defaultAdminUserAddress.Id;
 
-            await _customerRepository.Insert(adminUser);
+            await InsertInstallationData(adminUser);
 
             await InsertInstallationData(new CustomerAddressMapping { CustomerId = adminUser.Id, AddressId = defaultAdminUserAddress.Id });
 
@@ -4532,8 +4542,24 @@ namespace Nop.Services.Installation
                 new CustomerCustomerRoleMapping { CustomerId = adminUser.Id, CustomerRoleId = crRegistered.Id });
 
             //set default customer name
-            await _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.FirstNameAttribute, "John");
-            await _genericAttributeService.SaveAttribute(adminUser, NopCustomerDefaults.LastNameAttribute, "Smith");
+            await InsertInstallationData(new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.FirstNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "John",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            },
+            new GenericAttribute
+            {
+                EntityId = adminUser.Id,
+                Key = NopCustomerDefaults.LastNameAttribute,
+                KeyGroup = nameof(Customer),
+                Value = "Smith",
+                StoreId = 0,
+                CreatedOrUpdatedDateUTC = DateTime.UtcNow
+            });
 
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -4554,7 +4580,7 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            await _customerRepository.Insert(searchEngineUser);
+            await InsertInstallationData(searchEngineUser);
 
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerRoleId = crGuests.Id, CustomerId = searchEngineUser.Id });
 
@@ -4572,13 +4598,37 @@ namespace Nop.Services.Installation
                 RegisteredInStoreId = storeId
             };
 
-            await _customerRepository.Insert(backgroundTaskUser);
+            await InsertInstallationData(backgroundTaskUser);
 
             await InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = backgroundTaskUser.Id, CustomerRoleId = crGuests.Id });
         }
 
         protected virtual async Task InstallOrders()
         {
+            Address cloneAddress(Address address)
+            {
+                var addr = new Address
+                {
+                    FirstName = address.FirstName,
+                    LastName = address.LastName,
+                    Email = address.Email,
+                    Company = address.Company,
+                    CountryId = address.CountryId,
+                    StateProvinceId = address.StateProvinceId,
+                    County = address.County,
+                    City = address.City,
+                    Address1 = address.Address1,
+                    Address2 = address.Address2,
+                    ZipPostalCode = address.ZipPostalCode,
+                    PhoneNumber = address.PhoneNumber,
+                    FaxNumber = address.FaxNumber,
+                    CustomAttributes = address.CustomAttributes,
+                    CreatedOnUtc = address.CreatedOnUtc
+                };
+
+                return addr;
+            }
+
             //default store
             var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
             if (defaultStore == null)
@@ -4586,9 +4636,9 @@ namespace Nop.Services.Installation
 
             //first order
             var firstCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "steve_gates@nopCommerce.com");
-
-            var firstCustomerBillingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(firstCustomer.BillingAddressId)));
-            var firstCustomerShippingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(firstCustomer.ShippingAddressId)));
+            
+            var firstCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4644,9 +4694,10 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            await _orderRepository.Insert(firstOrder);
+
+            await InsertInstallationData(firstOrder);
             firstOrder.CustomOrderNumber = firstOrder.Id.ToString();
-            await _orderRepository.Update(firstOrder);
+            await UpdateInstallationData(firstOrder);
 
             //item Apple iCam
             var firstOrderItem1 = new OrderItem
@@ -4671,7 +4722,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(firstOrderItem1);
+
+            await InsertInstallationData(firstOrderItem1);
 
             //item Leica T Mirrorless Digital Camera
             var firstOrderItem2 = new OrderItem
@@ -4696,7 +4748,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(firstOrderItem2);
+
+            await InsertInstallationData(firstOrderItem2);
 
             //item $25 Virtual Gift Card
             var firstOrderItem3 = new OrderItem
@@ -4721,7 +4774,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(firstOrderItem3);
+
+            await InsertInstallationData(firstOrderItem3);
 
             var firstOrderGiftcard = new GiftCard
             {
@@ -4738,16 +4792,18 @@ namespace Nop.Services.Installation
                 IsRecipientNotified = false,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _giftCardRepository.Insert(firstOrderGiftcard);
+
+            await InsertInstallationData(firstOrderGiftcard);
 
             //order notes
-            await _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = firstOrder.Id
             });
-            await _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
@@ -4757,8 +4813,8 @@ namespace Nop.Services.Installation
             //second order
             var secondCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "arthur_holmes@nopCommerce.com");
 
-            var secondCustomerBillingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(secondCustomer.BillingAddressId)));
-            var secondCustomerShippingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(secondCustomer.ShippingAddressId)));
+            var secondCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4814,12 +4870,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            await _orderRepository.Insert(secondOrder);
+
+            await InsertInstallationData(secondOrder);
             secondOrder.CustomOrderNumber = secondOrder.Id.ToString();
-            await _orderRepository.Update(secondOrder);
+            await UpdateInstallationData(secondOrder);
 
             //order notes
-            await _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
@@ -4849,7 +4906,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(secondOrderItem1);
+
+            await InsertInstallationData(secondOrderItem1);
 
             //item Flower Girl Bracelet
             var secondOrderItem2 = new OrderItem
@@ -4874,12 +4932,13 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(secondOrderItem2);
+
+            await InsertInstallationData(secondOrderItem2);
 
             //third order
             var thirdCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "james_pan@nopCommerce.com");
 
-            var thirdCustomerBillingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(thirdCustomer.BillingAddressId)));
+            var thirdCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
@@ -4934,12 +4993,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            await _orderRepository.Insert(thirdOrder);
+
+            await InsertInstallationData(thirdOrder);
             thirdOrder.CustomOrderNumber = thirdOrder.Id.ToString();
-            await _orderRepository.Update(thirdOrder);
+            await UpdateInstallationData(thirdOrder);
 
             //order notes
-            await _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
@@ -4969,7 +5029,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(thirdOrderItem1);
+
+            await InsertInstallationData(thirdOrderItem1);
 
             //item Night Visions
             var thirdOrderItem2 = new OrderItem
@@ -4994,7 +5055,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(thirdOrderItem2);
+
+            await InsertInstallationData(thirdOrderItem2);
 
             //item Science & Faith
             var thirdOrderItem3 = new OrderItem
@@ -5019,14 +5081,15 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(thirdOrderItem3);
+
+            await InsertInstallationData(thirdOrderItem3);
 
             //fourth order
             var fourthCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
-            var fourthCustomerBillingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
-            var fourthCustomerShippingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
-            var fourthCustomerPickupAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fourthCustomer.ShippingAddressId)));
 
             var fourthOrder = new Order
             {
@@ -5083,24 +5146,27 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            await _orderRepository.Insert(fourthOrder);
+
+            await InsertInstallationData(fourthOrder);
             fourthOrder.CustomOrderNumber = fourthOrder.Id.ToString();
-            await _orderRepository.Update(fourthOrder);
+            await UpdateInstallationData(fourthOrder);
 
             //order notes
-            await _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = fourthOrder.Id
             });
-            await _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 OrderId = fourthOrder.Id
             });
-            await _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
@@ -5130,7 +5196,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(fourthOrderItem1);
+
+            await InsertInstallationData(fourthOrderItem1);
 
             //item First Prize Pies
             var fourthOrderItem2 = new OrderItem
@@ -5155,7 +5222,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(fourthOrderItem2);
+
+            await InsertInstallationData(fourthOrderItem2);
 
             //item Fahrenheit 451 by Ray Bradbury
             var fourthOrderItem3 = new OrderItem
@@ -5180,7 +5248,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(fourthOrderItem3);
+
+            await InsertInstallationData(fourthOrderItem3);
 
             //shipments
             //shipment 1
@@ -5194,7 +5263,8 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _shipmentRepository.Insert(fourthOrderShipment1);
+
+            await InsertInstallationData(fourthOrderShipment1);
 
             var fourthOrderShipment1Item1 = new ShipmentItem
             {
@@ -5203,7 +5273,8 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment1.Id
             };
-            await _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
+
+            await InsertInstallationData(fourthOrderShipment1Item1);
 
             var fourthOrderShipment1Item2 = new ShipmentItem
             {
@@ -5212,7 +5283,8 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment1.Id
             };
-            await _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
+
+            await InsertInstallationData(fourthOrderShipment1Item2);
 
             //shipment 2
             var fourthOrderShipment2 = new Shipment
@@ -5225,7 +5297,8 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _shipmentRepository.Insert(fourthOrderShipment2);
+
+            await InsertInstallationData(fourthOrderShipment2);
 
             var fourthOrderShipment2Item1 = new ShipmentItem
             {
@@ -5234,13 +5307,14 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fourthOrderShipment2.Id
             };
-            await _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
+
+            await InsertInstallationData(fourthOrderShipment2Item1);
 
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
-            var fifthCustomerBillingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(fifthCustomer.BillingAddressId)));
-            var fifthCustomerShippingAddress = await InsertInstallationData(_addressService.CloneAddress(await _addressRepository.ToCachedGetById(fifthCustomer.ShippingAddressId)));
+            var fifthCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
@@ -5296,30 +5370,34 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomOrderNumber = string.Empty
             };
-            await _orderRepository.Insert(fifthOrder);
+
+            await InsertInstallationData(fifthOrder);
             fifthOrder.CustomOrderNumber = fifthOrder.Id.ToString();
-            await _orderRepository.Update(fifthOrder);
+            await UpdateInstallationData(fifthOrder);
 
             //order notes
-            await _orderNoteRepository.Insert(new OrderNote
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
                 OrderId = fifthOrder.Id
             });
-            await _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
                 OrderId = fifthOrder.Id
             });
-            await _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
                 OrderId = fifthOrder.Id
             });
-            await _orderNoteRepository.Insert(new OrderNote
+
+            await InsertInstallationData(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order delivered",
@@ -5349,7 +5427,8 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            await _orderItemRepository.Insert(fifthOrderItem1);
+
+            await InsertInstallationData(fifthOrderItem1);
 
             //shipment 1
             var fifthOrderShipment1 = new Shipment
@@ -5362,7 +5441,8 @@ namespace Nop.Services.Installation
                 AdminComment = string.Empty,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _shipmentRepository.Insert(fifthOrderShipment1);
+
+            await InsertInstallationData(fifthOrderShipment1);
 
             var fifthOrderShipment1Item1 = new ShipmentItem
             {
@@ -5371,7 +5451,8 @@ namespace Nop.Services.Installation
                 WarehouseId = 0,
                 ShipmentId = fifthOrderShipment1.Id
             };
-            await _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
+
+            await InsertInstallationData(fifthOrderShipment1Item1);
         }
 
         protected virtual async Task InstallActivityLog(string defaultUserEmail)
@@ -5381,7 +5462,7 @@ namespace Nop.Services.Installation
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
 
-            await _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
@@ -5390,7 +5471,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            await _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
@@ -5399,7 +5480,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            await _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
@@ -5408,7 +5489,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            await _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
@@ -5417,7 +5498,7 @@ namespace Nop.Services.Installation
                 IpAddress = "127.0.0.1"
             });
 
-            await _activityLogRepository.Insert(new ActivityLog
+            await InsertInstallationData(new ActivityLog
             {
                 ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
@@ -5434,37 +5515,42 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-            await _searchTermRepository.Insert(new SearchTerm
+            await InsertInstallationData(new SearchTerm
             {
                 Count = 34,
                 Keyword = "computer",
                 StoreId = defaultStore.Id
             });
-            await _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationData(new SearchTerm
             {
                 Count = 30,
                 Keyword = "camera",
                 StoreId = defaultStore.Id
             });
-            await _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationData(new SearchTerm
             {
                 Count = 27,
                 Keyword = "jewelry",
                 StoreId = defaultStore.Id
             });
-            await _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationData(new SearchTerm
             {
                 Count = 26,
                 Keyword = "shoes",
                 StoreId = defaultStore.Id
             });
-            await _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationData(new SearchTerm
             {
                 Count = 19,
                 Keyword = "jeans",
                 StoreId = defaultStore.Id
             });
-            await _searchTermRepository.Insert(new SearchTerm
+
+            await InsertInstallationData(new SearchTerm
             {
                 Count = 10,
                 Keyword = "gift",
@@ -5488,7 +5574,8 @@ namespace Nop.Services.Installation
                     UseDefaultCredentials = false
                 }
             };
-            await _emailAccountRepository.Insert(emailAccounts);
+
+            await InsertInstallationData(emailAccounts);
         }
 
         protected virtual async Task InstallMessageTemplates()
@@ -5575,7 +5662,7 @@ namespace Nop.Services.Installation
                 {
                     Name = MessageTemplateSystemNames.GiftCardNotification,
                     Subject = "%GiftCard.SenderName% has sent you a gift card for %Store.Name%",
-                    Body = $"<p>{Environment.NewLine}You have received a gift card for %Store.Name%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Dear %GiftCard.RecipientName%,{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift cart for <a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}You gift card code is %GiftCard.CouponCode%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}%GiftCard.Message%{Environment.NewLine}</p>{Environment.NewLine}",
+                    Body = $"<p>{Environment.NewLine}You have received a gift card for %Store.Name%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Dear %GiftCard.RecipientName%,{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}%GiftCard.SenderName% (%GiftCard.SenderEmail%) has sent you a %GiftCard.Amount% gift card for <a href=\"%Store.URL%\"> %Store.Name%</a>{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}Your gift card code is %GiftCard.CouponCode%{Environment.NewLine}</p>{Environment.NewLine}<p>{Environment.NewLine}%GiftCard.Message%{Environment.NewLine}</p>{Environment.NewLine}",
                     IsActive = true,
                     EmailAccountId = eaGeneral.Id
                 },
@@ -5876,7 +5963,8 @@ namespace Nop.Services.Installation
                     EmailAccountId = eaGeneral.Id
                 }
             };
-            await _messageTemplateRepository.Insert(messageTemplates);
+
+            await InsertInstallationData(messageTemplates);
         }
 
         protected virtual async Task InstallTopics()
@@ -6032,12 +6120,13 @@ namespace Nop.Services.Installation
                     TopicTemplateId = defaultTopicTemplate.Id
                 }
             };
-            await _topicRepository.Insert(topics);
+
+            await InsertInstallationData(topics);
 
             //search engine names
             foreach (var topic in topics)
             {
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = topic.Id,
                     EntityName = nameof(Topic),
@@ -6234,6 +6323,7 @@ namespace Nop.Services.Installation
                 ShowShareButton = true,
                 PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
+                OneReviewPerProductFromCustomer = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
                 ProductReviewPossibleOnlyAfterPurchasing = false,
@@ -6428,8 +6518,6 @@ namespace Nop.Services.Installation
                 StoreClosed = false,
                 DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
-                DisplayMiniProfilerInPublicStore = false,
-                DisplayMiniProfilerForAdminOnly = false,
                 DisplayEuCookieLawWarning = false,
                 FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
@@ -6440,6 +6528,7 @@ namespace Nop.Services.Installation
             await settingService.SaveSetting(new ExternalAuthenticationSettings
             {
                 RequireEmailValidation = false,
+                LogErrors = false,
                 AllowCustomersToRemoveAssociations = true
             });
 
@@ -6793,13 +6882,6 @@ namespace Nop.Services.Installation
                 RecentlyViewedProductsCookieExpires = 24 * 10,
                 CustomerCookieExpires = 24 * 365
             });
-
-            await settingService.SaveSetting(new CachingSettings
-            {
-                ShortTermCacheTime = 5,
-                DefaultCacheTime = NopCachingDefaults.CacheTime,
-                BundledFilesCacheTime = 120
-            });
         }
 
         protected virtual async Task InstallCheckoutAttributes()
@@ -6833,6 +6915,12 @@ namespace Nop.Services.Installation
 
         protected virtual async Task InstallSpecificationAttributes()
         {
+            var sag1 = await InsertInstallationData(
+                new SpecificationAttributeGroup
+                {
+                    Name = "System unit"
+                });
+
             var sa1 = await InsertInstallationData(
                 new SpecificationAttribute
                 {
@@ -6876,7 +6964,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "CPU Type",
-                    DisplayOrder = 2
+                    DisplayOrder = 2,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             await InsertInstallationData(
@@ -6897,7 +6986,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "Memory",
-                    DisplayOrder = 3
+                    DisplayOrder = 3,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             await InsertInstallationData(
@@ -6924,7 +7014,8 @@ namespace Nop.Services.Installation
                 new SpecificationAttribute
                 {
                     Name = "Hard drive",
-                    DisplayOrder = 5
+                    DisplayOrder = 5,
+                    SpecificationAttributeGroupId = sag1.Id
                 });
 
             await InsertInstallationData(
@@ -7019,7 +7110,8 @@ namespace Nop.Services.Installation
                     Name = "Software"
                 }
             };
-            await _productAttributeRepository.Insert(productAttributes);
+
+            await InsertInstallationData(productAttributes);
         }
 
         protected virtual async Task InstallCategories()
@@ -7050,7 +7142,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryComputers);
-            await _categoryRepository.Insert(categoryComputers);
+
+            await InsertInstallationData(categoryComputers);
 
             var categoryDesktops = new Category
             {
@@ -7069,7 +7162,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryDesktops);
-            await _categoryRepository.Insert(categoryDesktops);
+
+            await InsertInstallationData(categoryDesktops);
 
             var categoryNotebooks = new Category
             {
@@ -7087,7 +7181,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryNotebooks);
-            await _categoryRepository.Insert(categoryNotebooks);
+
+            await InsertInstallationData(categoryNotebooks);
 
             var categorySoftware = new Category
             {
@@ -7105,7 +7200,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categorySoftware);
-            await _categoryRepository.Insert(categorySoftware);
+
+            await InsertInstallationData(categorySoftware);
 
             var categoryElectronics = new Category
             {
@@ -7123,7 +7219,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryElectronics);
-            await _categoryRepository.Insert(categoryElectronics);
+
+            await InsertInstallationData(categoryElectronics);
 
             var categoryCameraPhoto = new Category
             {
@@ -7142,7 +7239,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryCameraPhoto);
-            await _categoryRepository.Insert(categoryCameraPhoto);
+
+            await InsertInstallationData(categoryCameraPhoto);
 
             var categoryCellPhones = new Category
             {
@@ -7160,7 +7258,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryCellPhones);
-            await _categoryRepository.Insert(categoryCellPhones);
+
+            await InsertInstallationData(categoryCellPhones);
 
             var categoryOthers = new Category
             {
@@ -7179,7 +7278,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryOthers);
-            await _categoryRepository.Insert(categoryOthers);
+
+            await InsertInstallationData(categoryOthers);
 
             var categoryApparel = new Category
             {
@@ -7197,7 +7297,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryApparel);
-            await _categoryRepository.Insert(categoryApparel);
+
+            await InsertInstallationData(categoryApparel);
 
             var categoryShoes = new Category
             {
@@ -7216,7 +7317,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryShoes);
-            await _categoryRepository.Insert(categoryShoes);
+
+            await InsertInstallationData(categoryShoes);
 
             var categoryClothing = new Category
             {
@@ -7234,7 +7336,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryClothing);
-            await _categoryRepository.Insert(categoryClothing);
+
+            await InsertInstallationData(categoryClothing);
 
             var categoryAccessories = new Category
             {
@@ -7253,7 +7356,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryAccessories);
-            await _categoryRepository.Insert(categoryAccessories);
+
+            await InsertInstallationData(categoryAccessories);
 
             var categoryDigitalDownloads = new Category
             {
@@ -7271,7 +7375,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryDigitalDownloads);
-            await _categoryRepository.Insert(categoryDigitalDownloads);
+
+            await InsertInstallationData(categoryDigitalDownloads);
 
             var categoryBooks = new Category
             {
@@ -7291,7 +7396,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryBooks);
-            await _categoryRepository.Insert(categoryBooks);
+
+            await InsertInstallationData(categoryBooks);
 
             var categoryJewelry = new Category
             {
@@ -7309,7 +7415,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryJewelry);
-            await _categoryRepository.Insert(categoryJewelry);
+
+            await InsertInstallationData(categoryJewelry);
 
             var categoryGiftCards = new Category
             {
@@ -7326,11 +7433,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categoryGiftCards);
-            await _categoryRepository.Insert(categoryGiftCards);
+
+            await InsertInstallationData(categoryGiftCards);
 
             //search engine names
             foreach (var category in allCategories)
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = category.Id,
                     EntityName = nameof(Category),
@@ -7364,7 +7472,9 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.Insert(manufacturerAsus);
+
+            await InsertInstallationData(manufacturerAsus);
+
             allManufacturers.Add(manufacturerAsus);
 
             var manufacturerHp = new Manufacturer
@@ -7380,7 +7490,9 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.Insert(manufacturerHp);
+
+            await InsertInstallationData(manufacturerHp);
+
             allManufacturers.Add(manufacturerHp);
 
             var manufacturerNike = new Manufacturer
@@ -7396,12 +7508,14 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _manufacturerRepository.Insert(manufacturerNike);
+
+            await InsertInstallationData(manufacturerNike);
+
             allManufacturers.Add(manufacturerNike);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
                     EntityName = nameof(Manufacturer),
@@ -7450,7 +7564,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productBuildComputer);
 
-            await _productRepository.Insert(productBuildComputer);
+            await InsertInstallationData(productBuildComputer);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -7659,7 +7773,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productDigitalStorm);
 
-            await _productRepository.Insert(productDigitalStorm);
+            await InsertInstallationData(productDigitalStorm);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -7713,7 +7827,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoIdeaCentre);
 
-            await _productRepository.Insert(productLenovoIdeaCentre);
+            await InsertInstallationData(productLenovoIdeaCentre);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -7769,7 +7883,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleMacBookPro);
 
-            await _productRepository.Insert(productAppleMacBookPro);
+            await InsertInstallationData(productAppleMacBookPro);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -7864,7 +7978,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productAsusN551JK);
 
-            await _productRepository.Insert(productAsusN551JK);
+            await InsertInstallationData(productAsusN551JK);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -7954,7 +8068,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSamsungSeries);
 
-            await _productRepository.Insert(productSamsungSeries);
+            await InsertInstallationData(productSamsungSeries);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8043,7 +8157,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHpSpectre);
 
-            await _productRepository.Insert(productHpSpectre);
+            await InsertInstallationData(productHpSpectre);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8145,7 +8259,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHpEnvy);
 
-            await _productRepository.Insert(productHpEnvy);
+            await InsertInstallationData(productHpEnvy);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8241,7 +8355,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoThinkpad);
 
-            await _productRepository.Insert(productLenovoThinkpad);
+            await InsertInstallationData(productLenovoThinkpad);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8314,7 +8428,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAdobePhotoshop);
 
-            await _productRepository.Insert(productAdobePhotoshop);
+            await InsertInstallationData(productAdobePhotoshop);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8361,7 +8475,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productWindows8Pro);
 
-            await _productRepository.Insert(productWindows8Pro);
+            await InsertInstallationData(productWindows8Pro);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8412,7 +8526,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSoundForge);
 
-            await _productRepository.Insert(productSoundForge);
+            await InsertInstallationData(productSoundForge);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8628,7 +8742,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DSLR);
 
-            await _productRepository.Insert(productNikonD5500DSLR);
+            await InsertInstallationData(productNikonD5500DSLR);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8675,7 +8789,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DslrAssociated1);
 
-            await _productRepository.Insert(productNikonD5500DslrAssociated1);
+            await InsertInstallationData(productNikonD5500DslrAssociated1);
 
             await InsertProductPicture(productNikonD5500DslrAssociated1, "product_NikonCamera_black.jpeg");
 
@@ -8711,7 +8825,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikonD5500DslrAssociated2);
 
-            await _productRepository.Insert(productNikonD5500DslrAssociated2);
+            await InsertInstallationData(productNikonD5500DslrAssociated2);
 
             await InsertProductPicture(productNikonD5500DslrAssociated2, "product_NikonCamera_red.jpeg");
 
@@ -8748,7 +8862,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLeica);
 
-            await _productRepository.Insert(productLeica);
+            await InsertInstallationData(productLeica);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8795,7 +8909,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleICam);
 
-            await _productRepository.Insert(productAppleICam);
+            await InsertInstallationData(productAppleICam);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8848,7 +8962,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHtcOne);
 
-            await _productRepository.Insert(productHtcOne);
+            await InsertInstallationData(productHtcOne);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8897,7 +9011,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productHtcOneMini);
 
-            await _productRepository.Insert(productHtcOneMini);
+            await InsertInstallationData(productHtcOneMini);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8946,7 +9060,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNokiaLumia);
 
-            await _productRepository.Insert(productNokiaLumia);
+            await InsertInstallationData(productNokiaLumia);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -8997,7 +9111,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productBeatsPill);
 
-            await _productRepository.Insert(productBeatsPill);
+            await InsertInstallationData(productBeatsPill);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9009,7 +9123,7 @@ namespace Nop.Services.Installation
             await InsertProductPicture(productBeatsPill, "product_PillBeats_1.jpeg");
             await InsertProductPicture(productBeatsPill, "product_PillBeats_2.jpeg", 2);
 
-            await _tierPriceRepository.Insert(new List<TierPrice>
+            await InsertInstallationData(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9069,7 +9183,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productUniversalTabletCover);
 
-            await _productRepository.Insert(productUniversalTabletCover);
+            await InsertInstallationData(productUniversalTabletCover);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9116,7 +9230,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productPortableSoundSpeakers);
 
-            await _productRepository.Insert(productPortableSoundSpeakers);
+            await InsertInstallationData(productPortableSoundSpeakers);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9247,7 +9361,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikeFloral);
 
-            await _productRepository.Insert(productNikeFloral);
+            await InsertInstallationData(productNikeFloral);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9372,7 +9486,7 @@ namespace Nop.Services.Installation
             await AddProductTag(productNikeFloral, "shoes");
             await AddProductTag(productNikeFloral, "apparel");
 
-            await _productRepository.Update(productNikeFloral);
+            await UpdateInstallationData(productNikeFloral);
 
             var productAdidas = new Product
             {
@@ -9408,7 +9522,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAdidas);
 
-            await _productRepository.Insert(productAdidas);
+            await InsertInstallationData(productAdidas);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9529,7 +9643,7 @@ namespace Nop.Services.Installation
             await AddProductTag(productAdidas, "shoes");
             await AddProductTag(productAdidas, "apparel");
 
-            await _productRepository.Update(productAdidas);
+            await UpdateInstallationData(productAdidas);
 
             var productNikeZoom = new Product
             {
@@ -9565,7 +9679,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productNikeZoom);
 
-            await _productRepository.Insert(productNikeZoom);
+            await InsertInstallationData(productNikeZoom);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9629,7 +9743,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNikeTailwind);
 
-            await _productRepository.Insert(productNikeTailwind);
+            await InsertInstallationData(productNikeTailwind);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9739,7 +9853,7 @@ namespace Nop.Services.Installation
 
             allProducts.Add(productOversizedWomenTShirt);
 
-            await _productRepository.Insert(productOversizedWomenTShirt);
+            await InsertInstallationData(productOversizedWomenTShirt);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9750,7 +9864,7 @@ namespace Nop.Services.Installation
 
             await InsertProductPicture(productOversizedWomenTShirt, "product_WomenTShirt.jpg");
 
-            await _tierPriceRepository.Insert(new List<TierPrice>
+            await InsertInstallationData(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9809,7 +9923,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productCustomTShirt);
 
-            await _productRepository.Insert(productCustomTShirt);
+            await InsertInstallationData(productCustomTShirt);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9820,7 +9934,7 @@ namespace Nop.Services.Installation
 
             await InsertProductPicture(productCustomTShirt, "product_CustomTShirt.jpeg");
 
-            await _productAttributeMappingRepository.Insert(
+            await InsertInstallationData(
                 new ProductAttributeMapping
                 {
                     ProductId = productCustomTShirt.Id,
@@ -9869,7 +9983,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLeviJeans);
 
-            await _productRepository.Insert(productLeviJeans);
+            await InsertInstallationData(productLeviJeans);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -9881,7 +9995,7 @@ namespace Nop.Services.Installation
             await InsertProductPicture(productLeviJeans, "product_LeviJeans_1.jpg");
             await InsertProductPicture(productLeviJeans, "product_LeviJeans_2.jpg", 2);
 
-            await _tierPriceRepository.Insert(new List<TierPrice>
+            await InsertInstallationData(new List<TierPrice>
             {
                 new TierPrice
                 {
@@ -9940,7 +10054,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productObeyHat);
 
-            await _productRepository.Insert(productObeyHat);
+            await InsertInstallationData(productObeyHat);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10027,7 +10141,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productBelt);
 
-            await _productRepository.Insert(productBelt);
+            await InsertInstallationData(productBelt);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10071,7 +10185,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSunglasses);
 
-            await _productRepository.Insert(productSunglasses);
+            await InsertInstallationData(productSunglasses);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10208,7 +10322,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productNightVision);
 
-            await _productRepository.Insert(productNightVision);
+            await InsertInstallationData(productNightVision);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10279,7 +10393,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productIfYouWait);
 
-            await _productRepository.Insert(productIfYouWait);
+            await InsertInstallationData(productIfYouWait);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10339,7 +10453,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productScienceAndFaith);
 
-            await _productRepository.Insert(productScienceAndFaith);
+            await InsertInstallationData(productScienceAndFaith);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10415,7 +10529,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFahrenheit);
 
-            await _productRepository.Insert(productFahrenheit);
+            await InsertInstallationData(productFahrenheit);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10464,7 +10578,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFirstPrizePies);
 
-            await _productRepository.Insert(productFirstPrizePies);
+            await InsertInstallationData(productFirstPrizePies);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10511,7 +10625,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productPrideAndPrejudice);
 
-            await _productRepository.Insert(productPrideAndPrejudice);
+            await InsertInstallationData(productPrideAndPrejudice);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10598,7 +10712,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productElegantGemstoneNecklace);
 
-            await _productRepository.Insert(productElegantGemstoneNecklace);
+            await InsertInstallationData(productElegantGemstoneNecklace);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10646,7 +10760,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productFlowerGirlBracelet);
 
-            await _productRepository.Insert(productFlowerGirlBracelet);
+            await InsertInstallationData(productFlowerGirlBracelet);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10693,7 +10807,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productEngagementRing);
 
-            await _productRepository.Insert(productEngagementRing);
+            await InsertInstallationData(productEngagementRing);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10771,7 +10885,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product25GiftCard);
 
-            await _productRepository.Insert(product25GiftCard);
+            await InsertInstallationData(product25GiftCard);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10819,7 +10933,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product50GiftCard);
 
-            await _productRepository.Insert(product50GiftCard);
+            await InsertInstallationData(product50GiftCard);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10862,7 +10976,7 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(product100GiftCard);
 
-            await _productRepository.Insert(product100GiftCard);
+            await InsertInstallationData(product100GiftCard);
 
             await InsertInstallationData(new ProductCategory
             {
@@ -10934,7 +11048,7 @@ namespace Nop.Services.Installation
 
             //search engine names
             foreach (var product in allProducts)
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = product.Id,
                     EntityName = nameof(Product),
@@ -10944,7 +11058,7 @@ namespace Nop.Services.Installation
                 });
 
             //related products
-            await _relatedProductRepository.Insert(relatedProducts);
+            await InsertInstallationData(relatedProducts);
 
             //reviews
             using (var random = new SecureRandomNumberGenerator())
@@ -10981,12 +11095,12 @@ namespace Nop.Services.Installation
                 }
             }
 
-            await _productRepository.Update(allProducts);
+            await UpdateInstallationData(allProducts);
 
             //stock quantity history
             foreach (var product in allProducts)
                 if (product.StockQuantity > 0)
-                    await _stockQuantityHistoryRepository.Insert(new StockQuantityHistory
+                    await InsertInstallationData(new StockQuantityHistory
                     {
                         ProductId = product.Id,
                         WarehouseId = product.WarehouseId > 0 ? (int?)product.WarehouseId : null,
@@ -11007,7 +11121,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
 
-            await _forumGroupRepository.Insert(forumGroup);
+            await InsertInstallationData(forumGroup);
 
             var newProductsForum = new Forum
             {
@@ -11022,7 +11136,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _forumRepository.Insert(newProductsForum);
+
+            await InsertInstallationData(newProductsForum);
 
             var mobileDevicesForum = new Forum
             {
@@ -11037,7 +11152,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _forumRepository.Insert(mobileDevicesForum);
+
+            await InsertInstallationData(mobileDevicesForum);
 
             var packagingShippingForum = new Forum
             {
@@ -11051,7 +11167,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            await _forumRepository.Insert(packagingShippingForum);
+
+            await InsertInstallationData(packagingShippingForum);
         }
 
         protected virtual async Task InstallDiscounts()
@@ -11081,7 +11198,8 @@ namespace Nop.Services.Installation
                     CouponCode = "456"
                 }
             };
-            await _discountRepository.Insert(discounts);
+
+            await InsertInstallationData(discounts);
         }
 
         protected virtual async Task InstallBlogPosts(string defaultUserEmail)
@@ -11117,11 +11235,11 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _blogPostRepository.Insert(blogPosts);
+            await InsertInstallationData(blogPosts);
 
             //search engine names
             foreach (var blogPost in blogPosts)
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = nameof(BlogPost),
@@ -11151,7 +11269,7 @@ namespace Nop.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-            await _blogPostRepository.Update(blogPosts);
+            await UpdateInstallationData(blogPosts);
         }
 
         protected virtual async Task InstallNews(string defaultUserEmail)
@@ -11196,11 +11314,12 @@ namespace Nop.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(2)
                 }
             };
-            await _newsItemRepository.Insert(news);
+
+            await InsertInstallationData(news);
 
             //search engine names
             foreach (var newsItem in news)
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = newsItem.Id,
                     EntityName = nameof(NewsItem),
@@ -11231,7 +11350,7 @@ namespace Nop.Services.Installation
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-            await _newsItemRepository.Update(news);
+            await UpdateInstallationData(news);
         }
 
         protected virtual async Task InstallPolls()
@@ -11251,7 +11370,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             };
 
-            await _pollRepository.Insert(poll1);
+            await InsertInstallationData(poll1);
 
             var answers = new List<PollAnswer>
             {
@@ -11281,7 +11400,7 @@ namespace Nop.Services.Installation
             }
             };
 
-            await _pollAnswerRepository.Insert(answers);
+            await InsertInstallationData(answers);
         }
 
         protected virtual async Task InstallActivityLogTypes()
@@ -11438,6 +11557,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "AddNewSpecAttribute",
                     Enabled = true,
                     Name = "Add a new specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "AddNewSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Add a new specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -11696,6 +11821,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "DeleteSpecAttribute",
                     Enabled = true,
                     Name = "Delete a specification attribute"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "DeleteSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Delete a specification attribute group"
                 },
                 new ActivityLogType
                 {
@@ -11969,6 +12100,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "EditSpecAttributeGroup",
+                    Enabled = true,
+                    Name = "Edit a specification attribute group"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "EditVendor",
                     Enabled = true,
                     Name = "Edit a vendor"
@@ -12191,7 +12328,8 @@ namespace Nop.Services.Installation
                     Name = "Upload a favicon and app icons"
                 }
             };
-            await _activityLogTypeRepository.Insert(activityLogTypes);
+
+            await InsertInstallationData(activityLogTypes);
         }
 
         protected virtual async Task InstallProductTemplates()
@@ -12213,7 +12351,8 @@ namespace Nop.Services.Installation
                     IgnoredProductTypes = ((int)ProductType.SimpleProduct).ToString()
                 }
             };
-            await _productTemplateRepository.Insert(productTemplates);
+
+            await InsertInstallationData(productTemplates);
         }
 
         protected virtual async Task InstallCategoryTemplates()
@@ -12227,7 +12366,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            await _categoryTemplateRepository.Insert(categoryTemplates);
+
+            await InsertInstallationData(categoryTemplates);
         }
 
         protected virtual async Task InstallManufacturerTemplates()
@@ -12241,7 +12381,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            await _manufacturerTemplateRepository.Insert(manufacturerTemplates);
+
+            await InsertInstallationData(manufacturerTemplates);
         }
 
         protected virtual async Task InstallTopicTemplates()
@@ -12255,7 +12396,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 1
                 }
             };
-            await _topicTemplateRepository.Insert(topicTemplates);
+
+            await InsertInstallationData(topicTemplates);
         }
 
         protected virtual async Task InstallScheduleTasks()
@@ -12314,7 +12456,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _scheduleTaskRepository.Insert(tasks);
+            await InsertInstallationData(tasks);
         }
 
         protected virtual async Task InstallReturnRequestReasons()
@@ -12337,7 +12479,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            await _returnRequestReasonRepository.Insert(returnRequestReasons);
+
+            await InsertInstallationData(returnRequestReasons);
         }
 
         protected virtual async Task InstallReturnRequestActions()
@@ -12360,7 +12503,8 @@ namespace Nop.Services.Installation
                     DisplayOrder = 3
                 }
             };
-            await _returnRequestActionRepository.Insert(returnRequestActions);
+
+            await InsertInstallationData(returnRequestActions);
         }
 
         protected virtual async Task InstallWarehouses()
@@ -12374,7 +12518,9 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _addressRepository.Insert(warehouse1address);
+
+            await InsertInstallationData(warehouse1address);
+
             var warehouse2address = new Address
             {
                 Address1 = "300 South Spring Stree",
@@ -12384,7 +12530,9 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _addressRepository.Insert(warehouse2address);
+
+            await InsertInstallationData(warehouse2address);
+
             var warehouses = new List<Warehouse>
             {
                 new Warehouse
@@ -12399,7 +12547,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _warehouseRepository.Insert(warehouses);
+            await InsertInstallationData(warehouses);
         }
 
         protected virtual async Task InstallVendors()
@@ -12434,11 +12582,11 @@ namespace Nop.Services.Installation
                 }
             };
 
-            await _vendorRepository.Insert(vendors);
+            await InsertInstallationData(vendors);
 
             //search engine names
             foreach (var vendor in vendors)
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = vendor.Id,
                     EntityName = nameof(Vendor),
@@ -12464,13 +12612,16 @@ namespace Nop.Services.Installation
                 CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _addressRepository.Insert(affiliateAddress);
+
+            await InsertInstallationData(affiliateAddress);
+
             var affilate = new Affiliate
             {
                 Active = true,
                 AddressId = affiliateAddress.Id
             };
-            await _affiliateRepository.Insert(affilate);
+
+            await InsertInstallationData(affilate);
         }
 
         private async Task AddProductTag(Product product, string tag)
@@ -12483,10 +12634,11 @@ namespace Nop.Services.Installation
                 {
                     Name = tag
                 };
-                await _productTagRepository.Insert(productTag);
+
+                await InsertInstallationData(productTag);
 
                 //search engine name
-                await _urlRecordRepository.Insert(new UrlRecord
+                await InsertInstallationData(new UrlRecord
                 {
                     EntityId = productTag.Id,
                     EntityName = nameof(ProductTag),
@@ -12496,7 +12648,7 @@ namespace Nop.Services.Installation
                 });
             }
 
-            await _productProductTagMappingRepository.Insert(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
+            await InsertInstallationData(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 

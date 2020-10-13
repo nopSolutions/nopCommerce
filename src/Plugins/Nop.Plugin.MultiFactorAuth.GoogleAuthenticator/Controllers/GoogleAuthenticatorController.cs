@@ -1,0 +1,143 @@
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Models;
+using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services;
+using Nop.Services.Common;
+using Nop.Services.Configuration;
+using Nop.Services.Localization;
+using Nop.Services.Messages;
+using Nop.Services.Security;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Models.Extensions;
+using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
+
+namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
+{
+    [AutoValidateAntiforgeryToken]
+    [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
+    public class GoogleAuthenticatorController : BasePluginController
+    {
+        #region Fields
+
+        private readonly GoogleAuthenticatorService _googleAuthenticatorService;
+        private readonly GoogleAuthenticatorSettings _googleAuthenticatorSettings;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
+        private readonly IPermissionService _permissionService;
+        private readonly ISettingService _settingService;
+        private readonly IWorkContext _workContext;
+
+
+        #endregion
+
+        #region Ctor 
+
+        public GoogleAuthenticatorController(GoogleAuthenticatorService googleAuthenticatorService,
+            GoogleAuthenticatorSettings googleAuthenticatorSettings,
+            IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
+            INotificationService notificationService,
+            IPermissionService permissionService,
+            ISettingService settingService,
+            IWorkContext workContext
+            )
+        {
+            _googleAuthenticatorService = googleAuthenticatorService;
+            _googleAuthenticatorSettings = googleAuthenticatorSettings;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public async Task<IActionResult> Configure()
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = new ConfigurationModel
+            {
+                QRPixelsPerModule = _googleAuthenticatorSettings.QRPixelsPerModule,
+                BusinessPrefix = _googleAuthenticatorSettings.BusinessPrefix                
+            };
+            model.GoogleAuthenticatorSearchModel.HideSearchBlock = await _genericAttributeService
+                .GetAttribute<bool>(await _workContext.GetCurrentCustomer(), GoogleAuthenticatorDefaults.HideSearchBlockAttribute);
+
+            return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Configure.cshtml", model);
+        }
+
+        [HttpPost]        
+        public async Task<IActionResult> Configure(ConfigurationModel model)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+                return AccessDeniedView();
+
+            if (!ModelState.IsValid)
+                return await Configure();
+
+            //set new settings values
+            _googleAuthenticatorSettings.QRPixelsPerModule = model.QRPixelsPerModule;
+            _googleAuthenticatorSettings.BusinessPrefix = model.BusinessPrefix;
+            await _settingService.SaveSetting(_googleAuthenticatorSettings);
+
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+
+            return await Configure();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+                return AccessDeniedView();
+
+            //get GoogleAuthenticator configuration records
+            var configurations = await _googleAuthenticatorService.GetPagedConfigurations(searchModel.SearchEmail,
+                searchModel.Page - 1, searchModel.PageSize);
+            var model = new GoogleAuthenticatorListModel().PrepareToGrid(searchModel, configurations, () =>
+            {
+                //fill in model values from the configuration
+                return configurations.Select(configuration => new GoogleAuthenticatorModel
+                {
+                    Id = configuration.Id,
+                    Customer = configuration.Customer,
+                    SecretKey = configuration.SecretKey
+                });
+            });
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GoogleAuthenticatorDelete (GoogleAuthenticatorModel model)
+        {
+            if (!ModelState.IsValid)
+                return ErrorJson(ModelState.SerializeErrors());
+
+            //delete configuration
+            var configuration = await _googleAuthenticatorService.GetConfigurationById(model.Id);
+            if (configuration != null)
+            {
+                _googleAuthenticatorService.DeleteConfiguration(configuration);
+            }
+
+            return new NullJsonResult();
+        }
+
+        #endregion
+    }
+}

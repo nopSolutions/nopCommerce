@@ -7,10 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Catalog
@@ -23,10 +20,8 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -38,10 +33,8 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ProductTagService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
-            IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IStaticCacheManager staticCacheManager,
@@ -49,10 +42,8 @@ namespace Nop.Services.Catalog
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dataProvider = dataProvider;
-            _eventPublisher = eventPublisher;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
             _staticCacheManager = staticCacheManager;
@@ -77,9 +68,6 @@ namespace Nop.Services.Catalog
                 throw new Exception("Mapping record not found");
 
             await _productProductTagMappingRepository.Delete(mappingRecord);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(mappingRecord);
         }
 
         /// <summary>
@@ -98,8 +86,8 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()));
             }
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
-                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), 
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), 
                 showHidden);
            
             return await _staticCacheManager.Get(key, async () =>
@@ -126,13 +114,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTag">Product tag</param>
         public virtual async Task DeleteProductTag(ProductTag productTag)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
-
             await _productTagRepository.Delete(productTag);
-            
-            //event notification
-            await _eventPublisher.EntityDeleted(productTag);
         }
 
         /// <summary>
@@ -155,11 +137,9 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTags(string tagName = null)
         {
-            var query = _productTagRepository.Table;
-            
-            var allProductTags = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllCacheKey));
+            var allProductTags = await _productTagRepository.GetAll(getCacheKey: cache => default);
 
-            if(!string.IsNullOrEmpty(tagName)) 
+            if (!string.IsNullOrEmpty(tagName)) 
                 allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();
 
             return allProductTags;
@@ -172,15 +152,14 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTagsByProductId(int productId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllByProductIdCacheKey, productId);
-
-            var query = from pt in _productTagRepository.Table
-                join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                where ppt.ProductId == productId
-                orderby pt.Id
-                select pt;
-
-            var productTags = await query.ToCachedList(key);
+            var productTags = await _productTagRepository.GetAll(query =>
+            {
+                return from pt in query
+                    join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                    where ppt.ProductId == productId
+                    orderby pt.Id
+                    select pt;
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId));
 
             return productTags;
         }
@@ -192,10 +171,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tag</returns>
         public virtual async Task<ProductTag> GetProductTagById(int productTagId)
         {
-            if (productTagId == 0)
-                return null;
-
-            return await _productTagRepository.ToCachedGetById(productTagId);
+            return await _productTagRepository.GetById(productTagId, cache => default);
         }
 
         /// <summary>
@@ -205,14 +181,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual async Task<IList<ProductTag>> GetProductTagsByIds(int[] productTagIds)
         {
-            if (productTagIds == null || productTagIds.Length == 0)
-                return new List<ProductTag>();
-
-            var query = from p in _productTagRepository.Table
-                        where productTagIds.Contains(p.Id)
-                        select p;
-
-            return await query.ToListAsync();
+            return await _productTagRepository.GetByIds(productTagIds);
         }
 
         /// <summary>
@@ -236,13 +205,7 @@ namespace Nop.Services.Catalog
         /// <param name="tagMapping">Product-product tag mapping</param>
         public virtual async Task InsertProductProductTagMapping(ProductProductTagMapping tagMapping)
         {
-            if (tagMapping is null)
-                throw new ArgumentNullException(nameof(tagMapping));
-
             await _productProductTagMappingRepository.Insert(tagMapping);
-
-            //event notification
-            await _eventPublisher.EntityInserted(tagMapping);
         }
 
         /// <summary>
@@ -251,13 +214,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTag">Product tag</param>
         public virtual async Task InsertProductTag(ProductTag productTag)
         {
-            if (productTag == null)
-                throw new ArgumentNullException(nameof(productTag));
-
             await _productTagRepository.Insert(productTag);
-            
-            //event notification
-            await _eventPublisher.EntityInserted(productTag);
         }
 
         /// <summary>
@@ -287,9 +244,6 @@ namespace Nop.Services.Catalog
 
             var seName = await _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
             await _urlRecordService.SaveSlug(productTag, seName, 0);
-            
-            //event notification
-            await _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>
@@ -364,7 +318,7 @@ namespace Nop.Services.Catalog
             }
 
             //cache
-            await _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<ProductTag>.Prefix);
         }
 
         #endregion

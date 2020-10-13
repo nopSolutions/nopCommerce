@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -17,24 +14,21 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AddressAttribute> _addressAttributeRepository;
         private readonly IRepository<AddressAttributeValue> _addressAttributeValueRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public AddressAttributeService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<AddressAttribute> addressAttributeRepository,
-            IRepository<AddressAttributeValue> addressAttributeValueRepository)
+        public AddressAttributeService(IRepository<AddressAttribute> addressAttributeRepository,
+            IRepository<AddressAttributeValue> addressAttributeValueRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _addressAttributeRepository = addressAttributeRepository;
             _addressAttributeValueRepository = addressAttributeValueRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -47,13 +41,7 @@ namespace Nop.Services.Common
         /// <param name="addressAttribute">Address attribute</param>
         public virtual async Task DeleteAddressAttribute(AddressAttribute addressAttribute)
         {
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
-
             await _addressAttributeRepository.Delete(addressAttribute);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(addressAttribute);
         }
 
         /// <summary>
@@ -62,11 +50,12 @@ namespace Nop.Services.Common
         /// <returns>Address attributes</returns>
         public virtual async Task<IList<AddressAttribute>> GetAllAddressAttributes()
         {
-            var query = from aa in _addressAttributeRepository.Table
-                orderby aa.DisplayOrder, aa.Id
-                select aa;
-
-            return await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributesAllCacheKey));
+            return await _addressAttributeRepository.GetAll(query=>
+            {
+                return from aa in query
+                    orderby aa.DisplayOrder, aa.Id
+                    select aa;
+            }, cache => default);
         }
 
         /// <summary>
@@ -76,10 +65,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute</returns>
         public virtual async Task<AddressAttribute> GetAddressAttributeById(int addressAttributeId)
         {
-            if (addressAttributeId == 0)
-                return null;
-
-            return await _addressAttributeRepository.ToCachedGetById(addressAttributeId);
+            return await _addressAttributeRepository.GetById(addressAttributeId, cache => default);
         }
 
         /// <summary>
@@ -88,13 +74,7 @@ namespace Nop.Services.Common
         /// <param name="addressAttribute">Address attribute</param>
         public virtual async Task InsertAddressAttribute(AddressAttribute addressAttribute)
         {
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
-
             await _addressAttributeRepository.Insert(addressAttribute);
-            
-            //event notification
-            await _eventPublisher.EntityInserted(addressAttribute);
         }
 
         /// <summary>
@@ -103,13 +83,7 @@ namespace Nop.Services.Common
         /// <param name="addressAttribute">Address attribute</param>
         public virtual async Task UpdateAddressAttribute(AddressAttribute addressAttribute)
         {
-            if (addressAttribute == null)
-                throw new ArgumentNullException(nameof(addressAttribute));
-
             await _addressAttributeRepository.Update(addressAttribute);
-            
-            //event notification
-            await _eventPublisher.EntityUpdated(addressAttribute);
         }
 
         /// <summary>
@@ -118,13 +92,7 @@ namespace Nop.Services.Common
         /// <param name="addressAttributeValue">Address attribute value</param>
         public virtual async Task DeleteAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
-            if (addressAttributeValue == null)
-                throw new ArgumentNullException(nameof(addressAttributeValue));
-
             await _addressAttributeValueRepository.Delete(addressAttributeValue);
-            
-            //event notification
-            await _eventPublisher.EntityDeleted(addressAttributeValue);
         }
 
         /// <summary>
@@ -134,13 +102,13 @@ namespace Nop.Services.Common
         /// <returns>Address attribute values</returns>
         public virtual async Task<IList<AddressAttributeValue>> GetAddressAttributeValues(int addressAttributeId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesAllCacheKey, addressAttributeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, addressAttributeId);
 
             var query = from aav in _addressAttributeValueRepository.Table
                 orderby aav.DisplayOrder, aav.Id
                 where aav.AddressAttributeId == addressAttributeId
                 select aav;
-            var addressAttributeValues = await query.ToCachedList(key);
+            var addressAttributeValues = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return addressAttributeValues;
         }
@@ -152,10 +120,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute value</returns>
         public virtual async Task<AddressAttributeValue> GetAddressAttributeValueById(int addressAttributeValueId)
         {
-            if (addressAttributeValueId == 0)
-                return null;
-
-            return await _addressAttributeValueRepository.ToCachedGetById(addressAttributeValueId);
+            return await _addressAttributeValueRepository.GetById(addressAttributeValueId, cache => default);
         }
 
         /// <summary>
@@ -164,13 +129,7 @@ namespace Nop.Services.Common
         /// <param name="addressAttributeValue">Address attribute value</param>
         public virtual async Task InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
-            if (addressAttributeValue == null)
-                throw new ArgumentNullException(nameof(addressAttributeValue));
-
             await _addressAttributeValueRepository.Insert(addressAttributeValue);
-            
-            //event notification
-            await _eventPublisher.EntityInserted(addressAttributeValue);
         }
 
         /// <summary>
@@ -179,13 +138,7 @@ namespace Nop.Services.Common
         /// <param name="addressAttributeValue">Address attribute value</param>
         public virtual async Task UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
-            if (addressAttributeValue == null)
-                throw new ArgumentNullException(nameof(addressAttributeValue));
-
             await _addressAttributeValueRepository.Update(addressAttributeValue);
-            
-            //event notification
-            await _eventPublisher.EntityUpdated(addressAttributeValue);
         }
 
         #endregion

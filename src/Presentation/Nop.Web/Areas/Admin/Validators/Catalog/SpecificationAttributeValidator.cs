@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
     {
         public SpecificationAttributeValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.Name.Required").Result);
 
             SetDatabaseValidationRules<SpecificationAttribute>(dataProvider);
         }

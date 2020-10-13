@@ -95,6 +95,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ProductReviewsMustBeApproved { get; set; }
         public bool ProductReviewsMustBeApproved_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer")]
+        public bool OneReviewPerProductFromCustomer { get; set; }
+        public bool OneReviewPerProductFromCustomer_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToReviewProduct")]
         public bool AllowAnonymousUsersToReviewProduct { get; set; }
         public bool AllowAnonymousUsersToReviewProduct_OverrideForStore { get; set; }

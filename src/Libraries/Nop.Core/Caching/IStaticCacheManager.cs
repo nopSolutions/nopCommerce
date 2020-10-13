@@ -18,34 +18,64 @@ namespace Nop.Core.Caching
         Task<T> Get<T>(CacheKey key, Func<Task<T>> acquire);
 
         /// <summary>
-        /// Removes the value with the specified key from the cache
+        /// Remove the value with the specified key from the cache
         /// </summary>
-        /// <param name="key">Key of cached item</param>
-        Task Remove(CacheKey key);
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        Task Remove(CacheKey cacheKey, params object[] cacheKeyParameters);
 
         /// <summary>
-        /// Adds the specified key and object to the cache
+        /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
         Task Set(CacheKey key, object data);
 
         /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
+        /// Get a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
         Task<bool> IsSet(CacheKey key);
 
         /// <summary>
-        /// Removes items by key prefix
+        /// Remove items by cache key prefix
         /// </summary>
-        /// <param name="prefix">String key prefix</param>
-        Task RemoveByPrefix(string prefix);
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        Task RemoveByPrefix(string prefix, params object[] prefixParameters);
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
         Task Clear();
+
+        #region Cache key
+
+        /// <summary>
+        /// Create a copy of cache key and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        CacheKey PrepareKey(CacheKey cacheKey, params object[] cacheKeyParameters);
+
+        /// <summary>
+        /// Create a copy of cache key using the default cache time and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        CacheKey PrepareKeyForDefaultCache(CacheKey cacheKey, params object[] cacheKeyParameters);
+
+        /// <summary>
+        /// Create a copy of cache key using the short cache time and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] cacheKeyParameters);
+
+        #endregion
     }
 }

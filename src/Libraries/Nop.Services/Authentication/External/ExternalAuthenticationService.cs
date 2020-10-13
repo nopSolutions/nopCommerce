@@ -7,15 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Services.Orders;
 
 namespace Nop.Services.Authentication.External
 {
@@ -30,14 +27,12 @@ namespace Nop.Services.Authentication.External
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IAuthenticationService _authenticationService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
-        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -51,14 +46,12 @@ namespace Nop.Services.Authentication.External
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationPluginManager authenticationPluginManager,
             IAuthenticationService authenticationService,
-            ICustomerActivityService customerActivityService,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
-            IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -68,14 +61,12 @@ namespace Nop.Services.Authentication.External
             _externalAuthenticationSettings = externalAuthenticationSettings;
             _authenticationPluginManager = authenticationPluginManager;
             _authenticationService = authenticationService;
-            _customerActivityService = customerActivityService;
             _customerRegistrationService = customerRegistrationService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
-            _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
@@ -97,7 +88,7 @@ namespace Nop.Services.Authentication.External
         {
             //log in guest user
             if (currentLoggedInUser == null)
-                return await LoginUser(associatedUser, returnUrl);
+                return await _customerRegistrationService.SignInCustomer(associatedUser, returnUrl);
 
             //account is already assigned to another user
             if (currentLoggedInUser.Id != associatedUser.Id)
@@ -203,31 +194,7 @@ namespace Nop.Services.Authentication.External
 
             return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
         }
-
-        /// <summary>
-        /// Login passed user
-        /// </summary>
-        /// <param name="user">User to login</param>
-        /// <param name="returnUrl">URL to which the user will return after authentication</param>
-        /// <returns>Result of an authentication</returns>
-        protected virtual async Task<IActionResult> LoginUser(Customer user, string returnUrl)
-        {
-            //migrate shopping cart
-            await _shoppingCartService.MigrateShoppingCart(await _workContext.GetCurrentCustomer(), user, true);
-
-            //authenticate
-            await _authenticationService.SignIn(user, false);
-
-            //raise event       
-            await _eventPublisher.Publish(new CustomerLoggedinEvent(user));
-
-            //activity log
-            await _customerActivityService.InsertActivity(user, "PublicStore.Login",
-                await _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
-
-            return SuccessfulAuthentication(returnUrl);
-        }
-
+        
         /// <summary>
         /// Add errors that occurred during authentication
         /// </summary>
@@ -310,7 +277,7 @@ namespace Nop.Services.Authentication.External
                 ProviderSystemName = parameters.ProviderSystemName
             };
 
-            await _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord);
+            await _externalAuthenticationRecordRepository.Insert(externalAuthenticationRecord, false);
         }
 
         /// <summary>
@@ -338,10 +305,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result</returns>
         public virtual async Task<ExternalAuthenticationRecord> GetExternalAuthenticationRecordById(int externalAuthenticationRecordId)
         {
-            if (externalAuthenticationRecordId == 0)
-                return null;
-
-            return await _externalAuthenticationRecordRepository.ToCachedGetById(externalAuthenticationRecordId);
+            return await _externalAuthenticationRecordRepository.GetById(externalAuthenticationRecordId, cache => default);
         }
 
         /// <summary>
@@ -372,7 +336,7 @@ namespace Nop.Services.Authentication.External
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
 
             if (associationRecord != null)
-                await _externalAuthenticationRecordRepository.Delete(associationRecord);
+                await _externalAuthenticationRecordRepository.Delete(associationRecord, false);
         }
 
         /// <summary>
@@ -384,7 +348,7 @@ namespace Nop.Services.Authentication.External
             if (externalAuthenticationRecord == null)
                 throw new ArgumentNullException(nameof(externalAuthenticationRecord));
 
-            await _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord);
+            await _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord, false);
         }
 
         #endregion

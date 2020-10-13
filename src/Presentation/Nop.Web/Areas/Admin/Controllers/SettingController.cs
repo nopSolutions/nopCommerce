@@ -56,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
@@ -79,13 +80,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IUploadService _uploadService;
-        private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
-        public SettingController(IAddressService addressService,
+        public SettingController(AppSettings appSettings,
+            IAddressService addressService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
@@ -107,9 +108,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
-            IUploadService uploadService,
-            NopConfig config)
+            IUploadService uploadService)
         {
+            _appSettings = appSettings;
             _addressService = addressService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
@@ -133,7 +134,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _workContext = workContext;
             _uploadService = uploadService;
-            _config = config;
         }
 
         #endregion
@@ -178,6 +178,41 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
 
             return Redirect(returnUrl);
+        }
+
+        public virtual async Task<IActionResult> AppSettings()
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _settingModelFactory.PrepareAppSettingsModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> AppSettings(AppSettingsModel model)
+        {
+            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var appSettings = _appSettings;
+            appSettings.CacheConfig = model.CacheConfigModel.ToConfig(appSettings.CacheConfig);
+            appSettings.HostingConfig = model.HostingConfigModel.ToConfig(appSettings.HostingConfig);
+            appSettings.RedisConfig = model.RedisConfigModel.ToConfig(appSettings.RedisConfig);
+            appSettings.AzureBlobConfig = model.AzureBlobConfigModel.ToConfig(appSettings.AzureBlobConfig);
+            appSettings.InstallationConfig = model.InstallationConfigModel.ToConfig(appSettings.InstallationConfig);
+            appSettings.PluginConfig = model.PluginConfigModel.ToConfig(appSettings.PluginConfig);
+            appSettings.CommonConfig = model.CommonConfigModel.ToConfig(appSettings.CommonConfig);
+            await AppSettingsHelper.SaveAppSettings(appSettings, _fileProvider);
+
+            await _customerActivityService.InsertActivity("EditSettings", await _localizationService.GetResource("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Updated"));
+
+            var returnUrl = Url.Action("AppSettings", "Setting", new { area = AreaNames.Admin });
+            return View("RestartApplication", returnUrl);
         }
 
         public virtual async Task<IActionResult> Blog()
@@ -584,6 +619,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowShareButton, model.ShowShareButton_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.PageShareCode, model.PageShareCode_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewsMustBeApproved, model.ProductReviewsMustBeApproved_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.OneReviewPerProductFromCustomer, model.OneReviewPerProductFromCustomer, storeScope, false);
             await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, model.AllowAnonymousUsersToReviewProduct_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, storeScope, false);
             await _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, storeScope, false);
@@ -1857,7 +1893,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public async Task<IActionResult> RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
-            if (_config.RedisEnabled && _config.UseRedisForCaching && loadAllLocaleRecordsOnStartup)
+            if (_appSettings.RedisConfig.Enabled && _appSettings.RedisConfig.UseCaching && loadAllLocaleRecordsOnStartup)
                 return Json(new
                 {
                     Result = await _localizationService.GetResource(

@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -10,7 +11,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a category
     /// </summary>
-    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>
+    public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountCategoryMapping>, ISoftDeletedEntity
     {
         /// <summary>
         /// Gets or sets the name

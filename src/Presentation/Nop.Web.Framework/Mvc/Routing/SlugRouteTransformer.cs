@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Localization;
-using Nop.Services.Events;
+using Nop.Core.Events;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Events;

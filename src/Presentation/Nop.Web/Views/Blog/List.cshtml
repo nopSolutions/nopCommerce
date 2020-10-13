@@ -44,7 +44,7 @@
                 <div class="post">
                     <div class="post-head">
                         <a class="post-title" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
-                        <span class="post-date">-@item.CreatedOn.ToString("D")</span>
+                        <span class="post-date">@item.CreatedOn.ToString("D")</span>
                     </div>
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BlogListPageBeforePostBody, additionalData = item })
                     <div class="post-body">

@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
@@ -219,16 +218,16 @@ namespace Nop.Data
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual async Task SetTableIdent<T>(int ident) where T : BaseEntity
+        public virtual async Task SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
-            var currentIdent = GetTableIdent<T>();
+            await using var currentConnection = CreateDataConnection();
+            var currentIdent = GetTableIdent<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = currentConnection.GetTable<T>().TableName;
+            var tableName = currentConnection.GetTable<TEntity>().TableName;
 
             await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
@@ -353,7 +352,7 @@ namespace Nop.Data
         /// <summary>
         /// Sql server data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2008);
+        protected override IDataProvider LinqToDbDataProvider => SqlServerTools.GetDataProvider(SqlServerVersion.v2008, SqlServerProvider.SystemDataSqlClient);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

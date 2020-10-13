@@ -15,10 +15,7 @@ namespace Nop.Services.Common.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(AddressAttribute entity)
         {
-            await Remove(NopCommonDefaults.AddressAttributesAllCacheKey);
-
-            var cacheKey = _cacheKeyService.PrepareKey(NopCommonDefaults.AddressAttributeValuesAllCacheKey, entity);
-            await Remove(cacheKey);
+            await Remove(NopCommonDefaults.AddressAttributeValuesByAttributeCacheKey, entity);
         }
     }
 }

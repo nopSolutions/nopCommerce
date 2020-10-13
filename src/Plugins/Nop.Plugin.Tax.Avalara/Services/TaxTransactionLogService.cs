@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
-using Nop.Services;
 
 namespace Nop.Plugin.Tax.Avalara.Services
 {
@@ -70,9 +69,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>Log item</returns>
         public virtual async Task<TaxTransactionLog> GetTaxTransactionLogById(int logItemId)
         {
-            if (logItemId == 0)
-                return null;
-
             return await _taxTransactionLogRepository.GetById(logItemId);
         }
 
@@ -85,7 +81,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            await _taxTransactionLogRepository.Insert(logItem);
+            await _taxTransactionLogRepository.Insert(logItem, false);
         }
 
         /// <summary>
@@ -97,7 +93,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            await _taxTransactionLogRepository.Update(logItem);
+            await _taxTransactionLogRepository.Update(logItem, false);
         }
 
         /// <summary>
@@ -106,10 +102,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="logItem">Log item</param>
         public virtual async Task DeleteTaxTransactionLog(TaxTransactionLog logItem)
         {
-            if (logItem == null)
-                throw new ArgumentNullException(nameof(logItem));
-
-            await _taxTransactionLogRepository.Delete(logItem);
+            await _taxTransactionLogRepository.Delete(logItem, false);
         }
 
         /// <summary>

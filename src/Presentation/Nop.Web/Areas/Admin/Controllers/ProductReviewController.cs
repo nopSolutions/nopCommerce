@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -233,7 +233,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new { Result = true });
 
             //filter not approved reviews
-            var productReviews = (await _productService.GetProducReviewsByIds(selectedIds.ToArray())).Where(review => !review.IsApproved);
+            var productReviews = (await _productService.GetProductReviewsByIds(selectedIds.ToArray())).Where(review => !review.IsApproved);
+
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = true;
@@ -265,7 +266,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new { Result = true });
 
             //filter approved reviews
-            var productReviews = (await _productService.GetProducReviewsByIds(selectedIds.ToArray())).Where(review => review.IsApproved);
+            var productReviews = (await _productService.GetProductReviewsByIds(selectedIds.ToArray())).Where(review => review.IsApproved);
+
             foreach (var productReview in productReviews)
             {
                 productReview.IsApproved = false;
@@ -293,7 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds == null)
                 return Json(new { Result = true });
 
-            var productReviews = await _productService.GetProducReviewsByIds(selectedIds.ToArray());
+            var productReviews = await _productService.GetProductReviewsByIds(selectedIds.ToArray());
             var products = await _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
 
             await _productService.DeleteProductReviews(productReviews);

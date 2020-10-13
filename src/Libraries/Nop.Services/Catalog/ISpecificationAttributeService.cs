@@ -10,6 +10,50 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface ISpecificationAttributeService
     {
+        #region Specification attribute group
+
+        /// <summary>
+        /// Gets a specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
+        /// <returns>Specification attribute group</returns>
+        Task<SpecificationAttributeGroup> GetSpecificationAttributeGroupById(int specificationAttributeGroupId);
+
+        /// <summary>
+        /// Gets specification attribute groups
+        /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Specification attribute groups</returns>
+        Task<IPagedList<SpecificationAttributeGroup>> GetSpecificationAttributeGroups(int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets product specification attribute groups
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Specification attribute groups</returns>
+        Task<IList<SpecificationAttributeGroup>> GetProductSpecificationAttributeGroups(int productId);
+
+        /// <summary>
+        /// Deletes a specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroup">The specification attribute group</param>
+        Task DeleteSpecificationAttributeGroup(SpecificationAttributeGroup specificationAttributeGroup);
+
+        /// <summary>
+        /// Inserts a specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroup">The specification attribute group</param>
+        Task InsertSpecificationAttributeGroup(SpecificationAttributeGroup specificationAttributeGroup);
+
+        /// <summary>
+        /// Updates the specification attribute group
+        /// </summary>
+        /// <param name="specificationAttributeGroup">The specification attribute group</param>
+        Task UpdateSpecificationAttributeGroup(SpecificationAttributeGroup specificationAttributeGroup);
+
+        #endregion
+
         #region Specification attribute
 
         /// <summary>
@@ -39,6 +83,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Specification attributes that have available options</returns>
         Task<IList<SpecificationAttribute>> GetSpecificationAttributesWithOptions();
+
+        /// <summary>
+        /// Gets specification attributes by group identifier
+        /// </summary>
+        /// <param name="specificationAttributeGroupId">The specification attribute group identifier</param>
+        /// <returns>Specification attributes</returns>
+        Task<IList<SpecificationAttribute>> GetSpecificationAttributesByGroupId(int? specificationAttributeGroupId = null);
 
         /// <summary>
         /// Deletes a specification attribute
@@ -131,9 +182,10 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOptionId">Specification attribute option identifier; 0 to load all records</param>
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 1 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 1 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
+        /// <param name="specificationAttributeGroupId">Specification attribute group identifier; 0 to load all records; null to load attributes without group</param>
         /// <returns>Product specification attribute mapping collection</returns>
         Task<IList<ProductSpecificationAttribute>> GetProductSpecificationAttributes(int productId = 0,
-            int specificationAttributeOptionId = 0, bool? allowFiltering = null, bool? showOnProductPage = null);
+            int specificationAttributeOptionId = 0, bool? allowFiltering = null, bool? showOnProductPage = null, int? specificationAttributeGroupId = 0);
 
         /// <summary>
         /// Gets a product specification attribute mapping 

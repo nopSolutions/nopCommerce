@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -48,6 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly AppSettings _appSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
         private readonly IAddressService _addressService;
@@ -75,7 +77,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public SettingModelFactory(CurrencySettings currencySettings,
+        public SettingModelFactory(AppSettings appSettings,
+            CurrencySettings currencySettings,
             IAddressAttributeModelFactory addressAttributeModelFactory,
             IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
@@ -98,6 +101,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReviewTypeModelFactory reviewTypeModelFactory,
             IWorkContext workContext)
         {
+            _appSettings = appSettings;
             _currencySettings = currencySettings;
             _addressAttributeModelFactory = addressAttributeModelFactory;
             _addressService = addressService;
@@ -738,6 +742,26 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Methods
 
         /// <summary>
+        /// Prepare app settings model
+        /// </summary>
+        /// <returns>App settings model</returns>
+        public virtual AppSettingsModel PrepareAppSettingsModel()
+        {
+            var model = new AppSettingsModel
+            {
+                CacheConfigModel = _appSettings.CacheConfig.ToConfigModel<CacheConfigModel>(),
+                HostingConfigModel = _appSettings.HostingConfig.ToConfigModel<HostingConfigModel>(),
+                RedisConfigModel = _appSettings.RedisConfig.ToConfigModel<RedisConfigModel>(),
+                AzureBlobConfigModel = _appSettings.AzureBlobConfig.ToConfigModel<AzureBlobConfigModel>(),
+                InstallationConfigModel = _appSettings.InstallationConfig.ToConfigModel<InstallationConfigModel>(),
+                PluginConfigModel = _appSettings.PluginConfig.ToConfigModel<PluginConfigModel>(),
+                CommonConfigModel = _appSettings.CommonConfig.ToConfigModel<CommonConfigModel>()
+            };
+
+            return model;
+        }
+
+        /// <summary>
         /// Prepare blog settings model
         /// </summary>
         /// <returns>Blog settings model</returns>
@@ -1043,6 +1067,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShowShareButton_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.ShowShareButton, storeId);
                 model.PageShareCode_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.PageShareCode, storeId);
                 model.ProductReviewsMustBeApproved_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.ProductReviewsMustBeApproved, storeId);
+                model.OneReviewPerProductFromCustomer_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.OneReviewPerProductFromCustomer, storeId);
                 model.AllowAnonymousUsersToReviewProduct_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeId);
                 model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeId);
                 model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = await _settingService.SettingExists(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeId);

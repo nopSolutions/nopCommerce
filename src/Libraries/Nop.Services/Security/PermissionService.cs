@@ -8,10 +8,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Security
@@ -23,9 +20,7 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
@@ -36,18 +31,14 @@ namespace Nop.Services.Security
 
         #region Ctor
 
-        public PermissionService(ICacheKeyService cacheKeyService,
-            ICustomerService customerService,
-            IEventPublisher eventPublisher,
+        public PermissionService(ICustomerService customerService,
             ILocalizationService localizationService,
             IRepository<PermissionRecord> permissionRecordRepository,
             IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
             IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
-            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _permissionRecordRepository = permissionRecordRepository;
             _permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
@@ -66,7 +57,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         protected virtual async Task<IList<PermissionRecord>> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionsAllByCustomerRoleIdCacheKey, customerRoleId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionRecordsAllCacheKey, customerRoleId);
 
             var query = from pr in _permissionRecordRepository.Table
                 join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
@@ -75,7 +66,7 @@ namespace Nop.Services.Security
                 orderby pr.Id
                 select pr;
 
-            return await query.ToCachedList(key);
+            return await _staticCacheManager.Get(key, async ()=> await query.ToAsyncEnumerable().ToListAsync());
         }
 
         #endregion
@@ -88,13 +79,7 @@ namespace Nop.Services.Security
         /// <param name="permission">Permission</param>
         public virtual async Task DeletePermissionRecord(PermissionRecord permission)
         {
-            if (permission == null)
-                throw new ArgumentNullException(nameof(permission));
-
             await _permissionRecordRepository.Delete(permission);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(permission);
         }
 
         /// <summary>
@@ -104,10 +89,7 @@ namespace Nop.Services.Security
         /// <returns>Permission</returns>
         public virtual async Task<PermissionRecord> GetPermissionRecordById(int permissionId)
         {
-            if (permissionId == 0)
-                return null;
-
-            return await _permissionRecordRepository.ToCachedGetById(permissionId);
+            return await _permissionRecordRepository.GetById(permissionId, cache => default);
         }
 
         /// <summary>
@@ -135,10 +117,12 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         public virtual async Task<IList<PermissionRecord>> GetAllPermissionRecords()
         {
-            var query = from pr in _permissionRecordRepository.Table
-                        orderby pr.Name
-                        select pr;
-            var permissions = await query.ToListAsync();
+            var permissions = await _permissionRecordRepository.GetAll(query =>
+            {
+                return from pr in query
+                    orderby pr.Name
+                    select pr;
+            });
 
             return permissions;
         }
@@ -149,13 +133,7 @@ namespace Nop.Services.Security
         /// <param name="permission">Permission</param>
         public virtual async Task InsertPermissionRecord(PermissionRecord permission)
         {
-            if (permission == null)
-                throw new ArgumentNullException(nameof(permission));
-
             await _permissionRecordRepository.Insert(permission);
-
-            //event notification
-            await _eventPublisher.EntityInserted(permission);
         }
 
         /// <summary>
@@ -164,13 +142,7 @@ namespace Nop.Services.Security
         /// <param name="permission">Permission</param>
         public virtual async Task UpdatePermissionRecord(PermissionRecord permission)
         {
-            if (permission == null)
-                throw new ArgumentNullException(nameof(permission));
-
             await _permissionRecordRepository.Update(permission);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(permission);
         }
 
         /// <summary>
@@ -217,7 +189,7 @@ namespace Nop.Services.Security
                     }
 
                     var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
-                                        
+
                     if (!defaultMappingProvided)
                         continue;
 
@@ -318,7 +290,7 @@ namespace Nop.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionsAllowedCacheKey, permissionRecordSystemName, customerRoleId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionAllowedCacheKey, permissionRecordSystemName, customerRoleId);
 
             return await _staticCacheManager.Get(key, async () =>
             {
@@ -351,15 +323,12 @@ namespace Nop.Services.Security
         /// <param name="customerRoleId">Customer role identifier</param>
         public virtual async Task DeletePermissionRecordCustomerRoleMapping(int permissionId, int customerRoleId)
         {
-            var mapping = _permissionRecordCustomerRoleMappingRepository.Table.FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
-
+            var mapping = _permissionRecordCustomerRoleMappingRepository.Table
+                .FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
             if (mapping is null)
-                throw new Exception(string.Empty);
+                return;
 
             await _permissionRecordCustomerRoleMappingRepository.Delete(mapping);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(mapping);
         }
 
         /// <summary>
@@ -368,13 +337,7 @@ namespace Nop.Services.Security
         /// <param name="permissionRecordCustomerRoleMapping">Permission record-customer role mapping</param>
         public virtual async Task InsertPermissionRecordCustomerRoleMapping(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping)
         {
-            if (permissionRecordCustomerRoleMapping is null)
-                throw new ArgumentNullException(nameof(permissionRecordCustomerRoleMapping));
-
             await _permissionRecordCustomerRoleMappingRepository.Insert(permissionRecordCustomerRoleMapping);
-
-            //event notification
-            await _eventPublisher.EntityInserted(permissionRecordCustomerRoleMapping);
         }
 
         #endregion

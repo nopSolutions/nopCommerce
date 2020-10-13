@@ -87,6 +87,7 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<BackInStockSubscription>(Create);
             _migrationManager.BuildTable<RelatedProduct>(Create);
             _migrationManager.BuildTable<ReviewType>(Create);
+            _migrationManager.BuildTable<SpecificationAttributeGroup>(Create);
             _migrationManager.BuildTable<SpecificationAttribute>(Create);
             _migrationManager.BuildTable<ProductAttributeCombination>(Create);
             _migrationManager.BuildTable<ProductAttributeMapping>(Create);

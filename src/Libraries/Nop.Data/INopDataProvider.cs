@@ -146,9 +146,9 @@ namespace Nop.Data
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        Task SetTableIdent<T>(int ident) where T : BaseEntity;
+        Task SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity;
 
         /// <summary>
         /// Returns mapped entity descriptor
@@ -156,7 +156,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Type of entity</typeparam>
         /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
-        
+
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type

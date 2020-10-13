@@ -15,12 +15,7 @@ namespace Nop.Services.Localization.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(LocalizedProperty entity)
         {
-            await Remove(NopLocalizationDefaults.LocalizedPropertyAllCacheKey);
-
-            var cacheKey = _cacheKeyService.PrepareKey(NopLocalizationDefaults.LocalizedPropertyCacheKey,
-                entity.LanguageId, entity.EntityId, entity.LocaleKeyGroup, entity.LocaleKey);
-
-            await Remove(cacheKey);
+            await Remove(NopLocalizationDefaults.LocalizedPropertyCacheKey, entity.LanguageId, entity.EntityId, entity.LocaleKeyGroup, entity.LocaleKey);
         }
     }
 }

@@ -11,10 +11,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Seo;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -37,7 +35,6 @@ namespace Nop.Services.Media
 
         private readonly INopDataProvider _dataProvider;
         private readonly IDownloadService _downloadService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -55,7 +52,6 @@ namespace Nop.Services.Media
 
         public PictureService(INopDataProvider dataProvider,
             IDownloadService downloadService,
-            IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IProductAttributeParser productAttributeParser,
@@ -69,7 +65,6 @@ namespace Nop.Services.Media
         {
             _dataProvider = dataProvider;
             _downloadService = downloadService;
-            _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
             _productAttributeParser = productAttributeParser;
@@ -363,19 +358,9 @@ namespace Nop.Services.Media
             pictureBinary.BinaryData = binaryData;
 
             if (isNew)
-            {
                 await _pictureBinaryRepository.Insert(pictureBinary);
-
-                //event notification
-                await _eventPublisher.EntityInserted(pictureBinary);
-            }
             else
-            {
                 await _pictureBinaryRepository.Update(pictureBinary);
-
-                //event notification
-                await _eventPublisher.EntityUpdated(pictureBinary);
-            }
 
             return pictureBinary;
         }
@@ -676,10 +661,7 @@ namespace Nop.Services.Media
         /// <returns>Picture</returns>
         public virtual async Task<Picture> GetPictureById(int pictureId)
         {
-            if (pictureId == 0)
-                return null;
-
-            return await _pictureRepository.ToCachedGetById(pictureId);
+            return await _pictureRepository.GetById(pictureId, cache => default);
         }
 
         /// <summary>
@@ -700,9 +682,6 @@ namespace Nop.Services.Media
 
             //delete from database
             await _pictureRepository.Delete(picture);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(picture);
         }
 
         /// <summary>
@@ -785,9 +764,6 @@ namespace Nop.Services.Media
 
             if (!StoreInDb)
                 await SavePictureInFile(picture.Id, pictureBinary, mimeType);
-
-            //event notification
-            await _eventPublisher.EntityInserted(picture);
 
             return picture;
         }
@@ -919,10 +895,7 @@ namespace Nop.Services.Media
 
             if (!StoreInDb)
                 await SavePictureInFile(picture.Id, pictureBinary, mimeType);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(picture);
-
+            
             return picture;
         }
 
@@ -949,10 +922,7 @@ namespace Nop.Services.Media
 
             if (!StoreInDb)
                 await SavePictureInFile(picture.Id, (await GetPictureBinaryByPictureId(picture.Id)).BinaryData, picture.MimeType);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(picture);
-
+            
             return picture;
         }
 
@@ -1133,12 +1103,10 @@ namespace Nop.Services.Media
                             //update appropriate properties
                             UpdatePictureBinary(picture, value ? pictureBinary : Array.Empty<byte>()).Wait();
                             picture.IsNew = true;
-                            //raise event?
-                            //await _eventPublisher.EntityUpdated(picture);
                         }
 
                         //save all at once
-                        _pictureRepository.Update(pictures);
+                        _pictureRepository.Update(pictures, false);
                     }
                 }
                 catch

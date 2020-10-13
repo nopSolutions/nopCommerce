@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 
@@ -20,7 +19,6 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<RewardPointsHistory> _rewardPointsHistoryRepository;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -30,13 +28,11 @@ namespace Nop.Services.Orders
         #region Ctor
 
         public RewardPointService(IDateTimeHelper dateTimeHelper,
-            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
         {
             _dateTimeHelper = dateTimeHelper;
-            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _rewardPointsHistoryRepository = rewardPointsHistoryRepository;
             _rewardPointsSettings = rewardPointsSettings;
@@ -252,9 +248,6 @@ namespace Nop.Services.Orders
         /// <returns>Reward point history entry</returns>
         public virtual async Task<RewardPointsHistory> GetRewardPointsHistoryEntryById(int rewardPointsHistoryId)
         {
-            if (rewardPointsHistoryId == 0)
-                return null;
-
             return await _rewardPointsHistoryRepository.GetById(rewardPointsHistoryId);
         }
 
@@ -264,13 +257,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         public virtual async Task InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
             await _rewardPointsHistoryRepository.Insert(rewardPointsHistory);
-
-            //event notification
-            await _eventPublisher.EntityInserted(rewardPointsHistory);
         }
 
         /// <summary>
@@ -279,13 +266,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         public virtual async Task UpdateRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
             await _rewardPointsHistoryRepository.Update(rewardPointsHistory);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(rewardPointsHistory);
         }
 
         /// <summary>
@@ -294,13 +275,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsHistory">Reward point history entry</param>
         public virtual async Task DeleteRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
         {
-            if (rewardPointsHistory == null)
-                throw new ArgumentNullException(nameof(rewardPointsHistory));
-
             await _rewardPointsHistoryRepository.Delete(rewardPointsHistory);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(rewardPointsHistory);
         }
 
         #endregion

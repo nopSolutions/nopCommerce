@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -19,7 +18,6 @@ namespace Nop.Web.Components
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IOrderReportService _orderReportService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
@@ -29,7 +27,6 @@ namespace Nop.Web.Components
 
         public ProductsAlsoPurchasedViewComponent(CatalogSettings catalogSettings,
             IAclService aclService,
-            ICacheKeyService cacheKeyService,
             IOrderReportService orderReportService,
             IProductModelFactory productModelFactory,
             IProductService productService,
@@ -39,7 +36,6 @@ namespace Nop.Web.Components
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
-            _cacheKeyService = cacheKeyService;
             _orderReportService = orderReportService;
             _productModelFactory = productModelFactory;
             _productService = productService;
@@ -54,7 +50,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = await _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, await _storeContext.GetCurrentStore()),
+            var productIds = await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, await _storeContext.GetCurrentStore()),
                 async () => await _orderReportService.GetAlsoPurchasedProductsIds((await _storeContext.GetCurrentStore()).Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
             );
 

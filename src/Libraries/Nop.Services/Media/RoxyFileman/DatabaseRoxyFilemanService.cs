@@ -594,7 +594,7 @@ namespace Nop.Services.Media.RoxyFileman
                         await FlushImages(picture, width, height);
 
                     if (removeOriginal)
-                        await _pictureRepository.Delete(pictures);
+                        await _pictureRepository.Delete(pictures, false);
                 }
             }
             catch

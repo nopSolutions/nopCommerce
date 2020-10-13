@@ -16,12 +16,10 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entityEventType">Entity event type</param>
         protected override async Task ClearCache(ProductAttribute entity, EntityEventType entityEventType)
         {
-            if (entityEventType != EntityEventType.Delete) 
-                return;
+            if (entityEventType == EntityEventType.Insert)
+                await Remove(NopCatalogDefaults.ProductAttributeValuesByAttributeCacheKey, entity);
 
-            await RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
-            await RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesAllPrefixCacheKey);
-            await RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsAllPrefixCacheKey);
+            await base.ClearCache(entity, entityEventType);
         }
     }
 }

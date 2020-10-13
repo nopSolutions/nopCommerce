@@ -4,14 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 
 namespace Nop.Services.Security
 {
@@ -23,10 +21,9 @@ namespace Nop.Services.Security
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRecordRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -34,17 +31,15 @@ namespace Nop.Services.Security
         #region Ctor
 
         public AclService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
-            IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRecordRepository,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
-            _eventPublisher = eventPublisher;
             _aclRecordRepository = aclRecordRepository;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
         }
 
@@ -58,13 +53,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual async Task DeleteAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             await _aclRecordRepository.Delete(aclRecord);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(aclRecord);
         }
 
         /// <summary>
@@ -74,10 +63,7 @@ namespace Nop.Services.Security
         /// <returns>ACL record</returns>
         public virtual async Task<AclRecord> GetAclRecordById(int aclRecordId)
         {
-            if (aclRecordId == 0)
-                return null;
-
-            return await _aclRecordRepository.ToCachedGetById(aclRecordId);
+            return await _aclRecordRepository.GetById(aclRecordId, cache => default);
         }
 
         /// <summary>
@@ -109,13 +95,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual async Task InsertAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             await _aclRecordRepository.Insert(aclRecord);
-
-            //event notification
-            await _eventPublisher.EntityInserted(aclRecord);
         }
 
         /// <summary>
@@ -151,13 +131,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual async Task UpdateAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             await _aclRecordRepository.Update(aclRecord);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(aclRecord);
         }
 
         /// <summary>
@@ -174,14 +148,14 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
 
             var query = from ur in _aclRecordRepository.Table
                 where ur.EntityId == entityId &&
                       ur.EntityName == entityName
                 select ur.CustomerRoleId;
 
-            return await query.ToCachedArray(key);
+            return await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToArrayAsync());
         }
 
         /// <summary>

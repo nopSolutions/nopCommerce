@@ -24,7 +24,6 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Services.Blogs;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -61,7 +60,6 @@ namespace Nop.Web.Factories
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBlogService _blogService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
@@ -110,7 +108,6 @@ namespace Nop.Web.Factories
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
             IBlogService blogService,
-            ICacheKeyService cacheKeyService,
             ICategoryService categoryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -155,7 +152,6 @@ namespace Nop.Web.Factories
             _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
             _blogService = blogService;
-            _cacheKeyService = cacheKeyService;
             _categoryService = categoryService;
             _currencyService = currencyService;
             _customerService = customerService;
@@ -233,7 +229,7 @@ namespace Nop.Web.Factories
                 StoreName = await _localizationService.GetLocalized(await _storeContext.GetCurrentStore(), x => x.Name)
             };
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreLogoPath
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.StoreLogoPath
                 , await _storeContext.GetCurrentStore(), await _themeContext.GetWorkingThemeName(), _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = await _staticCacheManager.Get(cacheKey, async () =>
             {
@@ -532,9 +528,9 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual async Task<SitemapModel> PrepareSitemapModel(SitemapPageModel pageModel)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapPageModelKey,
                 await _workContext.GetWorkingLanguage(),
-                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore());
 
             var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
@@ -638,7 +634,7 @@ namespace Nop.Web.Factories
                         GroupTitle = blogPostsGroupTitle,
                         Name = post.Title,
                         Url = urlHelper.RouteUrl("BlogPost",
-                            new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false).Result })
+                            new { SeName = _urlRecordService.GetSeName(post, post.LanguageId, ensureTwoPublishedLanguages: false) })
                     }));
                 }
 
@@ -652,7 +648,7 @@ namespace Nop.Web.Factories
                         GroupTitle = newsGroupTitle,
                         Name = newsItem.Title,
                         Url = urlHelper.RouteUrl("NewsItem",
-                            new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false).Result })
+                            new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) })
                     }));
                 }
 
@@ -729,9 +725,9 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap as string in XML format</returns>
         public virtual async Task<string> PrepareSitemapXml(int? id)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey, id,
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SitemapSeoModelKey, id,
                 await _workContext.GetWorkingLanguage(),
-                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore());
 
             var siteMap = await _staticCacheManager.Get(cacheKey, async () => await _sitemapGenerator.Generate(id));

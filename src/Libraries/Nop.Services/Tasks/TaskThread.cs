@@ -105,16 +105,19 @@ namespace Nop.Services.Tasks
             try
             {
                 _timer.Change(-1, -1);
-                Run().Wait();
 
-                if (RunOnlyOnce)
-                    Dispose();
-                else
-                    _timer.Change(Interval, Interval);
+                Run().Wait();
             }
             catch
             {
                 // ignore
+            }
+            finally
+            {
+                if (RunOnlyOnce)
+                    Dispose();
+                else
+                    _timer.Change(Interval, Interval);
             }
         }
 

@@ -15,9 +15,7 @@ namespace Nop.Services.News.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(NewsItem entity)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopNewsDefaults.NewsCommentsNumberPrefixCacheKey, entity);
-
-            await RemoveByPrefix(prefix);
+            await RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity);
         }
     }
 }

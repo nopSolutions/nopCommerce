@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Topics
 {
@@ -17,20 +13,14 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
 
         #endregion
 
         #region Ctor
 
-        public TopicTemplateService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<TopicTemplate> topicTemplateRepository)
+        public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _topicTemplateRepository = topicTemplateRepository;
         }
 
@@ -44,13 +34,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplate">Topic template</param>
         public virtual async Task DeleteTopicTemplate(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
             await _topicTemplateRepository.Delete(topicTemplate);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(topicTemplate);
         }
 
         /// <summary>
@@ -59,11 +43,12 @@ namespace Nop.Services.Topics
         /// <returns>Topic templates</returns>
         public virtual async Task<IList<TopicTemplate>> GetAllTopicTemplates()
         {
-            var query = from pt in _topicTemplateRepository.Table
-                        orderby pt.DisplayOrder, pt.Id
-                        select pt;
-
-            var templates = await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopTopicDefaults.TopicTemplatesAllCacheKey));
+            var templates = await _topicTemplateRepository.GetAll(query=>
+            {
+                return from pt in query
+                    orderby pt.DisplayOrder, pt.Id
+                    select pt;
+            }, cache => default);
 
             return templates;
         }
@@ -75,10 +60,7 @@ namespace Nop.Services.Topics
         /// <returns>Topic template</returns>
         public virtual async Task<TopicTemplate> GetTopicTemplateById(int topicTemplateId)
         {
-            if (topicTemplateId == 0)
-                return null;
-
-            return await _topicTemplateRepository.ToCachedGetById(topicTemplateId);
+            return await _topicTemplateRepository.GetById(topicTemplateId, cache => default);
         }
 
         /// <summary>
@@ -87,13 +69,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplate">Topic template</param>
         public virtual async Task InsertTopicTemplate(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
             await _topicTemplateRepository.Insert(topicTemplate);
-
-            //event notification
-            await _eventPublisher.EntityInserted(topicTemplate);
         }
 
         /// <summary>
@@ -102,13 +78,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplate">Topic template</param>
         public virtual async Task UpdateTopicTemplate(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
             await _topicTemplateRepository.Update(topicTemplate);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(topicTemplate);
         }
 
         #endregion

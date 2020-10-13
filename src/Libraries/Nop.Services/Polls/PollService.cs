@@ -7,8 +7,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Polls
 {
@@ -20,7 +18,6 @@ namespace Nop.Services.Polls
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<PollAnswer> _pollAnswerRepository;
         private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
@@ -31,14 +28,12 @@ namespace Nop.Services.Polls
         #region Ctor
 
         public PollService(CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
             IRepository<Poll> pollRepository,
             IRepository<PollAnswer> pollAnswerRepository,
             IRepository<PollVotingRecord> pollVotingRecordRepository,
              IRepository<StoreMapping> storeMappingRepository)
         {
             _catalogSettings = catalogSettings;
-            _eventPublisher = eventPublisher;
             _pollRepository = pollRepository;
             _pollAnswerRepository = pollAnswerRepository;
             _pollVotingRecordRepository = pollVotingRecordRepository;
@@ -56,10 +51,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll</returns>
         public virtual async Task<Poll> GetPollById(int pollId)
         {
-            if (pollId == 0)
-                return null;
-
-            return await _pollRepository.ToCachedGetById(pollId);
+            return await _pollRepository.GetById(pollId, cache => default);
         }
 
         /// <summary>
@@ -134,13 +126,7 @@ namespace Nop.Services.Polls
         /// <param name="poll">The poll</param>
         public virtual async Task DeletePoll(Poll poll)
         {
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
-
             await _pollRepository.Delete(poll);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(poll);
         }
 
         /// <summary>
@@ -149,13 +135,7 @@ namespace Nop.Services.Polls
         /// <param name="poll">Poll</param>
         public virtual async Task InsertPoll(Poll poll)
         {
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
-
             await _pollRepository.Insert(poll);
-
-            //event notification
-            await _eventPublisher.EntityInserted(poll);
         }
 
         /// <summary>
@@ -164,13 +144,7 @@ namespace Nop.Services.Polls
         /// <param name="poll">Poll</param>
         public virtual async Task UpdatePoll(Poll poll)
         {
-            if (poll == null)
-                throw new ArgumentNullException(nameof(poll));
-
             await _pollRepository.Update(poll);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(poll);
         }
 
         /// <summary>
@@ -180,10 +154,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         public virtual async Task<PollAnswer> GetPollAnswerById(int pollAnswerId)
         {
-            if (pollAnswerId == 0)
-                return null;
-
-            return await _pollAnswerRepository.ToCachedGetById(pollAnswerId);
+            return await _pollAnswerRepository.GetById(pollAnswerId, cache => default);
         }
 
         /// <summary>
@@ -192,13 +163,7 @@ namespace Nop.Services.Polls
         /// <param name="pollAnswer">Poll answer</param>
         public virtual async Task DeletePollAnswer(PollAnswer pollAnswer)
         {
-            if (pollAnswer == null)
-                throw new ArgumentNullException(nameof(pollAnswer));
-
             await _pollAnswerRepository.Delete(pollAnswer);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(pollAnswer);
         }
 
         /// <summary>
@@ -225,13 +190,7 @@ namespace Nop.Services.Polls
         /// <param name="pollAnswer">Poll answer</param>
         public virtual async Task InsertPollAnswer(PollAnswer pollAnswer)
         {
-            if (pollAnswer == null)
-                throw new ArgumentNullException(nameof(pollAnswer));
-
             await _pollAnswerRepository.Insert(pollAnswer);
-
-            //event notification
-            await _eventPublisher.EntityInserted(pollAnswer);
         }
 
         /// <summary>
@@ -240,13 +199,7 @@ namespace Nop.Services.Polls
         /// <param name="pollAnswer">Poll answer</param>
         public virtual async Task UpdatePollAnswer(PollAnswer pollAnswer)
         {
-            if (pollAnswer == null)
-                throw new ArgumentNullException(nameof(pollAnswer));
-
             await _pollAnswerRepository.Update(pollAnswer);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(pollAnswer);
         }
 
         /// <summary>
@@ -273,13 +226,7 @@ namespace Nop.Services.Polls
         /// <param name="pollVotingRecord">Voting record</param>
         public virtual async Task InsertPollVotingRecord(PollVotingRecord pollVotingRecord)
         {
-            if (pollVotingRecord == null)
-                throw new ArgumentNullException(nameof(pollVotingRecord));
-
             await _pollVotingRecordRepository.Insert(pollVotingRecord);
-
-            //event notification
-            await _eventPublisher.EntityInserted(pollVotingRecord);
         }
 
         /// <summary>

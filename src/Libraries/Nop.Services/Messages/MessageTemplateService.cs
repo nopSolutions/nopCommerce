@@ -8,9 +8,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 
@@ -24,9 +21,7 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly IStaticCacheManager _staticCacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -39,9 +34,7 @@ namespace Nop.Services.Messages
         #region Ctor
 
         public MessageTemplateService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
             IStaticCacheManager staticCacheManager,
-            IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
@@ -50,9 +43,7 @@ namespace Nop.Services.Messages
             IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
             _staticCacheManager = staticCacheManager;
-            _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizationService = localizationService;
             _localizedEntityService = localizedEntityService;
@@ -71,13 +62,7 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplate">Message template</param>
         public virtual async Task DeleteMessageTemplate(MessageTemplate messageTemplate)
         {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
-
             await _messageTemplateRepository.Delete(messageTemplate);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(messageTemplate);
         }
 
         /// <summary>
@@ -86,13 +71,7 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplate">Message template</param>
         public virtual async Task InsertMessageTemplate(MessageTemplate messageTemplate)
         {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
-
             await _messageTemplateRepository.Insert(messageTemplate);
-
-            //event notification
-            await _eventPublisher.EntityInserted(messageTemplate);
         }
 
         /// <summary>
@@ -101,13 +80,7 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplate">Message template</param>
         public virtual async Task UpdateMessageTemplate(MessageTemplate messageTemplate)
         {
-            if (messageTemplate == null)
-                throw new ArgumentNullException(nameof(messageTemplate));
-
             await _messageTemplateRepository.Update(messageTemplate);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(messageTemplate);
         }
 
         /// <summary>
@@ -117,10 +90,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template</returns>
         public virtual async Task<MessageTemplate> GetMessageTemplateById(int messageTemplateId)
         {
-            if (messageTemplateId == 0)
-                return null;
-
-            return await _messageTemplateRepository.ToCachedGetById(messageTemplateId);
+            return await _messageTemplateRepository.GetById(messageTemplateId, cache => default);
         }
 
         /// <summary>
@@ -134,7 +104,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId);
 
             return await _staticCacheManager.Get(key, async () =>
             {
@@ -158,35 +128,27 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplates(int storeId)
         {
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
+            return await _messageTemplateRepository.GetAll(query =>
+            {
+                query = query.OrderBy(t => t.Name);
 
-            var query = _messageTemplateRepository.Table;
-            query = query.OrderBy(t => t.Name);
+                if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations)
+                    return query;
 
-            if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations)
-                return await query.ToCachedList(key);
+                //store mapping
+                query = from t in query
+                    join sm in _storeMappingRepository.Table
+                        on new {c1 = t.Id, c2 = nameof(MessageTemplate)}
+                        equals new {c1 = sm.EntityId, c2 = sm.EntityName}
+                        into tSm
+                    from sm in tSm.DefaultIfEmpty()
+                    where !t.LimitedToStores || storeId == sm.StoreId
+                    select t;
 
-            //store mapping
-            query = from t in query
-                join sm in _storeMappingRepository.Table
-                    on new
-                    {
-                        c1 = t.Id,
-                        c2 = nameof(MessageTemplate)
-                    } 
-                    equals new
-                    {
-                        c1 = sm.EntityId,
-                        c2 = sm.EntityName
-                    } 
-                    into tSm
-                from sm in tSm.DefaultIfEmpty()
-                where !t.LimitedToStores || storeId == sm.StoreId
-                select t;
+                query = query.Distinct();
 
-            query = query.Distinct().OrderBy(t => t.Name);
-
-            return await query.ToCachedList(key);
+                return query;
+            }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
         }
 
         /// <summary>

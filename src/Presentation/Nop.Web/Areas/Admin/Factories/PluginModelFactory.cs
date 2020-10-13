@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
-using Nop.Services.Caching;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
@@ -33,9 +33,9 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPluginService _pluginService;
@@ -54,8 +54,8 @@ namespace Nop.Web.Areas.Admin.Factories
         public PluginModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
             IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
-            ICacheKeyService cacheKeyService,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             ILocalizedModelFactory localizedModelFactory,
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
@@ -71,9 +71,9 @@ namespace Nop.Web.Areas.Admin.Factories
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
-            _cacheKeyService = cacheKeyService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _paymentPluginManager = paymentPluginManager;
             _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
@@ -128,6 +128,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 case IExternalAuthenticationMethod externalAuthenticationMethod:
                     model.IsEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
+                    break;
+
+                case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
+                    model.IsEnabled = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
                     break;
 
                 case IWidgetPlugin widgetPlugin:
@@ -381,7 +385,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List of models</returns>
         public virtual async Task<IList<AdminNavigationPluginModel>> PrepareAdminNavigationPluginModels()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, await _workContext.GetCurrentCustomer());
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, await _workContext.GetCurrentCustomer());
             return await _staticCacheManager.Get(cacheKey, async () =>
             {
                 //get installed plugins

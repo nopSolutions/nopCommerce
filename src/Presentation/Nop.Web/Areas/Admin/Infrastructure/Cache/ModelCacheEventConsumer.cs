@@ -101,7 +101,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         /// <param name="eventMessage">Event</param>
         public async Task HandleEvent(PluginUpdatedEvent eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefix(NopPluginDefaults.AdminNavigationPluginsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopPluginDefaults.AdminNavigationPluginsPrefix);
         }
 
         #endregion

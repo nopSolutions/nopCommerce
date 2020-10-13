@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core.Domain.Tasks;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Tasks
 {
@@ -37,10 +36,7 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task</param>
         public virtual async System.Threading.Tasks.Task DeleteTask(ScheduleTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            await _taskRepository.Delete(task);
+            await _taskRepository.Delete(task, false);
         }
 
         /// <summary>
@@ -50,10 +46,7 @@ namespace Nop.Services.Tasks
         /// <returns>Task</returns>
         public virtual async Task<ScheduleTask> GetTaskById(int taskId)
         {
-            if (taskId == 0)
-                return null;
-
-            return await _taskRepository.ToCachedGetById(taskId);
+            return await _taskRepository.GetById(taskId, cache => default);
         }
 
         /// <summary>
@@ -82,13 +75,15 @@ namespace Nop.Services.Tasks
         /// <returns>Tasks</returns>
         public virtual async Task<IList<ScheduleTask>> GetAllTasks(bool showHidden = false)
         {
-            var query = _taskRepository.Table;
-            if (!showHidden) 
-                query = query.Where(t => t.Enabled);
+            var tasks = await _taskRepository.GetAll(query =>
+            {
+                if (!showHidden) 
+                    query = query.Where(t => t.Enabled);
 
-            query = query.OrderByDescending(t => t.Seconds);
+                query = query.OrderByDescending(t => t.Seconds);
 
-            var tasks = await query.ToListAsync();
+                return query;
+            });
 
             return tasks;
         }
@@ -102,7 +97,7 @@ namespace Nop.Services.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            await _taskRepository.Insert(task);
+            await _taskRepository.Insert(task, false);
         }
 
         /// <summary>
@@ -111,10 +106,7 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task</param>
         public virtual async System.Threading.Tasks.Task UpdateTask(ScheduleTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            await _taskRepository.Update(task);
+            await _taskRepository.Update(task, false);
         }
 
         #endregion

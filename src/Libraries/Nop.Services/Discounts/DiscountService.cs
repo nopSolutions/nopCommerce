@@ -10,11 +10,8 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 
@@ -27,10 +24,8 @@ namespace Nop.Services.Discounts
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IDiscountPluginManager _discountPluginManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IRepository<Discount> _discountRepository;
@@ -44,10 +39,8 @@ namespace Nop.Services.Discounts
 
         #region Ctor
 
-        public DiscountService(ICacheKeyService cacheKeyService,
-            ICustomerService customerService,
+        public DiscountService(ICustomerService customerService,
             IDiscountPluginManager discountPluginManager,
-            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IProductService productService,
             IRepository<Discount> discountRepository,
@@ -57,10 +50,8 @@ namespace Nop.Services.Discounts
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext)
         {
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _discountPluginManager = discountPluginManager;
-            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _productService = productService;
             _discountRepository = discountRepository;
@@ -148,13 +139,11 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         public virtual async Task DeleteDiscount(Discount discount)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
+            //first, delete related discount requirements
+            await _discountRequirementRepository.Delete(await GetAllDiscountRequirements(discount.Id));
 
+            //then delete the discount
             await _discountRepository.Delete(discount);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(discount);
         }
 
         /// <summary>
@@ -164,10 +153,7 @@ namespace Nop.Services.Discounts
         /// <returns>Discount</returns>
         public virtual async Task<Discount> GetDiscountById(int discountId)
         {
-            if (discountId == 0)
-                return null;
-
-            return await _discountRepository.ToCachedGetById(discountId);
+            return await _discountRepository.GetById(discountId, cache => default);
         }
 
         /// <summary>
@@ -187,44 +173,42 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey
-                , showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
-
-            var query = _discountRepository.Table;
-
-            if (!showHidden)
+            var discounts = (await _discountRepository.GetAll(query =>
             {
-                query = query.Where(discount =>
-                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
-                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
-            }
+                if (!showHidden)
+                    query = query.Where(discount =>
+                        (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
+                        (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
 
-            //filter by coupon code
-            if (!string.IsNullOrEmpty(couponCode))
-                query = query.Where(discount => discount.CouponCode == couponCode);
+                //filter by coupon code
+                if (!string.IsNullOrEmpty(couponCode))
+                    query = query.Where(discount => discount.CouponCode == couponCode);
 
-            //filter by name
-            if (!string.IsNullOrEmpty(discountName))
-                query = query.Where(discount => discount.Name.Contains(discountName));
+                //filter by name
+                if (!string.IsNullOrEmpty(discountName))
+                    query = query.Where(discount => discount.Name.Contains(discountName));
 
-            query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
+                query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
-            query = (await query.ToCachedList(cacheKey)).AsQueryable();
+                return query;
+            }, cache => cache.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountAllCacheKey, 
+                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty)))
+            .AsQueryable();
 
             //we know that this method is usually invoked multiple times
             //that's why we filter discounts by type and dates on the application layer
             if (discountType.HasValue)
-                query = query.Where(discount => discount.DiscountType == discountType.Value);
+                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value);
 
             //filter by dates
             if (startDateUtc.HasValue)
-                query = query.Where(discount =>
+                discounts = discounts.Where(discount =>
                     !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
             if (endDateUtc.HasValue)
-                query = query.Where(discount =>
+                discounts = discounts.Where(discount =>
                     !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
 
-            return query.ToList();
+            return discounts.ToList();
         }
 
         /// <summary>
@@ -249,13 +233,7 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         public virtual async Task InsertDiscount(Discount discount)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
             await _discountRepository.Insert(discount);
-
-            //event notification
-            await _eventPublisher.EntityInserted(discount);
         }
 
         /// <summary>
@@ -264,13 +242,7 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         public virtual async Task UpdateDiscount(Discount discount)
         {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
             await _discountRepository.Update(discount);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(discount);
         }
 
         #endregion
@@ -385,19 +357,20 @@ namespace Nop.Services.Discounts
         /// <returns>Requirements</returns>
         public virtual async Task<IList<DiscountRequirement>> GetAllDiscountRequirements(int discountId = 0, bool topLevelOnly = false)
         {
-            var query = _discountRequirementRepository.Table;
+            return await _discountRequirementRepository.GetAll(query =>
+            {
+                //filter by discount
+                if (discountId > 0)
+                    query = query.Where(requirement => requirement.DiscountId == discountId);
 
-            //filter by discount
-            if (discountId > 0)
-                query = query.Where(requirement => requirement.DiscountId == discountId);
+                //filter by top-level
+                if (topLevelOnly)
+                    query = query.Where(requirement => !requirement.ParentId.HasValue);
 
-            //filter by top-level
-            if (topLevelOnly)
-                query = query.Where(requirement => !requirement.ParentId.HasValue);
+                query = query.OrderBy(requirement => requirement.Id);
 
-            query = query.OrderBy(requirement => requirement.Id);
-
-            return await query.ToListAsync();
+                return query;
+            });
         }
 
         /// <summary>
@@ -406,10 +379,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirementId">Discount requirement identifier</param>
         public virtual async Task<DiscountRequirement> GetDiscountRequirementById(int discountRequirementId)
         {
-            if (discountRequirementId == 0)
-                return null;
-
-            return await _discountRequirementRepository.ToCachedGetById(discountRequirementId);
+            return await _discountRequirementRepository.GetById(discountRequirementId, cache => default);
         }
 
         /// <summary>
@@ -439,9 +409,6 @@ namespace Nop.Services.Discounts
                     await DeleteDiscountRequirement(child, true);
 
             await _discountRequirementRepository.Delete(discountRequirement);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(discountRequirement);
         }
 
         /// <summary>
@@ -450,13 +417,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirement">Discount requirement</param>
         public virtual async Task InsertDiscountRequirement(DiscountRequirement discountRequirement)
         {
-            if (discountRequirement is null)
-                throw new ArgumentNullException(nameof(discountRequirement));
-
             await _discountRequirementRepository.Insert(discountRequirement);
-
-            //event notification
-            await _eventPublisher.EntityInserted(discountRequirement);
         }
 
         /// <summary>
@@ -465,13 +426,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirement">Discount requirement</param>
         public virtual async Task UpdateDiscountRequirement(DiscountRequirement discountRequirement)
         {
-            if (discountRequirement is null)
-                throw new ArgumentNullException(nameof(discountRequirement));
-
             await _discountRequirementRepository.Update(discountRequirement);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(discountRequirement);
         }
 
         #endregion
@@ -601,7 +556,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, discount);
 
             var requirements = await _staticCacheManager.Get(key, async () => await GetAllDiscountRequirements(discount.Id, true));
 
@@ -638,9 +593,6 @@ namespace Nop.Services.Discounts
         /// <returns>Discount usage history</returns>
         public virtual async Task<DiscountUsageHistory> GetDiscountUsageHistoryById(int discountUsageHistoryId)
         {
-            if (discountUsageHistoryId == 0)
-                return null;
-
             return await _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
         }
 
@@ -656,33 +608,35 @@ namespace Nop.Services.Discounts
         public virtual async Task<IPagedList<DiscountUsageHistory>> GetAllDiscountUsageHistory(int? discountId = null,
             int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var discountUsageHistory = _discountUsageHistoryRepository.Table;
+            return await _discountUsageHistoryRepository.GetAllPaged(query =>
+            {
+                //filter by discount
+                if (discountId.HasValue && discountId.Value > 0)
+                    query = query.Where(historyRecord => historyRecord.DiscountId == discountId.Value);
 
-            //filter by discount
-            if (discountId.HasValue && discountId.Value > 0)
-                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.DiscountId == discountId.Value);
+                //filter by customer
+                if (customerId.HasValue && customerId.Value > 0)
+                    query = from duh in query
+                        join order in _orderRepository.Table on duh.OrderId equals order.Id
+                        where order.CustomerId == customerId
+                        select duh;
 
-            //filter by customer
-            if (customerId.HasValue && customerId.Value > 0)
-                discountUsageHistory = from duh in discountUsageHistory
+                //filter by order
+                if (orderId.HasValue && orderId.Value > 0)
+                    query = query.Where(historyRecord => historyRecord.OrderId == orderId.Value);
+
+                //ignore deleted orders
+                query = from duh in query
                     join order in _orderRepository.Table on duh.OrderId equals order.Id
-                    where order.CustomerId == customerId
+                    where !order.Deleted
                     select duh;
 
-            //filter by order
-            if (orderId.HasValue && orderId.Value > 0)
-                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.OrderId == orderId.Value);
+                //order
+                query = query.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc)
+                    .ThenBy(historyRecord => historyRecord.Id);
 
-            //ignore deleted orders
-            discountUsageHistory = from duh in discountUsageHistory
-                join order in _orderRepository.Table on duh.OrderId equals order.Id
-                where !order.Deleted
-                select duh;
-
-            //order
-            discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);
-
-            return await discountUsageHistory.ToPagedList(pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -691,13 +645,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         public virtual async Task InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
-            if (discountUsageHistory == null)
-                throw new ArgumentNullException(nameof(discountUsageHistory));
-
             await _discountUsageHistoryRepository.Insert(discountUsageHistory);
-
-            //event notification
-            await _eventPublisher.EntityInserted(discountUsageHistory);
         }
 
         /// <summary>
@@ -706,13 +654,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         public virtual async Task UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
-            if (discountUsageHistory == null)
-                throw new ArgumentNullException(nameof(discountUsageHistory));
-
             await _discountUsageHistoryRepository.Update(discountUsageHistory);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(discountUsageHistory);
         }
 
         /// <summary>
@@ -721,13 +663,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         public virtual async Task DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
-            if (discountUsageHistory == null)
-                throw new ArgumentNullException(nameof(discountUsageHistory));
-
             await _discountUsageHistoryRepository.Delete(discountUsageHistory);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(discountUsageHistory);
         }
 
         #endregion

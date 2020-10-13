@@ -9,13 +9,5 @@ namespace Nop.Services.Catalog.Caching
     /// </summary>
     public partial class ManufacturerTemplateCacheEventConsumer : CacheEventConsumer<ManufacturerTemplate>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(ManufacturerTemplate entity)
-        {
-            await Remove(NopCatalogDefaults.ManufacturerTemplatesAllCacheKey);
-        }
     }
 }

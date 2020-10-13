@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -85,7 +84,7 @@ namespace Nop.Services.Logging
             if (log == null)
                 throw new ArgumentNullException(nameof(log));
 
-            await _logRepository.Delete(log);
+            await _logRepository.Delete(log, false);
         }
 
         /// <summary>
@@ -94,10 +93,7 @@ namespace Nop.Services.Logging
         /// <param name="logs">Log items</param>
         public virtual async Task DeleteLogs(IList<Log> logs)
         {
-            if (logs == null)
-                throw new ArgumentNullException(nameof(logs));
-
-            await _logRepository.Delete(logs);
+            await _logRepository.Delete(logs, false);
         }
 
         /// <summary>
@@ -122,23 +118,26 @@ namespace Nop.Services.Logging
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _logRepository.Table;
-            if (fromUtc.HasValue)
-                query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
-            if (toUtc.HasValue)
-                query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
-            if (logLevel.HasValue)
+            var logs = await _logRepository.GetAllPaged(query =>
             {
-                var logLevelId = (int)logLevel.Value;
-                query = query.Where(l => logLevelId == l.LogLevelId);
-            }
+                if (fromUtc.HasValue)
+                    query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
+                if (toUtc.HasValue)
+                    query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
+                if (logLevel.HasValue)
+                {
+                    var logLevelId = (int)logLevel.Value;
+                    query = query.Where(l => logLevelId == l.LogLevelId);
+                }
 
-            if (!string.IsNullOrEmpty(message))
-                query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
-            query = query.OrderByDescending(l => l.CreatedOnUtc);
+                if (!string.IsNullOrEmpty(message))
+                    query = query.Where(l => l.ShortMessage.Contains(message) || l.FullMessage.Contains(message));
+                query = query.OrderByDescending(l => l.CreatedOnUtc);
 
-            var log = await query.ToPagedList(pageIndex, pageSize);
-            return log;
+                return query;
+            }, pageIndex, pageSize);
+
+            return logs;
         }
 
         /// <summary>
@@ -148,9 +147,6 @@ namespace Nop.Services.Logging
         /// <returns>Log item</returns>
         public virtual async Task<Log> GetLogById(int logId)
         {
-            if (logId == 0)
-                return null;
-
             return await _logRepository.GetById(logId);
         }
 
@@ -161,23 +157,7 @@ namespace Nop.Services.Logging
         /// <returns>Log items</returns>
         public virtual async Task<IList<Log>> GetLogByIds(int[] logIds)
         {
-            if (logIds == null || logIds.Length == 0)
-                return new List<Log>();
-
-            var query = from l in _logRepository.Table
-                        where logIds.Contains(l.Id)
-                        select l;
-            var logItems = await query.ToListAsync();
-            //sort by passed identifiers
-            var sortedLogItems = new List<Log>();
-            foreach (var id in logIds)
-            {
-                var log = logItems.Find(x => x.Id == id);
-                if (log != null)
-                    sortedLogItems.Add(log);
-            }
-
-            return sortedLogItems;
+            return await _logRepository.GetByIds(logIds);
         }
 
         /// <summary>
@@ -206,7 +186,7 @@ namespace Nop.Services.Logging
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _logRepository.Insert(log);
+            await _logRepository.Insert(log, false);
 
             return log;
         }

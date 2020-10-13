@@ -10,8 +10,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
 {
@@ -22,7 +20,6 @@ namespace Nop.Services.Configuration
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Setting> _settingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
 
@@ -30,11 +27,9 @@ namespace Nop.Services.Configuration
 
         #region Ctor
 
-        public SettingService(IEventPublisher eventPublisher,
-            IRepository<Setting> settingRepository,
+        public SettingService(IRepository<Setting> settingRepository,
             IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
             _settingRepository = settingRepository;
             _staticCacheManager = staticCacheManager;
         }
@@ -49,8 +44,6 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         protected virtual async Task<IDictionary<string, IList<Setting>>> GetAllSettingsDictionary()
         {
-            //we can not use ICacheKeyService because it'll cause circular references.
-            //that's why we use the default cache time
             return await _staticCacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, async () =>
             {
                 var settings = await GetAllSettings();
@@ -131,17 +124,11 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual async Task InsertSetting(Setting setting, bool clearCache = true)
         {
-            if (setting == null)
-                throw new ArgumentNullException(nameof(setting));
-
             await _settingRepository.Insert(setting);
 
             //cache
             if (clearCache)
                 await ClearCache();
-
-            //event notification
-            await _eventPublisher.EntityInserted(setting);
         }
 
         /// <summary>
@@ -159,9 +146,6 @@ namespace Nop.Services.Configuration
             //cache
             if (clearCache)
                 await ClearCache();
-
-            //event notification
-            await _eventPublisher.EntityUpdated(setting);
         }
 
         /// <summary>
@@ -170,16 +154,10 @@ namespace Nop.Services.Configuration
         /// <param name="setting">Setting</param>
         public virtual async Task DeleteSetting(Setting setting)
         {
-            if (setting == null)
-                throw new ArgumentNullException(nameof(setting));
-
             await _settingRepository.Delete(setting);
 
             //cache
             await ClearCache();
-
-            //event notification
-            await _eventPublisher.EntityDeleted(setting);
         }
 
         /// <summary>
@@ -188,17 +166,10 @@ namespace Nop.Services.Configuration
         /// <param name="settings">Settings</param>
         public virtual async Task DeleteSettings(IList<Setting> settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException(nameof(settings));
-
             await _settingRepository.Delete(settings);
 
             //cache
             await ClearCache();
-
-            //event notification
-            foreach (var setting in settings) 
-                await _eventPublisher.EntityDeleted(setting);
         }
 
         /// <summary>
@@ -208,10 +179,7 @@ namespace Nop.Services.Configuration
         /// <returns>Setting</returns>
         public virtual async Task<Setting> GetSettingById(int settingId)
         {
-            if (settingId == 0)
-                return null;
-
-            return await _settingRepository.ToCachedGetById(settingId);
+            return await _settingRepository.GetById(settingId, cache => default);
         }
 
         /// <summary>
@@ -290,14 +258,13 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         public virtual async Task<IList<Setting>> GetAllSettings()
         {
-            var query = from s in _settingRepository.Table
-                        orderby s.Name, s.StoreId
-                        select s;
-
-            //we can not use ICacheKeyService because it'll cause circular references.
-            //that's why we use the default cache time
-            var settings = await query.ToCachedList(NopConfigurationDefaults.SettingsAllCacheKey);
-
+            var settings = await _settingRepository.GetAll(query =>
+            {
+                return from s in query
+                       orderby s.Name, s.StoreId
+                    select s;
+            }, cache => default);
+            
             return settings;
         }
 
@@ -493,7 +460,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual async Task ClearCache()
         {
-            await _staticCacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            await _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<Setting>.Prefix);
         }
 
         /// <summary>

@@ -9,13 +9,5 @@ namespace Nop.Services.Directory.Caching
     /// </summary>
     public partial class MeasureDimensionCacheEventConsumer : CacheEventConsumer<MeasureDimension>
     {
-        /// <summary>
-        /// Clear cache data
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(MeasureDimension entity)
-        {
-            await Remove(NopDirectoryDefaults.MeasureDimensionsAllCacheKey);
-        }
     }
 }

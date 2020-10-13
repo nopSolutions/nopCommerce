@@ -9,9 +9,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Blogs
 {
@@ -23,8 +20,6 @@ namespace Nop.Services.Blogs
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
@@ -35,16 +30,12 @@ namespace Nop.Services.Blogs
         #region Ctor
 
         public BlogService(CatalogSettings catalogSettings,
-            ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogPost> blogPostRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager)
         {
             _catalogSettings = catalogSettings;
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _blogCommentRepository = blogCommentRepository;
             _blogPostRepository = blogPostRepository;
             _storeMappingRepository = storeMappingRepository;
@@ -63,13 +54,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogPost">Blog post</param>
         public virtual async Task DeleteBlogPost(BlogPost blogPost)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
-
             await _blogPostRepository.Delete(blogPost);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(blogPost);
         }
 
         /// <summary>
@@ -79,10 +64,7 @@ namespace Nop.Services.Blogs
         /// <returns>Blog post</returns>
         public virtual async Task<BlogPost> GetBlogPostById(int blogPostId)
         {
-            if (blogPostId == 0)
-                return null;
-
-            return await _blogPostRepository.ToCachedGetById(blogPostId);
+            return await _blogPostRepository.GetById(blogPostId, cache => default);
         }
 
         /// <summary>
@@ -101,39 +83,40 @@ namespace Nop.Services.Blogs
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            var query = _blogPostRepository.Table;
-            if (dateFrom.HasValue)
-                query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
-            if (dateTo.HasValue)
-                query = query.Where(b => dateTo.Value >= (b.StartDateUtc ?? b.CreatedOnUtc));
-            if (languageId > 0)
-                query = query.Where(b => languageId == b.LanguageId);
-            if (!string.IsNullOrEmpty(title))
-                query = query.Where(b => b.Title.Contains(title));
-            if (!showHidden)
+            return await _blogPostRepository.GetAllPaged(query =>
             {
-                query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
-                query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
-            }
+                if (dateFrom.HasValue)
+                    query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
+                if (dateTo.HasValue)
+                    query = query.Where(b => dateTo.Value >= (b.StartDateUtc ?? b.CreatedOnUtc));
+                if (languageId > 0)
+                    query = query.Where(b => languageId == b.LanguageId);
+                if (!string.IsNullOrEmpty(title))
+                    query = query.Where(b => b.Title.Contains(title));
+                if (!showHidden)
+                {
+                    query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
+                    query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
+                }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-            {
-                //Store mapping
-                query = from bp in query
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    query = from bp in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = bp.Id, c2 = nameof(BlogPost) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into bp_sm
+                            on new {c1 = bp.Id, c2 = nameof(BlogPost)} equals new {c1 = sm.EntityId, c2 = sm.EntityName}
+                            into bp_sm
                         from sm in bp_sm.DefaultIfEmpty()
                         where !bp.LimitedToStores || storeId == sm.StoreId
                         select bp;
 
-                query = query.Distinct();
-            }
+                    query = query.Distinct();
+                }
 
-            query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
+                query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 
-            var blogPosts = await query.ToPagedList(pageIndex, pageSize);
-
-            return blogPosts;
+                return query;
+            }, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -176,7 +159,7 @@ namespace Nop.Services.Blogs
         /// <returns>Blog post tags</returns>
         public virtual async Task<IList<BlogPostTag>> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogTagsModelCacheKey, languageId, storeId, showHidden);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogTagsCacheKey, languageId, storeId, showHidden);
 
             var blogPostTags = await _staticCacheManager.Get(cacheKey, async () =>
             {
@@ -217,13 +200,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogPost">Blog post</param>
         public virtual async Task InsertBlogPost(BlogPost blogPost)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
-
             await _blogPostRepository.Insert(blogPost);
-
-            //event notification
-            await _eventPublisher.EntityInserted(blogPost);
         }
 
         /// <summary>
@@ -232,13 +209,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogPost">Blog post</param>
         public virtual async Task UpdateBlogPost(BlogPost blogPost)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException(nameof(blogPost));
-
             await _blogPostRepository.Update(blogPost);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(blogPost);
         }
 
         /// <summary>
@@ -318,32 +289,33 @@ namespace Nop.Services.Blogs
         public virtual async Task<IList<BlogComment>> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            var query = _blogCommentRepository.Table;
+            return await _blogCommentRepository.GetAll(query =>
+            {
+                if (approved.HasValue)
+                    query = query.Where(comment => comment.IsApproved == approved);
 
-            if (approved.HasValue)
-                query = query.Where(comment => comment.IsApproved == approved);
+                if (blogPostId > 0)
+                    query = query.Where(comment => comment.BlogPostId == blogPostId);
 
-            if (blogPostId > 0)
-                query = query.Where(comment => comment.BlogPostId == blogPostId);
+                if (customerId > 0)
+                    query = query.Where(comment => comment.CustomerId == customerId);
 
-            if (customerId > 0)
-                query = query.Where(comment => comment.CustomerId == customerId);
+                if (storeId > 0)
+                    query = query.Where(comment => comment.StoreId == storeId);
 
-            if (storeId > 0)
-                query = query.Where(comment => comment.StoreId == storeId);
+                if (fromUtc.HasValue)
+                    query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
 
-            if (fromUtc.HasValue)
-                query = query.Where(comment => fromUtc.Value <= comment.CreatedOnUtc);
+                if (toUtc.HasValue)
+                    query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
 
-            if (toUtc.HasValue)
-                query = query.Where(comment => toUtc.Value >= comment.CreatedOnUtc);
+                if (!string.IsNullOrEmpty(commentText))
+                    query = query.Where(c => c.CommentText.Contains(commentText));
 
-            if (!string.IsNullOrEmpty(commentText))
-                query = query.Where(c => c.CommentText.Contains(commentText));
+                query = query.OrderBy(comment => comment.CreatedOnUtc);
 
-            query = query.OrderBy(comment => comment.CreatedOnUtc);
-
-            return await query.ToListAsync();
+                return query;
+            });
         }
 
         /// <summary>
@@ -353,10 +325,7 @@ namespace Nop.Services.Blogs
         /// <returns>Blog comment</returns>
         public virtual async Task<BlogComment> GetBlogCommentById(int blogCommentId)
         {
-            if (blogCommentId == 0)
-                return null;
-
-            return await _blogCommentRepository.ToCachedGetById(blogCommentId);
+            return await _blogCommentRepository.GetById(blogCommentId, cache => default);
         }
 
         /// <summary>
@@ -366,23 +335,7 @@ namespace Nop.Services.Blogs
         /// <returns>Blog comments</returns>
         public virtual async Task<IList<BlogComment>> GetBlogCommentsByIds(int[] commentIds)
         {
-            if (commentIds == null || commentIds.Length == 0)
-                return new List<BlogComment>();
-
-            var query = from bc in _blogCommentRepository.Table
-                        where commentIds.Contains(bc.Id)
-                        select bc;
-            var comments =  await query.ToListAsync();
-            //sort by passed identifiers
-            var sortedComments = new List<BlogComment>();
-            foreach (var id in commentIds)
-            {
-                var comment = comments.Find(x => x.Id == id);
-                if (comment != null)
-                    sortedComments.Add(comment);
-            }
-
-            return sortedComments;
+            return await _blogCommentRepository.GetByIds(commentIds);
         }
 
         /// <summary>
@@ -402,7 +355,7 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
             
             return await _staticCacheManager.Get(cacheKey, () => query.CountAsync());
         }
@@ -413,13 +366,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogComment">Blog comment</param>
         public virtual async Task DeleteBlogComment(BlogComment blogComment)
         {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
-
             await _blogCommentRepository.Delete(blogComment);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(blogComment);
         }
 
         /// <summary>
@@ -428,11 +375,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogComments">Blog comments</param>
         public virtual async Task DeleteBlogComments(IList<BlogComment> blogComments)
         {
-            if (blogComments == null)
-                throw new ArgumentNullException(nameof(blogComments));
-
-            foreach (var blogComment in blogComments) 
-                await DeleteBlogComment(blogComment);
+            await _blogCommentRepository.Delete(blogComments);
         }
 
         /// <summary>
@@ -441,13 +384,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogComment">Blog comment</param>
         public virtual async Task InsertBlogComment(BlogComment blogComment)
         {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
-
             await _blogCommentRepository.Insert(blogComment);
-
-            //event notification
-            await _eventPublisher.EntityInserted(blogComment);
         }
 
         /// <summary>
@@ -456,13 +393,7 @@ namespace Nop.Services.Blogs
         /// <param name="blogComment">Blog comment</param>
         public virtual async Task UpdateBlogComment(BlogComment blogComment)
         {
-            if (blogComment == null)
-                throw new ArgumentNullException(nameof(blogComment));
-
             await _blogCommentRepository.Update(blogComment);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(blogComment);
         }
 
         #endregion

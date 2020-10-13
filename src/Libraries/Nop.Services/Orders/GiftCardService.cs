@@ -6,10 +6,9 @@ using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 
 namespace Nop.Services.Orders
 {
@@ -52,13 +51,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCard">Gift card</param>
         public virtual async Task DeleteGiftCard(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
-
             await _giftCardRepository.Delete(giftCard);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(giftCard);
         }
 
         /// <summary>
@@ -68,10 +61,7 @@ namespace Nop.Services.Orders
         /// <returns>Gift card entry</returns>
         public virtual async Task<GiftCard> GetGiftCardById(int giftCardId)
         {
-            if (giftCardId == 0)
-                return null;
-
-            return await _giftCardRepository.ToCachedGetById(giftCardId);
+            return await _giftCardRepository.GetById(giftCardId, cache => default);
         }
 
         /// <summary>
@@ -93,35 +83,36 @@ namespace Nop.Services.Orders
             string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _giftCardRepository.Table;
-
-            if (purchasedWithOrderId.HasValue)
+            var giftCards = await _giftCardRepository.GetAllPaged(query =>
             {
-                query = from gc in query
-                    join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
-                    where oi.OrderId == purchasedWithOrderId.Value
-                    select gc;
-            }
+                if (purchasedWithOrderId.HasValue)
+                {
+                    query = from gc in query
+                        join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
+                        where oi.OrderId == purchasedWithOrderId.Value
+                        select gc;
+                }
 
-            if (usedWithOrderId.HasValue)
-                query = from gc in query
-                    join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
-                    where gcuh.UsedWithOrderId == usedWithOrderId
-                    select gc;
+                if (usedWithOrderId.HasValue)
+                    query = from gc in query
+                        join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
+                        where gcuh.UsedWithOrderId == usedWithOrderId
+                        select gc;
 
-            if (createdFromUtc.HasValue)
-                query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
-            if (isGiftCardActivated.HasValue)
-                query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
-            if (!string.IsNullOrEmpty(giftCardCouponCode))
-                query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
-            if (!string.IsNullOrWhiteSpace(recipientName))
-                query = query.Where(c => c.RecipientName.Contains(recipientName));
-            query = query.OrderByDescending(gc => gc.CreatedOnUtc);
+                if (createdFromUtc.HasValue)
+                    query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
+                if (createdToUtc.HasValue)
+                    query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
+                if (isGiftCardActivated.HasValue)
+                    query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
+                if (!string.IsNullOrEmpty(giftCardCouponCode))
+                    query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
+                if (!string.IsNullOrWhiteSpace(recipientName))
+                    query = query.Where(c => c.RecipientName.Contains(recipientName));
+                query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
-            var giftCards = await query.ToPagedList(pageIndex, pageSize);
+                return query;
+            }, pageIndex, pageSize);
 
             return giftCards;
         }
@@ -132,13 +123,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCard">Gift card</param>
         public virtual async Task InsertGiftCard(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
-
             await _giftCardRepository.Insert(giftCard);
-
-            //event notification
-            await _eventPublisher.EntityInserted(giftCard);
         }
 
         /// <summary>
@@ -147,13 +132,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCard">Gift card</param>
         public virtual async Task UpdateGiftCard(GiftCard giftCard)
         {
-            if (giftCard == null)
-                throw new ArgumentNullException(nameof(giftCard));
-
             await _giftCardRepository.Update(giftCard);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(giftCard);
         }
 
         /// <summary>
@@ -227,10 +206,8 @@ namespace Nop.Services.Orders
             var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
-            foreach (var giftCard in giftCards)
-            {
+            foreach (var giftCard in giftCards) 
                 await _eventPublisher.EntityUpdated(giftCard);
-            }
         }
 
         /// <summary>
@@ -285,13 +262,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
         public virtual async Task InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
         {
-            if (giftCardUsageHistory is null)
-                throw new ArgumentNullException(nameof(giftCardUsageHistory));
-
             await _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);
-
-            //event notification
-            await _eventPublisher.EntityInserted(giftCardUsageHistory);
         }
 
         /// <summary>

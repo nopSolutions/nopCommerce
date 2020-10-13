@@ -15,8 +15,8 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(ProductSpecificationAttribute entity)
         {
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdPrefixCacheKey, entity.ProductId);
-            await RemoveByPrefix(prefix);
+            await RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeByProductPrefix, entity.ProductId);
+            await Remove(NopCatalogDefaults.SpecificationAttributeGroupByProductCacheKey, entity.ProductId);
         }
     }
 }

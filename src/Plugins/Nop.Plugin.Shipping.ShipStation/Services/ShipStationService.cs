@@ -15,7 +15,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -47,7 +46,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
@@ -65,8 +63,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
         #region Ctor
 
-        public ShipStationService(ICacheKeyService cacheKeyService,
-            IAddressService addressService,
+        public ShipStationService(IAddressService addressService,
             ICountryService countryService,
             ICustomerService customerService,
             ILogger logger,
@@ -81,7 +78,6 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             ShipStationSettings shipStationSettings)
         {
             _addressService = addressService;
-            _cacheKeyService = cacheKeyService;
             _countryService = countryService;
             _customerService = customerService;
             _logger = logger;
@@ -267,7 +263,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         
         protected virtual async Task<IList<Carrier>> GetCarriers()
         {
-            var rez = await _staticCacheManager.Get(_cacheKeyService.PrepareKeyForShortTermCache(_carriersCacheKey), async () =>
+            var rez = await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForShortTermCache(_carriersCacheKey), async () =>
             {
                 var data = await SendGetRequest($"{API_URL}{LIST_CARRIERS_CMD}");
                 
@@ -284,7 +280,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         {
             var services = (await GetCarriers()).SelectMany(carrier =>
             {
-                var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
+                var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
                 var data = _staticCacheManager.Get(cacheKey, async () => await SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code))).Result;
                 
@@ -420,13 +416,13 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         }
         
         /// <summary>
-        /// Create or upadete shipping
+        /// Create or update shipping
         /// </summary>
-        /// <param name="orderNumber"></param>
-        /// <param name="carrier"></param>
-        /// <param name="service"></param>
-        /// <param name="trackingNumber"></param>
-        public async Task CreateOrUpadeteShipping(string orderNumber, string carrier, string service, string trackingNumber)
+        /// <param name="orderNumber">Order number</param>
+        /// <param name="carrier">Carrier</param>
+        /// <param name="service">Service</param>
+        /// <param name="trackingNumber">Tracking number</param>
+        public async Task CreateOrUpdateShipping(string orderNumber, string carrier, string service, string trackingNumber)
         {
             try
             {
@@ -448,6 +444,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                     };
 
                     decimal totalWeight = 0;
+
+                    await _shipmentService.InsertShipment(shipment);
 
                     foreach (var orderItem in await _orderService.GetOrderItems(order.Id))
                     {
@@ -475,7 +473,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                         {
                             OrderItemId = orderItem.Id,
                             Quantity = orderItem.Quantity,
-                            WarehouseId = warehouseId
+                            WarehouseId = warehouseId,
+                            ShipmentId = shipment.Id
                         };
 
                         await _shipmentService.InsertShipmentItem(shipmentItem);
@@ -483,7 +482,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
                     shipment.TotalWeight = totalWeight;
 
-                    await _shipmentService.InsertShipment(shipment);
+                    await _shipmentService.UpdateShipment(shipment);
                 }
                 else
                 {

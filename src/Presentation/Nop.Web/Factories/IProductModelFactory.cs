@@ -6,6 +6,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Factories
 {
+
     /// <summary>
     /// Represents the interface of the product model factory
     /// </summary>
@@ -67,10 +68,10 @@ namespace Nop.Web.Factories
         Task<ProductEmailAFriendModel> PrepareProductEmailAFriendModel(ProductEmailAFriendModel model, Product product, bool excludeProperties);
 
         /// <summary>
-        /// Prepare the product specification models
+        /// Prepare the product specification model
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>List of product specification model</returns>
-        Task<IList<ProductSpecificationModel>> PrepareProductSpecificationModel(Product product);
+        /// <returns>The product specification model</returns>
+        Task<ProductSpecificationModel> PrepareProductSpecificationModel(Product product);
     }
 }

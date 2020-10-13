@@ -6,8 +6,6 @@ using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
@@ -18,17 +16,14 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
 
         #endregion
 
         #region Ctor
 
-        public QueuedEmailService(IEventPublisher eventPublisher,
-            IRepository<QueuedEmail> queuedEmailRepository)
+        public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository)
         {
-            _eventPublisher = eventPublisher;
             _queuedEmailRepository = queuedEmailRepository;
         }
 
@@ -42,13 +37,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>        
         public virtual async Task InsertQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             await _queuedEmailRepository.Insert(queuedEmail);
-
-            //event notification
-            await _eventPublisher.EntityInserted(queuedEmail);
         }
 
         /// <summary>
@@ -57,13 +46,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>
         public virtual async Task UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             await _queuedEmailRepository.Update(queuedEmail);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
@@ -72,13 +55,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>
         public virtual async Task DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             await _queuedEmailRepository.Delete(queuedEmail);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(queuedEmail);
         }
 
         /// <summary>
@@ -87,16 +64,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmails">Queued emails</param>
         public virtual async Task DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
         {
-            if (queuedEmails == null)
-                throw new ArgumentNullException(nameof(queuedEmails));
-
             await _queuedEmailRepository.Delete(queuedEmails);
-
-            //event notification
-            foreach (var queuedEmail in queuedEmails)
-            {
-                await _eventPublisher.EntityDeleted(queuedEmail);
-            }
         }
 
         /// <summary>
@@ -106,10 +74,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email</returns>
         public virtual async Task<QueuedEmail> GetQueuedEmailById(int queuedEmailId)
         {
-            if (queuedEmailId == 0)
-                return null;
-
-            return await _queuedEmailRepository.ToCachedGetById(queuedEmailId);
+            return await _queuedEmailRepository.GetById(queuedEmailId, cache => default);
         }
 
         /// <summary>
@@ -119,23 +84,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued emails</returns>
         public virtual async Task<IList<QueuedEmail>> GetQueuedEmailsByIds(int[] queuedEmailIds)
         {
-            if (queuedEmailIds == null || queuedEmailIds.Length == 0)
-                return new List<QueuedEmail>();
-
-            var query = from qe in _queuedEmailRepository.Table
-                        where queuedEmailIds.Contains(qe.Id)
-                        select qe;
-            var queuedEmails = await query.ToListAsync();
-            //sort by passed identifiers
-            var sortedQueuedEmails = new List<QueuedEmail>();
-            foreach (var id in queuedEmailIds)
-            {
-                var queuedEmail = queuedEmails.Find(x => x.Id == id);
-                if (queuedEmail != null)
-                    sortedQueuedEmails.Add(queuedEmail);
-            }
-
-            return sortedQueuedEmails;
+            return await _queuedEmailRepository.GetByIds(queuedEmailIds);
         }
 
         /// <summary>

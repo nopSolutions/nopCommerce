@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
-using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -19,18 +16,18 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public GenericAttributeService(IEventPublisher eventPublisher,
-            IRepository<GenericAttribute> genericAttributeRepository)
+        public GenericAttributeService(IRepository<GenericAttribute> genericAttributeRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
             _genericAttributeRepository = genericAttributeRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -43,13 +40,7 @@ namespace Nop.Services.Common
         /// <param name="attribute">Attribute</param>
         public virtual async Task DeleteAttribute(GenericAttribute attribute)
         {
-            if (attribute == null)
-                throw new ArgumentNullException(nameof(attribute));
-
             await _genericAttributeRepository.Delete(attribute);
-            
-            //event notification
-            await _eventPublisher.EntityDeleted(attribute);
         }
 
         /// <summary>
@@ -58,14 +49,7 @@ namespace Nop.Services.Common
         /// <param name="attributes">Attributes</param>
         public virtual async Task DeleteAttributes(IList<GenericAttribute> attributes)
         {
-            if (attributes == null)
-                throw new ArgumentNullException(nameof(attributes));
-
             await _genericAttributeRepository.Delete(attributes);
-            
-            //event notification
-            foreach (var attribute in attributes) 
-                await _eventPublisher.EntityDeleted(attribute);
         }
 
         /// <summary>
@@ -75,9 +59,6 @@ namespace Nop.Services.Common
         /// <returns>An attribute</returns>
         public virtual async Task<GenericAttribute> GetAttributeById(int attributeId)
         {
-            if (attributeId == 0)
-                return null;
-
             return await _genericAttributeRepository.GetById(attributeId);
         }
 
@@ -91,10 +72,8 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
+
             await _genericAttributeRepository.Insert(attribute);
-            
-            //event notification
-            await _eventPublisher.EntityInserted(attribute);
         }
 
         /// <summary>
@@ -107,10 +86,8 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
+
             await _genericAttributeRepository.Update(attribute);
-            
-            //event notification
-            await _eventPublisher.EntityUpdated(attribute);
         }
 
         /// <summary>
@@ -121,16 +98,13 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual async Task<IList<GenericAttribute>> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            //we cannot inject ICacheKeyService into constructor because it'll cause circular references.
-            //that's why we resolve it here this way
-            var key = EngineContext.Current.Resolve<ICacheKeyService>()
-                .PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
             
             var query = from ga in _genericAttributeRepository.Table
                 where ga.EntityId == entityId &&
                       ga.KeyGroup == keyGroup
                 select ga;
-            var attributes = await query.ToCachedList(key);
+            var attributes = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return attributes;
         }

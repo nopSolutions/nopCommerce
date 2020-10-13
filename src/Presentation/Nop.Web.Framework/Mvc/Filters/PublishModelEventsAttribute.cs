@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nop.Services.Events;
+using Nop.Core.Events;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Models;
 

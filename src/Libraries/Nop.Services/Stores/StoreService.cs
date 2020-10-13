@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Stores
 {
@@ -17,17 +15,14 @@ namespace Nop.Services.Stores
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Store> _storeRepository;
 
         #endregion
 
         #region Ctor
 
-        public StoreService(IEventPublisher eventPublisher,
-            IRepository<Store> storeRepository)
+        public StoreService(IRepository<Store> storeRepository)
         {
-            _eventPublisher = eventPublisher;
             _storeRepository = storeRepository;
         }
 
@@ -49,9 +44,6 @@ namespace Nop.Services.Stores
                 throw new Exception("You cannot delete the only configured store");
 
             await _storeRepository.Delete(store);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(store);
         }
 
         /// <summary>
@@ -60,11 +52,10 @@ namespace Nop.Services.Stores
         /// <returns>Stores</returns>
         public virtual async Task<IList<Store>> GetAllStores()
         {
-            var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
-
-            //we can not use ICacheKeyService because it'll cause circular references.
-            //that's why we use the default cache time
-            var result = await query.ToCachedList(NopStoreDefaults.StoresAllCacheKey);
+            var result = await _storeRepository.GetAll(query =>
+            {
+                return from s in query orderby s.DisplayOrder, s.Id select s;
+            }, cache => default);
 
             return result;
         }
@@ -76,12 +67,7 @@ namespace Nop.Services.Stores
         /// <returns>Store</returns>
         public virtual async Task<Store> GetStoreById(int storeId)
         {
-            if (storeId == 0)
-                return null;
-
-            var store = await _storeRepository.ToCachedGetById(storeId);
-
-            return store;
+            return await _storeRepository.GetById(storeId, cache => default);
         }
 
         /// <summary>
@@ -90,13 +76,7 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         public virtual async Task InsertStore(Store store)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
-
             await _storeRepository.Insert(store);
-
-            //event notification
-            await _eventPublisher.EntityInserted(store);
         }
 
         /// <summary>
@@ -105,13 +85,7 @@ namespace Nop.Services.Stores
         /// <param name="store">Store</param>
         public virtual async Task UpdateStore(Store store)
         {
-            if (store == null)
-                throw new ArgumentNullException(nameof(store));
-            
             await _storeRepository.Update(store);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(store);
         }
 
         /// <summary>

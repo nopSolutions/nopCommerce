@@ -15,8 +15,7 @@ namespace Nop.Services.Discounts.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(DiscountRequirement entity)
         {
-            var cacheKey = _cacheKeyService.PrepareKey(NopDiscountDefaults.DiscountRequirementModelCacheKey, entity.DiscountId);
-            await Remove(cacheKey);
+            await Remove(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity.DiscountId);
         }
     }
 }

@@ -6,7 +6,6 @@ using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
-using Nop.Services.Events;
 
 namespace Nop.Services.Media
 {
@@ -17,16 +16,14 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Download> _downloadRepository;
+
         #endregion
 
         #region Ctor
 
-        public DownloadService(IEventPublisher eventPublisher,
-            IRepository<Download> downloadRepository)
+        public DownloadService(IRepository<Download> downloadRepository)
         {
-            _eventPublisher = eventPublisher;
             _downloadRepository = downloadRepository;
         }
 
@@ -41,9 +38,6 @@ namespace Nop.Services.Media
         /// <returns>Download</returns>
         public virtual async Task<Download> GetDownloadById(int downloadId)
         {
-            if (downloadId == 0)
-                return null;
-
             return await _downloadRepository.GetById(downloadId);
         }
 
@@ -70,13 +64,7 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         public virtual async Task DeleteDownload(Download download)
         {
-            if (download == null)
-                throw new ArgumentNullException(nameof(download));
-
             await _downloadRepository.Delete(download);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(download);
         }
 
         /// <summary>
@@ -85,13 +73,7 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         public virtual async Task InsertDownload(Download download)
         {
-            if (download == null)
-                throw new ArgumentNullException(nameof(download));
-
             await _downloadRepository.Insert(download);
-
-            //event notification
-            await _eventPublisher.EntityInserted(download);
         }
 
         /// <summary>
@@ -100,13 +82,7 @@ namespace Nop.Services.Media
         /// <param name="download">Download</param>
         public virtual async Task UpdateDownload(Download download)
         {
-            if (download == null)
-                throw new ArgumentNullException(nameof(download));
-
             await _downloadRepository.Update(download);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(download);
         }
 
         /// <summary>

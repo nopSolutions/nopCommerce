@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Infrastructure;
+using Nop.Data;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Authentication
 {
@@ -60,9 +64,21 @@ namespace Nop.Services.Authentication
                     if (await handlers.GetHandlerAsync(context, scheme.Name) is IAuthenticationRequestHandler handler && await handler.HandleRequestAsync())
                         return;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // ignored
+                    if (!DataSettingsManager.DatabaseIsInstalled)
+                        continue;
+
+                    var externalAuthenticationSettings =
+                        EngineContext.Current.Resolve<ExternalAuthenticationSettings>();
+
+                    if (!externalAuthenticationSettings.LogErrors)
+                        continue;
+
+                    var logger =
+                        EngineContext.Current.Resolve<ILogger>();
+
+                    logger.Error(ex.Message, ex);
                 }
             }
 

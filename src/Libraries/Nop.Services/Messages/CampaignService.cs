@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
@@ -21,7 +18,6 @@ namespace Nop.Services.Messages
 
         private readonly ICustomerService _customerService;
         private readonly IEmailSender _emailSender;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IRepository<Campaign> _campaignRepository;
@@ -34,7 +30,6 @@ namespace Nop.Services.Messages
 
         public CampaignService(ICustomerService customerService,
             IEmailSender emailSender,
-            IEventPublisher eventPublisher,
             IMessageTokenProvider messageTokenProvider,
             IQueuedEmailService queuedEmailService,
             IRepository<Campaign> campaignRepository,
@@ -43,7 +38,6 @@ namespace Nop.Services.Messages
         {
             _customerService = customerService;
             _emailSender = emailSender;
-            _eventPublisher = eventPublisher;
             _messageTokenProvider = messageTokenProvider;
             _queuedEmailService = queuedEmailService;
             _campaignRepository = campaignRepository;
@@ -61,13 +55,7 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>        
         public virtual async Task InsertCampaign(Campaign campaign)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
-
             await _campaignRepository.Insert(campaign);
-
-            //event notification
-            await _eventPublisher.EntityInserted(campaign);
         }
 
         /// <summary>
@@ -76,13 +64,7 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>
         public virtual async Task UpdateCampaign(Campaign campaign)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
-
             await _campaignRepository.Update(campaign);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(campaign);
         }
 
         /// <summary>
@@ -91,13 +73,7 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>
         public virtual async Task DeleteCampaign(Campaign campaign)
         {
-            if (campaign == null)
-                throw new ArgumentNullException(nameof(campaign));
-
             await _campaignRepository.Delete(campaign);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(campaign);
         }
 
         /// <summary>
@@ -107,10 +83,7 @@ namespace Nop.Services.Messages
         /// <returns>Campaign</returns>
         public virtual async Task<Campaign> GetCampaignById(int campaignId)
         {
-            if (campaignId == 0)
-                return null;
-
-            return await _campaignRepository.ToCachedGetById(campaignId);
+            return await _campaignRepository.GetById(campaignId, cache => default);
         }
 
         /// <summary>
@@ -120,14 +93,15 @@ namespace Nop.Services.Messages
         /// <returns>Campaigns</returns>
         public virtual async Task<IList<Campaign>> GetAllCampaigns(int storeId = 0)
         {
-            var query = _campaignRepository.Table;
+            var campaigns = await _campaignRepository.GetAll(query =>
+            {
+                if (storeId > 0) 
+                    query = query.Where(c => c.StoreId == storeId);
 
-            if (storeId > 0) 
-                query = query.Where(c => c.StoreId == storeId);
+                query = query.OrderBy(c => c.CreatedOnUtc);
 
-            query = query.OrderBy(c => c.CreatedOnUtc);
-
-            var campaigns = await query.ToListAsync();
+                return query;
+            });
 
             return campaigns;
         }

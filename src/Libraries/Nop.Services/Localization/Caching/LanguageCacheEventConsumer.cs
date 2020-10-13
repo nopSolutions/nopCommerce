@@ -15,14 +15,10 @@ namespace Nop.Services.Localization.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(Language entity)
         {
-            await Remove(_cacheKeyService.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity));
-            await Remove(_cacheKeyService.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity));
-            await Remove(_cacheKeyService.PrepareKey(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity));
-
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopLocalizationDefaults.LocaleStringResourcesByResourceNamePrefixCacheKey, entity);
-            await RemoveByPrefix(prefix);
-
-            await RemoveByPrefix(NopLocalizationDefaults.LanguagesAllPrefixCacheKey);
+            await Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity);
+            await Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity);
+            await Remove(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity);
+            await RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity);
         }
     }
 }

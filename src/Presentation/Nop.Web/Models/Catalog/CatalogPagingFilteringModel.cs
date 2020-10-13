@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Models;
@@ -377,12 +376,12 @@ namespace Nop.Web.Models.Catalog
             /// <param name="staticCacheManager">Cache manager</param>
             public virtual async Task PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
                 int[] filterableSpecificationAttributeOptionIds,
-                ICacheKeyService cacheKeyService,
-                ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
+                    ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
                 IWebHelper webHelper, IWorkContext workContext, IStaticCacheManager staticCacheManager)
             {
                 Enabled = false;
-                var cacheKey = cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, await workContext.GetWorkingLanguage());
+
+                var cacheKey = staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, await workContext.GetWorkingLanguage());
 
                 var allOptions = await specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
                 var allFilters = await staticCacheManager.Get(cacheKey, () => Task.FromResult(allOptions.Select(sao =>

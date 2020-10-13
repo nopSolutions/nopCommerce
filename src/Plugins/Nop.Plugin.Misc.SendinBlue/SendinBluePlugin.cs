@@ -97,7 +97,7 @@ namespace Nop.Plugin.Misc.SendinBlue
             await _settingService.SaveSetting(new SendinBlueSettings
             {
                 //prepopulate a tracking script
-                TrackingScript = $@"<!-- SendinBlue tracting code -->
+                TrackingScript = $@"<!-- SendinBlue tracking code -->
                 <script>
                     (function() {{
                         window.sib = {{ equeue: [], client_key: '{SendinBlueDefaults.TrackingScriptId}' }};

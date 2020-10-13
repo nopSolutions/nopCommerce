@@ -26,7 +26,7 @@ namespace Nop.Core
     {
         #region Fields 
 
-        private readonly HostingConfig _hostingConfig;
+        private readonly AppSettings _appSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -36,13 +36,13 @@ namespace Nop.Core
 
         #region Ctor
 
-        public WebHelper(HostingConfig hostingConfig,
+        public WebHelper(AppSettings appSettings,
             IActionContextAccessor actionContextAccessor,
             IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
             IUrlHelperFactory urlHelperFactory)
         {
-            _hostingConfig = hostingConfig;
+            _appSettings = appSettings;
             _actionContextAccessor = actionContextAccessor;
             _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;
@@ -122,11 +122,11 @@ namespace Nop.Core
                     //the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer
                     var forwardedHttpHeaderKey = NopHttpDefaults.XForwardedForHeader;
-                    if (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader))
+                    if (!string.IsNullOrEmpty(_appSettings.HostingConfig.ForwardedHttpHeader))
                     {
                         //but in some cases server use other HTTP header
                         //in these cases an administrator can specify a custom Forwarded HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc)
-                        forwardedHttpHeaderKey = _hostingConfig.ForwardedHttpHeader;
+                        forwardedHttpHeaderKey = _appSettings.HostingConfig.ForwardedHttpHeader;
                     }
 
                     var forwardedHeader = _httpContextAccessor.HttpContext.Request.Headers[forwardedHttpHeaderKey];
@@ -198,11 +198,11 @@ namespace Nop.Core
 
             //check whether hosting uses a load balancer
             //use HTTP_CLUSTER_HTTPS?
-            if (_hostingConfig.UseHttpClusterHttps)
+            if (_appSettings.HostingConfig.UseHttpClusterHttps)
                 return _httpContextAccessor.HttpContext.Request.Headers[NopHttpDefaults.HttpClusterHttpsHeader].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
 
             //use HTTP_X_FORWARDED_PROTO?
-            if (_hostingConfig.UseHttpXForwardedProto)
+            if (_appSettings.HostingConfig.UseHttpXForwardedProto)
                 return _httpContextAccessor.HttpContext.Request.Headers[NopHttpDefaults.HttpXForwardedProtoHeader].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
 
             return _httpContextAccessor.HttpContext.Request.IsHttps;

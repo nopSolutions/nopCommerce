@@ -18,13 +18,13 @@
     }
     else
     {
-        <link href="@Url.Content("~/lib/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
-        <link href="@Url.Content("~/lib/adminLTE/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/lib_npm/admin-lte/css/AdminLTE.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
     }
-    <script src="@Url.Content("~/lib/jquery/jquery-3.4.1.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery/jquery.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation/jquery.validate.min.js")"></script>
+    <script src="@Url.Content("~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js")"></script>
     <script src="@Url.Content("~/js/public.common.js")"></script>
 </head>
 <body class="skin-blue">
@@ -49,7 +49,7 @@
 
                 @*<p>@ILS.GetResource("Tooltip1")</p>*@
                 <p>@ILS.GetResource("Tooltip2")</p>
-                <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.</p>
+                <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank" rel="noopener noreferrer">@ILS.GetResource("Documentation2")</a>.</p>
 
                 <script>
                     function showThrobber(message) {
@@ -252,7 +252,7 @@
                                             Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
                                             ID=userName;Password=password
                                             <br />
-                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
+                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank" rel="noopener noreferrer">here</a>
                                         </span>
                                     </div>
                                 </div>

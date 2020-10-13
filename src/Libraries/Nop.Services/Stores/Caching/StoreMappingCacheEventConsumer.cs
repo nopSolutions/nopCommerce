@@ -15,16 +15,8 @@ namespace Nop.Services.Stores.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(StoreMapping entity)
         {
-            var entityId = entity.EntityId;
-            var entityName = entity.EntityName;
-
-            var key = _cacheKeyService.PrepareKey(NopStoreDefaults.StoreMappingsByEntityIdNameCacheKey, entityId, entityName);
-
-            await Remove(key);
-
-            key = _cacheKeyService.PrepareKey(NopStoreDefaults.StoreMappingIdsByEntityIdNameCacheKey, entityId, entityName);
-            
-            await Remove(key);
+            await Remove(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName);
+            await Remove(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName);
         }
     }
 }

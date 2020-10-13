@@ -176,7 +176,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement]
         public virtual async Task<IActionResult> ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
@@ -280,7 +279,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement]
         public virtual async Task<IActionResult> Info()
         {
             if (!await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()))

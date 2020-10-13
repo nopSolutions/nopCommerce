@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Orders
 {
@@ -18,8 +15,6 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
@@ -28,14 +23,10 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public ReturnRequestService(ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
-            IRepository<ReturnRequest> returnRequestRepository,
+        public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository)
         {
-            _cacheKeyService = cacheKeyService;
-            _eventPublisher = eventPublisher;
             _returnRequestRepository = returnRequestRepository;
             _returnRequestActionRepository = returnRequestActionRepository;
             _returnRequestReasonRepository = returnRequestReasonRepository;
@@ -51,13 +42,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequest">Return request</param>
         public virtual async Task DeleteReturnRequest(ReturnRequest returnRequest)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
-
             await _returnRequestRepository.Delete(returnRequest);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(returnRequest);
         }
 
         /// <summary>
@@ -67,9 +52,6 @@ namespace Nop.Services.Orders
         /// <returns>Return request</returns>
         public virtual async Task<ReturnRequest> GetReturnRequestById(int returnRequestId)
         {
-            if (returnRequestId == 0)
-                return null;
-
             return await _returnRequestRepository.GetById(returnRequestId);
         }
 
@@ -126,13 +108,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestAction">Return request action</param>
         public virtual async Task DeleteReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
-            if (returnRequestAction == null)
-                throw new ArgumentNullException(nameof(returnRequestAction));
-
             await _returnRequestActionRepository.Delete(returnRequestAction);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(returnRequestAction);
         }
 
         /// <summary>
@@ -141,11 +117,12 @@ namespace Nop.Services.Orders
         /// <returns>Return request actions</returns>
         public virtual async Task<IList<ReturnRequestAction>> GetAllReturnRequestActions()
         {
-            var query = from rra in _returnRequestActionRepository.Table
-                        orderby rra.DisplayOrder, rra.Id
-                        select rra;
-
-            return await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestActionAllCacheKey));
+            return await _returnRequestActionRepository.GetAll(query =>
+            {
+                return from rra in query
+                    orderby rra.DisplayOrder, rra.Id
+                    select rra;
+            }, cache => default);
         }
 
         /// <summary>
@@ -155,10 +132,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request action</returns>
         public virtual async Task<ReturnRequestAction> GetReturnRequestActionById(int returnRequestActionId)
         {
-            if (returnRequestActionId == 0)
-                return null;
-
-            return await _returnRequestActionRepository.ToCachedGetById(returnRequestActionId);
+            return await _returnRequestActionRepository.GetById(returnRequestActionId, cache => default);
         }
 
         /// <summary>
@@ -167,13 +141,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequest">Return request</param>
         public virtual async Task InsertReturnRequest(ReturnRequest returnRequest)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
-
             await _returnRequestRepository.Insert(returnRequest);
-
-            //event notification
-            await _eventPublisher.EntityInserted(returnRequest);
         }
 
         /// <summary>
@@ -182,13 +150,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestAction">Return request action</param>
         public virtual async Task InsertReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
-            if (returnRequestAction == null)
-                throw new ArgumentNullException(nameof(returnRequestAction));
-
             await _returnRequestActionRepository.Insert(returnRequestAction);
-
-            //event notification
-            await _eventPublisher.EntityInserted(returnRequestAction);
         }
 
         /// <summary>
@@ -197,13 +159,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequest">Return request</param>
         public virtual async Task UpdateReturnRequest(ReturnRequest returnRequest)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
-
             await _returnRequestRepository.Update(returnRequest);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(returnRequest);
         }
 
         /// <summary>
@@ -212,13 +168,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestAction">Return request action</param>
         public virtual async Task UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
-            if (returnRequestAction == null)
-                throw new ArgumentNullException(nameof(returnRequestAction));
-
             await _returnRequestActionRepository.Update(returnRequestAction);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(returnRequestAction);
         }
 
         /// <summary>
@@ -227,13 +177,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual async Task DeleteReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
-            if (returnRequestReason == null)
-                throw new ArgumentNullException(nameof(returnRequestReason));
-
             await _returnRequestReasonRepository.Delete(returnRequestReason);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(returnRequestReason);
         }
 
         /// <summary>
@@ -242,11 +186,12 @@ namespace Nop.Services.Orders
         /// <returns>Return request reasons</returns>
         public virtual async Task<IList<ReturnRequestReason>> GetAllReturnRequestReasons()
         {
-            var query = from rra in _returnRequestReasonRepository.Table
-                        orderby rra.DisplayOrder, rra.Id
-                        select rra;
-
-            return await query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopOrderDefaults.ReturnRequestReasonAllCacheKey));
+            return await _returnRequestReasonRepository.GetAll(query =>
+            {
+                return from rra in query
+                    orderby rra.DisplayOrder, rra.Id
+                    select rra;
+            }, cache => default);
         }
 
         /// <summary>
@@ -256,10 +201,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request reason</returns>
         public virtual async Task<ReturnRequestReason> GetReturnRequestReasonById(int returnRequestReasonId)
         {
-            if (returnRequestReasonId == 0)
-                return null;
-
-            return await _returnRequestReasonRepository.ToCachedGetById(returnRequestReasonId);
+            return await _returnRequestReasonRepository.GetById(returnRequestReasonId, cache => default);
         }
 
         /// <summary>
@@ -268,13 +210,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual async Task InsertReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
-            if (returnRequestReason == null)
-                throw new ArgumentNullException(nameof(returnRequestReason));
-
             await _returnRequestReasonRepository.Insert(returnRequestReason);
-
-            //event notification
-            await _eventPublisher.EntityInserted(returnRequestReason);
         }
 
         /// <summary>
@@ -283,13 +219,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual async Task UpdateReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
-            if (returnRequestReason == null)
-                throw new ArgumentNullException(nameof(returnRequestReason));
-
             await _returnRequestReasonRepository.Update(returnRequestReason);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(returnRequestReason);
         }
 
         #endregion

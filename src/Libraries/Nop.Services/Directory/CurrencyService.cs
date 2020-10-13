@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Directory
@@ -20,8 +17,6 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
-        private readonly ICacheKeyService _cacheKeyService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IStoreMappingService _storeMappingService;
@@ -31,15 +26,11 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CurrencyService(CurrencySettings currencySettings,
-            ICacheKeyService cacheKeyService,
-            IEventPublisher eventPublisher,
             IExchangeRatePluginManager exchangeRatePluginManager,
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService)
         {
-            _cacheKeyService = cacheKeyService;
             _currencySettings = currencySettings;
-            _eventPublisher = eventPublisher;
             _exchangeRatePluginManager = exchangeRatePluginManager;
             _currencyRepository = currencyRepository;
             _storeMappingService = storeMappingService;
@@ -57,13 +48,7 @@ namespace Nop.Services.Directory
         /// <param name="currency">Currency</param>
         public virtual async Task DeleteCurrency(Currency currency)
         {
-            if (currency == null)
-                throw new ArgumentNullException(nameof(currency));
-
             await _currencyRepository.Delete(currency);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -73,10 +58,7 @@ namespace Nop.Services.Directory
         /// <returns>Currency</returns>
         public virtual async Task<Currency> GetCurrencyById(int currencyId)
         {
-            if (currencyId == 0)
-                return null;
-            
-            return await _currencyRepository.ToCachedGetById(currencyId);
+            return await _currencyRepository.GetById(currencyId, cache => default);
         }
 
         /// <summary>
@@ -101,16 +83,15 @@ namespace Nop.Services.Directory
         /// <returns>Currencies</returns>
         public virtual async Task<IList<Currency>> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
-            var query = _currencyRepository.Table;
+            var currencies = await _currencyRepository.GetAll(query =>
+            {
+                if (!showHidden)
+                    query = query.Where(c => c.Published);
 
-            if (!showHidden)
-                query = query.Where(c => c.Published);
+                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
-            query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
-
-            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
-
-            var currencies = await query.ToCachedList(key);
+                return query;
+            }, cache => cache.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden));
 
             //store mapping
             if (storeId > 0)
@@ -127,13 +108,7 @@ namespace Nop.Services.Directory
         /// <param name="currency">Currency</param>
         public virtual async Task InsertCurrency(Currency currency)
         {
-            if (currency == null)
-                throw new ArgumentNullException(nameof(currency));
-
             await _currencyRepository.Insert(currency);
-
-            //event notification
-            await _eventPublisher.EntityInserted(currency);
         }
 
         /// <summary>
@@ -142,13 +117,7 @@ namespace Nop.Services.Directory
         /// <param name="currency">Currency</param>
         public virtual async Task UpdateCurrency(Currency currency)
         {
-            if (currency == null)
-                throw new ArgumentNullException(nameof(currency));
-
             await _currencyRepository.Update(currency);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(currency);
         }
 
         #endregion

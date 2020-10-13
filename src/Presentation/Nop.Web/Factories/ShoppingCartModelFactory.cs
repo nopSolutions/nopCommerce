@@ -18,7 +18,6 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http.Extensions;
-using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -55,7 +54,6 @@ namespace Nop.Web.Factories
         private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IAddressModelFactory _addressModelFactory;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
@@ -107,7 +105,6 @@ namespace Nop.Web.Factories
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
             IAddressModelFactory addressModelFactory,
-            ICacheKeyService cacheKeyService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
@@ -155,7 +152,6 @@ namespace Nop.Web.Factories
             _commonSettings = commonSettings;
             _customerSettings = customerSettings;
             _addressModelFactory = addressModelFactory;
-            _cacheKeyService = cacheKeyService;
             _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
@@ -807,7 +803,7 @@ namespace Nop.Web.Factories
         /// <returns>Picture model</returns>
         public virtual async Task<PictureModel> PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
+            var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
                 , sci, pictureSize, true, await _workContext.GetWorkingLanguage(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStore());
             
             var model = await _staticCacheManager.Get(pictureCacheKey, async () =>

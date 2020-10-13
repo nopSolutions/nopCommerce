@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {
@@ -17,17 +14,14 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<SearchTerm> _searchTermRepository;
 
         #endregion
 
         #region Ctor
 
-        public SearchTermService(IEventPublisher eventPublisher,
-            IRepository<SearchTerm> searchTermRepository)
+        public SearchTermService(IRepository<SearchTerm> searchTermRepository)
         {
-            _eventPublisher = eventPublisher;
             _searchTermRepository = searchTermRepository;
         }
 
@@ -41,13 +35,7 @@ namespace Nop.Services.Common
         /// <param name="searchTerm">Search term</param>
         public virtual async Task DeleteSearchTerm(SearchTerm searchTerm)
         {
-            if (searchTerm == null)
-                throw new ArgumentNullException(nameof(searchTerm));
-
             await _searchTermRepository.Delete(searchTerm);
-
-            //event notification
-            await _eventPublisher.EntityDeleted(searchTerm);
         }
 
         /// <summary>
@@ -57,10 +45,7 @@ namespace Nop.Services.Common
         /// <returns>Search term</returns>
         public virtual async Task<SearchTerm> GetSearchTermById(int searchTermId)
         {
-            if (searchTermId == 0)
-                return null;
-
-            return await _searchTermRepository.ToCachedGetById(searchTermId);
+            return await _searchTermRepository.GetById(searchTermId, cache => default);
         }
 
         /// <summary>
@@ -116,13 +101,7 @@ namespace Nop.Services.Common
         /// <param name="searchTerm">Search term</param>
         public virtual async Task InsertSearchTerm(SearchTerm searchTerm)
         {
-            if (searchTerm == null)
-                throw new ArgumentNullException(nameof(searchTerm));
-
             await _searchTermRepository.Insert(searchTerm);
-
-            //event notification
-            await _eventPublisher.EntityInserted(searchTerm);
         }
 
         /// <summary>
@@ -131,13 +110,7 @@ namespace Nop.Services.Common
         /// <param name="searchTerm">Search term</param>
         public virtual async Task UpdateSearchTerm(SearchTerm searchTerm)
         {
-            if (searchTerm == null)
-                throw new ArgumentNullException(nameof(searchTerm));
-
             await _searchTermRepository.Update(searchTerm);
-
-            //event notification
-            await _eventPublisher.EntityUpdated(searchTerm);
         }
 
         #endregion

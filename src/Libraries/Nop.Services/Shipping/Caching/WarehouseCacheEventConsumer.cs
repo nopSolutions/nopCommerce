@@ -9,9 +9,5 @@ namespace Nop.Services.Shipping.Caching
     /// </summary>
     public partial class WarehouseCacheEventConsumer : CacheEventConsumer<Warehouse>
     {
-        protected override async Task ClearCache(Warehouse entity)
-        {
-            await Remove(NopShippingDefaults.WarehousesAllCacheKey);
-        }
     }
 }

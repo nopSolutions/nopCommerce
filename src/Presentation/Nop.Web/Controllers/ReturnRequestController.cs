@@ -14,7 +14,6 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
-using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
@@ -78,7 +77,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement]
         public virtual async Task<IActionResult> CustomerReturnRequests()
         {
             if (!await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()))
@@ -88,7 +86,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement]
         public virtual async Task<IActionResult> ReturnRequest(int orderId)
         {
             var order = await _orderService.GetOrderById(orderId);

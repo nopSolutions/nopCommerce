@@ -11,6 +11,16 @@
             <span asp-validation-for="ProductReviewsMustBeApproved"></span>
         </div>
     </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="OneReviewPerProductFromCustomer_OverrideForStore" asp-input="OneReviewPerProductFromCustomer" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="OneReviewPerProductFromCustomer"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="OneReviewPerProductFromCustomer"/>
+            <span asp-validation-for="OneReviewPerProductFromCustomer"></span>
+        </div>
+    </div>
     <div class="form-group advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowAnonymousUsersToReviewProduct_OverrideForStore" asp-input="AllowAnonymousUsersToReviewProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

@@ -15,8 +15,7 @@ namespace Nop.Services.Forums.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(Forum entity)
         {
-            var cacheKey = _cacheKeyService.PrepareKey(NopForumDefaults.ForumAllByForumGroupIdCacheKey, entity.ForumGroupId);
-            await Remove(cacheKey);
+            await Remove(NopForumDefaults.ForumByForumGroupCacheKey, entity.ForumGroupId);
         }
     }
 }

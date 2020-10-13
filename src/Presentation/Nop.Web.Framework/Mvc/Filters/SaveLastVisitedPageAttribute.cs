@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Common;
@@ -36,6 +38,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             private readonly CustomerSettings _customerSettings;
             private readonly IGenericAttributeService _genericAttributeService;
+            private readonly IRepository<GenericAttribute> _genericAttributeRepository;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
 
@@ -45,11 +48,13 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
                 IGenericAttributeService genericAttributeService,
+                IRepository<GenericAttribute> genericAttributeRepository,
                 IWebHelper webHelper,
                 IWorkContext workContext)
             {
                 _customerSettings = customerSettings;
                 _genericAttributeService = genericAttributeService;
+                _genericAttributeRepository = genericAttributeRepository;
                 _webHelper = webHelper;
                 _workContext = workContext;
             }
@@ -87,11 +92,31 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get previous last page
-                var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.GetCurrentCustomer().Result, NopCustomerDefaults.LastVisitedPageAttribute).Result;
+                var previousPageAttribute = _genericAttributeService
+                    .GetAttributesForEntity(_workContext.GetCurrentCustomer().Result.Id, nameof(Customer)).Result
+                    .FirstOrDefault(attribute => attribute.Key
+                        .Equals(NopCustomerDefaults.LastVisitedPageAttribute, StringComparison.InvariantCultureIgnoreCase));
 
                 //save new one if don't match
-                if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
-                    _genericAttributeService.SaveAttribute(_workContext.GetCurrentCustomer().Result, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl).Wait();
+                if (previousPageAttribute == null)
+                {
+                    //insert without event notification
+                    _genericAttributeRepository.Insert(new GenericAttribute
+                    {
+                        EntityId = _workContext.GetCurrentCustomer().Result.Id,
+                        Key = NopCustomerDefaults.LastVisitedPageAttribute,
+                        KeyGroup = nameof(Customer),
+                        Value = pageUrl,
+                        CreatedOrUpdatedDateUTC = DateTime.UtcNow
+                    }, false);
+                }
+                else if (!pageUrl.Equals(previousPageAttribute.Value, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    //update without event notification
+                    previousPageAttribute.Value = pageUrl;
+                    previousPageAttribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
+                    _genericAttributeRepository.Update(previousPageAttribute, false);
+                }
             }
 
             /// <summary>

@@ -16,12 +16,10 @@ namespace Nop.Services.News.Caching
         /// <param name="entityEventType">Entity event type</param>
         protected override async Task ClearCache(NewsComment entity, EntityEventType entityEventType)
         {
-            if (entityEventType != EntityEventType.Delete)
-                return;
+            if (entityEventType == EntityEventType.Delete)
+                await RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId);
 
-            var prefix = _cacheKeyService.PrepareKeyPrefix(NopNewsDefaults.NewsCommentsNumberPrefixCacheKey, entity.NewsItemId);
-
-            await RemoveByPrefix(prefix);
+            await base.ClearCache(entity, entityEventType);
         }
     }
 }

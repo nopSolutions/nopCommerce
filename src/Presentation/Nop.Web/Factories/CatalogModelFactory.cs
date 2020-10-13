@@ -20,12 +20,11 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
-using Nop.Services.Caching;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
@@ -47,7 +46,6 @@ namespace Nop.Web.Factories
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICurrencyService _currencyService;
@@ -84,7 +82,6 @@ namespace Nop.Web.Factories
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
             ForumSettings forumSettings,
             IActionContextAccessor actionContextAccessor,
-            ICacheKeyService cacheKeyService,
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICurrencyService currencyService,
@@ -117,7 +114,6 @@ namespace Nop.Web.Factories
             _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
             _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
-            _cacheKeyService = cacheKeyService;
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
             _currencyService = currencyService;
@@ -399,7 +395,7 @@ namespace Nop.Web.Factories
                         };
 
                         //prepare picture model
-                        var categoryPictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, curCategory,
+                        var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, curCategory,
                             pictureSize, true, _workContext.GetWorkingLanguage().Result, _webHelper.IsCurrentConnectionSecured(),
                             _storeContext.GetCurrentStore().Result);
 
@@ -435,8 +431,9 @@ namespace Nop.Web.Factories
             {
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
-                var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category,
-                    await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), await _storeContext.GetCurrentStore());
+
+                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category,
+                    _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()), await _storeContext.GetCurrentStore());
                 var hasFeaturedProductsCache = await _staticCacheManager.Get(cacheKey, async () =>
                 {
                     //no value in the cache yet
@@ -492,8 +489,7 @@ namespace Nop.Web.Factories
 
             //specs
             await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds?.ToArray(), _cacheKeyService,
-                _specificationAttributeService, _localizationService, _webHelper, _workContext, _staticCacheManager);
+                filterableSpecificationAttributeOptionIds?.ToArray(), _specificationAttributeService, _localizationService, _webHelper, _workContext, _staticCacheManager);
 
             return model;
         }
@@ -595,7 +591,7 @@ namespace Nop.Web.Factories
         {
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
-            var categoriesCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey, 
+            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey, 
                 pictureSize,
                 await _workContext.GetWorkingLanguage(),
                 _webHelper.IsCurrentConnectionSecured());
@@ -616,7 +612,7 @@ namespace Nop.Web.Factories
                         };
 
                         //prepare picture model
-                        var categoryPictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, 
+                        var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, 
                             category, pictureSize, true, _workContext.GetWorkingLanguage().Result,
                             _webHelper.IsCurrentConnectionSecured(), _storeContext.GetCurrentStore().Result);
                         catModel.PictureModel = _staticCacheManager.Get(categoryPictureCacheKey, async () =>
@@ -655,9 +651,9 @@ namespace Nop.Web.Factories
         public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels()
         {
             //load and cache them
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryAllModelKey, 
                 await _workContext.GetWorkingLanguage(),
-                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore());
 
             return await _staticCacheManager.Get(cacheKey, async () => await PrepareCategorySimpleModels(0));
@@ -724,9 +720,9 @@ namespace Nop.Web.Factories
         /// <returns>Xml document of category (simple) models</returns>
         public virtual async Task<XDocument> PrepareCategoryXmlDocument()
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryXmlAllModelKey, 
                 await _workContext.GetWorkingLanguage(),
-                await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
+                _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                 await _storeContext.GetCurrentStore());
 
             return await _staticCacheManager.Get(cacheKey, async () =>
@@ -833,7 +829,7 @@ namespace Nop.Web.Factories
                 IPagedList<Product> featuredProducts = null;
 
                 //We cache a value indicating whether we have featured products
-                var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey, 
+                var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey, 
                     manufacturer,
                     await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
                     await _storeContext.GetCurrentStore());
@@ -924,7 +920,7 @@ namespace Nop.Web.Factories
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
-                var manufacturerPictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerPictureModelKey, 
+                var manufacturerPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerPictureModelKey, 
                     manufacturer, pictureSize, true, await _workContext.GetWorkingLanguage(), 
                     _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStore());
                 modelMan.PictureModel = await _staticCacheManager.Get(manufacturerPictureCacheKey, async () =>
@@ -959,7 +955,7 @@ namespace Nop.Web.Factories
         /// <returns>Manufacturer navigation model</returns>
         public virtual async Task<ManufacturerNavigationModel> PrepareManufacturerNavigationModel(int currentManufacturerId)
         {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerNavigationModelKey, 
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerNavigationModelKey, 
                 currentManufacturerId,
                 await _workContext.GetWorkingLanguage(),
                 await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer()),
@@ -1069,7 +1065,7 @@ namespace Nop.Web.Factories
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.VendorThumbPictureSize;
-                var pictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey, 
+                var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey, 
                     vendor, pictureSize, true, await _workContext.GetWorkingLanguage(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStore());
                 vendorModel.PictureModel = await _staticCacheManager.Get(pictureCacheKey, async () =>
                 {

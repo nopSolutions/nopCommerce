@@ -138,7 +138,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
                 var service = await _webHelper.QueryString<string>("service");
                 var trackingNumber = await _webHelper.QueryString<string>("tracking_number");
 
-                await _shipStationService.CreateOrUpadeteShipping(orderNumber, carrier, service, trackingNumber);
+                await _shipStationService.CreateOrUpdateShipping(orderNumber, carrier, service, trackingNumber);
 
                 //nothing should be rendered to visitor
                 return Content(string.Empty);

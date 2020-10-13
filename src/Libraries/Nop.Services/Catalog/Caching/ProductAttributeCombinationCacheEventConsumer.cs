@@ -15,11 +15,8 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override async Task ClearCache(ProductAttributeCombination entity)
         {
-            var cacheKey = _cacheKeyService.PrepareKey(NopCatalogDefaults.ProductAttributeMappingsAllCacheKey, entity.ProductId);
-            await Remove(cacheKey);
-
-            cacheKey = _cacheKeyService.PrepareKey(NopCatalogDefaults.ProductAttributeCombinationsAllCacheKey, entity.ProductId);
-            await Remove(cacheKey);
+            await Remove(NopCatalogDefaults.ProductAttributeMappingsByProductCacheKey, entity.ProductId);
+            await Remove(NopCatalogDefaults.ProductAttributeCombinationsByProductCacheKey, entity.ProductId);
         }
     }
 }
