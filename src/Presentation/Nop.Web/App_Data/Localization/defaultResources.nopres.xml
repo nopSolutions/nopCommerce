@@ -10380,6 +10380,9 @@
   <LocaleResource Name="Admin.Customers.ActivityLog.Fields.IpAddress">
     <Value>IP address</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.IpAddress.Hint">
+    <Value>A customer IP address.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.ActivityLogType">
     <Value>Activity Types</Value>
   </LocaleResource>

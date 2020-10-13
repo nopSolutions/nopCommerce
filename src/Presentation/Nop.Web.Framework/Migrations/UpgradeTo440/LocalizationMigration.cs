@@ -247,6 +247,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Reviews.AlreadyAddedProductReviews"] = "Product review is already added for this product",
                 ["Admin.Configuration.Plugins.ChangesApplyAfterReboot"] = "Changes will be applied after restart application",
                 ["Admin.Configuration.Plugins.Fields.IsEnabled"] = "Enabled",
+                ["Admin.Customers.ActivityLog.Fields.IpAddress.Hint"] = "A customer IP address.",
             });
 
             // rename locales
