@@ -353,18 +353,23 @@ columns: [
                     }
                     break;
                 case RenderPicture picture:
+                    var widthAttr = string.Empty;
                     <text>
                     render: function (data, type, row, meta) {
+                        @if (picture.Width > 0)
+                        {
+                            widthAttr = "width=" + picture.Width;
+                        }
                         @if (!string.IsNullOrEmpty(picture.Src))
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)@(picture.Src)"/>';
+                            return '<img src="@(picture.SrcPrefix)@(picture.Src)" @(widthAttr) />';
                             </text>
                         }
                         else
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)' + data + '"/>';
+                            return '<img src="@(picture.SrcPrefix)' + data + '" @(widthAttr) />';
                             </text>
                         }
                     },
