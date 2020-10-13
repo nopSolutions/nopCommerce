@@ -10,16 +10,12 @@ namespace Nop.Services.News.Caching
     public partial class NewsCommentCacheEventConsumer : CacheEventConsumer<NewsComment>
     {
         /// <summary>
-        /// entity
+        /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        /// <param name="entityEventType">Entity event type</param>
-        protected override async Task ClearCache(NewsComment entity, EntityEventType entityEventType)
+        protected override async Task ClearCache(NewsComment entity)
         {
-            if (entityEventType == EntityEventType.Delete)
-                await RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId);
-
-            await base.ClearCache(entity, entityEventType);
+            await RemoveByPrefix(NopNewsDefaults.NewsCommentsNumberPrefix, entity.NewsItemId);
         }
     }
 }

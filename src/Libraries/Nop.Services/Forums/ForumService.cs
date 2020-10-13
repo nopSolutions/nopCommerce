@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
@@ -34,6 +35,7 @@ namespace Nop.Services.Forums
         private readonly IRepository<ForumSubscription> _forumSubscriptionRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IRepository<PrivateMessage> _forumPrivateMessageRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -54,6 +56,7 @@ namespace Nop.Services.Forums
             IRepository<ForumSubscription> forumSubscriptionRepository,
             IRepository<ForumTopic> forumTopicRepository,
             IRepository<PrivateMessage> forumPrivateMessageRepository,
+            IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -70,6 +73,7 @@ namespace Nop.Services.Forums
             _forumSubscriptionRepository = forumSubscriptionRepository;
             _forumTopicRepository = forumTopicRepository;
             _forumPrivateMessageRepository = forumPrivateMessageRepository;
+            _staticCacheManager = staticCacheManager;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
@@ -340,6 +344,12 @@ namespace Nop.Services.Forums
         /// <param name="forum">Forum</param>
         public virtual async Task UpdateForum(Forum forum)
         {
+            // if the forum group is changed then clear cache for the previous group 
+            // (we can't use the event consumer because it will work after saving the changes in DB)
+            var forumToUpdate = await _forumRepository.LoadOriginalCopy(forum);
+            if (forumToUpdate.ForumGroupId != forum.ForumGroupId)
+                await _staticCacheManager.Remove(NopForumDefaults.ForumByForumGroupCacheKey, forumToUpdate.ForumGroupId);
+
             await _forumRepository.Update(forum);
         }
 

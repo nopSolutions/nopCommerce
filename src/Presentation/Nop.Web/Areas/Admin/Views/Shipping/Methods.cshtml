@@ -10,6 +10,10 @@
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.Methods")
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="Providers">@T("Admin.Configuration.Shipping.Providers.BackToList")</a>
+        </small>
     </h1>
     <div class="pull-right">
         <a asp-action="CreateMethod" class="btn bg-blue">

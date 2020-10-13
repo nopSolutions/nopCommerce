@@ -1048,7 +1048,7 @@ namespace Nop.Services.Orders
             await _orderService.UpdateOrder(order);
 
             //order notes, notifications
-            await AddOrderNote(order, $"Order status has been changed to {os}");
+            await AddOrderNote(order, $"Order status has been changed to {await _localizationService.GetLocalizedEnum(os)}");
 
             if (prevOrderStatus != OrderStatus.Complete &&
                 os == OrderStatus.Complete
