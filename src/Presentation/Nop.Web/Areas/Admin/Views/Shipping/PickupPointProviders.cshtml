@@ -17,11 +17,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "pickup-point-providers-grid",
@@ -39,7 +40,7 @@
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName").Text,
                                     Width = "250"
-                                },
+                                },                                
                                 new ColumnProperty(nameof(PickupPointProviderModel.DisplayOrder))
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder").Text,
@@ -88,3 +89,4 @@
         </div>
     </div>
 </div>
+</section>

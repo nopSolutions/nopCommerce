@@ -11,13 +11,15 @@
             @T("Admin.Common.AddNew")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
-        </div>
-    </div>
+    <section class="content">
+		<div class="container-fluid">
+			<div class="form-horizontal">
+				@await Html.PartialAsync("~/Plugins/Shipping.FixedByWeightByTotal/Views/_CreateOrUpdateRateByWeightByTotal.cshtml", Model)
+			</div>
+		</div>
+    </section>
 </form>

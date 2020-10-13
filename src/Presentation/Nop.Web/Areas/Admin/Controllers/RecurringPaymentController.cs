@@ -180,8 +180,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                //selected card
+                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -192,8 +192,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                //selected card
+                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -225,8 +225,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                //selected card
+                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -237,8 +237,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = _recurringPaymentModelFactory.PrepareRecurringPaymentModel(null, payment);
 
-                //selected panel
-                SaveSelectedPanelName("recurringpayment-history", persistForTheNextRequest: false);
+                //selected card
+                SaveSelectedCardName("recurringpayment-history", persistForTheNextRequest: false);
 
                 return View(model);
             }

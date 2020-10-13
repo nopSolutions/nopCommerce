@@ -17,68 +17,70 @@
     </div>
 </div>
 
-<div class="content">
-    <div class="form-horizontal">
-        <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsTop })
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @foreach (var warning in Model)
-                    {
-                        switch (warning.Level)
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsTop })
+                <div class="card card-default">
+                    <div class="card-body">
+                        @foreach (var warning in Model)
                         {
-                            case SystemWarningLevel.Pass:
-                                {
-                                    <p class="text-green">
-                                        <i class="icon fa fa-check"></i>
-                                        @if (warning.DontEncode)
-                                        {
-                                            @Html.Raw(warning.Text)
-                                        }
-                                        else
-                                        {
-                                            @warning.Text
-                                        }
-                                    </p>
-                                }
-                                break;
-                            case SystemWarningLevel.CopyrightRemovalKey:
-                            case SystemWarningLevel.Recommendation:
-                            case SystemWarningLevel.Warning:
-                                {
-                                    <p class="text-yellow">
-                                        <i class="icon fa fa-warning"></i>
-                                        @if (warning.DontEncode)
-                                        {
-                                            @Html.Raw(warning.Text)
-                                        }
-                                        else
-                                        {
-                                            @warning.Text
-                                        }
-                                    </p>
-                                }
-                                break;
-                            case SystemWarningLevel.Fail:
-                                {
-                                    <p class="text-red">
-                                        <i class="icon fa fa-ban"></i>
-                                        @if (warning.DontEncode)
-                                        {
-                                            @Html.Raw(warning.Text)
-                                        }
-                                        else
-                                        {
-                                            @warning.Text
-                                        }
-                                    </p>
-                                }
-                                break;
+                            switch (warning.Level)
+                            {
+                                case SystemWarningLevel.Pass:
+                                    {
+                                        <p class="text-green">
+                                            <i class="icon fa fa-check"></i>
+                                            @if (warning.DontEncode)
+                                            {
+                                                @Html.Raw(warning.Text)
+                                            }
+                                            else
+                                            {
+                                                @warning.Text
+                                            }
+                                        </p>
+                                    }
+                                    break;
+                                case SystemWarningLevel.CopyrightRemovalKey:
+                                case SystemWarningLevel.Recommendation:
+                                case SystemWarningLevel.Warning:
+                                    {
+                                        <p class="text-yellow">
+                                            <i class="icon fa fa-warning"></i>
+                                            @if (warning.DontEncode)
+                                            {
+                                                @Html.Raw(warning.Text)
+                                            }
+                                            else
+                                            {
+                                                @warning.Text
+                                            }
+                                        </p>
+                                    }
+                                    break;
+                                case SystemWarningLevel.Fail:
+                                    {
+                                        <p class="text-red">
+                                            <i class="icon fa fa-ban"></i>
+                                            @if (warning.DontEncode)
+                                            {
+                                                @Html.Raw(warning.Text)
+                                            }
+                                            else
+                                            {
+                                                @warning.Text
+                                            }
+                                        </p>
+                                    }
+                                    break;
+                            }
                         }
-                    }
+                    </div>
                 </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsBottom })
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.WarningsBottom })
         </div>
     </div>
-</div>
+</section>

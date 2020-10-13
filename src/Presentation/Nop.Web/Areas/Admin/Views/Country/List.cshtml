@@ -7,12 +7,13 @@
     Html.SetActiveMenuItemSystemName("Countries");
 }
 
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Countries")
     </h1>
     <div class="pull-right">
-        <a asp-action="Create" class="btn bg-blue">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
@@ -20,11 +21,11 @@
             <i class="fa fa-check-square-o"></i>
             @T("Admin.Configuration.Countries.PublishSelected")
         </button>
-        <button type="button" id="unpublish-selected" class="btn bg-navy">
+        <button type="button" id="unpublish-selected" class="btn btn-secondary">
             <i class="fa fa-minus-square-o"></i>
             @T("Admin.Configuration.Countries.UnpublishSelected")
         </button>
-        <a asp-action="ExportCsv" class="btn bg-green">
+        <a asp-action="ExportCsv" class="btn btn-success">
             <i class="fa fa-download"></i>
             @T("Admin.Configuration.Countries.ExportToCsv")
         </a>
@@ -36,11 +37,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "countries-grid",
@@ -59,7 +61,7 @@
                             },
                             new ColumnProperty(nameof(CountryModel.Name))
                             {
-                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text                                
                             },
                             new ColumnProperty(nameof(CountryModel.AllowsBilling))
                             {
@@ -187,6 +189,7 @@
         </div>
     </div>
 </div>
+</section>
 <nop-alert asp-alert-id="publishSelectedFailed" />
 <nop-alert asp-alert-id="unpublishSelectedFailed" />
 
@@ -195,8 +198,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
@@ -209,10 +212,10 @@
                                 <em><a href="https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
                             </li>
                         </ul>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Common.CsvFile")
                                     </label>
                                 </div>

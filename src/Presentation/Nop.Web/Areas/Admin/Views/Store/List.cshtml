@@ -12,7 +12,7 @@
         @T("Admin.Configuration.Stores")
     </h1>
     <div class="pull-right">
-        <a asp-action="Create" class="btn bg-blue">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
@@ -20,11 +20,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table",new DataTablesModel
                     {
                         Name = "stores-grid",
@@ -60,3 +61,4 @@
         </div>
     </div>
 </div>
+</section>

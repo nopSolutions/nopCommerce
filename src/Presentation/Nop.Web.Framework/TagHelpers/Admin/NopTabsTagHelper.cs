@@ -90,13 +90,24 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             await output.GetChildContentAsync();
 
             //tabs title
+            var tabsTitlediv = new TagBuilder("div");
+            tabsTitlediv.AddCssClass("card-header p-0 pt-1 border-bottom-0");
+
             var tabsTitle = new TagBuilder("ul");
             tabsTitle.AddCssClass("nav");
             tabsTitle.AddCssClass("nav-tabs");
+            tabsTitle.Attributes.Add("id", "custom-content-above-tab");
+            tabsTitle.Attributes.Add("role", "tablist");
 
             //tabs content
+            var tabsContentout = new TagBuilder("div");
+            tabsContentout.AddCssClass("card-body");
+
             var tabsContent = new TagBuilder("div");
-            tabsContent.AddCssClass("tab-content");
+            tabsContent.AddCssClass("tab-content");            
+
+            var outputiner = new TagBuilder("div");
+            outputiner.AddCssClass("card card-primary card-outline card-outline-tabs");
 
             foreach (var tabItem in tabContext)
             {
@@ -104,9 +115,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 tabsContent.InnerHtml.AppendHtml(tabItem.Content);
             }
 
+            tabsTitlediv.InnerHtml.AppendHtml(tabsTitle.RenderHtmlContent());            
+            tabsContentout.InnerHtml.AppendHtml(tabsContent.RenderHtmlContent());
             //append data
-            output.Content.AppendHtml(tabsTitle.RenderHtmlContent());
-            output.Content.AppendHtml(tabsContent.RenderHtmlContent());
+
+            output.Content.AppendHtml(tabsTitlediv.RenderHtmlContent());
+            output.Content.AppendHtml(tabsContentout.RenderHtmlContent());
 
             bool.TryParse(RenderSelectedTabInput, out bool renderSelectedTabInput);
             if (string.IsNullOrEmpty(RenderSelectedTabInput) || renderSelectedTabInput)
@@ -127,14 +141,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     output.PostContent.SetHtmlContent(script.RenderHtmlContent());
                 }
             }
-
+            
             output.TagName = "div";
 
-            var itemClass = "nav-tabs-custom";
+            var itemClass = "card card-primary card-outline card-outline-tabs nav-tabs-custom";
             //merge classes
             var classValue = output.Attributes.ContainsName("class")
                 ? $"{output.Attributes["class"].Value} {itemClass}"
                 : itemClass;
+                        
             output.Attributes.SetAttribute("class", classValue);
         }
     }
@@ -221,15 +236,28 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //tab title
             var tabTitle = new TagBuilder("li");
+            tabTitle.AddCssClass("nav-item");
             var a = new TagBuilder("a")
             {
                 Attributes =
                 {
                     new KeyValuePair<string, string>("data-tab-name", Name),
                     new KeyValuePair<string, string>("href", $"#{Name}"),
-                    new KeyValuePair<string, string>("data-toggle", "tab"),
+                    new KeyValuePair<string, string>("data-toggle", "pill"),
+                    new KeyValuePair<string, string>("role", "tab"),
+                    new KeyValuePair<string, string>("aria-selected", "false"),
                 }
             };
+            //active class
+            if (tabNameToSelect == Name)
+            {                
+                a.AddCssClass("nav-link active");
+            }
+            else
+            {
+                a.AddCssClass("nav-link");
+            }
+           
             a.InnerHtml.AppendHtml(Title);
 
             //merge classes
@@ -238,15 +266,19 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             tabTitle.InnerHtml.AppendHtml(a.RenderHtmlContent());
 
             //tab content
+            var tabContenttop = new TagBuilder("div");
+            tabContenttop.AddCssClass("card-body");
+
             var tabContent = new TagBuilder("div");
-            tabContent.AddCssClass("tab-pane");
+            tabContent.AddCssClass("tab-pane fade{0}");
             tabContent.Attributes.Add("id", Name);
+            tabContent.Attributes.Add("role", "tabpanel");
             tabContent.InnerHtml.AppendHtml(output.GetChildContentAsync().Result.GetContent());
 
+            tabContenttop.InnerHtml.AppendHtml(tabContent.RenderHtmlContent());
             //active class
             if (tabNameToSelect == Name)
             {
-                tabTitle.AddCssClass("active");
                 tabContent.AddCssClass("active");
             }
 

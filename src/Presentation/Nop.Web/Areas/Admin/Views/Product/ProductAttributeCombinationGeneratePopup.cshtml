@@ -37,39 +37,43 @@
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateSeveralTitle")
         </h1>
         <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
+            <button type="submit" name="save" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Generate")
             </button>
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsButtons })
         </div>
     </div>
-    <div class="content">
-        <h4>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.RequiredAttribute")</h4>
-        <div class="form-horizontal">
-            @foreach (var attribute in Model.ProductAttributes)
-            {
-                <div class="panel-group">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            @(attribute.Name)
-                            @if (attribute.IsRequired)
-                            {
-                                <span>*</span>
-                            }
-                        </div>
-                        <div class="panel-body">
-                            @foreach (var attributeValue in attribute.Values)
-                            {
-                                <div>
-                                    <input id="attribute_value_@(attributeValue.Id)" type="checkbox" value="@(attributeValue.Id)" name="attribute_value_@(attributeValue.Id)" @(attributeValue.Checked)/>
-                                    <label for="attribute_value_@(attributeValue.Id)">@(attributeValue.Name)</label>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <h4>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.RequiredAttribute")</h4>
+                <div class="form-horizontal">
+                    @foreach (var attribute in Model.ProductAttributes)
+                    {
+                        <div class="cards-group">
+                            <div class="card card-default">
+                                <div class="card-header">
+                                    @(attribute.Name)
+                                    @if (attribute.IsRequired)
+                                    {
+                                        <span>*</span>
+                                    }
                                 </div>
-                            }
+                                <div class="card-body">
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <div>
+                                            <input id="attribute_value_@(attributeValue.Id)" type="checkbox" value="@(attributeValue.Id)" name="attribute_value_@(attributeValue.Id)" @(attributeValue.Checked)/>
+                                            <label for="attribute_value_@(attributeValue.Id)">@(attributeValue.Name)</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
-            }
+            </div>
         </div>
-    </div>
+    </section>
 </form>

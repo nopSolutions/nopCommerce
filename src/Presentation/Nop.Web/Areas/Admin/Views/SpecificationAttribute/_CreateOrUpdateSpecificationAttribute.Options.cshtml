@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "specificationattributeoptions-grid",
@@ -52,7 +52,7 @@
         </script>
     </div>
     
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
             @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.AddNew")
         </button>
@@ -72,7 +72,7 @@
 }    
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Options.SaveBeforeEdit")
     </div>
 }

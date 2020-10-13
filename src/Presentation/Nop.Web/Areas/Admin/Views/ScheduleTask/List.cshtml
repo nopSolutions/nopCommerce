@@ -25,11 +25,12 @@
     });
 </script>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
                     <p>
                         @T("Admin.System.ScheduleTasks.24days")
                     </p>
@@ -112,7 +113,7 @@
                     
                     <script>
                         function renderColumnRunNow(data, type, row, meta) {
-                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn bg-green">@T("Admin.System.ScheduleTasks.RunNow")</a>';
+                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn btn-success">@T("Admin.System.ScheduleTasks.RunNow")</a>';
                         }
                     </script>
                 </div>
@@ -120,3 +121,4 @@
         </div>
     </div>
 </div>
+</section>

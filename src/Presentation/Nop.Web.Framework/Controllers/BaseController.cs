@@ -261,28 +261,28 @@ namespace Nop.Web.Framework.Controllers
 
         #endregion
 
-        #region Panels and tabs
+        #region Cards and tabs
 
         /// <summary>
-        /// Save selected panel name
+        /// Save selected card name
         /// </summary>
-        /// <param name="panelName">Panel name to save</param>
+        /// <param name="cardName">Card name to save</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
-        public virtual void SaveSelectedPanelName(string tabName, bool persistForTheNextRequest = true)
+        public virtual void SaveSelectedCardName(string cardName, bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedPanelName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
-            if (string.IsNullOrEmpty(tabName))
-                throw new ArgumentNullException(nameof(tabName));
+            //"GetSelectedCardName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(cardName))
+                throw new ArgumentNullException(nameof(cardName));
 
-            const string dataKey = "nop.selected-panel-name";
+            const string dataKey = "nop.selected-card-name";
             if (persistForTheNextRequest)
             {
-                TempData[dataKey] = tabName;
+                TempData[dataKey] = cardName;
             }
             else
             {
-                ViewData[dataKey] = tabName;
+                ViewData[dataKey] = cardName;
             }
         }
 

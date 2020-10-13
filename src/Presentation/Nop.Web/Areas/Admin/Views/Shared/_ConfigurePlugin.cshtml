@@ -116,21 +116,10 @@
         &nbsp;
     </div>
 </div>
-<div class="content">
-    <div class="form-horizontal">
-        @*@if (plugin != null)
-        {*@
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
             @RenderBody()
-        @*}
-        else
-        {
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @T("Admin.Common.ConfigurationNotRequired")
-                    </div>
-                </div>
-            </div>
-        }*@
+        </div>
     </div>
-</div>
+</section>
