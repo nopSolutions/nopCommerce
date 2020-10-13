@@ -54,8 +54,12 @@
                 $(document).ready(function () {
                     $("#@Html.IdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
                     $("#@Html.IdFor(model => model.AllowPrivateMessages)").click(toggleAllowPrivateMessages);
+                    $("#@Html.IdFor(model => model.ForumFeedsEnabled)").click(toggleForumFeedsEnabled);
+                    $("#@Html.IdFor(model => model.ActiveDiscussionsFeedEnabled)").click(toggleActiveDiscussionsFeedEnabled);
                     toggleAllowVoting();
                     toggleAllowPrivateMessages();
+                    toggleForumFeedsEnabled();
+                    toggleActiveDiscussionsFeedEnabled();
                 });
 
                 function toggleAllowVoting() {
@@ -75,6 +79,24 @@
                     else {
                         $('#pnlShowAlertForPM').hide();
                         $('#pnlNotifyAboutPrivateMessages').hide();
+                    }
+                }
+
+                function toggleForumFeedsEnabled() {
+                    if ($('#@Html.IdFor(model => model.ForumFeedsEnabled)').is(':checked')) {
+                        $('#pnlForumFeedCount').show();
+                    }
+                    else {
+                        $('#pnlForumFeedCount').hide();
+                    }
+                }
+
+                function toggleActiveDiscussionsFeedEnabled() {
+                    if ($('#@Html.IdFor(model => model.ActiveDiscussionsFeedEnabled)').is(':checked')) {
+                        $('#pnlActiveDiscussionsFeedCount').show();
+                    }
+                    else {
+                        $('#pnlActiveDiscussionsFeedCount').hide();
                     }
                 }
             </script>
