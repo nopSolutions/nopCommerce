@@ -129,10 +129,17 @@ namespace Nop.Data
             return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
         }
 
-        public virtual TempDataStorage<TItem> CreateTempDataStorage<TItem>(string storeKey, IQueryable<TItem> query)
+        /// <summary>
+        /// Creates a new temporary storage and populate it using data from provided query
+        /// </summary>
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>IQueryable instance of temporary storage</returns>
+        public virtual ITempDataStorage<TItem> CreateTempDataStorage<TItem>(string storeKey, IQueryable<TItem> query)
             where TItem : class
         {
-            return new TempDataStorage<TItem>(storeKey, query, CreateDataConnection);
+            return new TempSqlDataStorage<TItem>(storeKey, query, CreateDataConnection);
         }
 
         /// <summary>

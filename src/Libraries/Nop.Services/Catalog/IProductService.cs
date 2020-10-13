@@ -33,9 +33,20 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         IList<Product> GetAllProductsDisplayedOnHomepage();
-
+        
+        /// <summary>
+        /// Gets featured products by a category identifier
+        /// </summary>
+        /// <param name="categoryId">Category identifier</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <returns>List of featured products</returns>
         IList<Product> GetCategoryFeaturedProducts(int categoryId, int storeId = 0);
 
+        /// <summary>
+        /// Gets products which marked as new
+        /// </summary>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <returns>List of new products</returns>
         IList<Product> GetProductsMarkedAsNew(int storeId = 0);
 
         /// <summary>

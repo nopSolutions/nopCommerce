@@ -39,6 +39,14 @@ namespace Nop.Services.Stores
         void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
+        /// Get a value indicating whether a store mapping exists for an entity type
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>True if exists; otherwise false</returns>
+        bool IsEntityMappingExists<T>(int storeId) where T : BaseEntity, IStoreMappingSupported;
+
+        /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)
         /// </summary>
         /// <typeparam name="T">Type</typeparam>

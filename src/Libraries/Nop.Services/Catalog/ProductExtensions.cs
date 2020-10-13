@@ -5,6 +5,12 @@ namespace Nop.Services.Catalog
 {
     public static class ProductExtensions
     {
+        /// <summary>
+        /// Sorts the elements of a sequence in order according to a product sorting rule
+        /// </summary>
+        /// <param name="productsQuery">A sequence of products to order</param>
+        /// <param name="orderBy">Product sorting rule</param>
+        /// <returns>An System.Linq.IOrderedQueryable`1 whose elements are sorted according to a rule.</returns>
         public static IOrderedQueryable<Product> OrderBy(this IQueryable<Product> productsQuery, ProductSortingEnum orderBy) 
         {
             return orderBy switch

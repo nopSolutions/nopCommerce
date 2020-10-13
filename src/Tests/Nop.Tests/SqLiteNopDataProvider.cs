@@ -393,7 +393,7 @@ namespace Nop.Tests
             }
         }
 
-        public TempDataStorage<TItem> CreateTempDataStorage<TItem>(string storageKey, IQueryable<TItem> query) where TItem : class
+        public ITempDataStorage<TItem> CreateTempDataStorage<TItem>(string storageKey, IQueryable<TItem> query) where TItem : class
         {
             throw new NotImplementedException();
         }

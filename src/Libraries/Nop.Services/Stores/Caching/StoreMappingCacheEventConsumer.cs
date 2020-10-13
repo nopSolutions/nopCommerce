@@ -16,6 +16,7 @@ namespace Nop.Services.Stores.Caching
         {
             Remove(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName);
             Remove(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName);
+            Remove(NopStoreDefaults.StoreMappingExistsCacheKey, entity.StoreId, entity.EntityName);
         }
     }
 }

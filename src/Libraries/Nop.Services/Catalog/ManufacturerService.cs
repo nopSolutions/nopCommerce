@@ -12,6 +12,8 @@ using Nop.Data;
 using Nop.Data.DataProviders.SQL;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Security;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -23,6 +25,7 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
@@ -32,6 +35,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        protected readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -39,6 +43,7 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ManufacturerService(CatalogSettings catalogSettings,
+            IAclService aclService,
             ICustomerService customerService,
             IRepository<AclRecord> aclRepository,
             IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
@@ -48,9 +53,11 @@ namespace Nop.Services.Catalog
             IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
+            _aclService = aclService;
             _customerService = customerService;
             _aclRepository = aclRepository;
             _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
@@ -60,6 +67,7 @@ namespace Nop.Services.Catalog
             _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
             _workContext = workContext;
         }
 
@@ -267,23 +275,45 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Delete(productManufacturer);
         }
 
-        public virtual IList<Product> GetFeaturedProducts(int manufacturerId, int storeId = 0)
+        /// <summary>
+        /// Gets featured products by manufacturer identifier
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <returns>List of featured products</returns>
+        public virtual IList<Product> GetManufacturerFeaturedProducts(int manufacturerId, int storeId = 0)
         {
-            var allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
-            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+            List<Product> featuredProducts = new List<Product>();
 
-            var query = from p in _productRepository.Table
-                    join pc in _productManufacturerRepository.Table on p.Id equals pc.ProductId
-                    where p.VisibleIndividually && pc.IsFeaturedProduct && manufacturerId == pc.ManufacturerId &&
-                    (
-                        (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                        (storeId == 0 || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                    )
-                    select p;
-            
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductsKey, manufacturerId,  storeId, customerRolesIds);
+            if (manufacturerId == 0)
+                return featuredProducts;
 
-            return _staticCacheManager.Get(cacheKey, query.ToList);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, storeId);
+
+            var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
+            {
+                var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+
+                featuredProducts = (from p in _productRepository.Table
+                                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                                    where p.VisibleIndividually && pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId &&
+                                    (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                                    select p).ToList();
+
+                return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
+            }).Cast<(int EntityId, bool SubjectToAcl)>();
+
+            if(featuredProducts.Count > 0)
+                return featuredProducts.Where(p => _aclService.Authorize(p)).ToList();
+
+            var authorizedIds = featuredProductIds.Where(fp => 
+                    _aclService.Authorize(new Product { Id = fp.EntityId, SubjectToAcl = fp.SubjectToAcl }, _workContext.CurrentCustomer))
+                    .Select(fp => fp.EntityId);
+
+            if (authorizedIds?.Count() > 0)
+                return _productRepository.Table.Where(p => authorizedIds.Contains(p.Id)).ToList();
+
+            return featuredProducts;
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ namespace Nop.Services.Catalog.Caching
             Remove(NopCatalogDefaults.ProductsHomepageCacheKey);
             RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity);
             RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            RemoveByPrefix(NopCatalogDefaults.FeaturedProductIdsPrefixCacheKey);
         }
     }
 }

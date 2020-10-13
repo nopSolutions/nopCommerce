@@ -9,6 +9,14 @@ namespace Nop.Data.DataProviders.SQL
 {
     public static class MultiStoreSqlExtensions
     {
+        /// <summary>
+        /// Builds store mapping predicate
+        /// </summary>
+        /// <param name="subjectEntity">Mapped entity</param>
+        /// <param name="storeMapping">Source with store mapping records</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns></returns>
         [ExpressionMethod(nameof(LimitedToStoresImpl))]
 		public static bool LimitedToStores<T>(this T subjectEntity, IQueryable<StoreMapping> storeMapping, int storeId) where T : BaseEntity, IStoreMappingSupported
 		{

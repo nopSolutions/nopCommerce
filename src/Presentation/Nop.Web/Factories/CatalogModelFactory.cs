@@ -789,7 +789,7 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                var featuredProducts = _manufacturerService.GetFeaturedProducts(manufacturer.Id, _storeContext.CurrentStore.Id);
+                var featuredProducts = _manufacturerService.GetManufacturerFeaturedProducts(manufacturer.Id, _storeContext.CurrentStore.Id);
 
                 if (featuredProducts != null)
                 {

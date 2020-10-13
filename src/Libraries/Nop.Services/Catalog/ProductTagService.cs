@@ -30,6 +30,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductTag> _productTagRepository;
         protected readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
+        protected readonly IStoreMappingService _storeMappingService;
         protected readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -46,6 +47,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductTag> productTagRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager,
+            IStoreMappingService storeMappingService,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
@@ -58,6 +60,7 @@ namespace Nop.Services.Catalog
             _productTagRepository = productTagRepository;
             _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
+            _storeMappingService = storeMappingService;
             _storeService = storeService;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -97,7 +100,7 @@ namespace Nop.Services.Catalog
             return _staticCacheManager.Get(key, () =>
             {
                 var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-                var countStores = _storeService.GetAllStores().Count;
+                var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
                 var pTagCount = from pt in _productTagRepository.Table
                     from ptm in _productProductTagMappingRepository.Table.Where(m => m.ProductTagId == pt.Id).DefaultIfEmpty()
@@ -105,7 +108,7 @@ namespace Nop.Services.Catalog
                     where !p.Deleted && p.Published && 
                         (
                             (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                            (storeId == 0 || countStores > 1 || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                            (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
                         )
                     group pt by pt.Id into ptGrouped
                     select new {
