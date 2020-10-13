@@ -512,7 +512,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as disabled
                             _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_multiFactorAuthenticationSettings);
+                            await _settingService.SaveSetting(_multiFactorAuthenticationSettings);
                             break;
                         }
 
@@ -520,7 +520,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             //mark as enabled
                             _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
-                            _settingService.SaveSetting(_multiFactorAuthenticationSettings);
+                            await _settingService.SaveSetting(_multiFactorAuthenticationSettings);
                         }
 
                         break;

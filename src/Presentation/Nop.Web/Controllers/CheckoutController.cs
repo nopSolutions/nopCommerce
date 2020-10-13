@@ -300,9 +300,9 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="addressId"></param>
         /// <returns></returns>
-        public virtual IActionResult GetAddressById(int addressId)
+        public virtual async Task<IActionResult> GetAddressById(int addressId)
         {
-            var address = _customerService.GetCustomerAddress(_workContext.CurrentCustomer.Id, addressId);
+            var address = _customerService.GetCustomerAddress((await _workContext.GetCurrentCustomer()).Id, addressId);
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
@@ -322,25 +322,25 @@ namespace Nop.Web.Controllers
         /// <param name="opc"></param>
         /// <returns></returns>
         [IgnoreAntiforgeryToken]        
-        public virtual IActionResult SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
+        public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
         {
             try
             {
-                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                var customer = _workContext.CurrentCustomer;
+                var customer = await _workContext.GetCurrentCustomer();
                 //find address (ensure that it belongs to the current customer)
-                var address = _customerService.GetCustomerAddress(customer.Id, model.BillingNewAddress.Id);
+                var address = await _customerService.GetCustomerAddress(customer.Id, model.BillingNewAddress.Id);
                 if (address == null)
                     throw new Exception("Address can't be loaded");
 
                 address = model.BillingNewAddress.ToEntity(address);
-                _addressService.UpdateAddress(address);
+                await _addressService.UpdateAddress(address);
 
-                _workContext.CurrentCustomer.BillingAddressId = address.Id;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                (await _workContext.GetCurrentCustomer()).BillingAddressId = address.Id;
+                await _customerService.UpdateCustomer(await _workContext.GetCurrentCustomer());
 
                 if (!opc)
                 {
@@ -363,7 +363,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
+                await _logger.Warning(exc.Message, exc, await _workContext.GetCurrentCustomer());
                 return Json(new { error = 1, message = exc.Message });
             }
         }
@@ -374,20 +374,20 @@ namespace Nop.Web.Controllers
         /// <param name="addressId"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        public virtual IActionResult DeleteEditAddress(int addressId, bool opc = false)
+        public virtual async Task<IActionResult> DeleteEditAddress(int addressId, bool opc = false)
         {
-            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
             if (!cart.Any())
                 throw new Exception("Your cart is empty");
 
-            var customer = _workContext.CurrentCustomer;
+            var customer = await _workContext.GetCurrentCustomer();
 
-            var address = _customerService.GetCustomerAddress(customer.Id, addressId);
+            var address = await _customerService.GetCustomerAddress(customer.Id, addressId);
             if (address != null)
             {
-                _customerService.RemoveCustomerAddress(customer, address);
-                _customerService.UpdateCustomer(customer);
-                _addressService.DeleteAddress(address);
+                await _customerService.RemoveCustomerAddress(customer, address);
+                await _customerService.UpdateCustomer(customer);
+                await _addressService.DeleteAddress(address);
             }
 
             if (!opc)

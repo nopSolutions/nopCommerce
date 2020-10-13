@@ -78,7 +78,7 @@ namespace Nop.Services.Authentication
                     var logger =
                         EngineContext.Current.Resolve<ILogger>();
 
-                    logger.Error(ex.Message, ex);
+                    await logger.Error(ex.Message, ex);
                 }
             }
 
