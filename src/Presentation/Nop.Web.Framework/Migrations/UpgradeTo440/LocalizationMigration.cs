@@ -248,6 +248,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Plugins.ChangesApplyAfterReboot"] = "Changes will be applied after restart application",
                 ["Admin.Configuration.Plugins.Fields.IsEnabled"] = "Enabled",
                 ["Admin.Customers.ActivityLog.Fields.IpAddress.Hint"] = "A customer IP address.",
+                ["Plugins.Widgets.GoogleAnalytics.UseJsToSendEcommerceInfo"] = "Use JS to send eCommerce info",
+                ["Plugins.Widgets.GoogleAnalytics.UseJsToSendEcommerceInfo.Hint"] = "Check to use JS code to send eCommerce info from the order completed page. But in case of redirection payment methods some customers may skip it. Otherwise, eCommerce information will be sent using HTTP request. Information is sent each time an order is paid but UTM is not supported in this mode.",
+                ["Plugins.Widgets.GoogleAnalytics.IncludeCustomerId"] = "Include customer ID",
+                ["Plugins.Widgets.GoogleAnalytics.IncludeCustomerId.Hint"] = "Check to include customer identifier to script.",
+                ["Admin.Configuration.Plugins.DiscardChanges"] = "Discard changes",
+                ["Admin.Configuration.Plugins.DiscardChanges.Progress"] = "Discarding changes on plugins...",
+                ["Admin.Configuration.Plugins.ApplyChanges"] = "Restart application to apply changes",
+                ["Admin.Configuration.Plugins.ApplyChanges.Progress"] = "Applying changes on plugins...",
             });
 
             // rename locales
