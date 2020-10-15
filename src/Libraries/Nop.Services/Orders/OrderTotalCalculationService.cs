@@ -563,8 +563,8 @@ namespace Nop.Services.Orders
                     updatedOrderItem.UnitPriceInclTax = updateOrderParameters.PriceInclTax;
                     updatedOrderItem.DiscountAmountExclTax = updateOrderParameters.DiscountAmountExclTax;
                     updatedOrderItem.DiscountAmountInclTax = updateOrderParameters.DiscountAmountInclTax;
-                    updatedOrderItem.PriceExclTax = itemSubTotalExclTax = updateOrderParameters.SubTotalExclTax;
-                    updatedOrderItem.PriceInclTax = itemSubTotalInclTax = updateOrderParameters.SubTotalInclTax;
+                    updatedOrderItem.PriceExclTax = itemSubTotalExclTax = updateOrderParameters.PriceExclTax * shoppingCartItem.Quantity;
+                    updatedOrderItem.PriceInclTax = itemSubTotalInclTax = updateOrderParameters.PriceInclTax * shoppingCartItem.Quantity;
                     updatedOrderItem.Quantity = shoppingCartItem.Quantity;
 
                     taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : 0M;
