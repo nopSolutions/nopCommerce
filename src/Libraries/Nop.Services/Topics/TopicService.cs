@@ -8,6 +8,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
+using Nop.Data.DataProviders.SQL;
 using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -155,18 +156,8 @@ namespace Nop.Services.Topics
                             select c;
                     }
 
-                    if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
-                    {
-                        //Store mapping
-                        query = from c in query
-                            join sm in _storeMappingRepository.Table
-                                on new {c1 = c.Id, c2 = nameof(Topic)}
-                                equals new {c1 = sm.EntityId, c2 = sm.EntityName}
-                                into cSm
-                            from sm in cSm.DefaultIfEmpty()
-                            where !c.LimitedToStores || storeId == sm.StoreId
-                            select c;
-                    }
+                    if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Topic>(storeId))
+                        query = query.Where(t => t.LimitedToStores(_storeMappingRepository.Table, storeId));
 
                     query = query.Distinct();
                 }

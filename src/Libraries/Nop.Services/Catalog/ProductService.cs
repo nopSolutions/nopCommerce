@@ -436,7 +436,7 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, storeId);
-            var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+            var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
@@ -505,22 +505,15 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds.Add(0);
             }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-            {
-                query = from p in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
-                        from sm in p_sm.DefaultIfEmpty()
-                        where !p.LimitedToStores || storeId == sm.StoreId
-                        select p;
-            }
+            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
+                query = query.Where(p => p.LimitedToStores(_storeMappingRepository.Table, storeId));
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey,
                 allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
             var result = _staticCacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());
-
+            
             return result;
         }
 
@@ -532,7 +525,7 @@ namespace Nop.Services.Catalog
         public virtual IList<Product> GetProductsMarkedAsNew(int storeId = 0)
         {
             var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-            var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+            var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
             var query = from p in _productRepository.Table
                         where p.VisibleIndividually && p.MarkAsNew &&
@@ -555,7 +548,7 @@ namespace Nop.Services.Catalog
         public virtual IList<Product> GetProductsVisibleIndividually(int storeId)
         {
             var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-            var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+            var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
             var products = from p in _productRepository.Table
                            orderby p.DisplayOrder, p.Id
@@ -743,12 +736,8 @@ namespace Nop.Services.Catalog
                     (priceMax == null || p.Price <= priceMax)
                 select p;
 
-            if (storeId > 0 && _storeMappingService.IsEntityMappingExists<Product>(storeId))
-            {
-                productsQuery = from p in productsQuery
-                                where (storeId == 0 || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                                select p;
-            }
+            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
+                productsQuery = productsQuery.Where(p => p.LimitedToStores(_storeMappingRepository.Table, storeId));
 
 
             if (!overridePublished.HasValue && !showHidden)
@@ -2189,16 +2178,11 @@ namespace Nop.Services.Catalog
                         select productReview;
 
                 //filter by limited to store products
-                if (storeId > 0 && !showHidden && !_catalogSettings.IgnoreStoreLimitations)
+                if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
                 {
                     query = from productReview in query
                             join product in _productRepository.Table on productReview.ProductId equals product.Id
-                            join storeMapping in _storeMappingRepository.Table
-                                on new { Id = productReview.ProductId, Name = nameof(Product) }
-                                equals new { Id = storeMapping.EntityId, Name = storeMapping.EntityName } into
-                                storeMappingsWithNulls
-                            from storeMapping in storeMappingsWithNulls.DefaultIfEmpty()
-                            where !product.LimitedToStores || storeMapping.StoreId == storeId
+                            where product.LimitedToStores(_storeMappingRepository.Table, storeId)
                             select productReview;
                 }
 

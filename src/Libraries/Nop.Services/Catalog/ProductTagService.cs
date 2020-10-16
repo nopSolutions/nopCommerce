@@ -100,7 +100,7 @@ namespace Nop.Services.Catalog
             return _staticCacheManager.Get(key, () =>
             {
                 var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-                var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+                var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
                 var pTagCount = from pt in _productTagRepository.Table
                     from ptm in _productProductTagMappingRepository.Table.Where(m => m.ProductTagId == pt.Id).DefaultIfEmpty()

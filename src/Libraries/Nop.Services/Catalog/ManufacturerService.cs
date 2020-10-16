@@ -159,19 +159,9 @@ namespace Nop.Services.Catalog
                         select m;
                 }
 
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-                {
-                    //store mapping
-                    query = from m in query
-                        join sm in _storeMappingRepository.Table
-                            on new {c1 = m.Id, c2 = nameof(Manufacturer)} equals new
-                            {
-                                c1 = sm.EntityId, c2 = sm.EntityName
-                            } into m_sm
-                        from sm in m_sm.DefaultIfEmpty()
-                        where !m.LimitedToStores || storeId == sm.StoreId
-                        select m;
-                }
+                //store mapping
+                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Manufacturer>(storeId))
+                    query = query.Where(m => m.LimitedToStores(_storeMappingRepository.Table, storeId));
 
                 return query.Distinct();
             }, pageIndex, pageSize);
@@ -292,7 +282,7 @@ namespace Nop.Services.Catalog
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
-                var skipSroreMapping = storeId == 0 || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+                var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
                 featuredProducts = (from p in _productRepository.Table
                                     join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
@@ -362,27 +352,15 @@ namespace Nop.Services.Catalog
                         where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select pm;
                 }
+                
+                //store mapping
+                var storeId = _storeContext.CurrentStore.Id;
 
-                if (!_catalogSettings.IgnoreStoreLimitations)
+                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Manufacturer>(storeId))
                 {
-                    //store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pm in query
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        join sm in _storeMappingRepository.Table
-                            on new
-                            {
-                                c1 = m.Id,
-                                c2 = nameof(Manufacturer)
-                            } 
-                            equals new
-                            {
-                                c1 = sm.EntityId,
-                                c2 = sm.EntityName
-                            } 
-                            into m_sm
-                        from sm in m_sm.DefaultIfEmpty()
-                        where !m.LimitedToStores || currentStoreId == sm.StoreId
+                        where m.LimitedToStores(_storeMappingRepository.Table, storeId)
                         select pm;
                 }
 
@@ -442,26 +420,14 @@ namespace Nop.Services.Catalog
                         select pm;
                 }
 
-                if (!_catalogSettings.IgnoreStoreLimitations)
+                //store mapping
+                var storeId = _storeContext.CurrentStore.Id;
+
+                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Manufacturer>(storeId))
                 {
-                    //store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pm in query
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
-                        join sm in _storeMappingRepository.Table
-                            on new
-                            {
-                                c1 = m.Id,
-                                c2 = nameof(Manufacturer)
-                            } 
-                            equals new
-                            {
-                                c1 = sm.EntityId,
-                                c2 = sm.EntityName
-                            } 
-                            into m_sm
-                        from sm in m_sm.DefaultIfEmpty()
-                        where !m.LimitedToStores || currentStoreId == sm.StoreId
+                        where m.LimitedToStores(_storeMappingRepository.Table, storeId)
                         select pm;
                 }
 
