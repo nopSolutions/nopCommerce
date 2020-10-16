@@ -712,13 +712,13 @@ namespace Nop.Services.Customers
                     .Select(ca => new { AddressId = ca.AddressId }));
 
             //delete guests
-            var totalRecordsDeleted = _customerRepository.Table.Where(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id)).Delete();
+            var totalRecordsDeleted = _customerRepository.Delete(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
 
             //delete attributes
-            _gaRepository.Table.Where(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer)).Delete();
+            _gaRepository.Delete(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
 
             //delete m -> m addresses
-            _customerAddressRepository.Table.Where(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id)).Delete();
+            _customerAddressRepository.Delete(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
 
             return totalRecordsDeleted;
         }

@@ -212,8 +212,8 @@ namespace Nop.Services.Catalog
         /// {0} : category id
         /// {1} : current store ID
         /// </remarks>
-        public static CacheKey CategoryFeaturedProductsIdsKey => new CacheKey("Nop.featuredproducts.category-{0}-{1}", CategoryFeaturedProductsIdsPrefixCacheKey);
-        public static string CategoryFeaturedProductsIdsPrefixCacheKey => "Nop.featuredproducts-category-{0}-";
+        public static CacheKey CategoryFeaturedProductsIdsKey => new CacheKey("Nop.product.featured-bycategory.{0}.{1}", CategoryFeaturedProductsIdsPrefixCacheKey, FeaturedProductIdsPrefixCacheKey);
+        public static string CategoryFeaturedProductsIdsPrefixCacheKey => "Nop.product.featured-bycategory.{0}";
 
         /// <summary>
         /// Key for caching of a value indicating whether a manufacturer has featured products
@@ -222,10 +222,10 @@ namespace Nop.Services.Catalog
         /// {0} : manufacturer id
         /// {1} : current store ID
         /// </remarks>
-        public static CacheKey ManufacturerFeaturedProductIdsKey => new CacheKey("Nop.featuredproducts.manufacturer-{0}-{1}", ManufacturerFeaturedProductIdsPrefixCacheKey);
-        public static string ManufacturerFeaturedProductIdsPrefixCacheKey => "Nop.featuredproducts.manufacturer-{0}-";
-
-        public static string FeaturedProductIdsPrefixCacheKey => "Nop.manufacturer.featuredproducts-";
+        public static CacheKey ManufacturerFeaturedProductIdsKey => new CacheKey("Nop.product.featured-bymanufacturer.{0}.{1}", ManufacturerFeaturedProductIdsPrefixCacheKey, FeaturedProductIdsPrefixCacheKey);
+        public static string ManufacturerFeaturedProductIdsPrefixCacheKey => "Nop.product.featured-bymanufacturer.{0}";
+        
+        public static string FeaturedProductIdsPrefixCacheKey => "Nop.product.featured-";
 
         /// <summary>
         /// Gets a key for product prices

@@ -436,28 +436,69 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, storeId);
-            var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+            var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
                 featuredProducts = (from p in _productRepository.Table
                                     join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                                    where p.VisibleIndividually && pc.IsFeaturedProduct && categoryId == pc.CategoryId &&
-                                    (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                                    where !p.Deleted && p.Published && p.VisibleIndividually && pc.IsFeaturedProduct && categoryId == pc.CategoryId &&
+                                    (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
                                     select p).ToList();
 
                 return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
-            }).Cast<(int EntityId, bool SubjectToAcl)>();
+            });
 
             if (featuredProducts.Count > 0)
                 return featuredProducts.Where(p => _aclService.Authorize(p)).ToList();
 
-            var authorizedIds = featuredProductIds.Where(fp =>
-                    _aclService.Authorize(new Product { Id = fp.EntityId, SubjectToAcl = fp.SubjectToAcl }, _workContext.CurrentCustomer))
-                    .Select(fp => fp.EntityId);
+            var authorizedIds = featuredProductIds.Where(fp => _aclService.Authorize(new Product { Id = fp.Id, SubjectToAcl = fp.SubjectToAcl }))
+                    .Select(fp => fp.Id)
+                    .ToList();
 
-            if (authorizedIds?.Count() > 0)
-                return _productRepository.Table.Where(p => authorizedIds.Contains(p.Id)).ToList();
+            if (authorizedIds.Count > 0)
+                return _productRepository.GetByIds(authorizedIds, cache => default);
+
+            return featuredProducts;
+        }
+
+        /// <summary>
+        /// Gets featured products by manufacturer identifier
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <returns>List of featured products</returns>
+        public virtual IList<Product> GetManufacturerFeaturedProducts(int manufacturerId, int storeId = 0)
+        {
+            List<Product> featuredProducts = new List<Product>();
+
+            if (manufacturerId == 0)
+                return featuredProducts;
+
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, storeId);
+
+            var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
+            {
+                var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+
+                featuredProducts = (from p in _productRepository.Table
+                                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                                    where !p.Deleted && p.Published && p.VisibleIndividually && pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId &&
+                                    (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                                    select p).ToList();
+
+                return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
+            });
+
+            if (featuredProducts.Count > 0)
+                return featuredProducts.Where(p => _aclService.Authorize(p)).ToList();
+
+            var authorizedIds = featuredProductIds.Where(fp => _aclService.Authorize(new Product { Id = fp.Id, SubjectToAcl = fp.SubjectToAcl }))
+                    .Select(fp => fp.Id)
+                    .ToList();
+
+            if (authorizedIds.Count > 0)
+                return _productRepository.GetByIds(authorizedIds, cache => default);
 
             return featuredProducts;
         }
@@ -525,14 +566,14 @@ namespace Nop.Services.Catalog
         public virtual IList<Product> GetProductsMarkedAsNew(int storeId = 0)
         {
             var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-            var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+            var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
             var query = from p in _productRepository.Table
-                        where p.VisibleIndividually && p.MarkAsNew &&
+                        where p.VisibleIndividually && p.MarkAsNew && !p.Deleted && p.Published &&
                         Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue) &&
                         (
                             (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                            (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                            (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
                         )
                         select p;
 
@@ -543,23 +584,6 @@ namespace Nop.Services.Catalog
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsMarkedAsNewCacheKey);
 
             return _staticCacheManager.Get(cacheKey, query.ToList);
-        }
-
-        public virtual IList<Product> GetProductsVisibleIndividually(int storeId)
-        {
-            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-            var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
-
-            var products = from p in _productRepository.Table
-                           orderby p.DisplayOrder, p.Id
-                           where p.Published && !p.Deleted && p.VisibleIndividually &&
-                           (
-                               (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                               (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                           )
-                           select p;
-
-            return products.ToList();
         }
 
         /// <summary>

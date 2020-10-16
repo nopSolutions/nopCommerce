@@ -444,7 +444,7 @@ namespace Nop.Web.Factories
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                excludeFeaturedProducts: _catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
+                excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
@@ -789,7 +789,7 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                var featuredProducts = _manufacturerService.GetManufacturerFeaturedProducts(manufacturer.Id, _storeContext.CurrentStore.Id);
+                var featuredProducts = _productService.GetManufacturerFeaturedProducts(manufacturer.Id, _storeContext.CurrentStore.Id);
 
                 if (featuredProducts != null)
                 {
@@ -802,7 +802,7 @@ namespace Nop.Web.Factories
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                excludeFeaturedProducts: _catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
+                excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
                 orderBy: (ProductSortingEnum)command.OrderBy,

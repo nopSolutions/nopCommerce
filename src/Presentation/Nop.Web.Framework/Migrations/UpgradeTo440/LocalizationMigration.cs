@@ -109,6 +109,21 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "ShoppingCart.AddToWishlist.Update",
                 "ShoppingCart.UpdateCartItem",
                 "Tax.SelectType",
+                "Admin.Configuration.Settings.GeneralCommon.BlockTitle.FullText",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode.Hint",
+                "Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported",
+                "Enums.Nop.Core.Domain.Common.FulltextSearchMode.And",
+                "Enums.Nop.Core.Domain.Common.FulltextSearchMode.ExactMatch",
+                "Enums.Nop.Core.Domain.Common.FulltextSearchMode.Or",
             });
 
             localizationService.AddLocaleResource(new Dictionary<string, string>

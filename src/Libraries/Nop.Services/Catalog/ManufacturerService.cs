@@ -266,47 +266,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Gets featured products by manufacturer identifier
-        /// </summary>
-        /// <param name="manufacturerId">Manufacturer identifier</param>
-        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
-        /// <returns>List of featured products</returns>
-        public virtual IList<Product> GetManufacturerFeaturedProducts(int manufacturerId, int storeId = 0)
-        {
-            List<Product> featuredProducts = new List<Product>();
-
-            if (manufacturerId == 0)
-                return featuredProducts;
-
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, storeId);
-
-            var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
-            {
-                var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
-
-                featuredProducts = (from p in _productRepository.Table
-                                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                                    where p.VisibleIndividually && pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId &&
-                                    (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                                    select p).ToList();
-
-                return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
-            }).Cast<(int EntityId, bool SubjectToAcl)>();
-
-            if(featuredProducts.Count > 0)
-                return featuredProducts.Where(p => _aclService.Authorize(p)).ToList();
-
-            var authorizedIds = featuredProductIds.Where(fp => 
-                    _aclService.Authorize(new Product { Id = fp.EntityId, SubjectToAcl = fp.SubjectToAcl }, _workContext.CurrentCustomer))
-                    .Select(fp => fp.EntityId);
-
-            if (authorizedIds?.Count() > 0)
-                return _productRepository.Table.Where(p => authorizedIds.Contains(p.Id)).ToList();
-
-            return featuredProducts;
-        }
-
-        /// <summary>
         /// Gets product manufacturer collection
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>

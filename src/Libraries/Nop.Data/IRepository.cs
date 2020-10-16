@@ -98,7 +98,8 @@ namespace Nop.Data
         /// Delete entity entries by the passed predicate
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
-        void Delete(Expression<Func<TEntity, bool>> predicate);
+        /// <returns>Number of deleted records</returns>
+        int Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Loads the original copy of the entity entry

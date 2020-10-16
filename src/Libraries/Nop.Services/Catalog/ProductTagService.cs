@@ -100,7 +100,7 @@ namespace Nop.Services.Catalog
             return _staticCacheManager.Get(key, () =>
             {
                 var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-                var skipSroreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+                var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
                 var pTagCount = from pt in _productTagRepository.Table
                     from ptm in _productProductTagMappingRepository.Table.Where(m => m.ProductTagId == pt.Id).DefaultIfEmpty()
@@ -108,7 +108,7 @@ namespace Nop.Services.Catalog
                     where !p.Deleted && p.Published && 
                         (
                             (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                            (skipSroreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
+                            (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
                         )
                     group pt by pt.Id into ptGrouped
                     select new {

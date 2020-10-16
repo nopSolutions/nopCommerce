@@ -43,6 +43,14 @@ namespace Nop.Services.Catalog
         IList<Product> GetCategoryFeaturedProducts(int categoryId, int storeId = 0);
 
         /// <summary>
+        /// Gets featured products by a manufacturer identifier
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
+        /// <returns>List of featured products</returns>
+        IList<Product> GetManufacturerFeaturedProducts(int manufacturerId, int storeId = 0);
+
+        /// <summary>
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
@@ -62,8 +70,6 @@ namespace Nop.Services.Catalog
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Products</returns>
         IList<Product> GetProductsByIds(int[] productIds);
-
-        IList<Product> GetProductsVisibleIndividually(int storeId);
 
         /// <summary>
         /// Inserts a product

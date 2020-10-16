@@ -83,7 +83,8 @@ namespace Nop.Data
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
+        /// <returns>Number of deleted records</returns>
+        int BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
 
         /// <summary>
         /// Performs bulk insert entities operation

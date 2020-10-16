@@ -223,10 +223,11 @@ namespace Nop.Data
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public virtual void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        /// <returns>Number of deleted records</returns>
+        public virtual int BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
-            dataContext.GetTable<TEntity>()
+            return dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .Delete();
         }

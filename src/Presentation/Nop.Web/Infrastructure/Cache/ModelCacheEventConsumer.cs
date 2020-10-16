@@ -38,6 +38,9 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<Category>>,
         IConsumer<EntityUpdatedEvent<Category>>,
         IConsumer<EntityDeletedEvent<Category>>,
+        //product categories
+        IConsumer<EntityInsertedEvent<ProductCategory>>,
+        IConsumer<EntityDeletedEvent<ProductCategory>>,
         //products
         IConsumer<EntityInsertedEvent<Product>>,
         IConsumer<EntityUpdatedEvent<Product>>,
@@ -142,7 +145,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         #endregion
-        
+
         #region Setting
 
         public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
@@ -236,7 +239,6 @@ namespace Nop.Web.Infrastructure.Cache
         #endregion
 
         #region Product categories
-
         public void HandleEvent(EntityInsertedEvent<ProductCategory> eventMessage)
         {
             if (_catalogSettings.ShowCategoryProductNumber)
@@ -523,7 +525,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         #endregion
-        
+
         #region Shopping cart items
 
         public void HandleEvent(EntityUpdatedEvent<ShoppingCartItem> eventMessage)

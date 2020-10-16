@@ -285,12 +285,13 @@ namespace Nop.Data
         /// Delete entity entries by the passed predicate
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
-        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
+        /// <returns>Number of deleted records</returns>
+        public virtual int Delete(Expression<Func<TEntity, bool>> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            _dataProvider.BulkDeleteEntities(predicate);
+            return _dataProvider.BulkDeleteEntities(predicate);
         }
 
         /// <summary>
