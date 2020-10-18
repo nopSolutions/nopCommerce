@@ -894,17 +894,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAddressListModel().PrepareToGrid(searchModel, addresses, () =>
+            var model = await new CustomerAddressListModel().PrepareToGridAsync(searchModel, addresses, () =>
             {
-                return addresses.Select(address =>
+                return addresses.ToAsyncEnumerable().SelectAwait(async address =>
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
-                    addressModel.CountryName = _countryService.GetCountryByAddress(address).Result?.Name;
-                    addressModel.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address).Result?.Name;
+                    addressModel.CountryName = (await _countryService.GetCountryByAddress(address))?.Name;
+                    addressModel.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddress(address))?.Name;
 
                     //fill in additional values (not existing in the entity)
-                    PrepareModelAddressHtml(addressModel, address).Wait();
+                    await PrepareModelAddressHtml(addressModel, address);
 
                     return addressModel;
                 });

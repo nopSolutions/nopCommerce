@@ -33,7 +33,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -45,11 +45,11 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         {
             var pickupPoints = await _storePickupPointService.GetAllStorePickupPoints(pageIndex: searchModel.Page - 1,
                 pageSize: searchModel.PageSize);
-            var model = new StorePickupPointListModel().PrepareToGrid(searchModel, pickupPoints, () =>
+            var model = await new StorePickupPointListModel().PrepareToGridAsync(searchModel, pickupPoints, () =>
             {
-                return pickupPoints.Select(point =>
+                return pickupPoints.ToAsyncEnumerable().SelectAwait(async point =>
                 {
-                    var store = _storeService.GetStoreById(point.StoreId).Result;
+                    var store = await _storeService.GetStoreById(point.StoreId);
                     return new StorePickupPointModel
                     {
                         Id = point.Id,
@@ -57,14 +57,12 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                         OpeningHours = point.OpeningHours,
                         PickupFee = point.PickupFee,
                         DisplayOrder = point.DisplayOrder,
-                        StoreName = store?.Name ?? (point.StoreId == 0
-                                        ? _localizationService.GetResource(
-                                            "Admin.Configuration.Settings.StoreScope.AllStores").Result
-                                        : string.Empty)
+                        StoreName = store?.Name
+                            ?? (point.StoreId == 0 ? (await _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores")) : string.Empty)
                     };
                 });
             });
-           
+
             return model;
         }
 

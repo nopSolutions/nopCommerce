@@ -758,7 +758,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             try
             {
-                _nopHttpClient.PingAsync().Wait();
+                await _nopHttpClient.PingAsync();
 
                 //connection is OK
                 models.Add(new SystemWarningModel

@@ -375,13 +375,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             var messageTemplates = (await _messageTemplateService.GetAllMessageTemplates(storeId)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SendinBlueMessageTemplateListModel().PrepareToGrid(searchModel, messageTemplates, () =>
+            var model = await new SendinBlueMessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.Select(messageTemplate =>
+                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
                 {
                     //standard template of message is edited in the admin area, SendinBlue template is edited in the SendinBlue account
-                    var templateId = _genericAttributeService.GetAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute).Result;
-                    var stores = _storeService.GetAllStores().Result
+                    var templateId = await _genericAttributeService.GetAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
+                    var stores = (await _storeService.GetAllStores())
                         .Where(store => !messageTemplate.LimitedToStores || _storeMappingService.GetStoresIdsWithAccess(messageTemplate).Result.Contains(store.Id))
                         .Aggregate(string.Empty, (current, next) => $"{current}, {next.Name}").Trim(',');
 
@@ -485,26 +485,26 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 .ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SmsListModel().PrepareToGrid(searchModel, messageTemplates, () =>
+            var model = await new SmsListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.Select(messageTemplate =>
+                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
                 {
-                    var phoneTypeID = _genericAttributeService.GetAttribute<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute).Result;
+                    var phoneTypeID = await _genericAttributeService.GetAttribute<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute);
                     var smsModel = new SmsModel
                     {
                         Id = messageTemplate.Id,
                         MessageId = messageTemplate.Id,
                         Name = messageTemplate.Name,
                         PhoneTypeId = phoneTypeID,
-                        Text = _genericAttributeService.GetAttribute<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute).Result
+                        Text = await _genericAttributeService.GetAttribute<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute)
                     };
 
                     if (storeId == 0)
                     {
                         if (storeId == 0 && messageTemplate.LimitedToStores)
                         {
-                            var storeIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate).Result;
-                            var storeNames = _storeService.GetAllStores().Result.Where(store => storeIds.Contains(store.Id)).Select(store => store.Name);
+                            var storeIds = await _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
+                            var storeNames = (await _storeService.GetAllStores()).Where(store => storeIds.Contains(store.Id)).Select(store => store.Name);
                             smsModel.Name = $"{smsModel.Name} ({string.Join(',', storeNames)})";
                         }
                     }
@@ -514,13 +514,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                     switch (phoneTypeID)
                     {
                         case 0:
-                            smsModel.PhoneType = _localizationService.GetResource("Plugins.Misc.SendinBlue.MyPhone").Result;
+                            smsModel.PhoneType = await _localizationService.GetResource("Plugins.Misc.SendinBlue.MyPhone");
                             break;
                         case 1:
-                            smsModel.PhoneType = _localizationService.GetResource("Plugins.Misc.SendinBlue.CustomerPhone").Result;
+                            smsModel.PhoneType = await _localizationService.GetResource("Plugins.Misc.SendinBlue.CustomerPhone");
                             break;
                         case 2:
-                            smsModel.PhoneType = _localizationService.GetResource("Plugins.Misc.SendinBlue.BillingAddressPhone").Result;
+                            smsModel.PhoneType = await _localizationService.GetResource("Plugins.Misc.SendinBlue.BillingAddressPhone");
                             break;
                         default:
                             break;

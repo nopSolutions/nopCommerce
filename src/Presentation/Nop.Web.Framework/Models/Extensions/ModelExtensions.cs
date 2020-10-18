@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 
 namespace Nop.Web.Framework.Models.Extensions
@@ -33,7 +35,7 @@ namespace Nop.Web.Framework.Models.Extensions
         /// <param name="dataFillFunction">Function to populate model data</param>
         /// <returns>List model</returns>
         public static TListModel PrepareToGrid<TListModel, TModel, TObject>(this TListModel listModel,
-            BaseSearchModel searchModel, IPagedList<TObject> objectList, Func<IEnumerable<TModel>> dataFillFunction) 
+            BaseSearchModel searchModel, IPagedList<TObject> objectList, Func<IEnumerable<TModel>> dataFillFunction)
             where TListModel : BasePagedListModel<TModel>
             where TModel : BaseNopModel
         {
@@ -41,6 +43,33 @@ namespace Nop.Web.Framework.Models.Extensions
                 throw new ArgumentNullException(nameof(listModel));
 
             listModel.Data = dataFillFunction?.Invoke();
+            listModel.Draw = searchModel?.Draw;
+            listModel.RecordsTotal = objectList?.TotalCount ?? 0;
+            listModel.RecordsFiltered = objectList?.TotalCount ?? 0;
+
+            return listModel;
+        }
+
+        /// <summary>
+        /// Prepare passed list model to display in a grid
+        /// </summary>
+        /// <typeparam name="TListModel">List model type</typeparam>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <typeparam name="TObject">Object type</typeparam>
+        /// <param name="listModel">List model</param>
+        /// <param name="searchModel">Search model</param>
+        /// <param name="objectList">Paged list of objects</param>
+        /// <param name="dataFillFunction">Function to populate model data</param>
+        /// <returns>List model</returns>
+        public static async Task<TListModel> PrepareToGridAsync<TListModel, TModel, TObject>(this TListModel listModel,
+            BaseSearchModel searchModel, IPagedList<TObject> objectList, Func<IAsyncEnumerable<TModel>> dataFillFunction)
+            where TListModel : BasePagedListModel<TModel>
+            where TModel : BaseNopModel
+        {
+            if (listModel == null)
+                throw new ArgumentNullException(nameof(listModel));
+
+            listModel.Data = await (dataFillFunction?.Invoke()).ToListAsync();
             listModel.Draw = searchModel?.Draw;
             listModel.RecordsTotal = objectList?.TotalCount ?? 0;
             listModel.RecordsFiltered = objectList?.TotalCount ?? 0;

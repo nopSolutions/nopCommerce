@@ -120,16 +120,16 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
                 return AccessDeniedDataTablesJson();
 
             var configurations = await _facebookPixelService.GetPagedConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
-            var model = new FacebookPixelListModel().PrepareToGrid(searchModel, configurations, () =>
+            var model = await new FacebookPixelListModel().PrepareToGridAsync(searchModel, configurations, () =>
             {
                 //fill in model values from the configuration
-                return configurations.Select(configuration => new FacebookPixelModel
+                return configurations.ToAsyncEnumerable().SelectAwait(async configuration => new FacebookPixelModel
                 {
                     Id = configuration.Id,
                     PixelId = configuration.PixelId,
                     Enabled = configuration.Enabled,
                     StoreId = configuration.StoreId,
-                    StoreName = _storeService.GetStoreById(configuration.StoreId).Result?.Name
+                    StoreName = (await _storeService.GetStoreById(configuration.StoreId))?.Name
                 });
             });
 

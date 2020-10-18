@@ -119,10 +119,10 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 ?? taxTypes?.FirstOrDefault();
 
             //prepare grid model
-            var model = new Models.Tax.TaxCategoryListModel().PrepareToGrid(searchModel, taxCategories, () =>
+            var model = await new Models.Tax.TaxCategoryListModel().PrepareToGridAsync(searchModel, taxCategories, () =>
             {
                 //fill in model values from the entity
-                return taxCategories.Select(taxCategory =>
+                return taxCategories.ToAsyncEnumerable().SelectAwait(async taxCategory =>
                 {
                     //fill in model values from the entity
                     var taxCategoryModel = new Models.Tax.TaxCategoryModel
@@ -133,13 +133,13 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                     };
 
                     //try to get previously saved tax code type and description
-                    var taxCodeType = taxTypes?.FirstOrDefault(type =>
-                        type.Id.Equals(_genericAttributeService.GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute).Result ?? string.Empty))
+                    var taxCodeType = (await taxTypes?.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async type =>
+                        type.Id.Equals((await _genericAttributeService.GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute)) ?? string.Empty)).AsTask())
                         ?? defaultType;
                     taxCategoryModel.Type = taxCodeType?.Name ?? string.Empty;
                     taxCategoryModel.TypeId = taxCodeType?.Id ?? Guid.Empty.ToString();
-                    taxCategoryModel.Description = _genericAttributeService
-                        .GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute).Result ?? string.Empty;
+                    taxCategoryModel.Description = (await _genericAttributeService
+                        .GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute)) ?? string.Empty;
 
                     return taxCategoryModel;
                 });

@@ -123,22 +123,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 return new ActivityLogListModel();
 
             //prepare list model
-            var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
+            var customerIds = activityLog.GroupBy(logItem => logItem.CustomerId).Select(logItem => logItem.Key);
+            var activityLogCustomers = await _customerService.GetCustomersByIds(customerIds.ToArray());
+            var model = await new ActivityLogListModel().PrepareToGridAsync(searchModel, activityLog, () =>
             {
-                var activityLogCustomers = _customerService.GetCustomersByIds(activityLog.GroupBy(x => x.CustomerId).Select(x => x.Key).ToArray()).Result;
-
-                return activityLog.Select(logItem =>
+                return activityLog.ToAsyncEnumerable().SelectAwait(async logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
-                    logItemModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId).Result?.Name;
+                    logItemModel.ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId))?.Name;
                     logItemModel.CustomerEmail = activityLogCustomers?.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email;
 
                     //convert dates to the user time
                     logItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
 
                     return logItemModel;
-
                 });
             });
 

@@ -145,14 +145,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// </summary>
         /// <param name="transaction">A corresponding transaction</param>
         /// <param name="httpClient">HTTP client</param>
-        public void SendRequest(Transaction transaction, HttpClient httpClient)
+        public async Task SendRequest(Transaction transaction, HttpClient httpClient)
         {
             var requestUrl = BASE_URL + CreateParameterString() + "&" + transaction.CreateParameterString();
-            RequestAsync(requestUrl, httpClient).Wait();
+            await RequestAsync(requestUrl, httpClient);
 
             foreach (var transItem in transaction.Items)
             {
-                RequestAsync(BASE_URL + CreateParameterString() + "&" + transItem.CreateParameterString(), httpClient).Wait();
+                await RequestAsync(BASE_URL + CreateParameterString() + "&" + transItem.CreateParameterString(), httpClient);
             }
         }
 
