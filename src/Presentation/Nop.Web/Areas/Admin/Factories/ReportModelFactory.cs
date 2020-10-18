@@ -158,30 +158,29 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare low stock product models
             var lowStockProductModels = new List<LowStockProductModel>();
-            lowStockProductModels.AddRange(products.Select(product => new LowStockProductModel
+            lowStockProductModels.AddRange(await products.ToAsyncEnumerable().SelectAwait(async product => new LowStockProductModel
             {
                 Id = product.Id,
                 Name = product.Name,
-                ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod).Result,
-                StockQuantity = _productService.GetTotalStockQuantity(product).Result,
+                ManageInventoryMethod = await _localizationService.GetLocalizedEnum(product.ManageInventoryMethod),
+                StockQuantity = await _productService.GetTotalStockQuantity(product),
                 Published = product.Published
-            }));
+            }).ToListAsync());
 
-            lowStockProductModels.AddRange(combinations.Select(combination => {
-
-                var product = _productService.GetProductById(combination.ProductId).Result;
-
+            lowStockProductModels.AddRange(await combinations.ToAsyncEnumerable().SelectAwait(async combination =>
+            {
+                var product = await _productService.GetProductById(combination.ProductId);
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,
                     Name = product.Name,
-                    Attributes = _productAttributeFormatter
-                        .FormatAttributes(product, combination.AttributesXml, _workContext.GetCurrentCustomer().Result, "<br />", true, true, true, false).Result,
-                    ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod).Result,
+                    Attributes = await _productAttributeFormatter
+                        .FormatAttributes(product, combination.AttributesXml, await _workContext.GetCurrentCustomer(), "<br />", true, true, true, false),
+                    ManageInventoryMethod = await _localizationService.GetLocalizedEnum(product.ManageInventoryMethod),
                     StockQuantity = combination.StockQuantity,
                     Published = product.Published
                 };
-            }));
+            }).ToListAsync());
 
             var pagesList = lowStockProductModels.ToPagedList(searchModel);
 
@@ -280,7 +279,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get parameters to filter bestsellers
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
@@ -570,16 +569,16 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return reportItems.Select(item =>
                {
-                    //fill in model values from the entity
-                    var bestCustomersReportModel = new BestCustomersReportModel
+                   //fill in model values from the entity
+                   var bestCustomersReportModel = new BestCustomersReportModel
                    {
                        CustomerId = item.CustomerId,
                        OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false).Result,
                        OrderCount = item.OrderCount
                    };
 
-                    //fill in additional values (not existing in the entity)
-                    var customer = _customerService.GetCustomerById(item.CustomerId).Result;
+                   //fill in additional values (not existing in the entity)
+                   var customer = _customerService.GetCustomerById(item.CustomerId).Result;
                    if (customer != null)
                    {
                        bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer).Result ? customer.Email :
@@ -592,7 +591,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-                
+
         /// <summary>
         /// Prepare paged registered customers report list model
         /// </summary>

@@ -570,7 +570,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -730,7 +730,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
                     model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
                         (await _storeService.GetAllStores()).Select(x => x.Id).Count() > 1;
-                   
+
                     //prepare model affiliate
                     var affiliate = await _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
@@ -1008,31 +1008,30 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-
-            var pageList = shoppingCart.Select(item =>
+            var model = await new CustomerShoppingCartListModel().PrepareToGridAsync(searchModel, shoppingCart, () =>
             {
-                //fill in model values from the entity
-                var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
+                return shoppingCart.ToAsyncEnumerable().SelectAwait(async item =>
+                {
+                    //fill in model values from the entity
+                    var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
 
-                var product = _productService.GetProductById(item.ProductId).Result;
+                    var product = await _productService.GetProductById(item.ProductId);
 
-                //fill in additional values (not existing in the entity)
-                shoppingCartItemModel.ProductName = product.Name;
-                shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId).Result?.Name ?? "Unknown";
-                shoppingCartItemModel.AttributeInfo =
-                    _productAttributeFormatter.FormatAttributes(product, item.AttributesXml).Result;
-                shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(product, _shoppingCartService.GetUnitPrice(item, true).Result.unitPrice).Result.price).Result;
-                shoppingCartItemModel.Total = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(product, _shoppingCartService.GetSubTotal(item, true).Result.subTotal).Result.price).Result;
-                //convert dates to the user time
-                shoppingCartItemModel.UpdatedOn =
-                    _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
+                    //fill in additional values (not existing in the entity)
+                    shoppingCartItemModel.ProductName = product.Name;
+                    shoppingCartItemModel.Store = (await _storeService.GetStoreById(item.StoreId))?.Name ?? "Unknown";
+                    shoppingCartItemModel.AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, item.AttributesXml);
+                    var (unitPrice, _, _) = await _shoppingCartService.GetUnitPrice(item, true);
+                    shoppingCartItemModel.UnitPrice = await _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, unitPrice)).price);
+                    var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotal(item, true);
+                    shoppingCartItemModel.Total = await _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, subTotal)).price);
 
-                return shoppingCartItemModel;
-            }).ToList().ToPagedList(searchModel);
+                    //convert dates to the user time
+                    shoppingCartItemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
-            var model = new CustomerShoppingCartListModel().PrepareToGrid(searchModel, pageList, () => pageList);
+                    return shoppingCartItemModel;
+                });
+            });
 
             return model;
         }
@@ -1055,24 +1054,24 @@ namespace Nop.Web.Areas.Admin.Factories
             var activityLog = await _customerActivityService.GetAllActivities(customerId: customer.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
-            var pageList = activityLog.Select(logItem =>
-            {
-                //fill in model values from the entity
-                var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
-
-                //fill in additional values (not existing in the entity)
-                customerActivityLogModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId).Result?.Name;
-
-                //convert dates to the user time
-                customerActivityLogModel.CreatedOn =
-                    _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
-
-                return customerActivityLogModel;
-            }).ToList().ToPagedList(searchModel);
-
             //prepare list model
-            var model = new CustomerActivityLogListModel().PrepareToGrid(searchModel, pageList, () => pageList);
-            
+            var model = await new CustomerActivityLogListModel().PrepareToGridAsync(searchModel, activityLog, () =>
+            {
+                return activityLog.ToAsyncEnumerable().SelectAwait(async logItem =>
+                {
+                    //fill in model values from the entity
+                    var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    customerActivityLogModel.ActivityLogTypeName = (await _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId))?.Name;
+
+                    //convert dates to the user time
+                    customerActivityLogModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
+
+                    return customerActivityLogModel;
+                });
+            });
+
             return model;
         }
 
@@ -1096,23 +1095,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var pageList = subscriptions.Select(subscription =>
+            var model = await new CustomerBackInStockSubscriptionListModel().PrepareToGridAsync(searchModel, subscriptions, () =>
             {
-                //fill in model values from the entity
-                var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
+                return subscriptions.ToAsyncEnumerable().SelectAwait(async subscription =>
+                {
+                    //fill in model values from the entity
+                    var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
 
-                //convert dates to the user time
-                subscriptionModel.CreatedOn =
-                    _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
+                    //convert dates to the user time
+                    subscriptionModel.CreatedOn =
+                        _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
 
-                //fill in additional values (not existing in the entity)
-                subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId).Result?.Name ?? "Unknown";
-                subscriptionModel.ProductName = _productService.GetProductById(subscription.ProductId).Result?.Name ?? "Unknown";
+                    //fill in additional values (not existing in the entity)
+                    subscriptionModel.StoreName = (await _storeService.GetStoreById(subscription.StoreId))?.Name ?? "Unknown";
+                    subscriptionModel.ProductName = (await _productService.GetProductById(subscription.ProductId))?.Name ?? "Unknown";
 
-                return subscriptionModel;
-            }).ToList().ToPagedList(searchModel);
-
-            var model = new CustomerBackInStockSubscriptionListModel().PrepareToGrid(searchModel, pageList, () => pageList);
+                    return subscriptionModel;
+                });
+            });
 
             return model;
         }

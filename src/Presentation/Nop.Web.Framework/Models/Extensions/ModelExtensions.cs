@@ -24,6 +24,19 @@ namespace Nop.Web.Framework.Models.Extensions
         }
 
         /// <summary>
+        /// Convert async-enumerable sequence to paged list according to paging request
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="collection">Async-enumerable sequence of objects</param>
+        /// <param name="pagingRequestModel">Paging request model</param>
+        /// <returns>Paged list</returns>
+        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IAsyncEnumerable<T> collection, IPagingRequestModel pagingRequestModel)
+        {
+            var list = await collection.ToListAsync();
+            return list.ToPagedList(pagingRequestModel);
+        }
+
+        /// <summary>
         /// Prepare passed list model to display in a grid
         /// </summary>
         /// <typeparam name="TListModel">List model type</typeparam>
