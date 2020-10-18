@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Data;
@@ -63,7 +62,7 @@ namespace Nop.Services.Common
                         where st.Keyword == keyword && st.StoreId == storeId
                         orderby st.Id
                         select st;
-            var searchTerm = await query.FirstOrDefaultAsync();
+            var searchTerm = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return searchTerm;
         }

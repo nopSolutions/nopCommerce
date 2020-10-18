@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Polls;
@@ -216,7 +215,7 @@ namespace Nop.Services.Polls
             var result = await (from pa in _pollAnswerRepository.Table
                           join pvr in _pollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
                           where pa.PollId == pollId && pvr.CustomerId == customerId
-                          select pvr).AnyAsync();
+                          select pvr).ToAsyncEnumerable().AnyAsync();
             return result;
         }
 

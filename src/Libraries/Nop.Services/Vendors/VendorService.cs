@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
@@ -62,7 +61,7 @@ namespace Nop.Services.Vendors
             return await (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where p.Id == productId
-                    select v).FirstOrDefaultAsync();
+                    select v).ToAsyncEnumerable().FirstOrDefaultAsync();
         }
 
         /// <summary>

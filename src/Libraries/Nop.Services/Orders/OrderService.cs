@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -93,7 +92,9 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(customOrderNumber))
                 return null;
 
-            return await _orderRepository.Table.FirstOrDefaultAsync(o => o.CustomOrderNumber == customOrderNumber);
+            return await _orderRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(o => o.CustomOrderNumber == customOrderNumber);
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace Nop.Services.Orders
             return await (from o in _orderRepository.Table
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.Id == orderItemId
-                    select o).FirstOrDefaultAsync();
+                    select o).ToAsyncEnumerable().FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Nop.Services.Orders
             var query = from o in _orderRepository.Table
                         where o.OrderGuid == orderGuid
                         select o;
-            var order = await query.FirstOrDefaultAsync();
+            var order = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return order;
         }
@@ -300,7 +301,7 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
             query = query.OrderByDescending(o => o.CreatedOnUtc);
-            var order = await query.FirstOrDefaultAsync();
+            var order = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return order;
         }
@@ -445,7 +446,7 @@ namespace Nop.Services.Orders
             return await (from p in _productRepository.Table
                     join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
                     where oi.Id == orderItemId
-                    select p).SingleOrDefaultAsync();
+                    select p).ToAsyncEnumerable().SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -468,7 +469,7 @@ namespace Nop.Services.Orders
                     (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
                     (!isNotReturnable.HasValue || (p.NotReturnable == isNotReturnable)) &&
                     (vendorId <= 0 || (p.VendorId == vendorId))
-                    select oi).ToListAsync();
+                    select oi).ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -484,7 +485,7 @@ namespace Nop.Services.Orders
             var query = from orderItem in _orderItemRepository.Table
                         where orderItem.OrderItemGuid == orderItemGuid
                         select orderItem;
-            var item = await query.FirstOrDefaultAsync();
+            var item = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
             return item;
         }
 
@@ -507,7 +508,7 @@ namespace Nop.Services.Orders
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;
 
-            var orderItems = await query.ToListAsync();
+            var orderItems = await query.ToAsyncEnumerable().ToListAsync();
             return orderItems;
         }
 
@@ -792,7 +793,7 @@ namespace Nop.Services.Orders
                 query = query.Where(on => on.DisplayToCustomer == displayToCustomer);
             }
 
-            return await query.ToListAsync();
+            return await query.ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -932,7 +933,10 @@ namespace Nop.Services.Orders
             if (recurringPayment is null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            return await _recurringPaymentHistoryRepository.Table.Where(rph => rph.RecurringPaymentId == recurringPayment.Id).ToListAsync();
+            return await _recurringPaymentHistoryRepository.Table
+                .Where(rph => rph.RecurringPaymentId == recurringPayment.Id)
+                .ToAsyncEnumerable()
+                .ToListAsync();
         }
 
         /// <summary>

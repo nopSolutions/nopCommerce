@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
@@ -111,7 +110,9 @@ namespace Nop.Services.Messages
                 //get message templates with the passed name
                 var templates = await _messageTemplateRepository.Table
                     .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName))
-                    .OrderBy(messageTemplate => messageTemplate.Id).ToListAsync();
+                    .OrderBy(messageTemplate => messageTemplate.Id)
+                    .ToAsyncEnumerable()
+                    .ToListAsync();
 
                 //filter by the store
                 if (storeId.HasValue && storeId.Value > 0)

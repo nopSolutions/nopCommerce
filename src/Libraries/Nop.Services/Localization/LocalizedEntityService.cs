@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
@@ -58,7 +57,7 @@ namespace Nop.Services.Localization
                               lp.LocaleKeyGroup == localeKeyGroup
                         select lp;
 
-            var props = await query.ToListAsync();
+            var props = await query.ToAsyncEnumerable().ToListAsync();
 
             return props;
         }

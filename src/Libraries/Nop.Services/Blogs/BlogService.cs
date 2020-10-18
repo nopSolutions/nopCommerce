@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -357,7 +356,7 @@ namespace Nop.Services.Blogs
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
             
-            return await _staticCacheManager.Get(cacheKey, () => query.CountAsync());
+            return await _staticCacheManager.Get(cacheKey, async () => await query.ToAsyncEnumerable().CountAsync());
         }
 
         /// <summary>

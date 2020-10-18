@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -320,7 +319,7 @@ namespace Nop.Services.Authentication.External
 
             var associationRecords = _externalAuthenticationRecordRepository.Table.Where(ear => ear.CustomerId == customer.Id);
 
-            return await associationRecords.ToListAsync();
+            return await associationRecords.ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -332,7 +331,7 @@ namespace Nop.Services.Authentication.External
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            var associationRecord = await _externalAuthenticationRecordRepository.Table.FirstOrDefaultAsync(record =>
+            var associationRecord = await _externalAuthenticationRecordRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
 
             if (associationRecord != null)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -103,7 +102,7 @@ namespace Nop.Services.Topics
                 if (!showHidden)
                     query = query.Where(c => c.Published);
                 query = query.OrderBy(t => t.Id);
-                var topics = await query.ToListAsync();
+                var topics = await query.ToAsyncEnumerable().ToListAsync();
                 if (storeId > 0)
                 {
                     //filter by store

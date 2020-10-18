@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using LinqToDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -274,7 +273,7 @@ namespace Nop.Services.Orders
         public virtual async Task DeleteShoppingCartItem(int shoppingCartItemId, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
-            var shoppingCartItem = await _sciRepository.Table.FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
+            var shoppingCartItem = await _sciRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
             if (shoppingCartItem != null)
                 await DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
         }
@@ -290,7 +289,7 @@ namespace Nop.Services.Orders
                         where sci.UpdatedOnUtc < olderThanUtc
                         select sci;
 
-            var cartItems = await query.ToListAsync();
+            var cartItems = await query.ToAsyncEnumerable().ToListAsync();
             
             foreach (var cartItem in cartItems)
                 await DeleteShoppingCartItem(cartItem);
@@ -698,7 +697,7 @@ namespace Nop.Services.Orders
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
-            return await _staticCacheManager.Get(key, async () => await items.ToListAsync());
+            return await _staticCacheManager.Get(key, async () => await items.ToAsyncEnumerable().ToListAsync());
         }
 
         /// <summary>

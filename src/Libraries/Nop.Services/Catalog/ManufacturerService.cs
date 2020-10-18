@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -463,7 +462,9 @@ namespace Nop.Services.Catalog
             var query = _productManufacturerRepository.Table;
 
             return (await query.Where(p => productIds.Contains(p.ProductId))
-                .Select(p => new { p.ProductId, p.ManufacturerId }).ToListAsync())
+                .Select(p => new { p.ProductId, p.ManufacturerId })
+                .ToAsyncEnumerable()
+                .ToListAsync())
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
         }
@@ -489,7 +490,10 @@ namespace Nop.Services.Catalog
                 return queryFilter.ToArray();
 
             //filtering by IDs
-            filter = await query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToListAsync();
+            filter = await query.Select(c => c.Id.ToString())
+                .Where(c => queryFilter.Contains(c))
+                .ToAsyncEnumerable()
+                .ToListAsync();
 
             return queryFilter.Except(filter).ToArray();
         }
@@ -518,7 +522,9 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public async Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturer(int manufacturerId, int discountId)
         {
-            return await _discountManufacturerMappingRepository.Table.FirstOrDefaultAsync(dcm => dcm.EntityId == manufacturerId && dcm.DiscountId == discountId);
+            return await _discountManufacturerMappingRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(dcm => dcm.EntityId == manufacturerId && dcm.DiscountId == discountId);
         }
 
         /// <summary>

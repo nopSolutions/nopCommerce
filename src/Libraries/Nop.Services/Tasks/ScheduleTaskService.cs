@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core.Domain.Tasks;
 using Nop.Data;
 
@@ -63,7 +62,7 @@ namespace Nop.Services.Tasks
             query = query.Where(st => st.Type == type);
             query = query.OrderByDescending(t => t.Id);
 
-            var task = await query.FirstOrDefaultAsync();
+            var task = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return task;
         }

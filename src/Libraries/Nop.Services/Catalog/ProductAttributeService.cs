@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -140,7 +139,10 @@ namespace Nop.Services.Catalog
 
             var query = _productAttributeRepository.Table;
             var queryFilter = attributeId.Distinct().ToArray();
-            var filter = await query.Select(a => a.Id).Where(m => queryFilter.Contains(m)).ToListAsync();
+            var filter = await query.Select(a => a.Id)
+                .Where(m => queryFilter.Contains(m))
+                .ToAsyncEnumerable()
+                .ToListAsync();
             
             return queryFilter.Except(filter).ToArray();
         }
@@ -384,7 +386,7 @@ namespace Nop.Services.Catalog
                         orderby pac.Id
                         where pac.Sku == sku
                         select pac;
-            var combination = await query.FirstOrDefaultAsync();
+            var combination = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return combination;
         }

@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -192,7 +191,7 @@ namespace Nop.Services.Localization
                         where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
                         select lsr;
 
-            var localeStringResource = await query.FirstOrDefaultAsync();
+            var localeStringResource = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             if (localeStringResource == null && logIfNotFound)
                 await _logger.Warning($"Resource string ({resourceName}) not found. Language ID = {languageId}");

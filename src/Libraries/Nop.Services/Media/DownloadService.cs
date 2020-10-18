@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
@@ -55,7 +54,7 @@ namespace Nop.Services.Media
                         where o.DownloadGuid == downloadGuid
                         select o;
 
-            return await query.FirstOrDefaultAsync();
+            return await query.ToAsyncEnumerable().FirstOrDefaultAsync();
         }
 
         /// <summary>

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
@@ -191,10 +190,13 @@ namespace Nop.Services.Installation
 
         protected virtual async Task<int> GetSpecificationAttributeOptionId(string specAttributeName, string specAttributeOptionName)
         {
-            var specificationAttribute = await _specificationAttributeRepository.Table.SingleAsync(sa => sa.Name == specAttributeName);
+            var specificationAttribute = await _specificationAttributeRepository.Table
+                .ToAsyncEnumerable()
+                .SingleAsync(sa => sa.Name == specAttributeName);
 
-            var specificationAttributeOption = await _specificationAttributeOptionRepository.Table.SingleAsync(sao =>
-                sao.Name == specAttributeOptionName && sao.SpecificationAttributeId == specificationAttribute.Id);
+            var specificationAttributeOption = await _specificationAttributeOptionRepository.Table
+                .ToAsyncEnumerable()
+                .SingleAsync(sao => sao.Name == specAttributeOptionName && sao.SpecificationAttributeId == specificationAttribute.Id);
 
             return specificationAttributeOption.Id;
         }
@@ -262,7 +264,7 @@ namespace Nop.Services.Installation
                 var query = from ur in _urlRecordRepository.Table
                             where tempSeName != null && ur.Slug == tempSeName
                             select ur;
-                var urlRecord = await query.FirstOrDefaultAsync();
+                var urlRecord = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
                 var entityName = entity.GetType().Name;
                 var reserved = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
@@ -4089,14 +4091,15 @@ namespace Nop.Services.Installation
 
         protected virtual async Task InstallSampleCustomers()
         {
-            var crRegistered = await _customerRoleRepository.Table.FirstOrDefaultAsync(customerRole =>
-                customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
+            var crRegistered = await _customerRoleRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(customerRole => customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
             if (crRegistered == null)
                 throw new ArgumentNullException(nameof(crRegistered));
 
             //default store 
-            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
+            var defaultStore = await _storeRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
@@ -4398,8 +4401,8 @@ namespace Nop.Services.Installation
                     Address1 = "201 1st Avenue South",
                     Address2 = string.Empty,
                     City = "Saskatoon",
-                    StateProvinceId = (await _stateProvinceRepository.Table.FirstOrDefaultAsync(sp => sp.Name == "Saskatchewan"))?.Id,
-                    CountryId = (await _countryRepository.Table.FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "CAN"))?.Id,
+                    StateProvinceId = (await _stateProvinceRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync(sp => sp.Name == "Saskatchewan"))?.Id,
+                    CountryId = (await _countryRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync(c => c.ThreeLetterIsoCode == "CAN"))?.Id,
                     ZipPostalCode = "S7K 1J9",
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -4492,7 +4495,7 @@ namespace Nop.Services.Installation
             await InsertInstallationData(customerRoles);
 
             //default store 
-            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
+            var defaultStore = await _storeRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
@@ -4630,12 +4633,12 @@ namespace Nop.Services.Installation
             }
 
             //default store
-            var defaultStore = await _storeRepository.Table.FirstOrDefaultAsync();
+            var defaultStore = await _storeRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync();
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
             //first order
-            var firstCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "steve_gates@nopCommerce.com");
+            var firstCustomer = await _customerRepository.Table.ToAsyncEnumerable().FirstAsync(c => c.Email == "steve_gates@nopCommerce.com");
             
             var firstCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(firstCustomer.BillingAddressId)));
             var firstCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(firstCustomer.ShippingAddressId)));
@@ -4811,7 +4814,7 @@ namespace Nop.Services.Installation
             });
 
             //second order
-            var secondCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "arthur_holmes@nopCommerce.com");
+            var secondCustomer = await _customerRepository.Table.ToAsyncEnumerable().FirstAsync(c => c.Email == "arthur_holmes@nopCommerce.com");
 
             var secondCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(secondCustomer.BillingAddressId)));
             var secondCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(secondCustomer.ShippingAddressId)));
@@ -4936,7 +4939,7 @@ namespace Nop.Services.Installation
             await InsertInstallationData(secondOrderItem2);
 
             //third order
-            var thirdCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "james_pan@nopCommerce.com");
+            var thirdCustomer = await _customerRepository.Table.ToAsyncEnumerable().FirstAsync(c => c.Email == "james_pan@nopCommerce.com");
 
             var thirdCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
@@ -4945,7 +4948,7 @@ namespace Nop.Services.Installation
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
                 CustomerId = thirdCustomer.Id,
-                CustomerLanguageId = (await _languageRepository.Table.FirstAsync()).Id,
+                CustomerLanguageId = (await _languageRepository.Table.ToAsyncEnumerable().FirstAsync()).Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 8.80M,
                 OrderSubtotalExclTax = 8.80M,
@@ -5085,7 +5088,7 @@ namespace Nop.Services.Installation
             await InsertInstallationData(thirdOrderItem3);
 
             //fourth order
-            var fourthCustomer = await _customerRepository.Table.FirstAsync(c => c.Email == "brenda_lindgren@nopCommerce.com");
+            var fourthCustomer = await _customerRepository.Table.ToAsyncEnumerable().FirstAsync(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
             var fourthCustomerBillingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fourthCustomer.BillingAddressId)));
             var fourthCustomerShippingAddress = await InsertInstallationData(cloneAddress(await _addressRepository.GetById(fourthCustomer.ShippingAddressId)));
