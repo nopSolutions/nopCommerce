@@ -96,7 +96,7 @@ namespace Nop.Services.Tests.ExportImport
         }
 
         #endregion
-        
+
         #region Utilities
 
         protected static T PropertiesShouldEqual<T, Tp>(T actual, PropertyManager<Tp> manager, IDictionary<string, string> replacePairs, params string[] filter)
@@ -116,19 +116,19 @@ namespace Nop.Services.Tests.ExportImport
 
                 var objectPropertyValue = objectProperty.GetValue(actual);
 
-                if (objectProperty.PropertyType == typeof(Guid)) 
+                if (objectProperty.PropertyType == typeof(Guid))
                     objectPropertyValue = objectPropertyValue.ToString();
 
                 if (objectProperty.PropertyType == typeof(string))
                     objectPropertyValue = (property.PropertyValue?.ToString() == string.Empty && objectPropertyValue == null) ? string.Empty : objectPropertyValue;
 
-                if (objectProperty.PropertyType.IsEnum) 
+                if (objectProperty.PropertyType.IsEnum)
                     objectPropertyValue = (int)objectPropertyValue;
 
-                if (objectProperty.PropertyType == typeof(DateTime)) 
+                if (objectProperty.PropertyType == typeof(DateTime))
                     objectPropertyValue = ((DateTime)objectPropertyValue).ToOADate();
 
-                if (objectProperty.PropertyType == typeof(DateTime?)) 
+                if (objectProperty.PropertyType == typeof(DateTime?))
                     objectPropertyValue = ((DateTime?)objectPropertyValue)?.ToOADate();
 
                 property.PropertyValue.Should().Be(objectPropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
@@ -173,7 +173,7 @@ namespace Nop.Services.Tests.ExportImport
 
             return obj;
         }
-        
+
         #endregion
 
         #region Test export to excel
@@ -192,9 +192,6 @@ namespace Nop.Services.Tests.ExportImport
             var replacePairs = new Dictionary<string, string>
                 {
                     { "OrderId", "Id" },
-                    { "OrderStatusId", "OrderStatus" },
-                    { "PaymentStatusId", "PaymentStatus" },
-                    { "ShippingStatusId", "ShippingStatus" },
                     { "ShippingPickupInStore", "PickupInStore" }
                 };
 
@@ -213,18 +210,23 @@ namespace Nop.Services.Tests.ExportImport
                 "AuthorizationTransactionId", "AuthorizationTransactionCode", "AuthorizationTransactionResult",
                 "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
                 "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
-                "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus ",
+                "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus",
                 "CustomerTaxDisplayType", "CustomOrderNumber"
             });
 
             //fields tested individually
             ignore.AddRange(new[]
             {
-               "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey"
+               "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey",
+               "OrderStatusId", "PaymentStatusId", "ShippingStatusId"
             });
 
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
-            PropertiesShouldEqual(order, manager, replacePairs);
+            PropertiesShouldEqual(order, manager, replacePairs, "OrderStatus", "PaymentStatus", "ShippingStatus");
+
+            manager.GetProperties.First(x => x.PropertyName == "OrderStatus").PropertyValue.Should().Be(order.OrderStatus.ToString());
+            manager.GetProperties.First(x => x.PropertyName == "PaymentStatus").PropertyValue.Should().Be(order.PaymentStatus.ToString());
+            manager.GetProperties.First(x => x.PropertyName == "ShippingStatus").PropertyValue.Should().Be(order.ShippingStatus.ToString());
 
             var addressFields = new List<string>
             {
@@ -248,8 +250,8 @@ namespace Nop.Services.Tests.ExportImport
 
             var testBillingAddress = _addressService.GetAddressById(order.BillingAddressId);
 
-            PropertiesShouldEqual(testBillingAddress, manager, replacePairs, "CreatedOnUtc", "BillingCountry"); 
-            
+            PropertiesShouldEqual(testBillingAddress, manager, replacePairs, "CreatedOnUtc", "BillingCountry");
+
             manager.GetProperties.First(p => p.PropertyName == "BillingCountry").PropertyValue.Should().Be(_countryService.GetCountryByAddress(testBillingAddress).Name);
 
             const string shippingPattern = "Shipping";
@@ -346,7 +348,7 @@ namespace Nop.Services.Tests.ExportImport
                 { "RecurringCyclePeriod", "RecurringCyclePeriodId" },
                 { "RentalPricePeriod", "RentalPricePeriodId" }
             };
-            
+
             var ignore = new List<string> { "Categories", "Manufacturers", "AdminComment",
                 "ProductType", "BackorderMode", "DownloadActivationType", "GiftCardType", "LowStockActivity",
                 "ManageInventoryMethod", "RecurringCyclePeriod", "RentalPricePeriod", "ProductCategories",
