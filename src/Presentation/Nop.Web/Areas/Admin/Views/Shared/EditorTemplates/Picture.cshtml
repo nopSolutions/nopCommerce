@@ -24,7 +24,7 @@
 <div class="upload-picture-block">
     <div class="picture-container">
         <div id="@(clientId + "image")" class="uploaded-image">
-            <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))"/>
+            <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))" />
         </div>
     </div>
     <div class="upload-button-container">
@@ -85,7 +85,10 @@
                 endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
             },
             template: "@(clientId)-qq-template",
-            multiple: false
+            multiple: false,
+            validation: {
+                allowedExtensions: [ "bmp", "gif", "jpeg", "jpg", "jpe", "jfif", "pjpeg", "pjp", "png", "tiff", "tif"]
+            }
         }).on("complete", function(event, id, name, responseJSON, xhr) {
             if (responseJSON.success) {
                 $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");
