@@ -2305,6 +2305,9 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
+            //force sending
+            messageTemplate.DelayBeforeSend = null;
+
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
         }
 
