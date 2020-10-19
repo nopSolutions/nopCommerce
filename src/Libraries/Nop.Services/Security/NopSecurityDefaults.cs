@@ -45,6 +45,23 @@ namespace Nop.Services.Security
         /// </remarks>
         public static CacheKey AclRecordCacheKey => new CacheKey("Nop.aclrecord.{0}-{1}");
 
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity name
+        /// {1} : customer role IDs
+        /// </remarks>
+        public static CacheKey EntityAclRecordExistsCacheKey => new CacheKey("Nop.aclrecord.exists.{0}-{1}", EntityAclRecordExistsPrefix);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity name
+        /// </remarks>
+        public static string EntityAclRecordExistsPrefix => "Nop.aclrecord.exists.{0}";
+
         #endregion
 
         #region Permissions

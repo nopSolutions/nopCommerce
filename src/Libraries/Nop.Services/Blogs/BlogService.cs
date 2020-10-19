@@ -5,8 +5,8 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Blogs
 {
@@ -20,8 +20,8 @@ namespace Nop.Services.Blogs
         private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IStoreMappingService _storeMappingService;
         
         #endregion
 
@@ -30,14 +30,14 @@ namespace Nop.Services.Blogs
         public BlogService(CatalogSettings catalogSettings,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogPost> blogPostRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            IStaticCacheManager staticCacheManager)
+            IStaticCacheManager staticCacheManager,
+            IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
             _blogCommentRepository = blogCommentRepository;
             _blogPostRepository = blogPostRepository;
-            _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -97,18 +97,10 @@ namespace Nop.Services.Blogs
                     query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
                 }
 
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                //Store mapping
+                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<BlogPost>(storeId))
                 {
-                    //Store mapping
-                    query = from bp in query
-                        join sm in _storeMappingRepository.Table
-                            on new {c1 = bp.Id, c2 = nameof(BlogPost)} equals new {c1 = sm.EntityId, c2 = sm.EntityName}
-                            into bp_sm
-                        from sm in bp_sm.DefaultIfEmpty()
-                        where !bp.LimitedToStores || storeId == sm.StoreId
-                        select bp;
-
-                    query = query.Distinct();
+                    query = query.Where(_storeMappingService.ApplyStoreMapping<BlogPost>(storeId));
                 }
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);

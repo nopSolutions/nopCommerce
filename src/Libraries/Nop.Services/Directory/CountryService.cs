@@ -5,9 +5,9 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Directory
 {
@@ -22,8 +22,8 @@ namespace Nop.Services.Directory
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -33,15 +33,15 @@ namespace Nop.Services.Directory
             IStaticCacheManager staticCacheManager,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
             _staticCacheManager = staticCacheManager;
             _localizationService = localizationService;
             _countryRepository = countryRepository;
-            _storeMappingRepository = storeMappingRepository;
             _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -75,21 +75,13 @@ namespace Nop.Services.Directory
                     if (!showHidden)
                         query = query.Where(c => c.Published);
 
-                    if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
-                    {
-                        //Store mapping
-                        var currentStoreId = _storeContext.CurrentStore.Id;
-                        query = from c in query
-                            join sc in _storeMappingRepository.Table
-                                on new {c1 = c.Id, c2 = nameof(Country)} equals new
-                                {
-                                    c1 = sc.EntityId, c2 = sc.EntityName
-                                } into c_sc
-                            from sc in c_sc.DefaultIfEmpty()
-                            where !c.LimitedToStores || currentStoreId == sc.StoreId
-                            select c;
+                    //Store mapping
+                    //TODO: Are we need apply store mapping when showHidden is false?
+                    var storeId = _storeContext.CurrentStore.Id;
 
-                        query = query.Distinct();
+                    if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Country>(storeId))
+                    {
+                        query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
                     }
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);

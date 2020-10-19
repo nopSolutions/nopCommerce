@@ -32,10 +32,7 @@ namespace Nop.Core
             if (getOnlyTotalCount)
                 return;
 
-            if (source.AsQueryable().ElementType.BaseType == typeof(BaseEntity))
-                AddRange(source.Where(x => ((BaseEntity)(object)x).Id > pageIndex * pageSize).Take(pageSize).ToList());
-            else
-                AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+            AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
         /// <summary>

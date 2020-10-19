@@ -10,12 +10,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.DataProviders.SQL;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -41,7 +38,6 @@ namespace Nop.Services.Catalog
         protected readonly ILocalizationService _localizationService;
         protected readonly IProductAttributeParser _productAttributeParser;
         protected readonly IProductAttributeService _productAttributeService;
-        protected readonly IRepository<AclRecord> _aclRepository;
         protected readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         protected readonly IRepository<DiscountProductMapping> _discountProductMappingRepository;
         protected readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
@@ -60,7 +56,6 @@ namespace Nop.Services.Catalog
         protected readonly IRepository<RelatedProduct> _relatedProductRepository;
         protected readonly IRepository<Shipment> _shipmentRepository;
         protected readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
-        protected readonly IRepository<StoreMapping> _storeMappingRepository;
         protected readonly IRepository<TierPrice> _tierPriceRepository;
         protected readonly IRepository<Warehouse> _warehouseRepository;
         protected readonly IStaticCacheManager _staticCacheManager;
@@ -82,7 +77,6 @@ namespace Nop.Services.Catalog
             ILocalizationService localizationService,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
-            IRepository<AclRecord> aclRepository,
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<DiscountProductMapping> discountProductMappingRepository,
             IRepository<LocalizedProperty> localizedPropertyRepository,
@@ -101,7 +95,6 @@ namespace Nop.Services.Catalog
             IRepository<RelatedProduct> relatedProductRepository,
             IRepository<Shipment> shipmentRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
-            IRepository<StoreMapping> storeMappingRepository,
             IRepository<TierPrice> tierPriceRepository,
             IRepository<Warehouse> warehouseRepository,
             IStaticCacheManager staticCacheManager,
@@ -119,7 +112,6 @@ namespace Nop.Services.Catalog
             _localizationService = localizationService;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
-            _aclRepository = aclRepository;
             _crossSellProductRepository = crossSellProductRepository;
             _discountProductMappingRepository = discountProductMappingRepository;
             _localizedPropertyRepository = localizedPropertyRepository;
@@ -138,7 +130,6 @@ namespace Nop.Services.Catalog
             _relatedProductRepository = relatedProductRepository;
             _shipmentRepository = shipmentRepository;
             _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
-            _storeMappingRepository = storeMappingRepository;
             _tierPriceRepository = tierPriceRepository;
             _warehouseRepository = warehouseRepository;
             _staticCacheManager = staticCacheManager;
@@ -332,6 +323,31 @@ namespace Nop.Services.Catalog
             return stockMessage;
         }
 
+        /// <summary>
+        /// Filter hidden entries according to constraints if any
+        /// </summary>
+        /// <param name="query">Query to filter</param>
+        /// <param name="storeId">A store identifier</param>
+        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <returns>Filtered query</returns>
+        /// TODO: Make generic method for all entities
+        protected virtual IQueryable<TEntity> FilterHiddenEntries<TEntity>(IQueryable<TEntity> query, int storeId, int[] customerRoleIds)
+            where TEntity : Product
+        {
+            //filter unpublished entries
+            query = query.Where(entry => entry.Published);
+
+            //apply store mapping constraints
+            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<TEntity>(storeId))
+                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
+
+            //apply ACL constraints
+            if (!_catalogSettings.IgnoreAcl && _aclService.IsEntityAclMappingExist<TEntity>(customerRoleIds))
+                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRoleIds));
+
+            return query;
+        }
+
         #endregion
 
         #region Methods
@@ -436,15 +452,21 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, storeId);
-            var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
-                featuredProducts = (from p in _productRepository.Table
-                                    join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                                    where !p.Deleted && p.Published && p.VisibleIndividually && pc.IsFeaturedProduct && categoryId == pc.CategoryId &&
-                                    (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                                    select p).ToList();
+                var query = from p in _productRepository.Table
+                            join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                            where !p.Deleted && p.Published && p.VisibleIndividually &&
+                                pc.IsFeaturedProduct && categoryId == pc.CategoryId
+                            select p;
+
+                if (!_catalogSettings.IgnoreStoreLimitations || _storeMappingService.IsEntityMappingExists<Product>(storeId))
+                {
+                    query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
+                }
+
+                featuredProducts = query.ToList();
 
                 return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
             });
@@ -479,13 +501,18 @@ namespace Nop.Services.Catalog
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
-                var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+                var query = from p in _productRepository.Table
+                            join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                            where !p.Deleted && p.Published && p.VisibleIndividually &&
+                                pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
+                            select p;
 
-                featuredProducts = (from p in _productRepository.Table
-                                    join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                                    where !p.Deleted && p.Published && p.VisibleIndividually && pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId &&
-                                    (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                                    select p).ToList();
+                if (!_catalogSettings.IgnoreStoreLimitations || _storeMappingService.IsEntityMappingExists<Product>(storeId))
+                {
+                    query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
+                }
+
+                featuredProducts = query.ToList();
 
                 return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
             });
@@ -515,8 +542,12 @@ namespace Nop.Services.Catalog
             if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
 
+            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+
             var query = _productRepository.Table;
-            query = query.Where(p => !p.Deleted && p.Published && p.VisibleIndividually);
+            query = FilterHiddenEntries(query, storeId, customerRolesIds);
+
+            query = query.Where(p => !p.Deleted && p.VisibleIndividually);
 
             //category filtering
             if (categoryIds != null && categoryIds.Any())
@@ -527,34 +558,12 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            var allowedCustomerRolesIds = new List<int>();
-
-            if (!_catalogSettings.IgnoreAcl)
-            {
-                //Access control list. Allowed customer roles
-                allowedCustomerRolesIds.AddRange(_customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
-
-                query = from p in query
-                        join acl in _aclRepository.Table
-                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
-                        from acl in p_acl.DefaultIfEmpty()
-                        where !p.SubjectToAcl || allowedCustomerRolesIds.ToArray().Contains(acl.CustomerRoleId)
-                        select p;
-            }
-            else
-            {
-                allowedCustomerRolesIds.Add(0);
-            }
-
-            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
-                query = query.Where(p => p.LimitedToStores(_storeMappingRepository.Table, storeId));
-
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey,
-                allowedCustomerRolesIds, storeId, categoryIds);
+                customerRolesIds, storeId, categoryIds);
 
             //only distinct products
-            var result = _staticCacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());
-            
+            var result = _staticCacheManager.Get(cacheKey, () => query.Select(p => p.Id).Count());
+
             return result;
         }
 
@@ -565,25 +574,19 @@ namespace Nop.Services.Catalog
         /// <returns>List of new products</returns>
         public virtual IList<Product> GetProductsMarkedAsNew(int storeId = 0)
         {
-            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-            var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+            return _productRepository.GetAll(query =>
+            {
+                query = FilterHiddenEntries(query, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
-            var query = from p in _productRepository.Table
+                query = from p in query
                         where p.VisibleIndividually && p.MarkAsNew && !p.Deleted && p.Published &&
-                        Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue) &&
-                        (
-                            (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                            (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                        )
+                        Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
                         select p;
 
-            query = query
-                .Take(_catalogSettings.NewProductsNumber)
-                .OrderBy(ProductSortingEnum.CreatedOn);
-
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsMarkedAsNewCacheKey);
-
-            return _staticCacheManager.Get(cacheKey, query.ToList);
+                return query
+                    .Take(_catalogSettings.NewProductsNumber)
+                    .OrderBy(ProductSortingEnum.CreatedOn);
+            });
         }
 
         /// <summary>
@@ -743,26 +746,26 @@ namespace Nop.Services.Catalog
             if (pageSize == int.MaxValue)
                 pageSize = int.MaxValue - 1;
 
-            var productsQuery =
-                from p in _productRepository.Table
-                where !p.Deleted &&
-                    (vendorId == 0 || p.VendorId == vendorId) &&
-                    (
-                        warehouseId == 0 ||
-                        (
-                            !p.UseMultipleWarehouses ? p.WarehouseId == warehouseId :
-                                _productWarehouseInventoryRepository.Table.Any(pwi => pwi.Id == warehouseId && pwi.ProductId == p.Id)
-                        )
-                    ) &&
-                    (productType == null || p.ProductTypeId == (int)productType) &&
-                    (showHidden == false || Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
-                    (priceMin == null || p.Price >= priceMin) &&
-                    (priceMax == null || p.Price <= priceMax)
-                select p;
+            var productsQuery = _productRepository.Table;
 
-            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
-                productsQuery = productsQuery.Where(p => p.LimitedToStores(_storeMappingRepository.Table, storeId));
+            if (!showHidden)
+                productsQuery = FilterHiddenEntries(productsQuery, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
+            productsQuery = from p in productsQuery
+                            where !p.Deleted &&
+                                (vendorId == 0 || p.VendorId == vendorId) &&
+                                (
+                                    warehouseId == 0 ||
+                                    (
+                                        !p.UseMultipleWarehouses ? p.WarehouseId == warehouseId :
+                                            _productWarehouseInventoryRepository.Table.Any(pwi => pwi.Id == warehouseId && pwi.ProductId == p.Id)
+                                    )
+                                ) &&
+                                (productType == null || p.ProductTypeId == (int)productType) &&
+                                (showHidden == false || Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
+                                (priceMin == null || p.Price >= priceMin) &&
+                                (priceMax == null || p.Price <= priceMax)
+                            select p;
 
             if (!overridePublished.HasValue && !showHidden)
             {
@@ -776,18 +779,6 @@ namespace Nop.Services.Catalog
                                 where p.Published == overridePublished
                                 select p;
             }
-
-            if (!showHidden)
-            {
-                //Access control list. Allowed customer roles
-                var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-
-                productsQuery = from p in productsQuery
-                                where !p.SubjectToAcl || allowedCustomerRolesIds == null ||
-                                    (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, allowedCustomerRolesIds))
-                                select p;
-            }
-
 
             if (!string.IsNullOrEmpty(keywords))
             {
@@ -873,9 +864,10 @@ namespace Nop.Services.Catalog
             if (filteredSpecs?.Count > 0)
             {
                 productsQuery = from p in productsQuery
-                                where _productSpecificationAttributeRepository.Table
-                                    .Any(psa => filteredSpecs.Contains(psa.SpecificationAttributeOptionId))
-                                select p;
+                                join psm in _productSpecificationAttributeRepository.Table.Where(psa => filteredSpecs.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
+                                group p by p into groupedProduct
+                                where groupedProduct.Count() == filteredSpecs.Count
+                                select groupedProduct.Key;
             }
 
             filterableSpecificationAttributeOptionIds = new List<int>();
@@ -884,7 +876,7 @@ namespace Nop.Services.Catalog
                 filterableSpecificationAttributeOptionIds =
                     (from psam in _productSpecificationAttributeRepository.Table
                      where psam.AllowFiltering && productsQuery.Any(p => p.Id == psam.ProductId)
-                     select psam.SpecificationAttributeOptionId).ToList();
+                     select psam.SpecificationAttributeOptionId).Distinct().ToList();
             }
 
             return new PagedList<Product>(productsQuery.OrderBy(orderBy), pageIndex, pageSize);
@@ -2178,6 +2170,13 @@ namespace Nop.Services.Catalog
         {
             var productReviews = _productReviewRepository.GetAllPaged(query =>
             {
+                if (!showHidden)
+                {
+                    var productsQuery = FilterHiddenEntries(_productRepository.Table,
+                        storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    query = query.Where(review => productsQuery.Any(product => product.Id == review.ProductId));
+                }
+
                 if (approved.HasValue)
                     query = query.Where(pr => pr.IsApproved == approved);
                 if (customerId > 0)
@@ -2200,15 +2199,6 @@ namespace Nop.Services.Catalog
                             //ignore deleted products
                             !product.Deleted
                         select productReview;
-
-                //filter by limited to store products
-                if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
-                {
-                    query = from productReview in query
-                            join product in _productRepository.Table on productReview.ProductId equals product.Id
-                            where product.LimitedToStores(_storeMappingRepository.Table, storeId)
-                            select productReview;
-                }
 
                 query = _catalogSettings.ProductReviewsSortByCreatedDateAscending
                     ? query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id)

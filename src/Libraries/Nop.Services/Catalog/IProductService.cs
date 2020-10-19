@@ -33,7 +33,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         IList<Product> GetAllProductsDisplayedOnHomepage();
-        
+
         /// <summary>
         /// Gets featured products by a category identifier
         /// </summary>

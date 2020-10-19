@@ -8,9 +8,9 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Helpers;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
 {
@@ -31,7 +31,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace Nop.Services.Orders
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
-            IRepository<StoreMapping> storeMappingRepository)
+            IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
             _dateTimeHelper = dateTimeHelper;
@@ -59,7 +59,7 @@ namespace Nop.Services.Orders
             _productCategoryRepository = productCategoryRepository;
             _productManufacturerRepository = productManufacturerRepository;
             _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            _storeMappingRepository = storeMappingRepository;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -613,14 +613,9 @@ namespace Nop.Services.Orders
                         select p;
             }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
             {
-                query = from p in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
-                        from sm in p_sm.DefaultIfEmpty()
-                        where !p.LimitedToStores || storeId == sm.StoreId
-                        select p;
+                query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
             }
 
             query = query.OrderBy(p => p.Name);

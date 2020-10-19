@@ -5,8 +5,8 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Stores;
 
 namespace Nop.Services.News
 {
@@ -20,8 +20,8 @@ namespace Nop.Services.News
         private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -30,14 +30,15 @@ namespace Nop.Services.News
         public NewsService(CatalogSettings catalogSettings,
             IRepository<NewsComment> newsCommentRepository,
             IRepository<NewsItem> newsItemRepository,
-            IRepository<StoreMapping> storeMappingRepository,
-            IStaticCacheManager staticCacheManager)
+            IStaticCacheManager staticCacheManager,
+            IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
             _newsCommentRepository = newsCommentRepository;
             _newsItemRepository = newsItemRepository;
-            _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
+            _storeMappingService = storeMappingService;
+            
         }
 
         #endregion
@@ -104,18 +105,11 @@ namespace Nop.Services.News
                     query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
                 }
 
-                //Store mapping
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                //Store mapping 
+                //TODO: Are we need apply store mapping when showHidden is false?
+                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<NewsItem>(storeId))
                 {
-                    query = from n in query
-                        join sm in _storeMappingRepository.Table
-                            on new {c1 = n.Id, c2 = nameof(NewsItem)} equals new {c1 = sm.EntityId, c2 = sm.EntityName}
-                            into n_sm
-                        from sm in n_sm.DefaultIfEmpty()
-                        where !n.LimitedToStores || storeId == sm.StoreId
-                        select n;
-
-                    query = query.Distinct();
+                    query = query.Where(_storeMappingService.ApplyStoreMapping<NewsItem>(storeId));
                 }
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);

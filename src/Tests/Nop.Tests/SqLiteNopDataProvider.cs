@@ -16,7 +16,6 @@ using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.DataProviders;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
 
@@ -151,10 +150,10 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        public int BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            DataContext.GetTable<TEntity>()
-                 .Where(predicate).Delete();
+            return DataContext.GetTable<TEntity>()
+                .Where(predicate).Delete();
         }
 
         /// <summary>

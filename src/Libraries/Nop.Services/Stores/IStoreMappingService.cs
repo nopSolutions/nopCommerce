@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
 
@@ -9,6 +11,14 @@ namespace Nop.Services.Stores
     /// </summary>
     public partial interface IStoreMappingService
     {
+        /// <summary>
+        /// Get an expression predicate to apply a store mapping
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <typeparam name="TEntity">Type of entity with supported store mapping</typeparam>
+        /// <returns>Lambda expression</returns>
+        Expression<Func<TEntity, bool>> ApplyStoreMapping<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
+
         /// <summary>
         /// Deletes a store mapping record
         /// </summary>

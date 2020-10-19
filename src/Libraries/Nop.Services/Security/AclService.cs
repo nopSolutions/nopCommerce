@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -44,6 +45,22 @@ namespace Nop.Services.Security
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Get an expression predicate to apply the ACL
+        /// </summary>
+        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <typeparam name="TEntity">Type of entity with supported the ACL</typeparam>
+        /// <returns>Lambda expression</returns>
+        public virtual Expression<Func<TEntity, bool>> ApplyAcl<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported
+        {
+            return (subjectEntity) => (from acl in _aclRecordRepository.Table
+                                       where !subjectEntity.SubjectToAcl ||
+                                           (acl.EntityId == subjectEntity.Id &&
+                                               acl.EntityName == typeof(TEntity).Name &&
+                                               customerRoleIds.Contains(acl.CustomerRoleId))
+                                       select acl.EntityId).Any();
+        }
 
         /// <summary>
         /// Deletes an ACL record
@@ -123,6 +140,28 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
+        /// Get a value indicating whether any ACL records exist for entity type are related to customer roles
+        /// </summary>
+        /// <param name="customerRoleIds">Customer's role identifiers</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>True if exist; otherwise false</returns>
+        public virtual bool IsEntityAclMappingExist<T>(int[] customerRoleIds) where T : BaseEntity, IAclSupported
+        {
+            if (!customerRoleIds.Any())
+                return false;
+
+            var entityName = typeof(T).Name;
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName, customerRoleIds);
+
+            var query = from acl in _aclRecordRepository.Table
+                        where acl.EntityName == entityName &&
+                              customerRoleIds.Contains(acl.CustomerRoleId)
+                        select acl;
+
+            return _staticCacheManager.Get(key, query.Any);
+        }
+
+        /// <summary>
         /// Updates the ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
@@ -148,9 +187,9 @@ namespace Nop.Services.Security
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
 
             var query = from ur in _aclRecordRepository.Table
-                where ur.EntityId == entityId &&
-                      ur.EntityName == entityName
-                select ur.CustomerRoleId;
+                        where ur.EntityId == entityId &&
+                              ur.EntityName == entityName
+                        select ur.CustomerRoleId;
 
             return _staticCacheManager.Get(key, query.ToArray);
         }

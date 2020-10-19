@@ -5,11 +5,9 @@ using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Data.DataProviders.SQL;
 using Nop.Services.Customers;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 
@@ -23,15 +21,13 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
-        protected readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
-        protected readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
-        protected readonly IStoreMappingService _storeMappingService;
-        protected readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
 
@@ -40,28 +36,24 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ProductTagService(CatalogSettings catalogSettings,
+            IAclService aclService,
             ICustomerService customerService,
-            IRepository<AclRecord> aclRepository,
             IRepository<Product> productRepository,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
-            IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService,
-            IStoreService storeService,
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
+            _aclService = aclService;
             _customerService = customerService;
-            _aclRepository = aclRepository;
             _productRepository = productRepository;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
-            _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
-            _storeService = storeService;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
         }
@@ -75,7 +67,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <param name="productTagId">Product tag identifier</param>
-        public virtual void DeleteProductProductTagMapping(int productId, int productTagId)
+        protected virtual void DeleteProductProductTagMapping(int productId, int productTagId)
         {
             var mappitngRecord = _productProductTagMappingRepository.Table.FirstOrDefault(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
 
@@ -86,32 +78,59 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Filter hidden entries according to constraints if any
+        /// </summary>
+        /// <param name="query">Query to filter</param>
+        /// <param name="storeId">A store identifier</param>
+        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <returns>Filtered query</returns>
+        /// TODO: Make generic method for all entities
+        protected virtual IQueryable<TEntity> FilterHiddenEntries<TEntity>(IQueryable<TEntity> query, int storeId, int[] customerRoleIds)
+            where TEntity : Product
+        {
+            //filter unpublished entries
+            query = query.Where(entry => entry.Published);
+
+            //apply store mapping constraints
+            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<TEntity>(storeId))
+                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
+
+            //apply ACL constraints
+            if (!_catalogSettings.IgnoreAcl && _aclService.IsEntityAclMappingExist<TEntity>(customerRoleIds))
+                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRoleIds));
+
+            return query;
+        }
+
+        /// <summary>
         /// Get product count for each of existing product tag
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
+        protected virtual Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
         {
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
-                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
-                showHidden);
+            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRolesIds, showHidden);
 
             return _staticCacheManager.Get(key, () =>
             {
-                var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
-                var skipStoreMapping = _catalogSettings.IgnoreStoreLimitations || !_storeMappingService.IsEntityMappingExists<Product>(storeId);
+                var query = _productProductTagMappingRepository.Table;
+
+                if (!showHidden)
+                {
+                    var productsQuery = FilterHiddenEntries(_productRepository.Table,
+                        storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
+                }
 
                 var pTagCount = from pt in _productTagRepository.Table
-                    from ptm in _productProductTagMappingRepository.Table.Where(m => m.ProductTagId == pt.Id).DefaultIfEmpty()
-                    from p in _productRepository.Table.Where(p => p.Id == ptm.ProductId).DefaultIfEmpty()
-                    where !p.Deleted && p.Published && 
-                        (
-                            (_catalogSettings.IgnoreAcl || p.SubjectToAcl(_aclRepository.Table, customerRolesIds)) &&
-                            (skipStoreMapping || p.LimitedToStores(_storeMappingRepository.Table, storeId))
-                        )
+                    join ptm in query on pt.Id equals ptm.ProductTagId into ptmDefaults
+                    from ptm in ptmDefaults.DefaultIfEmpty()
                     group pt by pt.Id into ptGrouped
-                    select new {
+                    select new
+                    {
                         ProductTagId = ptGrouped.Key,
                         ProductCount = ptGrouped.Count()
                     };
@@ -123,7 +142,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Delete a product tag
         /// </summary>
@@ -157,7 +176,7 @@ namespace Nop.Services.Catalog
         {
             var allProductTags = _productTagRepository.GetAll(getCacheKey: cache => default);
 
-            if (!string.IsNullOrEmpty(tagName)) 
+            if (!string.IsNullOrEmpty(tagName))
                 allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();
 
             return allProductTags;

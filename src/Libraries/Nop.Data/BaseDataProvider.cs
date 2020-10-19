@@ -12,7 +12,6 @@ using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Data.DataProviders;
 using Nop.Data.Mapping;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Data;

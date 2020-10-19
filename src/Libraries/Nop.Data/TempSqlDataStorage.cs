@@ -3,7 +3,7 @@ using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
 
-namespace Nop.Data.DataProviders
+namespace Nop.Data
 {
     /// <summary>
     /// Represents temporary storage

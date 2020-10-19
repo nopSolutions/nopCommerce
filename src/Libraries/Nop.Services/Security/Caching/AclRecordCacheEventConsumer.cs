@@ -15,6 +15,7 @@ namespace Nop.Services.Security.Caching
         protected override void ClearCache(AclRecord entity)
         {
             Remove(NopSecurityDefaults.AclRecordCacheKey, entity.EntityId, entity.EntityName);
+            RemoveByPrefix(NopSecurityDefaults.EntityAclRecordExistsPrefix, entity.EntityName);
         }
     }
 }

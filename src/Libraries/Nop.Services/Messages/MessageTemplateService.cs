@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -24,7 +23,6 @@ namespace Nop.Services.Messages
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreMappingService _storeMappingService;
 
         #endregion
@@ -37,7 +35,6 @@ namespace Nop.Services.Messages
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             IRepository<MessageTemplate> messageTemplateRepository,
-            IRepository<StoreMapping> storeMappingRepository,
             IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
@@ -46,7 +43,6 @@ namespace Nop.Services.Messages
             _localizationService = localizationService;
             _localizedEntityService = localizedEntityService;
             _messageTemplateRepository = messageTemplateRepository;
-            _storeMappingRepository = storeMappingRepository;
             _storeMappingService = storeMappingService;
         }
 
@@ -128,24 +124,12 @@ namespace Nop.Services.Messages
         {
             return _messageTemplateRepository.GetAll(query =>
             {
-                query = query.OrderBy(t => t.Name);
-
-                if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations)
-                    return query;
-
                 //store mapping
-                query = from t in query
-                    join sm in _storeMappingRepository.Table
-                        on new {c1 = t.Id, c2 = nameof(MessageTemplate)}
-                        equals new {c1 = sm.EntityId, c2 = sm.EntityName}
-                        into tSm
-                    from sm in tSm.DefaultIfEmpty()
-                    where !t.LimitedToStores || storeId == sm.StoreId
-                    select t;
-
-                query = query.Distinct();
-
-                return query;
+                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<MessageTemplate>(storeId))
+                {
+                    query = query.Where(_storeMappingService.ApplyStoreMapping<MessageTemplate>(storeId));
+                }
+                return query.OrderBy(t => t.Name);
             }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
         }
 
