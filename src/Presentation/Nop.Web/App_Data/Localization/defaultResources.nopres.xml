@@ -17476,7 +17476,7 @@
     <Value>Estimated Delivery on</Value>
   </LocaleResource>
   <LocaleResource Name="Products.EstimateShipping.NoSelectedShippingOption">
-    <Value>Please select the address you want to ship from</Value>
+    <Value>Please select the address you want to ship to</Value>
   </LocaleResource>
   <LocaleResource Name="Products.EstimateShipping.PriceTitle">
     <Value>Shipping:</Value>
