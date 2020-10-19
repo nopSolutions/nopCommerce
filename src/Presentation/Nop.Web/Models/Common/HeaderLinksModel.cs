@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Core.Domain.Customers;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
@@ -16,5 +17,6 @@ namespace Nop.Web.Models.Common
         public bool AllowPrivateMessages { get; set; }
         public string UnreadPrivateMessages { get; set; }
         public string AlertMessage { get; set; }
+        public UserRegistrationType RegistrationType { get; set; }
     }
 }
