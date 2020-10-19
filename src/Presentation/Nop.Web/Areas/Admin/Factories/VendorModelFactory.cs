@@ -285,13 +285,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorListModel().PrepareToGrid(searchModel, vendors, () =>
+            var model = await new VendorListModel().PrepareToGridAsync(searchModel, vendors, () =>
             {
                 //fill in model values from the entity
-                return vendors.Select(vendor =>
+                return vendors.ToAsyncEnumerable().SelectAwait(async vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
-                    vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false).Result;
+                    vendorModel.SeName = await _urlRecordService.GetSeName(vendor, 0, true, false);
 
                     return vendorModel;
                 });

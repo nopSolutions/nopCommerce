@@ -113,22 +113,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new RecurringPaymentListModel().PrepareToGrid(searchModel, recurringPayments, () =>
+            var model = await new RecurringPaymentListModel().PrepareToGridAsync(searchModel, recurringPayments, () =>
             {
-                return recurringPayments.Select(recurringPayment =>
+                return recurringPayments.ToAsyncEnumerable().SelectAwait(async recurringPayment =>
                 {
                     //fill in model values from the entity
                     var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();
 
-                    var order = _orderService.GetOrderById(recurringPayment.InitialOrderId).Result;
-                    var customer = _customerService.GetCustomerById(order.CustomerId).Result;
+                    var order = await _orderService.GetOrderById(recurringPayment.InitialOrderId);
+                    var customer = await _customerService.GetCustomerById(order.CustomerId);
 
                     //convert dates to the user time
-                    if (_orderProcessingService.GetNextPaymentDate(recurringPayment).Result is DateTime nextPaymentDate)
+                    if ((await _orderProcessingService.GetNextPaymentDate(recurringPayment)) is DateTime nextPaymentDate)
                     {
                         recurringPaymentModel.NextPaymentDate = _dateTimeHelper
                             .ConvertToUserTime(nextPaymentDate, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
-                        recurringPaymentModel.CyclesRemaining = _orderProcessingService.GetCyclesRemaining(recurringPayment).Result;
+                        recurringPaymentModel.CyclesRemaining = await _orderProcessingService.GetCyclesRemaining(recurringPayment);
                     }
 
                     recurringPaymentModel.StartDate = _dateTimeHelper
@@ -137,9 +137,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     recurringPaymentModel.CustomerId = customer.Id;
                     recurringPaymentModel.InitialOrderId = order.Id;
-                    recurringPaymentModel.CyclePeriodStr = _localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod).Result;
-                    recurringPaymentModel.CustomerEmail = _customerService.IsRegistered(customer).Result
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
+                    recurringPaymentModel.CyclePeriodStr = await _localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod);
+                    recurringPaymentModel.CustomerEmail = (await _customerService.IsRegistered(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResource("Admin.Customers.Guest");
 
                     return recurringPaymentModel;
                 });
@@ -183,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PaymentType = await _localizationService.GetLocalizedEnum(_paymentService
                 .GetRecurringPaymentType(order.PaymentMethodSystemName));
             model.CanCancelRecurringPayment = await _orderProcessingService.CanCancelRecurringPayment(await _workContext.GetCurrentCustomer(), recurringPayment);
-            
+
             //prepare nested search model
             PrepareRecurringPaymentHistorySearchModel(model.RecurringPaymentHistorySearchModel, recurringPayment);
 
@@ -211,9 +212,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new RecurringPaymentHistoryListModel().PrepareToGrid(searchModel, recurringPayments, () =>
+            var model = await new RecurringPaymentHistoryListModel().PrepareToGridAsync(searchModel, recurringPayments, () =>
             {
-                return recurringPayments.Select(historyEntry =>
+                return recurringPayments.ToAsyncEnumerable().SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();
@@ -222,13 +223,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     historyModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var order = _orderService.GetOrderById(historyEntry.OrderId).Result;
+                    var order = await _orderService.GetOrderById(historyEntry.OrderId);
                     if (order == null)
                         return historyModel;
 
-                    historyModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus).Result;
-                    historyModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus).Result;
-                    historyModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus).Result;
+                    historyModel.OrderStatus = await _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    historyModel.PaymentStatus = await _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    historyModel.ShippingStatus = await _localizationService.GetLocalizedEnum(order.ShippingStatus);
                     historyModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return historyModel;

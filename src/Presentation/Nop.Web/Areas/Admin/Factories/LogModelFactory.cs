@@ -91,10 +91,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new LogListModel().PrepareToGrid(searchModel, logItems, () =>
+            var model = await new LogListModel().PrepareToGridAsync(searchModel, logItems, () =>
             {
                 //fill in model values from the entity
-                return logItems.Select(logItem =>
+                return logItems.ToAsyncEnumerable().SelectAwait(async logItem =>
                 {
                     //fill in model values from the entity
                     var logModel = logItem.ToModel<LogModel>();
@@ -103,10 +103,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     logModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    logModel.LogLevel = _localizationService.GetLocalizedEnum(logItem.LogLevel).Result;
+                    logModel.LogLevel = await _localizationService.GetLocalizedEnum(logItem.LogLevel);
                     logModel.ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false);
                     logModel.FullMessage = string.Empty;
-                    logModel.CustomerEmail = _customerService.GetCustomerById(logItem.CustomerId ?? 0).Result?.Email ?? string.Empty;
+                    logModel.CustomerEmail = (await _customerService.GetCustomerById(logItem.CustomerId ?? 0))?.Email ?? string.Empty;
 
                     return logModel;
                 });

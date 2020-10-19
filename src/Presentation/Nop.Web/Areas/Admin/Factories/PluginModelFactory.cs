@@ -177,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Plugin search model</param>
         /// <returns>Plugin list model</returns>
-        public virtual Task<PluginListModel> PreparePluginListModel(PluginSearchModel searchModel)
+        public virtual async Task<PluginListModel> PreparePluginListModel(PluginSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -195,15 +195,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PluginListModel().PrepareToGrid(searchModel, plugins, () =>
+            var model = await new PluginListModel().PrepareToGridAsync(searchModel, plugins, () =>
             {
-                return plugins.Select(pluginDescriptor =>
+                return plugins.ToAsyncEnumerable().SelectAwait(async pluginDescriptor =>
                 {
                     //fill in model values from the entity
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pluginModel.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor).Result;
+                    pluginModel.LogoUrl = await _pluginService.GetPluginLogoUrl(pluginDescriptor);
                     if (pluginDescriptor.Installed)
                         PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance<IPlugin>());
 
@@ -211,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>

@@ -96,15 +96,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerAttributes = (await _customerAttributeService.GetAllCustomerAttributes()).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CustomerAttributeListModel().PrepareToGrid(searchModel, customerAttributes, () =>
+            var model = await new CustomerAttributeListModel().PrepareToGridAsync(searchModel, customerAttributes, () =>
             {
-                return customerAttributes.Select(attribute =>
+                return customerAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CustomerAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType).Result;
+                    attributeModel.AttributeControlTypeName = await _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
                 });

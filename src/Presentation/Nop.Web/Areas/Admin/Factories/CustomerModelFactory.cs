@@ -266,39 +266,39 @@ namespace Nop.Web.Areas.Admin.Factories
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
-                        {
-                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                foreach (var attributeValue in selectedValues)
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    //clear default selection
                                     foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
                             }
-                        }
-                        break;
+                            break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!string.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                if (enteredText.Any())
-                                    attributeModel.DefaultValue = enteredText[0];
+                                if (!string.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    if (enteredText.Any())
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
                             }
-                        }
-                        break;
+                            break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -637,30 +637,34 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerListModel().PrepareToGrid(searchModel, customers, () =>
+            var model = await new CustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.Select(customer =>
+                return customers.ToAsyncEnumerable().SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<CustomerModel>();
 
                     //convert dates to the user time
-                    customerModel.Email = _customerService.IsRegistered(customer).Result ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
-                    customerModel.FullName = _customerService.GetCustomerFullName(customer).Result;
-                    customerModel.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute).Result;
-                    customerModel.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute).Result;
-                    customerModel.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute).Result;
+                    customerModel.Email = (await _customerService.IsRegistered(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResource("Admin.Customers.Guest");
+                    customerModel.FullName = await _customerService.GetCustomerFullName(customer);
+                    customerModel.Company = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                    customerModel.Phone = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                    customerModel.ZipPostalCode = await _genericAttributeService
+                        .GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
 
                     customerModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerRoleNames = string.Join(", ", _customerService.GetCustomerRoles(customer).Result.Select(role => role.Name));
+                    customerModel.CustomerRoleNames = string.Join(", ",
+                        (await _customerService.GetCustomerRoles(customer)).Select(role => role.Name));
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
-                        var avatarPictureId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute).Result;
-                        customerModel.AvatarUrl = _pictureService.GetPictureUrl(avatarPictureId, _mediaSettings.AvatarPictureSize,
-                            _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar).Result;
+                        var avatarPictureId = await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute);
+                        customerModel.AvatarUrl = await _pictureService
+                            .GetPictureUrl(avatarPictureId, _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
                     }
 
                     return customerModel;
@@ -849,9 +853,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerRewardPointsListModel().PrepareToGrid(searchModel, rewardPoints, () =>
+            var model = await new CustomerRewardPointsListModel().PrepareToGridAsync(searchModel, rewardPoints, () =>
             {
-                return rewardPoints.Select(historyEntry =>
+                return rewardPoints.ToAsyncEnumerable().SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity        
                     var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();
@@ -859,13 +863,15 @@ namespace Nop.Web.Areas.Admin.Factories
                     //convert dates to the user time
                     var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                     rewardPointsHistoryModel.CreatedOn = activatingDate;
-                    rewardPointsHistoryModel.PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString() :
-                        string.Format(_localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater").Result, activatingDate);
-                    rewardPointsHistoryModel.EndDate = !historyEntry.EndDateUtc.HasValue ? null :
-                        (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc);
+                    rewardPointsHistoryModel.PointsBalance = historyEntry.PointsBalance.HasValue
+                        ? historyEntry.PointsBalance.ToString()
+                        : string.Format((await _localizationService.GetResource("Admin.Customers.Customers.RewardPoints.ActivatedLater")), activatingDate);
+                    rewardPointsHistoryModel.EndDate = !historyEntry.EndDateUtc.HasValue
+                        ? null
+                        : (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    rewardPointsHistoryModel.StoreName = _storeService.GetStoreById(historyEntry.StoreId).Result?.Name ?? "Unknown";
+                    rewardPointsHistoryModel.StoreName = (await _storeService.GetStoreById(historyEntry.StoreId))?.Name ?? "Unknown";
 
                     return rewardPointsHistoryModel;
                 });
@@ -964,9 +970,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new CustomerOrderListModel().PrepareToGrid(searchModel, orders, () =>
+            var model = await new CustomerOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
-                return orders.Select(order =>
+                return orders.ToAsyncEnumerable().SelectAwait(async order =>
                 {
                     //fill in model values from the entity
                     var orderModel = order.ToModel<CustomerOrderModel>();
@@ -975,11 +981,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    orderModel.StoreName = _storeService.GetStoreById(order.StoreId).Result?.Name ?? "Unknown";
-                    orderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus).Result;
-                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus).Result;
-                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus).Result;
-                    orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false).Result;
+                    orderModel.StoreName = (await _storeService.GetStoreById(order.StoreId))?.Name ?? "Unknown";
+                    orderModel.OrderStatus = await _localizationService.GetLocalizedEnum(order.OrderStatus);
+                    orderModel.PaymentStatus = await _localizationService.GetLocalizedEnum(order.PaymentStatus);
+                    orderModel.ShippingStatus = await _localizationService.GetLocalizedEnum(order.ShippingStatus);
+                    orderModel.OrderTotal = await _priceFormatter.FormatPrice(order.OrderTotal, true, false);
 
                     return orderModel;
                 });
@@ -1152,9 +1158,9 @@ namespace Nop.Web.Areas.Admin.Factories
                  pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OnlineCustomerListModel().PrepareToGrid(searchModel, customers, () =>
+            var model = await new OnlineCustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.Select(customer =>
+                return customers.ToAsyncEnumerable().SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<OnlineCustomerModel>();
@@ -1163,14 +1169,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerInfo = _customerService.IsRegistered(customer).Result
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
+                    customerModel.CustomerInfo = (await _customerService.IsRegistered(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResource("Admin.Customers.Guest");
                     customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
-                        ? customer.LastIpAddress : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled").Result;
+                        ? customer.LastIpAddress
+                        : await _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");
                     customerModel.Location = _geoLookupService.LookupCountryName(customer.LastIpAddress);
                     customerModel.LastVisitedPage = _customerSettings.StoreLastVisitedPage
-                        ? _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute).Result
-                        : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled").Result;
+                        ? await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute)
+                        : await _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled");
 
                     return customerModel;
                 });
@@ -1229,18 +1237,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new GdprLogListModel().PrepareToGrid(searchModel, gdprLog, () =>
+            var model = await new GdprLogListModel().PrepareToGridAsync(searchModel, gdprLog, () =>
             {
-                return gdprLog.Select(log =>
+                return gdprLog.ToAsyncEnumerable().SelectAwait(async log =>
                 {
                     //fill in model values from the entity
-                    var customer = _customerService.GetCustomerById(log.CustomerId).Result;
+                    var customer = await _customerService.GetCustomerById(log.CustomerId);
 
                     var requestModel = log.ToModel<GdprLogModel>();
 
                     //fill in additional values (not existing in the entity)
-                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email) ? customer.Email : log.CustomerInfo;
-                    requestModel.RequestType = _localizationService.GetLocalizedEnum(log.RequestType).Result;
+                    requestModel.CustomerInfo = customer != null && !customer.Deleted && !string.IsNullOrEmpty(customer.Email)
+                        ? customer.Email
+                        : log.CustomerInfo;
+                    requestModel.RequestType = await _localizationService.GetLocalizedEnum(log.RequestType);
                     requestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
 
                     return requestModel;

@@ -46,7 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -79,15 +79,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerRoles = (await _customerService.GetAllCustomerRoles(true)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CustomerRoleListModel().PrepareToGrid(searchModel, customerRoles, () =>
+            var model = await new CustomerRoleListModel().PrepareToGridAsync(searchModel, customerRoles, () =>
             {
-                return customerRoles.Select(role =>
+                return customerRoles.ToAsyncEnumerable().SelectAwait(async role =>
                 {
                     //fill in model values from the entity
                     var customerRoleModel = role.ToModel<CustomerRoleModel>();
 
                     //fill in additional values (not existing in the entity)
-                    customerRoleModel.PurchasedWithProductName = _productService.GetProductById(role.PurchasedWithProductId).Result?.Name;
+                    customerRoleModel.PurchasedWithProductName = (await _productService.GetProductById(role.PurchasedWithProductId))?.Name;
 
                     return customerRoleModel;
                 });
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.SearchVendorId = (await _workContext.GetCurrentVendor()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProducts(false,showHidden: true,
+            var (products, _) = await _productService.SearchProducts(false, showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 storeId: searchModel.SearchStoreId,
@@ -181,12 +181,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new CustomerRoleProductListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new CustomerRoleProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false).Result;
+                    productModel.SeName = await _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
                 });

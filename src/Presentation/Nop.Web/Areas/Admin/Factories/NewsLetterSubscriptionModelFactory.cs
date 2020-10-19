@@ -119,9 +119,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NewsletterSubscriptionListModel().PrepareToGrid(searchModel, newsletterSubscriptions, () =>
+            var model = await new NewsletterSubscriptionListModel().PrepareToGridAsync(searchModel, newsletterSubscriptions, () =>
             {
-                return newsletterSubscriptions.Select(subscription =>
+                return newsletterSubscriptions.ToAsyncEnumerable().SelectAwait(async subscription =>
                 {
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
@@ -130,7 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc).ToString();
 
                     //fill in additional values (not existing in the entity)
-                    subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId).Result?.Name ?? "Deleted";
+                    subscriptionModel.StoreName = (await _storeService.GetStoreById(subscription.StoreId))?.Name ?? "Deleted";
 
                     return subscriptionModel;
                 });

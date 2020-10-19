@@ -114,9 +114,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PollListModel().PrepareToGrid(searchModel, polls, () =>
+            var model = await new PollListModel().PrepareToGridAsync(searchModel, polls, () =>
             {
-                return polls.Select(poll =>
+                return polls.ToAsyncEnumerable().SelectAwait(async poll =>
                 {
                     //fill in model values from the entity
                     var pollModel = poll.ToModel<PollModel>();
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         pollModel.EndDateUtc = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    pollModel.LanguageName = _languageService.GetLanguageById(poll.LanguageId).Result?.Name;
+                    pollModel.LanguageName = (await _languageService.GetLanguageById(poll.LanguageId))?.Name;
 
                     return pollModel;
                 });

@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
@@ -150,7 +150,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
@@ -173,7 +173,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -223,18 +223,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 endDateUtc: endDateUtc)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new DiscountListModel().PrepareToGrid(searchModel, discounts, () =>
+            var model = await new DiscountListModel().PrepareToGridAsync(searchModel, discounts, () =>
             {
-                return discounts.Select(discount =>
+                return discounts.ToAsyncEnumerable().SelectAwait(async discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
 
                     //fill in additional values (not existing in the entity)
-                    discountModel.DiscountTypeName = _localizationService.GetLocalizedEnum(discount.DiscountType).Result;
-                    discountModel.PrimaryStoreCurrencyCode = _currencyService
-                        .GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).Result?.CurrencyCode;
-                    discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).Result.TotalCount;
+                    discountModel.DiscountTypeName = await _localizationService.GetLocalizedEnum(discount.DiscountType);
+                    discountModel.PrimaryStoreCurrencyCode = (await _currencyService
+                        .GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+                    discountModel.TimesUsed = (await _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1)).TotalCount;
 
                     return discountModel;
                 });
@@ -386,9 +386,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new DiscountUsageHistoryListModel().PrepareToGrid(searchModel, history, () =>
+            var model = await new DiscountUsageHistoryListModel().PrepareToGridAsync(searchModel, history, () =>
             {
-                return history.Select(historyEntry =>
+                return history.ToAsyncEnumerable().SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
@@ -397,10 +397,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var order = _orderService.GetOrderById(historyEntry.OrderId).Result;
+                    var order = await _orderService.GetOrderById(historyEntry.OrderId);
                     if (order != null)
                     {
-                        discountUsageHistoryModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false).Result;
+                        discountUsageHistoryModel.OrderTotal = await _priceFormatter.FormatPrice(order.OrderTotal, true, false);
                         discountUsageHistoryModel.CustomOrderNumber = order.CustomOrderNumber;
                     }
 
@@ -489,7 +489,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProducts(false,showHidden: true,
+            var (products, _) = await _productService.SearchProducts(false, showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 storeId: searchModel.SearchStoreId,
@@ -499,12 +499,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToDiscountListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddProductToDiscountListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false).Result;
+                    productModel.SeName = await _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
                 });
@@ -533,14 +533,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountCategoryListModel().PrepareToGrid(searchModel, discountCategories, () =>
+            var model = await new DiscountCategoryListModel().PrepareToGridAsync(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                return discountCategories.Select(category =>
+                return discountCategories.ToAsyncEnumerable().SelectAwait(async category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
-                    discountCategoryModel.CategoryName = _categoryService.GetFormattedBreadCrumb(category).Result;
+                    discountCategoryModel.CategoryName = await _categoryService.GetFormattedBreadCrumb(category);
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
@@ -582,16 +582,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddCategoryToDiscountListModel().PrepareToGrid(searchModel, categories, () =>
+            var model = await new AddCategoryToDiscountListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.Select(category =>
+                return categories.ToAsyncEnumerable().SelectAwait(async category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = _categoryService.GetFormattedBreadCrumb(category).Result;
-                    categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false).Result;
+                    categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumb(category);
+                    categoryModel.SeName = await _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
                 });
@@ -669,12 +669,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddManufacturerToDiscountListModel().PrepareToGrid(searchModel, manufacturers, () =>
+            var model = await new AddManufacturerToDiscountListModel().PrepareToGridAsync(searchModel, manufacturers, () =>
             {
-                return manufacturers.Select(manufacturer =>
+                return manufacturers.ToAsyncEnumerable().SelectAwait(async manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
-                    manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false).Result;
+                    manufacturerModel.SeName = await _urlRecordService.GetSeName(manufacturer, 0, true, false);
 
                     return manufacturerModel;
                 });

@@ -135,9 +135,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ProductReviewListModel().PrepareToGrid(searchModel, productReviews, () =>
+            var model = await new ProductReviewListModel().PrepareToGridAsync(searchModel, productReviews, () =>
             {
-                return productReviews.Select(productReview =>
+                return productReviews.ToAsyncEnumerable().SelectAwait(async productReview =>
                 {
                     //fill in model values from the entity
                     var productReviewModel = productReview.ToModel<ProductReviewModel>();
@@ -146,10 +146,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     productReviewModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    productReviewModel.StoreName = _storeService.GetStoreById(productReview.StoreId).Result?.Name;
-                    productReviewModel.ProductName = _productService.GetProductById(productReview.ProductId).Result?.Name;
-                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId).Result is Customer customer && _customerService.IsRegistered(customer).Result
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
+                    productReviewModel.StoreName = (await _storeService.GetStoreById(productReview.StoreId))?.Name;
+                    productReviewModel.ProductName = (await _productService.GetProductById(productReview.ProductId))?.Name;
+                    productReviewModel.CustomerInfo = (await _customerService.GetCustomerById(productReview.CustomerId)) is Customer customer && (await _customerService.IsRegistered(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResource("Admin.Customers.Guest");
                     productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
@@ -225,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.IsAnyReviewTypes = (await _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id)).Any();
 
             //prepare page parameters
-            searchModel.SetGridPageSize();            
+            searchModel.SetGridPageSize();
 
             return searchModel;
         }
@@ -249,24 +250,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductReviewReviewTypeMappingListModel().PrepareToGrid(searchModel, productReviewReviewTypeMappings, () =>
+            var model = await new ProductReviewReviewTypeMappingListModel().PrepareToGridAsync(searchModel, productReviewReviewTypeMappings, () =>
             {
-                return productReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
+                return productReviewReviewTypeMappings.ToAsyncEnumerable().SelectAwait(async productReviewReviewTypeMapping =>
                 {
                     //fill in model values from the entity
                     var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping
                         .ToModel<ProductReviewReviewTypeMappingModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var reviewType =
-                        _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId).Result;
+                    var reviewType = await _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
 
-                    productReviewReviewTypeMappingModel.Name =
-                        _localizationService.GetLocalized(reviewType, entity => entity.Name).Result;
-                    productReviewReviewTypeMappingModel.Description =
-                        _localizationService.GetLocalized(reviewType, entity => entity.Description).Result;
-                    productReviewReviewTypeMappingModel.VisibleToAllCustomers =
-                        reviewType.VisibleToAllCustomers;
+                    productReviewReviewTypeMappingModel.Name = await _localizationService.GetLocalized(reviewType, entity => entity.Name);
+                    productReviewReviewTypeMappingModel.Description = await _localizationService.GetLocalized(reviewType, entity => entity.Description);
+                    productReviewReviewTypeMappingModel.VisibleToAllCustomers = reviewType.VisibleToAllCustomers;
 
                     return productReviewReviewTypeMappingModel;
                 });

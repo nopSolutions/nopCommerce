@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>
@@ -257,16 +257,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SpecificationAttributeOptionListModel().PrepareToGrid(searchModel, options, () =>
+            var model = await new SpecificationAttributeOptionListModel().PrepareToGridAsync(searchModel, options, () =>
             {
-                return options.Select(option =>
+                return options.ToAsyncEnumerable().SelectAwait(async option =>
                 {
                     //fill in model values from the entity
                     var optionModel = option.ToModel<SpecificationAttributeOptionModel>();
 
                     //in order to save performance to do not check whether a product is deleted, etc
-                    optionModel.NumberOfAssociatedProducts = _specificationAttributeService
-                        .GetProductSpecificationAttributeCount(specificationAttributeOptionId: option.Id).Result;
+                    optionModel.NumberOfAssociatedProducts = await _specificationAttributeService
+                        .GetProductSpecificationAttributeCount(specificationAttributeOptionId: option.Id);
 
                     return optionModel;
                 });

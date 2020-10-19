@@ -248,9 +248,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var bestsellers = await GetBestsellersReport(searchModel);
 
             //prepare list model
-            var model = new BestsellerListModel().PrepareToGrid(searchModel, bestsellers, () =>
+            var model = await new BestsellerListModel().PrepareToGridAsync(searchModel, bestsellers, () =>
             {
-                return bestsellers.Select(bestseller =>
+                return bestsellers.ToAsyncEnumerable().SelectAwait(async bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -260,8 +260,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = _productService.GetProductById(bestseller.ProductId).Result?.Name;
-                    bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false).Result;
+                    bestsellerModel.ProductName = (await _productService.GetProductById(bestseller.ProductId))?.Name;
+                    bestsellerModel.TotalAmount = await _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;
                 });
@@ -434,9 +434,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 endTimeUtc: endDateValue)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryReportListModel().PrepareToGrid(searchModel, items, () =>
+            var model = await new CountryReportListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.Select(item =>
+                return items.ToAsyncEnumerable().SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var countryReportModel = new CountryReportModel
@@ -445,8 +445,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    countryReportModel.SumOrders = _priceFormatter.FormatPrice(item.SumOrders, true, false).Result;
-                    countryReportModel.CountryName = _countryService.GetCountryById(item.CountryId ?? 0).Result?.Name;
+                    countryReportModel.SumOrders = await _priceFormatter.FormatPrice(item.SumOrders, true, false);
+                    countryReportModel.CountryName = (await _countryService.GetCountryById(item.CountryId ?? 0))?.Name;
 
                     return countryReportModel;
                 });
@@ -565,24 +565,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestCustomersReportListModel().PrepareToGrid(searchModel, reportItems, () =>
+            var model = await new BestCustomersReportListModel().PrepareToGridAsync(searchModel, reportItems, () =>
             {
-                return reportItems.Select(item =>
+                return reportItems.ToAsyncEnumerable().SelectAwait(async item =>
                {
                    //fill in model values from the entity
                    var bestCustomersReportModel = new BestCustomersReportModel
                    {
                        CustomerId = item.CustomerId,
-                       OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false).Result,
+                       OrderTotal = await _priceFormatter.FormatPrice(item.OrderTotal, true, false),
                        OrderCount = item.OrderCount
                    };
 
                    //fill in additional values (not existing in the entity)
-                   var customer = _customerService.GetCustomerById(item.CustomerId).Result;
+                   var customer = await _customerService.GetCustomerById(item.CustomerId);
                    if (customer != null)
                    {
-                       bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer).Result ? customer.Email :
-                           _localizationService.GetResource("Admin.Customers.Guest").Result;
+                       bestCustomersReportModel.CustomerName = (await _customerService.IsRegistered(customer))
+                            ? customer.Email
+                            : await _localizationService.GetResource("Admin.Customers.Guest");
                    }
 
                    return bestCustomersReportModel;

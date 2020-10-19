@@ -110,9 +110,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedTopics = topics.ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TopicListModel().PrepareToGrid(searchModel, pagedTopics, () =>
+            var model = await new TopicListModel().PrepareToGridAsync(searchModel, pagedTopics, () =>
             {
-                return pagedTopics.Select(topic =>
+                return pagedTopics.ToAsyncEnumerable().SelectAwait(async topic =>
                 {
                     //fill in model values from the entity
                     var topicModel = topic.ToModel<TopicModel>();
@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //little performance optimization: ensure that "Body" is not returned
                     topicModel.Body = string.Empty;
 
-                    topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false).Result;
+                    topicModel.SeName = await _urlRecordService.GetSeName(topic, 0, true, false);
 
                     if (!string.IsNullOrEmpty(topicModel.SystemName))
                         topicModel.TopicName = topicModel.SystemName;

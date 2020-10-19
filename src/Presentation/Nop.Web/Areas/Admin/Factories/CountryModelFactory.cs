@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -101,13 +101,13 @@ namespace Nop.Web.Areas.Admin.Factories
             var countries = (await _countryService.GetAllCountries(showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryListModel().PrepareToGrid(searchModel, countries, () =>
+            var model = await new CountryListModel().PrepareToGridAsync(searchModel, countries, () =>
             {
                 //fill in model values from the entity
-                return countries.Select(country =>
+                return countries.ToAsyncEnumerable().SelectAwait(async country =>
                 {
                     var countryModel = country.ToModel<CountryModel>();
-                    countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id).Result?.Count ?? 0;
+                    countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryId(country.Id))?.Count ?? 0;
 
                     return countryModel;
                 });
@@ -182,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var states = (await _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, ()=>
+            var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, () =>
             {
                 //fill in model values from the entity
                 return states.Select(state => state.ToModel<StateProvinceModel>());

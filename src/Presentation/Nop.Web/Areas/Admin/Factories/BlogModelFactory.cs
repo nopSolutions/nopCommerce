@@ -123,12 +123,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get blog posts
             var blogPosts = await _blogService.GetAllBlogPosts(storeId: searchModel.SearchStoreId, showHidden: true,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title : searchModel.SearchTitle);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title: searchModel.SearchTitle);
 
             //prepare list model
-            var model = new BlogPostListModel().PrepareToGrid(searchModel, blogPosts, () =>
+            var model = await new BlogPostListModel().PrepareToGridAsync(searchModel, blogPosts, () =>
             {
-                return blogPosts.Select(blogPost =>
+                return blogPosts.ToAsyncEnumerable().SelectAwait(async blogPost =>
                 {
                     //fill in model values from the entity
                     var blogPostModel = blogPost.ToModel<BlogPostModel>();
@@ -144,10 +144,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     blogPostModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    blogPostModel.LanguageName = _languageService.GetLanguageById(blogPost.LanguageId).Result?.Name;
-                    blogPostModel.ApprovedComments = _blogService.GetBlogCommentsCount(blogPost, isApproved: true).Result;
-                    blogPostModel.NotApprovedComments = _blogService.GetBlogCommentsCount(blogPost, isApproved: false).Result;
-                    blogPostModel.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false).Result;
+                    blogPostModel.LanguageName = (await _languageService.GetLanguageById(blogPost.LanguageId))?.Name;
+                    blogPostModel.ApprovedComments = await _blogService.GetBlogCommentsCount(blogPost, isApproved: true);
+                    blogPostModel.NotApprovedComments = await _blogService.GetBlogCommentsCount(blogPost, isApproved: false);
+                    blogPostModel.SeName = await _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false);
 
                     return blogPostModel;
                 });
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 blogTagsSb.Append("'");
                 blogTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
                 blogTagsSb.Append("'");
-                if (i != blogTags.Count - 1) 
+                if (i != blogTags.Count - 1)
                     blogTagsSb.Append(",");
             }
             blogTagsSb.Append("]");
@@ -270,23 +270,27 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText)).ToPagedList(searchModel);
 
-            //prepare list model
-            var model = new BlogCommentListModel().PrepareToGrid(searchModel, comments, () =>
-            {                
-                //prepare store names (to avoid loading for each comment)
-                var storeNames = _storeService.GetAllStores().Result.ToDictionary(store => store.Id, store => store.Name);
+            //prepare store names (to avoid loading for each comment)
+            var storeNames = (await _storeService.GetAllStores())
+                .ToDictionary(store => store.Id, store => store.Name);
 
-                return comments.Select(blogComment =>
+            //prepare list model
+            var model = await new BlogCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
+            {
+                return comments.ToAsyncEnumerable().SelectAwait(async blogComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
-                    
+
                     //set title from linked blog post
-                    commentModel.BlogPostTitle = _blogService.GetBlogPostById(blogComment.BlogPostId).Result?.Title;
+                    commentModel.BlogPostTitle = (await _blogService.GetBlogPostById(blogComment.BlogPostId))?.Title;
 
-                    if (_customerService.GetCustomerById(blogComment.CustomerId).Result is Customer customer)
-                        commentModel.CustomerInfo = _customerService.IsRegistered(customer).Result ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
-
+                    if ((await _customerService.GetCustomerById(blogComment.CustomerId)) is Customer customer)
+                    {
+                        commentModel.CustomerInfo = (await _customerService.IsRegistered(customer))
+                            ? customer.Email
+                            : await _localizationService.GetResource("Admin.Customers.Guest");
+                    }
                     //fill in additional values (not existing in the entity)
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);

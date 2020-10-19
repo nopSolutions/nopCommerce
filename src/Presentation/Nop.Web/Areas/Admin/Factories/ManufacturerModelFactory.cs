@@ -91,7 +91,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -152,13 +152,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));
 
             //prepare grid model
-            var model = new ManufacturerListModel().PrepareToGrid(searchModel, manufacturers, () =>
+            var model = await new ManufacturerListModel().PrepareToGridAsync(searchModel, manufacturers, () =>
             {
                 //fill in model values from the entity
-                return manufacturers.Select(manufacturer =>
+                return manufacturers.ToAsyncEnumerable().SelectAwait(async manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
-                    manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false).Result;
+                    manufacturerModel.SeName = await _urlRecordService.GetSeName(manufacturer, 0, true, false);
 
                     return manufacturerModel;
                 });
@@ -253,15 +253,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new ManufacturerProductListModel().PrepareToGrid(searchModel, productManufacturers, () =>
+            var model = await new ManufacturerProductListModel().PrepareToGridAsync(searchModel, productManufacturers, () =>
             {
-                return productManufacturers.Select(productManufacturer =>
+                return productManufacturers.ToAsyncEnumerable().SelectAwait(async productManufacturer =>
                 {
                     //fill in model values from the entity
                     var manufacturerProductModel = productManufacturer.ToModel<ManufacturerProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    manufacturerProductModel.ProductName = _productService.GetProductById(productManufacturer.ProductId).Result?.Name;
+                    manufacturerProductModel.ProductName = (await _productService.GetProductById(productManufacturer.ProductId))?.Name;
 
                     return manufacturerProductModel;
                 });
@@ -322,12 +322,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToManufacturerListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddProductToManufacturerListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false).Result;
+                    productModel.SeName = await _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
                 });

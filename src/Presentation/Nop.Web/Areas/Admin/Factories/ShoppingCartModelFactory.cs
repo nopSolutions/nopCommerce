@@ -150,9 +150,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ShoppingCartListModel().PrepareToGrid(searchModel, customers, () =>
+            var model = await new ShoppingCartListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.Select(customer =>
+                return customers.ToAsyncEnumerable().SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var shoppingCartModel = new ShoppingCartModel
@@ -161,10 +161,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    shoppingCartModel.CustomerEmail = _customerService.IsRegistered(customer).Result
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
-                    shoppingCartModel.TotalItems = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
-                        searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Result.Sum(item => item.Quantity);
+                    shoppingCartModel.CustomerEmail = (await _customerService.IsRegistered(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResource("Admin.Customers.Guest");
+                    shoppingCartModel.TotalItems = (await _shoppingCartService
+                        .GetShoppingCart(customer, searchModel.ShoppingCartType,
+                            searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate))
+                        .Sum(item => item.Quantity);
 
                     return shoppingCartModel;
                 });
@@ -190,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //get shopping cart items
             var items = (await _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
                 searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate)).ToPagedList(searchModel);
-            
+
             var isSearchProduct = searchModel.ProductId > 0;
 
             Product product = null;
@@ -201,26 +204,26 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare list model
-            var model = new ShoppingCartItemListModel().PrepareToGrid(searchModel, items, () =>
+            var model = await new ShoppingCartItemListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.Select(item =>
+                return items.ToAsyncEnumerable().SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
                     if (!isSearchProduct)
-                        product = _productService.GetProductById(item.ProductId).Result;
+                        product = await _productService.GetProductById(item.ProductId);
 
                     //convert dates to the user time
                     itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    itemModel.Store = _storeService.GetStoreById(item.StoreId).Result?.Name ?? "Deleted";
-                    itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer).Result;
-                    var unitPrice = _shoppingCartService.GetUnitPrice(item, true).Result.unitPrice;
-                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, unitPrice).Result.price).Result;
-                    var subTotal = _shoppingCartService.GetSubTotal(item, true).Result.subTotal;
-                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, subTotal).Result.price).Result;
+                    itemModel.Store = (await _storeService.GetStoreById(item.StoreId))?.Name ?? "Deleted";
+                    itemModel.AttributeInfo = await _productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer);
+                    var (unitPrice, _, _) = await _shoppingCartService.GetUnitPrice(item, true);
+                    itemModel.UnitPrice = await _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, unitPrice)).price);
+                    var (subTotal, _, _, _) = await _shoppingCartService.GetSubTotal(item, true);
+                    itemModel.Total = await _priceFormatter.FormatPrice((await _taxService.GetProductPrice(product, subTotal)).price);
 
                     //set product name since it does not survive mapping
                     itemModel.ProductName = product.Name;

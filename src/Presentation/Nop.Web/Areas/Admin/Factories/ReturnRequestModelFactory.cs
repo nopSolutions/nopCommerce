@@ -114,28 +114,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ReturnRequestListModel().PrepareToGrid(searchModel, returnRequests, () =>
+            var model = await new ReturnRequestListModel().PrepareToGridAsync(searchModel, returnRequests, () =>
             {
-                return returnRequests.Select(returnRequest =>
+                return returnRequests.ToAsyncEnumerable().SelectAwait(async returnRequest =>
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
 
-                    var customer = _customerService.GetCustomerById(returnRequest.CustomerId).Result;
+                    var customer = await _customerService.GetCustomerById(returnRequest.CustomerId);
 
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = _customerService.IsRegistered(customer).Result
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
-                    returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus).Result;
-                    var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId).Result;
+                    returnRequestModel.CustomerInfo = (await _customerService.IsRegistered(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResource("Admin.Customers.Guest");
+                    returnRequestModel.ReturnRequestStatusStr = await _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus);
+                    var orderItem = await _orderService.GetOrderItemById(returnRequest.OrderItemId);
                     if (orderItem == null)
                         return returnRequestModel;
 
-                    var order = _orderService.GetOrderById(orderItem.OrderId).Result;
-                    var product = _productService.GetProductById(orderItem.ProductId).Result;
+                    var order = await _orderService.GetOrderById(orderItem.OrderId);
+                    var product = await _productService.GetProductById(orderItem.ProductId);
 
                     returnRequestModel.ProductId = orderItem.ProductId;
                     returnRequestModel.ProductName = product.Name;

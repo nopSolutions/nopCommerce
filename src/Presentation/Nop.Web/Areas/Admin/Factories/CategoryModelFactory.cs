@@ -150,16 +150,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));
 
             //prepare grid model
-            var model = new CategoryListModel().PrepareToGrid(searchModel, categories, () =>
+            var model = await new CategoryListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.Select(category =>
+                return categories.ToAsyncEnumerable().SelectAwait(async category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryModel.Breadcrumb = _categoryService.GetFormattedBreadCrumb(category).Result;
-                    categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false).Result;
+                    categoryModel.Breadcrumb = await _categoryService.GetFormattedBreadCrumb(category);
+                    categoryModel.SeName = await _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
                 });
@@ -257,15 +257,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new CategoryProductListModel().PrepareToGrid(searchModel, productCategories, () =>
+            var model = await new CategoryProductListModel().PrepareToGridAsync(searchModel, productCategories, () =>
             {
-                return productCategories.Select(productCategory =>
+                return productCategories.ToAsyncEnumerable().SelectAwait(async productCategory =>
                 {
                     //fill in model values from the entity
                     var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    categoryProductModel.ProductName = _productService.GetProductById(productCategory.ProductId).Result?.Name;
+                    categoryProductModel.ProductName = (await _productService.GetProductById(productCategory.ProductId))?.Name;
 
                     return categoryProductModel;
                 });
@@ -326,12 +326,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToCategoryListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddProductToCategoryListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false).Result;
+                    productModel.SeName = await _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
                 });

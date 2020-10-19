@@ -107,9 +107,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new QueuedEmailListModel().PrepareToGrid(searchModel, queuedEmails, () =>
+            var model = await new QueuedEmailListModel().PrepareToGridAsync(searchModel, queuedEmails, () =>
             {
-                return queuedEmails.Select(queuedEmail =>
+                return queuedEmails.ToAsyncEnumerable().SelectAwait(async queuedEmail =>
                 {
                     //fill in model values from the entity
                     var queuedEmailModel = queuedEmail.ToModel<QueuedEmailModel>();
@@ -121,8 +121,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     queuedEmailModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    queuedEmailModel.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId).Result);
-                    queuedEmailModel.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority).Result;
+                    var emailAccount = await _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId);
+                    queuedEmailModel.EmailAccountName = GetEmailAccountName(emailAccount);
+                    queuedEmailModel.PriorityName = await _localizationService.GetLocalizedEnum(queuedEmail.Priority);
                     if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                     {
                         queuedEmailModel.DontSendBeforeDate = _dateTimeHelper
@@ -162,7 +163,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.SentOnUtc.Value, DateTimeKind.Utc);
             if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                 model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(queuedEmail.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
-            else model.SendImmediately = true;
+            else
+                model.SendImmediately = true;
 
             return model;
         }
