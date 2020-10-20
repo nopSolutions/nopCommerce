@@ -33,8 +33,8 @@
             </div>
         }
         @{
-            var pager = Html.Pager(Model.PageModel).QueryParam("pagenumber");
-            if (!pager.IsEmpty())
+            var pager = (await Html.Pager(Model.PageModel)).QueryParam("pagenumber");
+            if (!(await pager.IsEmpty()))
             {
                 <div class="pager">
                     @pager

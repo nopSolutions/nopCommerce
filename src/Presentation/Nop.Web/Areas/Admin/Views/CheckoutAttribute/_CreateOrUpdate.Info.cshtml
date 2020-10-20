@@ -3,7 +3,7 @@
 @model CheckoutAttributeModel
 
 <div class="panel-body">
-    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+    @(await Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
     @<div>
         <div class="form-group">
             <div class="col-md-3">
@@ -107,7 +107,7 @@
         </div>
     </div>
     
-    @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("pnlDefaultValueLocalized",
+    @(await Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("pnlDefaultValueLocalized",
     @<div>
         <div class="form-group advanced-setting">
             <div class="col-md-3">

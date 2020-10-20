@@ -42,9 +42,9 @@
             </div>
         }
         @{
-            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+            var pager = (await Html.Pager(Model.PagingFilteringContext)).QueryParam("pagenumber");
         }
-        @if (!pager.IsEmpty())
+        @if (!(await pager.IsEmpty()))
         {
             <div class="pager">
                 @pager

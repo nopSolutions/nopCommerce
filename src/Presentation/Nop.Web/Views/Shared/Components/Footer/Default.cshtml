@@ -118,7 +118,7 @@
             {
                 var inclTax = await workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
                 <span class="footer-tax-shipping">
-                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo")}))
+                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = await Html.GetTopicSeName("shippinginfo") }))
                 </span>
             }
         </div>
