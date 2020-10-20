@@ -9,27 +9,31 @@ using Nop.Web.Framework.Extensions;
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     /// <summary>
-    /// nop-tabs tag helper
+    /// "nop-tabs" tag helper
     /// </summary>
-    [HtmlTargetElement("nop-tabs", Attributes = IdAttributeName)]
+    [HtmlTargetElement("nop-tabs", Attributes = ID_ATTRIBUTE_NAME)]
     public class NopTabsTagHelper : TagHelper
     {
-        private const string IdAttributeName = "id";
-        private const string TabNameToSelectAttributeName = "asp-tab-name-to-select";
-        private const string RenderSelectedTabInputAttributeName = "asp-render-selected-tab-input";
+        #region Constants
 
-        private readonly IHtmlHelper _htmlHelper;
+        private const string ID_ATTRIBUTE_NAME = "id";
+        private const string TAB_NAME_TO_SELECT_ATTRIBUTE_NAME = "asp-tab-name-to-select";
+        private const string RENDER_SELECTED_TAB_INPUT_ATTRIBUTE_NAME = "asp-render-selected-tab-input";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Name of the tab which should be selected
         /// </summary>
-        [HtmlAttributeName(TabNameToSelectAttributeName)]
+        [HtmlAttributeName(TAB_NAME_TO_SELECT_ATTRIBUTE_NAME)]
         public string TabNameToSelect { set; get; }
 
         /// <summary>
         /// Indicates whether the tab is default
         /// </summary>
-        [HtmlAttributeName(RenderSelectedTabInputAttributeName)]
+        [HtmlAttributeName(RENDER_SELECTED_TAB_INPUT_ATTRIBUTE_NAME)]
         public string RenderSelectedTabInput { set; get; }
 
         /// <summary>
@@ -39,32 +43,37 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="htmlHelper">HTML helper</param>
+        #endregion
+
+        #region Fields
+
+        private readonly IHtmlHelper _htmlHelper;
+
+        #endregion
+
+        #region Ctor
+
         public NopTabsTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        /// <returns>Result</returns>
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             if (output == null)
-            {
                 throw new ArgumentNullException(nameof(output));
-            }
 
             //contextualize IHtmlHelper
             var viewContextAware = _htmlHelper as IViewContextAware;
@@ -105,10 +114,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             }
 
             //append data
-            output.Content.AppendHtml(tabsTitle.RenderHtmlContent());
-            output.Content.AppendHtml(tabsContent.RenderHtmlContent());
+            output.Content.AppendHtml(await tabsTitle.RenderHtmlContent());
+            output.Content.AppendHtml(await tabsContent.RenderHtmlContent());
 
-            bool.TryParse(RenderSelectedTabInput, out bool renderSelectedTabInput);
+            bool.TryParse(RenderSelectedTabInput, out var renderSelectedTabInput);
             if (string.IsNullOrEmpty(RenderSelectedTabInput) || renderSelectedTabInput)
             {
                 //render input contains selected tab name
@@ -116,15 +125,19 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 selectedTabInput.Attributes.Add("type", "hidden");
                 selectedTabInput.Attributes.Add("id", "selected-tab-name");
                 selectedTabInput.Attributes.Add("name", "selected-tab-name");
-                selectedTabInput.Attributes.Add("value", _htmlHelper.GetSelectedTabName());
-                output.PreContent.SetHtmlContent(selectedTabInput.RenderHtmlContent());
+                selectedTabInput.Attributes.Add("value", await _htmlHelper.GetSelectedTabName());
+                output.PreContent.SetHtmlContent(await selectedTabInput.RenderHtmlContent());
 
                 //render tabs script
                 if (output.Attributes.ContainsName("id"))
                 {
                     var script = new TagBuilder("script");
-                    script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "', 'selected-tab-name');});");
-                    output.PostContent.SetHtmlContent(script.RenderHtmlContent());
+                    script.InnerHtml.AppendHtml(
+                        "$(document).ready(function () {" +
+                            "bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "', 'selected-tab-name');" +
+                        "});");
+                    var scriptTag = await script.RenderHtmlContent();
+                    output.PostContent.SetHtmlContent(scriptTag);
                 }
             }
 
@@ -137,36 +150,42 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 : itemClass;
             output.Attributes.SetAttribute("class", classValue);
         }
+
+        #endregion
     }
 
     /// <summary>
-    /// "nop-tab tag helper
+    /// "nop-tab" tag helper
     /// </summary>
-    [HtmlTargetElement("nop-tab", ParentTag = "nop-tabs", Attributes = NameAttributeName)]
+    [HtmlTargetElement("nop-tab", ParentTag = "nop-tabs", Attributes = NAME_ATTRIBUTE_NAME)]
     public class NopTabTagHelper : TagHelper
     {
-        private const string NameAttributeName = "asp-name";
-        private const string TitleAttributeName = "asp-title";
-        private const string DefaultAttributeName = "asp-default";
+        #region Constants
 
-        private readonly IHtmlHelper _htmlHelper;
+        private const string NAME_ATTRIBUTE_NAME = "asp-name";
+        private const string TITLE_ATTRIBUTE_NAME = "asp-title";
+        private const string DEFAULT_ATTRIBUTE_NAME = "asp-default";
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Title of the tab
         /// </summary>
-        [HtmlAttributeName(TitleAttributeName)]
+        [HtmlAttributeName(TITLE_ATTRIBUTE_NAME)]
         public string Title { set; get; }
 
         /// <summary>
         /// Indicates whether the tab is default
         /// </summary>
-        [HtmlAttributeName(DefaultAttributeName)]
+        [HtmlAttributeName(DEFAULT_ATTRIBUTE_NAME)]
         public string IsDefault { set; get; }
 
         /// <summary>
         /// Name of the tab
         /// </summary>
-        [HtmlAttributeName(NameAttributeName)]
+        [HtmlAttributeName(NAME_ATTRIBUTE_NAME)]
         public string Name { set; get; }
 
         /// <summary>
@@ -176,52 +195,58 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="htmlHelper">HTML helper</param>
+        #endregion
+
+        #region Fields
+
+        private readonly IHtmlHelper _htmlHelper;
+
+        #endregion
+
+        #region Ctor
+
         public NopTabTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Process
+        /// Asynchronously executes the tag helper with the given context and output
         /// </summary>
-        /// <param name="context">Context</param>
-        /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <param name="context">Contains information associated with the current HTML tag</param>
+        /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
-            {
                 throw new ArgumentNullException(nameof(context));
-            }
 
             if (output == null)
-            {
                 throw new ArgumentNullException(nameof(output));
-            }
 
             //contextualize IHtmlHelper
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
-            bool.TryParse(IsDefault, out bool isDefaultTab);
+            bool.TryParse(IsDefault, out var isDefaultTab);
 
             //get name of the tab should be selected
             var tabNameToSelect = context.Items.ContainsKey("tabNameToSelect")
                 ? context.Items["tabNameToSelect"].ToString()
-                : "";
+                : string.Empty;
 
             if (string.IsNullOrEmpty(tabNameToSelect))
-                tabNameToSelect = _htmlHelper.GetSelectedTabName();
+                tabNameToSelect = await _htmlHelper.GetSelectedTabName();
 
             if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
                 tabNameToSelect = Name;
 
             //tab title
             var tabTitle = new TagBuilder("li");
-            var a = new TagBuilder("a")
+            var linkTag = new TagBuilder("a")
             {
                 Attributes =
                 {
@@ -230,18 +255,20 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     new KeyValuePair<string, string>("data-toggle", "tab"),
                 }
             };
-            a.InnerHtml.AppendHtml(Title);
+            linkTag.InnerHtml.AppendHtml(Title);
 
             //merge classes
             if (context.AllAttributes.ContainsName("class"))
                 tabTitle.Attributes.Add("class", context.AllAttributes["class"].Value.ToString());
-            tabTitle.InnerHtml.AppendHtml(a.RenderHtmlContent());
+            tabTitle.InnerHtml.AppendHtml(await linkTag.RenderHtmlContent());
 
             //tab content
             var tabContent = new TagBuilder("div");
             tabContent.AddCssClass("tab-pane");
             tabContent.Attributes.Add("id", Name);
-            tabContent.InnerHtml.AppendHtml(output.GetChildContentAsync().Result.GetContent());
+
+            var childContent = await output.GetChildContentAsync();
+            tabContent.InnerHtml.AppendHtml(childContent.GetContent());
 
             //active class
             if (tabNameToSelect == Name)
@@ -252,16 +279,18 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //add to context
             var tabContext = (List<NopTabContextItem>)context.Items[typeof(NopTabsTagHelper)];
-            tabContext.Add(new NopTabContextItem()
+            tabContext.Add(new NopTabContextItem
             {
-                Title = tabTitle.RenderHtmlContent(),
-                Content = tabContent.RenderHtmlContent(),
+                Title = await tabTitle.RenderHtmlContent(),
+                Content = await tabContent.RenderHtmlContent(),
                 IsDefault = isDefaultTab
             });
 
             //generate nothing
             output.SuppressOutput();
         }
+
+        #endregion
     }
 
     /// <summary>
