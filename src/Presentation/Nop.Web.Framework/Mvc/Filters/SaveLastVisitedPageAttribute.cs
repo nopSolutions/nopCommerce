@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -32,7 +33,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that saves last visited page by customer
         /// </summary>
-        private class SaveLastVisitedPageFilter : IActionFilter
+        private class SaveLastVisitedPageFilter : IAsyncActionFilter
         {
             #region Fields
 
@@ -61,13 +62,14 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #endregion
 
-            #region Methods
+            #region Utilities
 
             /// <summary>
-            /// Called before the action executes, after model binding is complete
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
+            private async Task SaveLastVisitedPageAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -87,13 +89,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get current page
-                var pageUrl = _webHelper.GetThisPageUrl(true).Result;
+                var pageUrl = await _webHelper.GetThisPageUrl(true);
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
 
                 //get previous last page
-                var previousPageAttribute = _genericAttributeService
-                    .GetAttributesForEntity(_workContext.GetCurrentCustomer().Result.Id, nameof(Customer)).Result
+                var customer = await _workContext.GetCurrentCustomer();
+                var previousPageAttribute = (await _genericAttributeService
+                    .GetAttributesForEntity(customer.Id, nameof(Customer)))
                     .FirstOrDefault(attribute => attribute.Key
                         .Equals(NopCustomerDefaults.LastVisitedPageAttribute, StringComparison.InvariantCultureIgnoreCase));
 
@@ -101,9 +104,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (previousPageAttribute == null)
                 {
                     //insert without event notification
-                    _genericAttributeRepository.Insert(new GenericAttribute
+                    await _genericAttributeRepository.Insert(new GenericAttribute
                     {
-                        EntityId = _workContext.GetCurrentCustomer().Result.Id,
+                        EntityId = customer.Id,
                         Key = NopCustomerDefaults.LastVisitedPageAttribute,
                         KeyGroup = nameof(Customer),
                         Value = pageUrl,
@@ -115,17 +118,25 @@ namespace Nop.Web.Framework.Mvc.Filters
                     //update without event notification
                     previousPageAttribute.Value = pageUrl;
                     previousPageAttribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
-                    _genericAttributeRepository.Update(previousPageAttribute, false);
+                    await _genericAttributeRepository.Update(previousPageAttribute, false);
                 }
             }
 
+            #endregion
+
+            #region Methods
+
             /// <summary>
-            /// Called after the action executes, before the action result
+            /// Called asynchronously before the action, after model binding is complete.
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuted(ActionExecutedContext context)
+            /// <param name="next">A delegate invoked to execute the next action filter or the action itself</param>
+            /// <returns>A task that on completion indicates the filter has executed</returns>
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                //do nothing
+                await SaveLastVisitedPageAsync(context);
+                if (context.Result == null)
+                    await next();
             }
 
             #endregion
