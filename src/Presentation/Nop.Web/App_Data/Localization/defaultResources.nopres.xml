@@ -9159,6 +9159,9 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled">
     <Value>SSL enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Deleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
     <Value>Check if your store will be SSL secured. SSL (Secure Socket Layer) is the standard security technology for establishing an encrypted connection between a web server and the browser. This ensures that all data exchanged between web server and browser arrives unchanged.</Value>
   </LocaleResource>

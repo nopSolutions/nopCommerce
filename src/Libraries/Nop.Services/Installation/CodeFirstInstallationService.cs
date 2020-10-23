@@ -302,7 +302,8 @@ namespace Nop.Services.Installation
                     CompanyName = "Your company name",
                     CompanyAddress = "your company country, state, zip, street, etc",
                     CompanyPhoneNumber = "(123) 456-78901",
-                    CompanyVat = null
+                    CompanyVat = null,
+                    Deleted = false
                 }
             };
 

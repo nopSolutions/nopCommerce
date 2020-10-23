@@ -23,7 +23,8 @@ namespace Nop.Data.Mapping.Builders.Stores
                 .WithColumn(nameof(Store.CompanyName)).AsString(1000).Nullable()
                 .WithColumn(nameof(Store.CompanyAddress)).AsString(1000).Nullable()
                 .WithColumn(nameof(Store.CompanyPhoneNumber)).AsString(1000).Nullable()
-                .WithColumn(nameof(Store.CompanyVat)).AsString(1000).Nullable();
+                .WithColumn(nameof(Store.CompanyVat)).AsString(1000).Nullable()
+                .WithColumn(nameof(Store.Deleted)).AsBoolean().NotNullable();
         }
 
         #endregion

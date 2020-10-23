@@ -54,7 +54,10 @@ namespace Nop.Web.Areas.Admin.Models.Stores
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
         public string CompanyVat { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Deleted")]
+        public bool Deleted { get; set; }
+
         public IList<StoreLocalizedModel> Locales { get; set; }
 
         #endregion
