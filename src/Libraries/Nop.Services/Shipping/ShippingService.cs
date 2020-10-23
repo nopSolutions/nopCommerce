@@ -844,10 +844,6 @@ namespace Nop.Services.Shipping
                 if (result.ShippingOptions.Any() && result.Errors.Any())
                     result.Errors.Clear();
             }
-            result.ShippingOptions.Clear();
-            result.Errors.Add("error message from provider");
-            result.Errors.Add("error message from provider 1");
-            result.Errors.Add("error message from provider 2");
             //no shipping options loaded
             if (!result.ShippingOptions.Any() && !result.Errors.Any())
                 result.Errors.Add(_localizationService.GetResource("Checkout.ShippingOptionCouldNotBeLoaded"));
