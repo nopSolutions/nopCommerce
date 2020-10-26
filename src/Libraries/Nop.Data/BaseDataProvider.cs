@@ -89,24 +89,25 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected virtual DataConnection CreateDataConnection()
+        protected virtual DataConnection CreateDataConnection(int timeout = 0)
         {
-            return CreateDataConnection(LinqToDbDataProvider);
+            return CreateDataConnection(LinqToDbDataProvider, timeout);
         }
 
         /// <summary>
         /// Creates the database connection
         /// </summary>
         /// <param name="dataProvider">Data provider</param>
+        /// <param name="timeout">Command timeout (0 - default)</param>
         /// <returns>Database connection</returns>
-        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
+        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider, int timeout = 0)
         {
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
             var dataContext = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
             {
-                CommandTimeout = DataSettingsManager.SQLCommandTimeout
+                CommandTimeout = timeout != 0 ? timeout : DataSettingsManager.SQLCommandTimeout
             };
 
             return dataContext;
@@ -251,17 +252,50 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
+        /// <param name="timeout">Command timeout</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Resulting value</returns>
-        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
+        public T ExecuteStoredProcedure<T>(string procedureName, int timeout, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = CreateDataConnection(timeout);
             var command = new CommandInfo(dataContext, procedureName, parameters);
 
             var result = command.ExecuteProc<T>();
             UpdateOutputParameters(dataContext, parameters);
 
             return result;
+        }
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
+        {
+            return ExecuteStoredProcedure<T>(procedureName, parameters);
+        }
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="timeout">Command timeout</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public int ExecuteStoredProcedure(string procedureName, int timeout, params DataParameter[] parameters)
+        {
+            using var dataContext = CreateDataConnection(timeout);
+            var command = new CommandInfo(dataContext, procedureName, parameters);
+
+            var affectedRecords = command.ExecuteProc();
+            UpdateOutputParameters(dataContext, parameters);
+
+            return affectedRecords;
         }
 
         /// <summary>
@@ -273,13 +307,7 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var affectedRecords = command.ExecuteProc();
-            UpdateOutputParameters(dataContext, parameters);
-
-            return affectedRecords;
+            return ExecuteStoredProcedure(procedureName, 0, parameters);
         }
 
         /// <summary>

@@ -90,9 +90,9 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected override DataConnection CreateDataConnection()
+        protected override DataConnection CreateDataConnection(int timeout = 0)
         {
-            var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            var dataContext = CreateDataConnection(LinqToDbDataProvider, timeout);
 
             ConfigureDataContext(dataContext);
 

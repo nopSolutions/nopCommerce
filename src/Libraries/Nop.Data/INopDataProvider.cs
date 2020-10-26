@@ -189,9 +189,30 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
+        /// <param name="timeout">Command timeout</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        T ExecuteStoredProcedure<T>(string procedureName, int timeout, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Resulting value</returns>
         T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="timeout">Command timeout</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Returns collection of query result records</returns>
+        int ExecuteStoredProcedure(string procedureName, int timeout, params DataParameter[] parameters);
 
         /// <summary>
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
