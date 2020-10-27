@@ -104,7 +104,7 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker))
             {
-                entity.Id = DataContext.InsertWithInt32Identity(entity);
+                entity.Id = GetDataContext().InsertWithInt32Identity(entity);
                 return entity;
             }
         }
@@ -117,8 +117,8 @@ namespace Nop.Tests
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (new ReaderWriteLockDisposable(_locker)) 
-                DataContext.Update(entity);
+            using (new ReaderWriteLockDisposable(_locker))
+                GetDataContext().Update(entity);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Nop.Tests
         public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker))
-                DataContext.Delete(entity);
+                GetDataContext().Delete(entity);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker))
                 foreach (var entity in entities)
-                    DataContext.Delete(entity);
+                    GetDataContext().Delete(entity);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Nop.Tests
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            DataContext.GetTable<TEntity>()
+            GetDataContext().GetTable<TEntity>()
                  .Where(predicate).Delete();
         }
 
@@ -164,7 +164,7 @@ namespace Nop.Tests
         public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker))
-                DataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(DataContext));
+                GetDataContext().BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(GetDataContext()));
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Nop.Tests
         public ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-                return DataContext.GetTable<TEntity>();
+                return GetDataContext().GetTable<TEntity>();
         }
 
         /// <summary>
@@ -212,9 +212,9 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var tableName = DataContext.GetTable<TEntity>().TableName;
+                var tableName = GetDataContext().GetTable<TEntity>().TableName;
 
-                var result = DataContext.Query<int?>($"select seq from sqlite_sequence where name = \"{tableName}\"")
+                var result = GetDataContext().Query<int?>($"select seq from sqlite_sequence where name = \"{tableName}\"")
                     .FirstOrDefault();
 
                 return result ?? 1;
@@ -253,7 +253,7 @@ namespace Nop.Tests
         public void ReIndexTables()
         {
             using (new ReaderWriteLockDisposable(_locker))
-                DataContext.Execute("VACUUM;");
+                GetDataContext().Execute("VACUUM;");
         }
 
         public string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
@@ -284,9 +284,9 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker))
             {
-                var tableName = DataContext.GetTable<TEntity>().TableName;
+                var tableName = GetDataContext().GetTable<TEntity>().TableName;
 
-                DataContext.Execute($"update sqlite_sequence set seq = {ident} where name = \"{tableName}\"");
+                GetDataContext().Execute($"update sqlite_sequence set seq = {ident} where name = \"{tableName}\"");
             }
         }
 
@@ -312,9 +312,9 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
+                var command = new CommandInfo(GetDataContext(), procedureName, parameters);
                 var rez = command.QueryProc<T>()?.ToList();
-                UpdateOutputParameters(DataContext, parameters);
+                UpdateOutputParameters(GetDataContext(), parameters);
                 return rez ?? new List<T>();
             }
         }
@@ -329,7 +329,7 @@ namespace Nop.Tests
         public IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-                return DataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+                return GetDataContext().Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
 
         /// <summary>
@@ -342,12 +342,34 @@ namespace Nop.Tests
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, sqlStatement, dataParameters);
+                var command = new CommandInfo(GetDataContext(), sqlStatement, dataParameters);
                 var affectedRecords = command.Execute();
 
-                UpdateOutputParameters(DataContext, dataParameters);
+                UpdateOutputParameters(GetDataContext(), dataParameters);
 
                 return affectedRecords;
+            }
+        }
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="timeout">Command timeout</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        public T ExecuteStoredProcedure<T>(string procedureName, int timeout, params DataParameter[] parameters)
+        {
+            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
+            {
+                var command = new CommandInfo(GetDataContext(), procedureName, parameters);
+
+                var result = command.ExecuteProc<T>();
+                UpdateOutputParameters(GetDataContext(), parameters);
+
+                return result;
             }
         }
 
@@ -361,14 +383,27 @@ namespace Nop.Tests
         /// <returns>Resulting value</returns>
         public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
         {
+            return ExecuteStoredProcedure<T>(procedureName, 0, parameters);
+        }
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="timeout">Command timeout</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public int ExecuteStoredProcedure(string procedureName, int timeout, params DataParameter[] parameters)
+        {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
+                var command = new CommandInfo(GetDataContext(), procedureName, parameters);
 
-                var result = command.ExecuteProc<T>();
-                UpdateOutputParameters(DataContext, parameters);
+                var affectedRecords = command.ExecuteProc();
+                UpdateOutputParameters(GetDataContext(), parameters);
 
-                return result;
+                return affectedRecords;
             }
         }
 
@@ -381,26 +416,20 @@ namespace Nop.Tests
         /// <returns>Number of records, affected by command execution.</returns>
         public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
         {
-            using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
-            {
-                var command = new CommandInfo(DataContext, procedureName, parameters);
-
-                var affectedRecords = command.ExecuteProc();
-                UpdateOutputParameters(DataContext, parameters);
-
-                return affectedRecords;
-            }
+            return ExecuteStoredProcedure(procedureName, 0, parameters);
         }
 
         #endregion
 
         #region Properties
 
-        protected DataConnection DataContext =>
-            _dataContext ??= new DataConnection(LinqToDbDataProvider, CreateDbConnection(), AdditionalSchema)
+        protected DataConnection GetDataContext(int timeout = 0)
+        {
+            return _dataContext ??= new DataConnection(LinqToDbDataProvider, CreateDbConnection(), AdditionalSchema)
             {
-                CommandTimeout = DataSettingsManager.SQLCommandTimeout
+                CommandTimeout = timeout != 0 ? timeout : DataSettingsManager.SQLCommandTimeout
             };
+        }
 
         /// <summary>
         /// Name of database provider
