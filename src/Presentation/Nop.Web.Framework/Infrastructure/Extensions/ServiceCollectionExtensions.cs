@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var appSettings = new AppSettings();
             configuration.Bind(appSettings);
             services.AddSingleton(appSettings);
-            AppSettingsHelper.SaveAppSettingsAsync(appSettings);
+            AppSettingsHelper.SaveAppSettingsAsync(appSettings).Wait();
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();

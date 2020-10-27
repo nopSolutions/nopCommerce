@@ -21,7 +21,7 @@ namespace Nop.Core
         /// Sets the current customer
         /// </summary>
         /// <param name="customer">Current customer</param>
-        Task SetCustomerAsync(Customer customer = null);
+        Task SetCurrentCustomerAsync(Customer customer = null);
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)

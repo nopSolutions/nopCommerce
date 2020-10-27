@@ -424,15 +424,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var manufacturers = (await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray())).ToList();
+                var manufacturers = await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray());
                 await _manufacturerService.DeleteManufacturersAsync(manufacturers);
 
-                manufacturers.ForEach(manufacturer => 
+                var locale = await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer");
+                foreach (var manufacturer in manufacturers)
                 {
                     //activity log
-                    _customerActivityService.InsertActivityAsync("DeleteManufacturer",
-                        string.Format(_localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer").Result, manufacturer.Name), manufacturer).Wait();
-                });
+                    await _customerActivityService.InsertActivityAsync("DeleteManufacturer", string.Format(locale, manufacturer.Name), manufacturer);
+                }
             }
 
             return Json(new { Result = true });
