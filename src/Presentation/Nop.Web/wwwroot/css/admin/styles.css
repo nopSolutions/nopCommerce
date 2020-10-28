@@ -1261,11 +1261,14 @@ div.dataTables_wrapper {
 
 .input-group.input-group-short .input-group-text {
   margin-right: 10px;
+  margin-bottom: 4px;
+  background-color: transparent;
+  border: none;
 }
 
-.input-group-required {
-  width: 100%;
-}
+  .input-group-required {
+    width: 100%;
+  }
 
   .input-group-required .input-group-btn {
     font-size: inherit;

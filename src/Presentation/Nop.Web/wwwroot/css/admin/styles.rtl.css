@@ -1015,6 +1015,9 @@ div.dataTables_wrapper {
   color: #fff;
   padding: 0 15px;
 }
+.navbar .ml-auto {
+  margin-left: 0px !important;  
+}
 
 /* NAV TABS */
 .nav > li > a > img {
@@ -1264,6 +1267,9 @@ div.dataTables_wrapper {
 
 .input-group.input-group-short .input-group-text {
   margin-left: 10px;
+  margin-bottom: 4px;
+  background-color: transparent;
+  border: none;
 }
 
 .input-group-required {
