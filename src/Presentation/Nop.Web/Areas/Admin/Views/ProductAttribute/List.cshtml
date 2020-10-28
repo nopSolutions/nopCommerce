@@ -7,17 +7,18 @@
     Html.SetActiveMenuItemSystemName("Product attributes");
 }
 
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.ProductAttributes")
     </h1>
     <div class="pull-right">
-        <a asp-action="Create" class="btn bg-blue">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeListButtons })
-        <button type="button" id="delete-selected" class="btn bg-red">
+        <button type="button" id="delete-selected" class="btn btn-danger">
             <i class="fa fa-trash-o"></i>
             @T("Admin.Common.Delete.Selected")
         </button>
@@ -25,10 +26,11 @@
     </div>
 </div>
 
-<div class="content">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
+<section class="content">
+    <div class="container-fluid">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
                 <p>
                     @T("Admin.Catalog.Attributes.ProductAttributes.Description")
                 </p>
@@ -40,7 +42,7 @@
                     LengthMenu = Model.AvailablePageSizes,
                     ColumnCollection = new List<ColumnProperty>
                     {
-                        new ColumnProperty(nameof(ProductAttributeModel.Id))
+                         new ColumnProperty(nameof(ProductAttributeModel.Id))
                         {
                             IsMasterCheckBox = true,
                             Render = new RenderCheckBox("checkbox_productattributes"),
@@ -49,7 +51,7 @@
                         },
                         new ColumnProperty(nameof(ProductAttributeModel.Name))
                         {
-                            Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text,
+                            Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text
                         },
                         new ColumnProperty(nameof(ProductAttributeModel.Id))
                         {
@@ -91,3 +93,4 @@
         </div>
     </div>
 </div>
+</section>

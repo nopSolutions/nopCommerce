@@ -1,8 +1,8 @@
 ﻿@model ConfigurationModel
 
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
+<div class="card-body">
+    <div class="card card-default">
+        <div class="card-body">
             <p>
                 To enable this tax provider, you'll need to:<br />
                 <br />
@@ -11,7 +11,7 @@
                 3. Add a company and some nexus jurisdiction selections to get any tax results<br />
                 4. Fill in your Avalara account details below<br />
             </p>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="AccountId" />
                 </div>
@@ -20,7 +20,7 @@
                     <span asp-validation-for="AccountId"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="LicenseKey" />
                 </div>
@@ -29,7 +29,7 @@
                     <span asp-validation-for="LicenseKey"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="CompanyCode" />
                 </div>
@@ -38,7 +38,7 @@
                     <span asp-validation-for="CompanyCode"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="UseSandbox" />
                 </div>
@@ -47,7 +47,7 @@
                     <span asp-validation-for="UseSandbox"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="CommitTransactions" />
                 </div>
@@ -56,7 +56,7 @@
                     <span asp-validation-for="CommitTransactions"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="ValidateAddress" />
                 </div>
@@ -65,7 +65,7 @@
                     <span asp-validation-for="ValidateAddress"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="TaxOriginAddressTypeId" />
                 </div>
@@ -85,7 +85,7 @@
                     }
                 </script>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <nop-label asp-for="EnableLogging" />
                 </div>
@@ -94,8 +94,8 @@
                     <span asp-validation-for="EnableLogging"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-9 col-md-offset-3">
+            <div class="form-group row">
+                <div class="col-md-9 offset-md-3">
                     <div class="input-group input-group-short">
                         <div class="input-group-text">
                             <button type="submit" name="save" class="btn btn-primary">
@@ -143,9 +143,9 @@
             });
         </script>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="TestAddress.CountryId" />
                     </div>
@@ -154,7 +154,7 @@
                         <span asp-validation-for="TestAddress.CountryId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="TestAddress.StateProvinceId" />
                     </div>
@@ -163,7 +163,7 @@
                         <span asp-validation-for="TestAddress.StateProvinceId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="TestAddress.City" />
                     </div>
@@ -172,7 +172,7 @@
                         <span asp-validation-for="TestAddress.City"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="TestAddress.Address1" />
                     </div>
@@ -181,7 +181,7 @@
                         <span asp-validation-for="TestAddress.Address1"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="TestAddress.ZipPostalCode" />
                     </div>
@@ -190,8 +190,8 @@
                         <span asp-validation-for="TestAddress.ZipPostalCode"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
                         <button type="submit" name="testTax" class="btn btn-info">
                             @T("Plugins.Tax.Avalara.TestTax")
                         </button>
@@ -199,7 +199,7 @@
                 </div>
                 @if (!string.IsNullOrEmpty(Model.TestTaxResult))
                 {
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-12" style="white-space: pre-line">
                             @Model.TestTaxResult
                         </div>

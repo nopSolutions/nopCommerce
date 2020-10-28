@@ -18,15 +18,15 @@
             </small>
         </h1>
         <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
+            <button type="submit" name="save" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="save-continue" class="btn bg-blue">
+            <button type="submit" name="save-continue" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <a asp-action="ExportXml" asp-route-id="@Model.Id" class="btn bg-green">
+            <a asp-action="ExportXml" asp-route-id="@Model.Id" class="btn btn-success">
                 <i class="fa fa-download"></i>
                 @T("Admin.Configuration.Languages.Export")
             </a>
@@ -34,7 +34,7 @@
                 <i class="fa fa-upload"></i>
                 @T("Admin.Configuration.Languages.Import")
             </button>
-            <span id="language-delete" class="btn bg-red">
+            <span id="language-delete" class="btn btn-danger">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
@@ -50,8 +50,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importxml-window-title">@T("Admin.Configuration.Languages.Import")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Language" asp-route-id="@Model.Id" asp-action="ImportXml" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
@@ -64,10 +64,10 @@
                                 <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
                             </li>
                         </ul>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Configuration.Languages.XmlFile")
                                     </label>
                                 </div>

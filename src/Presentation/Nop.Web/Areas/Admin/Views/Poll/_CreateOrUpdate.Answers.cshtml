@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "answers-grid",
@@ -49,12 +49,12 @@
             }
         })
 
-        <div class="panel panel-default no-margin">
-            <div class="panel-heading">
+        <div class="card card-default no-margin">
+            <div class="card-header">
                 @T("Admin.Common.AddNewRecord")
             </div>
-            <div class="panel-body">
-                <div class="form-group">
+            <div class="card-body">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name" />
                     </div>
@@ -63,7 +63,7 @@
                         <span asp-validation-for="@Model.PollAnswerSearchModel.AddPollAnswer.Name"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder" />
                     </div>
@@ -72,8 +72,8 @@
                         <span asp-validation-for="@Model.PollAnswerSearchModel.AddPollAnswer.DisplayOrder"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-9 col-md-offset-3">
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3">
                         <button type="button" id="addPollAnswer" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
     </div>
 }

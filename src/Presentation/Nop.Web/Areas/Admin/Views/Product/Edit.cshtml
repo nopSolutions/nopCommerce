@@ -17,15 +17,15 @@
             </small>
         </h1>
         <div class="pull-right">
-            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">
+            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-info">
                 <i class="fa fa-eye"></i>
                 @T("Admin.Common.Preview")
             </button>
-            <button type="submit" name="save" class="btn bg-blue">
+            <button type="submit" name="save" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="save-continue" class="btn bg-blue">
+            <button type="submit" name="save-continue" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
@@ -33,7 +33,7 @@
                 <i class="fa fa-clone"></i>
                 @T("Admin.Catalog.Products.Copy")
             </button>
-            <span id="product-delete" class="btn bg-red">
+            <span id="product-delete" class="btn btn-danger">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
@@ -55,14 +55,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="copyproduct-window-title">@T("Admin.Catalog.Products.Copy")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Product" asp-action="CopyProduct" method="post">
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <input asp-for="CopyProductModel.Id" type="hidden" />
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-4">
                                 <nop-label asp-for="CopyProductModel.Name" />
                             </div>
@@ -70,7 +70,7 @@
                                 <nop-editor asp-for="CopyProductModel.Name" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-4">
                                 <nop-label asp-for="CopyProductModel.Published" />
                             </div>
@@ -78,7 +78,7 @@
                                 <nop-editor asp-for="CopyProductModel.Published" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-4">
                                 <nop-label asp-for="CopyProductModel.CopyImages" />
                             </div>

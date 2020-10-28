@@ -5,7 +5,7 @@
 @inject IPluginManager<IAdminMenuPlugin> adminMenuPluginManager
 @inject IWorkContext workContext
 
-<ul class="sidebar-menu" data-widget="tree">
+<ul class="nav nav-pills nav-sidebar flex-column nav-legacy" data-widget="treeview" role="menu">
     @{
         //load sitemap
         var siteMap = new XmlSiteMap();

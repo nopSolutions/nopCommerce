@@ -220,8 +220,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select an appropriate panel
-            SaveSelectedPanelName("ordersettings-return-request");
+            //select an appropriate card
+            SaveSelectedCardName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");
@@ -354,8 +354,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select an appropriate panel
-            SaveSelectedPanelName("ordersettings-return-request");
+            //select an appropriate card
+            SaveSelectedCardName("ordersettings-return-request");
 
             //we just redirect a user to the order settings page
             return RedirectToAction("Order", "Setting");

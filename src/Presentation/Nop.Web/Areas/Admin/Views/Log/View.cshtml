@@ -17,7 +17,7 @@
             </small>
         </h1>
         <div class="pull-right">
-            <span id="log-delete" class="btn bg-red">
+            <span id="log-delete" class="btn btn-danger">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
@@ -25,13 +25,14 @@
         </div>
     </div>
 
-    <div class="content">
+   <section class="content">
+    <div class="container-fluid">
         <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default">
+            <div class="cards-group">
+                <div class="card card-default">
                     <div asp-validation-summary="All"></div>
-                    <div class="panel-body">
-                        <div class="form-group">
+                    <div class="card-body">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="LogLevel" />
                             </div>
@@ -39,7 +40,7 @@
                                 <div class="form-text-row">@Model.LogLevel</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="ShortMessage" />
                             </div>
@@ -47,7 +48,7 @@
                                 <div class="form-text-row">@Html.Raw(Model.ShortMessage)</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="FullMessage" />
                             </div>
@@ -55,7 +56,7 @@
                                 <div class="form-text-row">@Html.Raw(Model.FullMessage)</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="IpAddress" />
                             </div>
@@ -63,7 +64,7 @@
                                 <div class="form-text-row">@Model.IpAddress</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CustomerId" />
                             </div>
@@ -74,7 +75,7 @@
                                 }
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="PageUrl" />
                             </div>
@@ -82,7 +83,7 @@
                                 <div class="form-text-row">@Model.PageUrl</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="ReferrerUrl" />
                             </div>
@@ -90,7 +91,7 @@
                                 <div class="form-text-row">@Model.ReferrerUrl</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CreatedOn" />
                             </div>
@@ -103,5 +104,6 @@
             </div>
         </div>
     </div>
+   </section>
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="log-delete" />

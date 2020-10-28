@@ -66,13 +66,23 @@ namespace Nop.Web.Framework.Extensions
                 selectedTabInput.Attributes.Add("value", tabNameToSelect);
                 tabStrip.AppendLine(selectedTabInput.RenderHtmlContent());
 
-                tabStrip.AppendLine("<ul class=\"nav nav-tabs\">");
+                tabStrip.AppendLine($"<div class=\"card card-primary card-outline card-outline-tabs\">");
+                tabStrip.AppendLine($"<div class=\"card-header p-0 pt-1 border-bottom-0\">");
+
+                tabStrip.AppendLine("<ul class=\"nav nav-tabs\" id=\"custom-content-above-tab\" role=\"tablist\" >");
 
                 //default tab
                 var standardTabName = $"{name}-standard-tab";
                 var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
-                tabStrip.AppendLine(string.Format("<li{0}>", standardTabSelected ? " class=\"active\"" : null));
-                tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
+                if (standardTabSelected)
+                {
+                    tabStrip.AppendLine($"<a class=\"nav-link active\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                }
+                else
+                {
+                    tabStrip.AppendLine($"<a class=\"nav-link\" data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                }
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -86,17 +96,19 @@ namespace Nop.Web.Framework.Extensions
                         throw new Exception("Language cannot be loaded");
 
                     var localizedTabName = $"{name}-{language.Id}-tab";
-                    tabStrip.AppendLine(string.Format("<li{0}>", localizedTabName == tabNameToSelect ? " class=\"active\"" : null));
+                    tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
                     var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
-                    tabStrip.AppendLine($"<a data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"tab\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
+                    tabStrip.AppendLine($"<a class=\"nav-link\" data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
                     tabStrip.AppendLine("</li>");
                 }
                 tabStrip.AppendLine("</ul>");
-                    
+                tabStrip.AppendLine("</div>");
+                tabStrip.AppendLine("<div class=\"card-body\">");
+
                 //default tab
-                tabStrip.AppendLine("<div class=\"tab-content\">");
-                tabStrip.AppendLine(string.Format("<div class=\"tab-pane{0}\" id=\"{1}\">", standardTabSelected ? " active" : null, standardTabName));
+                tabStrip.AppendLine("<div class=\"tab-content\" id=\"custom-content-above-tabContent\">");
+                tabStrip.AppendLine(string.Format("<div class=\"tab-pane fade{0}\" id=\"{1}\" role=\"tabpanel\">", standardTabSelected ? " show active" : null, standardTabName));
                 tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                 tabStrip.AppendLine("</div>");
 
@@ -108,10 +120,12 @@ namespace Nop.Web.Framework.Extensions
                         throw new Exception("Language cannot be loaded");
 
                     var localizedTabName = $"{name}-{language.Id}-tab";
-                    tabStrip.AppendLine(string.Format("<div class=\"tab-pane{0}\" id=\"{1}\">", localizedTabName == tabNameToSelect ? " active" : null, localizedTabName));
+                    tabStrip.AppendLine(string.Format("<div class=\"tab-pane fade{0}\" id=\"{1}\" role=\"tabpanel\">", localizedTabName == tabNameToSelect ? " show active" : null, localizedTabName));
                     tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                     tabStrip.AppendLine("</div>");
                 }
+                tabStrip.AppendLine("</div>");
+                tabStrip.AppendLine("</div>");
                 tabStrip.AppendLine("</div>");
                 tabStrip.AppendLine("</div>");
 
@@ -129,16 +143,16 @@ namespace Nop.Web.Framework.Extensions
         }
 
         /// <summary>
-        /// Gets a selected panel name (used in admin area to store selected panel name)
+        /// Gets a selected card name (used in admin area to store selected panel name)
         /// </summary>
         /// <param name="helper">HtmlHelper</param>
         /// <returns>Name</returns>
-        public static string GetSelectedPanelName(this IHtmlHelper helper)
+        public static string GetSelectedCardName(this IHtmlHelper helper)
         {
             //keep this method synchronized with
-            //"SaveSelectedPanelName" method of \Area\Admin\Controllers\BaseAdminController.cs
+            //"SaveSelectedCardName" method of \Area\Admin\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
-            const string dataKey = "nop.selected-panel-name";
+            const string dataKey = "nop.selected-card-name";
 
             if (helper.ViewData.ContainsKey(dataKey))
                 tabName = helper.ViewData[dataKey].ToString();
