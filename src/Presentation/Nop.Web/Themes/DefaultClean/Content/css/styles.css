@@ -2599,6 +2599,50 @@ label, label + * {
   text-align: center;
 }
 
+.attributes .option-list:not(.attribute-squares) .disabled {
+  opacity: .5;
+}
+.attributes .attribute-squares .disabled .attribute-square {
+  cursor: default;
+  opacity: .25;
+}
+
+.attributes .attribute-squares .disabled .attribute-square-container {
+  background: linear-gradient(to top left, rgba(0,0,0,0) 0%, rgba(0,0,0,0) calc(50% - 1.5px), #e91e63 50%, rgba(0,0,0,0) calc(50% + 1.5px), rgba(0,0,0,0) 100%), linear-gradient(to top right, rgba(0,0,0,0) 0%, rgba(0,0,0,0) calc(50% - 1.5px), #e91e63 50%, rgba(0,0,0,0) calc(50% + 1.5px), rgba(0,0,0,0) 100%);
+}
+
+.attributes .attribute-squares .tooltip-container .not-available-text {
+    font-size: 12px;
+}
+
+.attributes .attribute-squares.color-squares .tooltip-container .not-available-text {
+  margin: 5px;
+}
+.attributes .attribute-squares.color-squares .tooltip-container {
+  width: 120px;
+  display: none;
+}
+.attributes .attribute-squares.color-squares li:hover .tooltip-container {
+  margin-left: -42px;
+}
+
+.attributes .attribute-squares.color-squares .disabled .tooltip-container {
+  display: block;
+}
+
+.attributes .attribute-squares.image-squares .tooltip-container .not-available-text {
+  margin-bottom: 5px;
+  display: none;
+}
+.attributes .attribute-squares.image-squares .disabled .tooltip-container .not-available-text {
+  display: block;
+}
+
+.attributes select option.disabled,
+.attributes select option:disabled {
+  color: #cecece;
+}
+
 .ui-datepicker {
   width: 280px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
@@ -2745,9 +2789,7 @@ label, label + * {
 }
 
 .attribute-squares li input {
-  position: relative;
-  z-index: -1;
-  margin: -32px 0 0;
+  display: none;
 }
 
 .tooltip-container {

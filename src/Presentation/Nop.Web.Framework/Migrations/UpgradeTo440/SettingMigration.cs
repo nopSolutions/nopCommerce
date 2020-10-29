@@ -169,6 +169,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 orderSettings.DisplayCustomerCurrencyOnOrders = false;
                 settingService.SaveSettingAsync(orderSettings).Wait();
             }
+
+            //#16 #2909
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.AttributeValueOutOfStockDisplayType).Result)
+            {
+                catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.AlwaysDisplay;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
         }
 
         public override void Down()

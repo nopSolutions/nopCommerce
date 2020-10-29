@@ -350,6 +350,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool DisplayDatePreOrderAvailability { get; set; }
         public bool DisplayDatePreOrderAvailability_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType")]
+        public int AttributeValueOutOfStockDisplayType { get; set; }
+        public bool AttributeValueOutOfStockDisplayType_OverrideForStore { get; set; }
+        public SelectList AttributeValueOutOfStockDisplayTypes { get; set; }
+
         public SortOptionSearchModel SortOptionSearchModel { get; set; }
 
         public ReviewTypeSearchModel ReviewTypeSearchModel { get; set; }

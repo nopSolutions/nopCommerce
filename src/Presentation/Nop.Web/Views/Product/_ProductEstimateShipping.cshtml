@@ -40,7 +40,7 @@
                         ZipPostalCode: address.zipPostalCode
                     });
 
-                    return `@Html.Raw(Url.Action("estimateshipping", "product", new { ProductId = Model.ProductId }))&${params}`;
+                    return '@Html.Raw(Url.Action("estimateshipping", "product", new { ProductId = Model.ProductId }))&' + params;
                 },
                 handlers: {
                     openPopUp: function () {
@@ -85,11 +85,11 @@
 
                             var estimatedDelivery = $('<div/>').addClass('estimated-delivery')
                                 .append($('<div/>').addClass('shipping-address')
-                                    .append($('<span/>').text(`@T("Products.EstimateShipping.ToAddress") ${option.address.countryName}, ${(option.address.stateProvinceName ? option.address.stateProvinceName + ',' : '')} ${option.address.zipPostalCode} @T("Products.EstimateShipping.ViaProvider") ${option.provider}`))
+                                    .append($('<span/>').text('@T("Products.EstimateShipping.ToAddress") ' + option.address.countryName + ', ' + (option.address.stateProvinceName ? option.address.stateProvinceName + ', ' : '') + option.address.zipPostalCode + ' @T("Products.EstimateShipping.ViaProvider") ' + option.provider))
                                     .append($('<i/>').addClass('arrow-down')));
 
                             if (option.deliveryDate && option.deliveryDate !== '-')
-                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text(`@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ${option.deliveryDate}`));
+                                estimatedDelivery.append($('<div/>').addClass('shipping-date').text('@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ' + option.deliveryDate));
 
                             shippingContent.append(estimatedDelivery);
                         } else {

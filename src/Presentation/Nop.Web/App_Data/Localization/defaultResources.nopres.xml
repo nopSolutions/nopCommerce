@@ -5586,6 +5586,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
     <Value>Check to allow viewing of unpublished product details page. This way SEO won't be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType">
+    <Value>Display type for attribute value when out of stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint">
+    <Value>Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections">
     <Value>Additional sections</Value>
   </LocaleResource>
@@ -18419,6 +18425,12 @@
   </LocaleResource>
   <LocaleResource Name="Products.PriceRangeFrom">
     <Value>From {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.DropdownList.DefaultItem">
+    <Value>Please select</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.NotAvailable">
+    <Value>Not available</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductAttributes.PriceAdjustment">
     <Value>{0} [{1}{2}]</Value>

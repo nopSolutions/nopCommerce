@@ -31,4 +31,14 @@
             <span asp-validation-for="DisplayDiscontinuedMessageForUnpublishedProducts"></span>
         </div>
     </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AttributeValueOutOfStockDisplayType_OverrideForStore" asp-input="AttributeValueOutOfStockDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AttributeValueOutOfStockDisplayType" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="AttributeValueOutOfStockDisplayType" asp-items="Model.AttributeValueOutOfStockDisplayTypes" />
+            <span asp-validation-for="AttributeValueOutOfStockDisplayType"></span>
+        </div>
+    </div>
 </div>

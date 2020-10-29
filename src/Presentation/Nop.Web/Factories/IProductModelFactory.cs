@@ -35,6 +35,13 @@ namespace Nop.Web.Factories
             bool forceRedirectionAfterAddingToCart = false);
 
         /// <summary>
+        /// Prepare the product combination models
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Product combination models</returns>
+        Task<IList<ProductCombinationModel>> PrepareProductCombinationModelsAsync(Product product);
+
+        /// <summary>
         /// Prepare the product details model
         /// </summary>
         /// <param name="product">Product</param>

@@ -510,6 +510,11 @@ namespace Nop.Web.Infrastructure
                 pattern: $"vendor/products",
                 defaults: new { controller = "Catalog", action = "GetVendorProducts" });
 
+            //product combinations (AJAX)
+            endpointRouteBuilder.MapControllerRoute(name: "GetProductCombinations",
+                pattern: $"product/combinations",
+                defaults: new { controller = "Product", action = "GetProductCombinations" });
+
             //product attributes with "upload file" type (AJAX)
             endpointRouteBuilder.MapControllerRoute(name: "UploadFileProductAttribute",
                 pattern: $"uploadfileproductattribute/{{attributeId:min(0)}}",
