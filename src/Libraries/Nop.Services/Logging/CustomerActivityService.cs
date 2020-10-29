@@ -44,36 +44,36 @@ namespace Nop.Services.Logging
         /// Inserts an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public virtual async Task InsertActivityType(ActivityLogType activityLogType)
+        public virtual async Task InsertActivityTypeAsync(ActivityLogType activityLogType)
         {
-            await _activityLogTypeRepository.Insert(activityLogType);
+            await _activityLogTypeRepository.InsertAsync(activityLogType);
         }
 
         /// <summary>
         /// Updates an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        public virtual async Task UpdateActivityType(ActivityLogType activityLogType)
+        public virtual async Task UpdateActivityTypeAsync(ActivityLogType activityLogType)
         {
-            await _activityLogTypeRepository.Update(activityLogType);
+            await _activityLogTypeRepository.UpdateAsync(activityLogType);
         }
 
         /// <summary>
         /// Deletes an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type</param>
-        public virtual async Task DeleteActivityType(ActivityLogType activityLogType)
+        public virtual async Task DeleteActivityTypeAsync(ActivityLogType activityLogType)
         {
-            await _activityLogTypeRepository.Delete(activityLogType);
+            await _activityLogTypeRepository.DeleteAsync(activityLogType);
         }
 
         /// <summary>
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type items</returns>
-        public virtual async Task<IList<ActivityLogType>> GetAllActivityTypes()
+        public virtual async Task<IList<ActivityLogType>> GetAllActivityTypesAsync()
         {
-            var activityLogTypes = await _activityLogTypeRepository.GetAll(query=>
+            var activityLogTypes = await _activityLogTypeRepository.GetAllAsync(query=>
             {
                 return from alt in query
                     orderby alt.Name
@@ -88,9 +88,9 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
-        public virtual async Task<ActivityLogType> GetActivityTypeById(int activityLogTypeId)
+        public virtual async Task<ActivityLogType> GetActivityTypeByIdAsync(int activityLogTypeId)
         {
-            return await _activityLogTypeRepository.GetById(activityLogTypeId, cache => default);
+            return await _activityLogTypeRepository.GetByIdAsync(activityLogTypeId, cache => default);
         }
 
         /// <summary>
@@ -100,9 +100,9 @@ namespace Nop.Services.Logging
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
         /// <returns>Activity log item</returns>
-        public virtual async Task<ActivityLog> InsertActivity(string systemKeyword, string comment, BaseEntity entity = null)
+        public virtual async Task<ActivityLog> InsertActivityAsync(string systemKeyword, string comment, BaseEntity entity = null)
         {
-            return await InsertActivity(await _workContext.GetCurrentCustomer(), systemKeyword, comment, entity);
+            return await InsertActivityAsync(await _workContext.GetCurrentCustomerAsync(), systemKeyword, comment, entity);
         }
 
         /// <summary>
@@ -113,13 +113,13 @@ namespace Nop.Services.Logging
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
         /// <returns>Activity log item</returns>
-        public virtual async Task<ActivityLog> InsertActivity(Customer customer, string systemKeyword, string comment, BaseEntity entity = null)
+        public virtual async Task<ActivityLog> InsertActivityAsync(Customer customer, string systemKeyword, string comment, BaseEntity entity = null)
         {
             if (customer == null)
                 return null;
 
             //try to get activity log type by passed system keyword
-            var activityLogType = (await GetAllActivityTypes()).FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
+            var activityLogType = (await GetAllActivityTypesAsync()).FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
             if (!activityLogType?.Enabled ?? true)
                 return null;
 
@@ -132,9 +132,9 @@ namespace Nop.Services.Logging
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,
-                IpAddress = await _webHelper.GetCurrentIpAddress()
+                IpAddress = await _webHelper.GetCurrentIpAddressAsync()
             };
-            await _activityLogRepository.Insert(logItem);
+            await _activityLogRepository.InsertAsync(logItem);
 
             return logItem;
         }
@@ -143,9 +143,9 @@ namespace Nop.Services.Logging
         /// Deletes an activity log item
         /// </summary>
         /// <param name="activityLog">Activity log type</param>
-        public virtual async Task DeleteActivity(ActivityLog activityLog)
+        public virtual async Task DeleteActivityAsync(ActivityLog activityLog)
         {
-            await _activityLogRepository.Delete(activityLog);
+            await _activityLogRepository.DeleteAsync(activityLog);
         }
 
         /// <summary>
@@ -161,11 +161,11 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual async Task<IPagedList<ActivityLog>> GetAllActivities(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
+        public virtual async Task<IPagedList<ActivityLog>> GetAllActivitiesAsync(DateTime? createdOnFrom = null, DateTime? createdOnTo = null,
             int? customerId = null, int? activityLogTypeId = null, string ipAddress = null, string entityName = null, int? entityId = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _activityLogRepository.GetAllPaged(query =>
+            return await _activityLogRepository.GetAllPagedAsync(query =>
             {
                 //filter by IP
                 if (!string.IsNullOrEmpty(ipAddress))
@@ -202,17 +202,17 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
         /// <returns>Activity log item</returns>
-        public virtual async Task<ActivityLog> GetActivityById(int activityLogId)
+        public virtual async Task<ActivityLog> GetActivityByIdAsync(int activityLogId)
         {
-            return await _activityLogRepository.GetById(activityLogId);
+            return await _activityLogRepository.GetByIdAsync(activityLogId);
         }
 
         /// <summary>
         /// Clears activity log
         /// </summary>
-        public virtual async Task ClearAllActivities()
+        public virtual async Task ClearAllActivitiesAsync()
         {
-            await _activityLogRepository.Truncate();
+            await _activityLogRepository.TruncateAsync();
         }
 
         #endregion

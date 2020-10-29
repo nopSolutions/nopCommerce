@@ -52,7 +52,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                 return new ValueTask<RouteValueDictionary>(values);
 
             var slug = slugValue as string;
-            var urlRecord = _urlRecordService.GetBySlug(slug).Result;
+            var urlRecord = _urlRecordService.GetBySlugAsync(slug).Result;
 
             //no URL record found
             if (urlRecord == null)
@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.Mvc.Routing
             //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
             {
-                var activeSlug = _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId).Result;
+                var activeSlug = _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId).Result;
                 if (string.IsNullOrEmpty(activeSlug))
                     return new ValueTask<RouteValueDictionary>(values);
 
@@ -85,11 +85,11 @@ namespace Nop.Web.Framework.Mvc.Routing
                 var urllanguage = values["language"];
                 if (urllanguage != null && !string.IsNullOrEmpty(urllanguage.ToString()))
                 {
-                    var language = _languageService.GetAllLanguages().Result.FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == urllanguage.ToString().ToLowerInvariant());
+                    var language = _languageService.GetAllLanguagesAsync().Result.FirstOrDefault(x => x.UniqueSeoCode.ToLowerInvariant() == urllanguage.ToString().ToLowerInvariant());
                     if (language == null)
-                        language = _languageService.GetAllLanguages().Result.FirstOrDefault();
+                        language = _languageService.GetAllLanguagesAsync().Result.FirstOrDefault();
 
-                    var slugForCurrentLanguage = _urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, language.Id).Result;
+                    var slugForCurrentLanguage = _urlRecordService.GetActiveSlugAsync(urlRecord.EntityId, urlRecord.EntityName, language.Id).Result;
                     if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
                     {
                         //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
@@ -159,7 +159,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
-                    _eventPublisher.Publish(new GenericRoutingEvent(values, urlRecord)).Wait();
+                    _eventPublisher.PublishAsync(new GenericRoutingEvent(values, urlRecord)).Wait();
                     break;
             }
 

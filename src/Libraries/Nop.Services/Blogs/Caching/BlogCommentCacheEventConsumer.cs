@@ -13,9 +13,9 @@ namespace Nop.Services.Blogs.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(BlogComment entity)
+        protected override async Task ClearCacheAsync(BlogComment entity)
         {
-            await RemoveByPrefix(NopBlogsDefaults.BlogCommentsNumberPrefix, entity.BlogPostId);
+            await RemoveByPrefixAsync(NopBlogsDefaults.BlogCommentsNumberPrefix, entity.BlogPostId);
         }
     }
 }

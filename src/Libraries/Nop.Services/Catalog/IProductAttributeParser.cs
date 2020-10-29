@@ -18,7 +18,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected product attribute mappings</returns>
-        Task<IList<ProductAttributeMapping>> ParseProductAttributeMappings(string attributesXml);
+        Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(string attributesXml);
 
         /// <summary>
         /// Get product attribute values
@@ -26,7 +26,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
         /// <returns>Product attribute values</returns>
-        Task<IList<ProductAttributeValue>> ParseProductAttributeValues(string attributesXml, int productAttributeMappingId = 0);
+        Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(string attributesXml, int productAttributeMappingId = 0);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.Catalog
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreQuantity">A value indicating whether we should ignore the quantity of attribute value entered by the customer</param>
         /// <returns>Result</returns>
-        Task<bool> AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true);
+        Task<bool> AreProductAttributesEqualAsync(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes, bool ignoreQuantity = true);
 
         /// <summary>
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
@@ -73,7 +73,7 @@ namespace Nop.Services.Catalog
         /// <param name="pam">Product attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        Task<bool?> IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml);
+        Task<bool?> IsConditionMetAsync(ProductAttributeMapping pam, string selectedAttributesXml);
 
         /// <summary>
         /// Finds a product attribute combination by attributes stored in XML 
@@ -82,7 +82,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Found product attribute combination</returns>
-        Task<ProductAttributeCombination> FindProductAttributeCombination(Product product,
+        Task<ProductAttributeCombination> FindProductAttributeCombinationAsync(Product product,
             string attributesXml, bool ignoreNonCombinableAttributes = true);
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Nop.Services.Catalog
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="allowedAttributeIds">List of allowed attribute identifiers. If null or empty then all attributes would be used.</param>
         /// <returns>Attribute combinations in XML format</returns>
-        Task<IList<string>> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
+        Task<IList<string>> GenerateAllCombinationsAsync(Product product, bool ignoreNonCombinableAttributes = false, IList<int> allowedAttributeIds = null);
 
         /// <summary>
         /// Parse a customer entered price of the product
@@ -100,7 +100,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="form">Form</param>
         /// <returns>Customer entered price of the product</returns>
-        Task<decimal> ParseCustomerEnteredPrice(Product product, IFormCollection form);
+        Task<decimal> ParseCustomerEnteredPriceAsync(Product product, IFormCollection form);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
         /// <param name="form">Form values</param>
         /// <param name="errors">Errors</param>
         /// <returns>Attributes in XML format</returns>
-        Task<string> ParseProductAttributes(Product product, IFormCollection form, List<string> errors);
+        Task<string> ParseProductAttributesAsync(Product product, IFormCollection form, List<string> errors);
 
         #endregion
 

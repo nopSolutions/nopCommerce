@@ -67,7 +67,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         public IList<string> GetWidgetZones()
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
-            widgetZones.AddRange(_facebookPixelService.GetCustomEventsWidgetZones().Result);
+            widgetZones.AddRange(_facebookPixelService.GetCustomEventsWidgetZonesAsync().Result);
             return widgetZones;
         }
 
@@ -87,9 +87,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
-            await _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.FacebookPixel.Configuration"] = "Configuration",
                 ["Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">DisplayEuCookieLawWarning</a> setting disabled.",
@@ -137,20 +137,20 @@ namespace Nop.Plugin.Widgets.FacebookPixel
                 ["Plugins.Widgets.FacebookPixel.Configuration.Search.Store.Hint"] = "Search configuration by the store."
             });
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             _widgetSettings.ActiveWidgetSystemNames.Remove(FacebookPixelDefaults.SystemName);
-            await _settingService.SaveSetting(_widgetSettings);
+            await _settingService.SaveSettingAsync(_widgetSettings);
 
-            await _localizationService.DeleteLocaleResources("Plugins.Widgets.FacebookPixel");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.FacebookPixel");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

@@ -21,51 +21,52 @@ namespace Nop.Services.Catalog
         /// Delete a product
         /// </summary>
         /// <param name="product">Product</param>
-        Task DeleteProduct(Product product);
+        Task DeleteProductAsync(Product product);
 
         /// <summary>
         /// Delete products
         /// </summary>
         /// <param name="products">Products</param>
-        Task DeleteProducts(IList<Product> products);
+        Task DeleteProductsAsync(IList<Product> products);
 
         /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
-        Task<IList<Product>> GetAllProductsDisplayedOnHomepage();
+        Task<IList<Product>> GetAllProductsDisplayedOnHomepageAsync();
 
         /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
-        Task<Product> GetProductById(int productId);
+        Task<Product> GetProductByIdAsync(int productId);
 
         /// <summary>
         /// Gets products by identifier
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Products</returns>
-        Task<IList<Product>> GetProductsByIds(int[] productIds);
+        Task<IList<Product>> GetProductsByIdsAsync(int[] productIds);
 
         /// <summary>
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        Task InsertProduct(Product product);
+        Task InsertProductAsync(Product product);
 
         /// <summary>
         /// Updates the product
         /// </summary>
         /// <param name="product">Product</param>
-        Task UpdateProduct(Product product);
+        Task UpdateProductAsync(Product product);
 
+        //TODO: may be deleted
         /// <summary>
         /// Updates the products
         /// </summary>
         /// <param name="products">Product</param>
-        Task UpdateProducts(IList<Product> products);
+        Task UpdateProductsAsync(IList<Product> products);
 
         /// <summary>
         /// Get number of product (published and visible) in certain category
@@ -73,7 +74,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Number of products</returns>
-        Task<int> GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0);
+        Task<int> GetNumberOfProductsInCategoryAsync(IList<int> categoryIds = null, int storeId = 0);
 
         /// <summary>
         /// Search products
@@ -107,7 +108,7 @@ namespace Nop.Services.Catalog
         /// false - load only "Unpublished" products
         /// </param>
         /// <returns>Products</returns>
-        Task<IPagedList<Product>> SearchProducts(
+        Task<IPagedList<Product>> SearchProductsAsync(
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
@@ -166,7 +167,7 @@ namespace Nop.Services.Catalog
         /// false - load only "Unpublished" products
         /// </param>
         /// <returns>Products</returns>
-        Task<(IPagedList<Product>, IList<int>)> SearchProducts(
+        Task<(IPagedList<Product>, IList<int>)> SearchProductsAsync(
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -200,7 +201,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Products</returns>
-        Task<IPagedList<Product>> GetProductsByProductAtributeId(int productAttributeId,
+        Task<IPagedList<Product>> GetProductsByProductAtributeIdAsync(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -211,14 +212,14 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        Task<IList<Product>> GetAssociatedProducts(int parentGroupedProductId,
+        Task<IList<Product>> GetAssociatedProductsAsync(int parentGroupedProductId,
             int storeId = 0, int vendorId = 0, bool showHidden = false);
 
         /// <summary>
         /// Update product review totals
         /// </summary>
         /// <param name="product">Product</param>
-        Task UpdateProductReviewTotals(Product product);
+        Task UpdateProductReviewTotalsAsync(Product product);
 
         /// <summary>
         /// Get low stock products
@@ -229,7 +230,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Products</returns>
-        Task<IPagedList<Product>> GetLowStockProducts(int? vendorId = null, bool? loadPublishedOnly = true,
+        Task<IPagedList<Product>> GetLowStockProductsAsync(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Product combinations</returns>
-        Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
+        Task<IPagedList<ProductAttributeCombination>> GetLowStockProductCombinationsAsync(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="sku">SKU</param>
         /// <returns>Product</returns>
-        Task<Product> GetProductBySku(string sku);
+        Task<Product> GetProductBySkuAsync(string sku);
 
         /// <summary>
         /// Gets a products by SKU array
@@ -257,26 +258,26 @@ namespace Nop.Services.Catalog
         /// <param name="skuArray">SKU array</param>
         /// <param name="vendorId">Vendor ID; 0 to load all records</param>
         /// <returns>Products</returns>
-        Task<IList<Product>> GetProductsBySku(string[] skuArray, int vendorId = 0);
+        Task<IList<Product>> GetProductsBySkuAsync(string[] skuArray, int vendorId = 0);
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        Task UpdateHasTierPricesProperty(Product product);
+        Task UpdateHasTierPricesPropertyAsync(Product product);
 
         /// <summary>
         /// Update HasDiscountsApplied property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        Task UpdateHasDiscountsApplied(Product product);
+        Task UpdateHasDiscountsAppliedAsync(Product product);
 
         /// <summary>
         /// Gets number of products by vendor identifier
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <returns>Number of products</returns>
-        Task<int> GetNumberOfProductsByVendorId(int vendorId);
+        Task<int> GetNumberOfProductsByVendorIdAsync(int vendorId);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -316,7 +317,7 @@ namespace Nop.Services.Catalog
         /// Used only with "multiple warehouses" enabled.
         /// </param>
         /// <returns>Result</returns>
-        Task<int> GetTotalStockQuantity(Product product, bool useReservedQuantity = true, int warehouseId = 0);
+        Task<int> GetTotalStockQuantityAsync(Product product, bool useReservedQuantity = true, int warehouseId = 0);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -334,7 +335,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
         /// <returns>The stock message</returns>
-        Task<string> FormatStockMessage(Product product, string attributesXml);
+        Task<string> FormatStockMessageAsync(Product product, string attributesXml);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -377,28 +378,28 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
-        Task UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds);
+        Task UpdateProductStoreMappingsAsync(Product product, IList<int> limitedToStoresIds);
 
         /// <summary>
         /// Gets the value whether the sequence contains downloadable products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Result</returns>
-        Task<bool> HasAnyDownloadableProduct(int[] productIds);
+        Task<bool> HasAnyDownloadableProductAsync(int[] productIds);
 
         /// <summary>
         /// Gets the value whether the sequence contains gift card products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Result</returns>
-        Task<bool> HasAnyGiftCardProduct(int[] productIds);
+        Task<bool> HasAnyGiftCardProductAsync(int[] productIds);
 
         /// <summary>
         /// Gets the value whether the sequence contains recurring products
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Result</returns>
-        Task<bool> HasAnyRecurringProduct(int[] productIds);
+        Task<bool> HasAnyRecurringProductAsync(int[] productIds);
 
         #endregion
 
@@ -411,21 +412,23 @@ namespace Nop.Services.Catalog
         /// <param name="quantityToChange">Quantity to increase or decrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="message">Message for the stock quantity history</param>
-        Task AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "");
+        Task AdjustInventoryAsync(Product product, int quantityToChange, string attributesXml = "", string message = "");
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Reserve the given quantity in the warehouses.
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        Task ReserveInventory(Product product, int quantity);
+        Task ReserveInventoryAsync(Product product, int quantity);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Unblocks the given quantity reserved items in the warehouses
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be positive</param>
-        Task UnblockReservedInventory(Product product, int quantity);
+        Task UnblockReservedInventoryAsync(Product product, int quantity);
 
         /// <summary>
         /// Book the reserved quantity
@@ -434,7 +437,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
         /// <param name="message">Message for the stock quantity history</param>
-        Task BookReservedInventory(Product product, int warehouseId, int quantity, string message = "");
+        Task BookReservedInventoryAsync(Product product, int warehouseId, int quantity, string message = "");
 
         /// <summary>
         /// Reverse booked inventory (if acceptable)
@@ -443,7 +446,7 @@ namespace Nop.Services.Catalog
         /// <param name="shipmentItem">Shipment item</param>
         /// <returns>Quantity reversed</returns>
         /// <param name="message">Message for the stock quantity history</param>
-        Task<int> ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "");
+        Task<int> ReverseBookedInventoryAsync(Product product, ShipmentItem shipmentItem, string message = "");
 
         #endregion
 
@@ -453,7 +456,7 @@ namespace Nop.Services.Catalog
         /// Deletes a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        Task DeleteRelatedProduct(RelatedProduct relatedProduct);
+        Task DeleteRelatedProductAsync(RelatedProduct relatedProduct);
 
         /// <summary>
         /// Gets related products by product identifier
@@ -461,26 +464,26 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Related products</returns>
-        Task<IList<RelatedProduct>> GetRelatedProductsByProductId1(int productId1, bool showHidden = false);
+        Task<IList<RelatedProduct>> GetRelatedProductsByProductId1Async(int productId1, bool showHidden = false);
 
         /// <summary>
         /// Gets a related product
         /// </summary>
         /// <param name="relatedProductId">Related product identifier</param>
         /// <returns>Related product</returns>
-        Task<RelatedProduct> GetRelatedProductById(int relatedProductId);
+        Task<RelatedProduct> GetRelatedProductByIdAsync(int relatedProductId);
 
         /// <summary>
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        Task InsertRelatedProduct(RelatedProduct relatedProduct);
+        Task InsertRelatedProductAsync(RelatedProduct relatedProduct);
 
         /// <summary>
         /// Updates a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        Task UpdateRelatedProduct(RelatedProduct relatedProduct);
+        Task UpdateRelatedProductAsync(RelatedProduct relatedProduct);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -500,7 +503,7 @@ namespace Nop.Services.Catalog
         /// Deletes a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell</param>
-        Task DeleteCrossSellProduct(CrossSellProduct crossSellProduct);
+        Task DeleteCrossSellProductAsync(CrossSellProduct crossSellProduct);
 
         /// <summary>
         /// Gets cross-sell products by product identifier
@@ -508,35 +511,36 @@ namespace Nop.Services.Catalog
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell products</returns>
-        Task<IList<CrossSellProduct>> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false);
+        Task<IList<CrossSellProduct>> GetCrossSellProductsByProductId1Async(int productId1, bool showHidden = false);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets cross-sell products by product identifier
         /// </summary>
         /// <param name="productIds">The first product identifiers</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Cross-sell products</returns>
-        Task<IList<CrossSellProduct>> GetCrossSellProductsByProductIds(int[] productIds, bool showHidden = false);
+        Task<IList<CrossSellProduct>> GetCrossSellProductsByProductIdsAsync(int[] productIds, bool showHidden = false);
 
         /// <summary>
         /// Gets a cross-sell product
         /// </summary>
         /// <param name="crossSellProductId">Cross-sell product identifier</param>
         /// <returns>Cross-sell product</returns>
-        Task<CrossSellProduct> GetCrossSellProductById(int crossSellProductId);
+        Task<CrossSellProduct> GetCrossSellProductByIdAsync(int crossSellProductId);
 
         /// <summary>
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        Task InsertCrossSellProduct(CrossSellProduct crossSellProduct);
+        Task InsertCrossSellProductAsync(CrossSellProduct crossSellProduct);
 
         //TODO: may be deleted
         /// <summary>
         /// Updates a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        Task UpdateCrossSellProduct(CrossSellProduct crossSellProduct);
+        Task UpdateCrossSellProductAsync(CrossSellProduct crossSellProduct);
 
         /// <summary>
         /// Gets a cross-sells
@@ -544,7 +548,7 @@ namespace Nop.Services.Catalog
         /// <param name="cart">Shopping cart</param>
         /// <param name="numberOfProducts">Number of products to return</param>
         /// <returns>Cross-sells</returns>
-        Task<IList<Product>> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts);
+        Task<IList<Product>> GetCrosssellProductsByShoppingCartAsync(IList<ShoppingCartItem> cart, int numberOfProducts);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -566,38 +570,38 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
-        Task<IList<TierPrice>> GetTierPrices(Product product, Customer customer, int storeId);
+        Task<IList<TierPrice>> GetTierPricesAsync(Product product, Customer customer, int storeId);
 
         /// <summary>
         /// Gets a tier prices by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        Task<IList<TierPrice>> GetTierPricesByProduct(int productId);
+        Task<IList<TierPrice>> GetTierPricesByProductAsync(int productId);
 
         /// <summary>
         /// Deletes a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        Task DeleteTierPrice(TierPrice tierPrice);
+        Task DeleteTierPriceAsync(TierPrice tierPrice);
 
         /// <summary>
         /// Gets a tier price
         /// </summary>
         /// <param name="tierPriceId">Tier price identifier</param>
         /// <returns>Tier price</returns>
-        Task<TierPrice> GetTierPriceById(int tierPriceId);
+        Task<TierPrice> GetTierPriceByIdAsync(int tierPriceId);
 
         /// <summary>
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        Task InsertTierPrice(TierPrice tierPrice);
+        Task InsertTierPriceAsync(TierPrice tierPrice);
 
         /// <summary>
         /// Updates the tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        Task UpdateTierPrice(TierPrice tierPrice);
+        Task UpdateTierPriceAsync(TierPrice tierPrice);
 
         /// <summary>
         /// Gets a preferred tier price
@@ -607,7 +611,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Tier price</returns>
-        Task<TierPrice> GetPreferredTierPrice(Product product, Customer customer, int storeId, int quantity);
+        Task<TierPrice> GetPreferredTierPriceAsync(Product product, Customer customer, int storeId, int quantity);
 
         #endregion
 
@@ -617,40 +621,40 @@ namespace Nop.Services.Catalog
         /// Deletes a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        Task DeleteProductPicture(ProductPicture productPicture);
+        Task DeleteProductPictureAsync(ProductPicture productPicture);
 
         /// <summary>
         /// Gets a product pictures by product identifier
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>Product pictures</returns>
-        Task<IList<ProductPicture>> GetProductPicturesByProductId(int productId);
+        Task<IList<ProductPicture>> GetProductPicturesByProductIdAsync(int productId);
 
         /// <summary>
         /// Gets a product picture
         /// </summary>
         /// <param name="productPictureId">Product picture identifier</param>
         /// <returns>Product picture</returns>
-        Task<ProductPicture> GetProductPictureById(int productPictureId);
+        Task<ProductPicture> GetProductPictureByIdAsync(int productPictureId);
 
         /// <summary>
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        Task InsertProductPicture(ProductPicture productPicture);
+        Task InsertProductPictureAsync(ProductPicture productPicture);
 
         /// <summary>
         /// Updates a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        Task UpdateProductPicture(ProductPicture productPicture);
+        Task UpdateProductPictureAsync(ProductPicture productPicture);
 
         /// <summary>
         /// Get the IDs of all product images 
         /// </summary>
         /// <param name="productsIds">Products IDs</param>
         /// <returns>All picture identifiers grouped by product ID</returns>
-        Task<IDictionary<int, int[]>> GetProductsImagesIds(int[] productsIds);
+        Task<IDictionary<int, int[]>> GetProductsImagesIdsAsync(int[] productsIds);
 
         /// <summary>
         /// Get products to which a discount is applied
@@ -660,7 +664,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of products</returns>
-        Task<IPagedList<Product>> GetProductsWithAppliedDiscount(int? discountId = null,
+        Task<IPagedList<Product>> GetProductsWithAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
@@ -682,7 +686,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        Task<IPagedList<ProductReview>> GetAllProductReviews(int customerId = 0, bool? approved = null,
+        Task<IPagedList<ProductReview>> GetAllProductReviewsAsync(int customerId = 0, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue);
@@ -692,65 +696,67 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewId">Product review identifier</param>
         /// <returns>Product review</returns>
-        Task<ProductReview> GetProductReviewById(int productReviewId);
+        Task<ProductReview> GetProductReviewByIdAsync(int productReviewId);
 
         /// <summary>
         /// Get product reviews by identifiers
         /// </summary>
         /// <param name="productReviewIds">Product review identifiers</param>
         /// <returns>Product reviews</returns>
-        Task<IList<ProductReview>> GetProductReviewsByIds(int[] productReviewIds);
+        Task<IList<ProductReview>> GetProductReviewsByIdsAsync(int[] productReviewIds);
 
         /// <summary>
         /// Inserts a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        Task InsertProductReview(ProductReview productReview);
+        Task InsertProductReviewAsync(ProductReview productReview);
 
         /// <summary>
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        Task DeleteProductReview(ProductReview productReview);
+        Task DeleteProductReviewAsync(ProductReview productReview);
 
         /// <summary>
         /// Deletes product reviews
         /// </summary>
         /// <param name="productReviews">Product reviews</param>
-        Task DeleteProductReviews(IList<ProductReview> productReviews);
+        Task DeleteProductReviewsAsync(IList<ProductReview> productReviews);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets ratio of useful and not useful product review 
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <returns>Result</returns>
-        Task<(int usefulCount, int notUsefulCount)> GetHelpfulnessCounts(ProductReview productReview);
+        Task<(int usefulCount, int notUsefulCount)> GetHelpfulnessCountsAsync(ProductReview productReview);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Inserts a product review helpfulness record
         /// </summary>
         /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
-        Task InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness);
+        Task InsertProductReviewHelpfulnessAsync(ProductReviewHelpfulness productReviewHelpfulness);
 
         /// <summary>
         /// Sets or create a product review helpfulness record
         /// </summary>
         /// <param name="productReview">Product reviews</param>
         /// <param name="helpfulness">Value indicating whether a review a helpful</param>
-        Task SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness);
+        Task SetProductReviewHelpfulnessAsync(ProductReview productReview, bool helpfulness);
 
         /// <summary>
         /// Updates a totals helpfulness count for product review
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <returns>Result</returns>
-        Task UpdateProductReviewHelpfulnessTotals(ProductReview productReview);
+        Task UpdateProductReviewHelpfulnessTotalsAsync(ProductReview productReview);
 
         /// <summary>
         /// Updates a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        Task UpdateProductReview(ProductReview productReview);
+        Task UpdateProductReviewAsync(ProductReview productReview);
 
         /// <summary>
         /// Check possibility added review for current customer
@@ -758,7 +764,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Current product</param>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <returns></returns>
-        Task<bool> CanAddReview(int productId, int storeId = 0);
+        Task<bool> CanAddReviewAsync(int productId, int storeId = 0);
 
         #endregion
 
@@ -768,14 +774,14 @@ namespace Nop.Services.Catalog
         /// Get a product warehouse-inventory records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecords(int productId);
+        Task<IList<ProductWarehouseInventory>> GetAllProductWarehouseInventoryRecordsAsync(int productId);
 
         /// <summary>
         /// Gets a warehouse by identifier
         /// </summary>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Result</returns>
-        Task<Warehouse> GetWarehousesById(int warehouseId);
+        Task<Warehouse> GetWarehousesByIdAsync(int warehouseId);
 
         //TODO: may be deleted
         /// <summary>
@@ -783,25 +789,25 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">The product identifier</param>
         /// <returns>List of warehouses</returns>
-        Task<IList<Warehouse>> GetWarehousesByProductId(int productId);
+        Task<IList<Warehouse>> GetWarehousesByProductIdAsync(int productId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
-        Task DeleteProductWarehouseInventory(ProductWarehouseInventory pwi);
+        Task DeleteProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
         /// <summary>
         /// Inserts a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
-        Task InsertProductWarehouseInventory(ProductWarehouseInventory pwi);
+        Task InsertProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
         /// <summary>
         /// Updates a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
-        Task UpdateProductWarehouseInventory(ProductWarehouseInventory pwi);
+        Task UpdateProductWarehouseInventoryAsync(ProductWarehouseInventory pwi);
 
         #endregion
 
@@ -816,7 +822,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="message">Message</param>
         /// <param name="combinationId">Product attribute combination identifier</param>
-        Task AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
+        Task AddStockQuantityHistoryEntryAsync(Product product, int quantityAdjustment, int stockQuantity,
             int warehouseId = 0, string message = "", int? combinationId = null);
 
         /// <summary>
@@ -828,7 +834,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of stock quantity change entries</returns>
-        Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
+        Task<IPagedList<StockQuantityHistory>> GetStockQuantityHistoryAsync(Product product, int warehouseId = 0, int combinationId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
@@ -839,13 +845,13 @@ namespace Nop.Services.Catalog
         /// Clean up product references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        Task ClearDiscountProductMapping(Discount discount);
+        Task ClearDiscountProductMappingAsync(Discount discount);
 
         /// <summary>
         /// Get a discount-product mapping records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        Task<IList<DiscountProductMapping>> GetAllDiscountsAppliedToProduct(int productId);
+        Task<IList<DiscountProductMapping>> GetAllDiscountsAppliedToProductAsync(int productId);
 
         /// <summary>
         /// Get a discount-product mapping record
@@ -853,19 +859,19 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Result</returns>
-        Task<DiscountProductMapping> GetDiscountAppliedToProduct(int productId, int discountId);
+        Task<DiscountProductMapping> GetDiscountAppliedToProductAsync(int productId, int discountId);
 
         /// <summary>
         /// Inserts a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
-        Task InsertDiscountProductMapping(DiscountProductMapping discountProductMapping);
+        Task InsertDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
 
         /// <summary>
         /// Deletes a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
-        Task DeleteDiscountProductMapping(DiscountProductMapping discountProductMapping);
+        Task DeleteDiscountProductMappingAsync(DiscountProductMapping discountProductMapping);
 
         #endregion
     }

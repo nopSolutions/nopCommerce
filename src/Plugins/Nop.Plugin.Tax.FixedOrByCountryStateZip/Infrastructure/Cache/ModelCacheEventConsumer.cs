@@ -60,53 +60,53 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Handle tax rate inserted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(EntityInsertedEvent<TaxRate> eventMessage)
+        public async Task HandleEventAsync(EntityInsertedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
         /// Handle tax rate updated event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(EntityUpdatedEvent<TaxRate> eventMessage)
+        public async Task HandleEventAsync(EntityUpdatedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
         /// Handle tax rate deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(EntityDeletedEvent<TaxRate> eventMessage)
+        public async Task HandleEventAsync(EntityDeletedEvent<TaxRate> eventMessage)
         {
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(TAXRATE_PATTERN_KEY);
         }
 
         /// <summary>
         /// Handle tax category deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(EntityDeletedEvent<TaxCategory> eventMessage)
+        public async Task HandleEventAsync(EntityDeletedEvent<TaxCategory> eventMessage)
         {
             var taxCategory = eventMessage?.Entity;
             if (taxCategory == null)
                 return;
 
             //delete an appropriate record when tax category is deleted
-            var recordsToDelete = (await _taxRateService.GetAllTaxRates()).Where(taxRate => taxRate.TaxCategoryId == taxCategory.Id).ToList();
+            var recordsToDelete = (await _taxRateService.GetAllTaxRatesAsync()).Where(taxRate => taxRate.TaxCategoryId == taxCategory.Id).ToList();
             foreach (var taxRate in recordsToDelete)
             {
-                await _taxRateService.DeleteTaxRate(taxRate);
+                await _taxRateService.DeleteTaxRateAsync(taxRate);
             }
 
             //delete saved fixed rate if exists
-            var setting = await _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id));
+            var setting = await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id));
             if (setting != null)
-                await _settingService.DeleteSetting(setting);
+                await _settingService.DeleteSettingAsync(setting);
         }
 
         #endregion

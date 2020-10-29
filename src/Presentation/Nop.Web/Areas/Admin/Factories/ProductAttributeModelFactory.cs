@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product attribute search model</param>
         /// <returns>Product attribute search model</returns>
-        public virtual Task<ProductAttributeSearchModel> PrepareProductAttributeSearchModel(ProductAttributeSearchModel searchModel)
+        public virtual Task<ProductAttributeSearchModel> PrepareProductAttributeSearchModelAsync(ProductAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -113,14 +113,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product attribute search model</param>
         /// <returns>Product attribute list model</returns>
-        public virtual async Task<ProductAttributeListModel> PrepareProductAttributeListModel(ProductAttributeSearchModel searchModel)
+        public virtual async Task<ProductAttributeListModel> PrepareProductAttributeListModelAsync(ProductAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product attributes
             var productAttributes = await _productAttributeService
-                .GetAllProductAttributes(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                .GetAllProductAttributesAsync(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
             var model = new ProductAttributeListModel().PrepareToGrid(searchModel, productAttributes, () =>
@@ -140,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttribute">Product attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product attribute model</returns>
-        public virtual async Task<ProductAttributeModel> PrepareProductAttributeModel(ProductAttributeModel model,
+        public virtual async Task<ProductAttributeModel> PrepareProductAttributeModelAsync(ProductAttributeModel model,
             ProductAttribute productAttribute, bool excludeProperties = false)
         {
             Action<ProductAttributeLocalizedModel, int> localizedModelConfiguration = null;
@@ -157,14 +157,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(productAttribute, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalized(productAttribute, entity => entity.Description, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(productAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Description = await _localizationService.GetLocalizedAsync(productAttribute, entity => entity.Description, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Predefined product attribute value search model</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <returns>Predefined product attribute value list model</returns>
-        public virtual async Task<PredefinedProductAttributeValueListModel> PreparePredefinedProductAttributeValueListModel(
+        public virtual async Task<PredefinedProductAttributeValueListModel> PreparePredefinedProductAttributeValueListModelAsync(
             PredefinedProductAttributeValueSearchModel searchModel, ProductAttribute productAttribute)
         {
             if (searchModel == null)
@@ -185,7 +185,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             //get predefined product attribute values
-            var values = (await _productAttributeService.GetPredefinedProductAttributeValues(productAttribute.Id)).ToPagedList(searchModel);
+            var values = (await _productAttributeService.GetPredefinedProductAttributeValuesAsync(productAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new PredefinedProductAttributeValueListModel().PrepareToGrid(searchModel, values, () =>
@@ -215,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttributeValue">Predefined product attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Predefined product attribute value model</returns>
-        public virtual async Task<PredefinedProductAttributeValueModel> PreparePredefinedProductAttributeValueModel(PredefinedProductAttributeValueModel model,
+        public virtual async Task<PredefinedProductAttributeValueModel> PreparePredefinedProductAttributeValueModelAsync(PredefinedProductAttributeValueModel model,
             ProductAttribute productAttribute, PredefinedProductAttributeValue productAttributeValue, bool excludeProperties = false)
         {
             if (productAttribute == null)
@@ -234,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(productAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -242,7 +242,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -253,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Search model of products that use the product attribute</param>
         /// <param name="productAttribute">Product attribute</param>
         /// <returns>List model of products that use the product attribute</returns>
-        public virtual async Task<ProductAttributeProductListModel> PrepareProductAttributeProductListModel(ProductAttributeProductSearchModel searchModel,
+        public virtual async Task<ProductAttributeProductListModel> PrepareProductAttributeProductListModelAsync(ProductAttributeProductSearchModel searchModel,
             ProductAttribute productAttribute)
         {
             if (searchModel == null)
@@ -263,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productAttribute));
 
             //get products
-            var products = await _productService.GetProductsByProductAtributeId(productAttributeId: productAttribute.Id,
+            var products = await _productService.GetProductsByProductAtributeIdAsync(productAttributeId: productAttribute.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

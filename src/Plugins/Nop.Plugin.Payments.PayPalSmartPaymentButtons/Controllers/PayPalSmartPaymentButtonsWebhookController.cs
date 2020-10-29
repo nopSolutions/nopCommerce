@@ -29,7 +29,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
         [HttpPost]
         public async Task<IActionResult> WebhookHandler()
         {
-            await _serviceManager.HandleWebhook(_settings, Request);
+            await _serviceManager.HandleWebhookAsync(_settings, Request);
             return Ok();
         }
 

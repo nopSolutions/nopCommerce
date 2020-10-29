@@ -69,87 +69,87 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task UpdateLocales(Topic topic, TopicModel model)
+        protected virtual async Task UpdateLocalesAsync(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(topic,
+                await _localizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.Title,
                     localized.Title,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(topic,
+                await _localizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.Body,
                     localized.Body,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(topic,
+                await _localizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.MetaKeywords,
                     localized.MetaKeywords,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(topic,
+                await _localizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.MetaDescription,
                     localized.MetaDescription,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(topic,
+                await _localizedEntityService.SaveLocalizedValueAsync(topic,
                     x => x.MetaTitle,
                     localized.MetaTitle,
                     localized.LanguageId);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeName(topic, localized.SeName, localized.Title, false);
-                await _urlRecordService.SaveSlug(topic, seName, localized.LanguageId);
+                var seName = await _urlRecordService.ValidateSeNameAsync(topic, localized.SeName, localized.Title, false);
+                await _urlRecordService.SaveSlugAsync(topic, seName, localized.LanguageId);
             }
         }
 
-        protected virtual async Task SaveTopicAcl(Topic topic, TopicModel model)
+        protected virtual async Task SaveTopicAclAsync(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
-            await _topicService.UpdateTopic(topic);
+            await _topicService.UpdateTopicAsync(topic);
 
-            var existingAclRecords = await _aclService.GetAclRecords(topic);
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var existingAclRecords = await _aclService.GetAclRecordsAsync(topic);
+            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
             foreach (var customerRole in allCustomerRoles)
             {
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
-                        await _aclService.InsertAclRecord(topic, customerRole.Id);
+                        await _aclService.InsertAclRecordAsync(topic, customerRole.Id);
                 }
                 else
                 {
                     //remove role
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
-                        await _aclService.DeleteAclRecord(aclRecordToDelete);
+                        await _aclService.DeleteAclRecordAsync(aclRecordToDelete);
                 }
             }
         }
 
-        protected virtual async Task SaveStoreMappings(Topic topic, TopicModel model)
+        protected virtual async Task SaveStoreMappingsAsync(Topic topic, TopicModel model)
         {
             topic.LimitedToStores = model.SelectedStoreIds.Any();
-            await _topicService.UpdateTopic(topic);
+            await _topicService.UpdateTopicAsync(topic);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappings(topic);
-            var allStores = await _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(topic);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMapping(topic, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(topic, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -165,11 +165,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicSearchModel(new TopicSearchModel());
+            var model = await _topicModelFactory.PrepareTopicSearchModelAsync(new TopicSearchModel());
 
             return View(model);
         }
@@ -177,11 +177,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(TopicSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicListModel(searchModel);
+            var model = await _topicModelFactory.PrepareTopicListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -192,11 +192,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicModel(new TopicModel(), null);
+            var model = await _topicModelFactory.PrepareTopicModelAsync(new TopicModel(), null);
 
             return View(model);
         }
@@ -204,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(TopicModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -213,26 +213,26 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.Password = null;
 
                 var topic = model.ToEntity<Topic>();
-                await _topicService.InsertTopic(topic);
+                await _topicService.InsertTopicAsync(topic);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeName(topic, model.SeName, topic.Title ?? topic.SystemName, true);
-                await _urlRecordService.SaveSlug(topic, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
+                await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
 
                 //ACL (customer roles)
-                await SaveTopicAcl(topic, model);
+                await SaveTopicAclAsync(topic, model);
 
                 //stores
-                await SaveStoreMappings(topic, model);
+                await SaveStoreMappingsAsync(topic, model);
 
                 //locales
-                await UpdateLocales(topic, model);
+                await UpdateLocalesAsync(topic, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Added"));
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewTopic",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName), topic);
+                await _customerActivityService.InsertActivityAsync("AddNewTopic",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName), topic);
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -241,7 +241,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _topicModelFactory.PrepareTopicModel(model, null, true);
+            model = await _topicModelFactory.PrepareTopicModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -249,16 +249,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //try to get a topic with the specified id
-            var topic = await _topicService.GetTopicById(id);
+            var topic = await _topicService.GetTopicByIdAsync(id);
             if (topic == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _topicModelFactory.PrepareTopicModel(null, topic);
+            var model = await _topicModelFactory.PrepareTopicModelAsync(null, topic);
 
             return View(model);
         }
@@ -266,11 +266,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(TopicModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //try to get a topic with the specified id
-            var topic = await _topicService.GetTopicById(model.Id);
+            var topic = await _topicService.GetTopicByIdAsync(model.Id);
             if (topic == null)
                 return RedirectToAction("List");
 
@@ -280,26 +280,26 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 topic = model.ToEntity(topic);
-                await _topicService.UpdateTopic(topic);
+                await _topicService.UpdateTopicAsync(topic);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeName(topic, model.SeName, topic.Title ?? topic.SystemName, true);
-                await _urlRecordService.SaveSlug(topic, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(topic, model.SeName, topic.Title ?? topic.SystemName, true);
+                await _urlRecordService.SaveSlugAsync(topic, model.SeName, 0);
 
                 //ACL (customer roles)
-                await SaveTopicAcl(topic, model);
+                await SaveTopicAclAsync(topic, model);
 
                 //stores
-                await SaveStoreMappings(topic, model);
+                await SaveStoreMappingsAsync(topic, model);
 
                 //locales
-                await UpdateLocales(topic, model);
+                await UpdateLocalesAsync(topic, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Updated"));
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditTopic",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName), topic);
+                await _customerActivityService.InsertActivityAsync("EditTopic",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName), topic);
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -308,7 +308,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _topicModelFactory.PrepareTopicModel(model, topic, true);
+            model = await _topicModelFactory.PrepareTopicModelAsync(model, topic, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -317,21 +317,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
             //try to get a topic with the specified id
-            var topic = await _topicService.GetTopicById(id);
+            var topic = await _topicService.GetTopicByIdAsync(id);
             if (topic == null)
                 return RedirectToAction("List");
 
-            await _topicService.DeleteTopic(topic);
+            await _topicService.DeleteTopicAsync(topic);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Topics.Deleted"));
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteTopic",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName), topic);
+            await _customerActivityService.InsertActivityAsync("DeleteTopic",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName), topic);
 
             return RedirectToAction("List");
         }

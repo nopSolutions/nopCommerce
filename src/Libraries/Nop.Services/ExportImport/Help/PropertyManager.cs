@@ -63,7 +63,7 @@ namespace Nop.Services.ExportImport.Help
         /// <typeparam name="T">Type of object</typeparam>
         /// <param name="itemsToExport">The objects to export</param>
         /// <returns></returns>
-        public virtual async Task<byte[]> ExportToXlsx(IEnumerable<T> itemsToExport)
+        public virtual async Task<byte[]> ExportToXlsxAsync(IEnumerable<T> itemsToExport)
         {
             await using var stream = new MemoryStream();
             // ok, we can run the real code of the sample now
@@ -84,7 +84,7 @@ namespace Nop.Services.ExportImport.Help
                 foreach (var items in itemsToExport)
                 {
                     CurrentObject = items;
-                    await WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
+                    await WriteToXlsxAsync(worksheet, row++, fWorksheet: fWorksheet);
                 }
 
                 xlPackage.Save();
@@ -128,7 +128,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="row">Row index</param>
         /// <param name="cellOffset">Cell offset</param>
         /// <param name="fWorksheet">Filters worksheet</param>
-        public virtual async Task WriteToXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet = null)
+        public virtual async Task WriteToXlsxAsync(ExcelWorksheet worksheet, int row, int cellOffset = 0, ExcelWorksheet fWorksheet = null)
         {
             if (CurrentObject == null)
                 return;

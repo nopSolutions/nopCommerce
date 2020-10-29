@@ -15,9 +15,9 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override async Task ClearCache(ProductTag entity, EntityEventType entityEventType)
+        protected override async Task ClearCacheAsync(ProductTag entity, EntityEventType entityEventType)
         {
-            await RemoveByPrefix(NopEntityCacheDefaults<ProductTag>.Prefix);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ProductTag>.Prefix);
         }
     }
 }

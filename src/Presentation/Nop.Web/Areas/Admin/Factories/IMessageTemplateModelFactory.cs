@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Message template search model</param>
         /// <returns>Message template search model</returns>
-        Task<MessageTemplateSearchModel> PrepareMessageTemplateSearchModel(MessageTemplateSearchModel searchModel);
+        Task<MessageTemplateSearchModel> PrepareMessageTemplateSearchModelAsync(MessageTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged message template list model
         /// </summary>
         /// <param name="searchModel">Message template search model</param>
         /// <returns>Message template list model</returns>
-        Task<MessageTemplateListModel> PrepareMessageTemplateListModel(MessageTemplateSearchModel searchModel);
+        Task<MessageTemplateListModel> PrepareMessageTemplateListModelAsync(MessageTemplateSearchModel searchModel);
 
         /// <summary>
         /// Prepare message template model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="messageTemplate">Message template</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Message template model</returns>
-        Task<MessageTemplateModel> PrepareMessageTemplateModel(MessageTemplateModel model,
+        Task<MessageTemplateModel> PrepareMessageTemplateModelAsync(MessageTemplateModel model,
             MessageTemplate messageTemplate, bool excludeProperties = false);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="messageTemplate">Message template</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Test message template model</returns>
-        Task<TestMessageTemplateModel> PrepareTestMessageTemplateModel(TestMessageTemplateModel model,
+        Task<TestMessageTemplateModel> PrepareTestMessageTemplateModelAsync(TestMessageTemplateModel model,
             MessageTemplate messageTemplate, int languageId);
     }
 }

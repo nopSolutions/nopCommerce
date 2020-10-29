@@ -247,7 +247,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="directoryName">Plugin directory name</param>
         /// <returns>Original and parsed description files</returns>
-        private static async Task<IList<(string DescriptionFile, PluginDescriptor PluginDescriptor)>> GetDescriptionFilesAndDescriptors(string directoryName)
+        private static async Task<IList<(string DescriptionFile, PluginDescriptor PluginDescriptor)>> GetDescriptionFilesAndDescriptorsAsync(string directoryName)
         {
             if (string.IsNullOrEmpty(directoryName))
                 throw new ArgumentNullException(nameof(directoryName));
@@ -265,7 +265,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     continue;
 
                 //load plugin descriptor from the file
-                var text = await _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
+                var text = await _fileProvider.ReadAllTextAsync(descriptionFile, Encoding.UTF8);
                 var pluginDescriptor = PluginDescriptor.GetPluginDescriptorFromText(text);
 
                 result.Add((descriptionFile, pluginDescriptor));
@@ -354,7 +354,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Load plugins info (names of already installed, going to be installed, going to be uninstalled and going to be deleted plugins)
         /// </summary>
         /// <param name="appSettings">App settings</param>
-        private static async Task LoadPluginsInfo(AppSettings appSettings)
+        private static async Task LoadPluginsInfoAsync(AppSettings appSettings)
         {
             var useRedisToStorePluginsInfo = appSettings.RedisConfig.Enabled && appSettings.RedisConfig.StorePluginsInfo;
 
@@ -363,21 +363,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ? new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings))
                 : new PluginsInfo(_fileProvider);
 
-            if (await PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !appSettings.RedisConfig.Enabled)
+            if (await PluginsInfo.LoadPluginInfoAsync() || useRedisToStorePluginsInfo || !appSettings.RedisConfig.Enabled)
                 return;
 
             var redisPluginsInfo = new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings));
 
-            if (!await redisPluginsInfo.LoadPluginInfo())
+            if (!await redisPluginsInfo.LoadPluginInfoAsync())
                 return;
 
             //copy plugins info data from redis 
             PluginsInfo.CopyFrom(redisPluginsInfo);
-            await PluginsInfo.Save();
+            await PluginsInfo.SaveAsync();
 
             //clear redis plugins info data
             redisPluginsInfo = new RedisPluginsInfo(appSettings, _fileProvider, new RedisConnectionWrapper(appSettings));
-            await redisPluginsInfo.Save();
+            await redisPluginsInfo.SaveAsync();
         }
 
         #endregion
@@ -389,7 +389,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="applicationPartManager">Application part manager</param>
         /// <param name="appSettings">App settings</param>
-        public static async Task InitializePlugins(this ApplicationPartManager applicationPartManager, AppSettings appSettings)
+        public static async Task InitializePluginsAsync(this ApplicationPartManager applicationPartManager, AppSettings appSettings)
         {
             if (applicationPartManager == null)
                 throw new ArgumentNullException(nameof(applicationPartManager));
@@ -397,7 +397,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (appSettings == null)
                 throw new ArgumentNullException(nameof(appSettings));
 
-            await LoadPluginsInfo(appSettings);
+            await LoadPluginsInfoAsync(appSettings);
 
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))
@@ -459,7 +459,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     }
 
                     //load plugin descriptors from the plugin directory
-                    foreach (var item in GetDescriptionFilesAndDescriptors(pluginsDirectory).Result)
+                    foreach (var item in GetDescriptionFilesAndDescriptorsAsync(pluginsDirectory).Result)
                     {
                         var descriptionFile = item.DescriptionFile;
                         var pluginDescriptor = item.PluginDescriptor;

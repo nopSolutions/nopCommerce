@@ -13,9 +13,9 @@ namespace Nop.Services.Customers.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(CustomerCustomerRoleMapping entity)
+        protected override async Task ClearCacheAsync(CustomerCustomerRoleMapping entity)
         {
-            await RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
         }
     }
 }

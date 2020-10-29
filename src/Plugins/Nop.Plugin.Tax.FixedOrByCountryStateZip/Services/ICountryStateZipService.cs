@@ -13,31 +13,31 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// Deletes a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        Task DeleteTaxRate(TaxRate taxRate);
+        Task DeleteTaxRateAsync(TaxRate taxRate);
 
         /// <summary>
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
-        Task<IPagedList<TaxRate>> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<TaxRate>> GetAllTaxRatesAsync(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets a tax rate
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        Task<TaxRate> GetTaxRateById(int taxRateId);
+        Task<TaxRate> GetTaxRateByIdAsync(int taxRateId);
 
         /// <summary>
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        Task InsertTaxRate(TaxRate taxRate);
+        Task InsertTaxRateAsync(TaxRate taxRate);
 
         /// <summary>
         /// Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        Task UpdateTaxRate(TaxRate taxRate);
+        Task UpdateTaxRateAsync(TaxRate taxRate);
     }
 }

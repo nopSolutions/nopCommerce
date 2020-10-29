@@ -45,9 +45,9 @@ namespace Nop.Services.Stores
         /// Deletes a store mapping record
         /// </summary>
         /// <param name="storeMapping">Store mapping record</param>
-        public virtual async Task DeleteStoreMapping(StoreMapping storeMapping)
+        public virtual async Task DeleteStoreMappingAsync(StoreMapping storeMapping)
         {
-            await _storeMappingRepository.Delete(storeMapping);
+            await _storeMappingRepository.DeleteAsync(storeMapping);
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeMappingId">Store mapping record identifier</param>
         /// <returns>Store mapping record</returns>
-        public virtual async Task<StoreMapping> GetStoreMappingById(int storeMappingId)
+        public virtual async Task<StoreMapping> GetStoreMappingByIdAsync(int storeMappingId)
         {
-            return await _storeMappingRepository.GetById(storeMappingId);
+            return await _storeMappingRepository.GetByIdAsync(storeMappingId);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Store mapping records</returns>
-        public virtual async Task<IList<StoreMapping>> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        public virtual async Task<IList<StoreMapping>> GetStoreMappingsAsync<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -81,7 +81,7 @@ namespace Nop.Services.Stores
                         sm.EntityName == entityName
                         select sm;
 
-            var storeMappings = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return storeMappings;
         }
@@ -90,9 +90,9 @@ namespace Nop.Services.Stores
         /// Inserts a store mapping record
         /// </summary>
         /// <param name="storeMapping">Store mapping</param>
-        protected virtual async Task InsertStoreMapping(StoreMapping storeMapping)
+        protected virtual async Task InsertStoreMappingAsync(StoreMapping storeMapping)
         {
-            await _storeMappingRepository.Insert(storeMapping);
+            await _storeMappingRepository.InsertAsync(storeMapping);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store id</param>
         /// <param name="entity">Entity</param>
-        public virtual async Task InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
+        public virtual async Task InsertStoreMappingAsync<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -119,7 +119,7 @@ namespace Nop.Services.Stores
                 StoreId = storeId
             };
 
-            await InsertStoreMapping(storeMapping);
+            await InsertStoreMappingAsync(storeMapping);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Store identifiers</returns>
-        public virtual async Task<int[]> GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        public virtual async Task<int[]> GetStoresIdsWithAccessAsync<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -143,7 +143,7 @@ namespace Nop.Services.Stores
                       sm.EntityName == entityName
                 select sm.StoreId;
 
-            return await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToArrayAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToArrayAsync());
         }
 
         /// <summary>
@@ -152,9 +152,9 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual async Task<bool> Authorize<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        public virtual async Task<bool> AuthorizeAsync<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
-            return await Authorize(entity, (await _storeContext.GetCurrentStore()).Id);
+            return await AuthorizeAsync(entity, (await _storeContext.GetCurrentStoreAsync()).Id);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Nop.Services.Stores
         /// <param name="entity">Entity</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual async Task<bool> Authorize<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
+        public virtual async Task<bool> AuthorizeAsync<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 return false;
@@ -179,7 +179,7 @@ namespace Nop.Services.Stores
             if (!entity.LimitedToStores)
                 return true;
 
-            foreach (var storeIdWithAccess in await GetStoresIdsWithAccess(entity))
+            foreach (var storeIdWithAccess in await GetStoresIdsWithAccessAsync(entity))
                 if (storeId == storeIdWithAccess)
                     //yes, we have such permission
                     return true;

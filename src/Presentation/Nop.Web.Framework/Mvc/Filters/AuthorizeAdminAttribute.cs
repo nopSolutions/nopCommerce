@@ -93,7 +93,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))
                 {
                     //authorize permission of access to the admin area
-                    if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel).Result)
+                    if (!_permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel).Result)
                         filterContext.Result = new ChallengeResult();
                 }
             }

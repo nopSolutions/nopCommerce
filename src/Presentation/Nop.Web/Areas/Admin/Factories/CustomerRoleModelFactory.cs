@@ -54,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer role search model</param>
         /// <returns>Customer role search model</returns>
-        public virtual Task<CustomerRoleSearchModel> PrepareCustomerRoleSearchModel(CustomerRoleSearchModel searchModel)
+        public virtual Task<CustomerRoleSearchModel> PrepareCustomerRoleSearchModelAsync(CustomerRoleSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -70,13 +70,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer role search model</param>
         /// <returns>Customer role list model</returns>
-        public virtual async Task<CustomerRoleListModel> PrepareCustomerRoleListModel(CustomerRoleSearchModel searchModel)
+        public virtual async Task<CustomerRoleListModel> PrepareCustomerRoleListModelAsync(CustomerRoleSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get customer roles
-            var customerRoles = (await _customerService.GetAllCustomerRoles(true)).ToPagedList(searchModel);
+            var customerRoles = (await _customerService.GetAllCustomerRolesAsync(true)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CustomerRoleListModel().PrepareToGrid(searchModel, customerRoles, () =>
@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customerRoleModel = role.ToModel<CustomerRoleModel>();
 
                     //fill in additional values (not existing in the entity)
-                    customerRoleModel.PurchasedWithProductName = _productService.GetProductById(role.PurchasedWithProductId).Result?.Name;
+                    customerRoleModel.PurchasedWithProductName = _productService.GetProductByIdAsync(role.PurchasedWithProductId).Result?.Name;
 
                     return customerRoleModel;
                 });
@@ -103,13 +103,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customerRole">Customer role</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Customer role model</returns>
-        public virtual async Task<CustomerRoleModel> PrepareCustomerRoleModel(CustomerRoleModel model, CustomerRole customerRole, bool excludeProperties = false)
+        public virtual async Task<CustomerRoleModel> PrepareCustomerRoleModelAsync(CustomerRoleModel model, CustomerRole customerRole, bool excludeProperties = false)
         {
             if (customerRole != null)
             {
                 //fill in model values from the entity
                 model ??= customerRole.ToModel<CustomerRoleModel>();
-                model.PurchasedWithProductName = (await _productService.GetProductById(customerRole.PurchasedWithProductId))?.Name;
+                model.PurchasedWithProductName = (await _productService.GetProductByIdAsync(customerRole.PurchasedWithProductId))?.Name;
             }
 
             //set default values for the new model
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.Active = true;
 
             //prepare available tax display types
-            await _baseAdminModelFactory.PrepareTaxDisplayTypes(model.TaxDisplayTypeValues, false);
+            await _baseAdminModelFactory.PrepareTaxDisplayTypesAsync(model.TaxDisplayTypeValues, false);
 
             return model;
         }
@@ -127,28 +127,28 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer role product search model</param>
         /// <returns>Customer role product search model</returns>
-        public virtual async Task<CustomerRoleProductSearchModel> PrepareCustomerRoleProductSearchModel(CustomerRoleProductSearchModel searchModel)
+        public virtual async Task<CustomerRoleProductSearchModel> PrepareCustomerRoleProductSearchModelAsync(CustomerRoleProductSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
+            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
+            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -161,17 +161,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer role product search model</param>
         /// <returns>Customer role product list model</returns>
-        public virtual async Task<CustomerRoleProductListModel> PrepareCustomerRoleProductListModel(CustomerRoleProductSearchModel searchModel)
+        public virtual async Task<CustomerRoleProductListModel> PrepareCustomerRoleProductListModelAsync(CustomerRoleProductSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendor() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendor()).Id;
+            if (await _workContext.GetCurrentVendorAsync() != null)
+                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
             //get products
-            var (products, _) = await _productService.SearchProducts(false,showHidden: true,
+            var (products, _) = await _productService.SearchProductsAsync(false,showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 storeId: searchModel.SearchStoreId,
@@ -186,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false).Result;
+                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
 
                     return productModel;
                 });

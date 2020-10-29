@@ -13,9 +13,9 @@ namespace Nop.Services.Orders.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(CheckoutAttributeValue entity)
+        protected override async Task ClearCacheAsync(CheckoutAttributeValue entity)
         {
-            await Remove(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity.CheckoutAttributeId);
+            await RemoveAsync(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity.CheckoutAttributeId);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Measure search model</param>
         /// <returns>Measure search model</returns>
-        public virtual Task<MeasureSearchModel> PrepareMeasureSearchModel(MeasureSearchModel searchModel)
+        public virtual Task<MeasureSearchModel> PrepareMeasureSearchModelAsync(MeasureSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -92,13 +92,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Measure dimension search model</param>
         /// <returns>Measure dimension list model</returns>
-        public virtual async Task<MeasureDimensionListModel> PrepareMeasureDimensionListModel(MeasureDimensionSearchModel searchModel)
+        public virtual async Task<MeasureDimensionListModel> PrepareMeasureDimensionListModelAsync(MeasureDimensionSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get dimensions
-            var dimensions = (await _measureService.GetAllMeasureDimensions()).ToPagedList(searchModel);
+            var dimensions = (await _measureService.GetAllMeasureDimensionsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureDimensionListModel().PrepareToGrid(searchModel, dimensions, () =>
@@ -123,13 +123,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Measure weight search model</param>
         /// <returns>Measure weight list model</returns>
-        public virtual async Task<MeasureWeightListModel> PrepareMeasureWeightListModel(MeasureWeightSearchModel searchModel)
+        public virtual async Task<MeasureWeightListModel> PrepareMeasureWeightListModelAsync(MeasureWeightSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get weights
-            var weights = (await _measureService.GetAllMeasureWeights()).ToPagedList(searchModel);
+            var weights = (await _measureService.GetAllMeasureWeightsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new MeasureWeightListModel().PrepareToGrid(searchModel, weights, () =>

@@ -13,7 +13,6 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface IPriceCalculationService
     {
-
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -23,7 +22,7 @@ namespace Nop.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        Task<(decimal, decimal, List<Discount>)> GetFinalPrice(Product product,
+        Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal additionalCharge = 0,
             bool includeDiscounts = true,
@@ -40,7 +39,7 @@ namespace Nop.Services.Catalog
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
         /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        Task<(decimal, decimal, List<Discount>)> GetFinalPrice(Product product,
+        Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal additionalCharge,
             bool includeDiscounts,
@@ -60,7 +59,7 @@ namespace Nop.Services.Catalog
         /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
         /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
         /// <returns>Final price, Applied discount amount, Applied discounts</returns>
-        Task<(decimal, decimal, List<Discount>)> GetFinalPrice(Product product,
+        Task<(decimal, decimal, List<Discount>)> GetFinalPriceAsync(Product product,
             Customer customer,
             decimal? overriddenProductPrice,
             decimal additionalCharge,
@@ -75,7 +74,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Shopping cart item attributes in XML</param>
         /// <returns>Product cost (one item)</returns>
-        Task<decimal> GetProductCost(Product product, string attributesXml);
+        Task<decimal> GetProductCostAsync(Product product, string attributesXml);
 
         /// <summary>
         /// Get a price adjustment of a product attribute value
@@ -85,7 +84,7 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="productPrice">Product price (null for using the base product price)</param>
         /// <returns>Price adjustment</returns>
-        Task<decimal> GetProductAttributeValuePriceAdjustment(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null);
+        Task<decimal> GetProductAttributeValuePriceAdjustmentAsync(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null);
 
         /// <summary>
         /// Round a product or order total for the currency
@@ -93,7 +92,7 @@ namespace Nop.Services.Catalog
         /// <param name="value">Value to round</param>
         /// <param name="currency">Currency; pass null to use the primary store currency</param>
         /// <returns>Rounded value</returns>
-        Task<decimal> RoundPrice(decimal value, Currency currency = null);
+        Task<decimal> RoundPriceAsync(decimal value, Currency currency = null);
 
         //TODO: migrate to an extension method
         /// <summary>

@@ -50,11 +50,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _templateModelFactory.PrepareTemplatesModel(new TemplatesModel());
+            var model = await _templateModelFactory.PrepareTemplatesModelAsync(new TemplatesModel());
 
             return View(model);
         }
@@ -64,11 +64,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CategoryTemplates(CategoryTemplateSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _templateModelFactory.PrepareCategoryTemplateListModel(searchModel);
+            var model = await _templateModelFactory.PrepareCategoryTemplateListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -76,18 +76,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CategoryTemplateUpdate(CategoryTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a category template with the specified id
-            var template = await _categoryTemplateService.GetCategoryTemplateById(model.Id)
+            var template = await _categoryTemplateService.GetCategoryTemplateByIdAsync(model.Id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
             template = model.ToEntity(template);
-            await _categoryTemplateService.UpdateCategoryTemplate(template);
+            await _categoryTemplateService.UpdateCategoryTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CategoryTemplateAdd(CategoryTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var template = new CategoryTemplate();
             template = model.ToEntity(template);
-            await _categoryTemplateService.InsertCategoryTemplate(template);
+            await _categoryTemplateService.InsertCategoryTemplateAsync(template);
 
             return Json(new { Result = true });
         }
@@ -111,14 +111,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CategoryTemplateDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //try to get a category template with the specified id
-            var template = await _categoryTemplateService.GetCategoryTemplateById(id)
+            var template = await _categoryTemplateService.GetCategoryTemplateByIdAsync(id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
-            await _categoryTemplateService.DeleteCategoryTemplate(template);
+            await _categoryTemplateService.DeleteCategoryTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -130,11 +130,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _templateModelFactory.PrepareManufacturerTemplateListModel(searchModel);
+            var model = await _templateModelFactory.PrepareManufacturerTemplateListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -142,18 +142,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ManufacturerTemplateUpdate(ManufacturerTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a manufacturer template with the specified id
-            var template = await _manufacturerTemplateService.GetManufacturerTemplateById(model.Id)
+            var template = await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(model.Id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
             template = model.ToEntity(template);
-            await _manufacturerTemplateService.UpdateManufacturerTemplate(template);
+            await _manufacturerTemplateService.UpdateManufacturerTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -161,7 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ManufacturerTemplateAdd(ManufacturerTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -169,7 +169,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var template = new ManufacturerTemplate();
             template = model.ToEntity(template);
-            await _manufacturerTemplateService.InsertManufacturerTemplate(template);
+            await _manufacturerTemplateService.InsertManufacturerTemplateAsync(template);
 
             return Json(new { Result = true });
         }
@@ -177,14 +177,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ManufacturerTemplateDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //try to get a manufacturer template with the specified id
-            var template = await _manufacturerTemplateService.GetManufacturerTemplateById(id)
+            var template = await _manufacturerTemplateService.GetManufacturerTemplateByIdAsync(id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
-            await _manufacturerTemplateService.DeleteManufacturerTemplate(template);
+            await _manufacturerTemplateService.DeleteManufacturerTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -196,11 +196,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTemplates(ProductTemplateSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _templateModelFactory.PrepareProductTemplateListModel(searchModel);
+            var model = await _templateModelFactory.PrepareProductTemplateListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -208,18 +208,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTemplateUpdate(ProductTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a product template with the specified id
-            var template = await _productTemplateService.GetProductTemplateById(model.Id)
+            var template = await _productTemplateService.GetProductTemplateByIdAsync(model.Id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
             template = model.ToEntity(template);
-            await _productTemplateService.UpdateProductTemplate(template);
+            await _productTemplateService.UpdateProductTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -227,7 +227,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTemplateAdd(ProductTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -235,7 +235,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var template = new ProductTemplate();
             template = model.ToEntity(template);
-            await _productTemplateService.InsertProductTemplate(template);
+            await _productTemplateService.InsertProductTemplateAsync(template);
 
             return Json(new { Result = true });
         }
@@ -243,14 +243,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductTemplateDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //try to get a product template with the specified id
-            var template = await _productTemplateService.GetProductTemplateById(id)
+            var template = await _productTemplateService.GetProductTemplateByIdAsync(id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
-            await _productTemplateService.DeleteProductTemplate(template);
+            await _productTemplateService.DeleteProductTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -262,11 +262,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TopicTemplates(TopicTemplateSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _templateModelFactory.PrepareTopicTemplateListModel(searchModel);
+            var model = await _templateModelFactory.PrepareTopicTemplateListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -274,18 +274,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TopicTemplateUpdate(TopicTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a topic template with the specified id
-            var template = await _topicTemplateService.GetTopicTemplateById(model.Id)
+            var template = await _topicTemplateService.GetTopicTemplateByIdAsync(model.Id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
             template = model.ToEntity(template);
-            await _topicTemplateService.UpdateTopicTemplate(template);
+            await _topicTemplateService.UpdateTopicTemplateAsync(template);
 
             return new NullJsonResult();
         }
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TopicTemplateAdd(TopicTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -301,7 +301,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var template = new TopicTemplate();
             template = model.ToEntity(template);
-            await _topicTemplateService.InsertTopicTemplate(template);
+            await _topicTemplateService.InsertTopicTemplateAsync(template);
 
             return Json(new { Result = true });
         }
@@ -309,14 +309,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> TopicTemplateDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //try to get a topic template with the specified id
-            var template = await _topicTemplateService.GetTopicTemplateById(id)
+            var template = await _topicTemplateService.GetTopicTemplateByIdAsync(id)
                 ?? throw new ArgumentException("No template found with the specified id");
 
-            await _topicTemplateService.DeleteTopicTemplate(template);
+            await _topicTemplateService.DeleteTopicTemplateAsync(template);
 
             return new NullJsonResult();
         }

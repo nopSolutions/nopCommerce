@@ -46,10 +46,10 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare activity log type models
         /// </summary>
         /// <returns>List of activity log type models</returns>
-        protected virtual async Task<IList<ActivityLogTypeModel>> PrepareActivityLogTypeModels()
+        protected virtual async Task<IList<ActivityLogTypeModel>> PrepareActivityLogTypeModelsAsync()
         {
             //prepare available activity log types
-            var availableActivityTypes = await _customerActivityService.GetAllActivityTypes();
+            var availableActivityTypes = await _customerActivityService.GetAllActivityTypesAsync();
             var models = availableActivityTypes.Select(activityType => activityType.ToModel<ActivityLogTypeModel>()).ToList();
 
             return models;
@@ -64,12 +64,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Activity log types search model</param>
         /// <returns>Activity log types search model</returns>
-        public virtual async Task<ActivityLogTypeSearchModel> PrepareActivityLogTypeSearchModel(ActivityLogTypeSearchModel searchModel)
+        public virtual async Task<ActivityLogTypeSearchModel> PrepareActivityLogTypeSearchModelAsync(ActivityLogTypeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.ActivityLogTypeListModel = await PrepareActivityLogTypeModels();
+            searchModel.ActivityLogTypeListModel = await PrepareActivityLogTypeModelsAsync();
 
             //prepare grid
             searchModel.SetGridPageSize();
@@ -82,13 +82,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
         /// <returns>Activity log search model</returns>
-        public virtual async Task<ActivityLogSearchModel> PrepareActivityLogSearchModel(ActivityLogSearchModel searchModel)
+        public virtual async Task<ActivityLogSearchModel> PrepareActivityLogSearchModelAsync(ActivityLogSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available activity log types
-            await _baseAdminModelFactory.PrepareActivityLogTypes(searchModel.ActivityLogType);
+            await _baseAdminModelFactory.PrepareActivityLogTypesAsync(searchModel.ActivityLogType);
 
             //prepare grid
             searchModel.SetGridPageSize();
@@ -101,7 +101,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Activity log search model</param>
         /// <returns>Activity log list model</returns>
-        public virtual async Task<ActivityLogListModel> PrepareActivityLogListModel(ActivityLogSearchModel searchModel)
+        public virtual async Task<ActivityLogListModel> PrepareActivityLogListModelAsync(ActivityLogSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -113,7 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get log
-            var activityLog = await _customerActivityService.GetAllActivities(createdOnFrom: startDateValue,
+            var activityLog = await _customerActivityService.GetAllActivitiesAsync(createdOnFrom: startDateValue,
                 createdOnTo: endDateValue,
                 activityLogTypeId: searchModel.ActivityLogTypeId,
                 ipAddress: searchModel.IpAddress,
@@ -125,13 +125,13 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
             {
-                var activityLogCustomers = _customerService.GetCustomersByIds(activityLog.GroupBy(x => x.CustomerId).Select(x => x.Key).ToArray()).Result;
+                var activityLogCustomers = _customerService.GetCustomersByIdsAsync(activityLog.GroupBy(x => x.CustomerId).Select(x => x.Key).ToArray()).Result;
 
                 return activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
-                    logItemModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId).Result?.Name;
+                    logItemModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeByIdAsync(logItem.ActivityLogTypeId).Result?.Name;
                     logItemModel.CustomerEmail = activityLogCustomers?.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email;
 
                     //convert dates to the user time

@@ -51,7 +51,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return _webHelper.GetStoreLocation().Result + "Admin/WidgetsGoogleAnalytics/Configure";
+            return _webHelper.GetStoreLocationAsync().Result + "Admin/WidgetsGoogleAnalytics/Configure";
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
             var settings = new GoogleAnalyticsSettings
             {
@@ -85,9 +85,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 </script>",
                 UseJsToSendEcommerceInfo = true
             };
-            await _settingService.SaveSetting(settings);
+            await _settingService.SaveSettingAsync(settings);
 
-            await _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Widgets.GoogleAnalytics.GoogleId"] = "ID",
                 ["Plugins.Widgets.GoogleAnalytics.GoogleId.Hint"] = "Enter Google Analytics ID.",
@@ -104,21 +104,21 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 ["Plugins.Widgets.GoogleAnalytics.Instructions"] = "<p>Google Analytics is a free website stats tool from Google. It keeps track of statistics about the visitors and eCommerce conversion on your website.<br /><br />Follow the next steps to enable Google Analytics integration:<br /><ul><li><a href=\"http://www.google.com/analytics/\" target=\"_blank\">Create a Google Analytics account</a> and follow the wizard to add your website</li><li>Copy the Tracking ID into the 'ID' box below</li><li>Click the 'Save' button below and Google Analytics will be integrated into your store</li></ul><br />If you would like to switch between Google Analytics (used by default) and Universal Analytics, then please use the buttons below:</p>"
             });
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             //settings
-            await _settingService.DeleteSetting<GoogleAnalyticsSettings>();
+            await _settingService.DeleteSettingAsync<GoogleAnalyticsSettings>();
 
             //locales
-            await _localizationService.DeleteLocaleResources("Plugins.Widgets.GoogleAnalytics");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.GoogleAnalytics");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

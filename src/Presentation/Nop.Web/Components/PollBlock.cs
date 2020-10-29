@@ -20,7 +20,7 @@ namespace Nop.Web.Components
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
 
-            var model = await _pollModelFactory.PreparePollModelBySystemName(systemKeyword);
+            var model = await _pollModelFactory.PreparePollModelBySystemNameAsync(systemKeyword);
             if (model == null)
                 return Content("");
 

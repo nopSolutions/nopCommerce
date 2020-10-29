@@ -58,15 +58,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 Services.Tasks.TaskManager.Instance.Start();
 
                 //log application start
-                engine.Resolve<ILogger>().Information("Application started").Wait();
+                engine.Resolve<ILogger>().InformationAsync("Application started").Wait();
 
                 var pluginService = engine.Resolve<IPluginService>();
 
                 //install plugins
-                pluginService.InstallPlugins().Wait();
+                pluginService.InstallPluginsAsync().Wait();
 
                 //update plugins
-                pluginService.UpdatePlugins().Wait();
+                pluginService.UpdatePluginsAsync().Wait();
 
                 //update nopCommerce core
                 var migrationManager = engine.Resolve<IMigrationManager>();
@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 //prevent save the update migrations into the DB during the developing process  
                 var versions = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
-                versions.Delete(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
+                versions.DeleteAsync(mvi => mvi.Description.StartsWith(string.Format(NopMigrationDefaults.UpdateMigrationDescriptionPrefix, NopVersion.FULL_VERSION)));
 
 #endif
             }
@@ -124,10 +124,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         if (DataSettingsManager.DatabaseIsInstalled)
                         {
                             //get current customer
-                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomer().Result;
+                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync().Result;
 
                             //log error
-                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer).Wait();
+                            EngineContext.Current.Resolve<ILogger>().ErrorAsync(exception.Message, exception, currentCustomer).Wait();
                         }
                     }
                     finally
@@ -153,7 +153,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
                 {
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    if (!await webHelper.IsStaticResource())
+                    if (!await webHelper.IsStaticResourceAsync())
                     {
                         //get original path and query
                         var originalPath = context.HttpContext.Request.Path;
@@ -168,8 +168,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                 var logger = EngineContext.Current.Resolve<ILogger>();
                                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
 
-                                await logger.Error($"Error 404. The requested page ({originalPath}) was not found",
-                                    customer: workContext.GetCurrentCustomer().Result);
+                                await logger.ErrorAsync($"Error 404. The requested page ({originalPath}) was not found",
+                                    customer: workContext.GetCurrentCustomerAsync().Result);
                             }
                         }
 
@@ -206,7 +206,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    logger.Error("Error 400. Bad request", null, customer: workContext.GetCurrentCustomer().Result).Wait();
+                    logger.ErrorAsync("Error 400. Bad request", null, customer: workContext.GetCurrentCustomerAsync().Result).Wait();
                 }
 
                 return Task.CompletedTask;
@@ -360,7 +360,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     return;
 
                 //prepare supported cultures
-                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages().Result
+                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguagesAsync().Result
                     .OrderBy(language => language.DisplayOrder)
                     .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
                 options.SupportedCultures = cultures;

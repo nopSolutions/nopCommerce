@@ -81,13 +81,13 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return await base.Categories();
             }
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //prepare model
             var model = new Models.Tax.TaxCategorySearchModel();
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
-            var taxCodeTypes = await _cacheManager.Get(cacheKey, async () => await _avalaraTaxManager.GetTaxCodeTypes());
+            var taxCodeTypes = await _cacheManager.GetAsync(cacheKey, async () => await _avalaraTaxManager.GetTaxCodeTypesAsync());
 
             if (taxCodeTypes != null)
                 model.AvailableTypes = taxCodeTypes.Select(type => new SelectListItem(type.Value, type.Key)).ToList();
@@ -104,15 +104,15 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return await base.Categories(searchModel);
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedDataTablesJson();
 
             //get tax categories
-            var taxCategories = (await _taxCategoryService.GetAllTaxCategories()).ToPagedList(searchModel);
+            var taxCategories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
             //get tax types and define the default value
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey);
-            var taxTypes = (await _cacheManager.Get(cacheKey, async () => await _avalaraTaxManager.GetTaxCodeTypes()))
+            var taxTypes = (await _cacheManager.GetAsync(cacheKey, async () => await _avalaraTaxManager.GetTaxCodeTypesAsync()))
                 ?.Select(taxType => new { Id = taxType.Key, Name = taxType.Value });
             var defaultType = taxTypes
                 ?.FirstOrDefault(taxType => taxType.Name.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase))
@@ -134,12 +134,12 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
                     //try to get previously saved tax code type and description
                     var taxCodeType = taxTypes?.FirstOrDefault(type =>
-                        type.Id.Equals(_genericAttributeService.GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute).Result ?? string.Empty))
+                        type.Id.Equals(_genericAttributeService.GetAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute).Result ?? string.Empty))
                         ?? defaultType;
                     taxCategoryModel.Type = taxCodeType?.Name ?? string.Empty;
                     taxCategoryModel.TypeId = taxCodeType?.Id ?? Guid.Empty.ToString();
                     taxCategoryModel.Description = _genericAttributeService
-                        .GetAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute).Result ?? string.Empty;
+                        .GetAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute).Result ?? string.Empty;
 
                     return taxCategoryModel;
                 });
@@ -161,7 +161,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return new NullJsonResult();
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -169,11 +169,11 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             var taxCategory = new TaxCategory();
             taxCategory = model.ToEntity(taxCategory);
-            await _taxCategoryService.InsertTaxCategory(taxCategory);
+            await _taxCategoryService.InsertTaxCategoryAsync(taxCategory);
 
             //save tax code type as generic attribute
             if (!string.IsNullOrEmpty(model.TypeId) && !model.TypeId.Equals(Guid.Empty.ToString()))
-                await _genericAttributeService.SaveAttribute(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute, model.TypeId);
+                await _genericAttributeService.SaveAttributeAsync(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute, model.TypeId);
 
             return Json(new { Result = true });
         }
@@ -185,19 +185,19 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return new NullJsonResult();
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //try to get a tax category with the specified id
-            var taxCategory = await _taxCategoryService.GetTaxCategoryById(id);
+            var taxCategory = await _taxCategoryService.GetTaxCategoryByIdAsync(id);
             if (taxCategory == null)
                 throw new ArgumentException("No tax category found with the specified id");
 
             //delete generic attributes 
-            await _genericAttributeService.SaveAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute, null);
-            await _genericAttributeService.SaveAttribute<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute, null);
+            await _genericAttributeService.SaveAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeDescriptionAttribute, null);
+            await _genericAttributeService.SaveAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute, null);
 
-            await _taxCategoryService.DeleteTaxCategory(taxCategory);
+            await _taxCategoryService.DeleteTaxCategoryAsync(taxCategory);
 
             return new NullJsonResult();
         }
@@ -210,19 +210,19 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return await Categories();
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //import tax caodes
-            var importedTaxCodesNumber = await _avalaraTaxManager.ImportTaxCodes();
+            var importedTaxCodesNumber = await _avalaraTaxManager.ImportTaxCodesAsync();
             if (importedTaxCodesNumber.HasValue)
             {
                 //successfully imported
-                var successMessage = await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Import.Success");
+                var successMessage = await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Import.Success");
                 _notificationService.SuccessNotification(string.Format(successMessage, importedTaxCodesNumber));
             }
             else
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Import.Error"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Import.Error"));
 
             return await Categories();
         }
@@ -235,20 +235,20 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return await Categories();
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //export tax codes
-            var exportedTaxCodes = await _avalaraTaxManager.ExportTaxCodes();
+            var exportedTaxCodes = await _avalaraTaxManager.ExportTaxCodesAsync();
             if (exportedTaxCodes.HasValue)
             {
                 if (exportedTaxCodes > 0)
-                    _notificationService.SuccessNotification(string.Format(await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Export.Success"), exportedTaxCodes));
+                    _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Export.Success"), exportedTaxCodes));
                 else
-                    _notificationService.SuccessNotification(await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Export.AlreadyExported"));
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Export.AlreadyExported"));
             }
             else
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Export.Error"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Export.Error"));
 
             return await Categories();
         }
@@ -261,14 +261,14 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return await Categories();
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            var deleted = await _avalaraTaxManager.DeleteSystemTaxCodes();
+            var deleted = await _avalaraTaxManager.DeleteSystemTaxCodesAsync();
             if (deleted)
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Delete.Success"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Delete.Success"));
             else
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Plugins.Tax.Avalara.TaxCodes.Delete.Error"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.TaxCodes.Delete.Error"));
 
             return await Categories();
         }

@@ -53,11 +53,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _widgetModelFactory.PrepareWidgetSearchModel(new WidgetSearchModel());
+            var model = await _widgetModelFactory.PrepareWidgetSearchModelAsync(new WidgetSearchModel());
 
             return View(model);
         }
@@ -65,11 +65,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(WidgetSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _widgetModelFactory.PrepareWidgetListModel(searchModel);
+            var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> WidgetUpdate(WidgetModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             var widget = _widgetPluginManager.LoadPluginBySystemName(model.SystemName);
@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _widgetSettings.ActiveWidgetSystemNames.Remove(widget.PluginDescriptor.SystemName);
-                    await _settingService.SaveSetting(_widgetSettings);
+                    await _settingService.SaveSettingAsync(_widgetSettings);
                 }
             }
             else
@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _widgetSettings.ActiveWidgetSystemNames.Add(widget.PluginDescriptor.SystemName);
-                    await _settingService.SaveSetting(_widgetSettings);
+                    await _settingService.SaveSettingAsync(_widgetSettings);
                 }
             }
 
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

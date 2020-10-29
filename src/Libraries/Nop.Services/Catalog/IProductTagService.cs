@@ -13,74 +13,76 @@ namespace Nop.Services.Catalog
         /// Delete a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        Task DeleteProductTag(ProductTag productTag);
+        Task DeleteProductTagAsync(ProductTag productTag);
 
         /// <summary>
         /// Delete product tags
         /// </summary>
         /// <param name="productTags">Product tags</param>
-        Task DeleteProductTags(IList<ProductTag> productTags);
+        Task DeleteProductTagsAsync(IList<ProductTag> productTags);
 
         /// <summary>
         /// Gets product tags
         /// </summary>
         /// <param name="productTagIds">Product tags identifiers</param>
         /// <returns>Product tags</returns>
-        Task<IList<ProductTag>> GetProductTagsByIds(int[] productTagIds);
+        Task<IList<ProductTag>> GetProductTagsByIdsAsync(int[] productTagIds);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Indicates whether a product tag exists
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Result</returns>
-        Task<bool> ProductTagExists(Product product, int productTagId);
+        Task<bool> ProductTagExistsAsync(Product product, int productTagId);
 
         /// <summary>
         /// Gets all product tags
         /// </summary>
         /// <param name="tagName">Tag name</param>
         /// <returns>Product tags</returns>
-        Task<IList<ProductTag>> GetAllProductTags(string tagName = null);
+        Task<IList<ProductTag>> GetAllProductTagsAsync(string tagName = null);
 
         /// <summary>
         /// Gets all product tags by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product tags</returns>
-        Task<IList<ProductTag>> GetAllProductTagsByProductId(int productId);
+        Task<IList<ProductTag>> GetAllProductTagsByProductIdAsync(int productId);
 
         /// <summary>
         /// Gets product tag
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        Task<ProductTag> GetProductTagById(int productTagId);
+        Task<ProductTag> GetProductTagByIdAsync(int productTagId);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets product tag by name
         /// </summary>
         /// <param name="name">Product tag name</param>
         /// <returns>Product tag</returns>
-        Task<ProductTag> GetProductTagByName(string name);
+        Task<ProductTag> GetProductTagByNameAsync(string name);
 
         /// <summary>
         /// Inserts a product-product tag mapping
         /// </summary>
         /// <param name="tagMapping">Product-product tag mapping</param>
-        Task InsertProductProductTagMapping(ProductProductTagMapping tagMapping);
+        Task InsertProductProductTagMappingAsync(ProductProductTagMapping tagMapping);
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        Task InsertProductTag(ProductTag productTag);
+        Task InsertProductTagAsync(ProductTag productTag);
 
         /// <summary>
         /// Updates the product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        Task UpdateProductTag(ProductTag productTag);
+        Task UpdateProductTagAsync(ProductTag productTag);
 
         /// <summary>
         /// Get number of products
@@ -89,13 +91,13 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Number of products</returns>
-        Task<int> GetProductCount(int productTagId, int storeId, bool showHidden = false);
+        Task<int> GetProductCountAsync(int productTagId, int storeId, bool showHidden = false);
 
         /// <summary>
         /// Update product tags
         /// </summary>
         /// <param name="product">Product for update</param>
         /// <param name="productTags">Product tags</param>
-        Task UpdateProductTags(Product product, string[] productTags);
+        Task UpdateProductTagsAsync(Product product, string[] productTags);
     }
 }

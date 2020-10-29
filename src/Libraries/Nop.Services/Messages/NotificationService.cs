@@ -73,8 +73,8 @@ namespace Nop.Services.Messages
         {
             if (exception == null)
                 return;
-            var customer = _workContext.GetCurrentCustomer().Result;
-            _logger.Error(exception.Message, exception, customer).Wait();
+            var customer = _workContext.GetCurrentCustomerAsync().Result;
+            _logger.ErrorAsync(exception.Message, exception, customer).Wait();
         }
 
         #endregion

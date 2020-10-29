@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _commonModelFactory.PrepareLanguageSelectorModel();
+            var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
 
             if (model.AvailableLanguages.Count == 1)
                 return Content("");

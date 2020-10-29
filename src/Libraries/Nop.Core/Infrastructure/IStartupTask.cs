@@ -10,7 +10,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Executes a task
         /// </summary>
-        Task Execute();
+        Task ExecuteAsync();
 
         /// <summary>
         /// Gets order of this startup task implementation

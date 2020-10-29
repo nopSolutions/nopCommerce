@@ -20,7 +20,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> RunTask(string taskType)
         {
-            var scheduleTask = await _scheduleTaskService.GetTaskByType(taskType);
+            var scheduleTask = await _scheduleTaskService.GetTaskByTypeAsync(taskType);
             if (scheduleTask == null)
                 //schedule task cannot be loaded
                 return NoContent();

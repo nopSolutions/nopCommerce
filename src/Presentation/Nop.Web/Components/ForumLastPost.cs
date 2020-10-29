@@ -19,8 +19,8 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int forumPostId, bool showTopic)
         {
-            var forumPost = await _forumService.GetPostById(forumPostId);
-            var model = await _forumModelFactory.PrepareLastPostModel(forumPost, showTopic);
+            var forumPost = await _forumService.GetPostByIdAsync(forumPostId);
+            var model = await _forumModelFactory.PrepareLastPostModelAsync(forumPost, showTopic);
 
             return View(model);
         }

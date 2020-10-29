@@ -14,9 +14,9 @@ namespace Nop.Services.Common.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Address entity)
+        protected override async Task ClearCacheAsync(Address entity)
         {
-            await RemoveByPrefix(NopCustomerServicesDefaults.CustomerAddressesPrefix);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesPrefix);
         }
     }
 }

@@ -30,11 +30,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareOnlineCustomerSearchModel(new OnlineCustomerSearchModel());
+            var model = await _customerModelFactory.PrepareOnlineCustomerSearchModelAsync(new OnlineCustomerSearchModel());
 
             return View(model);
         }
@@ -42,11 +42,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(OnlineCustomerSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _customerModelFactory.PrepareOnlineCustomerListModel(searchModel);
+            var model = await _customerModelFactory.PrepareOnlineCustomerListModelAsync(searchModel);
 
             return Json(model);
         }

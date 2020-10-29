@@ -44,11 +44,11 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-            var products = await _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
+            var products = await _productService.GetCrosssellProductsByShoppingCartAsync(cart, _shoppingCartSettings.CrossSellsNumber);
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
+            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
             //visible individually
@@ -61,7 +61,7 @@ namespace Nop.Web.Components
             //We know that the entire shopping cart page is not refresh
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
             //That's why we force page refresh (redirect) in this case
-            var model = (await _productModelFactory.PrepareProductOverviewModels(products,
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products,
                     productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true))
                 .ToList();
 

@@ -16,25 +16,25 @@ namespace Nop.Services.Catalog
         /// Clean up manufacturer references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        Task ClearDiscountManufacturerMapping(Discount discount);
+        Task ClearDiscountManufacturerMappingAsync(Discount discount);
 
         /// <summary>
         /// Deletes a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        Task DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
+        Task DeleteDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping);
 
         /// <summary>
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        Task DeleteManufacturer(Manufacturer manufacturer);
+        Task DeleteManufacturerAsync(Manufacturer manufacturer);
 
         /// <summary>
         /// Delete manufacturers
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
-        Task DeleteManufacturers(IList<Manufacturer> manufacturers);
+        Task DeleteManufacturersAsync(IList<Manufacturer> manufacturers);
 
         /// <summary>
         /// Gets all manufacturers
@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
         /// false - load only "Unpublished" products
         /// </param>
         /// <returns>Manufacturers</returns>
-        Task<IPagedList<Manufacturer>> GetAllManufacturers(string manufacturerName = "",
+        Task<IPagedList<Manufacturer>> GetAllManufacturersAsync(string manufacturerName = "",
             int storeId = 0,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
@@ -63,21 +63,21 @@ namespace Nop.Services.Catalog
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Manufacturer identifiers</returns>
-        Task<IList<int>> GetAppliedManufacturerIds(Discount discount, Customer customer);
+        Task<IList<int>> GetAppliedManufacturerIdsAsync(Discount discount, Customer customer);
 
         /// <summary>
         /// Gets a manufacturer
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        Task<Manufacturer> GetManufacturerById(int manufacturerId);
+        Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId);
 
         /// <summary>
         /// Gets manufacturers by identifier
         /// </summary>
         /// <param name="manufacturerIds">manufacturer identifiers</param>
         /// <returns>Manufacturers</returns>
-        Task<IList<Manufacturer>> GetManufacturersByIds(int[] manufacturerIds);
+        Task<IList<Manufacturer>> GetManufacturersByIdsAsync(int[] manufacturerIds);
 
         /// <summary>
         /// Get manufacturers for which a discount is applied
@@ -87,26 +87,26 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of manufacturers</returns>
-        Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscount(int? discountId = null,
+        Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        Task InsertManufacturer(Manufacturer manufacturer);
+        Task InsertManufacturerAsync(Manufacturer manufacturer);
 
         /// <summary>
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        Task UpdateManufacturer(Manufacturer manufacturer);
+        Task UpdateManufacturerAsync(Manufacturer manufacturer);
 
         /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        Task DeleteProductManufacturer(ProductManufacturer productManufacturer);
+        Task DeleteProductManufacturerAsync(ProductManufacturer productManufacturer);
 
         /// <summary>
         /// Gets product manufacturer collection
@@ -116,7 +116,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(int manufacturerId,
+        Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerIdAsync(int manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
@@ -125,40 +125,40 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        Task<IList<ProductManufacturer>> GetProductManufacturersByProductId(int productId, bool showHidden = false);
+        Task<IList<ProductManufacturer>> GetProductManufacturersByProductIdAsync(int productId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product manufacturer mapping 
         /// </summary>
         /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        Task<ProductManufacturer> GetProductManufacturerById(int productManufacturerId);
+        Task<ProductManufacturer> GetProductManufacturerByIdAsync(int productManufacturerId);
 
         /// <summary>
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        Task InsertProductManufacturer(ProductManufacturer productManufacturer);
+        Task InsertProductManufacturerAsync(ProductManufacturer productManufacturer);
 
         /// <summary>
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        Task UpdateProductManufacturer(ProductManufacturer productManufacturer);
+        Task UpdateProductManufacturerAsync(ProductManufacturer productManufacturer);
 
         /// <summary>
         /// Get manufacturer IDs for products
         /// </summary>
         /// <param name="productIds">Products IDs</param>
         /// <returns>Manufacturer IDs for products</returns>
-        Task<IDictionary<int, int[]>> GetProductManufacturerIds(int[] productIds);
+        Task<IDictionary<int, int[]>> GetProductManufacturerIdsAsync(int[] productIds);
 
         /// <summary>
         /// Returns a list of names of not existing manufacturers
         /// </summary>
         /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
         /// <returns>List of names and/or IDs not existing manufacturers</returns>
-        Task<string[]> GetNotExistingManufacturers(string[] manufacturerIdsNames);
+        Task<string[]> GetNotExistingManufacturersAsync(string[] manufacturerIdsNames);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -168,7 +168,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
-        ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId);
+        ProductManufacturer FindProductManufacturerAsync(IList<ProductManufacturer> source, int productId, int manufacturerId);
 
         /// <summary>
         /// Get a discount-manufacturer mapping record
@@ -176,12 +176,12 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Result</returns>
-        Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturer(int manufacturerId, int discountId);
+        Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturerAsync(int manufacturerId, int discountId);
 
         /// <summary>
         /// Inserts a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        Task InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
+        Task InsertDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping);
     }
 }

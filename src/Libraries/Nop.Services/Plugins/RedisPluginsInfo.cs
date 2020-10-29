@@ -23,7 +23,7 @@ namespace Nop.Services.Plugins
         public RedisPluginsInfo(AppSettings appSettings, INopFileProvider fileProvider, IRedisConnectionWrapper connectionWrapper)
             : base(fileProvider)
         {
-            _db = connectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Plugin).Result;
+            _db = connectionWrapper.GetDatabaseAsync(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Plugin).Result;
         }
 
         #endregion
@@ -33,7 +33,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Save plugins info to the redis
         /// </summary>
-        public override async Task Save()
+        public override async Task SaveAsync()
         {
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
             await _db.StringSetAsync(nameof(RedisPluginsInfo), text);
@@ -43,7 +43,7 @@ namespace Nop.Services.Plugins
         /// Get plugins info
         /// </summary>
         /// <returns>True if data are loaded, otherwise False</returns>
-        public override async Task<bool> LoadPluginInfo()
+        public override async Task<bool> LoadPluginInfoAsync()
         {
             //try to get plugin info from the JSON file
             var serializedItem = await _db.StringGetAsync(nameof(RedisPluginsInfo));
@@ -56,9 +56,9 @@ namespace Nop.Services.Plugins
             if (loaded)
                 return true;
 
-            if (await base.LoadPluginInfo())
+            if (await base.LoadPluginInfoAsync())
             {
-                await Save();
+                await SaveAsync();
                 loaded = true;
             }
 

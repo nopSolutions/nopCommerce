@@ -15,14 +15,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
         /// <returns>Discount search model</returns>
-        Task<DiscountSearchModel> PrepareDiscountSearchModel(DiscountSearchModel searchModel);
+        Task<DiscountSearchModel> PrepareDiscountSearchModelAsync(DiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged discount list model
         /// </summary>
         /// <param name="searchModel">Discount search model</param>
         /// <returns>Discount list model</returns>
-        Task<DiscountListModel> PrepareDiscountListModel(DiscountSearchModel searchModel);
+        Task<DiscountListModel> PrepareDiscountListModelAsync(DiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare discount model
@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="discount">Discount</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Discount model</returns>
-        Task<DiscountModel> PrepareDiscountModel(DiscountModel model, Discount discount, bool excludeProperties = false);
+        Task<DiscountModel> PrepareDiscountModelAsync(DiscountModel model, Discount discount, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare discount requirement rule models
@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="discount">Discount</param>
         /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
         /// <returns>List of discount requirement rule models</returns>
-        Task<IList<DiscountRequirementRuleModel>> PrepareDiscountRequirementRuleModels(ICollection<DiscountRequirement> requirements,
+        Task<IList<DiscountRequirementRuleModel>> PrepareDiscountRequirementRuleModelsAsync(ICollection<DiscountRequirement> requirements,
             Discount discount, RequirementGroupInteractionType groupInteractionType);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount usage history search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount usage history list model</returns>
-        Task<DiscountUsageHistoryListModel> PrepareDiscountUsageHistoryListModel(DiscountUsageHistorySearchModel searchModel,
+        Task<DiscountUsageHistoryListModel> PrepareDiscountUsageHistoryListModelAsync(DiscountUsageHistorySearchModel searchModel,
             Discount discount);
 
         /// <summary>
@@ -58,21 +58,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount product search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount product list model</returns>
-        Task<DiscountProductListModel> PrepareDiscountProductListModel(DiscountProductSearchModel searchModel, Discount discount);
+        Task<DiscountProductListModel> PrepareDiscountProductListModelAsync(DiscountProductSearchModel searchModel, Discount discount);
 
         /// <summary>
         /// Prepare product search model to add to the discount
         /// </summary>
         /// <param name="searchModel">Product search model to add to the discount</param>
         /// <returns>Product search model to add to the discount</returns>
-        Task<AddProductToDiscountSearchModel> PrepareAddProductToDiscountSearchModel(AddProductToDiscountSearchModel searchModel);
+        Task<AddProductToDiscountSearchModel> PrepareAddProductToDiscountSearchModelAsync(AddProductToDiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product list model to add to the discount
         /// </summary>
         /// <param name="searchModel">Product search model to add to the discount</param>
         /// <returns>Product list model to add to the discount</returns>
-        Task<AddProductToDiscountListModel> PrepareAddProductToDiscountListModel(AddProductToDiscountSearchModel searchModel);
+        Task<AddProductToDiscountListModel> PrepareAddProductToDiscountListModelAsync(AddProductToDiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged discount category list model
@@ -80,21 +80,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount category search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount category list model</returns>
-        Task<DiscountCategoryListModel> PrepareDiscountCategoryListModel(DiscountCategorySearchModel searchModel, Discount discount);
+        Task<DiscountCategoryListModel> PrepareDiscountCategoryListModelAsync(DiscountCategorySearchModel searchModel, Discount discount);
 
         /// <summary>
         /// Prepare category search model to add to the discount
         /// </summary>
         /// <param name="searchModel">Category search model to add to the discount</param>
         /// <returns>Category search model to add to the discount</returns>
-        Task<AddCategoryToDiscountSearchModel> PrepareAddCategoryToDiscountSearchModel(AddCategoryToDiscountSearchModel searchModel);
+        Task<AddCategoryToDiscountSearchModel> PrepareAddCategoryToDiscountSearchModelAsync(AddCategoryToDiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged category list model to add to the discount
         /// </summary>
         /// <param name="searchModel">Category search model to add to the discount</param>
         /// <returns>Category list model to add to the discount</returns>
-        Task<AddCategoryToDiscountListModel> PrepareAddCategoryToDiscountListModel(AddCategoryToDiscountSearchModel searchModel);
+        Task<AddCategoryToDiscountListModel> PrepareAddCategoryToDiscountListModelAsync(AddCategoryToDiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged discount manufacturer list model
@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Discount manufacturer search model</param>
         /// <param name="discount">Discount</param>
         /// <returns>Discount manufacturer list model</returns>
-        Task<DiscountManufacturerListModel> PrepareDiscountManufacturerListModel(DiscountManufacturerSearchModel searchModel,
+        Task<DiscountManufacturerListModel> PrepareDiscountManufacturerListModelAsync(DiscountManufacturerSearchModel searchModel,
             Discount discount);
 
         /// <summary>
@@ -110,13 +110,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer search model to add to the discount</param>
         /// <returns>Manufacturer search model to add to the discount</returns>
-        Task<AddManufacturerToDiscountSearchModel> PrepareAddManufacturerToDiscountSearchModel(AddManufacturerToDiscountSearchModel searchModel);
+        Task<AddManufacturerToDiscountSearchModel> PrepareAddManufacturerToDiscountSearchModelAsync(AddManufacturerToDiscountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged manufacturer list model to add to the discount
         /// </summary>
         /// <param name="searchModel">Manufacturer search model to add to the discount</param>
         /// <returns>Manufacturer list model to add to the discount</returns>
-        Task<AddManufacturerToDiscountListModel> PrepareAddManufacturerToDiscountListModel(AddManufacturerToDiscountSearchModel searchModel);
+        Task<AddManufacturerToDiscountListModel> PrepareAddManufacturerToDiscountListModelAsync(AddManufacturerToDiscountSearchModel searchModel);
     }
 }

@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model</param>
         /// <returns>Product search model</returns>
-        Task<ProductSearchModel> PrepareProductSearchModel(ProductSearchModel searchModel);
+        Task<ProductSearchModel> PrepareProductSearchModelAsync(ProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product list model
         /// </summary>
         /// <param name="searchModel">Product search model</param>
         /// <returns>Product list model</returns>
-        Task<ProductListModel> PrepareProductListModel(ProductSearchModel searchModel);
+        Task<ProductListModel> PrepareProductListModelAsync(ProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare product model
@@ -30,21 +30,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product model</returns>
-        Task<ProductModel> PrepareProductModel(ProductModel model, Product product, bool excludeProperties = false);
+        Task<ProductModel> PrepareProductModelAsync(ProductModel model, Product product, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare required product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Required product search model to add to the product</param>
         /// <returns>Required product search model to add to the product</returns>
-        Task<AddRequiredProductSearchModel> PrepareAddRequiredProductSearchModel(AddRequiredProductSearchModel searchModel);
+        Task<AddRequiredProductSearchModel> PrepareAddRequiredProductSearchModelAsync(AddRequiredProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare required product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Required product search model to add to the product</param>
         /// <returns>Required product list model to add to the product</returns>
-        Task<AddRequiredProductListModel> PrepareAddRequiredProductListModel(AddRequiredProductSearchModel searchModel);
+        Task<AddRequiredProductListModel> PrepareAddRequiredProductListModelAsync(AddRequiredProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged related product list model
@@ -52,21 +52,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Related product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Related product list model</returns>
-        Task<RelatedProductListModel> PrepareRelatedProductListModel(RelatedProductSearchModel searchModel, Product product);
+        Task<RelatedProductListModel> PrepareRelatedProductListModelAsync(RelatedProductSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare related product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Related product search model to add to the product</param>
         /// <returns>Related product search model to add to the product</returns>
-        Task<AddRelatedProductSearchModel> PrepareAddRelatedProductSearchModel(AddRelatedProductSearchModel searchModel);
+        Task<AddRelatedProductSearchModel> PrepareAddRelatedProductSearchModelAsync(AddRelatedProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged related product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Related product search model to add to the product</param>
         /// <returns>Related product list model to add to the product</returns>
-        Task<AddRelatedProductListModel> PrepareAddRelatedProductListModel(AddRelatedProductSearchModel searchModel);
+        Task<AddRelatedProductListModel> PrepareAddRelatedProductListModelAsync(AddRelatedProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged cross-sell product list model
@@ -74,21 +74,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Cross-sell product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Cross-sell product list model</returns>
-        Task<CrossSellProductListModel> PrepareCrossSellProductListModel(CrossSellProductSearchModel searchModel, Product product);
+        Task<CrossSellProductListModel> PrepareCrossSellProductListModelAsync(CrossSellProductSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare cross-sell product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Cross-sell product search model to add to the product</param>
         /// <returns>Cross-sell product search model to add to the product</returns>
-        Task<AddCrossSellProductSearchModel> PrepareAddCrossSellProductSearchModel(AddCrossSellProductSearchModel searchModel);
+        Task<AddCrossSellProductSearchModel> PrepareAddCrossSellProductSearchModelAsync(AddCrossSellProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged cross-sell product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Cross-sell product search model to add to the product</param>
         /// <returns>Cross-sell product list model to add to the product</returns>
-        Task<AddCrossSellProductListModel> PrepareAddCrossSellProductListModel(AddCrossSellProductSearchModel searchModel);
+        Task<AddCrossSellProductListModel> PrepareAddCrossSellProductListModelAsync(AddCrossSellProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged associated product list model
@@ -96,21 +96,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Associated product search model</param>
         /// <param name="product">Product</param>
         /// <returns>Associated product list model</returns>
-        Task<AssociatedProductListModel> PrepareAssociatedProductListModel(AssociatedProductSearchModel searchModel, Product product);
+        Task<AssociatedProductListModel> PrepareAssociatedProductListModelAsync(AssociatedProductSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare associated product search model to add to the product
         /// </summary>
         /// <param name="searchModel">Associated product search model to add to the product</param>
         /// <returns>Associated product search model to add to the product</returns>
-        Task<AddAssociatedProductSearchModel> PrepareAddAssociatedProductSearchModel(AddAssociatedProductSearchModel searchModel);
+        Task<AddAssociatedProductSearchModel> PrepareAddAssociatedProductSearchModelAsync(AddAssociatedProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged associated product list model to add to the product
         /// </summary>
         /// <param name="searchModel">Associated product search model to add to the product</param>
         /// <returns>Associated product list model to add to the product</returns>
-        Task<AddAssociatedProductListModel> PrepareAddAssociatedProductListModel(AddAssociatedProductSearchModel searchModel);
+        Task<AddAssociatedProductListModel> PrepareAddAssociatedProductListModelAsync(AddAssociatedProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product picture list model
@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product picture search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product picture list model</returns>
-        Task<ProductPictureListModel> PrepareProductPictureListModel(ProductPictureSearchModel searchModel, Product product);
+        Task<ProductPictureListModel> PrepareProductPictureListModelAsync(ProductPictureSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged product specification attribute list model
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product specification attribute search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product specification attribute list model</returns>
-        Task<ProductSpecificationAttributeListModel> PrepareProductSpecificationAttributeListModel(
+        Task<ProductSpecificationAttributeListModel> PrepareProductSpecificationAttributeListModelAsync(
             ProductSpecificationAttributeSearchModel searchModel, Product product);
 
         /// <summary>
@@ -135,21 +135,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productId">Product id</param>
         /// <param name="specificationId">Specification attribute id</param>
         /// <returns>Product specification attribute model</returns>
-        Task<AddSpecificationAttributeModel> PrepareAddSpecificationAttributeModel(int productId, int? specificationId);
+        Task<AddSpecificationAttributeModel> PrepareAddSpecificationAttributeModelAsync(int productId, int? specificationId);
 
         /// <summary>
         /// Prepare product tag search model
         /// </summary>
         /// <param name="searchModel">Product tag search model</param>
         /// <returns>Product tag search model</returns>
-        Task<ProductTagSearchModel> PrepareProductTagSearchModel(ProductTagSearchModel searchModel);
+        Task<ProductTagSearchModel> PrepareProductTagSearchModelAsync(ProductTagSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product tag list model
         /// </summary>
         /// <param name="searchModel">Product tag search model</param>
         /// <returns>Product tag list model</returns>
-        Task<ProductTagListModel> PrepareProductTagListModel(ProductTagSearchModel searchModel);
+        Task<ProductTagListModel> PrepareProductTagListModelAsync(ProductTagSearchModel searchModel);
 
         /// <summary>
         /// Prepare product tag model
@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productTag">Product tag</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product tag model</returns>
-        Task<ProductTagModel> PrepareProductTagModel(ProductTagModel model, ProductTag productTag, bool excludeProperties = false);
+        Task<ProductTagModel> PrepareProductTagModelAsync(ProductTagModel model, ProductTag productTag, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged product order list model
@@ -166,7 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product order search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product order list model</returns>
-        Task<ProductOrderListModel> PrepareProductOrderListModel(ProductOrderSearchModel searchModel, Product product);
+        Task<ProductOrderListModel> PrepareProductOrderListModelAsync(ProductOrderSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged tier price list model
@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Tier price search model</param>
         /// <param name="product">Product</param>
         /// <returns>Tier price list model</returns>
-        Task<TierPriceListModel> PrepareTierPriceListModel(TierPriceSearchModel searchModel, Product product);
+        Task<TierPriceListModel> PrepareTierPriceListModelAsync(TierPriceSearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare tier price model
@@ -184,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="tierPrice">Tier price</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Tier price model</returns>
-        Task<TierPriceModel> PrepareTierPriceModel(TierPriceModel model,
+        Task<TierPriceModel> PrepareTierPriceModelAsync(TierPriceModel model,
             Product product, TierPrice tierPrice, bool excludeProperties = false);
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Stock quantity history search model</param>
         /// <param name="product">Product</param>
         /// <returns>Stock quantity history list model</returns>
-        Task<StockQuantityHistoryListModel> PrepareStockQuantityHistoryListModel(StockQuantityHistorySearchModel searchModel, Product product);
+        Task<StockQuantityHistoryListModel> PrepareStockQuantityHistoryListModelAsync(StockQuantityHistorySearchModel searchModel, Product product);
 
         /// <summary>
         /// Prepare paged product attribute mapping list model
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product attribute mapping search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product attribute mapping list model</returns>
-        Task<ProductAttributeMappingListModel> PrepareProductAttributeMappingListModel(ProductAttributeMappingSearchModel searchModel,
+        Task<ProductAttributeMappingListModel> PrepareProductAttributeMappingListModelAsync(ProductAttributeMappingSearchModel searchModel,
             Product product);
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product attribute mapping model</returns>
-        Task<ProductAttributeMappingModel> PrepareProductAttributeMappingModel(ProductAttributeMappingModel model,
+        Task<ProductAttributeMappingModel> PrepareProductAttributeMappingModelAsync(ProductAttributeMappingModel model,
             Product product, ProductAttributeMapping productAttributeMapping, bool excludeProperties = false);
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product attribute value search model</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <returns>Product attribute value list model</returns>
-        Task<ProductAttributeValueListModel> PrepareProductAttributeValueListModel(ProductAttributeValueSearchModel searchModel,
+        Task<ProductAttributeValueListModel> PrepareProductAttributeValueListModelAsync(ProductAttributeValueSearchModel searchModel,
             ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttributeValue">Product attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product attribute value model</returns>
-        Task<ProductAttributeValueModel> PrepareProductAttributeValueModel(ProductAttributeValueModel model,
+        Task<ProductAttributeValueModel> PrepareProductAttributeValueModelAsync(ProductAttributeValueModel model,
             ProductAttributeMapping productAttributeMapping, ProductAttributeValue productAttributeValue, bool excludeProperties = false);
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product model to associate to the product attribute value</param>
         /// <returns>Product model to associate to the product attribute value</returns>
-        Task<AssociateProductToAttributeValueSearchModel> PrepareAssociateProductToAttributeValueSearchModel(
+        Task<AssociateProductToAttributeValueSearchModel> PrepareAssociateProductToAttributeValueSearchModelAsync(
             AssociateProductToAttributeValueSearchModel searchModel);
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product model to associate to the product attribute value</param>
         /// <returns>Product model to associate to the product attribute value</returns>
-        Task<AssociateProductToAttributeValueListModel> PrepareAssociateProductToAttributeValueListModel(
+        Task<AssociateProductToAttributeValueListModel> PrepareAssociateProductToAttributeValueListModelAsync(
             AssociateProductToAttributeValueSearchModel searchModel);
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product attribute combination search model</param>
         /// <param name="product">Product</param>
         /// <returns>Product attribute combination list model</returns>
-        Task<ProductAttributeCombinationListModel> PrepareProductAttributeCombinationListModel(
+        Task<ProductAttributeCombinationListModel> PrepareProductAttributeCombinationListModelAsync(
             ProductAttributeCombinationSearchModel searchModel, Product product);
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productAttributeCombination">Product attribute combination</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product attribute combination model</returns>
-        Task<ProductAttributeCombinationModel> PrepareProductAttributeCombinationModel(ProductAttributeCombinationModel model,
+        Task<ProductAttributeCombinationModel> PrepareProductAttributeCombinationModelAsync(ProductAttributeCombinationModel model,
             Product product, ProductAttributeCombination productAttributeCombination, bool excludeProperties = false);
     }
 }

@@ -10,6 +10,7 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial interface IDateTimeHelper
     {
+        //TODO: may be deleted from interface
         /// <summary>
         /// Retrieves a System.TimeZoneInfo object from the registry based on its identifier.
         /// </summary>
@@ -83,7 +84,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
-        Task<TimeZoneInfo> GetCustomerTimeZone(Customer customer);
+        Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer);
 
         /// <summary>
         /// Gets or sets a default store time zone

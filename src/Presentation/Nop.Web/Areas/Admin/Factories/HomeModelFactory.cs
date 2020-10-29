@@ -60,17 +60,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Dashboard model</param>
         /// <returns>Dashboard model</returns>
-        public virtual async Task<DashboardModel> PrepareDashboardModel(DashboardModel model)
+        public virtual async Task<DashboardModel> PrepareDashboardModelAsync(DashboardModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.IsLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
+            model.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
             //prepare nested search models
-            await _commonModelFactory.PreparePopularSearchTermSearchModel(model.PopularSearchTerms);
-            await _orderModelFactory.PrepareBestsellerBriefSearchModel(model.BestsellersByAmount);
-            await _orderModelFactory.PrepareBestsellerBriefSearchModel(model.BestsellersByQuantity);
+            await _commonModelFactory.PreparePopularSearchTermSearchModelAsync(model.PopularSearchTerms);
+            await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByAmount);
+            await _orderModelFactory.PrepareBestsellerBriefSearchModelAsync(model.BestsellersByQuantity);
 
             return model;
         }
@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare nopCommerce news model
         /// </summary>
         /// <returns>nopCommerce news model</returns>
-        public virtual async Task<NopCommerceNewsModel> PrepareNopCommerceNewsModel()
+        public virtual async Task<NopCommerceNewsModel> PrepareNopCommerceNewsModelAsync()
         {
             var model = new NopCommerceNewsModel
             {
@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
             try
             {
                 //try to get news RSS feed
-                var rssData = await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), async () =>
+                var rssData = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.OfficialNewsModelKey), async () =>
                 {
                     try
                     {
@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         continue;
 
                     _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                    await _settingService.SaveSetting(_adminAreaSettings);
+                    await _settingService.SaveSettingAsync(_adminAreaSettings);
 
                     //new item
                     if (!firstRequest)
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             catch (Exception ex)
             {
-                await _logger.Error("No access to the news. Website www.nopcommerce.com is not available.", ex);
+                await _logger.ErrorAsync("No access to the news. Website www.nopcommerce.com is not available.", ex);
             }
 
             return model;

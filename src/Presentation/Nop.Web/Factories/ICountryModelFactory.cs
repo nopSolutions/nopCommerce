@@ -15,6 +15,6 @@ namespace Nop.Web.Factories
         /// <param name="countryId">Country identifier</param>
         /// <param name="addSelectStateItem">Whether to add "Select state" item to list of states</param>
         /// <returns>List of identifiers and names of states and provinces</returns>
-        Task<IList<StateProvinceModel>> GetStatesByCountryId(string countryId, bool addSelectStateItem);
+        Task<IList<StateProvinceModel>> GetStatesByCountryIdAsync(string countryId, bool addSelectStateItem);
     }
 }

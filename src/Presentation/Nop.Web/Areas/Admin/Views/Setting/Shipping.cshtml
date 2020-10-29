@@ -9,16 +9,16 @@
 
 @{
     const string hideCommonBlockAttributeName = "ShippingSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 
     const string hideNotificationsBlockAttributeName = "ShippingSettingsPage.HideNotificationsBlock";
-    var hideNotificationsBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideNotificationsBlockAttributeName);
+    var hideNotificationsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideNotificationsBlockAttributeName);
 
     const string hideCheckoutBlockAttributeName = "ShippingSettingsPage.HideCheckoutBlock";
-    var hideCheckoutBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCheckoutBlockAttributeName);
+    var hideCheckoutBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCheckoutBlockAttributeName);
 
     const string hideShippingOriginBlockAttributeName = "ShippingSettingsPage.HideShippingOriginBlock";
-    var hideShippingOriginBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideShippingOriginBlockAttributeName);
+    var hideShippingOriginBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideShippingOriginBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="Shipping" method="post">

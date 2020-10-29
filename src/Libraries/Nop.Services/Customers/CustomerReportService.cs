@@ -55,7 +55,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        public virtual async Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReport(DateTime? createdFromUtc,
+        public virtual async Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReportAsync(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364)
         {
@@ -95,7 +95,7 @@ namespace Nop.Services.Customers
                 OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.OrderCount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
-            var tmp = await query2.ToPagedList(pageIndex, pageSize);
+            var tmp = await query2.ToPagedListAsync(pageIndex, pageSize);
             return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
             {
                 CustomerId = x.CustomerId,
@@ -110,15 +110,15 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        public virtual async Task<int> GetRegisteredCustomersReport(int days)
+        public virtual async Task<int> GetRegisteredCustomersReportAsync(int days)
         {
             var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
-            var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)
                 return 0;
 
-            return (await _customerService.GetAllCustomers(
+            return (await _customerService.GetAllCustomersAsync(
                 date,
                 customerRoleIds: new[] { registeredCustomerRole.Id })).Count;
         }

@@ -14,6 +14,6 @@ namespace Nop.Services.Vendors
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Formatted attributes</returns>
-        Task<string> FormatAttributes(string attributesXml, string separator = "<br />", bool htmlEncode = true);
+        Task<string> FormatAttributesAsync(string attributesXml, string separator = "<br />", bool htmlEncode = true);
     }
 }

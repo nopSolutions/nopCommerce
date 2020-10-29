@@ -34,7 +34,7 @@ namespace Nop.Services.Tasks
 
         static TaskThread()
         {
-            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStore().Result.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.Url}{NopTaskDefaults.ScheduleTaskPath}";
             _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
         }
 
@@ -80,12 +80,12 @@ namespace Nop.Services.Tasks
                     var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
                     var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
 
-                    var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
+                    var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? await localizationService.GetResourceAsync("ScheduleTasks.TimeoutError") : ex.Message;
 
-                    message = string.Format(await localizationService.GetResource("ScheduleTasks.Error"), taskName,
-                        message, taskType, (await storeContext.GetCurrentStore()).Name, _scheduleTaskUrl);
+                    message = string.Format(await localizationService.GetResourceAsync("ScheduleTasks.Error"), taskName,
+                        message, taskType, (await storeContext.GetCurrentStoreAsync()).Name, _scheduleTaskUrl);
 
-                    await logger.Error(message, ex);
+                    await logger.ErrorAsync(message, ex);
                 }
                 finally
                 {

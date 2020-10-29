@@ -91,11 +91,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
         /// <param name="tokens">Tokens</param>
-        private async Task SendSmsNotification(MessageTemplate messageTemplate, IEnumerable<Token> tokens)
+        private async Task SendSmsNotificationAsync(MessageTemplate messageTemplate, IEnumerable<Token> tokens)
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
-            var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>(storeId ?? 0);
+            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>(storeId ?? 0);
 
             //ensure SMS notifications enabled
             if (!sendinBlueSettings.UseSmsNotifications)
@@ -103,18 +103,18 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
             //whether to send SMS by the passed message template
             var sendSmsForThisMessageTemplate = await _genericAttributeService
-                .GetAttribute<bool>(messageTemplate, SendinBlueDefaults.UseSmsAttribute);
+                .GetAttributeAsync<bool>(messageTemplate, SendinBlueDefaults.UseSmsAttribute);
             if (!sendSmsForThisMessageTemplate)
                 return;
 
             //get text with replaced tokens
-            var text = await _genericAttributeService.GetAttribute<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute);
+            var text = await _genericAttributeService.GetAttributeAsync<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute);
             if (!string.IsNullOrEmpty(text))
                 text = _tokenizer.Replace(text, tokens, false);
 
             //get phone number send to
             var phoneNumberTo = string.Empty;
-            var phoneType = await _genericAttributeService.GetAttribute<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute);
+            var phoneType = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute);
             switch (phoneType)
             {
                 case 0:
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             }
 
             //try to send SMS
-            await _sendinBlueEmailManager.SendSMS(phoneNumberTo, sendinBlueSettings.SmsSenderName, text);
+            await _sendinBlueEmailManager.SendSMSAsync(phoneNumberTo, sendinBlueSettings.SmsSenderName, text);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
-        private async Task<int?> SendEmailNotification(MessageTemplate messageTemplate, EmailAccount emailAccount, IEnumerable<Token> tokens,
+        private async Task<int?> SendEmailNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null,
@@ -159,23 +159,23 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         {
             //get plugin settings
             var storeId = (int?)tokens.FirstOrDefault(token => token.Key == "Store.Id")?.Value;
-            var sendinBlueSettings = await _settingService.LoadSetting<SendinBlueSettings>(storeId ?? 0);
+            var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>(storeId ?? 0);
 
             //ensure email notifications enabled
             if (!sendinBlueSettings.UseSmtp)
                 return null;
 
             //whether to send email by the passed message template
-            var templateId = await _genericAttributeService.GetAttribute<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
+            var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
             var sendEmailForThisMessageTemplate = templateId.HasValue;
             if (!sendEmailForThisMessageTemplate)
                 return null;
 
             //get the specified email account from settings
-            emailAccount = await _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) ?? emailAccount;
+            emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(sendinBlueSettings.EmailAccountId) ?? emailAccount;
 
             //get an email from the template
-            var email = await _sendinBlueEmailManager.GetQueuedEmailFromTemplate(templateId.Value)
+            var email = await _sendinBlueEmailManager.GetQueuedEmailFromTemplateAsync(templateId.Value)
                 ?? throw new NopException($"There is no template with id {templateId}");
 
             //replace body and subject tokens
@@ -206,7 +206,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 : null;
 
             //queue email
-            await _queuedEmailService.InsertQueuedEmail(email);
+            await _queuedEmailService.InsertQueuedEmailAsync(email);
             return email.Id;
         }
 
@@ -231,7 +231,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
-        public override async Task<int> SendNotification(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
+        public override async Task<int> SendNotificationAsync(MessageTemplate messageTemplate, EmailAccount emailAccount, int languageId, IList<Token> tokens,
             string toEmailAddress, string toName, string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null, string fromEmail = null, string fromName = null,
             string subject = null)
@@ -243,17 +243,17 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 throw new ArgumentNullException(nameof(emailAccount));
 
             //try to send SMS notification
-            await SendSmsNotification(messageTemplate, tokens);
+            await SendSmsNotificationAsync(messageTemplate, tokens);
 
             //try to send email notification
-            var emailId = await SendEmailNotification(messageTemplate, emailAccount, tokens,
+            var emailId = await SendEmailNotificationAsync(messageTemplate, emailAccount, tokens,
                 toEmailAddress, toName, attachmentFilePath, attachmentFileName,
                 replyToEmailAddress, replyToName, fromEmail, fromName, subject);
             if (emailId.HasValue)
                 return emailId.Value;
 
             //send base notification
-            return await base.SendNotification(messageTemplate, emailAccount, languageId, tokens,
+            return await base.SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens,
                 toEmailAddress, toName, attachmentFilePath, attachmentFileName,
                 replyToEmailAddress, replyToName, fromEmail, fromName, subject);
         }

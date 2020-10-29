@@ -6,7 +6,7 @@
 {
     <div class="currency-selector">
         @{
-            var returnUrl = webHelper.GetRawUrl(Context.Request);
+            var returnUrl = webHelper.GetRawUrlAsync(Context.Request);
             var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
             {
                 Text = x.Name,

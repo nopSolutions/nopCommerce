@@ -46,13 +46,13 @@ namespace Nop.Services.Common
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml,
+        public virtual async Task<string> FormatAttributesAsync(string attributesXml,
             string separator = "<br />",
             bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
-            var attributes = await _addressAttributeParser.ParseAddressAttributes(attributesXml);
+            var attributes = await _addressAttributeParser.ParseAddressAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
@@ -67,7 +67,7 @@ namespace Nop.Services.Common
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id);
+                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -82,7 +82,7 @@ namespace Nop.Services.Common
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id)}: {valueStr}";
+                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -92,10 +92,10 @@ namespace Nop.Services.Common
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _addressAttributeService.GetAddressAttributeValueById(attributeValueId);
+                            var attributeValue = await _addressAttributeService.GetAddressAttributeValueByIdAsync(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id)}: {await _localizationService.GetLocalized(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguage()).Id)}";
+                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}";
                             }
                             //encode (if required)
                             if (htmlEncode)

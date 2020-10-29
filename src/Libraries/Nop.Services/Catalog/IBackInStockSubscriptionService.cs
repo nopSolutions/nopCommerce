@@ -13,7 +13,7 @@ namespace Nop.Services.Catalog
         /// Delete a back in stock subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        Task DeleteSubscription(BackInStockSubscription subscription);
+        Task DeleteSubscriptionAsync(BackInStockSubscription subscription);
 
         /// <summary>
         /// Gets all subscriptions
@@ -23,9 +23,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerId(int customerId,
+        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerIdAsync(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
@@ -34,7 +35,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(int productId,
+        Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductIdAsync(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -44,33 +45,33 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        Task<BackInStockSubscription> FindSubscription(int customerId, int productId, int storeId);
+        Task<BackInStockSubscription> FindSubscriptionAsync(int customerId, int productId, int storeId);
 
         /// <summary>
         /// Gets a subscription
         /// </summary>
         /// <param name="subscriptionId">Subscription identifier</param>
         /// <returns>Subscription</returns>
-        Task<BackInStockSubscription> GetSubscriptionById(int subscriptionId);
+        Task<BackInStockSubscription> GetSubscriptionByIdAsync(int subscriptionId);
 
         /// <summary>
         /// Inserts subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        Task InsertSubscription(BackInStockSubscription subscription);
+        Task InsertSubscriptionAsync(BackInStockSubscription subscription);
 
         //TODO: may be deleted
         /// <summary>
         /// Updates subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        Task UpdateSubscription(BackInStockSubscription subscription);
+        Task UpdateSubscriptionAsync(BackInStockSubscription subscription);
 
         /// <summary>
         /// Send notification to subscribers
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
-        Task<int> SendNotificationsToSubscribers(Product product);
+        Task<int> SendNotificationsToSubscribersAsync(Product product);
     }
 }

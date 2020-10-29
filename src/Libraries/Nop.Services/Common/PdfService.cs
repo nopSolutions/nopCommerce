@@ -206,9 +206,9 @@ namespace Nop.Services.Common
         /// <param name="lang">Language</param>
         /// <param name="font">Font</param>
         /// <returns>PDF cell</returns>
-        protected virtual async Task<PdfPCell> GetPdfCell(string resourceKey, Language lang, Font font)
+        protected virtual async Task<PdfPCell> GetPdfCellAsync(string resourceKey, Language lang, Font font)
         {
-            return new PdfPCell(new Phrase(await _localizationService.GetResource(resourceKey, lang.Id), font));
+            return new PdfPCell(new Phrase(await _localizationService.GetResourceAsync(resourceKey, lang.Id), font));
         }
 
         /// <summary>
@@ -230,9 +230,9 @@ namespace Nop.Services.Common
         /// <param name="font">Font</param>
         /// <param name="args">Locale arguments</param>
         /// <returns>Paragraph</returns>
-        protected virtual async Task<Paragraph> GetParagraph(string resourceKey, Language lang, Font font, params object[] args)
+        protected virtual async Task<Paragraph> GetParagraphAsync(string resourceKey, Language lang, Font font, params object[] args)
         {
-            return await GetParagraph(resourceKey, string.Empty, lang, font, args);
+            return await GetParagraphAsync(resourceKey, string.Empty, lang, font, args);
         }
 
         /// <summary>
@@ -244,9 +244,9 @@ namespace Nop.Services.Common
         /// <param name="font">Font</param>
         /// <param name="args">Locale arguments</param>
         /// <returns>Paragraph</returns>
-        protected virtual async Task<Paragraph> GetParagraph(string resourceKey, string indent, Language lang, Font font, params object[] args)
+        protected virtual async Task<Paragraph> GetParagraphAsync(string resourceKey, string indent, Language lang, Font font, params object[] args)
         {
-            var formatText = await _localizationService.GetResource(resourceKey, lang.Id);
+            var formatText = await _localizationService.GetResourceAsync(resourceKey, lang.Id);
             return new Paragraph(indent + (args.Any() ? string.Format(formatText, args) : formatText), font);
         }
 
@@ -352,12 +352,12 @@ namespace Nop.Services.Common
         /// <param name="titleFont">Title font</param>
         /// <param name="doc">Document</param>
         /// <param name="font">Font</param>
-        protected virtual async Task PrintOrderNotes(PdfSettings pdfSettingsByStore, Order order, Language lang, Font titleFont, Document doc, Font font)
+        protected virtual async Task PrintOrderNotesAsync(PdfSettings pdfSettingsByStore, Order order, Language lang, Font titleFont, Document doc, Font font)
         {
             if (!pdfSettingsByStore.RenderOrderNotes)
                 return;
 
-            var orderNotes = (await _orderService.GetOrderNotesByOrderId(order.Id, true))
+            var orderNotes = (await _orderService.GetOrderNotesByOrderIdAsync(order.Id, true))
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList();
 
@@ -370,7 +370,7 @@ namespace Nop.Services.Common
                 WidthPercentage = 100f
             };
 
-            var cellOrderNote = await GetPdfCell("PDFInvoice.OrderNotes", lang, titleFont);
+            var cellOrderNote = await GetPdfCellAsync("PDFInvoice.OrderNotes", lang, titleFont);
             cellOrderNote.Border = Rectangle.NO_BORDER;
             notesHeader.AddCell(cellOrderNote);
             doc.Add(notesHeader);
@@ -384,13 +384,13 @@ namespace Nop.Services.Common
             notesTable.SetWidths(lang.Rtl ? new[] { 70, 30 } : new[] { 30, 70 });
 
             //created on
-            cellOrderNote = await GetPdfCell("PDFInvoice.OrderNotes.CreatedOn", lang, font);
+            cellOrderNote = await GetPdfCellAsync("PDFInvoice.OrderNotes.CreatedOn", lang, font);
             cellOrderNote.BackgroundColor = BaseColor.LightGray;
             cellOrderNote.HorizontalAlignment = Element.ALIGN_CENTER;
             notesTable.AddCell(cellOrderNote);
 
             //note
-            cellOrderNote = await GetPdfCell("PDFInvoice.OrderNotes.Note", lang, font);
+            cellOrderNote = await GetPdfCellAsync("PDFInvoice.OrderNotes.Note", lang, font);
             cellOrderNote.BackgroundColor = BaseColor.LightGray;
             cellOrderNote.HorizontalAlignment = Element.ALIGN_CENTER;
             notesTable.AddCell(cellOrderNote);
@@ -421,7 +421,7 @@ namespace Nop.Services.Common
         /// <param name="font">Text font</param>
         /// <param name="titleFont">Title font</param>
         /// <param name="doc">PDF document</param>
-        protected virtual async Task PrintTotals(int vendorId, Language lang, Order order, Font font, Font titleFont, Document doc)
+        protected virtual async Task PrintTotalsAsync(int vendorId, Language lang, Order order, Font font, Font titleFont, Document doc)
         {
             //vendors cannot see totals
             if (vendorId != 0)
@@ -445,10 +445,10 @@ namespace Nop.Services.Common
 
                 var orderSubtotalInclTaxInCustomerCurrency =
                     _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
-                var orderSubtotalInclTaxStr = await _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true,
+                var orderSubtotalInclTaxStr = await _priceFormatter.FormatPriceAsync(orderSubtotalInclTaxInCustomerCurrency, true,
                     order.CustomerCurrencyCode, languageId, true);
 
-                var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Sub-Total", languageId)} {orderSubtotalInclTaxStr}", font);
+                var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Sub-Total", languageId)} {orderSubtotalInclTaxStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -459,10 +459,10 @@ namespace Nop.Services.Common
 
                 var orderSubtotalExclTaxInCustomerCurrency = 
                     _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
-                var orderSubtotalExclTaxStr = await _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true,
+                var orderSubtotalExclTaxStr = await _priceFormatter.FormatPriceAsync(orderSubtotalExclTaxInCustomerCurrency, true,
                     order.CustomerCurrencyCode, languageId, false);
 
-                var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Sub-Total", languageId)} {orderSubtotalExclTaxStr}", font);
+                var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Sub-Total", languageId)} {orderSubtotalExclTaxStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -479,10 +479,10 @@ namespace Nop.Services.Common
 
                     var orderSubTotalDiscountInclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
-                    var orderSubTotalDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPrice(
+                    var orderSubTotalDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPriceAsync(
                         -orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
 
-                    var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Discount", languageId)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
+                    var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Discount", languageId)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -493,10 +493,10 @@ namespace Nop.Services.Common
 
                     var orderSubTotalDiscountExclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
-                    var orderSubTotalDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPrice(
+                    var orderSubTotalDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPriceAsync(
                         -orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
 
-                    var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Discount", languageId)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
+                    var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Discount", languageId)} {orderSubTotalDiscountInCustomerCurrencyStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -511,10 +511,10 @@ namespace Nop.Services.Common
                     //including tax
                     var orderShippingInclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                    var orderShippingInclTaxStr = await _priceFormatter.FormatShippingPrice(
+                    var orderShippingInclTaxStr = await _priceFormatter.FormatShippingPriceAsync(
                         orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
 
-                    var p = GetPdfCell($"{ await _localizationService.GetResource("PDFInvoice.Shipping", languageId)} {orderShippingInclTaxStr}", font);
+                    var p = GetPdfCell($"{ await _localizationService.GetResourceAsync("PDFInvoice.Shipping", languageId)} {orderShippingInclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -524,10 +524,10 @@ namespace Nop.Services.Common
                     //excluding tax
                     var orderShippingExclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                    var orderShippingExclTaxStr =  await _priceFormatter.FormatShippingPrice(
+                    var orderShippingExclTaxStr =  await _priceFormatter.FormatShippingPriceAsync(
                         orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
 
-                    var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Shipping", languageId)} {orderShippingExclTaxStr}", font);
+                    var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Shipping", languageId)} {orderShippingExclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -542,10 +542,10 @@ namespace Nop.Services.Common
                     //including tax
                     var paymentMethodAdditionalFeeInclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                    var paymentMethodAdditionalFeeInclTaxStr = await _priceFormatter.FormatPaymentMethodAdditionalFee(
+                    var paymentMethodAdditionalFeeInclTaxStr = await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(
                         paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, true);
 
-                    var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", languageId)} {paymentMethodAdditionalFeeInclTaxStr}", font);
+                    var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.PaymentMethodAdditionalFee", languageId)} {paymentMethodAdditionalFeeInclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -555,10 +555,10 @@ namespace Nop.Services.Common
                     //excluding tax
                     var paymentMethodAdditionalFeeExclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                    var paymentMethodAdditionalFeeExclTaxStr =  await _priceFormatter.FormatPaymentMethodAdditionalFee(
+                    var paymentMethodAdditionalFeeExclTaxStr =  await _priceFormatter.FormatPaymentMethodAdditionalFeeAsync(
                         paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, languageId, false);
 
-                    var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", languageId)} {paymentMethodAdditionalFeeExclTaxStr}", font);
+                    var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.PaymentMethodAdditionalFee", languageId)} {paymentMethodAdditionalFeeExclTaxStr}", font);
                     p.HorizontalAlignment = Element.ALIGN_RIGHT;
                     p.Border = Rectangle.NO_BORDER;
                     totalsTable.AddCell(p);
@@ -589,14 +589,14 @@ namespace Nop.Services.Common
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                    taxStr = await _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
+                    taxStr = await _priceFormatter.FormatPriceAsync(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
                         false, languageId);
                 }
             }
 
             if (displayTax)
             {
-                var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Tax", languageId)} {taxStr}", font);
+                var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Tax", languageId)} {taxStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
@@ -606,9 +606,9 @@ namespace Nop.Services.Common
             {
                 foreach (var item in taxRates)
                 {
-                    var taxRate = string.Format(await _localizationService.GetResource("PDFInvoice.TaxRate", languageId),
+                    var taxRate = string.Format(await _localizationService.GetResourceAsync("PDFInvoice.TaxRate", languageId),
                         _priceFormatter.FormatTaxRate(item.Key));
-                    var taxValue = await _priceFormatter.FormatPrice(
+                    var taxValue = await _priceFormatter.FormatPriceAsync(
                         _currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode,
                         false, languageId);
 
@@ -624,21 +624,21 @@ namespace Nop.Services.Common
             {
                 var orderDiscountInCustomerCurrency =  
                     _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
-                var orderDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency,
+                var orderDiscountInCustomerCurrencyStr = await _priceFormatter.FormatPriceAsync(-orderDiscountInCustomerCurrency,
                     true, order.CustomerCurrencyCode, false, languageId);
 
-                var p = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.Discount", languageId)} {orderDiscountInCustomerCurrencyStr}", font);
+                var p = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.Discount", languageId)} {orderDiscountInCustomerCurrencyStr}", font);
                 p.HorizontalAlignment = Element.ALIGN_RIGHT;
                 p.Border = Rectangle.NO_BORDER;
                 totalsTable.AddCell(p);
             }
 
             //gift cards
-            foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistory(order))
+            foreach (var gcuh in await _giftCardService.GetGiftCardUsageHistoryAsync(order))
             {
-                var gcTitle = string.Format(await _localizationService.GetResource("PDFInvoice.GiftCardInfo", languageId),
-                    (await _giftCardService.GetGiftCardById(gcuh.GiftCardId))?.GiftCardCouponCode);
-                var gcAmountStr = await _priceFormatter.FormatPrice(
+                var gcTitle = string.Format(await _localizationService.GetResourceAsync("PDFInvoice.GiftCardInfo", languageId),
+                    (await _giftCardService.GetGiftCardByIdAsync(gcuh.GiftCardId))?.GiftCardCouponCode);
+                var gcAmountStr = await _priceFormatter.FormatPriceAsync(
                     -_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true,
                     order.CustomerCurrencyCode, false, languageId);
 
@@ -649,11 +649,11 @@ namespace Nop.Services.Common
             }
 
             //reward points
-            if (order.RedeemedRewardPointsEntryId.HasValue && await _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
+            if (order.RedeemedRewardPointsEntryId.HasValue && await _rewardPointService.GetRewardPointsHistoryEntryByIdAsync(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
             {
-                var rpTitle = string.Format(await _localizationService.GetResource("PDFInvoice.RewardPoints", languageId),
+                var rpTitle = string.Format(await _localizationService.GetResourceAsync("PDFInvoice.RewardPoints", languageId),
                     -redeemedRewardPointsEntry.Points);
-                var rpAmount = await _priceFormatter.FormatPrice(
+                var rpAmount = await _priceFormatter.FormatPriceAsync(
                     -_currencyService.ConvertCurrency(redeemedRewardPointsEntry.UsedAmount, order.CurrencyRate),
                     true, order.CustomerCurrencyCode, false, languageId);
 
@@ -665,9 +665,9 @@ namespace Nop.Services.Common
 
             //order total
             var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-            var orderTotalStr = await _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
+            var orderTotalStr = await _priceFormatter.FormatPriceAsync(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, languageId);
 
-            var pTotal = GetPdfCell($"{await _localizationService.GetResource("PDFInvoice.OrderTotal", languageId)} {orderTotalStr}", titleFont);
+            var pTotal = GetPdfCell($"{await _localizationService.GetResourceAsync("PDFInvoice.OrderTotal", languageId)} {orderTotalStr}", titleFont);
             pTotal.HorizontalAlignment = Element.ALIGN_RIGHT;
             pTotal.Border = Rectangle.NO_BORDER;
             totalsTable.AddCell(pTotal);
@@ -713,21 +713,21 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="font">Text font</param>
         /// <param name="attributesFont">Product attributes font</param>
-        protected virtual async Task PrintProducts(int vendorId, Language lang, Font titleFont, Document doc, Order order, Font font, Font attributesFont)
+        protected virtual async Task PrintProductsAsync(int vendorId, Language lang, Font titleFont, Document doc, Order order, Font font, Font attributesFont)
         {
             var productsHeader = new PdfPTable(1)
             {
                 RunDirection = GetDirection(lang),
                 WidthPercentage = 100f
             };
-            var cellProducts = await GetPdfCell("PDFInvoice.Product(s)", lang, titleFont);
+            var cellProducts = await GetPdfCellAsync("PDFInvoice.Product(s)", lang, titleFont);
             cellProducts.Border = Rectangle.NO_BORDER;
             productsHeader.AddCell(cellProducts);
             doc.Add(productsHeader);
             doc.Add(new Paragraph(" "));
 
             //a vendor should have access only to products
-            var orderItems = await _orderService.GetOrderItems(order.Id, vendorId: vendorId);
+            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, vendorId: vendorId);
 
             var count = 4 + (_catalogSettings.ShowSkuOnProductDetailsPage ? 1 : 0)
                         + (_vendorSettings.ShowVendorOnOrderDetailsPage ? 1 : 0);
@@ -748,7 +748,7 @@ namespace Nop.Services.Common
             productsTable.SetWidths(lang.Rtl ? widths[count].Reverse().ToArray() : widths[count]);
 
             //product name
-            var cellProductItem = await GetPdfCell("PDFInvoice.ProductName", lang, font);
+            var cellProductItem = await GetPdfCellAsync("PDFInvoice.ProductName", lang, font);
             cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
@@ -756,7 +756,7 @@ namespace Nop.Services.Common
             //SKU
             if (_catalogSettings.ShowSkuOnProductDetailsPage)
             {
-                cellProductItem = await GetPdfCell("PDFInvoice.SKU", lang, font);
+                cellProductItem = await GetPdfCellAsync("PDFInvoice.SKU", lang, font);
                 cellProductItem.BackgroundColor = BaseColor.LightGray;
                 cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cellProductItem);
@@ -765,41 +765,41 @@ namespace Nop.Services.Common
             //Vendor name
             if (_vendorSettings.ShowVendorOnOrderDetailsPage)
             {
-                cellProductItem = await GetPdfCell("PDFInvoice.VendorName", lang, font);
+                cellProductItem = await GetPdfCellAsync("PDFInvoice.VendorName", lang, font);
                 cellProductItem.BackgroundColor = BaseColor.LightGray;
                 cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cellProductItem);
             }
 
             //price
-            cellProductItem = await GetPdfCell("PDFInvoice.ProductPrice", lang, font);
+            cellProductItem = await GetPdfCellAsync("PDFInvoice.ProductPrice", lang, font);
             cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
             //qty
-            cellProductItem = await GetPdfCell("PDFInvoice.ProductQuantity", lang, font);
+            cellProductItem = await GetPdfCellAsync("PDFInvoice.ProductQuantity", lang, font);
             cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
             //total
-            cellProductItem = await GetPdfCell("PDFInvoice.ProductTotal", lang, font);
+            cellProductItem = await GetPdfCellAsync("PDFInvoice.ProductTotal", lang, font);
             cellProductItem.BackgroundColor = BaseColor.LightGray;
             cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
             productsTable.AddCell(cellProductItem);
 
-            var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? await _vendorService.GetVendorsByProductIds(orderItems.Select(item => item.ProductId).ToArray()) : new List<Vendor>();
+            var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? await _vendorService.GetVendorsByProductIdsAsync(orderItems.Select(item => item.ProductId).ToArray()) : new List<Vendor>();
 
             foreach (var orderItem in orderItems)
             {
-                var product = await _productService.GetProductById(orderItem.ProductId);
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
                 var pAttribTable = new PdfPTable(1) { RunDirection = GetDirection(lang) };
                 pAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
                 //product name
-                var name = await _localizationService.GetLocalized(product, x => x.Name, lang.Id);
+                var name = await _localizationService.GetLocalizedAsync(product, x => x.Name, lang.Id);
                 pAttribTable.AddCell(new Paragraph(name, font));
                 cellProductItem.AddElement(new Paragraph(name, font));
                 //attributes
@@ -820,7 +820,7 @@ namespace Nop.Services.Common
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
                         ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value)
                         : string.Empty;
-                    var rentalInfo = string.Format(await _localizationService.GetResource("Order.Rental.FormattedDate"),
+                    var rentalInfo = string.Format(await _localizationService.GetResourceAsync("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
 
                     var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
@@ -854,7 +854,7 @@ namespace Nop.Services.Common
                     //including tax
                     var unitPriceInclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    unitPrice = await _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true,
+                    unitPrice = await _priceFormatter.FormatPriceAsync(unitPriceInclTaxInCustomerCurrency, true,
                         order.CustomerCurrencyCode, lang.Id, true);
                 }
                 else
@@ -862,7 +862,7 @@ namespace Nop.Services.Common
                     //excluding tax
                     var unitPriceExclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    unitPrice = await _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true,
+                    unitPrice = await _priceFormatter.FormatPriceAsync(unitPriceExclTaxInCustomerCurrency, true,
                         order.CustomerCurrencyCode, lang.Id, false);
                 }
 
@@ -882,7 +882,7 @@ namespace Nop.Services.Common
                     //including tax
                     var priceInclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
-                    subTotal = await _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
+                    subTotal = await _priceFormatter.FormatPriceAsync(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
                         lang.Id, true);
                 }
                 else
@@ -890,7 +890,7 @@ namespace Nop.Services.Common
                     //excluding tax
                     var priceExclTaxInCustomerCurrency =  
                         _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
-                    subTotal = await _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
+                    subTotal = await _priceFormatter.FormatPriceAsync(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode,
                         lang.Id, false);
                 }
 
@@ -911,7 +911,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="font">Text font</param>
         /// <param name="doc">Document</param>
-        protected virtual async Task PrintAddresses(int vendorId, Language lang, Font titleFont, Order order, Font font, Document doc)
+        protected virtual async Task PrintAddressesAsync(int vendorId, Language lang, Font titleFont, Order order, Font font, Document doc)
         {
             var addressTable = new PdfPTable(2) { RunDirection = GetDirection(lang) };
             addressTable.DefaultCell.Border = Rectangle.NO_BORDER;
@@ -919,10 +919,10 @@ namespace Nop.Services.Common
             addressTable.SetWidths(new[] { 50, 50 });
 
             //billing info
-            await PrintBillingInfo(vendorId, lang, titleFont, order, font, addressTable);
+            await PrintBillingInfoAsync(vendorId, lang, titleFont, order, font, addressTable);
 
             //shipping info
-            await PrintShippingInfo(lang, order, titleFont, font, addressTable);
+            await PrintShippingInfoAsync(lang, order, titleFont, font, addressTable);
 
             doc.Add(addressTable);
             doc.Add(new Paragraph(" "));
@@ -936,7 +936,7 @@ namespace Nop.Services.Common
         /// <param name="titleFont">Title font</param>
         /// <param name="font">Text font</param>
         /// <param name="addressTable">PDF table for address</param>
-        protected virtual async Task PrintShippingInfo(Language lang, Order order, Font titleFont, Font font, PdfPTable addressTable)
+        protected virtual async Task PrintShippingInfoAsync(Language lang, Order order, Font titleFont, Font font, PdfPTable addressTable)
         {
             var shippingAddressPdf = new PdfPTable(1)
             {
@@ -952,39 +952,39 @@ namespace Nop.Services.Common
 
                 if (!order.PickupInStore)
                 {
-                    if (order.ShippingAddressId == null || !(await _addressService.GetAddressById(order.ShippingAddressId.Value) is Address shippingAddress))
+                    if (order.ShippingAddressId == null || !(await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is Address shippingAddress))
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
-                    shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.ShippingInformation", lang, titleFont));
+                    shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.ShippingInformation", lang, titleFont));
                     if (!string.IsNullOrEmpty(shippingAddress.Company))
-                        shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Company", indent, lang, font, shippingAddress.Company));
-                    shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Name", indent, lang, font, shippingAddress.FirstName + " " + shippingAddress.LastName));
+                        shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Company", indent, lang, font, shippingAddress.Company));
+                    shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Name", indent, lang, font, shippingAddress.FirstName + " " + shippingAddress.LastName));
                     if (_addressSettings.PhoneEnabled)
-                        shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Phone", indent, lang, font, shippingAddress.PhoneNumber));
+                        shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Phone", indent, lang, font, shippingAddress.PhoneNumber));
                     if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(shippingAddress.FaxNumber))
-                        shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Fax", indent, lang, font, shippingAddress.FaxNumber));
+                        shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Fax", indent, lang, font, shippingAddress.FaxNumber));
                     if (_addressSettings.StreetAddressEnabled)
-                        shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Address", indent, lang, font, shippingAddress.Address1));
+                        shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Address", indent, lang, font, shippingAddress.Address1));
                     if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(shippingAddress.Address2))
-                        shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Address2", indent, lang, font, shippingAddress.Address2));
+                        shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Address2", indent, lang, font, shippingAddress.Address2));
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                         _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
                     {
                         var addressLine = $"{indent}{shippingAddress.City}, " +
                             $"{(!string.IsNullOrEmpty(shippingAddress.County) ? $"{shippingAddress.County}, " : string.Empty)}" +
-                            $"{(await _stateProvinceService.GetStateProvinceByAddress(shippingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalized(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                            $"{(await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                             $"{shippingAddress.ZipPostalCode}";
                         shippingAddressPdf.AddCell(new Paragraph(addressLine, font));
                     }
 
-                    if (_addressSettings.CountryEnabled &&  await _countryService.GetCountryByAddress(shippingAddress) is Country country)
+                    if (_addressSettings.CountryEnabled &&  await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country)
                     {
                         shippingAddressPdf.AddCell(
-                            new Paragraph(indent + await _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
+                            new Paragraph(indent + await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id), font));
                     }
                     //custom attributes
                     var customShippingAddressAttributes = await _addressAttributeFormatter
-                        .FormatAttributes(shippingAddress.CustomAttributes, $"<br />{indent}");
+                        .FormatAttributesAsync(shippingAddress.CustomAttributes, $"<br />{indent}");
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         var text = HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true);
@@ -993,13 +993,13 @@ namespace Nop.Services.Common
 
                     shippingAddressPdf.AddCell(new Paragraph(" "));
                 }
-                else if (order.PickupAddressId.HasValue && await _addressService.GetAddressById(order.PickupAddressId.Value) is Address pickupAddress)
+                else if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
                 {
-                    shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Pickup", lang, titleFont));
+                    shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Pickup", lang, titleFont));
 
                     if (!string.IsNullOrEmpty(pickupAddress.Address1))
                         shippingAddressPdf.AddCell(new Paragraph(
-                            $"{indent}{string.Format(await _localizationService.GetResource("PDFInvoice.Address", lang.Id), pickupAddress.Address1)}",
+                            $"{indent}{string.Format(await _localizationService.GetResourceAsync("PDFInvoice.Address", lang.Id), pickupAddress.Address1)}",
                             font));
 
                     if (!string.IsNullOrEmpty(pickupAddress.City))
@@ -1008,9 +1008,9 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(pickupAddress.County))
                         shippingAddressPdf.AddCell(new Paragraph($"{indent}{pickupAddress.County}", font));
 
-                    if (await _countryService.GetCountryByAddress(pickupAddress) is Country country)
+                    if (await _countryService.GetCountryByAddressAsync(pickupAddress) is Country country)
                         shippingAddressPdf.AddCell(
-                            new Paragraph($"{indent}{await _localizationService.GetLocalized(country, x => x.Name, lang.Id)}", font));
+                            new Paragraph($"{indent}{await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id)}", font));
 
                     if (!string.IsNullOrEmpty(pickupAddress.ZipPostalCode))
                         shippingAddressPdf.AddCell(new Paragraph($"{indent}{pickupAddress.ZipPostalCode}", font));
@@ -1018,7 +1018,7 @@ namespace Nop.Services.Common
                     shippingAddressPdf.AddCell(new Paragraph(" "));
                 }
 
-                shippingAddressPdf.AddCell(await GetParagraph("PDFInvoice.ShippingMethod", indent, lang, font, order.ShippingMethod));
+                shippingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.ShippingMethod", indent, lang, font, order.ShippingMethod));
                 shippingAddressPdf.AddCell(new Paragraph());
 
                 addressTable.AddCell(shippingAddressPdf);
@@ -1039,53 +1039,53 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="font">Text font</param>
         /// <param name="addressTable">Address PDF table</param>
-        protected virtual async Task PrintBillingInfo(int vendorId, Language lang, Font titleFont, Order order, Font font, PdfPTable addressTable)
+        protected virtual async Task PrintBillingInfoAsync(int vendorId, Language lang, Font titleFont, Order order, Font font, PdfPTable addressTable)
         {
             const string indent = "   ";
             var billingAddressPdf = new PdfPTable(1) { RunDirection = GetDirection(lang) };
             billingAddressPdf.DefaultCell.Border = Rectangle.NO_BORDER;
 
-            billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.BillingInformation", lang, titleFont));
+            billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.BillingInformation", lang, titleFont));
 
-            var billingAddress = await _addressService.GetAddressById(order.BillingAddressId);
+            var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
             if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(billingAddress.Company))
-                billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Company", indent, lang, font, billingAddress.Company));
+                billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Company", indent, lang, font, billingAddress.Company));
 
-            billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Name", indent, lang, font, billingAddress.FirstName + " " + billingAddress.LastName));
+            billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Name", indent, lang, font, billingAddress.FirstName + " " + billingAddress.LastName));
 
             if (_addressSettings.PhoneEnabled)
-                billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Phone", indent, lang, font, billingAddress.PhoneNumber));
+                billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Phone", indent, lang, font, billingAddress.PhoneNumber));
 
             if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(billingAddress.FaxNumber))
-                billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Fax", indent, lang, font, billingAddress.FaxNumber));
+                billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Fax", indent, lang, font, billingAddress.FaxNumber));
 
             if (_addressSettings.StreetAddressEnabled)
-                billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Address", indent, lang, font, billingAddress.Address1));
+                billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Address", indent, lang, font, billingAddress.Address1));
 
             if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(billingAddress.Address2))
-                billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.Address2", indent, lang, font, billingAddress.Address2));
+                billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.Address2", indent, lang, font, billingAddress.Address2));
 
             if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                 _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
             {
                 var addressLine = $"{indent}{billingAddress.City}, " +
                     $"{(!string.IsNullOrEmpty(billingAddress.County) ? $"{billingAddress.County}, " : string.Empty)}" +
-                    $"{(await _stateProvinceService.GetStateProvinceByAddress(billingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalized(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                    $"{(await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                     $"{billingAddress.ZipPostalCode}";
                 billingAddressPdf.AddCell(new Paragraph(addressLine, font));
             }
 
-            if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddress(billingAddress) is Country country)
-                billingAddressPdf.AddCell(new Paragraph(indent + await _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
+            if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(billingAddress) is Country country)
+                billingAddressPdf.AddCell(new Paragraph(indent + await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id), font));
 
             //VAT number
             if (!string.IsNullOrEmpty(order.VatNumber))
-                billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.VATNumber", indent, lang, font, order.VatNumber));
+                billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.VATNumber", indent, lang, font, order.VatNumber));
 
             //custom attributes
             var customBillingAddressAttributes = await _addressAttributeFormatter
-                .FormatAttributes(billingAddress.CustomAttributes, $"<br />{indent}");
+                .FormatAttributesAsync(billingAddress.CustomAttributes, $"<br />{indent}");
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 var text = HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true);
@@ -1098,12 +1098,12 @@ namespace Nop.Services.Common
                 //payment method
                 var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
                 var paymentMethodStr = paymentMethod != null
-                    ? await _localizationService.GetLocalizedFriendlyName(paymentMethod, lang.Id)
+                    ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, lang.Id)
                     : order.PaymentMethodSystemName;
                 if (!string.IsNullOrEmpty(paymentMethodStr))
                 {
                     billingAddressPdf.AddCell(new Paragraph(" "));
-                    billingAddressPdf.AddCell(await GetParagraph("PDFInvoice.PaymentMethod", indent, lang, font, paymentMethodStr));
+                    billingAddressPdf.AddCell(await GetParagraphAsync("PDFInvoice.PaymentMethod", indent, lang, font, paymentMethodStr));
                     billingAddressPdf.AddCell(new Paragraph());
                 }
 
@@ -1132,10 +1132,10 @@ namespace Nop.Services.Common
         /// <param name="font">Text font</param>
         /// <param name="titleFont">Title font</param>
         /// <param name="doc">Document</param>
-        protected virtual async Task PrintHeader(PdfSettings pdfSettingsByStore, Language lang, Order order, Font font, Font titleFont, Document doc)
+        protected virtual async Task PrintHeaderAsync(PdfSettings pdfSettingsByStore, Language lang, Order order, Font font, Font titleFont, Document doc)
         {
             //logo
-            var logoPicture = await _pictureService.GetPictureById(pdfSettingsByStore.LogoPictureId);
+            var logoPicture = await _pictureService.GetPictureByIdAsync(pdfSettingsByStore.LogoPictureId);
             var logoExists = logoPicture != null;
 
             //header
@@ -1146,17 +1146,17 @@ namespace Nop.Services.Common
             headerTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
             //store info
-            var store = await _storeService.GetStoreById(order.StoreId) ?? await _storeContext.GetCurrentStore();
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
             var anchor = new Anchor(store.Url.Trim('/'), font)
             {
                 Reference = store.Url
             };
 
-            var cellHeader = GetPdfCell(string.Format(await _localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.CustomOrderNumber), titleFont);
+            var cellHeader = GetPdfCell(string.Format(await _localizationService.GetResourceAsync("PDFInvoice.Order#", lang.Id), order.CustomOrderNumber), titleFont);
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.Phrase.Add(new Phrase(anchor));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
-            cellHeader.Phrase.Add(GetParagraph("PDFInvoice.OrderDate", lang, font, _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D", new CultureInfo(lang.LanguageCulture))));
+            cellHeader.Phrase.Add(GetParagraphAsync("PDFInvoice.OrderDate", lang, font, _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D", new CultureInfo(lang.LanguageCulture))));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -1171,7 +1171,7 @@ namespace Nop.Services.Common
             //logo               
             if (logoExists)
             {
-                var logoFilePath = await _pictureService.GetThumbLocalPath(logoPicture, 0, false);
+                var logoFilePath = await _pictureService.GetThumbLocalPathAsync(logoPicture, 0, false);
                 var logo = Image.GetInstance(logoFilePath);
                 logo.Alignment = GetAlignment(lang, true);
                 logo.ScaleToFit(65f, 65f);
@@ -1195,7 +1195,7 @@ namespace Nop.Services.Common
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <param name="vendorId">Vendor identifier to limit products; 0 to print all products. If specified, then totals won't be printed</param>
         /// <returns>A path of generated file</returns>
-        public virtual async Task<string> PrintOrderToPdf(Order order, int languageId = 0, int vendorId = 0)
+        public virtual async Task<string> PrintOrderToPdfAsync(Order order, int languageId = 0, int vendorId = 0)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -1205,7 +1205,7 @@ namespace Nop.Services.Common
             await using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order> { order };
-                await PrintOrdersToPdf(fileStream, orders, languageId, vendorId);
+                await PrintOrdersToPdfAsync(fileStream, orders, languageId, vendorId);
             }
 
             return filePath;
@@ -1218,7 +1218,7 @@ namespace Nop.Services.Common
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <param name="vendorId">Vendor identifier to limit products; 0 to print all products. If specified, then totals won't be printed</param>
-        public virtual async Task PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0, int vendorId = 0)
+        public virtual async Task PrintOrdersToPdfAsync(Stream stream, IList<Order> orders, int languageId = 0, int vendorId = 0)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -1251,29 +1251,29 @@ namespace Nop.Services.Common
                 //by default _pdfSettings contains settings for the current active store
                 //and we need PdfSettings for the store which was used to place an order
                 //so let's load it based on a store of the current order
-                var pdfSettingsByStore = await _settingService.LoadSetting<PdfSettings>(order.StoreId);
+                var pdfSettingsByStore = await _settingService.LoadSettingAsync<PdfSettings>(order.StoreId);
 
-                var lang = await _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
+                var lang = await _languageService.GetLanguageByIdAsync(languageId == 0 ? order.CustomerLanguageId : languageId);
                 if (lang == null || !lang.Published)
-                    lang = await _workContext.GetWorkingLanguage();
+                    lang = await _workContext.GetWorkingLanguageAsync();
 
                 //header
-                await PrintHeader(pdfSettingsByStore, lang, order, font, titleFont, doc);
+                await PrintHeaderAsync(pdfSettingsByStore, lang, order, font, titleFont, doc);
 
                 //addresses
-                await PrintAddresses(vendorId, lang, titleFont, order, font, doc);
+                await PrintAddressesAsync(vendorId, lang, titleFont, order, font, doc);
 
                 //products
-                await PrintProducts(vendorId, lang, titleFont, doc, order, font, attributesFont);
+                await PrintProductsAsync(vendorId, lang, titleFont, doc, order, font, attributesFont);
 
                 //checkout attributes
                 PrintCheckoutAttributes(vendorId, order, doc, lang, font);
 
                 //totals
-                await PrintTotals(vendorId, lang, order, font, titleFont, doc);
+                await PrintTotalsAsync(vendorId, lang, order, font, titleFont, doc);
 
                 //order notes
-                await PrintOrderNotes(pdfSettingsByStore, order, lang, titleFont, doc, font);
+                await PrintOrderNotesAsync(pdfSettingsByStore, order, lang, titleFont, doc, font);
 
                 //footer
                 PrintFooter(pdfSettingsByStore, pdfWriter, pageSize, lang, font);
@@ -1292,7 +1292,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        public virtual async Task PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, int languageId = 0)
+        public virtual async Task PrintPackagingSlipsToPdfAsync(Stream stream, IList<Shipment> shipments, int languageId = 0)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -1324,11 +1324,11 @@ namespace Nop.Services.Common
 
             foreach (var shipment in shipments)
             {
-                var order = await _orderService.GetOrderById(shipment.OrderId);
+                var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
 
-                var lang = await _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
+                var lang = await _languageService.GetLanguageByIdAsync(languageId == 0 ? order.CustomerLanguageId : languageId);
                 if (lang == null || !lang.Published)
-                    lang = await _workContext.GetWorkingLanguage();
+                    lang = await _workContext.GetWorkingLanguageAsync();
 
                 var addressTable = new PdfPTable(1);
                 if (lang.Rtl)
@@ -1336,53 +1336,53 @@ namespace Nop.Services.Common
                 addressTable.DefaultCell.Border = Rectangle.NO_BORDER;
                 addressTable.WidthPercentage = 100f;
 
-                addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Shipment", lang, titleFont, shipment.Id));
-                addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Order", lang, titleFont, order.CustomOrderNumber));
+                addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Shipment", lang, titleFont, shipment.Id));
+                addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Order", lang, titleFont, order.CustomOrderNumber));
 
                 if (!order.PickupInStore)
                 {
-                    if (order.ShippingAddressId == null || !(await _addressService.GetAddressById(order.ShippingAddressId.Value) is Address shippingAddress))
+                    if (order.ShippingAddressId == null || !(await _addressService.GetAddressByIdAsync(order.ShippingAddressId.Value) is Address shippingAddress))
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
                     if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(shippingAddress.Company))
-                        addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Company", lang, font, shippingAddress.Company));
+                        addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Company", lang, font, shippingAddress.Company));
 
-                    addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Name", lang, font, shippingAddress.FirstName + " " + shippingAddress.LastName));
+                    addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Name", lang, font, shippingAddress.FirstName + " " + shippingAddress.LastName));
                     if (_addressSettings.PhoneEnabled)
-                        addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Phone", lang, font, shippingAddress.PhoneNumber));
+                        addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Phone", lang, font, shippingAddress.PhoneNumber));
                     if (_addressSettings.StreetAddressEnabled)
-                        addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Address", lang, font, shippingAddress.Address1));
+                        addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Address", lang, font, shippingAddress.Address1));
 
                     if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(shippingAddress.Address2))
-                        addressTable.AddCell(await GetParagraph("PDFPackagingSlip.Address2", lang, font, shippingAddress.Address2));
+                        addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.Address2", lang, font, shippingAddress.Address2));
 
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                         _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
                     {
                         var addressLine = $"{shippingAddress.City}, " +
                             $"{(!string.IsNullOrEmpty(shippingAddress.County) ? $"{shippingAddress.County}, " : string.Empty)}" +
-                            $"{(await _stateProvinceService.GetStateProvinceByAddress(shippingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalized(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                            $"{(await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress) is StateProvince stateProvince ? await _localizationService.GetLocalizedAsync(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                             $"{shippingAddress.ZipPostalCode}";
                         addressTable.AddCell(new Paragraph(addressLine, font));
                     }
 
-                    if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddress(shippingAddress) is Country country)
-                        addressTable.AddCell(new Paragraph(await _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
+                    if (_addressSettings.CountryEnabled && await _countryService.GetCountryByAddressAsync(shippingAddress) is Country country)
+                        addressTable.AddCell(new Paragraph(await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id), font));
 
                     //custom attributes
-                    var customShippingAddressAttributes = await _addressAttributeFormatter.FormatAttributes(shippingAddress.CustomAttributes);
+                    var customShippingAddressAttributes = await _addressAttributeFormatter.FormatAttributesAsync(shippingAddress.CustomAttributes);
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
                     }
                 }
                 else
-                    if (order.PickupAddressId.HasValue && await _addressService.GetAddressById(order.PickupAddressId.Value) is Address pickupAddress)
+                    if (order.PickupAddressId.HasValue && await _addressService.GetAddressByIdAsync(order.PickupAddressId.Value) is Address pickupAddress)
                 {
-                    addressTable.AddCell(new Paragraph(await _localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                    addressTable.AddCell(new Paragraph(await _localizationService.GetResourceAsync("PDFInvoice.Pickup", lang.Id), titleFont));
 
                     if (!string.IsNullOrEmpty(pickupAddress.Address1))
-                        addressTable.AddCell(new Paragraph($"   {string.Format(await _localizationService.GetResource("PDFInvoice.Address", lang.Id), pickupAddress.Address1)}", font));
+                        addressTable.AddCell(new Paragraph($"   {string.Format(await _localizationService.GetResourceAsync("PDFInvoice.Address", lang.Id), pickupAddress.Address1)}", font));
 
                     if (!string.IsNullOrEmpty(pickupAddress.City))
                         addressTable.AddCell(new Paragraph($"   {pickupAddress.City}", font));
@@ -1390,8 +1390,8 @@ namespace Nop.Services.Common
                     if (!string.IsNullOrEmpty(pickupAddress.County))
                         addressTable.AddCell(new Paragraph($"   {pickupAddress.County}", font));
 
-                    if (await _countryService.GetCountryByAddress(pickupAddress) is Country country)
-                        addressTable.AddCell(new Paragraph($"   {await _localizationService.GetLocalized(country, x => x.Name, lang.Id)}", font));
+                    if (await _countryService.GetCountryByAddressAsync(pickupAddress) is Country country)
+                        addressTable.AddCell(new Paragraph($"   {await _localizationService.GetLocalizedAsync(country, x => x.Name, lang.Id)}", font));
 
                     if (!string.IsNullOrEmpty(pickupAddress.ZipPostalCode))
                         addressTable.AddCell(new Paragraph($"   {pickupAddress.ZipPostalCode}", font));
@@ -1401,7 +1401,7 @@ namespace Nop.Services.Common
 
                 addressTable.AddCell(new Paragraph(" "));
 
-                addressTable.AddCell(await GetParagraph("PDFPackagingSlip.ShippingMethod", lang, font, order.ShippingMethod));
+                addressTable.AddCell(await GetParagraphAsync("PDFPackagingSlip.ShippingMethod", lang, font, order.ShippingMethod));
                 addressTable.AddCell(new Paragraph(" "));
                 doc.Add(addressTable);
 
@@ -1417,24 +1417,24 @@ namespace Nop.Services.Common
                 }
 
                 //product name
-                var cell = await GetPdfCell("PDFPackagingSlip.ProductName", lang, font);
+                var cell = await GetPdfCellAsync("PDFPackagingSlip.ProductName", lang, font);
                 cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
                 //SKU
-                cell = await GetPdfCell("PDFPackagingSlip.SKU", lang, font);
+                cell = await GetPdfCellAsync("PDFPackagingSlip.SKU", lang, font);
                 cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
                 //qty
-                cell = await GetPdfCell("PDFPackagingSlip.QTY", lang, font);
+                cell = await GetPdfCellAsync("PDFPackagingSlip.QTY", lang, font);
                 cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
-                foreach (var si in await _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
+                foreach (var si in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
                 {
                     var productAttribTable = new PdfPTable(1);
                     if (lang.Rtl)
@@ -1442,13 +1442,13 @@ namespace Nop.Services.Common
                     productAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
                     //product name
-                    var orderItem = await _orderService.GetOrderItemById(si.OrderItemId);
+                    var orderItem = await _orderService.GetOrderItemByIdAsync(si.OrderItemId);
                     if (orderItem == null)
                         continue;
 
-                    var product = await _productService.GetProductById(orderItem.ProductId);
+                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
-                    var name = await _localizationService.GetLocalized(product, x => x.Name, lang.Id);
+                    var name = await _localizationService.GetLocalizedAsync(product, x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
                     //attributes
                     if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
@@ -1464,7 +1464,7 @@ namespace Nop.Services.Common
                             ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                         var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
                             ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
-                        var rentalInfo = string.Format(await _localizationService.GetResource("Order.Rental.FormattedDate"),
+                        var rentalInfo = string.Format(await _localizationService.GetResourceAsync("Order.Rental.FormattedDate"),
                             rentalStartDate, rentalEndDate);
 
                         var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
@@ -1500,7 +1500,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        public virtual async Task PrintProductsToPdf(Stream stream, IList<Product> products)
+        public virtual async Task PrintProductsToPdfAsync(Stream stream, IList<Product> products)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -1508,7 +1508,7 @@ namespace Nop.Services.Common
             if (products == null)
                 throw new ArgumentNullException(nameof(products));
 
-            var lang = await _workContext.GetWorkingLanguage();
+            var lang = await _workContext.GetWorkingLanguageAsync();
 
             var pageSize = PageSize.A4;
 
@@ -1532,8 +1532,8 @@ namespace Nop.Services.Common
 
             foreach (var product in products)
             {
-                var productName = await _localizationService.GetLocalized(product, x => x.Name, lang.Id);
-                var productDescription = await _localizationService.GetLocalized(product, x => x.FullDescription, lang.Id);
+                var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name, lang.Id);
+                var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.FullDescription, lang.Id);
 
                 var productTable = new PdfPTable(1) { WidthPercentage = 100f };
                 productTable.DefaultCell.Border = Rectangle.NO_BORDER;
@@ -1551,22 +1551,22 @@ namespace Nop.Services.Common
                 {
                     //simple product
                     //render its properties such as price, weight, etc
-                    var priceStr = $"{product.Price:0.00} {(await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode}";
+                    var priceStr = $"{product.Price:0.00} {(await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode}";
                     if (product.IsRental)
-                        priceStr = await _priceFormatter.FormatRentalProductPeriod(product, priceStr);
-                    productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.Price", lang.Id)}: {priceStr}", font));
-                    productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id)}: {product.Sku}", font));
+                        priceStr = await _priceFormatter.FormatRentalProductPeriodAsync(product, priceStr);
+                    productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.Price", lang.Id)}: {priceStr}", font));
+                    productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.SKU", lang.Id)}: {product.Sku}", font));
 
                     if (product.IsShipEnabled && product.Weight > decimal.Zero)
-                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id)}: {product.Weight:0.00} {(await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name}", font));
+                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.Weight", lang.Id)}: {product.Weight:0.00} {(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name}", font));
 
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantity(product)}", font));
+                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantityAsync(product)}", font));
 
                     productTable.AddCell(new Paragraph(" "));
                 }
 
-                var pictures = await _pictureService.GetPicturesByProductId(product.Id);
+                var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
                 if (pictures.Any())
                 {
                     var table = new PdfPTable(2) { WidthPercentage = 100f };
@@ -1575,11 +1575,11 @@ namespace Nop.Services.Common
 
                     foreach (var pic in pictures)
                     {
-                        var picBinary = await _pictureService.LoadPictureBinary(pic);
+                        var picBinary = await _pictureService.LoadPictureBinaryAsync(pic);
                         if (picBinary == null || picBinary.Length <= 0)
                             continue;
 
-                        var pictureLocalPath = await _pictureService.GetThumbLocalPath(pic, 200, false);
+                        var pictureLocalPath = await _pictureService.GetThumbLocalPathAsync(pic, 200, false);
                         var cell = new PdfPCell(Image.GetInstance(pictureLocalPath))
                         {
                             HorizontalAlignment = Element.ALIGN_LEFT,
@@ -1605,9 +1605,9 @@ namespace Nop.Services.Common
                 {
                     //grouped product. render its associated products
                     var pvNum = 1;
-                    foreach (var associatedProduct in await _productService.GetAssociatedProducts(product.Id, showHidden: true))
+                    foreach (var associatedProduct in await _productService.GetAssociatedProductsAsync(product.Id, showHidden: true))
                     {
-                        productTable.AddCell(new Paragraph($"{productNumber}-{pvNum}. {await _localizationService.GetLocalized(associatedProduct, x => x.Name, lang.Id)}", font));
+                        productTable.AddCell(new Paragraph($"{productNumber}-{pvNum}. {await _localizationService.GetLocalizedAsync(associatedProduct, x => x.Name, lang.Id)}", font));
                         productTable.AddCell(new Paragraph(" "));
 
                         //uncomment to render associated product description
@@ -1630,14 +1630,14 @@ namespace Nop.Services.Common
                         //    }
                         //}
 
-                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.Price", lang.Id)}: {associatedProduct.Price:0.00} {(await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode}", font));
-                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id)}: {associatedProduct.Sku}", font));
+                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.Price", lang.Id)}: {associatedProduct.Price:0.00} {(await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode}", font));
+                        productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.SKU", lang.Id)}: {associatedProduct.Sku}", font));
 
                         if (associatedProduct.IsShipEnabled && associatedProduct.Weight > decimal.Zero)
-                            productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id)}: {associatedProduct.Weight:0.00} {(await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name}", font));
+                            productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.Weight", lang.Id)}: {associatedProduct.Weight:0.00} {(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name}", font));
 
                         if (associatedProduct.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                            productTable.AddCell(new Paragraph($"{await _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantity(associatedProduct)}", font));
+                            productTable.AddCell(new Paragraph($"{await _localizationService.GetResourceAsync("PDFProductCatalog.StockQuantity", lang.Id)}: {await _productService.GetTotalStockQuantityAsync(associatedProduct)}", font));
 
                         productTable.AddCell(new Paragraph(" "));
 

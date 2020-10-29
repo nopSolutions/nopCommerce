@@ -33,18 +33,18 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// Deletes a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual async Task DeleteTaxRate(TaxRate taxRate)
+        public virtual async Task DeleteTaxRateAsync(TaxRate taxRate)
         {
-            await _taxRateRepository.Delete(taxRate);
+            await _taxRateRepository.DeleteAsync(taxRate);
         }
 
         /// <summary>
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
-        public virtual async Task<IPagedList<TaxRate>> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<TaxRate>> GetAllTaxRatesAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var rez = await _taxRateRepository.GetAll(query =>
+            var rez = await _taxRateRepository.GetAllAsync(query =>
             {
                 return from tr in query
                     orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
@@ -61,27 +61,27 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        public virtual async Task<TaxRate> GetTaxRateById(int taxRateId)
+        public virtual async Task<TaxRate> GetTaxRateByIdAsync(int taxRateId)
         {
-            return await _taxRateRepository.GetById(taxRateId);
+            return await _taxRateRepository.GetByIdAsync(taxRateId);
         }
 
         /// <summary>
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual async Task InsertTaxRate(TaxRate taxRate)
+        public virtual async Task InsertTaxRateAsync(TaxRate taxRate)
         {
-            await _taxRateRepository.Insert(taxRate);
+            await _taxRateRepository.InsertAsync(taxRate);
         }
 
         /// <summary>
         /// Updates the tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual async Task UpdateTaxRate(TaxRate taxRate)
+        public virtual async Task UpdateTaxRateAsync(TaxRate taxRate)
         {
-            await _taxRateRepository.Update(taxRate);
+            await _taxRateRepository.UpdateAsync(taxRate);
         }
 
         #endregion

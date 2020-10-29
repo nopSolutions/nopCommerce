@@ -49,24 +49,24 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual async Task DeleteLanguage(Language language)
+        public virtual async Task DeleteLanguageAsync(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
             
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
-                foreach (var activeLanguage in await GetAllLanguages())
+                foreach (var activeLanguage in await GetAllLanguagesAsync())
                 {
                     if (activeLanguage.Id == language.Id) 
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
-                    await _settingService.SaveSetting(_localizationSettings);
+                    await _settingService.SaveSettingAsync(_localizationSettings);
                     break;
                 }
 
-            await _languageRepository.Delete(language);
+            await _languageRepository.DeleteAsync(language);
         }
 
         /// <summary>
@@ -75,14 +75,14 @@ namespace Nop.Services.Localization
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Languages</returns>
-        public virtual async Task<IList<Language>> GetAllLanguages(bool showHidden = false, int storeId = 0)
+        public virtual async Task<IList<Language>> GetAllLanguagesAsync(bool showHidden = false, int storeId = 0)
         {
             //cacheable copy
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LanguagesAllCacheKey, storeId, showHidden);
             
-            var languages = await _staticCacheManager.Get(key, async () =>
+            var languages = await _staticCacheManager.GetAsync(key, async () =>
             {
-                var allLanguages = await _languageRepository.GetAll(query =>
+                var allLanguages = await _languageRepository.GetAllAsync(query =>
                 {
                     if (!showHidden)
                         query = query.Where(l => l.Published);
@@ -94,7 +94,7 @@ namespace Nop.Services.Localization
                 //store mapping
                 if (storeId > 0)
                     allLanguages = allLanguages
-                        .Where(l => _storeMappingService.Authorize(l, storeId).Result)
+                        .Where(l => _storeMappingService.AuthorizeAsync(l, storeId).Result)
                         .ToList();
 
                 return allLanguages;
@@ -108,28 +108,28 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        public virtual async Task<Language> GetLanguageById(int languageId)
+        public virtual async Task<Language> GetLanguageByIdAsync(int languageId)
         {
-            return await _languageRepository.GetById(languageId, cache => default);
+            return await _languageRepository.GetByIdAsync(languageId, cache => default);
         }
 
         /// <summary>
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual async Task InsertLanguage(Language language)
+        public virtual async Task InsertLanguageAsync(Language language)
         {
-            await _languageRepository.Insert(language);
+            await _languageRepository.InsertAsync(language);
         }
 
         /// <summary>
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual async Task UpdateLanguage(Language language)
+        public virtual async Task UpdateLanguageAsync(Language language)
         {
             //update language
-            await _languageRepository.Update(language);
+            await _languageRepository.UpdateAsync(language);
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Factories
         /// </summary>
         /// <typeparam name="TModel">Store mapping supported model type</typeparam>
         /// <param name="model">Model</param>
-        Task PrepareModelStores<TModel>(TModel model) where TModel : IStoreMappingSupportedModel;
+        Task PrepareModelStoresAsync<TModel>(TModel model) where TModel : IStoreMappingSupportedModel;
 
         /// <summary>
         /// Prepare selected and all available stores for the passed model by store mappings
@@ -25,7 +25,7 @@ namespace Nop.Web.Framework.Factories
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
         /// <param name="ignoreStoreMappings">Whether to ignore existing store mappings</param>
-        Task PrepareModelStores<TModel, TEntity>(TModel model, TEntity entity, bool ignoreStoreMappings)
+        Task PrepareModelStoresAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreStoreMappings)
             where TModel : IStoreMappingSupportedModel where TEntity : BaseEntity, IStoreMappingSupported;
     }
 }

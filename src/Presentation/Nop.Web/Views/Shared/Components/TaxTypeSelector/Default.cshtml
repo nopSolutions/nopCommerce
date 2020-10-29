@@ -3,7 +3,7 @@
 @inject Nop.Core.IWebHelper webHelper
 
 @{
-    var returnUrl = webHelper.GetRawUrl(Context.Request);
+    var returnUrl = webHelper.GetRawUrlAsync(Context.Request);
 
     var taxTypes = new List<SelectListItem>();
     taxTypes.Add(new SelectListItem

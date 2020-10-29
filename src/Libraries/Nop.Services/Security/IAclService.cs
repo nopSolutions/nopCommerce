@@ -15,7 +15,7 @@ namespace Nop.Services.Security
         /// Deletes an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        Task DeleteAclRecord(AclRecord aclRecord);
+        Task DeleteAclRecordAsync(AclRecord aclRecord);
 
         //TODO: may be deleted
         /// <summary>
@@ -23,7 +23,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        Task<AclRecord> GetAclRecordById(int aclRecordId);
+        Task<AclRecord> GetAclRecordByIdAsync(int aclRecordId);
 
         /// <summary>
         /// Gets ACL records
@@ -31,13 +31,14 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>ACL records</returns>
-        Task<IList<AclRecord>> GetAclRecords<T>(T entity) where T : BaseEntity, IAclSupported;
+        Task<IList<AclRecord>> GetAclRecordsAsync<T>(T entity) where T : BaseEntity, IAclSupported;
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Inserts an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        Task InsertAclRecord(AclRecord aclRecord);
+        Task InsertAclRecordAsync(AclRecord aclRecord);
 
         /// <summary>
         /// Inserts an ACL record
@@ -45,14 +46,14 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
-        Task InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
+        Task InsertAclRecordAsync<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
 
         //TODO: may be deleted
         /// <summary>
         /// Updates the ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        Task UpdateAclRecord(AclRecord aclRecord);
+        Task UpdateAclRecordAsync(AclRecord aclRecord);
 
         /// <summary>
         /// Find customer role identifiers with granted access
@@ -60,7 +61,7 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Customer role identifiers</returns>
-        Task<int[]> GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported;
+        Task<int[]> GetCustomerRoleIdsWithAccessAsync<T>(T entity) where T : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Authorize ACL permission
@@ -68,7 +69,7 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        Task<bool> Authorize<T>(T entity) where T : BaseEntity, IAclSupported;
+        Task<bool> AuthorizeAsync<T>(T entity) where T : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Authorize ACL permission
@@ -77,6 +78,6 @@ namespace Nop.Services.Security
         /// <param name="entity">Entity</param>
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        Task<bool> Authorize<T>(T entity, Customer customer) where T : BaseEntity, IAclSupported;
+        Task<bool> AuthorizeAsync<T>(T entity, Customer customer) where T : BaseEntity, IAclSupported;
     }
 }

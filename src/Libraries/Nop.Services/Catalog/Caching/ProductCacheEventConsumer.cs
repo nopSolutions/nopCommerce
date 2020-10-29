@@ -15,12 +15,12 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Product entity)
+        protected override async Task ClearCacheAsync(Product entity)
         {
-            await RemoveByPrefix(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);
-            await Remove(NopCatalogDefaults.ProductsHomepageCacheKey);
-            await RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity);
-            await RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity);
+            await RemoveAsync(NopCatalogDefaults.ProductsHomepageCacheKey);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
         }
     }
 }

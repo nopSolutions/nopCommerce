@@ -15,7 +15,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="newsComment">News comment</param>
         /// <returns>News comment model</returns>
-        Task<NewsCommentModel> PrepareNewsCommentModel(NewsComment newsComment);
+        Task<NewsCommentModel> PrepareNewsCommentModelAsync(NewsComment newsComment);
 
         /// <summary>
         /// Prepare the news item model
@@ -24,19 +24,19 @@ namespace Nop.Web.Factories
         /// <param name="newsItem">News item</param>
         /// <param name="prepareComments">Whether to prepare news comment models</param>
         /// <returns>News item model</returns>
-        Task<NewsItemModel> PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments);
+        Task<NewsItemModel> PrepareNewsItemModelAsync(NewsItemModel model, NewsItem newsItem, bool prepareComments);
 
         /// <summary>
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModel();
+        Task<HomepageNewsItemsModel> PrepareHomepageNewsItemsModelAsync();
 
         /// <summary>
         /// Prepare the news item list model
         /// </summary>
         /// <param name="command">News paging filtering model</param>
         /// <returns>News item list model</returns>
-        Task<NewsItemListModel> PrepareNewsItemListModel(NewsPagingFilteringModel command);
+        Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command);
     }
 }

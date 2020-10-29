@@ -44,7 +44,7 @@ namespace Nop.Services.Authentication
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        public virtual async Task SignIn(Customer customer, bool isPersistent)
+        public virtual async Task SignInAsync(Customer customer, bool isPersistent)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -79,7 +79,7 @@ namespace Nop.Services.Authentication
         /// <summary>
         /// Sign out
         /// </summary>
-        public virtual async Task SignOut()
+        public virtual async Task SignOutAsync()
         {
             //reset cached customer
             _cachedCustomer = null;
@@ -92,7 +92,7 @@ namespace Nop.Services.Authentication
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual async Task<Customer> GetAuthenticatedCustomer()
+        public virtual async Task<Customer> GetAuthenticatedCustomerAsync()
         {
             //whether there is a cached customer
             if (_cachedCustomer != null)
@@ -110,7 +110,7 @@ namespace Nop.Services.Authentication
                 var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
-                    customer = await _customerService.GetCustomerByUsername(usernameClaim.Value);
+                    customer = await _customerService.GetCustomerByUsernameAsync(usernameClaim.Value);
             }
             else
             {
@@ -118,11 +118,11 @@ namespace Nop.Services.Authentication
                 var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
                     && claim.Issuer.Equals(NopAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
-                    customer = await _customerService.GetCustomerByEmail(emailClaim.Value);
+                    customer = await _customerService.GetCustomerByEmailAsync(emailClaim.Value);
             }
 
             //whether the found customer is available
-            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await _customerService.IsRegistered(customer))
+            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !await _customerService.IsRegisteredAsync(customer))
                 return null;
 
             //cache authenticated customer

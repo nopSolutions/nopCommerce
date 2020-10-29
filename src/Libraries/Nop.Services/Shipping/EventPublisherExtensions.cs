@@ -14,9 +14,9 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="shipment">The shipment.</param>
-        public static async Task PublishShipmentSent(this IEventPublisher eventPublisher, Shipment shipment)
+        public static async Task PublishShipmentSentAsync(this IEventPublisher eventPublisher, Shipment shipment)
         {
-            await eventPublisher.Publish(new ShipmentSentEvent(shipment));
+            await eventPublisher.PublishAsync(new ShipmentSentEvent(shipment));
         }
 
         /// <summary>
@@ -24,9 +24,9 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="shipment">The shipment.</param>
-        public static async Task PublishShipmentDelivered(this IEventPublisher eventPublisher, Shipment shipment)
+        public static async Task PublishShipmentDeliveredAsync(this IEventPublisher eventPublisher, Shipment shipment)
         {
-            await eventPublisher.Publish(new ShipmentDeliveredEvent(shipment));
+            await eventPublisher.PublishAsync(new ShipmentDeliveredEvent(shipment));
         }
     }
 }

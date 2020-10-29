@@ -68,7 +68,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             var model = new ConfigurationModel
@@ -86,7 +86,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -95,12 +95,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             //save settings
             _facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientId;
             _facebookExternalAuthSettings.ClientSecret = model.ClientSecret;
-            await _settingService.SaveSetting(_facebookExternalAuthSettings);
+            await _settingService.SaveSettingAsync(_facebookExternalAuthSettings);
 
             //clear Facebook authentication options cache
             _optionsCache.TryRemove(FacebookDefaults.AuthenticationScheme);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             return await Configure();
         }
@@ -108,7 +108,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public async Task<IActionResult> Login(string returnUrl)
         {
             var methodIsAvailable = _authenticationPluginManager
-                .IsPluginActive(FacebookAuthenticationDefaults.SystemName, await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id);
+                .IsPluginActive(FacebookAuthenticationDefaults.SystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
             if (!methodIsAvailable)
                 throw new NopException("Facebook authentication module cannot be loaded");
 
@@ -147,7 +147,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             };
 
             //authenticate Nop user
-            return await _externalAuthenticationService.Authenticate(authenticationParameters, returnUrl);
+            return await _externalAuthenticationService.AuthenticateAsync(authenticationParameters, returnUrl);
         }
 
         #endregion

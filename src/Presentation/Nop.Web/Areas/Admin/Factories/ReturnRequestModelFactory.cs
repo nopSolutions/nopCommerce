@@ -67,20 +67,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request search model</param>
         /// <returns>Return request search model</returns>
-        public virtual async Task<ReturnRequestSearchModel> PrepareReturnRequestSearchModel(ReturnRequestSearchModel searchModel)
+        public virtual async Task<ReturnRequestSearchModel> PrepareReturnRequestSearchModelAsync(ReturnRequestSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available return request statuses
-            await _baseAdminModelFactory.PrepareReturnRequestStatuses(searchModel.ReturnRequestStatusList, false);
+            await _baseAdminModelFactory.PrepareReturnRequestStatusesAsync(searchModel.ReturnRequestStatusList, false);
 
             //for some reason, the standard default value (0) for the "All" item is already used for the "Pending" status, so here we use -1
             searchModel.ReturnRequestStatusId = -1;
             searchModel.ReturnRequestStatusList.Insert(0, new SelectListItem
             {
                 Value = "-1",
-                Text = await _localizationService.GetResource("Admin.ReturnRequests.SearchReturnRequestStatus.All")
+                Text = await _localizationService.GetResourceAsync("Admin.ReturnRequests.SearchReturnRequestStatus.All")
             });
 
             //prepare page parameters
@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request search model</param>
         /// <returns>Return request list model</returns>
-        public virtual async Task<ReturnRequestListModel> PrepareReturnRequestListModel(ReturnRequestSearchModel searchModel)
+        public virtual async Task<ReturnRequestListModel> PrepareReturnRequestListModelAsync(ReturnRequestSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var returnRequestStatus = searchModel.ReturnRequestStatusId == -1 ? null : (ReturnRequestStatus?)searchModel.ReturnRequestStatusId;
 
             //get return requests
-            var returnRequests = await _returnRequestService.SearchReturnRequests(customNumber: searchModel.CustomNumber,
+            var returnRequests = await _returnRequestService.SearchReturnRequestsAsync(customNumber: searchModel.CustomNumber,
                 rs: returnRequestStatus,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -121,21 +121,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
 
-                    var customer = _customerService.GetCustomerById(returnRequest.CustomerId).Result;
+                    var customer = _customerService.GetCustomerByIdAsync(returnRequest.CustomerId).Result;
 
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = _customerService.IsRegistered(customer).Result
-                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
-                    returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus).Result;
-                    var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId).Result;
+                    returnRequestModel.CustomerInfo = _customerService.IsRegisteredAsync(customer).Result
+                        ? customer.Email : _localizationService.GetResourceAsync("Admin.Customers.Guest").Result;
+                    returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus).Result;
+                    var orderItem = _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId).Result;
                     if (orderItem == null)
                         return returnRequestModel;
 
-                    var order = _orderService.GetOrderById(orderItem.OrderId).Result;
-                    var product = _productService.GetProductById(orderItem.ProductId).Result;
+                    var order = _orderService.GetOrderByIdAsync(orderItem.OrderId).Result;
+                    var product = _productService.GetProductByIdAsync(orderItem.ProductId).Result;
 
                     returnRequestModel.ProductId = orderItem.ProductId;
                     returnRequestModel.ProductName = product.Name;
@@ -157,7 +157,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="returnRequest">Return request</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Return request model</returns>
-        public virtual async Task<ReturnRequestModel> PrepareReturnRequestModel(ReturnRequestModel model,
+        public virtual async Task<ReturnRequestModel> PrepareReturnRequestModelAsync(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties = false)
         {
             if (returnRequest == null)
@@ -172,18 +172,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 Quantity = returnRequest.Quantity
             };
 
-            var customer = await _customerService.GetCustomerById(returnRequest.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
-            model.CustomerInfo = await _customerService.IsRegistered(customer)
-                ? customer.Email : await _localizationService.GetResource("Admin.Customers.Guest");
-            model.UploadedFileGuid = (await _downloadService.GetDownloadById(returnRequest.UploadedFileId))?.DownloadGuid ?? Guid.Empty;
-            var orderItem = await _orderService.GetOrderItemById(returnRequest.OrderItemId);
+            model.CustomerInfo = await _customerService.IsRegisteredAsync(customer)
+                ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+            model.UploadedFileGuid = (await _downloadService.GetDownloadByIdAsync(returnRequest.UploadedFileId))?.DownloadGuid ?? Guid.Empty;
+            var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
             if (orderItem != null)
             {
-                var order = await _orderService.GetOrderById(orderItem.OrderId);
-                var product = await _productService.GetProductById(orderItem.ProductId);
+                var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
                 model.ProductId = product.Id;
                 model.ProductName = product.Name;
@@ -209,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request reason search model</param>
         /// <returns>Return request reason search model</returns>
-        public virtual Task<ReturnRequestReasonSearchModel> PrepareReturnRequestReasonSearchModel(ReturnRequestReasonSearchModel searchModel)
+        public virtual Task<ReturnRequestReasonSearchModel> PrepareReturnRequestReasonSearchModelAsync(ReturnRequestReasonSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -225,13 +225,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request reason search model</param>
         /// <returns>Return request reason list model</returns>
-        public virtual async Task<ReturnRequestReasonListModel> PrepareReturnRequestReasonListModel(ReturnRequestReasonSearchModel searchModel)
+        public virtual async Task<ReturnRequestReasonListModel> PrepareReturnRequestReasonListModelAsync(ReturnRequestReasonSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request reasons
-            var reasons = (await _returnRequestService.GetAllReturnRequestReasons()).ToPagedList(searchModel);
+            var reasons = (await _returnRequestService.GetAllReturnRequestReasonsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReturnRequestReasonListModel().PrepareToGrid(searchModel, reasons, () =>
@@ -249,7 +249,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="returnRequestReason">Return request reason</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Return request reason model</returns>
-        public virtual async Task<ReturnRequestReasonModel> PrepareReturnRequestReasonModel(ReturnRequestReasonModel model,
+        public virtual async Task<ReturnRequestReasonModel> PrepareReturnRequestReasonModelAsync(ReturnRequestReasonModel model,
             ReturnRequestReason returnRequestReason, bool excludeProperties = false)
         {
             Action<ReturnRequestReasonLocalizedModel, int> localizedModelConfiguration = null;
@@ -262,13 +262,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(returnRequestReason, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(returnRequestReason, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -278,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request action search model</param>
         /// <returns>Return request action search model</returns>
-        public virtual Task<ReturnRequestActionSearchModel> PrepareReturnRequestActionSearchModel(ReturnRequestActionSearchModel searchModel)
+        public virtual Task<ReturnRequestActionSearchModel> PrepareReturnRequestActionSearchModelAsync(ReturnRequestActionSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -294,13 +294,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Return request action search model</param>
         /// <returns>Return request action list model</returns>
-        public virtual async Task<ReturnRequestActionListModel> PrepareReturnRequestActionListModel(ReturnRequestActionSearchModel searchModel)
+        public virtual async Task<ReturnRequestActionListModel> PrepareReturnRequestActionListModelAsync(ReturnRequestActionSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request actions
-            var actions = (await _returnRequestService.GetAllReturnRequestActions()).ToPagedList(searchModel);
+            var actions = (await _returnRequestService.GetAllReturnRequestActionsAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReturnRequestActionListModel().PrepareToGrid(searchModel, actions, () =>
@@ -318,7 +318,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="returnRequestAction">Return request action</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Return request action model</returns>
-        public virtual async Task<ReturnRequestActionModel> PrepareReturnRequestActionModel(ReturnRequestActionModel model,
+        public virtual async Task<ReturnRequestActionModel> PrepareReturnRequestActionModelAsync(ReturnRequestActionModel model,
             ReturnRequestAction returnRequestAction, bool excludeProperties = false)
         {
             Action<ReturnRequestActionLocalizedModel, int> localizedModelConfiguration = null;
@@ -331,13 +331,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(returnRequestAction, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(returnRequestAction, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

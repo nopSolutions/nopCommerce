@@ -53,7 +53,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare filter parameters
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 : null;
 
             //get tax transaction log
-            var taxtransactionLog = await _taxTransactionLogService.GetTaxTransactionLog(createdFromUtc: createdFromValue, createdToUtc: createdToValue,
+            var taxtransactionLog = await _taxTransactionLogService.GetTaxTransactionLogAsync(createdFromUtc: createdFromValue, createdToUtc: createdToValue,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
@@ -87,22 +87,22 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (selectedIds != null)
-                await _taxTransactionLogService.DeleteTaxTransactionLog(selectedIds.ToArray());
+                await _taxTransactionLogService.DeleteTaxTransactionLogAsync(selectedIds.ToArray());
 
             return Json(new { Result = true });
         }
 
         public virtual async Task<IActionResult> View(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //try to get log item with the passed identifier
-            var logItem = await _taxTransactionLogService.GetTaxTransactionLogById(id);
+            var logItem = await _taxTransactionLogService.GetTaxTransactionLogByIdAsync(id);
             if (logItem == null)
                 return RedirectToAction("Configure", "Avalara");
 
@@ -114,7 +114,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 RequestMessage = HtmlHelper.FormatText(logItem.RequestMessage, false, true, false, false, false, false),
                 ResponseMessage = HtmlHelper.FormatText(logItem.ResponseMessage, false, true, false, false, false, false),
                 CustomerId = logItem.CustomerId,
-                CustomerEmail = (await _customerService.GetCustomerById(logItem.CustomerId))?.Email,
+                CustomerEmail = (await _customerService.GetCustomerByIdAsync(logItem.CustomerId))?.Email,
                 CreatedDate = _dateTimeHelper.ConvertToUserTime(logItem.CreatedDateUtc, DateTimeKind.Utc)
             };
 
@@ -124,15 +124,15 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             //try to get log item with the passed identifier
-            var logItem = await _taxTransactionLogService.GetTaxTransactionLogById(id);
+            var logItem = await _taxTransactionLogService.GetTaxTransactionLogByIdAsync(id);
             if (logItem != null)
             {
-                await _taxTransactionLogService.DeleteTaxTransactionLog(logItem);
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Plugins.Tax.Avalara.Log.Deleted"));
+                await _taxTransactionLogService.DeleteTaxTransactionLogAsync(logItem);
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.Tax.Avalara.Log.Deleted"));
             }
 
             return RedirectToAction("Configure", "Avalara");

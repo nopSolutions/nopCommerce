@@ -35,10 +35,10 @@ namespace Nop.Web.Components
                 return Content("");
 
             //ignore search engines because some pages could be indexed with the EU cookie as description
-            if ((await _workContext.GetCurrentCustomer()).IsSearchEngineAccount())
+            if ((await _workContext.GetCurrentCustomerAsync()).IsSearchEngineAccount())
                 return Content("");
 
-            if (await _genericAttributeService.GetAttribute<bool>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, (await _storeContext.GetCurrentStore()).Id))
+            if (await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, (await _storeContext.GetCurrentStoreAsync()).Id))
                 //already accepted
                 return Content("");
 

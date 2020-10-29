@@ -13,10 +13,10 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(TierPrice entity)
+        protected override async Task ClearCacheAsync(TierPrice entity)
         {
-            await Remove(NopCatalogDefaults.TierPricesByProductCacheKey, entity.ProductId);
-            await RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
+            await RemoveAsync(NopCatalogDefaults.TierPricesByProductCacheKey, entity.ProductId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
         }
     }
 }

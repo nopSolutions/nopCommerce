@@ -28,7 +28,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
-            var model = await _countryModelFactory.GetStatesByCountryId(countryId, addSelectStateItem);
+            var model = await _countryModelFactory.GetStatesByCountryIdAsync(countryId, addSelectStateItem);
             
             return Json(model);
         }

@@ -32,18 +32,18 @@ namespace Nop.Services.Catalog
         /// Delete product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public virtual async Task DeleteProductTemplate(ProductTemplate productTemplate)
+        public virtual async Task DeleteProductTemplateAsync(ProductTemplate productTemplate)
         {
-            await _productTemplateRepository.Delete(productTemplate);
+            await _productTemplateRepository.DeleteAsync(productTemplate);
         }
 
         /// <summary>
         /// Gets all product templates
         /// </summary>
         /// <returns>Product templates</returns>
-        public virtual async Task<IList<ProductTemplate>> GetAllProductTemplates()
+        public virtual async Task<IList<ProductTemplate>> GetAllProductTemplatesAsync()
         {
-            var templates = await _productTemplateRepository.GetAll(query =>
+            var templates = await _productTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -58,27 +58,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
         /// <returns>Product template</returns>
-        public virtual async Task<ProductTemplate> GetProductTemplateById(int productTemplateId)
+        public virtual async Task<ProductTemplate> GetProductTemplateByIdAsync(int productTemplateId)
         {
-            return await _productTemplateRepository.GetById(productTemplateId, cache => default);
+            return await _productTemplateRepository.GetByIdAsync(productTemplateId, cache => default);
         }
 
         /// <summary>
         /// Inserts product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public virtual async Task InsertProductTemplate(ProductTemplate productTemplate)
+        public virtual async Task InsertProductTemplateAsync(ProductTemplate productTemplate)
         {
-            await _productTemplateRepository.Insert(productTemplate);
+            await _productTemplateRepository.InsertAsync(productTemplate);
         }
 
         /// <summary>
         /// Updates the product template
         /// </summary>
         /// <param name="productTemplate">Product template</param>
-        public virtual async Task UpdateProductTemplate(ProductTemplate productTemplate)
+        public virtual async Task UpdateProductTemplateAsync(ProductTemplate productTemplate)
         {
-            await _productTemplateRepository.Update(productTemplate);
+            await _productTemplateRepository.UpdateAsync(productTemplate);
         }
 
         #endregion

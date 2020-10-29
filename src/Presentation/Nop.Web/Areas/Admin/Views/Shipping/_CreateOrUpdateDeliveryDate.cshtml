@@ -9,7 +9,7 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DeliveryDateDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
+                    @(Html.LocalizedEditorAsync<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
                     @<div>
                         <div class="form-group">
                             <div class="col-md-3">

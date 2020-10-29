@@ -13,13 +13,13 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
         /// <returns>Tax</returns>
-        Task<TaxRateResult> GetTaxRate(TaxRateRequest taxRateRequest);
+        Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest);
 
         /// <summary>
         /// Gets tax total
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
         /// <returns>Tax total</returns>
-        Task<TaxTotalResult> GetTaxTotal(TaxTotalRequest taxTotalRequest);
+        Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest);
     }
 }

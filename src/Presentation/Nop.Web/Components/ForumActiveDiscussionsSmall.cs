@@ -17,7 +17,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _forumModelFactory.PrepareActiveDiscussionsModel();
+            var model = await _forumModelFactory.PrepareActiveDiscussionsModelAsync();
             if (!model.ForumTopics.Any())
                 return Content("");
 

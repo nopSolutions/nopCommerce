@@ -52,21 +52,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Index()
         {
             //display a warning to a store owner if there are some error
-            if (await _permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
             {
-                var warnings = await _commonModelFactory.PrepareSystemWarningModels();
+                var warnings = await _commonModelFactory.PrepareSystemWarningModelsAsync();
                 if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
                                             warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
                                             warning.Level == SystemWarningLevel.Warning))
                     _notificationService.WarningNotification(
-                        string.Format(await _localizationService.GetResource("Admin.System.Warnings.Errors"),
+                        string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.Errors"),
                         Url.Action("Warnings", "Common")),
                         //do not encode URLs
                         false);
             }
 
             //prepare model
-            var model = await _homeModelFactory.PrepareDashboardModel(new DashboardModel());
+            var model = await _homeModelFactory.PrepareDashboardModelAsync(new DashboardModel());
 
             return View(model);
         }
@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> NopCommerceNewsHideAdv()
         {
             _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
-            await _settingService.SaveSetting(_adminAreaSettings);
+            await _settingService.SaveSettingAsync(_adminAreaSettings);
 
             return Content("Setting changed");
         }

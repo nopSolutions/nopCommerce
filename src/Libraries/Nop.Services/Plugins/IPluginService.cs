@@ -63,7 +63,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <returns>Logo URL</returns>
-        Task<string> GetPluginLogoUrl(PluginDescriptor pluginDescriptor);
+        Task<string> GetPluginLogoUrlAsync(PluginDescriptor pluginDescriptor);
 
         /// <summary>
         /// Prepare plugin to the installation
@@ -71,19 +71,19 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
         /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
-        Task PreparePluginToInstall(string systemName, Customer customer = null, bool checkDependencies = true);
+        Task PreparePluginToInstallAsync(string systemName, Customer customer = null, bool checkDependencies = true);
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        Task PreparePluginToUninstall(string systemName);
+        Task PreparePluginToUninstallAsync(string systemName);
 
         /// <summary>
         /// Prepare plugin to the removing
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        Task PreparePluginToDelete(string systemName);
+        Task PreparePluginToDeleteAsync(string systemName);
 
         /// <summary>
         /// Reset changes
@@ -98,22 +98,22 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Install plugins
         /// </summary>
-        Task InstallPlugins();
+        Task InstallPluginsAsync();
 
         /// <summary>
         /// Uninstall plugins
         /// </summary>
-        Task UninstallPlugins();
+        Task UninstallPluginsAsync();
 
         /// <summary>
         /// Delete plugins
         /// </summary>
-        Task DeletePlugins();
+        Task DeletePluginsAsync();
 
         /// <summary>
         /// Update plugins
         /// </summary>
-        Task UpdatePlugins();
+        Task UpdatePluginsAsync();
 
         /// <summary>
         /// Check whether application restart is required to apply changes to plugins

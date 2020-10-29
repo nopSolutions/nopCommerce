@@ -64,13 +64,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
             _paymentService.GenerateOrderGuid(paymentRequest);
 
             //try to create an order
-            var (order, errorMessage) = await _serviceManager.CreateOrder(_settings, paymentRequest.OrderGuid);
+            var (order, errorMessage) = await _serviceManager.CreateOrderAsync(_settings, paymentRequest.OrderGuid);
             if (order != null)
             {
                 model.OrderId = order.Id;
 
                 //save order details for future using
-                paymentRequest.CustomValues.Add(await _localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId"), order.Id);
+                paymentRequest.CustomValues.Add(await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.OrderId"), order.Id);
             }
             else if (!string.IsNullOrEmpty(errorMessage))
             {

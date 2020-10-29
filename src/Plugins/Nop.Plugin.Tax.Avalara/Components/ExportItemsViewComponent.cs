@@ -45,7 +45,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return Content(string.Empty);
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone

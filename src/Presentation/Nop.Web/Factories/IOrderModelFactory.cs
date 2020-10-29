@@ -14,27 +14,27 @@ namespace Nop.Web.Factories
         /// Prepare the customer order list model
         /// </summary>
         /// <returns>Customer order list model</returns>
-        Task<CustomerOrderListModel> PrepareCustomerOrderListModel();
+        Task<CustomerOrderListModel> PrepareCustomerOrderListModelAsync();
 
         /// <summary>
         /// Prepare the order details model
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Order details model</returns>
-        Task<OrderDetailsModel> PrepareOrderDetailsModel(Order order);
+        Task<OrderDetailsModel> PrepareOrderDetailsModelAsync(Order order);
 
         /// <summary>
         /// Prepare the shipment details model
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <returns>Shipment details model</returns>
-        Task<ShipmentDetailsModel> PrepareShipmentDetailsModel(Shipment shipment);
+        Task<ShipmentDetailsModel> PrepareShipmentDetailsModelAsync(Shipment shipment);
 
         /// <summary>
         /// Prepare the customer reward points model
         /// </summary>
         /// <param name="page">Number of items page; pass null to load the first page</param>
         /// <returns>Customer reward points model</returns>
-        Task<CustomerRewardPointsModel> PrepareCustomerRewardPoints(int? page);
+        Task<CustomerRewardPointsModel> PrepareCustomerRewardPointsAsync(int? page);
     }
 }

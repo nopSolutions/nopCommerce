@@ -13,31 +13,31 @@ namespace Nop.Services.Topics
         /// Delete topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        Task DeleteTopicTemplate(TopicTemplate topicTemplate);
+        Task DeleteTopicTemplateAsync(TopicTemplate topicTemplate);
 
         /// <summary>
         /// Gets all topic templates
         /// </summary>
         /// <returns>Topic templates</returns>
-        Task<IList<TopicTemplate>> GetAllTopicTemplates();
+        Task<IList<TopicTemplate>> GetAllTopicTemplatesAsync();
 
         /// <summary>
         /// Gets a topic template
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>Topic template</returns>
-        Task<TopicTemplate> GetTopicTemplateById(int topicTemplateId);
+        Task<TopicTemplate> GetTopicTemplateByIdAsync(int topicTemplateId);
 
         /// <summary>
         /// Inserts topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        Task InsertTopicTemplate(TopicTemplate topicTemplate);
+        Task InsertTopicTemplateAsync(TopicTemplate topicTemplate);
 
         /// <summary>
         /// Updates the topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        Task UpdateTopicTemplate(TopicTemplate topicTemplate);
+        Task UpdateTopicTemplateAsync(TopicTemplate topicTemplate);
     }
 }

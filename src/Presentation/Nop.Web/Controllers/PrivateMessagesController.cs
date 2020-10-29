@@ -63,12 +63,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()))
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
             {
                 return Challenge();
             }
 
-            var model = await _privateMessagesModelFactory.PreparePrivateMessageIndexModel(pageNumber, tab);
+            var model = await _privateMessagesModelFactory.PreparePrivateMessageIndexModelAsync(pageNumber, tab);
             return View(model);
         }
         
@@ -85,13 +85,13 @@ namespace Nop.Web.Controllers
                     var id = key.Replace("pm", "").Trim();
                     if (int.TryParse(id, out var privateMessageId))
                     {
-                        var pm = await _forumService.GetPrivateMessageById(privateMessageId);
+                        var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                             {
                                 pm.IsDeletedByRecipient = true;
-                                await _forumService.UpdatePrivateMessage(pm);
+                                await _forumService.UpdatePrivateMessageAsync(pm);
                             }
                         }
                     }
@@ -113,13 +113,13 @@ namespace Nop.Web.Controllers
                     var id = key.Replace("pm", "").Trim();
                     if (int.TryParse(id, out var privateMessageId))
                     {
-                        var pm = await _forumService.GetPrivateMessageById(privateMessageId);
+                        var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                            if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                             {
                                 pm.IsRead = false;
-                                await _forumService.UpdatePrivateMessage(pm);
+                                await _forumService.UpdatePrivateMessageAsync(pm);
                             }
                         }
                     }
@@ -142,13 +142,13 @@ namespace Nop.Web.Controllers
                     var id = key.Replace("si", "").Trim();
                     if (int.TryParse(id, out var privateMessageId))
                     {
-                        var pm = await _forumService.GetPrivateMessageById(privateMessageId);
+                        var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
                         if (pm != null)
                         {
-                            if (pm.FromCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                            if (pm.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                             {
                                 pm.IsDeletedByAuthor = true;
-                                await _forumService.UpdatePrivateMessage(pm);
+                                await _forumService.UpdatePrivateMessageAsync(pm);
                             }
                         }
                     }
@@ -162,21 +162,21 @@ namespace Nop.Web.Controllers
             if (!_forumSettings.AllowPrivateMessages)
                 return RedirectToRoute("Homepage");
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()))
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            var customerTo = await _customerService.GetCustomerById(toCustomerId);
-            if (customerTo == null || await _customerService.IsGuest(customerTo))
+            var customerTo = await _customerService.GetCustomerByIdAsync(toCustomerId);
+            if (customerTo == null || await _customerService.IsGuestAsync(customerTo))
                 return RedirectToRoute("PrivateMessages");
 
             PrivateMessage replyToPM = null;
             if (replyToMessageId.HasValue)
             {
                 //reply to a previous PM
-                replyToPM = await _forumService.GetPrivateMessageById(replyToMessageId.Value);
+                replyToPM = await _forumService.GetPrivateMessageByIdAsync(replyToMessageId.Value);
             }
 
-            var model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModel(customerTo, replyToPM);
+            var model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModelAsync(customerTo, replyToPM);
             return View(model);
         }
 
@@ -189,20 +189,20 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()))
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
             {
                 return Challenge();
             }
 
             Customer toCustomer;
-            var replyToPM = await _forumService.GetPrivateMessageById(model.ReplyToMessageId);
+            var replyToPM = await _forumService.GetPrivateMessageByIdAsync(model.ReplyToMessageId);
             if (replyToPM != null)
             {
                 //reply to a previous PM
-                if (replyToPM.ToCustomerId == (await _workContext.GetCurrentCustomer()).Id || replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                if (replyToPM.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id || replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                 {
                     //Reply to already sent PM (by current customer) should not be sent to yourself
-                    toCustomer = await _customerService.GetCustomerById(replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomer()).Id
+                    toCustomer = await _customerService.GetCustomerByIdAsync(replyToPM.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id
                         ? replyToPM.ToCustomerId
                         : replyToPM.FromCustomerId);
                 }
@@ -214,10 +214,10 @@ namespace Nop.Web.Controllers
             else
             {
                 //first PM
-                toCustomer = await _customerService.GetCustomerById(model.ToCustomerId);
+                toCustomer = await _customerService.GetCustomerByIdAsync(model.ToCustomerId);
             }
 
-            if (toCustomer == null || await _customerService.IsGuest(toCustomer))
+            if (toCustomer == null || await _customerService.IsGuestAsync(toCustomer))
             {
                 return RedirectToRoute("PrivateMessages");
             }
@@ -242,9 +242,9 @@ namespace Nop.Web.Controllers
 
                     var privateMessage = new PrivateMessage
                     {
-                        StoreId = (await _storeContext.GetCurrentStore()).Id,
+                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                         ToCustomerId = toCustomer.Id,
-                        FromCustomerId = (await _workContext.GetCurrentCustomer()).Id,
+                        FromCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                         Subject = subject,
                         Text = text,
                         IsDeletedByAuthor = false,
@@ -253,11 +253,11 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = nowUtc
                     };
 
-                    await _forumService.InsertPrivateMessage(privateMessage);
+                    await _forumService.InsertPrivateMessageAsync(privateMessage);
 
                     //activity log
-                    await _customerActivityService.InsertActivity("PublicStore.SendPM",
-                        string.Format(await _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email), toCustomer);
+                    await _customerActivityService.InsertActivityAsync("PublicStore.SendPM",
+                        string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.SendPM"), toCustomer.Email), toCustomer);
 
                     return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }
@@ -267,7 +267,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModel(toCustomer, replyToPM);
+            model = await _privateMessagesModelFactory.PrepareSendPrivateMessageModelAsync(toCustomer, replyToPM);
             return View(model);
         }
 
@@ -278,23 +278,23 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()))
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
             {
                 return Challenge();
             }
 
-            var pm = await _forumService.GetPrivateMessageById(privateMessageId);
+            var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
             if (pm != null)
             {
-                if (pm.ToCustomerId != (await _workContext.GetCurrentCustomer()).Id && pm.FromCustomerId != (await _workContext.GetCurrentCustomer()).Id)
+                if (pm.ToCustomerId != (await _workContext.GetCurrentCustomerAsync()).Id && pm.FromCustomerId != (await _workContext.GetCurrentCustomerAsync()).Id)
                 {
                     return RedirectToRoute("PrivateMessages");
                 }
 
-                if (!pm.IsRead && pm.ToCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                if (!pm.IsRead && pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                 {
                     pm.IsRead = true;
-                    await _forumService.UpdatePrivateMessage(pm);
+                    await _forumService.UpdatePrivateMessageAsync(pm);
                 }
             }
             else
@@ -302,7 +302,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("PrivateMessages");
             }
 
-            var model = await _privateMessagesModelFactory.PreparePrivateMessageModel(pm);
+            var model = await _privateMessagesModelFactory.PreparePrivateMessageModelAsync(pm);
             return View(model);
         }
 
@@ -313,24 +313,24 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()))
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
             {
                 return Challenge();
             }
 
-            var pm = await _forumService.GetPrivateMessageById(privateMessageId);
+            var pm = await _forumService.GetPrivateMessageByIdAsync(privateMessageId);
             if (pm != null)
             {
-                if (pm.FromCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                if (pm.FromCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                 {
                     pm.IsDeletedByAuthor = true;
-                    await _forumService.UpdatePrivateMessage(pm);
+                    await _forumService.UpdatePrivateMessageAsync(pm);
                 }
 
-                if (pm.ToCustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                if (pm.ToCustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                 {
                     pm.IsDeletedByRecipient = true;
-                    await _forumService.UpdatePrivateMessage(pm);
+                    await _forumService.UpdatePrivateMessageAsync(pm);
                 }
             }
             return RedirectToRoute("PrivateMessages");

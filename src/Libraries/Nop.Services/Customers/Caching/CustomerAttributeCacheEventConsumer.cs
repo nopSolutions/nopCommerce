@@ -13,9 +13,9 @@ namespace Nop.Services.Customers.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(CustomerAttribute entity)
+        protected override async Task ClearCacheAsync(CustomerAttribute entity)
         {
-            await Remove(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, entity);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, entity);
         }
     }
 }

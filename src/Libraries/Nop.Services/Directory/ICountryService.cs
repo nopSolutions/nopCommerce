@@ -14,7 +14,7 @@ namespace Nop.Services.Directory
         /// Deletes a country
         /// </summary>
         /// <param name="country">Country</param>
-        Task DeleteCountry(Country country);
+        Task DeleteCountryAsync(Country country);
 
         /// <summary>
         /// Gets all countries
@@ -22,7 +22,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        Task<IList<Country>> GetAllCountries(int languageId = 0, bool showHidden = false);
+        Task<IList<Country>> GetAllCountriesAsync(int languageId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow billing
@@ -30,7 +30,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        Task<IList<Country>> GetAllCountriesForBilling(int languageId = 0, bool showHidden = false);
+        Task<IList<Country>> GetAllCountriesForBillingAsync(int languageId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow shipping
@@ -38,53 +38,53 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        Task<IList<Country>> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false);
+        Task<IList<Country>> GetAllCountriesForShippingAsync(int languageId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets a country by address 
         /// </summary>
         /// <param name="address">Address</param>
         /// <returns>Country</returns>
-        Task<Country> GetCountryByAddress(Address address);
+        Task<Country> GetCountryByAddressAsync(Address address);
 
         /// <summary>
         /// Gets a country 
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        Task<Country> GetCountryById(int countryId);
+        Task<Country> GetCountryByIdAsync(int countryId);
 
         /// <summary>
         /// Get countries by identifiers
         /// </summary>
         /// <param name="countryIds">Country identifiers</param>
         /// <returns>Countries</returns>
-        Task<IList<Country>> GetCountriesByIds(int[] countryIds);
+        Task<IList<Country>> GetCountriesByIdsAsync(int[] countryIds);
 
         /// <summary>
         /// Gets a country by two letter ISO code
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>
         /// <returns>Country</returns>
-        Task<Country> GetCountryByTwoLetterIsoCode(string twoLetterIsoCode);
+        Task<Country> GetCountryByTwoLetterIsoCodeAsync(string twoLetterIsoCode);
 
         /// <summary>
         /// Gets a country by three letter ISO code
         /// </summary>
         /// <param name="threeLetterIsoCode">Country three letter ISO code</param>
         /// <returns>Country</returns>
-        Task<Country> GetCountryByThreeLetterIsoCode(string threeLetterIsoCode);
+        Task<Country> GetCountryByThreeLetterIsoCodeAsync(string threeLetterIsoCode);
 
         /// <summary>
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
-        Task InsertCountry(Country country);
+        Task InsertCountryAsync(Country country);
 
         /// <summary>
         /// Updates the country
         /// </summary>
         /// <param name="country">Country</param>
-        Task UpdateCountry(Country country);
+        Task UpdateCountryAsync(Country country);
     }
 }

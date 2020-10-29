@@ -158,7 +158,7 @@
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
                                                 var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.CurrentRequestProtocol);
-                                                editCartItemUrl = await webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid", item.Id.ToString());
+                                                editCartItemUrl = await webHelper.ModifyQueryStringAsync(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                                 </div>
@@ -225,7 +225,7 @@
                     </div>
                     @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
                     {
-                        var inclTax = await workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
+                        var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
                         //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                         //of course, you can modify appropriate locales to include VAT info there
                         <div class="tax-shipping-info">

@@ -15,14 +15,14 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page; pass null to disable paging</param>
         /// <returns>Profile index model</returns>
-        Task<ProfileIndexModel> PrepareProfileIndexModel(Customer customer, int? page);
+        Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer, int? page);
 
         /// <summary>
         /// Prepare the profile info model
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Profile info model</returns>
-        Task<ProfileInfoModel> PrepareProfileInfoModel(Customer customer);
+        Task<ProfileInfoModel> PrepareProfileInfoModelAsync(Customer customer);
 
         /// <summary>
         /// Prepare the profile posts model
@@ -30,6 +30,6 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page</param>
         /// <returns>Profile posts model</returns>  
-        Task<ProfilePostsModel> PrepareProfilePostsModel(Customer customer, int page);
+        Task<ProfilePostsModel> PrepareProfilePostsModelAsync(Customer customer, int page);
     }
 }

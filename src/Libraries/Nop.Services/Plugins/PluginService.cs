@@ -107,7 +107,7 @@ namespace Nop.Services.Plugins
             if (_catalogSettings.IgnoreAcl)
                 return true;
 
-            return pluginDescriptor.LimitedToCustomerRoles.Intersect(_customerService.GetCustomerRoleIds(customer).Result).Any();
+            return pluginDescriptor.LimitedToCustomerRoles.Intersect(_customerService.GetCustomerRoleIdsAsync(customer).Result).Any();
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <returns>Logo URL</returns>
-        public virtual async Task<string> GetPluginLogoUrl(PluginDescriptor pluginDescriptor)
+        public virtual async Task<string> GetPluginLogoUrlAsync(PluginDescriptor pluginDescriptor)
         {
             var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
             if (string.IsNullOrEmpty(pluginDirectory))
@@ -304,7 +304,7 @@ namespace Nop.Services.Plugins
             if (string.IsNullOrWhiteSpace(logoExtension))
                 return null;
 
-            var storeLocation = await _webHelper.GetStoreLocation();
+            var storeLocation = await _webHelper.GetStoreLocationAsync();
             var logoUrl = $"{storeLocation}{NopPluginDefaults.PathName}/" +
                 $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
 
@@ -317,7 +317,7 @@ namespace Nop.Services.Plugins
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
         /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
-        public virtual async Task PreparePluginToInstall(string systemName, Customer customer = null, bool checkDependencies = true)
+        public virtual async Task PreparePluginToInstallAsync(string systemName, Customer customer = null, bool checkDependencies = true)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
             if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
@@ -342,7 +342,7 @@ namespace Nop.Services.Plugins
                         //do not inject services via constructor because it'll cause circular references
                         var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-                        var errorMessage = string.Format(await localizationService.GetResource("Admin.Plugins.Errors.InstallDependsOn"), string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName, dependsOnSystemNames);
+                        var errorMessage = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.InstallDependsOn"), string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName, dependsOnSystemNames);
 
                         throw new NopException(errorMessage);
                     }
@@ -350,14 +350,14 @@ namespace Nop.Services.Plugins
             }
 
             _pluginsInfo.PluginNamesToInstall.Add((systemName, customer?.CustomerGuid));
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        public virtual async Task PreparePluginToUninstall(string systemName)
+        public virtual async Task PreparePluginToUninstallAsync(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
             if (_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
@@ -389,7 +389,7 @@ namespace Nop.Services.Plugins
                     //do not inject services via constructor because it'll cause circular references
                     var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-                    var errorMessage = string.Format(await localizationService.GetResource("Admin.Plugins.Errors.UninstallDependsOn"),
+                    var errorMessage = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.UninstallDependsOn"),
                         string.IsNullOrEmpty(descriptor.FriendlyName) ? descriptor.SystemName : descriptor.FriendlyName,
                         dependsOnSystemNames);
 
@@ -400,24 +400,24 @@ namespace Nop.Services.Plugins
             var plugin = descriptor?.Instance<IPlugin>();
 
             if(plugin != null)
-                await plugin.PreparePluginToUninstall();
+                await plugin.PreparePluginToUninstallAsync();
 
             _pluginsInfo.PluginNamesToUninstall.Add(systemName);
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>
         /// Prepare plugin to the removing
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        public virtual async Task PreparePluginToDelete(string systemName)
+        public virtual async Task PreparePluginToDeleteAsync(string systemName)
         {
             //add plugin name to the appropriate list (if not yet contained) and save changes
             if (_pluginsInfo.PluginNamesToDelete.Contains(systemName))
                 return;
 
             _pluginsInfo.PluginNamesToDelete.Add(systemName);
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace Nop.Services.Plugins
             _pluginsInfo.PluginNamesToDelete.Clear();
             _pluginsInfo.PluginNamesToInstall.Clear();
             _pluginsInfo.PluginNamesToUninstall.Clear();
-            _pluginsInfo.Save().Wait();
+            _pluginsInfo.SaveAsync().Wait();
 
             //display all plugins on the plugin list page
             _pluginsInfo.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);
@@ -446,7 +446,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Install plugins
         /// </summary>
-        public virtual async Task InstallPlugins()
+        public virtual async Task InstallPluginsAsync()
         {
             //get all uninstalled plugins
             var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed).ToList();
@@ -469,7 +469,7 @@ namespace Nop.Services.Plugins
                     InsertPluginData(descriptor.PluginType);
 
                     //try to install an instance
-                    await descriptor.Instance<IPlugin>().Install();
+                    await descriptor.Instance<IPlugin>().InstallAsync();
 
                     //remove and add plugin system name to appropriate lists
                     var pluginToInstall = _pluginsInfo.PluginNamesToInstall
@@ -478,9 +478,9 @@ namespace Nop.Services.Plugins
                     _pluginsInfo.PluginNamesToInstall.Remove(pluginToInstall);
 
                     //activity log
-                    var customer = await _customerService.GetCustomerByGuid(pluginToInstall.CustomerGuid ?? Guid.Empty);
-                    await customerActivityService.InsertActivity(customer, "InstallNewPlugin",
-                        string.Format(await localizationService.GetResource("ActivityLog.InstallNewPlugin"), descriptor.SystemName));
+                    var customer = await _customerService.GetCustomerByGuidAsync(pluginToInstall.CustomerGuid ?? Guid.Empty);
+                    await customerActivityService.InsertActivityAsync(customer, "InstallNewPlugin",
+                        string.Format(await localizationService.GetResourceAsync("ActivityLog.InstallNewPlugin"), descriptor.SystemName));
 
                     //mark the plugin as installed
                     descriptor.Installed = true;
@@ -489,19 +489,19 @@ namespace Nop.Services.Plugins
                 catch (Exception exception)
                 {
                     //log error
-                    var message = string.Format(await localizationService.GetResource("Admin.Plugins.Errors.NotInstalled"), descriptor.SystemName);
-                    await _logger.Error(message, exception);
+                    var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotInstalled"), descriptor.SystemName);
+                    await _logger.ErrorAsync(message, exception);
                 }
             }
 
             //save changes
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>
         /// Uninstall plugins
         /// </summary>
-        public virtual async Task UninstallPlugins()
+        public virtual async Task UninstallPluginsAsync()
         {
             //get all installed plugins
             var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => descriptor.Installed).ToList();
@@ -523,7 +523,7 @@ namespace Nop.Services.Plugins
                 {
                     var plugin = descriptor.Instance<IPlugin>();
                     //try to uninstall an instance
-                    await plugin.Uninstall();
+                    await plugin.UninstallAsync();
 
                     //clear plugin data on the database
                     DeletePluginData(descriptor.PluginType);
@@ -533,8 +533,8 @@ namespace Nop.Services.Plugins
                     _pluginsInfo.PluginNamesToUninstall.Remove(descriptor.SystemName);
 
                     //activity log
-                    await customerActivityService.InsertActivity("UninstallPlugin",
-                        string.Format(await localizationService.GetResource("ActivityLog.UninstallPlugin"), descriptor.SystemName));
+                    await customerActivityService.InsertActivityAsync("UninstallPlugin",
+                        string.Format(await localizationService.GetResourceAsync("ActivityLog.UninstallPlugin"), descriptor.SystemName));
 
                     //mark the plugin as uninstalled
                     descriptor.Installed = false;
@@ -543,19 +543,19 @@ namespace Nop.Services.Plugins
                 catch (Exception exception)
                 {
                     //log error
-                    var message = string.Format(await localizationService.GetResource("Admin.Plugins.Errors.NotUninstalled"), descriptor.SystemName);
-                    await _logger.Error(message, exception);
+                    var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotUninstalled"), descriptor.SystemName);
+                    await _logger.ErrorAsync(message, exception);
                 }
             }
 
             //save changes
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>
         /// Delete plugins
         /// </summary>
-        public virtual async Task DeletePlugins()
+        public virtual async Task DeletePluginsAsync()
         {
             //get all uninstalled plugins (delete plugin only previously uninstalled)
             var pluginDescriptors = _pluginsInfo.PluginDescriptors.Where(descriptor => !descriptor.Installed).ToList();
@@ -584,19 +584,19 @@ namespace Nop.Services.Plugins
                     _pluginsInfo.PluginNamesToDelete.Remove(descriptor.SystemName);
 
                     //activity log
-                    await customerActivityService.InsertActivity("DeletePlugin",
-                        string.Format(await localizationService.GetResource("ActivityLog.DeletePlugin"), descriptor.SystemName));
+                    await customerActivityService.InsertActivityAsync("DeletePlugin",
+                        string.Format(await localizationService.GetResourceAsync("ActivityLog.DeletePlugin"), descriptor.SystemName));
                 }
                 catch (Exception exception)
                 {
                     //log error
-                    var message = string.Format(await localizationService.GetResource("Admin.Plugins.Errors.NotDeleted"), descriptor.SystemName);
-                    await _logger.Error(message, exception);
+                    var message = string.Format(await localizationService.GetResourceAsync("Admin.Plugins.Errors.NotDeleted"), descriptor.SystemName);
+                    await _logger.ErrorAsync(message, exception);
                 }
             }
 
             //save changes
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>
@@ -614,7 +614,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Update plugins
         /// </summary>
-        public virtual async Task UpdatePlugins()
+        public virtual async Task UpdatePluginsAsync()
         {
             foreach (var installedPlugin in _pluginsInfo.InstalledPlugins)
             {
@@ -631,13 +631,13 @@ namespace Nop.Services.Plugins
                 InsertPluginData(newVersion.PluginType, true);
 
                 //run the plugin update logic
-                await newVersion.Instance<IPlugin>().Update(installedPlugin.Version, newVersion.Version);
+                await newVersion.Instance<IPlugin>().UpdateAsync(installedPlugin.Version, newVersion.Version);
 
                 //update installed plugin info
                 installedPlugin.Version = newVersion.Version;
             }
 
-            await _pluginsInfo.Save();
+            await _pluginsInfo.SaveAsync();
         }
 
         /// <summary>

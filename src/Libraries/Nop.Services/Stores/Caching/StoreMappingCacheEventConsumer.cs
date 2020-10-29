@@ -13,10 +13,10 @@ namespace Nop.Services.Stores.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(StoreMapping entity)
+        protected override async Task ClearCacheAsync(StoreMapping entity)
         {
-            await Remove(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName);
-            await Remove(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName);
+            await RemoveAsync(NopStoreDefaults.StoreMappingsCacheKey, entity.EntityId, entity.EntityName);
+            await RemoveAsync(NopStoreDefaults.StoreMappingIdsCacheKey, entity.EntityId, entity.EntityName);
         }
     }
 }

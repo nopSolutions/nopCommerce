@@ -163,16 +163,16 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
-        protected virtual async Task<GdprConsentModel> PrepareGdprConsentModel(GdprConsent consent, bool accepted)
+        protected virtual async Task<GdprConsentModel> PrepareGdprConsentModelAsync(GdprConsent consent, bool accepted)
         {
             if (consent == null)
                 throw new ArgumentNullException(nameof(consent));
 
-            var requiredMessage = await _localizationService.GetLocalized(consent, x => x.RequiredMessage);
+            var requiredMessage = await _localizationService.GetLocalizedAsync(consent, x => x.RequiredMessage);
             return new GdprConsentModel
             {
                 Id = consent.Id,
-                Message = await _localizationService.GetLocalized(consent, x => x.Message),
+                Message = await _localizationService.GetLocalizedAsync(consent, x => x.Message),
                 IsRequired = consent.IsRequired,
                 RequiredMessage = !string.IsNullOrEmpty(requiredMessage) ? requiredMessage : $"'{consent.Message}' is required",
                 Accepted = accepted
@@ -189,20 +189,20 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>List of the customer attribute model</returns>
-        public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributes(Customer customer, string overrideAttributesXml = "")
+        public virtual async Task<IList<CustomerAttributeModel>> PrepareCustomCustomerAttributesAsync(Customer customer, string overrideAttributesXml = "")
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             var result = new List<CustomerAttributeModel>();
 
-            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributes();
+            var customerAttributes = await _customerAttributeService.GetAllCustomerAttributesAsync();
             foreach (var attribute in customerAttributes)
             {
                 var attributeModel = new CustomerAttributeModel
                 {
                     Id = attribute.Id,
-                    Name = await _localizationService.GetLocalized(attribute, x => x.Name),
+                    Name = await _localizationService.GetLocalizedAsync(attribute, x => x.Name),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                 };
@@ -210,13 +210,13 @@ namespace Nop.Web.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                    var attributeValues = await _customerAttributeService.GetCustomerAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new CustomerAttributeValueModel
                         {
                             Id = attributeValue.Id,
-                            Name = await _localizationService.GetLocalized(attributeValue, x => x.Name),
+                            Name = await _localizationService.GetLocalizedAsync(attributeValue, x => x.Name),
                             IsPreSelected = attributeValue.IsPreSelected
                         };
                         attributeModel.Values.Add(valueModel);
@@ -226,7 +226,7 @@ namespace Nop.Web.Factories
                 //set already selected attributes
                 var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml :
-                    await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
+                    await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CustomCustomerAttributes);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -240,7 +240,7 @@ namespace Nop.Web.Factories
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValues(selectedAttributesXml);
+                                var selectedValues = await _customerAttributeParser.ParseCustomerAttributeValuesAsync(selectedAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -288,7 +288,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>Customer info model</returns>
-        public virtual async Task<CustomerInfoModel> PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
+        public virtual async Task<CustomerInfoModel> PrepareCustomerInfoModelAsync(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
@@ -303,33 +303,33 @@ namespace Nop.Web.Factories
 
             if (!excludeProperties)
             {
-                model.VatNumber = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.VatNumberAttribute);
-                model.FirstName = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
-                model.LastName = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute);
-                model.Gender = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.GenderAttribute);
-                var dateOfBirth = await _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                model.VatNumber = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.VatNumberAttribute);
+                model.FirstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                model.LastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                model.Gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
+                var dateOfBirth = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dateOfBirth.HasValue)
                 {
                     model.DateOfBirthDay = dateOfBirth.Value.Day;
                     model.DateOfBirthMonth = dateOfBirth.Value.Month;
                     model.DateOfBirthYear = dateOfBirth.Value.Year;
                 }
-                model.Company = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
-                model.StreetAddress = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
-                model.StreetAddress2 = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
-                model.ZipPostalCode = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
-                model.City = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
-                model.County = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                model.CountryId = await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                model.StateProvinceId = await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
-                model.Phone = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
-                model.Fax = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FaxAttribute);
+                model.Company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                model.StreetAddress = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                model.StreetAddress2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                model.ZipPostalCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                model.City = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+                model.County = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
+                model.CountryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                model.StateProvinceId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute);
+                model.Phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                model.Fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
 
                 //newsletter
-                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, (await _storeContext.GetCurrentStore()).Id);
+                var newsletter = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, (await _storeContext.GetCurrentStoreAsync()).Id);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
-                model.Signature = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SignatureAttribute);
+                model.Signature = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SignatureAttribute);
 
                 model.Email = customer.Email;
                 model.Username = customer.Username;
@@ -346,12 +346,12 @@ namespace Nop.Web.Factories
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                foreach (var c in await _countryService.GetAllCountries((await _workContext.GetWorkingLanguage()).Id))
+                model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
+                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = await _localizationService.GetLocalized(c, x => x.Name),
+                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -360,14 +360,14 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, (await _workContext.GetWorkingLanguage()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalized(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -376,7 +376,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = await _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
+                            Text = await _localizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -385,8 +385,8 @@ namespace Nop.Web.Factories
             }
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnum((VatNumberStatus)await _genericAttributeService
-                .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
+            model.VatNumberStatusNote = await _localizationService.GetLocalizedEnumAsync((VatNumberStatus)await _genericAttributeService
+                .GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
             model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
             model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.FirstNameRequired = _customerSettings.FirstNameRequired;
@@ -423,12 +423,12 @@ namespace Nop.Web.Factories
             //external authentication
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = _authenticationPluginManager
-                .LoadActivePlugins(await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id)
+                .LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id)
                 .Count;
-            foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
+            foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
                 var authMethod = _authenticationPluginManager
-                    .LoadPluginBySystemName(record.ProviderSystemName, await _workContext.GetCurrentCustomer(), (await _storeContext.GetCurrentStore()).Id);
+                    .LoadPluginBySystemName(record.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -438,23 +438,23 @@ namespace Nop.Web.Factories
                     Email = record.Email,
                     ExternalIdentifier = !string.IsNullOrEmpty(record.ExternalDisplayIdentifier)
                         ? record.ExternalDisplayIdentifier : record.ExternalIdentifier,
-                    AuthMethodName = await _localizationService.GetLocalizedFriendlyName(authMethod, (await _workContext.GetWorkingLanguage()).Id)
+                    AuthMethodName = await _localizationService.GetLocalizedFriendlyNameAsync(authMethod, (await _workContext.GetWorkingLanguageAsync()).Id)
                 });
             }
 
             //custom customer attributes
-            var customAttributes = await PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
+            var customAttributes = await PrepareCustomCustomerAttributesAsync(customer, overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
             //GDPR
             if (_gdprSettings.GdprEnabled)
             {
-                var consents = (await _gdprService.GetAllConsents()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
+                var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayOnCustomerInfoPage).ToList();
                 foreach (var consent in consents)
                 {
-                    var accepted = await _gdprService.IsConsentAccepted(consent.Id, (await _workContext.GetCurrentCustomer()).Id);
-                    model.GdprConsents.Add(await PrepareGdprConsentModel(consent, accepted.HasValue && accepted.Value));
+                    var accepted = await _gdprService.IsConsentAcceptedAsync(consent.Id, (await _workContext.GetCurrentCustomerAsync()).Id);
+                    model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, accepted.HasValue && accepted.Value));
                 }
             }
 
@@ -469,7 +469,7 @@ namespace Nop.Web.Factories
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
         /// <returns>Customer register model</returns>
-        public virtual async Task<RegisterModel> PrepareRegisterModel(RegisterModel model, bool excludeProperties,
+        public virtual async Task<RegisterModel> PrepareRegisterModelAsync(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
@@ -525,13 +525,13 @@ namespace Nop.Web.Factories
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectCountry"), Value = "0" });
 
-                foreach (var c in await _countryService.GetAllCountries((await _workContext.GetWorkingLanguage()).Id))
+                foreach (var c in await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
-                        Text = await _localizationService.GetLocalized(c, x => x.Name),
+                        Text = await _localizationService.GetLocalizedAsync(c, x => x.Name),
                         Value = c.Id.ToString(),
                         Selected = c.Id == model.CountryId
                     });
@@ -540,14 +540,14 @@ namespace Nop.Web.Factories
                 if (_customerSettings.StateProvinceEnabled)
                 {
                     //states
-                    var states = (await _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, (await _workContext.GetWorkingLanguage()).Id)).ToList();
+                    var states = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.CountryId, (await _workContext.GetWorkingLanguageAsync()).Id)).ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalized(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetLocalizedAsync(s, x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
@@ -556,7 +556,7 @@ namespace Nop.Web.Factories
 
                         model.AvailableStates.Add(new SelectListItem
                         {
-                            Text = await _localizationService.GetResource(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
+                            Text = await _localizationService.GetResourceAsync(anyCountrySelected ? "Address.Other" : "Address.SelectState"),
                             Value = "0"
                         });
                     }
@@ -565,17 +565,17 @@ namespace Nop.Web.Factories
             }
 
             //custom customer attributes
-            var customAttributes = await PrepareCustomCustomerAttributes(await _workContext.GetCurrentCustomer(), overrideCustomCustomerAttributesXml);
+            var customAttributes = await PrepareCustomCustomerAttributesAsync(await _workContext.GetCurrentCustomerAsync(), overrideCustomCustomerAttributesXml);
             foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
             //GDPR
             if (_gdprSettings.GdprEnabled)
             {
-                var consents = (await _gdprService.GetAllConsents()).Where(consent => consent.DisplayDuringRegistration).ToList();
+                var consents = (await _gdprService.GetAllConsentsAsync()).Where(consent => consent.DisplayDuringRegistration).ToList();
                 foreach (var consent in consents)
                 {
-                    model.GdprConsents.Add(await PrepareGdprConsentModel(consent, false));
+                    model.GdprConsents.Add(await PrepareGdprConsentModelAsync(consent, false));
                 }
             }
 
@@ -587,7 +587,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="checkoutAsGuest">Whether to checkout as guest is enabled</param>
         /// <returns>Login model</returns>
-        public virtual Task<LoginModel> PrepareLoginModel(bool? checkoutAsGuest)
+        public virtual Task<LoginModel> PrepareLoginModelAsync(bool? checkoutAsGuest)
         {
             var model = new LoginModel
             {
@@ -605,7 +605,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Password recovery model</param>
         /// <returns>Password recovery model</returns>
-        public virtual Task<PasswordRecoveryModel> PreparePasswordRecoveryModel(PasswordRecoveryModel model)
+        public virtual Task<PasswordRecoveryModel> PreparePasswordRecoveryModelAsync(PasswordRecoveryModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -619,7 +619,7 @@ namespace Nop.Web.Factories
         /// Prepare the password recovery confirm model
         /// </summary>
         /// <returns>Password recovery confirm model</returns>
-        public virtual Task<PasswordRecoveryConfirmModel> PreparePasswordRecoveryConfirmModel()
+        public virtual Task<PasswordRecoveryConfirmModel> PreparePasswordRecoveryConfirmModelAsync()
         {
             var model = new PasswordRecoveryConfirmModel();
 
@@ -631,22 +631,22 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
         /// <returns>Register result model</returns>
-        public virtual async Task<RegisterResultModel> PrepareRegisterResultModel(int resultId)
+        public virtual async Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId)
         {
             var resultText = "";
             switch ((UserRegistrationType)resultId)
             {
                 case UserRegistrationType.Disabled:
-                    resultText = await _localizationService.GetResource("Account.Register.Result.Disabled");
+                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.Disabled");
                     break;
                 case UserRegistrationType.Standard:
-                    resultText = await _localizationService.GetResource("Account.Register.Result.Standard");
+                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.Standard");
                     break;
                 case UserRegistrationType.AdminApproval:
-                    resultText = await _localizationService.GetResource("Account.Register.Result.AdminApproval");
+                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval");
                     break;
                 case UserRegistrationType.EmailValidation:
-                    resultText = await _localizationService.GetResource("Account.Register.Result.EmailValidation");
+                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation");
                     break;
                 default:
                     break;
@@ -664,14 +664,14 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="selectedTabId">Identifier of the selected tab</param>
         /// <returns>Customer navigation model</returns>
-        public virtual async Task<CustomerNavigationModel> PrepareCustomerNavigationModel(int selectedTabId = 0)
+        public virtual async Task<CustomerNavigationModel> PrepareCustomerNavigationModelAsync(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
 
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerInfo",
-                Title = await _localizationService.GetResource("Account.CustomerInfo"),
+                Title = await _localizationService.GetResourceAsync("Account.CustomerInfo"),
                 Tab = CustomerNavigationEnum.Info,
                 ItemClass = "customer-info"
             });
@@ -679,7 +679,7 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerAddresses",
-                Title = await _localizationService.GetResource("Account.CustomerAddresses"),
+                Title = await _localizationService.GetResourceAsync("Account.CustomerAddresses"),
                 Tab = CustomerNavigationEnum.Addresses,
                 ItemClass = "customer-addresses"
             });
@@ -687,19 +687,19 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerOrders",
-                Title = await _localizationService.GetResource("Account.CustomerOrders"),
+                Title = await _localizationService.GetResourceAsync("Account.CustomerOrders"),
                 Tab = CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
 
             if (_orderSettings.ReturnRequestsEnabled &&
-                (await _returnRequestService.SearchReturnRequests((await _storeContext.GetCurrentStore()).Id,
-                    (await _workContext.GetCurrentCustomer()).Id, pageIndex: 0, pageSize: 1)).Any())
+                (await _returnRequestService.SearchReturnRequestsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                    (await _workContext.GetCurrentCustomerAsync()).Id, pageIndex: 0, pageSize: 1)).Any())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerReturnRequests",
-                    Title = await _localizationService.GetResource("Account.CustomerReturnRequests"),
+                    Title = await _localizationService.GetResourceAsync("Account.CustomerReturnRequests"),
                     Tab = CustomerNavigationEnum.ReturnRequests,
                     ItemClass = "return-requests"
                 });
@@ -710,7 +710,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerDownloadableProducts",
-                    Title = await _localizationService.GetResource("Account.DownloadableProducts"),
+                    Title = await _localizationService.GetResourceAsync("Account.DownloadableProducts"),
                     Tab = CustomerNavigationEnum.DownloadableProducts,
                     ItemClass = "downloadable-products"
                 });
@@ -721,7 +721,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerBackInStockSubscriptions",
-                    Title = await _localizationService.GetResource("Account.BackInStockSubscriptions"),
+                    Title = await _localizationService.GetResourceAsync("Account.BackInStockSubscriptions"),
                     Tab = CustomerNavigationEnum.BackInStockSubscriptions,
                     ItemClass = "back-in-stock-subscriptions"
                 });
@@ -732,7 +732,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerRewardPoints",
-                    Title = await _localizationService.GetResource("Account.RewardPoints"),
+                    Title = await _localizationService.GetResourceAsync("Account.RewardPoints"),
                     Tab = CustomerNavigationEnum.RewardPoints,
                     ItemClass = "reward-points"
                 });
@@ -741,7 +741,7 @@ namespace Nop.Web.Factories
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerChangePassword",
-                Title = await _localizationService.GetResource("Account.ChangePassword"),
+                Title = await _localizationService.GetResourceAsync("Account.ChangePassword"),
                 Tab = CustomerNavigationEnum.ChangePassword,
                 ItemClass = "change-password"
             });
@@ -751,7 +751,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerAvatar",
-                    Title = await _localizationService.GetResource("Account.Avatar"),
+                    Title = await _localizationService.GetResourceAsync("Account.Avatar"),
                     Tab = CustomerNavigationEnum.Avatar,
                     ItemClass = "customer-avatar"
                 });
@@ -762,7 +762,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerForumSubscriptions",
-                    Title = await _localizationService.GetResource("Account.ForumSubscriptions"),
+                    Title = await _localizationService.GetResourceAsync("Account.ForumSubscriptions"),
                     Tab = CustomerNavigationEnum.ForumSubscriptions,
                     ItemClass = "forum-subscriptions"
                 });
@@ -772,17 +772,17 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerProductReviews",
-                    Title = await _localizationService.GetResource("Account.CustomerProductReviews"),
+                    Title = await _localizationService.GetResourceAsync("Account.CustomerProductReviews"),
                     Tab = CustomerNavigationEnum.ProductReviews,
                     ItemClass = "customer-reviews"
                 });
             }
-            if (_vendorSettings.AllowVendorsToEditInfo && await _workContext.GetCurrentVendor() != null)
+            if (_vendorSettings.AllowVendorsToEditInfo && await _workContext.GetCurrentVendorAsync() != null)
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CustomerVendorInfo",
-                    Title = await _localizationService.GetResource("Account.VendorInfo"),
+                    Title = await _localizationService.GetResourceAsync("Account.VendorInfo"),
                     Tab = CustomerNavigationEnum.VendorInfo,
                     ItemClass = "customer-vendor-info"
                 });
@@ -792,7 +792,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "GdprTools",
-                    Title = await _localizationService.GetResource("Account.Gdpr"),
+                    Title = await _localizationService.GetResourceAsync("Account.Gdpr"),
                     Tab = CustomerNavigationEnum.GdprTools,
                     ItemClass = "customer-gdpr"
                 });
@@ -803,7 +803,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "CheckGiftCardBalance",
-                    Title = await _localizationService.GetResource("CheckGiftCardBalance"),
+                    Title = await _localizationService.GetResourceAsync("CheckGiftCardBalance"),
                     Tab = CustomerNavigationEnum.CheckGiftCardBalance,
                     ItemClass = "customer-check-gift-card-balance"
                 });
@@ -814,7 +814,7 @@ namespace Nop.Web.Factories
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
                     RouteName = "MultiFactorAuthenticationSettings",
-                    Title = await _localizationService.GetResource("PageTitle.MultiFactorAuthentication"),
+                    Title = await _localizationService.GetResourceAsync("PageTitle.MultiFactorAuthentication"),
                     Tab = CustomerNavigationEnum.MultiFactorAuthentication,
                     ItemClass = "customer-multiFactor-authentication"
                 });
@@ -829,22 +829,22 @@ namespace Nop.Web.Factories
         /// Prepare the customer address list model
         /// </summary>
         /// <returns>Customer address list model</returns>
-        public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModel()
+        public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
-            var addresses = (await _customerService.GetAddressesByCustomerId((await _workContext.GetCurrentCustomer()).Id))
+            var addresses = (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
                 //enabled for the current store
-                .Where(a => a.CountryId == null || _storeMappingService.Authorize(_countryService.GetCountryByAddress(a).Result).Result)
+                .Where(a => a.CountryId == null || _storeMappingService.AuthorizeAsync(_countryService.GetCountryByAddressAsync(a).Result).Result)
                 .ToList();
 
             var model = new CustomerAddressListModel();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                await _addressModelFactory.PrepareAddressModel(addressModel,
+                await _addressModelFactory.PrepareAddressModelAsync(addressModel,
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings,
-                    loadCountries: async () => await _countryService.GetAllCountries((await _workContext.GetWorkingLanguage()).Id));
+                    loadCountries: async () => await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id));
                 model.Addresses.Add(addressModel);
             }
             return model;
@@ -854,14 +854,14 @@ namespace Nop.Web.Factories
         /// Prepare the customer downloadable products model
         /// </summary>
         /// <returns>Customer downloadable products model</returns>
-        public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModel()
+        public virtual async Task<CustomerDownloadableProductsModel> PrepareCustomerDownloadableProductsModelAsync()
         {
             var model = new CustomerDownloadableProductsModel();
-            var items = await _orderService.GetDownloadableOrderItems((await _workContext.GetCurrentCustomer()).Id);
+            var items = await _orderService.GetDownloadableOrderItemsAsync((await _workContext.GetCurrentCustomerAsync()).Id);
             foreach (var item in items)
             {
-                var order = await _orderService.GetOrderById(item.OrderId);
-                var product = await _productService.GetProductById(item.ProductId);
+                var order = await _orderService.GetOrderByIdAsync(item.OrderId);
+                var product = await _productService.GetProductByIdAsync(item.ProductId);
 
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
@@ -869,17 +869,17 @@ namespace Nop.Web.Factories
                     OrderId = order.Id,
                     CustomOrderNumber = order.CustomOrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = await _localizationService.GetLocalized(product, x => x.Name),
-                    ProductSeName = await _urlRecordService.GetSeName(product),
+                    ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                    ProductSeName = await _urlRecordService.GetSeNameAsync(product),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };
                 model.Items.Add(itemModel);
 
-                if (await _orderService.IsDownloadAllowed(item))
+                if (await _orderService.IsDownloadAllowedAsync(item))
                     itemModel.DownloadId = product.DownloadId;
 
-                if (await _orderService.IsLicenseDownloadAllowed(item))
+                if (await _orderService.IsLicenseDownloadAllowedAsync(item))
                     itemModel.LicenseId = item.LicenseDownloadId ?? 0;
             }
 
@@ -892,7 +892,7 @@ namespace Nop.Web.Factories
         /// <param name="orderItem">Order item</param>
         /// <param name="product">Product</param>
         /// <returns>User agreement model</returns>
-        public virtual Task<UserAgreementModel> PrepareUserAgreementModel(OrderItem orderItem, Product product)
+        public virtual Task<UserAgreementModel> PrepareUserAgreementModelAsync(OrderItem orderItem, Product product)
         {
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
@@ -913,7 +913,7 @@ namespace Nop.Web.Factories
         /// Prepare the change password model
         /// </summary>
         /// <returns>Change password model</returns>
-        public virtual Task<ChangePasswordModel> PrepareChangePasswordModel()
+        public virtual Task<ChangePasswordModel> PrepareChangePasswordModelAsync()
         {
             var model = new ChangePasswordModel();
 
@@ -925,13 +925,13 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Customer avatar model</param>
         /// <returns>Customer avatar model</returns>
-        public virtual async Task<CustomerAvatarModel> PrepareCustomerAvatarModel(CustomerAvatarModel model)
+        public virtual async Task<CustomerAvatarModel> PrepareCustomerAvatarModelAsync(CustomerAvatarModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.AvatarUrl = await _pictureService.GetPictureUrl(
-                await _genericAttributeService.GetAttribute<int>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.AvatarPictureIdAttribute),
+            model.AvatarUrl = await _pictureService.GetPictureUrlAsync(
+                await _genericAttributeService.GetAttributeAsync<int>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AvatarPictureIdAttribute),
                 _mediaSettings.AvatarPictureSize,
                 false);
 
@@ -942,7 +942,7 @@ namespace Nop.Web.Factories
         /// Prepare the GDPR tools model
         /// </summary>
         /// <returns>GDPR tools model</returns>
-        public virtual Task<GdprToolsModel> PrepareGdprToolsModel()
+        public virtual Task<GdprToolsModel> PrepareGdprToolsModelAsync()
         {
             var model = new GdprToolsModel();
 
@@ -953,7 +953,7 @@ namespace Nop.Web.Factories
         /// Prepare the check gift card balance madel
         /// </summary>
         /// <returns>Check gift card balance madel</returns>
-        public virtual Task<CheckGiftCardBalanceModel> PrepareCheckGiftCardBalanceModel()
+        public virtual Task<CheckGiftCardBalanceModel> PrepareCheckGiftCardBalanceModelAsync()
         {
             var model = new CheckGiftCardBalanceModel();
 
@@ -965,19 +965,19 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="model">Multi-factor authentication model</param>
         /// <returns>Multi-factor authentication model</returns>
-        public virtual async Task<MultiFactorAuthenticationModel> PrepareMultiFactorAuthenticationModel(MultiFactorAuthenticationModel model)
+        public virtual async Task<MultiFactorAuthenticationModel> PrepareMultiFactorAuthenticationModelAsync(MultiFactorAuthenticationModel model)
         {            
-            var customer = await _workContext.GetCurrentCustomer();
+            var customer = await _workContext.GetCurrentCustomerAsync();
 
             model.IsEnabled = !string.IsNullOrEmpty(
-                await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
+                await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
             
-            var multiFactorAuthenticationProviders = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, (await _storeContext.GetCurrentStore()).Id).ToList();            
+            var multiFactorAuthenticationProviders = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, (await _storeContext.GetCurrentStoreAsync()).Id).ToList();            
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
                 var sysName = multiFactorAuthenticationProvider.PluginDescriptor.SystemName;
-                providerModel = await PrepareMultiFactorAuthenticationProviderModel(providerModel, sysName);                
+                providerModel = await PrepareMultiFactorAuthenticationProviderModelAsync(providerModel, sysName);                
                 model.Providers.Add(providerModel);
             }
 
@@ -990,18 +990,18 @@ namespace Nop.Web.Factories
         /// <param name="providerModel">Multi-factor authentication provider model</param>
         /// <param name="sysName">Multi-factor authentication provider system name</param>
         /// <returns>Multi-factor authentication model</returns>
-        public virtual async Task<MultiFactorAuthenticationProviderModel> PrepareMultiFactorAuthenticationProviderModel(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false)
+        public virtual async Task<MultiFactorAuthenticationProviderModel> PrepareMultiFactorAuthenticationProviderModelAsync(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false)
         {
-            var customer = await _workContext.GetCurrentCustomer();
-            var selectedProvider = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
 
-            var multiFactorAuthenticationProvider = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, (await _storeContext.GetCurrentStore()).Id)
+            var multiFactorAuthenticationProvider = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, (await _storeContext.GetCurrentStoreAsync()).Id)
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
-            providerModel.Name = await _localizationService.GetLocalizedFriendlyName(multiFactorAuthenticationProvider, (await _workContext.GetWorkingLanguage()).Id);
+            providerModel.Name = await _localizationService.GetLocalizedFriendlyNameAsync(multiFactorAuthenticationProvider, (await _workContext.GetWorkingLanguageAsync()).Id);
             providerModel.SystemName = sysName;
             providerModel.Description = multiFactorAuthenticationProvider.Description;
-            providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrl(multiFactorAuthenticationProvider);
+            providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
             providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName(): multiFactorAuthenticationProvider.GetPublicViewComponentName();
             providerModel.Selected = sysName == selectedProvider;
 

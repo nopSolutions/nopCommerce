@@ -19,7 +19,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        Task DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
+        Task DeleteShoppingCartItemAsync(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItemId">Shopping cart item ID</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        Task DeleteShoppingCartItem(int shoppingCartItemId, bool resetCheckoutData = true,
+        Task DeleteShoppingCartItemAsync(int shoppingCartItemId, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
         /// <returns>Number of deleted items</returns>
-        Task<int> DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
+        Task<int> DeleteExpiredShoppingCartItemsAsync(DateTime olderThanUtc);
 
         /// <summary>
         /// Get products from shopping cart whether requiring specific product
@@ -58,7 +58,7 @@ namespace Nop.Services.Orders
         /// <param name="addRequiredProducts">Whether to add required products</param>
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetRequiredProductWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product,
+        Task<IList<string>> GetRequiredProductWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product,
             int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId);
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product, 
+        Task<IList<string>> GetStandardWarningsAsync(Customer customer, ShoppingCartType shoppingCartType, Product product, 
             string attributesXml, decimal customerEnteredPrice, int quantity, int shoppingCartItemId, int storeId);
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Nop.Services.Orders
         /// <param name="createdFromUtc">Created date from (UTC); pass null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); pass null to load all records</param>
         /// <returns>Shopping Cart</returns>
-        Task<IList<ShoppingCartItem>> GetShoppingCart(Customer customer, ShoppingCartType? shoppingCartType = null,
+        Task<IList<ShoppingCartItem>> GetShoppingCartAsync(Customer customer, ShoppingCartType? shoppingCartType = null,
             int storeId = 0, int? productId = null, DateTime? createdFromUtc = null, DateTime? createdToUtc = null);
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nop.Services.Orders
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetShoppingCartItemAttributeWarnings(Customer customer,
+        Task<IList<string>> GetShoppingCartItemAttributeWarningsAsync(Customer customer,
             ShoppingCartType shoppingCartType,
             Product product,
             int quantity = 1,
@@ -115,7 +115,7 @@ namespace Nop.Services.Orders
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
+        Task<IList<string>> GetShoppingCartItemGiftCardWarningsAsync(ShoppingCartType shoppingCartType,
             Product product, string attributesXml);
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Nop.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetRentalProductWarnings(Product product,
+        Task<IList<string>> GetRentalProductWarningsAsync(Product product,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null);
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Nop.Services.Orders
         /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
+        Task<IList<string>> GetShoppingCartItemWarningsAsync(Customer customer, ShoppingCartType shoppingCartType,
             Product product, int storeId,
             string attributesXml, decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
@@ -164,7 +164,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributesXml">Checkout attributes in XML format</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
+        Task<IList<string>> GetShoppingCartWarningsAsync(IList<ShoppingCartItem> shoppingCart,
             string checkoutAttributesXml, bool validateCheckoutAttributes);
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item). Applied discount amount. Applied discounts</returns>
-        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPrice(ShoppingCartItem shoppingCartItem,
+        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts);
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Nop.Services.Orders
         /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
-        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPrice(Product product,
+        Task<(decimal unitPrice, decimal discountAmount, List<Discount> appliedDiscounts)> GetUnitPriceAsync(Product product,
             Customer customer,
             ShoppingCartType shoppingCartType,
             int quantity,
@@ -204,7 +204,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItem">The shopping cart item</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart item sub total. Applied discount amount.Applied discounts. Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</returns>
-        Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotal(ShoppingCartItem shoppingCartItem,
+        Task<(decimal subTotal, decimal discountAmount, List<Discount> appliedDiscounts, int? maximumDiscountQty)> GetSubTotalAsync(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts);
 
         //TODO: migrate to an extension method
@@ -241,7 +241,7 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="addRequiredProducts">Whether to add required products</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> AddToCart(Customer customer, Product product,
+        Task<IList<string>> AddToCartAsync(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
@@ -259,7 +259,7 @@ namespace Nop.Services.Orders
         /// <param name="quantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> UpdateShoppingCartItem(Customer customer,
+        Task<IList<string>> UpdateShoppingCartItemAsync(Customer customer,
             int shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
@@ -271,7 +271,7 @@ namespace Nop.Services.Orders
         /// <param name="fromCustomer">From customer</param>
         /// <param name="toCustomer">To customer</param>
         /// <param name="includeCouponCodes">A value indicating whether to coupon codes (discount and gift card) should be also re-applied</param>
-        Task MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes);
+        Task MigrateShoppingCartAsync(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes);
 
         /// <summary>
         /// Indicates whether the shopping cart requires shipping
@@ -285,13 +285,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <returns>Result</returns>
-        Task<bool> ShoppingCartIsRecurring(IList<ShoppingCartItem> shoppingCart);
+        Task<bool> ShoppingCartIsRecurringAsync(IList<ShoppingCartItem> shoppingCart);
 
         /// <summary>
         /// Get a recurring cycle information
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <returns>Error (if exists); otherwise, empty string</returns>
-        Task<(string error, int cycleLength, RecurringProductCyclePeriod cyclePeriod, int totalCycles)> GetRecurringCycleInfo(IList<ShoppingCartItem> shoppingCart);
+        Task<(string error, int cycleLength, RecurringProductCyclePeriod cyclePeriod, int totalCycles)> GetRecurringCycleInfoAsync(IList<ShoppingCartItem> shoppingCart);
     }
 }

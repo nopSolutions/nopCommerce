@@ -13,7 +13,7 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        Task DeleteLanguage(Language language);
+        Task DeleteLanguageAsync(Language language);
 
         /// <summary>
         /// Gets all languages
@@ -21,26 +21,26 @@ namespace Nop.Services.Localization
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Languages</returns>
-        Task<IList<Language>> GetAllLanguages(bool showHidden = false, int storeId = 0);
+        Task<IList<Language>> GetAllLanguagesAsync(bool showHidden = false, int storeId = 0);
 
         /// <summary>
         /// Gets a language
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        Task<Language> GetLanguageById(int languageId);
+        Task<Language> GetLanguageByIdAsync(int languageId);
 
         /// <summary>
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        Task InsertLanguage(Language language);
+        Task InsertLanguageAsync(Language language);
 
         /// <summary>
         /// Updates a language
         /// </summary>
         /// <param name="language">Language</param>
-        Task UpdateLanguage(Language language);
+        Task UpdateLanguageAsync(Language language);
 
         //TODO: migrate to an extension method
         /// <summary>

@@ -27,9 +27,9 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Executes a task
         /// </summary>
-        public virtual async System.Threading.Tasks.Task Execute()
+        public virtual async System.Threading.Tasks.Task ExecuteAsync()
         {
-            await _logger.ClearLog();
+            await _logger.ClearLogAsync();
         }
 
         #endregion

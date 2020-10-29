@@ -44,12 +44,12 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"first-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle").Result });
+                            var link = html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.FirstPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            var link = html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle").Result });
+                            var link = html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.FirstPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
@@ -65,12 +65,12 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"previous-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle").Result });
+                            var link = html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.PreviousPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            var link = html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle").Result });
+                            var link = html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.PreviousPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
@@ -94,12 +94,12 @@ namespace Nop.Web.Extensions
                             links.Append("<li class=\"individual-page\">");
                             if (model.UseRouteLinks)
                             {
-                                var link = html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle").Result, (i + 1)) });
+                                var link = html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = string.Format(localizationService.GetResourceAsync("Pager.PageLinkTitle").Result, (i + 1)) });
                                 links.Append(link.ToHtmlString());
                             }
                             else
                             {
-                                var link = html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle").Result, (i + 1)) });
+                                var link = html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = string.Format(localizationService.GetResourceAsync("Pager.PageLinkTitle").Result, (i + 1)) });
                                 links.Append(link.ToHtmlString());
                             }
                             links.Append("</li>");
@@ -116,12 +116,12 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"next-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle").Result });
+                            var link = html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.NextPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            var link = html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle").Result });
+                            var link = html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.NextPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
@@ -137,12 +137,12 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"last-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle").Result });
+                            var link = html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.LastPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            var link = html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle").Result });
+                            var link = html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResourceAsync("Pager.LastPageTitle").Result });
                             links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
@@ -173,7 +173,7 @@ namespace Nop.Web.Extensions
                 {
                     for (var x = 1; x <= totalPages; x++)
                     {
-                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle").Result, x.ToString()) });
+                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResourceAsync("Pager.PageLinkTitle").Result, x.ToString()) });
                         links.Append(link.ToHtmlString());
                         if (x < totalPages)
                         {
@@ -183,13 +183,13 @@ namespace Nop.Web.Extensions
                 }
                 else
                 {
-                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle").Result, 1) });
+                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResourceAsync("Pager.PageLinkTitle").Result, 1) });
                     links.Append(link1.ToHtmlString());
                     links.Append(" ... ");
 
                     for (var x = (totalPages - 2); x <= totalPages; x++)
                     {
-                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle").Result, x.ToString()) });
+                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResourceAsync("Pager.PageLinkTitle").Result, x.ToString()) });
                         links.Append(link2.ToHtmlString());
 
                         if (x < totalPages)
@@ -200,7 +200,7 @@ namespace Nop.Web.Extensions
                 }
 
                 // Inserts the topic page links into the localized string ([Go to page: {0}])
-                return new HtmlString(string.Format(localizationService.GetResource("Forum.Topics.GotoPostPager").Result, links));
+                return new HtmlString(string.Format(localizationService.GetResourceAsync("Forum.Topics.GotoPostPager").Result, links));
             }
             return new HtmlString(string.Empty);
         }
@@ -222,13 +222,13 @@ namespace Nop.Web.Extensions
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
             var topicService = EngineContext.Current.Resolve<ITopicService>();
 
-            var topic = topicService.GetTopicBySystemName(systemName, storeContext.GetCurrentStore().Result.Id).Result;
+            var topic = topicService.GetTopicBySystemNameAsync(systemName, storeContext.GetCurrentStoreAsync().Result.Id).Result;
             if (topic == null)
                 return "";
 
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
 
-            return urlRecordService.GetSeName(topic).Result;
+            return urlRecordService.GetSeNameAsync(topic).Result;
         }
 
         /// <summary>
@@ -243,14 +243,14 @@ namespace Nop.Web.Extensions
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
 
             var topicService = EngineContext.Current.Resolve<ITopicService>();
-            var topic = topicService.GetTopicBySystemName(systemName, storeContext.GetCurrentStore().Result.Id).Result;
+            var topic = topicService.GetTopicBySystemNameAsync(systemName, storeContext.GetCurrentStoreAsync().Result.Id).Result;
 
             if (topic == null)
                 return "";
 
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
-            return localizationService.GetLocalized(topic, x => x.Title).Result;
+            return localizationService.GetLocalizedAsync(topic, x => x.Title).Result;
         }
     }
 }

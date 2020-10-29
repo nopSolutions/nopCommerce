@@ -78,7 +78,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         #region Utilities
 
-        protected virtual async Task ProcessRecurringPayment(string invoiceId, PaymentStatus newPaymentStatus, string transactionId, string ipnInfo)
+        protected virtual async Task ProcessRecurringPaymentAsync(string invoiceId, PaymentStatus newPaymentStatus, string transactionId, string ipnInfo)
         {
             Guid orderNumberGuid;
 
@@ -91,14 +91,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 orderNumberGuid = Guid.Empty;
             }
 
-            var order = await _orderService.GetOrderByGuid(orderNumberGuid);
+            var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
             if (order == null)
             {
-                await _logger.Error("PayPal IPN. Order is not found", new NopException(ipnInfo));
+                await _logger.ErrorAsync("PayPal IPN. Order is not found", new NopException(ipnInfo));
                 return;
             }
 
-            var recurringPayments = await _orderService.SearchRecurringPayments(initialOrderId: order.Id);
+            var recurringPayments = await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id);
 
             foreach (var rp in recurringPayments)
             {
@@ -107,10 +107,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     case PaymentStatus.Authorized:
                     case PaymentStatus.Paid:
                         {
-                            var recurringPaymentHistory = await _orderService.GetRecurringPaymentHistory(rp);
+                            var recurringPaymentHistory = await _orderService.GetRecurringPaymentHistoryAsync(rp);
                             if (!recurringPaymentHistory.Any())
                             {
-                                await _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory
+                                await _orderService.InsertRecurringPaymentHistoryAsync(new RecurringPaymentHistory
                                 {
                                     RecurringPaymentId = rp.Id,
                                     OrderId = order.Id,
@@ -129,7 +129,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                 else
                                     processPaymentResult.CaptureTransactionId = transactionId;
 
-                                await _orderProcessingService.ProcessNextRecurringPayment(rp,
+                                await _orderProcessingService.ProcessNextRecurringPaymentAsync(rp,
                                     processPaymentResult);
                             }
                         }
@@ -142,16 +142,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             Errors = new[] { $"PayPal IPN. Recurring payment is {nameof(PaymentStatus.Voided).ToLower()} ." },
                             RecurringPaymentFailed = true
                         };
-                        await _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
+                        await _orderProcessingService.ProcessNextRecurringPaymentAsync(rp, failedPaymentResult);
                         break;
                 }
             }
 
             //OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
-            await _logger.Information("PayPal IPN. Recurring info", new NopException(ipnInfo));
+            await _logger.InformationAsync("PayPal IPN. Recurring info", new NopException(ipnInfo));
         }
 
-        protected virtual async Task ProcessPayment(string orderNumber, string ipnInfo, PaymentStatus newPaymentStatus, decimal mcGross, string transactionId)
+        protected virtual async Task ProcessPaymentAsync(string orderNumber, string ipnInfo, PaymentStatus newPaymentStatus, decimal mcGross, string transactionId)
         {
             Guid orderNumberGuid;
 
@@ -164,16 +164,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 orderNumberGuid = Guid.Empty;
             }
 
-            var order = await _orderService.GetOrderByGuid(orderNumberGuid);
+            var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
 
             if (order == null)
             {
-                await _logger.Error("PayPal IPN. Order is not found", new NopException(ipnInfo));
+                await _logger.ErrorAsync("PayPal IPN. Order is not found", new NopException(ipnInfo));
                 return;
             }
 
             //order note
-            await _orderService.InsertOrderNote(new OrderNote
+            await _orderService.InsertOrderNoteAsync(new OrderNote
             {
                 OrderId = order.Id,
                 Note = ipnInfo,
@@ -186,9 +186,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             {
                 var errorStr = $"PayPal IPN. Returned order total {mcGross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                 //log
-                await _logger.Error(errorStr);
+                await _logger.ErrorAsync(errorStr);
                 //order note
-                await _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNoteAsync(new OrderNote
                 {
                     OrderId = order.Id,
                     Note = errorStr,
@@ -203,15 +203,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             {
                 case PaymentStatus.Authorized:
                     if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
-                        await _orderProcessingService.MarkAsAuthorized(order);
+                        await _orderProcessingService.MarkAsAuthorizedAsync(order);
                     break;
                 case PaymentStatus.Paid:
                     if (_orderProcessingService.CanMarkOrderAsPaid(order))
                     {
                         order.AuthorizationTransactionId = transactionId;
-                        await _orderService.UpdateOrder(order);
+                        await _orderService.UpdateOrderAsync(order);
 
-                        await _orderProcessingService.MarkOrderAsPaid(order);
+                        await _orderProcessingService.MarkOrderAsPaidAsync(order);
                     }
 
                     break;
@@ -221,19 +221,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     {
                         //refund
                         if (_orderProcessingService.CanRefundOffline(order))
-                            await _orderProcessingService.RefundOffline(order);
+                            await _orderProcessingService.RefundOfflineAsync(order);
                     }
                     else
                     {
                         //partial refund
                         if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
-                            await _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                            await _orderProcessingService.PartiallyRefundOfflineAsync(order, totalToRefund);
                     }
 
                     break;
                 case PaymentStatus.Voided:
                     if (_orderProcessingService.CanVoidOffline(order))
-                        await _orderProcessingService.VoidOffline(order);
+                        await _orderProcessingService.VoidOfflineAsync(order);
 
                     break;
             }
@@ -247,12 +247,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
-            var payPalStandardPaymentSettings = await _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var payPalStandardPaymentSettings = await _settingService.LoadSettingAsync<PayPalStandardPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
             {
@@ -268,12 +268,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             if (storeScope <= 0)
                 return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
 
-            model.UseSandbox_OverrideForStore = await _settingService.SettingExists(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
-            model.BusinessEmail_OverrideForStore = await _settingService.SettingExists(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
-            model.PdtToken_OverrideForStore = await _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
-            model.PassProductNamesAndTotals_OverrideForStore = await _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-            model.AdditionalFee_OverrideForStore = await _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
-            model.AdditionalFeePercentage_OverrideForStore = await _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+            model.UseSandbox_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
+            model.BusinessEmail_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
+            model.PdtToken_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
+            model.PassProductNamesAndTotals_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
+            model.AdditionalFee_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
+            model.AdditionalFeePercentage_OverrideForStore = await _settingService.SettingExistsAsync(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
         }
@@ -284,15 +284,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return await Configure();
 
             //load settings for a chosen store scope
-            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
-            var payPalStandardPaymentSettings = await _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var payPalStandardPaymentSettings = await _settingService.LoadSettingAsync<PayPalStandardPaymentSettings>(storeScope);
 
             //save settings
             payPalStandardPaymentSettings.UseSandbox = model.UseSandbox;
@@ -305,17 +305,17 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            await _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
 
             //now clear settings cache
-            await _settingService.ClearCache();
+            await _settingService.ClearCacheAsync();
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             return await Configure();
         }
@@ -325,19 +325,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [Area(AreaNames.Admin)]
         public async Task<IActionResult> RoundingWarning(bool passProductNamesAndTotals)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //prices and total aren't rounded, so display warning
             if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
-                return Json(new { Result = await _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") });
+                return Json(new { Result = await _localizationService.GetResourceAsync("Plugins.Payments.PayPalStandard.RoundingWarning") });
 
             return Json(new { Result = string.Empty });
         }
 
         public async Task<IActionResult> PDTHandler()
         {
-            var tx = await _webHelper.QueryString<string>("tx");
+            var tx = await _webHelper.QueryStringAsync<string>("tx");
 
             if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
@@ -355,7 +355,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     // ignored
                 }
 
-                var order = await _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
 
                 if (order == null)
                     return RedirectToAction("Index", "Home", new { area = string.Empty });
@@ -368,7 +368,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 }
                 catch (Exception exc)
                 {
-                    await _logger.Error("PayPal PDT. Error getting mc_gross", exc);
+                    await _logger.ErrorAsync("PayPal PDT. Error getting mc_gross", exc);
                 }
 
                 values.TryGetValue("payer_status", out var payerStatus);
@@ -400,7 +400,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 sb.AppendLine("New payment status: " + newPaymentStatus);
 
                 //order note
-                await _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNoteAsync(new OrderNote
                 {
                     OrderId = order.Id,
                     Note = sb.ToString(),
@@ -409,14 +409,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 });
 
                 //validate order total
-                var orderTotalSentToPayPal = await _genericAttributeService.GetAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal);
+                var orderTotalSentToPayPal = await _genericAttributeService.GetAttributeAsync<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal);
                 if (orderTotalSentToPayPal.HasValue && mcGross != orderTotalSentToPayPal.Value)
                 {
                     var errorStr = $"PayPal PDT. Returned order total {mcGross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                     //log
-                    await _logger.Error(errorStr);
+                    await _logger.ErrorAsync(errorStr);
                     //order note
-                    await _orderService.InsertOrderNote(new OrderNote
+                    await _orderService.InsertOrderNoteAsync(new OrderNote
                     {
                         OrderId = order.Id,
                         Note = errorStr,
@@ -429,7 +429,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                 //clear attribute
                 if (orderTotalSentToPayPal.HasValue)
-                    await _genericAttributeService.SaveAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal, null);
+                    await _genericAttributeService.SaveAttributeAsync<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal, null);
 
                 if (newPaymentStatus != PaymentStatus.Paid)
                     return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
@@ -439,15 +439,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                 //mark order as paid
                 order.AuthorizationTransactionId = txnId;
-                await _orderService.UpdateOrder(order);
-                await _orderProcessingService.MarkOrderAsPaid(order);
+                await _orderService.UpdateOrderAsync(order);
+                await _orderProcessingService.MarkOrderAsPaidAsync(order);
 
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }
             else
             {
                 if (!values.TryGetValue("custom", out var orderNumber))
-                    orderNumber = await _webHelper.QueryString<string>("cm");
+                    orderNumber = await _webHelper.QueryStringAsync<string>("cm");
 
                 var orderNumberGuid = Guid.Empty;
 
@@ -460,12 +460,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     // ignored
                 }
 
-                var order = await _orderService.GetOrderByGuid(orderNumberGuid);
+                var order = await _orderService.GetOrderByGuidAsync(orderNumberGuid);
                 if (order == null)
                     return RedirectToAction("Index", "Home", new { area = string.Empty });
 
                 //order note
-                await _orderService.InsertOrderNote(new OrderNote
+                await _orderService.InsertOrderNoteAsync(new OrderNote
                 {
                     OrderId = order.Id,
                     Note = "PayPal PDT failed. " + response,
@@ -494,7 +494,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             if (!processor.VerifyIpn(strRequest, out var values))
             {
-                await _logger.Error("PayPal IPN failed.", new NopException(strRequest));
+                await _logger.ErrorAsync("PayPal IPN failed.", new NopException(strRequest));
 
                 //nothing should be rendered to visitor
                 return Content(string.Empty);
@@ -532,19 +532,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             switch (txnType)
             {
                 case "recurring_payment":
-                    await ProcessRecurringPayment(rpInvoiceId, newPaymentStatus, txnId, ipnInfo);
+                    await ProcessRecurringPaymentAsync(rpInvoiceId, newPaymentStatus, txnId, ipnInfo);
                     break;
                 case "recurring_payment_failed":
                     if (Guid.TryParse(rpInvoiceId, out var orderGuid))
                     {
-                        var order = await _orderService.GetOrderByGuid(orderGuid);
+                        var order = await _orderService.GetOrderByGuidAsync(orderGuid);
                         if (order != null)
                         {
-                            var recurringPayment = (await _orderService.SearchRecurringPayments(initialOrderId: order.Id))
+                            var recurringPayment = (await _orderService.SearchRecurringPaymentsAsync(initialOrderId: order.Id))
                                 .FirstOrDefault();
                             //failed payment
                             if (recurringPayment != null)
-                                await _orderProcessingService.ProcessNextRecurringPayment(recurringPayment,
+                                await _orderProcessingService.ProcessNextRecurringPaymentAsync(recurringPayment,
                                     new ProcessPaymentResult
                                     {
                                         Errors = new[] { txnType },
@@ -556,7 +556,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     break;
                 default:
                     values.TryGetValue("custom", out var orderNumber);
-                    await ProcessPayment(orderNumber, ipnInfo, newPaymentStatus, mcGross, txnId);
+                    await ProcessPaymentAsync(orderNumber, ipnInfo, newPaymentStatus, mcGross, txnId);
 
                     break;
             }
@@ -567,8 +567,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         public async Task<IActionResult> CancelOrder()
         {
-            var order = (await _orderService.SearchOrders((await _storeContext.GetCurrentStore()).Id,
-                customerId: (await _workContext.GetCurrentCustomer()).Id, pageSize: 1)).FirstOrDefault();
+            var order = (await _orderService.SearchOrdersAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                customerId: (await _workContext.GetCurrentCustomerAsync()).Id, pageSize: 1)).FirstOrDefault();
 
             if (order != null)
                 return RedirectToRoute("OrderDetails", new { orderId = order.Id });

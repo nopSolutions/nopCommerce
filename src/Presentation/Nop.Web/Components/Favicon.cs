@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _commonModelFactory.PrepareFaviconAndAppIconsModel();
+            var model = await _commonModelFactory.PrepareFaviconAndAppIconsModelAsync();
             if (string.IsNullOrEmpty(model.HeadCode))
                 return Content("");
             return View(model);

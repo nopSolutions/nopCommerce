@@ -40,8 +40,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Components
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             var script = widgetZone != PublicWidgetZones.HeadHtmlTag
-                ? await _facebookPixelService.PrepareCustomEventsScript(widgetZone)
-                : await _facebookPixelService.PrepareScript();
+                ? await _facebookPixelService.PrepareCustomEventsScriptAsync(widgetZone)
+                : await _facebookPixelService.PrepareScriptAsync();
 
             return new HtmlContentViewComponentResult(new HtmlString(script ?? string.Empty));
         }

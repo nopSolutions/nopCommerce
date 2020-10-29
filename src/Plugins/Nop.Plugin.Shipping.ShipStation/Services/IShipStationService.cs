@@ -12,7 +12,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// </summary>
         /// <param name="shippingOptionRequest"></param>
         /// <returns></returns>
-        Task<IList<ShipStationServiceRate>> GetAllRates(GetShippingOptionRequest shippingOptionRequest);
+        Task<IList<ShipStationServiceRate>> GetAllRatesAsync(GetShippingOptionRequest shippingOptionRequest);
         
         /// <summary>
         /// Create or update shipping
@@ -21,7 +21,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="carrier">Carrier</param>
         /// <param name="service">Service</param>
         /// <param name="trackingNumber">Tracking number</param>
-        Task CreateOrUpdateShipping(string orderNumber, string carrier, string service, string trackingNumber);
+        Task CreateOrUpdateShippingAsync(string orderNumber, string carrier, string service, string trackingNumber);
 
         /// <summary>
         /// Get XML view of orders to sending to the ShipStation service
@@ -31,7 +31,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>XML view of orders</returns>
-        Task<string> GetXmlOrders(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
+        Task<string> GetXmlOrdersAsync(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets a string that defines the required format of date time

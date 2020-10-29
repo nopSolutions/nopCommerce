@@ -61,11 +61,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             //prepare model
-            var model =await _affiliateModelFactory.PrepareAffiliateSearchModel(new AffiliateSearchModel());
+            var model =await _affiliateModelFactory.PrepareAffiliateSearchModelAsync(new AffiliateSearchModel());
 
             return View(model);
         }
@@ -73,22 +73,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(AffiliateSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _affiliateModelFactory.PrepareAffiliateListModel(searchModel);
+            var model = await _affiliateModelFactory.PrepareAffiliateListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _affiliateModelFactory.PrepareAffiliateModel(new AffiliateModel(), null);
+            var model = await _affiliateModelFactory.PrepareAffiliateModelAsync(new AffiliateModel(), null);
 
             return View(model);
         }
@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Create(AffiliateModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -112,28 +112,28 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
 
-                await _addressService.InsertAddress(address);
+                await _addressService.InsertAddressAsync(address);
 
                 var affiliate = model.ToEntity<Affiliate>();
 
                 //validate friendly URL name
-                var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlName(affiliate, model.FriendlyUrlName);
+                var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(affiliate, model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.AddressId = address.Id;
 
-                await _affiliateService.InsertAffiliate(affiliate);
+                await _affiliateService.InsertAffiliateAsync(affiliate);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewAffiliate",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewAffiliate"), affiliate.Id), affiliate);
+                await _customerActivityService.InsertActivityAsync("AddNewAffiliate",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewAffiliate"), affiliate.Id), affiliate);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Affiliates.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Affiliates.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = affiliate.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = await _affiliateModelFactory.PrepareAffiliateModel(model, null, true);
+            model = await _affiliateModelFactory.PrepareAffiliateModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -141,16 +141,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             //try to get an affiliate with the specified id
-            var affiliate = await _affiliateService.GetAffiliateById(id);
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(id);
             if (affiliate == null || affiliate.Deleted)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _affiliateModelFactory.PrepareAffiliateModel(null, affiliate);
+            var model = await _affiliateModelFactory.PrepareAffiliateModelAsync(null, affiliate);
 
             return View(model);
         }
@@ -158,17 +158,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(AffiliateModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             //try to get an affiliate with the specified id
-            var affiliate = await _affiliateService.GetAffiliateById(model.Id);
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(model.Id);
             if (affiliate == null || affiliate.Deleted)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                var address = await _addressService.GetAddressById(affiliate.AddressId);
+                var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
                 address = model.Address.ToEntity(address);
 
                 //some validation
@@ -177,22 +177,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
 
-                await _addressService.UpdateAddress(address);
+                await _addressService.UpdateAddressAsync(address);
 
                 affiliate = model.ToEntity(affiliate);
 
                 //validate friendly URL name
-                var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlName(affiliate, model.FriendlyUrlName);
+                var friendlyUrlName = await _affiliateService.ValidateFriendlyUrlNameAsync(affiliate, model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.AddressId = address.Id;
 
-                await _affiliateService.UpdateAffiliate(affiliate);
+                await _affiliateService.UpdateAffiliateAsync(affiliate);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditAffiliate",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditAffiliate"), affiliate.Id), affiliate);
+                await _customerActivityService.InsertActivityAsync("EditAffiliate",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAffiliate"), affiliate.Id), affiliate);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Affiliates.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Affiliates.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _affiliateModelFactory.PrepareAffiliateModel(model, affiliate, true);
+            model = await _affiliateModelFactory.PrepareAffiliateModelAsync(model, affiliate, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -211,21 +211,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             //try to get an affiliate with the specified id
-            var affiliate = await _affiliateService.GetAffiliateById(id);
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(id);
             if (affiliate == null)
                 return RedirectToAction("List");
 
-            await _affiliateService.DeleteAffiliate(affiliate);
+            await _affiliateService.DeleteAffiliateAsync(affiliate);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteAffiliate",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteAffiliate"), affiliate.Id), affiliate);
+            await _customerActivityService.InsertActivityAsync("DeleteAffiliate",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteAffiliate"), affiliate.Id), affiliate);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Affiliates.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Affiliates.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -233,15 +233,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AffiliatedOrderListGrid(AffiliatedOrderSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
-            var affiliate = await _affiliateService.GetAffiliateById(searchModel.AffliateId)
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
                 ?? throw new ArgumentException("No affiliate found with the specified id");
 
             //prepare model
-            var model = await _affiliateModelFactory.PrepareAffiliatedOrderListModel(searchModel, affiliate);
+            var model = await _affiliateModelFactory.PrepareAffiliatedOrderListModelAsync(searchModel, affiliate);
 
             return Json(model);
         }
@@ -249,15 +249,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
-            var affiliate = await _affiliateService.GetAffiliateById(searchModel.AffliateId)
+            var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
                 ?? throw new ArgumentException("No affiliate found with the specified id");
 
             //prepare model
-            var model = await _affiliateModelFactory.PrepareAffiliatedCustomerListModel(searchModel, affiliate);
+            var model = await _affiliateModelFactory.PrepareAffiliatedCustomerListModelAsync(searchModel, affiliate);
 
             return Json(model);
         }

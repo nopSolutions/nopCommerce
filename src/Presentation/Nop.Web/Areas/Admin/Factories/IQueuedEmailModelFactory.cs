@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Queued email search model</param>
         /// <returns>Queued email search model</returns>
-        Task<QueuedEmailSearchModel> PrepareQueuedEmailSearchModel(QueuedEmailSearchModel searchModel);
+        Task<QueuedEmailSearchModel> PrepareQueuedEmailSearchModelAsync(QueuedEmailSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged queued email list model
         /// </summary>
         /// <param name="searchModel">Queued email search model</param>
         /// <returns>Queued email list model</returns>
-        Task<QueuedEmailListModel> PrepareQueuedEmailListModel(QueuedEmailSearchModel searchModel);
+        Task<QueuedEmailListModel> PrepareQueuedEmailListModelAsync(QueuedEmailSearchModel searchModel);
 
         /// <summary>
         /// Prepare queued email model
@@ -30,6 +30,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="queuedEmail">Queued email</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Queued email model</returns>
-        Task<QueuedEmailModel> PrepareQueuedEmailModel(QueuedEmailModel model, QueuedEmail queuedEmail, bool excludeProperties = false);
+        Task<QueuedEmailModel> PrepareQueuedEmailModelAsync(QueuedEmailModel model, QueuedEmail queuedEmail, bool excludeProperties = false);
     }
 }

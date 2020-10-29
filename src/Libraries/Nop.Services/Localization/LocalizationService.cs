@@ -68,9 +68,9 @@ namespace Nop.Services.Localization
         /// Insert resources
         /// </summary>
         /// <param name="resources">Resources</param>
-        protected virtual async Task InsertLocaleStringResources(IList<LocaleStringResource> resources)
+        protected virtual async Task InsertLocaleStringResourcesAsync(IList<LocaleStringResource> resources)
         {
-            await _lsrRepository.Insert(resources);
+            await _lsrRepository.InsertAsync(resources);
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Locale string resources</returns>
-        protected virtual async Task<IList<LocaleStringResource>> GetAllResources(int languageId)
+        protected virtual async Task<IList<LocaleStringResource>> GetAllResourcesAsync(int languageId)
         {
-            var locales = await _lsrRepository.GetAll(query =>
+            var locales = await _lsrRepository.GetAllAsync(query =>
             {
                 return from l in query
                     orderby l.ResourceName
@@ -95,9 +95,9 @@ namespace Nop.Services.Localization
         /// Update resources
         /// </summary>
         /// <param name="resources">Resources</param>
-        protected virtual async Task UpdateLocaleStringResources(IList<LocaleStringResource> resources)
+        protected virtual async Task UpdateLocaleStringResourcesAsync(IList<LocaleStringResource> resources)
         {
-            await _lsrRepository.Update(resources);
+            await _lsrRepository.UpdateAsync(resources);
         }
 
         protected virtual HashSet<(string name, string value)> LoadLocaleResourcesFromStream(StreamReader xmlStreamReader, string language)
@@ -125,7 +125,7 @@ namespace Nop.Services.Localization
             return result;
         }
 
-        private static Task<Dictionary<string, KeyValuePair<int, string>>> ResourceValuesToDictionary(IEnumerable<LocaleStringResource> locales)
+        private static Task<Dictionary<string, KeyValuePair<int, string>>> ResourceValuesToDictionaryAsync(IEnumerable<LocaleStringResource> locales)
         {
             //format: <name, <id, value>>
             var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
@@ -147,9 +147,9 @@ namespace Nop.Services.Localization
         /// Deletes a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public virtual async Task DeleteLocaleStringResource(LocaleStringResource localeStringResource)
+        public virtual async Task DeleteLocaleStringResourceAsync(LocaleStringResource localeStringResource)
         {
-            await _lsrRepository.Delete(localeStringResource);
+            await _lsrRepository.DeleteAsync(localeStringResource);
         }
 
         /// <summary>
@@ -157,9 +157,9 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="localeStringResourceId">Locale string resource identifier</param>
         /// <returns>Locale string resource</returns>
-        public virtual async Task<LocaleStringResource> GetLocaleStringResourceById(int localeStringResourceId)
+        public virtual async Task<LocaleStringResource> GetLocaleStringResourceByIdAsync(int localeStringResourceId)
         {
-            return await _lsrRepository.GetById(localeStringResourceId, cache => default);
+            return await _lsrRepository.GetByIdAsync(localeStringResourceId, cache => default);
         }
 
         /// <summary>
@@ -167,12 +167,12 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceName">A string representing a resource name</param>
         /// <returns>Locale string resource</returns>
-        public virtual async Task<LocaleStringResource> GetLocaleStringResourceByName(string resourceName)
+        public virtual async Task<LocaleStringResource> GetLocaleStringResourceByNameAsync(string resourceName)
         {
-            var workingLanguage = await _workContext.GetWorkingLanguage();
+            var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
             if (workingLanguage != null)
-                return await GetLocaleStringResourceByName(resourceName, workingLanguage.Id);
+                return await GetLocaleStringResourceByNameAsync(resourceName, workingLanguage.Id);
 
             return null;
         }
@@ -184,7 +184,7 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <returns>Locale string resource</returns>
-        public virtual async Task<LocaleStringResource> GetLocaleStringResourceByName(string resourceName, int languageId,
+        public virtual async Task<LocaleStringResource> GetLocaleStringResourceByNameAsync(string resourceName, int languageId,
             bool logIfNotFound = true)
         {
             var query = from lsr in _lsrRepository.Table
@@ -195,7 +195,7 @@ namespace Nop.Services.Localization
             var localeStringResource = await query.FirstOrDefaultAsync();
 
             if (localeStringResource == null && logIfNotFound)
-                await _logger.Warning($"Resource string ({resourceName}) not found. Language ID = {languageId}");
+                await _logger.WarningAsync($"Resource string ({resourceName}) not found. Language ID = {languageId}");
 
             return localeStringResource;
         }
@@ -204,18 +204,18 @@ namespace Nop.Services.Localization
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public virtual async Task InsertLocaleStringResource(LocaleStringResource localeStringResource)
+        public virtual async Task InsertLocaleStringResourceAsync(LocaleStringResource localeStringResource)
         {
-            await _lsrRepository.Insert(localeStringResource);
+            await _lsrRepository.InsertAsync(localeStringResource);
         }
 
         /// <summary>
         /// Updates the locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public virtual async Task UpdateLocaleStringResource(LocaleStringResource localeStringResource)
+        public virtual async Task UpdateLocaleStringResourceAsync(LocaleStringResource localeStringResource)
         {
-            await _lsrRepository.Update(localeStringResource);
+            await _lsrRepository.UpdateAsync(localeStringResource);
         }
 
         /// <summary>
@@ -224,14 +224,14 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="loadPublicLocales">A value indicating whether to load data for the public store only (if "false", then for admin area only. If null, then load all locales. We use it for performance optimization of the site startup</param>
         /// <returns>Locale string resources</returns>
-        public virtual async Task<Dictionary<string, KeyValuePair<int, string>>> GetAllResourceValues(int languageId, bool? loadPublicLocales)
+        public virtual async Task<Dictionary<string, KeyValuePair<int, string>>> GetAllResourceValuesAsync(int languageId, bool? loadPublicLocales)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, languageId);
 
             //get all locale string resources by language identifier
-            if (!loadPublicLocales.HasValue || await _staticCacheManager.IsSet(key))
+            if (!loadPublicLocales.HasValue || await _staticCacheManager.IsSetAsync(key))
             {
-                var rez = await _staticCacheManager.Get(key, async () =>
+                var rez = await _staticCacheManager.GetAsync(key, async () =>
                 {
                     //we use no tracking here for performance optimization
                     //anyway records are loaded only for read-only operations
@@ -240,12 +240,12 @@ namespace Nop.Services.Localization
                                 where l.LanguageId == languageId
                                 select l;
 
-                    return await ResourceValuesToDictionary(query);
+                    return await ResourceValuesToDictionaryAsync(query);
                 });
 
                 //remove separated resource 
-                await _staticCacheManager.Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId);
-                await _staticCacheManager.Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId);
+                await _staticCacheManager.RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId);
+                await _staticCacheManager.RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId);
 
                 return rez;
             }
@@ -256,7 +256,7 @@ namespace Nop.Services.Localization
                 : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
                 languageId);
 
-            return await _staticCacheManager.Get(key, async () =>
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -265,7 +265,7 @@ namespace Nop.Services.Localization
                             where l.LanguageId == languageId
                             select l;
                 query = loadPublicLocales.Value ? query.Where(r => !r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix)) : query.Where(r => r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix));
-                return await ResourceValuesToDictionary(query);
+                return await ResourceValuesToDictionaryAsync(query);
             });
         }
 
@@ -274,12 +274,12 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public virtual async Task<string> GetResource(string resourceKey)
+        public virtual async Task<string> GetResourceAsync(string resourceKey)
         {
-            var workingLanguage = await _workContext.GetWorkingLanguage();
+            var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
             if (workingLanguage != null)
-                return await GetResource(resourceKey, workingLanguage.Id);
+                return await GetResourceAsync(resourceKey, workingLanguage.Id);
 
             return string.Empty;
         }
@@ -293,7 +293,7 @@ namespace Nop.Services.Localization
         /// <param name="defaultValue">Default value</param>
         /// <param name="returnEmptyIfNotFound">A value indicating whether an empty string will be returned if a resource is not found and default value is set to empty string</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public virtual async Task<string> GetResource(string resourceKey, int languageId,
+        public virtual async Task<string> GetResourceAsync(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false)
         {
             var result = string.Empty;
@@ -303,7 +303,7 @@ namespace Nop.Services.Localization
             if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
                 //load all records (we know they are cached)
-                var resources = await GetAllResourceValues(languageId, !resourceKey.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix, StringComparison.InvariantCultureIgnoreCase));
+                var resources = await GetAllResourceValuesAsync(languageId, !resourceKey.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix, StringComparison.InvariantCultureIgnoreCase));
                 if (resources.ContainsKey(resourceKey))
                 {
                     result = resources[resourceKey].Value;
@@ -320,7 +320,7 @@ namespace Nop.Services.Localization
                           && l.LanguageId == languageId
                     select l.ResourceValue;
 
-                var lsr = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+                var lsr = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
 
                 if (lsr != null)
                     result = lsr;
@@ -330,7 +330,7 @@ namespace Nop.Services.Localization
                 return result;
 
             if (logIfNotFound)
-                await _logger.Warning($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
+                await _logger.WarningAsync($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
 
             if (!string.IsNullOrEmpty(defaultValue))
             {
@@ -350,7 +350,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
-        public virtual async Task<string> ExportResourcesToXml(Language language)
+        public virtual async Task<string> ExportResourcesToXmlAsync(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
@@ -370,7 +370,7 @@ namespace Nop.Services.Localization
             await xmlWriter.WriteAttributeStringAsync("Name", language.Name);
             await xmlWriter.WriteAttributeStringAsync("SupportedVersion", NopVersion.CURRENT_VERSION);
 
-            var resources = await GetAllResources(language.Id);
+            var resources = await GetAllResourcesAsync(language.Id);
             foreach (var resource in resources)
             {
                 await xmlWriter.WriteStartElementAsync("LocaleResource");
@@ -392,7 +392,7 @@ namespace Nop.Services.Localization
         /// <param name="language">Language</param>
         /// <param name="xmlStreamReader">Stream reader of XML file</param>
         /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
-        public virtual async Task ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
+        public virtual async Task ImportResourcesFromXmlAsync(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
@@ -427,11 +427,11 @@ namespace Nop.Services.Localization
                 }
             }
 
-            await _lsrRepository.Update(lrsToUpdateList, false);
-            await _lsrRepository.Insert(lrsToInsertList.Values.ToList(), false);
+            await _lsrRepository.UpdateAsync(lrsToUpdateList, false);
+            await _lsrRepository.InsertAsync(lrsToInsertList.Values.ToList(), false);
 
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+            await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
@@ -445,7 +445,7 @@ namespace Nop.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public virtual async Task<TPropType> GetLocalized<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
+        public virtual async Task<TPropType> GetLocalizedAsync<TEntity, TPropType>(TEntity entity, Expression<Func<TEntity, TPropType>> keySelector,
             int? languageId = null, bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where TEntity : BaseEntity, ILocalizedEntity
         {
@@ -464,7 +464,7 @@ namespace Nop.Services.Localization
             var localeKeyGroup = entity.GetType().Name;
             var localeKey = propInfo.Name;
 
-            var workingLanguage = await _workContext.GetWorkingLanguage();
+            var workingLanguage = await _workContext.GetWorkingLanguageAsync();
 
             if (!languageId.HasValue)
                 languageId = workingLanguage.Id;
@@ -475,7 +475,7 @@ namespace Nop.Services.Localization
                 var loadLocalizedValue = true;
                 if (ensureTwoPublishedLanguages)
                 {
-                    var totalPublishedLanguages = (await _languageService.GetAllLanguages()).Count;
+                    var totalPublishedLanguages = (await _languageService.GetAllLanguagesAsync()).Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }
 
@@ -483,7 +483,7 @@ namespace Nop.Services.Localization
                 if (loadLocalizedValue)
                 {
                     resultStr = await _localizedEntityService
-                        .GetLocalizedValue(languageId.Value, entity.Id, localeKeyGroup, localeKey);
+                        .GetLocalizedValueAsync(languageId.Value, entity.Id, localeKeyGroup, localeKey);
                     if (!string.IsNullOrEmpty(resultStr))
                         result = CommonHelper.To<TPropType>(resultStr);
                 }
@@ -509,18 +509,18 @@ namespace Nop.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
-        public virtual async Task<string> GetLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
+        public virtual async Task<string> GetLocalizedSettingAsync<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
             int languageId, int storeId, bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where TSettings : ISettings, new()
         {
             var key = _settingService.GetSettingKey(settings, keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = await _settingService.GetSetting(key, storeId: storeId, loadSharedValueIfNotFound: true);
+            var setting = await _settingService.GetSettingAsync(key, storeId: storeId, loadSharedValueIfNotFound: true);
             if (setting == null)
                 return null;
 
-            return await GetLocalized(setting, x => x.Value, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
+            return await GetLocalizedAsync(setting, x => x.Value, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
         /// <summary>
@@ -532,17 +532,17 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="value">Localized value</param>
         /// <returns>Localized property</returns>
-        public virtual async Task SaveLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
+        public virtual async Task SaveLocalizedSettingAsync<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
             int languageId, string value) where TSettings : ISettings, new()
         {
             var key = _settingService.GetSettingKey(settings, keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = await _settingService.GetSetting(key);
+            var setting = await _settingService.GetSettingAsync(key);
             if (setting == null)
                 return;
 
-            await _localizedEntityService.SaveLocalizedValue(setting, x => x.Value, value, languageId);
+            await _localizedEntityService.SaveLocalizedValueAsync(setting, x => x.Value, value, languageId);
         }
 
         /// <summary>
@@ -552,15 +552,15 @@ namespace Nop.Services.Localization
         /// <param name="enumValue">Enum value</param>
         /// <param name="languageId">Language identifier; pass null to use the current working language</param>
         /// <returns>Localized value</returns>
-        public virtual async Task<string> GetLocalizedEnum<TEnum>(TEnum enumValue, int? languageId = null) where TEnum : struct
+        public virtual async Task<string> GetLocalizedEnumAsync<TEnum>(TEnum enumValue, int? languageId = null) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum)
                 throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            var workingLanguage = await _workContext.GetWorkingLanguage();
+            var workingLanguage = await _workContext.GetWorkingLanguageAsync();
             var resourceName = $"{NopLocalizationDefaults.EnumLocaleStringResourcesPrefix}{typeof(TEnum)}.{enumValue}";
-            var result = await GetResource(resourceName, languageId ?? workingLanguage.Id, false, string.Empty, true);
+            var result = await GetResourceAsync(resourceName, languageId ?? workingLanguage.Id, false, string.Empty, true);
 
             //set default value if required
             if (string.IsNullOrEmpty(result))
@@ -576,15 +576,15 @@ namespace Nop.Services.Localization
         /// <param name="permissionRecord">Permission record</param>
         /// <param name="languageId">Language identifier; pass null to use the current working language</param>
         /// <returns>Localized value</returns>
-        public virtual async Task<string> GetLocalizedPermissionName(PermissionRecord permissionRecord, int? languageId = null)
+        public virtual async Task<string> GetLocalizedPermissionNameAsync(PermissionRecord permissionRecord, int? languageId = null)
         {
             if (permissionRecord == null)
                 throw new ArgumentNullException(nameof(permissionRecord));
 
             //localized value
-            var workingLanguage = await _workContext.GetWorkingLanguage();
+            var workingLanguage = await _workContext.GetWorkingLanguageAsync();
             var resourceName = $"{NopLocalizationDefaults.PermissionLocaleStringResourcesPrefix}{permissionRecord.SystemName}";
-            var result = await GetResource(resourceName, languageId ?? workingLanguage.Id, false, string.Empty, true);
+            var result = await GetResourceAsync(resourceName, languageId ?? workingLanguage.Id, false, string.Empty, true);
 
             //set default value if required
             if (string.IsNullOrEmpty(result))
@@ -597,7 +597,7 @@ namespace Nop.Services.Localization
         /// Save localized name of a permission
         /// </summary>
         /// <param name="permissionRecord">Permission record</param>
-        public virtual async Task SaveLocalizedPermissionName(PermissionRecord permissionRecord)
+        public virtual async Task SaveLocalizedPermissionNameAsync(PermissionRecord permissionRecord)
         {
             if (permissionRecord == null)
                 throw new ArgumentNullException(nameof(permissionRecord));
@@ -605,9 +605,9 @@ namespace Nop.Services.Localization
             var resourceName = $"{NopLocalizationDefaults.PermissionLocaleStringResourcesPrefix}{permissionRecord.SystemName}";
             var resourceValue = permissionRecord.Name;
 
-            foreach (var lang in await _languageService.GetAllLanguages(true))
+            foreach (var lang in await _languageService.GetAllLanguagesAsync(true))
             {
-                var lsr = await GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await GetLocaleStringResourceByNameAsync(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
                     lsr = new LocaleStringResource
@@ -616,12 +616,12 @@ namespace Nop.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    await InsertLocaleStringResource(lsr);
+                    await InsertLocaleStringResourceAsync(lsr);
                 }
                 else
                 {
                     lsr.ResourceValue = resourceValue;
-                    await UpdateLocaleStringResource(lsr);
+                    await UpdateLocaleStringResourceAsync(lsr);
                 }
             }
         }
@@ -630,17 +630,17 @@ namespace Nop.Services.Localization
         /// Delete a localized name of a permission
         /// </summary>
         /// <param name="permissionRecord">Permission record</param>
-        public virtual async Task DeleteLocalizedPermissionName(PermissionRecord permissionRecord)
+        public virtual async Task DeleteLocalizedPermissionNameAsync(PermissionRecord permissionRecord)
         {
             if (permissionRecord == null)
                 throw new ArgumentNullException(nameof(permissionRecord));
 
             var resourceName = $"{NopLocalizationDefaults.PermissionLocaleStringResourcesPrefix}{permissionRecord.SystemName}";
-            foreach (var lang in await _languageService.GetAllLanguages(true))
+            foreach (var lang in await _languageService.GetAllLanguagesAsync(true))
             {
-                var lsr = await GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await GetLocaleStringResourceByNameAsync(resourceName, lang.Id, false);
                 if (lsr != null)
-                    await DeleteLocaleStringResource(lsr);
+                    await DeleteLocaleStringResourceAsync(lsr);
             }
         }
 
@@ -650,14 +650,14 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public virtual async Task AddOrUpdateLocaleResource(string resourceName, string resourceValue, string languageCulture = null)
+        public virtual async Task AddOrUpdateLocaleResourceAsync(string resourceName, string resourceValue, string languageCulture = null)
         {
-            foreach (var lang in await _languageService.GetAllLanguages(true))
+            foreach (var lang in await _languageService.GetAllLanguagesAsync(true))
             {
                 if (!string.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
                     continue;
 
-                var lsr = await GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await GetLocaleStringResourceByNameAsync(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
                     lsr = new LocaleStringResource
@@ -666,12 +666,12 @@ namespace Nop.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    await InsertLocaleStringResource(lsr);
+                    await InsertLocaleStringResourceAsync(lsr);
                 }
                 else
                 {
                     lsr.ResourceValue = resourceValue;
-                    await UpdateLocaleStringResource(lsr);
+                    await UpdateLocaleStringResourceAsync(lsr);
                 }
             }
         }
@@ -681,13 +681,13 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resources">Resource name-value pairs</param>
         /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
-        public virtual async Task AddLocaleResource(IDictionary<string, string> resources, int? languageId = null)
+        public virtual async Task AddLocaleResourceAsync(IDictionary<string, string> resources, int? languageId = null)
         {
             //first delete all previous locales with the passed names if they exist
-            await DeleteLocaleResources(resources.Keys.ToList(), languageId);
+            await DeleteLocaleResourcesAsync(resources.Keys.ToList(), languageId);
 
             //insert new locale resources
-            var locales = (await _languageService.GetAllLanguages(true))
+            var locales = (await _languageService.GetAllLanguagesAsync(true))
                 .Where(language => !languageId.HasValue || language.Id == languageId.Value)
                 .SelectMany(language => resources.Select(resource => new LocaleStringResource
                 {
@@ -697,23 +697,23 @@ namespace Nop.Services.Localization
                 }))
                 .ToList();
 
-            await _lsrRepository.Insert(locales, false);
+            await _lsrRepository.InsertAsync(locales, false);
 
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+            await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
-        public virtual async Task DeleteLocaleResource(string resourceName)
+        public virtual async Task DeleteLocaleResourceAsync(string resourceName)
         {
-            foreach (var lang in await _languageService.GetAllLanguages(true))
+            foreach (var lang in await _languageService.GetAllLanguagesAsync(true))
             {
-                var lsr = await GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                var lsr = await GetLocaleStringResourceByNameAsync(resourceName, lang.Id, false);
                 if (lsr != null)
-                    await DeleteLocaleStringResource(lsr);
+                    await DeleteLocaleStringResourceAsync(lsr);
             }
         }
 
@@ -722,13 +722,13 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceNames">Resource names</param>
         /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
-        public virtual async Task DeleteLocaleResources(IList<string> resourceNames, int? languageId = null)
+        public virtual async Task DeleteLocaleResourcesAsync(IList<string> resourceNames, int? languageId = null)
         {
-            await _lsrRepository.Delete(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
+            await _lsrRepository.DeleteAsync(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
                 resourceNames.Contains(locale.ResourceName, StringComparer.InvariantCultureIgnoreCase));
 
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+            await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
@@ -736,14 +736,14 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="resourceNamePrefix">Resource name prefix</param>
         /// <param name="languageId">Language identifier; pass null to delete resources by prefix from all languages</param>
-        public virtual async Task DeleteLocaleResources(string resourceNamePrefix, int? languageId = null)
+        public virtual async Task DeleteLocaleResourcesAsync(string resourceNamePrefix, int? languageId = null)
         {
-            await _lsrRepository.Delete(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
+            await _lsrRepository.DeleteAsync(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
                 !string.IsNullOrEmpty(locale.ResourceName) &&
                 locale.ResourceName.StartsWith(resourceNamePrefix, StringComparison.InvariantCultureIgnoreCase));
 
             //clear cache
-            await _staticCacheManager.RemoveByPrefix(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
+            await _staticCacheManager.RemoveByPrefixAsync(NopEntityCacheDefaults<LocaleStringResource>.Prefix);
         }
 
         /// <summary>
@@ -754,7 +754,7 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <returns>Localized value</returns>
-        public virtual async Task<string> GetLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, bool returnDefaultValue = true)
+        public virtual async Task<string> GetLocalizedFriendlyNameAsync<TPlugin>(TPlugin plugin, int languageId, bool returnDefaultValue = true)
             where TPlugin : IPlugin
         {
             if (plugin == null)
@@ -766,7 +766,7 @@ namespace Nop.Services.Localization
             var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
             var resourceName = $"{NopLocalizationDefaults.PluginNameLocaleStringResourcesPrefix}{systemName}";
-            var result = await GetResource(resourceName, languageId, false, string.Empty, true);
+            var result = await GetResourceAsync(resourceName, languageId, false, string.Empty, true);
 
             //set default value if required
             if (string.IsNullOrEmpty(result) && returnDefaultValue)
@@ -782,7 +782,7 @@ namespace Nop.Services.Localization
         /// <param name="plugin">Plugin</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        public virtual async Task SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName)
+        public virtual async Task SaveLocalizedFriendlyNameAsync<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName)
             where TPlugin : IPlugin
         {
             if (languageId == 0)
@@ -797,20 +797,20 @@ namespace Nop.Services.Localization
             var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
             var resourceName = $"{NopLocalizationDefaults.PluginNameLocaleStringResourcesPrefix}{systemName}";
-            var resource = await GetLocaleStringResourceByName(resourceName, languageId, false);
+            var resource = await GetLocaleStringResourceByNameAsync(resourceName, languageId, false);
 
             if (resource != null)
             {
                 if (string.IsNullOrWhiteSpace(localizedFriendlyName))
                 {
                     //delete
-                    await DeleteLocaleStringResource(resource);
+                    await DeleteLocaleStringResourceAsync(resource);
                 }
                 else
                 {
                     //update
                     resource.ResourceValue = localizedFriendlyName;
-                    await UpdateLocaleStringResource(resource);
+                    await UpdateLocaleStringResourceAsync(resource);
                 }
             }
             else
@@ -825,7 +825,7 @@ namespace Nop.Services.Localization
                     ResourceName = resourceName,
                     ResourceValue = localizedFriendlyName
                 };
-                await InsertLocaleStringResource(resource);
+                await InsertLocaleStringResourceAsync(resource);
             }
         }
 

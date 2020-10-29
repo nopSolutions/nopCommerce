@@ -73,15 +73,15 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle model received event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(ModelReceivedEvent<BaseNopModel> eventMessage)
+        public async Task HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
         {
             //get entity by received model
             var entity = eventMessage.Model switch
             {
-                CustomerModel customerModel => (BaseEntity)await _customerService.GetCustomerById(customerModel.Id),
-                CustomerRoleModel customerRoleModel => await _customerService.GetCustomerRoleById(customerRoleModel.Id),
-                ProductModel productModel => await _productService.GetProductById(productModel.Id),
-                CheckoutAttributeModel checkoutAttributeModel => await _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeModel.Id),
+                CustomerModel customerModel => (BaseEntity)await _customerService.GetCustomerByIdAsync(customerModel.Id),
+                CustomerRoleModel customerRoleModel => await _customerService.GetCustomerRoleByIdAsync(customerRoleModel.Id),
+                ProductModel productModel => await _productService.GetProductByIdAsync(productModel.Id),
+                CheckoutAttributeModel checkoutAttributeModel => await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(checkoutAttributeModel.Id),
                 _ => null
             };
             if (entity == null)
@@ -91,7 +91,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
                 return;
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return;
 
             //whether there is a form value for the entity use code
@@ -100,7 +100,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             {
                 //save attribute
                 var entityUseCode = !entityUseCodeValue.ToString().Equals(Guid.Empty.ToString()) ? entityUseCodeValue.ToString() : null;
-                await _genericAttributeService.SaveAttribute(entity, AvalaraTaxDefaults.EntityUseCodeAttribute, entityUseCode);
+                await _genericAttributeService.SaveAttributeAsync(entity, AvalaraTaxDefaults.EntityUseCodeAttribute, entityUseCode);
             }
         }
 
@@ -108,25 +108,25 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// Handle order placed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(OrderPlacedEvent eventMessage)
+        public async Task HandleEventAsync(OrderPlacedEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
 
             //ensure that Avalara tax provider is active
-            var customer = await _customerService.GetCustomerById(eventMessage.Order.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName, customer, eventMessage.Order.StoreId))
                 return;
 
             //create tax transaction
-            await _avalaraTaxManager.CreateOrderTaxTransaction(eventMessage.Order);
+            await _avalaraTaxManager.CreateOrderTaxTransactionAsync(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order refunded event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(OrderRefundedEvent eventMessage)
+        public async Task HandleEventAsync(OrderRefundedEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
@@ -136,14 +136,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //refund tax transaction
-            await _avalaraTaxManager.RefundTaxTransaction(eventMessage.Order, eventMessage.Amount);
+            await _avalaraTaxManager.RefundTaxTransactionAsync(eventMessage.Order, eventMessage.Amount);
         }
 
         /// <summary>
         /// Handle order async Tasked event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(OrderVoidedEvent eventMessage)
+        public async Task HandleEventAsync(OrderVoidedEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
@@ -153,14 +153,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //async Task tax transaction
-            await _avalaraTaxManager.VoidTaxTransaction(eventMessage.Order);
+            await _avalaraTaxManager.VoidTaxTransactionAsync(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order cancelled event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(OrderCancelledEvent eventMessage)
+        public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
         {
             if (eventMessage.Order == null)
                 return;
@@ -170,14 +170,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //async Task tax transaction
-            await _avalaraTaxManager.VoidTaxTransaction(eventMessage.Order);
+            await _avalaraTaxManager.VoidTaxTransactionAsync(eventMessage.Order);
         }
 
         /// <summary>
         /// Handle order deleted event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(EntityDeletedEvent<Order> eventMessage)
+        public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
         {
             if (eventMessage.Entity == null)
                 return;
@@ -187,7 +187,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //delete tax transaction
-            await _avalaraTaxManager.DeleteTaxTransaction(eventMessage.Entity);
+            await _avalaraTaxManager.DeleteTaxTransactionAsync(eventMessage.Entity);
         }
 
         #endregion

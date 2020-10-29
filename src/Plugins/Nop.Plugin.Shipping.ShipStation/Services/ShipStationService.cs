@@ -96,7 +96,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
         #region Utilities
 
-        protected virtual async Task<string> SendGetRequest(string apiUrl)
+        protected virtual async Task<string> SendGetRequestAsync(string apiUrl)
         {
             var request = WebRequest.Create(apiUrl);
 
@@ -110,9 +110,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return await sr.ReadToEndAsync();
         }
 
-        private async Task<int> ConvertFromPrimaryMeasureDimension(decimal quantity, MeasureDimension usedMeasureDimension)
+        private async Task<int> ConvertFromPrimaryMeasureDimensionAsync(decimal quantity, MeasureDimension usedMeasureDimension)
         {
-            return Convert.ToInt32(Math.Ceiling(await _measureService.ConvertFromPrimaryMeasureDimension(quantity, usedMeasureDimension)));
+            return Convert.ToInt32(Math.Ceiling(await _measureService.ConvertFromPrimaryMeasureDimensionAsync(quantity, usedMeasureDimension)));
         }
 
         protected virtual bool TryGetError(string data)
@@ -125,7 +125,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 if (rez.ContainsKey("message"))
                 {
                     flag = true;
-                    _logger.Error(rez["message"]).Wait();
+                    _logger.ErrorAsync(rez["message"]).Wait();
                 }
             }
             catch (JsonSerializationException)
@@ -135,24 +135,24 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return flag;
         }
 
-        protected virtual async Task<IList<ShipStationServiceRate>> GetRates(GetShippingOptionRequest getShippingOptionRequest, string carrierCode)
+        protected virtual async Task<IList<ShipStationServiceRate>> GetRatesAsync(GetShippingOptionRequest getShippingOptionRequest, string carrierCode)
         {
-            var usedWeight = await _measureService.GetMeasureWeightBySystemKeyword(Weight.Units);
+            var usedWeight = await _measureService.GetMeasureWeightBySystemKeywordAsync(Weight.Units);
             if (usedWeight == null)
                 throw new NopException("ShipStatio shipping service. Could not load \"{0}\" measure weight", Weight.Units);
 
-            var usedMeasureDimension = await _measureService.GetMeasureDimensionBySystemKeyword(Dimensions.Units);
+            var usedMeasureDimension = await _measureService.GetMeasureDimensionBySystemKeywordAsync(Dimensions.Units);
             if (usedMeasureDimension == null)
                 throw new NopException("ShipStatio shipping service. Could not load \"{0}\" measure dimension", Dimensions.Units);
 
-            var weight = Convert.ToInt32(Math.Ceiling(await _measureService.ConvertFromPrimaryMeasureWeight(await _shippingService.GetTotalWeight(getShippingOptionRequest), usedWeight)));
+            var weight = Convert.ToInt32(Math.Ceiling(await _measureService.ConvertFromPrimaryMeasureWeightAsync(await _shippingService.GetTotalWeightAsync(getShippingOptionRequest), usedWeight)));
 
             var postData = new RatesRequest
             {
                 CarrierCode = carrierCode,
                 FromPostalCode = getShippingOptionRequest.ZipPostalCodeFrom ?? getShippingOptionRequest.ShippingAddress.ZipPostalCode,
-                ToState = (await _stateProvinceService.GetStateProvinceByAddress(getShippingOptionRequest.ShippingAddress)).Abbreviation,
-                ToCountry = (await _countryService.GetCountryByAddress(getShippingOptionRequest.ShippingAddress)).TwoLetterIsoCode,
+                ToState = (await _stateProvinceService.GetStateProvinceByAddressAsync(getShippingOptionRequest.ShippingAddress)).Abbreviation,
+                ToCountry = (await _countryService.GetCountryByAddressAsync(getShippingOptionRequest.ShippingAddress)).TwoLetterIsoCode,
                 ToPostalCode = getShippingOptionRequest.ShippingAddress.ZipPostalCode,
                 ToCity = getShippingOptionRequest.ShippingAddress.City,
                 Weight = new Weight { Value = weight }
@@ -167,11 +167,11 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 switch (_shipStationSettings.PackingType)
                 {
                     case PackingType.PackByDimensions:
-                        (widthTmp, lengthTmp, heightTmp) = await _shippingService.GetDimensions(getShippingOptionRequest.Items);
+                        (widthTmp, lengthTmp, heightTmp) = await _shippingService.GetDimensionsAsync(getShippingOptionRequest.Items);
 
-                        length = await ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                        height = await ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-                        width = await ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                        length = await ConvertFromPrimaryMeasureDimensionAsync(lengthTmp, usedMeasureDimension);
+                        height = await ConvertFromPrimaryMeasureDimensionAsync(heightTmp, usedMeasureDimension);
+                        width = await ConvertFromPrimaryMeasureDimensionAsync(widthTmp, usedMeasureDimension);
                         break;
                     case PackingType.PackByVolume:
                         if (getShippingOptionRequest.Items.Count == 1 &&
@@ -180,14 +180,14 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                             var sci = getShippingOptionRequest.Items[0].ShoppingCartItem;
                             var product = getShippingOptionRequest.Items[0].Product;
 
-                            (widthTmp, lengthTmp, heightTmp) = await _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
+                            (widthTmp, lengthTmp, heightTmp) = await _shippingService.GetDimensionsAsync(new List<GetShippingOptionRequest.PackageItem>
                             {
                                 new GetShippingOptionRequest.PackageItem(sci, product, 1)
                             });
 
-                            length = await ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                            height = await ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                            width = await ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                            length = await ConvertFromPrimaryMeasureDimensionAsync(lengthTmp, usedMeasureDimension);
+                            height = await ConvertFromPrimaryMeasureDimensionAsync(lengthTmp, usedMeasureDimension);
+                            width = await ConvertFromPrimaryMeasureDimensionAsync(widthTmp, usedMeasureDimension);
                         }
                         else
                         {
@@ -197,14 +197,14 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                                 var sci = item.ShoppingCartItem;
                                 var product = item.Product;
 
-                                (widthTmp, lengthTmp, heightTmp) = await _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
+                                (widthTmp, lengthTmp, heightTmp) = await _shippingService.GetDimensionsAsync(new List<GetShippingOptionRequest.PackageItem>
                                 {
                                     new GetShippingOptionRequest.PackageItem(sci, product, 1)
                                 });
 
-                                var productLength = await ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                                var productHeight = await ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-                                var productWidth = await ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                                var productLength = await ConvertFromPrimaryMeasureDimensionAsync(lengthTmp, usedMeasureDimension);
+                                var productHeight = await ConvertFromPrimaryMeasureDimensionAsync(heightTmp, usedMeasureDimension);
+                                var productWidth = await ConvertFromPrimaryMeasureDimensionAsync(widthTmp, usedMeasureDimension);
                                 totalVolume += item.GetQuantity() * (productHeight * productWidth * productLength);
                             }
 
@@ -261,31 +261,31 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return TryGetError(data) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);
         }
         
-        protected virtual async Task<IList<Carrier>> GetCarriers()
+        protected virtual async Task<IList<Carrier>> GetCarriersAsync()
         {
-            var rez = await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForShortTermCache(_carriersCacheKey), async () =>
+            var rez = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForShortTermCache(_carriersCacheKey), async () =>
             {
-                var data = await SendGetRequest($"{API_URL}{LIST_CARRIERS_CMD}");
+                var data = await SendGetRequestAsync($"{API_URL}{LIST_CARRIERS_CMD}");
                 
                 return TryGetError(data) ? new List<Carrier>() : JsonConvert.DeserializeObject<List<Carrier>>(data);
             });
 
             if (!rez.Any())
-                await _staticCacheManager.Remove(_carriersCacheKey);
+                await _staticCacheManager.RemoveAsync(_carriersCacheKey);
 
             return rez;
         }
         
-        protected virtual async Task<IList<Service>> GetServices()
+        protected virtual async Task<IList<Service>> GetServicesAsync()
         {
-            var services = (await GetCarriers()).SelectMany(carrier =>
+            var services = (await GetCarriersAsync()).SelectMany(carrier =>
             {
                 var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
-                var data = _staticCacheManager.Get(cacheKey, async () => await SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code))).Result;
+                var data = _staticCacheManager.GetAsync(cacheKey, async () => await SendGetRequestAsync(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code))).Result;
                 
                 if (!data.Any())
-                    _staticCacheManager.Remove(cacheKey);
+                    _staticCacheManager.RemoveAsync(cacheKey);
 
                 var serviceList = JsonConvert.DeserializeObject<List<Service>>(data);
                 
@@ -295,7 +295,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return services.ToList();
         }
 
-        protected virtual async Task WriteAddressToXml(XmlWriter writer, bool isBillingAddress, Address address)
+        protected virtual async Task WriteAddressToXmlAsync(XmlWriter writer, bool isBillingAddress, Address address)
         {
             await writer.WriteElementStringAsync("Name", $"{address.FirstName} {address.LastName}");
 
@@ -308,19 +308,19 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("Address1", address.Address1);
             await writer.WriteElementStringAsync("Address2", address.Address2);
             await writer.WriteElementStringAsync("City", address.City);
-            await writer.WriteElementStringAsync("State", (await _stateProvinceService.GetStateProvinceByAddress(address))?.Name ?? string.Empty);
+            await writer.WriteElementStringAsync("State", (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name ?? string.Empty);
             await writer.WriteElementStringAsync("PostalCode ", address.ZipPostalCode);
-            await writer.WriteElementStringAsync("Country", (await _countryService.GetCountryByAddress(address)).TwoLetterIsoCode);
+            await writer.WriteElementStringAsync("Country", (await _countryService.GetCountryByAddressAsync(address)).TwoLetterIsoCode);
         }
 
-        protected virtual async Task WriteOrderItemsToXml(XmlWriter writer, ICollection<OrderItem> orderItems)
+        protected virtual async Task WriteOrderItemsToXmlAsync(XmlWriter writer, ICollection<OrderItem> orderItems)
         {
             await writer.WriteStartElementAsync("Items");
 
             foreach (var orderItem in orderItems)
             {
-                var product = await _productService.GetProductById(orderItem.ProductId);
-                var order = await _orderService.GetOrderById(orderItem.OrderId);
+                var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
+                var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
 
                 //is shippable
                 if (!product.IsShipEnabled)
@@ -343,16 +343,16 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.FlushAsync();
         }
 
-        protected virtual async Task WriteCustomerToXml(XmlWriter writer, Order order, Core.Domain.Customers.Customer customer)
+        protected virtual async Task WriteCustomerToXmlAsync(XmlWriter writer, Order order, Core.Domain.Customers.Customer customer)
         {
             await writer.WriteStartElementAsync("Customer");
 
             await writer.WriteElementStringAsync("CustomerCode", customer.Email);
             await writer.WriteStartElementAsync("BillTo");
-            await WriteAddressToXml(writer, true, await _addressService.GetAddressById(order.BillingAddressId));
+            await WriteAddressToXmlAsync(writer, true, await _addressService.GetAddressByIdAsync(order.BillingAddressId));
             await writer.WriteEndElementAsync();
             await writer.WriteStartElementAsync("ShipTo");
-            await WriteAddressToXml(writer, false, await _addressService.GetAddressById(order.ShippingAddressId ?? order.BillingAddressId));
+            await WriteAddressToXmlAsync(writer, false, await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? order.BillingAddressId));
             await writer.WriteEndElementAsync();
 
             await writer.WriteEndElementAsync();
@@ -376,7 +376,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             }
         }
 
-        protected virtual async Task WriteOrderToXml(XmlWriter writer, Order order)
+        protected virtual async Task WriteOrderToXmlAsync(XmlWriter writer, Order order)
         {
             await writer.WriteStartElementAsync("Order");
             await writer.WriteElementStringAsync("OrderID", order.Id.ToString());
@@ -387,8 +387,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteElementStringAsync("OrderTotal", order.OrderTotal.ToString(CultureInfo.InvariantCulture));
             await writer.WriteElementStringAsync("ShippingAmount", (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax).ToString(CultureInfo.InvariantCulture));
 
-            await WriteCustomerToXml(writer, order, await _customerService.GetCustomerById(order.CustomerId));
-            await WriteOrderItemsToXml(writer, await _orderService.GetOrderItems(order.Id));
+            await WriteCustomerToXmlAsync(writer, order, await _customerService.GetCustomerByIdAsync(order.CustomerId));
+            await WriteOrderItemsToXmlAsync(writer, await _orderService.GetOrderItemsAsync(order.Id));
 
             await writer.WriteEndElementAsync();
             await writer.FlushAsync();
@@ -403,16 +403,16 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// </summary>
         /// <param name="shippingOptionRequest"></param>
         /// <returns></returns>
-        public virtual async Task<IList<ShipStationServiceRate>> GetAllRates(GetShippingOptionRequest shippingOptionRequest)
+        public virtual async Task<IList<ShipStationServiceRate>> GetAllRatesAsync(GetShippingOptionRequest shippingOptionRequest)
         {
-            var services = await GetServices();
+            var services = await GetServicesAsync();
 
             var carrierFilter = services.Select(s => s.CarrierCode).Distinct().ToList();
             var serviceFilter = services.Select(s => s.Code).Distinct().ToList();
-            var carriers = (await GetCarriers()).Where(c => carrierFilter.Contains(c.Code));
+            var carriers = (await GetCarriersAsync()).Where(c => carrierFilter.Contains(c.Code));
 
             return carriers.SelectMany(carrier =>
-                GetRates(shippingOptionRequest, carrier.Code).Result.Where(r => serviceFilter.Contains(r.ServiceCode))).ToList();
+                GetRatesAsync(shippingOptionRequest, carrier.Code).Result.Where(r => serviceFilter.Contains(r.ServiceCode))).ToList();
         }
         
         /// <summary>
@@ -422,16 +422,16 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="carrier">Carrier</param>
         /// <param name="service">Service</param>
         /// <param name="trackingNumber">Tracking number</param>
-        public async Task CreateOrUpdateShipping(string orderNumber, string carrier, string service, string trackingNumber)
+        public async Task CreateOrUpdateShippingAsync(string orderNumber, string carrier, string service, string trackingNumber)
         {
             try
             {
-                var order = await _orderService.GetOrderByGuid(Guid.Parse(orderNumber));
+                var order = await _orderService.GetOrderByGuidAsync(Guid.Parse(orderNumber));
 
                 if (order == null)
                     return;
 
-                var shipments = await _shipmentService.GetShipmentsByOrderId(order.Id);
+                var shipments = await _shipmentService.GetShipmentsByOrderIdAsync(order.Id);
 
                 if (!shipments.Any())
                 {
@@ -445,18 +445,18 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
                     decimal totalWeight = 0;
 
-                    await _shipmentService.InsertShipment(shipment);
+                    await _shipmentService.InsertShipmentAsync(shipment);
 
-                    foreach (var orderItem in await _orderService.GetOrderItems(order.Id))
+                    foreach (var orderItem in await _orderService.GetOrderItemsAsync(order.Id))
                     {
-                        var product = await _productService.GetProductById(orderItem.ProductId);
+                        var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
                         
                         //is shippable
                         if (!product.IsShipEnabled)
                             continue;
 
                         //ensure that this product can be shipped (have at least one item to ship)
-                        var maxQtyToAdd = await _orderService.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
+                        var maxQtyToAdd = await _orderService.GetTotalNumberOfItemsCanBeAddedToShipmentAsync(orderItem);
                         if (maxQtyToAdd <= 0)
                             continue;
 
@@ -477,12 +477,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                             ShipmentId = shipment.Id
                         };
 
-                        await _shipmentService.InsertShipmentItem(shipmentItem);
+                        await _shipmentService.InsertShipmentItemAsync(shipmentItem);
                     }
 
                     shipment.TotalWeight = totalWeight;
 
-                    await _shipmentService.UpdateShipment(shipment);
+                    await _shipmentService.UpdateShipmentAsync(shipment);
                 }
                 else
                 {
@@ -493,17 +493,17 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
                     shipment.TrackingNumber = trackingNumber;
 
-                    await _shipmentService.UpdateShipment(shipment);
+                    await _shipmentService.UpdateShipmentAsync(shipment);
                 }
 
                 order.ShippingStatus = ShippingStatus.Shipped;
                 order.ShippingMethod = string.IsNullOrEmpty(service) ? carrier : service;
 
-                await _orderService.UpdateOrder(order);
+                await _orderService.UpdateOrderAsync(order);
             }
             catch (Exception e)
             {
-                await _logger.Error(e.Message, e);
+                await _logger.ErrorAsync(e.Message, e);
             }
         }
 
@@ -515,7 +515,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>XML view of orders</returns>
-        public async Task<string> GetXmlOrders(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize)
+        public async Task<string> GetXmlOrdersAsync(DateTime? startDate, DateTime? endDate, int pageIndex, int pageSize)
         {
             string xml;
 
@@ -533,9 +533,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             await writer.WriteStartDocumentAsync();
             await writer.WriteStartElementAsync("Orders");
 
-            foreach (var order in await _orderService.SearchOrders(createdFromUtc: startDate, createdToUtc: endDate, storeId: (await _storeContext.GetCurrentStore()).Id, pageIndex: pageIndex, pageSize: 200))
+            foreach (var order in await _orderService.SearchOrdersAsync(createdFromUtc: startDate, createdToUtc: endDate, storeId: (await _storeContext.GetCurrentStoreAsync()).Id, pageIndex: pageIndex, pageSize: 200))
             {
-                await WriteOrderToXml(writer, order);
+                await WriteOrderToXmlAsync(writer, order);
             }
 
             writer.WriteEndElement();

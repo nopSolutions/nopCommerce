@@ -9,7 +9,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "ManufacturersPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Product" asp-action="ProductTags" method="post" id="product-tags-form">

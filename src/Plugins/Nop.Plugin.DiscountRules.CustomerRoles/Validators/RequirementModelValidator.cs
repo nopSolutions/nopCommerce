@@ -14,10 +14,10 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Validators
         {
             RuleFor(model => model.DiscountId)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required").Result);
             RuleFor(model => model.CustomerRoleId)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required").Result);
         }
     }
 }

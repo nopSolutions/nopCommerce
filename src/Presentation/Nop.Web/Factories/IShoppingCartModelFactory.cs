@@ -17,7 +17,7 @@ namespace Nop.Web.Factories
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
         /// <returns>Estimate shipping model</returns>
-        Task<EstimateShippingModel> PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true);
+        Task<EstimateShippingModel> PrepareEstimateShippingModelAsync(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -28,7 +28,7 @@ namespace Nop.Web.Factories
         /// <param name="showDefaultPicture">Whether to show the default picture</param>
         /// <param name="productName">Product name</param>
         /// <returns>Picture model</returns>
-        Task<PictureModel> PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize,bool showDefaultPicture, string productName);
+        Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize,bool showDefaultPicture, string productName);
 
         /// <summary>
         /// Prepare the shopping cart model
@@ -39,7 +39,7 @@ namespace Nop.Web.Factories
         /// <param name="validateCheckoutAttributes">Whether to validate checkout attributes</param>
         /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
         /// <returns>Shopping cart model</returns>
-        Task<ShoppingCartModel> PrepareShoppingCartModel(ShoppingCartModel model,
+        Task<ShoppingCartModel> PrepareShoppingCartModelAsync(ShoppingCartModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true,
             bool validateCheckoutAttributes = false,
             bool prepareAndDisplayOrderReviewData = false);
@@ -51,19 +51,19 @@ namespace Nop.Web.Factories
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="isEditable">Whether model is editable</param>
         /// <returns>Wishlist model</returns>
-        Task<WishlistModel> PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true);
+        Task<WishlistModel> PrepareWishlistModelAsync(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true);
 
         /// <summary>
         /// Prepare the mini shopping cart model
         /// </summary>
         /// <returns>Mini shopping cart model</returns>
-        Task<MiniShoppingCartModel> PrepareMiniShoppingCartModel();
+        Task<MiniShoppingCartModel> PrepareMiniShoppingCartModelAsync();
 
         /// <summary>
         /// Prepare selected checkout attributes
         /// </summary>
         /// <returns>Formatted attributes</returns>
-        Task<string> FormatSelectedCheckoutAttributes();
+        Task<string> FormatSelectedCheckoutAttributesAsync();
 
         /// <summary>
         /// Prepare the order totals model
@@ -71,7 +71,7 @@ namespace Nop.Web.Factories
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="isEditable">Whether model is editable</param>
         /// <returns>Order totals model</returns>
-        Task<OrderTotalsModel> PrepareOrderTotalsModel(IList<ShoppingCartItem> cart, bool isEditable);
+        Task<OrderTotalsModel> PrepareOrderTotalsModelAsync(IList<ShoppingCartItem> cart, bool isEditable);
 
         /// <summary>
         /// Prepare the estimate shipping result model
@@ -82,7 +82,7 @@ namespace Nop.Web.Factories
         /// <param name="zipPostalCode">Zip postal code</param>
         /// <param name="cacheOfferedShippingOptions">Indicates whether to cache offered shipping options</param>
         /// <returns>Estimate shipping result model</returns>
-        Task<EstimateShippingResultModel> PrepareEstimateShippingResultModel(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheOfferedShippingOptions);
+        Task<EstimateShippingResultModel> PrepareEstimateShippingResultModelAsync(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheOfferedShippingOptions);
 
         /// <summary>
         /// Prepare the wishlist email a friend model
@@ -90,6 +90,6 @@ namespace Nop.Web.Factories
         /// <param name="model">Wishlist email a friend model</param>
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <returns>Wishlist email a friend model</returns>
-        Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModel(WishlistEmailAFriendModel model, bool excludeProperties);
+        Task<WishlistEmailAFriendModel> PrepareWishlistEmailAFriendModelAsync(WishlistEmailAFriendModel model, bool excludeProperties);
     }
 }

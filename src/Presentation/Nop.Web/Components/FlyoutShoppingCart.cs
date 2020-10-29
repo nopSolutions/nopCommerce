@@ -27,10 +27,10 @@ namespace Nop.Web.Components
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
 
-            if (!await _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModel();
+            var model = await _shoppingCartModelFactory.PrepareMiniShoppingCartModelAsync();
             return View(model);
         }
     }

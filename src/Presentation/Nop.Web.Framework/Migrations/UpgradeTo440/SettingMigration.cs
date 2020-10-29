@@ -20,13 +20,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             //do not use DI, because it produces exception on the installation process
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            var externalAuthenticationSettings = settingService.LoadSetting<ExternalAuthenticationSettings>().Result;
+            var externalAuthenticationSettings = settingService.LoadSettingAsync<ExternalAuthenticationSettings>().Result;
 
-            if (!settingService.SettingExists(externalAuthenticationSettings, settings => settings.LogErrors).Result)
+            if (!settingService.SettingExistsAsync(externalAuthenticationSettings, settings => settings.LogErrors).Result)
             {
                 externalAuthenticationSettings.LogErrors = false;
 
-                settingService.SaveSetting(externalAuthenticationSettings);
+                settingService.SaveSettingAsync(externalAuthenticationSettings);
             }
         }
 

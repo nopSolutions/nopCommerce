@@ -39,7 +39,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
             var setupInfo = _googleAuthenticatorService.GenerateSetupCode(secretkey);
 
             model.SecretKey = secretkey;
-            model.Account = $"{_googleAuthenticatorSettings.BusinessPrefix} ({_workContext.GetCurrentCustomer().Result.Email})";
+            model.Account = $"{_googleAuthenticatorSettings.BusinessPrefix} ({_workContext.GetCurrentCustomerAsync().Result.Email})";
             model.ManualEntryQrCode = setupInfo.ManualEntryKey;
             model.QrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
 

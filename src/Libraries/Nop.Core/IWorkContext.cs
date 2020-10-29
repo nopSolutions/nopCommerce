@@ -15,13 +15,13 @@ namespace Nop.Core
         /// <summary>
         /// Gets the current customer
         /// </summary>
-        Task<Customer> GetCurrentCustomer();
+        Task<Customer> GetCurrentCustomerAsync();
 
         /// <summary>
         /// Sets the current customer
         /// </summary>
         /// <param name="customer">Current customer</param>
-        Task SetCustomer(Customer customer = null);
+        Task SetCustomerAsync(Customer customer = null);
 
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
@@ -31,39 +31,39 @@ namespace Nop.Core
         /// <summary>
         /// Gets the current vendor (logged-in manager)
         /// </summary>
-        Task<Vendor> GetCurrentVendor();
+        Task<Vendor> GetCurrentVendorAsync();
 
         /// <summary>
         /// Gets current user working language
         /// </summary>
-        Task<Language> GetWorkingLanguage();
+        Task<Language> GetWorkingLanguageAsync();
 
         /// <summary>
         /// Sets current user working language
         /// </summary>
         /// <param name="language">Language</param>
-        Task SetWorkingLanguage(Language language);
+        Task SetWorkingLanguageAsync(Language language);
 
         /// <summary>
         /// Gets or sets current user working currency
         /// </summary>
-        Task<Currency> GetWorkingCurrency();
+        Task<Currency> GetWorkingCurrencyAsync();
 
         /// <summary>
         /// Sets current user working currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        Task SetWorkingCurrency(Currency currency);
+        Task SetWorkingCurrencyAsync(Currency currency);
 
         /// <summary>
         /// Gets or sets current tax display type
         /// </summary>
-        Task<TaxDisplayType> GetTaxDisplayType();
+        Task<TaxDisplayType> GetTaxDisplayTypeAsync();
 
         /// <summary>
         /// Sets current tax display type
         /// </summary>
-        Task SetTaxDisplayType(TaxDisplayType taxDisplayType);
+        Task SetTaxDisplayTypeAsync(TaxDisplayType taxDisplayType);
 
         /// <summary>
         /// Gets or sets value indicating whether we're in admin area

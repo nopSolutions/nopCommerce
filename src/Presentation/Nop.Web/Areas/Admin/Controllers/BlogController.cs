@@ -66,27 +66,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
+        protected virtual async Task SaveStoreMappingsAsync(BlogPost blogPost, BlogPostModel model)
         {
             blogPost.LimitedToStores = model.SelectedStoreIds.Any();
-            await _blogService.UpdateBlogPost(blogPost);
+            await _blogService.UpdateBlogPostAsync(blogPost);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappings(blogPost);
-            var allStores = await _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(blogPost);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMapping(blogPost, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(blogPost, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -104,11 +104,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> BlogPosts(int? filterByBlogPostId)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _blogModelFactory.PrepareBlogContentModel(new BlogContentModel(), filterByBlogPostId);
+            var model = await _blogModelFactory.PrepareBlogContentModelAsync(new BlogContentModel(), filterByBlogPostId);
 
             return View(model);
         }
@@ -116,22 +116,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(BlogPostSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _blogModelFactory.PrepareBlogPostListModel(searchModel);
+            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> BlogPostCreate()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _blogModelFactory.PrepareBlogPostModel(new BlogPostModel(), null);
+            var model = await _blogModelFactory.PrepareBlogPostModelAsync(new BlogPostModel(), null);
 
             return View(model);
         }
@@ -139,27 +139,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> BlogPostCreate(BlogPostModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var blogPost = model.ToEntity<BlogPost>();
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
-                await _blogService.InsertBlogPost(blogPost);
+                await _blogService.InsertBlogPostAsync(blogPost);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewBlogPost",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewBlogPost"), blogPost.Id), blogPost);
+                await _customerActivityService.InsertActivityAsync("AddNewBlogPost",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewBlogPost"), blogPost.Id), blogPost);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeName(blogPost, model.SeName, model.Title, true);
-                await _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
+                var seName = await _urlRecordService.ValidateSeNameAsync(blogPost, model.SeName, model.Title, true);
+                await _urlRecordService.SaveSlugAsync(blogPost, seName, blogPost.LanguageId);
 
                 //Stores
-                await SaveStoreMappings(blogPost, model);
+                await SaveStoreMappingsAsync(blogPost, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
@@ -168,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _blogModelFactory.PrepareBlogPostModel(model, null, true);
+            model = await _blogModelFactory.PrepareBlogPostModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -176,16 +176,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> BlogPostEdit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //try to get a blog post with the specified id
-            var blogPost = await _blogService.GetBlogPostById(id);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(id);
             if (blogPost == null)
                 return RedirectToAction("BlogPosts");
 
             //prepare model
-            var model = await _blogModelFactory.PrepareBlogPostModel(null, blogPost);
+            var model = await _blogModelFactory.PrepareBlogPostModelAsync(null, blogPost);
 
             return View(model);
         }
@@ -193,31 +193,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> BlogPostEdit(BlogPostModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //try to get a blog post with the specified id
-            var blogPost = await _blogService.GetBlogPostById(model.Id);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(model.Id);
             if (blogPost == null)
                 return RedirectToAction("BlogPosts");
 
             if (ModelState.IsValid)
             {
                 blogPost = model.ToEntity(blogPost);
-                await _blogService.UpdateBlogPost(blogPost);
+                await _blogService.UpdateBlogPostAsync(blogPost);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditBlogPost",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditBlogPost"), blogPost.Id), blogPost);
+                await _customerActivityService.InsertActivityAsync("EditBlogPost",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBlogPost"), blogPost.Id), blogPost);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeName(blogPost, model.SeName, model.Title, true);
-                await _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
+                var seName = await _urlRecordService.ValidateSeNameAsync(blogPost, model.SeName, model.Title, true);
+                await _urlRecordService.SaveSlugAsync(blogPost, seName, blogPost.LanguageId);
 
                 //Stores
-                await SaveStoreMappings(blogPost, model);
+                await SaveStoreMappingsAsync(blogPost, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
@@ -226,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
+            model = await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -235,21 +235,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //try to get a blog post with the specified id
-            var blogPost = await _blogService.GetBlogPostById(id);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(id);
             if (blogPost == null)
                 return RedirectToAction("BlogPosts");
 
-            await _blogService.DeleteBlogPost(blogPost);
+            await _blogService.DeleteBlogPostAsync(blogPost);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteBlogPost",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteBlogPost"), blogPost.Id), blogPost);
+            await _customerActivityService.InsertActivityAsync("DeleteBlogPost",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteBlogPost"), blogPost.Id), blogPost);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 
             return RedirectToAction("BlogPosts");
         }
@@ -260,16 +260,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> BlogComments(int? filterByBlogPostId)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //try to get a blog post with the specified id
-            var blogPost = await _blogService.GetBlogPostById(filterByBlogPostId ?? 0);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(filterByBlogPostId ?? 0);
             if (blogPost == null && filterByBlogPostId.HasValue)
                 return RedirectToAction("BlogComments");
 
             //prepare model
-            var model =await _blogModelFactory.PrepareBlogCommentSearchModel(new BlogCommentSearchModel(), blogPost);
+            var model =await _blogModelFactory.PrepareBlogCommentSearchModelAsync(new BlogCommentSearchModel(), blogPost);
 
             return View(model);
         }
@@ -277,11 +277,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Comments(BlogCommentSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _blogModelFactory.PrepareBlogCommentListModel(searchModel, searchModel.BlogPostId);
+            var model = await _blogModelFactory.PrepareBlogCommentListModelAsync(searchModel, searchModel.BlogPostId);
 
             return Json(model);
         }
@@ -289,11 +289,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CommentUpdate(BlogCommentModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //try to get a blog comment with the specified id
-            var comment = await _blogService.GetBlogCommentById(model.Id)
+            var comment = await _blogService.GetBlogCommentByIdAsync(model.Id)
                 ?? throw new ArgumentException("No comment found with the specified id");
 
             var previousIsApproved = comment.IsApproved;
@@ -301,33 +301,33 @@ namespace Nop.Web.Areas.Admin.Controllers
             //fill entity from model
             comment = model.ToEntity(comment);
 
-            await _blogService.UpdateBlogComment(comment);
+            await _blogService.UpdateBlogCommentAsync(comment);
 
             //raise event (only if it wasn't approved before and is approved now)
             if (!previousIsApproved && comment.IsApproved)
-                await _eventPublisher.Publish(new BlogCommentApprovedEvent(comment));
+                await _eventPublisher.PublishAsync(new BlogCommentApprovedEvent(comment));
 
             //activity log
-            await _customerActivityService.InsertActivity("EditBlogComment",
-               string.Format(await _localizationService.GetResource("ActivityLog.EditBlogComment"), comment.Id), comment);
+            await _customerActivityService.InsertActivityAsync("EditBlogComment",
+               string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment"), comment.Id), comment);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> CommentDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             //try to get a blog comment with the specified id
-            var comment = await _blogService.GetBlogCommentById(id)
+            var comment = await _blogService.GetBlogCommentByIdAsync(id)
                 ?? throw new ArgumentException("No comment found with the specified id", nameof(id));
 
-            await _blogService.DeleteBlogComment(comment);
+            await _blogService.DeleteBlogCommentAsync(comment);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteBlogPostComment",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), comment.Id), comment);
+            await _customerActivityService.InsertActivityAsync("DeleteBlogPostComment",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteBlogPostComment"), comment.Id), comment);
 
             return new NullJsonResult();
         }
@@ -335,20 +335,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelectedComments(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
-            var comments = await _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
+            var comments = await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray());
 
-            await _blogService.DeleteBlogComments(comments);
+            await _blogService.DeleteBlogCommentsAsync(comments);
             //activity log
             foreach (var blogComment in comments)
             {
-                await _customerActivityService.InsertActivity("DeleteBlogPostComment",
-                    string.Format(await _localizationService.GetResource("ActivityLog.DeleteBlogPostComment"), blogComment.Id), blogComment);
+                await _customerActivityService.InsertActivityAsync("DeleteBlogPostComment",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteBlogPostComment"), blogComment.Id), blogComment);
             }
 
             return Json(new { Result = true });
@@ -357,27 +357,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ApproveSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
             //filter not approved comments
-            var blogComments = (await _blogService.GetBlogCommentsByIds(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
+            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => !comment.IsApproved);
 
             foreach (var blogComment in blogComments)
             {
                 blogComment.IsApproved = true;
 
-                await _blogService.UpdateBlogComment(blogComment);
+                await _blogService.UpdateBlogCommentAsync(blogComment);
 
                 //raise event 
-                await _eventPublisher.Publish(new BlogCommentApprovedEvent(blogComment));
+                await _eventPublisher.PublishAsync(new BlogCommentApprovedEvent(blogComment));
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditBlogComment",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
+                await _customerActivityService.InsertActivityAsync("EditBlogComment",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
             }
 
             return Json(new { Result = true });
@@ -386,24 +386,24 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DisapproveSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             if (selectedIds == null)
                 return Json(new { Result = true });
 
             //filter approved comments
-            var blogComments = (await _blogService.GetBlogCommentsByIds(selectedIds.ToArray())).Where(comment => comment.IsApproved);
+            var blogComments = (await _blogService.GetBlogCommentsByIdsAsync(selectedIds.ToArray())).Where(comment => comment.IsApproved);
 
             foreach (var blogComment in blogComments)
             {
                 blogComment.IsApproved = false;
 
-                await _blogService.UpdateBlogComment(blogComment);
+                await _blogService.UpdateBlogCommentAsync(blogComment);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditBlogComment",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
+                await _customerActivityService.InsertActivityAsync("EditBlogComment",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditBlogComment"), blogComment.Id), blogComment);
             }
 
             return Json(new { Result = true });

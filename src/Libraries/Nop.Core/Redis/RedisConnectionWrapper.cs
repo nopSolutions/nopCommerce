@@ -53,7 +53,7 @@ namespace Nop.Core.Redis
         /// Get connection to Redis servers
         /// </summary>
         /// <returns></returns>
-        protected async Task<ConnectionMultiplexer> GetConnection()
+        protected async Task<ConnectionMultiplexer> GetConnectionAsync()
         {
             if (_connection != null && _connection.IsConnected)
                 return _connection;
@@ -75,7 +75,7 @@ namespace Nop.Core.Redis
         {
             //get RedLock endpoints
             var configurationOptions = ConfigurationOptions.Parse(_connectionString.Value);
-            var redLockEndPoints = GetEndPoints().Result.Select(endPoint => new RedLockEndPoint
+            var redLockEndPoints = GetEndPointsAsync().Result.Select(endPoint => new RedLockEndPoint
             {
                 EndPoint = endPoint,
                 Password = configurationOptions.Password,
@@ -99,9 +99,9 @@ namespace Nop.Core.Redis
         /// </summary>
         /// <param name="db">Database number</param>
         /// <returns>Redis cache database</returns>
-        public async Task<IDatabase> GetDatabase(int db)
+        public async Task<IDatabase> GetDatabaseAsync(int db)
         {
-            var connection = await GetConnection();
+            var connection = await GetConnectionAsync();
 
             return connection.GetDatabase(db);
         }
@@ -111,9 +111,9 @@ namespace Nop.Core.Redis
         /// </summary>
         /// <param name="endPoint">The network endpoint</param>
         /// <returns>Redis server</returns>
-        public async Task<IServer> GetServer(EndPoint endPoint)
+        public async Task<IServer> GetServerAsync(EndPoint endPoint)
         {
-            var connection = await GetConnection();
+            var connection = await GetConnectionAsync();
 
             return connection.GetServer(endPoint);
         }
@@ -122,9 +122,9 @@ namespace Nop.Core.Redis
         /// Gets all endpoints defined on the server
         /// </summary>
         /// <returns>Array of endpoints</returns>
-        public async Task<EndPoint[]> GetEndPoints()
+        public async Task<EndPoint[]> GetEndPointsAsync()
         {
-            var connection = await GetConnection();
+            var connection = await GetConnectionAsync();
 
             return connection.GetEndPoints();
         }
@@ -133,13 +133,13 @@ namespace Nop.Core.Redis
         /// Delete all the keys of the database
         /// </summary>
         /// <param name="db">Database number</param>
-        public async Task FlushDatabase(RedisDatabaseNumber db)
+        public async Task FlushDatabaseAsync(RedisDatabaseNumber db)
         {
-            var endPoints = await GetEndPoints();
+            var endPoints = await GetEndPointsAsync();
 
             foreach (var endPoint in endPoints)
             {
-                var server = await GetServer(endPoint);
+                var server = await GetServerAsync(endPoint);
                 await server.FlushDatabaseAsync((int)db);
             }
         }

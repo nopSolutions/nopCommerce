@@ -15,20 +15,20 @@ namespace Nop.Services.Orders
         /// Updates a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        Task UpdateReturnRequest(ReturnRequest returnRequest);
+        Task UpdateReturnRequestAsync(ReturnRequest returnRequest);
 
         /// <summary>
         /// Deletes a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        Task DeleteReturnRequest(ReturnRequest returnRequest);
+        Task DeleteReturnRequestAsync(ReturnRequest returnRequest);
 
         /// <summary>
         /// Gets a return request
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
         /// <returns>Return request</returns>
-        Task<ReturnRequest> GetReturnRequestById(int returnRequestId);
+        Task<ReturnRequest> GetReturnRequestByIdAsync(int returnRequestId);
 
         /// <summary>
         /// Search return requests
@@ -44,7 +44,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Return requests</returns>
-        Task<IPagedList<ReturnRequest>> SearchReturnRequests(int storeId = 0, int customerId = 0,
+        Task<IPagedList<ReturnRequest>> SearchReturnRequestsAsync(int storeId = 0, int customerId = 0,
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false);
 
@@ -52,68 +52,68 @@ namespace Nop.Services.Orders
         /// Delete a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
-        Task DeleteReturnRequestAction(ReturnRequestAction returnRequestAction);
+        Task DeleteReturnRequestActionAsync(ReturnRequestAction returnRequestAction);
 
         /// <summary>
         /// Gets all return request actions
         /// </summary>
         /// <returns>Return request actions</returns>
-        Task<IList<ReturnRequestAction>> GetAllReturnRequestActions();
+        Task<IList<ReturnRequestAction>> GetAllReturnRequestActionsAsync();
 
         /// <summary>
         /// Gets a return request action
         /// </summary>
         /// <param name="returnRequestActionId">Return request action identifier</param>
         /// <returns>Return request action</returns>
-        Task<ReturnRequestAction> GetReturnRequestActionById(int returnRequestActionId);
+        Task<ReturnRequestAction> GetReturnRequestActionByIdAsync(int returnRequestActionId);
 
         /// <summary>
         /// Inserts a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        Task InsertReturnRequest(ReturnRequest returnRequest);
+        Task InsertReturnRequestAsync(ReturnRequest returnRequest);
 
         /// <summary>
         /// Inserts a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
-        Task InsertReturnRequestAction(ReturnRequestAction returnRequestAction);
+        Task InsertReturnRequestActionAsync(ReturnRequestAction returnRequestAction);
 
         /// <summary>
         /// Updates the  return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
-        Task UpdateReturnRequestAction(ReturnRequestAction returnRequestAction);
+        Task UpdateReturnRequestActionAsync(ReturnRequestAction returnRequestAction);
 
         /// <summary>
         /// Delete a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
-        Task DeleteReturnRequestReason(ReturnRequestReason returnRequestReason);
+        Task DeleteReturnRequestReasonAsync(ReturnRequestReason returnRequestReason);
 
         /// <summary>
         /// Gets all return request reasons
         /// </summary>
         /// <returns>Return request reasons</returns>
-        Task<IList<ReturnRequestReason>> GetAllReturnRequestReasons();
+        Task<IList<ReturnRequestReason>> GetAllReturnRequestReasonsAsync();
 
         /// <summary>
         /// Gets a return request reason
         /// </summary>
         /// <param name="returnRequestReasonId">Return request reason identifier</param>
         /// <returns>Return request reason</returns>
-        Task<ReturnRequestReason> GetReturnRequestReasonById(int returnRequestReasonId);
+        Task<ReturnRequestReason> GetReturnRequestReasonByIdAsync(int returnRequestReasonId);
 
         /// <summary>
         /// Inserts a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
-        Task InsertReturnRequestReason(ReturnRequestReason returnRequestReason);
+        Task InsertReturnRequestReasonAsync(ReturnRequestReason returnRequestReason);
 
         /// <summary>
         /// Updates the  return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
-        Task UpdateReturnRequestReason(ReturnRequestReason returnRequestReason);
+        Task UpdateReturnRequestReasonAsync(ReturnRequestReason returnRequestReason);
     }
 }

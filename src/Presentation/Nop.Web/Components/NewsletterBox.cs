@@ -22,7 +22,7 @@ namespace Nop.Web.Components
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
 
-            var model = await _newsletterModelFactory.PrepareNewsletterBoxModel();
+            var model = await _newsletterModelFactory.PrepareNewsletterBoxModelAsync();
             return View(model);
         }
     }

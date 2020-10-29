@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Topic search model</param>
         /// <returns>Topic search model</returns>
-        Task<TopicSearchModel> PrepareTopicSearchModel(TopicSearchModel searchModel);
+        Task<TopicSearchModel> PrepareTopicSearchModelAsync(TopicSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged topic list model
         /// </summary>
         /// <param name="searchModel">Topic search model</param>
         /// <returns>Topic list model</returns>
-        Task<TopicListModel> PrepareTopicListModel(TopicSearchModel searchModel);
+        Task<TopicListModel> PrepareTopicListModelAsync(TopicSearchModel searchModel);
 
         /// <summary>
         /// Prepare topic model
@@ -30,6 +30,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="topic">Topic</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Topic model</returns>
-        Task<TopicModel> PrepareTopicModel(TopicModel model, Topic topic, bool excludeProperties = false);
+        Task<TopicModel> PrepareTopicModelAsync(TopicModel model, Topic topic, bool excludeProperties = false);
     }
 }

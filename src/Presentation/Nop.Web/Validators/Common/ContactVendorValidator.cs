@@ -10,14 +10,14 @@ namespace Nop.Web.Validators.Common
     {
         public ContactVendorValidator(ILocalizationService localizationService, CommonSettings commonSettings)
         {
-            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("ContactVendor.Email.Required").Result);
-            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail").Result);
-            RuleFor(x => x.FullName).NotEmpty().WithMessage(localizationService.GetResource("ContactVendor.FullName.Required").Result);
+            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactVendor.Email.Required").Result);
+            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResourceAsync("Common.WrongEmail").Result);
+            RuleFor(x => x.FullName).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactVendor.FullName.Required").Result);
             if (commonSettings.SubjectFieldOnContactUsForm)
             {
-                RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("ContactVendor.Subject.Required").Result);
+                RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactVendor.Subject.Required").Result);
             }
-            RuleFor(x => x.Enquiry).NotEmpty().WithMessage(localizationService.GetResource("ContactVendor.Enquiry.Required").Result);
+            RuleFor(x => x.Enquiry).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactVendor.Enquiry.Required").Result);
         }
     }
 }

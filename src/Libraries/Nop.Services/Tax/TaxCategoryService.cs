@@ -32,18 +32,18 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual async Task DeleteTaxCategory(TaxCategory taxCategory)
+        public virtual async Task DeleteTaxCategoryAsync(TaxCategory taxCategory)
         {
-            await _taxCategoryRepository.Delete(taxCategory);
+            await _taxCategoryRepository.DeleteAsync(taxCategory);
         }
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
         /// <returns>Tax categories</returns>
-        public virtual async Task<IList<TaxCategory>> GetAllTaxCategories()
+        public virtual async Task<IList<TaxCategory>> GetAllTaxCategoriesAsync()
         {
-            var taxCategories = await _taxCategoryRepository.GetAll(query=>
+            var taxCategories = await _taxCategoryRepository.GetAllAsync(query=>
             {
                 return from tc in query
                     orderby tc.DisplayOrder, tc.Id
@@ -58,27 +58,27 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        public virtual async Task<TaxCategory> GetTaxCategoryById(int taxCategoryId)
+        public virtual async Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId)
         {
-            return await _taxCategoryRepository.GetById(taxCategoryId, cache => default);
+            return await _taxCategoryRepository.GetByIdAsync(taxCategoryId, cache => default);
         }
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual async Task InsertTaxCategory(TaxCategory taxCategory)
+        public virtual async Task InsertTaxCategoryAsync(TaxCategory taxCategory)
         {
-            await _taxCategoryRepository.Insert(taxCategory);
+            await _taxCategoryRepository.InsertAsync(taxCategory);
         }
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual async Task UpdateTaxCategory(TaxCategory taxCategory)
+        public virtual async Task UpdateTaxCategoryAsync(TaxCategory taxCategory)
         {
-            await _taxCategoryRepository.Update(taxCategory);
+            await _taxCategoryRepository.UpdateAsync(taxCategory);
         }
 
         #endregion

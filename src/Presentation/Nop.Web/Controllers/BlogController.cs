@@ -95,7 +95,7 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _blogModelFactory.PrepareBlogPostListModel(command);
+            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(command);
             return View("List", model);
         }
 
@@ -104,7 +104,7 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _blogModelFactory.PrepareBlogPostListModel(command);
+            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(command);
             return View("List", model);
         }
 
@@ -113,31 +113,31 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _blogModelFactory.PrepareBlogPostListModel(command);
+            var model = await _blogModelFactory.PrepareBlogPostListModelAsync(command);
             return View("List", model);
         }
 
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var feed = new RssFeed(
-                $"{await _localizationService.GetLocalized(await _storeContext.GetCurrentStore(), x => x.Name)}: Blog",
+                $"{await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)}: Blog",
                 "Blog",
-                new Uri(await _webHelper.GetStoreLocation()),
+                new Uri(await _webHelper.GetStoreLocationAsync()),
                 DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
-                return new RssActionResult(feed, await _webHelper.GetThisPageUrl(false));
+                return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
 
             var items = new List<RssItem>();
-            var blogPosts = await _blogService.GetAllBlogPosts((await _storeContext.GetCurrentStore()).Id, languageId);
+            var blogPosts = await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
-                    $"urn:store:{(await _storeContext.GetCurrentStore()).Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
+                    $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult(feed, await _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
         }
 
         public virtual async Task<IActionResult> BlogPost(int blogPostId)
@@ -145,7 +145,7 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var blogPost = await _blogService.GetBlogPostById(blogPostId);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostId);
             if (blogPost == null)
                 return InvokeHttp404();
 
@@ -153,10 +153,10 @@ namespace Nop.Web.Controllers
                 //availability dates
                 !_blogService.BlogPostIsAvailable(blogPost) ||
                 //Store mapping
-                !await _storeMappingService.Authorize(blogPost);
+                !await _storeMappingService.AuthorizeAsync(blogPost);
             //Check whether the current user has a "Manage blog" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageBlog);
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog);
             if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
                 DisplayEditLink(Url.Action("BlogPostEdit", "Blog", new { id = blogPost.Id, area = AreaNames.Admin }));
 
             var model = new BlogPostModel();
-            await _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
+            await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
 
             return View(model);
         }
@@ -178,19 +178,19 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var blogPost = await _blogService.GetBlogPostById(blogPostId);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("Homepage");
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
-                ModelState.AddModelError("", await _localizationService.GetResource("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResource("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -198,37 +198,37 @@ namespace Nop.Web.Controllers
                 var comment = new BlogComment
                 {
                     BlogPostId = blogPost.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomer()).Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_blogSettings.BlogCommentsMustBeApproved,
-                    StoreId = (await _storeContext.GetCurrentStore()).Id,
+                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
 
-                await _blogService.InsertBlogComment(comment);
+                await _blogService.InsertBlogCommentAsync(comment);
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)
-                    await _workflowMessageService.SendBlogCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendBlogCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                await _customerActivityService.InsertActivity("PublicStore.AddBlogComment",
-                    await _localizationService.GetResource("ActivityLog.PublicStore.AddBlogComment"), comment);
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddBlogComment",
+                    await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddBlogComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)
-                    await _eventPublisher.Publish(new BlogCommentApprovedEvent(comment));
+                    await _eventPublisher.PublishAsync(new BlogCommentApprovedEvent(comment));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.blog.addcomment.result"] = comment.IsApproved
-                    ? await _localizationService.GetResource("Blog.Comments.SuccessfullyAdded")
-                    : await _localizationService.GetResource("Blog.Comments.SeeAfterApproving");
-                return RedirectToRoute("BlogPost", new { SeName = await _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                    ? await _localizationService.GetResourceAsync("Blog.Comments.SuccessfullyAdded")
+                    : await _localizationService.GetResourceAsync("Blog.Comments.SeeAfterApproving");
+                return RedirectToRoute("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form
-            await _blogModelFactory.PrepareBlogPostModel(model, blogPost, true);
+            await _blogModelFactory.PrepareBlogPostModelAsync(model, blogPost, true);
             
             return View(model);
         }

@@ -15,25 +15,26 @@ namespace Nop.Core.Redis
         /// </summary>
         /// <param name="db">Database number</param>
         /// <returns>Redis cache database</returns>
-        Task<IDatabase> GetDatabase(int db);
+        Task<IDatabase> GetDatabaseAsync(int db);
 
         /// <summary>
         /// Obtain a configuration API for an individual server
         /// </summary>
         /// <param name="endPoint">The network endpoint</param>
         /// <returns>Redis server</returns>
-        Task<IServer> GetServer(EndPoint endPoint);
+        Task<IServer> GetServerAsync(EndPoint endPoint);
 
         /// <summary>
         /// Gets all endpoints defined on the server
         /// </summary>
         /// <returns>Array of endpoints</returns>
-        Task<EndPoint[]> GetEndPoints();
+        Task<EndPoint[]> GetEndPointsAsync();
 
+        //TODO: may be deleted
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
         /// <param name="db">Database number</param>
-        Task FlushDatabase(RedisDatabaseNumber db);
+        Task FlushDatabaseAsync(RedisDatabaseNumber db);
     }
 }

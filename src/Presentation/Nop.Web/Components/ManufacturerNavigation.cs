@@ -23,7 +23,7 @@ namespace Nop.Web.Components
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = await _catalogModelFactory.PrepareManufacturerNavigationModel(currentManufacturerId);
+            var model = await _catalogModelFactory.PrepareManufacturerNavigationModelAsync(currentManufacturerId);
             if (!model.Manufacturers.Any())
                 return Content("");
 

@@ -98,94 +98,94 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
+        protected virtual async Task UpdateLocalesAsync(Manufacturer manufacturer, ManufacturerModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(manufacturer,
+                await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(manufacturer,
+                await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
                     x => x.Description,
                     localized.Description,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(manufacturer,
+                await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
                     x => x.MetaKeywords,
                     localized.MetaKeywords,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(manufacturer,
+                await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
                     x => x.MetaDescription,
                     localized.MetaDescription,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(manufacturer,
+                await _localizedEntityService.SaveLocalizedValueAsync(manufacturer,
                     x => x.MetaTitle,
                     localized.MetaTitle,
                     localized.LanguageId);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeName(manufacturer, localized.SeName, localized.Name, false);
-                await _urlRecordService.SaveSlug(manufacturer, seName, localized.LanguageId);
+                var seName = await _urlRecordService.ValidateSeNameAsync(manufacturer, localized.SeName, localized.Name, false);
+                await _urlRecordService.SaveSlugAsync(manufacturer, seName, localized.LanguageId);
             }
         }
 
-        protected virtual async Task UpdatePictureSeoNames(Manufacturer manufacturer)
+        protected virtual async Task UpdatePictureSeoNamesAsync(Manufacturer manufacturer)
         {
-            var picture = await _pictureService.GetPictureById(manufacturer.PictureId);
+            var picture = await _pictureService.GetPictureByIdAsync(manufacturer.PictureId);
             if (picture != null)
-                await _pictureService.SetSeoFilename(picture.Id, await _pictureService.GetPictureSeName(manufacturer.Name));
+                await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(manufacturer.Name));
         }
 
-        protected virtual async Task SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
+        protected virtual async Task SaveManufacturerAclAsync(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
-            await _manufacturerService.UpdateManufacturer(manufacturer);
+            await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
-            var existingAclRecords = await _aclService.GetAclRecords(manufacturer);
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var existingAclRecords = await _aclService.GetAclRecordsAsync(manufacturer);
+            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
             foreach (var customerRole in allCustomerRoles)
             {
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
-                        await _aclService.InsertAclRecord(manufacturer, customerRole.Id);
+                        await _aclService.InsertAclRecordAsync(manufacturer, customerRole.Id);
                 }
                 else
                 {
                     //remove role
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
-                        await _aclService.DeleteAclRecord(aclRecordToDelete);
+                        await _aclService.DeleteAclRecordAsync(aclRecordToDelete);
                 }
             }
         }
 
-        protected virtual async Task SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
+        protected virtual async Task SaveStoreMappingsAsync(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
-            await _manufacturerService.UpdateManufacturer(manufacturer);
+            await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappings(manufacturer);
-            var allStores = await _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(manufacturer);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMapping(manufacturer, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(manufacturer, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -201,11 +201,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareManufacturerSearchModel(new ManufacturerSearchModel());
+            var model = await _manufacturerModelFactory.PrepareManufacturerSearchModelAsync(new ManufacturerSearchModel());
 
             return View(model);
         }
@@ -213,11 +213,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(ManufacturerSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareManufacturerListModel(searchModel);
+            var model = await _manufacturerModelFactory.PrepareManufacturerListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -228,11 +228,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareManufacturerModel(new ManufacturerModel(), null);
+            var model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(new ManufacturerModel(), null);
 
             return View(model);
         }
@@ -240,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(ManufacturerModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -248,41 +248,41 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var manufacturer = model.ToEntity<Manufacturer>();
                 manufacturer.CreatedOnUtc = DateTime.UtcNow;
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-                await _manufacturerService.InsertManufacturer(manufacturer);
+                await _manufacturerService.InsertManufacturerAsync(manufacturer);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeName(manufacturer, model.SeName, manufacturer.Name, true);
-                await _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(manufacturer, model.SeName, manufacturer.Name, true);
+                await _urlRecordService.SaveSlugAsync(manufacturer, model.SeName, 0);
 
                 //locales
-                await UpdateLocales(manufacturer, model);
+                await UpdateLocalesAsync(manufacturer, model);
 
                 //discounts
-                var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+                var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         //manufacturer.AppliedDiscounts.Add(discount);
-                        await _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
+                        await _manufacturerService.InsertDiscountManufacturerMappingAsync(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
 
                 }
 
-                await _manufacturerService.UpdateManufacturer(manufacturer);
+                await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
                 //update picture seo file name
-                await UpdatePictureSeoNames(manufacturer);
+                await UpdatePictureSeoNamesAsync(manufacturer);
 
                 //ACL (customer roles)
-                await SaveManufacturerAcl(manufacturer, model);
+                await SaveManufacturerAclAsync(manufacturer, model);
 
                 //stores
-                await SaveStoreMappings(manufacturer, model);
+                await SaveStoreMappingsAsync(manufacturer, model);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewManufacturer",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name), manufacturer);
+                await _customerActivityService.InsertActivityAsync("AddNewManufacturer",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewManufacturer"), manufacturer.Name), manufacturer);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Manufacturers.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -291,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _manufacturerModelFactory.PrepareManufacturerModel(model, null, true);
+            model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -299,16 +299,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //try to get a manufacturer with the specified id
-            var manufacturer = await _manufacturerService.GetManufacturerById(id);
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
             if (manufacturer == null || manufacturer.Deleted)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareManufacturerModel(null, manufacturer);
+            var model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(null, manufacturer);
 
             return View(model);
         }
@@ -316,11 +316,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(ManufacturerModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //try to get a manufacturer with the specified id
-            var manufacturer = await _manufacturerService.GetManufacturerById(model.Id);
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(model.Id);
             if (manufacturer == null || manufacturer.Deleted)
                 return RedirectToAction("List");
 
@@ -329,57 +329,57 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var prevPictureId = manufacturer.PictureId;
                 manufacturer = model.ToEntity(manufacturer);
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-                await _manufacturerService.UpdateManufacturer(manufacturer);
+                await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeName(manufacturer, model.SeName, manufacturer.Name, true);
-                await _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(manufacturer, model.SeName, manufacturer.Name, true);
+                await _urlRecordService.SaveSlugAsync(manufacturer, model.SeName, 0);
 
                 //locales
-                await UpdateLocales(manufacturer, model);
+                await UpdateLocalesAsync(manufacturer, model);
 
                 //discounts
-                var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+                var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (await _manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
-                            await _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
+                        if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is null)
+                            await _manufacturerService.InsertDiscountManufacturerMappingAsync(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (await _manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
-                            await _manufacturerService.DeleteDiscountManufacturerMapping(discountManufacturerMapping);
+                        if (await _manufacturerService.GetDiscountAppliedToManufacturerAsync(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
+                            await _manufacturerService.DeleteDiscountManufacturerMappingAsync(discountManufacturerMapping);
                     }
                 }
 
-                await _manufacturerService.UpdateManufacturer(manufacturer);
+                await _manufacturerService.UpdateManufacturerAsync(manufacturer);
 
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != manufacturer.PictureId)
                 {
-                    var prevPicture = await _pictureService.GetPictureById(prevPictureId);
+                    var prevPicture = await _pictureService.GetPictureByIdAsync(prevPictureId);
                     if (prevPicture != null)
-                        await _pictureService.DeletePicture(prevPicture);
+                        await _pictureService.DeletePictureAsync(prevPicture);
                 }
 
                 //update picture seo file name
-                await UpdatePictureSeoNames(manufacturer);
+                await UpdatePictureSeoNamesAsync(manufacturer);
 
                 //ACL
-                await SaveManufacturerAcl(manufacturer, model);
+                await SaveManufacturerAclAsync(manufacturer, model);
 
                 //stores
-                await SaveStoreMappings(manufacturer, model);
+                await SaveStoreMappingsAsync(manufacturer, model);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditManufacturer",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
+                await _customerActivityService.InsertActivityAsync("EditManufacturer",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditManufacturer"), manufacturer.Name), manufacturer);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -388,7 +388,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _manufacturerModelFactory.PrepareManufacturerModel(model, manufacturer, true);
+            model = await _manufacturerModelFactory.PrepareManufacturerModelAsync(model, manufacturer, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -397,21 +397,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //try to get a manufacturer with the specified id
-            var manufacturer = await _manufacturerService.GetManufacturerById(id);
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(id);
             if (manufacturer == null)
                 return RedirectToAction("List");
 
-            await _manufacturerService.DeleteManufacturer(manufacturer);
+            await _manufacturerService.DeleteManufacturerAsync(manufacturer);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteManufacturer",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
+            await _customerActivityService.InsertActivityAsync("DeleteManufacturer",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -419,19 +419,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             if (selectedIds != null)
             {
-                var manufacturers = (await _manufacturerService.GetManufacturersByIds(selectedIds.ToArray())).ToList();
-                await _manufacturerService.DeleteManufacturers(manufacturers);
+                var manufacturers = (await _manufacturerService.GetManufacturersByIdsAsync(selectedIds.ToArray())).ToList();
+                await _manufacturerService.DeleteManufacturersAsync(manufacturers);
 
                 manufacturers.ForEach(manufacturer => 
                 {
                     //activity log
-                    _customerActivityService.InsertActivity("DeleteManufacturer",
-                        string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer").Result, manufacturer.Name), manufacturer).Wait();
+                    _customerActivityService.InsertActivityAsync("DeleteManufacturer",
+                        string.Format(_localizationService.GetResourceAsync("ActivityLog.DeleteManufacturer").Result, manufacturer.Name), manufacturer).Wait();
                 });
             }
 
@@ -444,13 +444,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ExportXml()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             try
             {
-                var manufacturers = await _manufacturerService.GetAllManufacturers(showHidden: true);
-                var xml = await _exportManager.ExportManufacturersToXml(manufacturers);
+                var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true);
+                var xml = await _exportManager.ExportManufacturersToXmlAsync(manufacturers);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "manufacturers.xml");
             }
             catch (Exception exc)
@@ -462,12 +462,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ExportXlsx()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             try
             {
-                var bytes = await _exportManager.ExportManufacturersToXlsx((await _manufacturerService.GetAllManufacturers(showHidden: true)).Where(p => !p.Deleted));
+                var bytes = await _exportManager.ExportManufacturersToXlsxAsync((await _manufacturerService.GetAllManufacturersAsync(showHidden: true)).Where(p => !p.Deleted));
 
                 return File(bytes, MimeTypes.TextXlsx, "manufacturers.xlsx");
             }
@@ -481,26 +481,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //a vendor cannot import manufacturers
-            if (await _workContext.GetCurrentVendor() != null)
+            if (await _workContext.GetCurrentVendorAsync() != null)
                 return AccessDeniedView();
 
             try
             {
                 if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    await _importManager.ImportManufacturersFromXlsx(importexcelfile.OpenReadStream());
+                    await _importManager.ImportManufacturersFromXlsxAsync(importexcelfile.OpenReadStream());
                 }
                 else
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)
@@ -517,15 +517,15 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductList(ManufacturerProductSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedDataTablesJson();
 
             //try to get a manufacturer with the specified id
-            var manufacturer = await _manufacturerService.GetManufacturerById(searchModel.ManufacturerId)
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(searchModel.ManufacturerId)
                 ?? throw new ArgumentException("No manufacturer found with the specified id");
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareManufacturerProductListModel(searchModel, manufacturer);
+            var model = await _manufacturerModelFactory.PrepareManufacturerProductListModelAsync(searchModel, manufacturer);
 
             return Json(model);
         }
@@ -533,16 +533,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductUpdate(ManufacturerProductModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //try to get a product manufacturer with the specified id
-            var productManufacturer = await _manufacturerService.GetProductManufacturerById(model.Id)
+            var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(model.Id)
                 ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
             //fill entity from model
             productManufacturer = model.ToEntity(productManufacturer);
-            await _manufacturerService.UpdateProductManufacturer(productManufacturer);
+            await _manufacturerService.UpdateProductManufacturerAsync(productManufacturer);
 
             return new NullJsonResult();
         }
@@ -550,25 +550,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //try to get a product manufacturer with the specified id
-            var productManufacturer = await _manufacturerService.GetProductManufacturerById(id)
+            var productManufacturer = await _manufacturerService.GetProductManufacturerByIdAsync(id)
                 ?? throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
-            await _manufacturerService.DeleteProductManufacturer(productManufacturer);
+            await _manufacturerService.DeleteProductManufacturerAsync(productManufacturer);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> ProductAddPopup(int manufacturerId)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareAddProductToManufacturerSearchModel(new AddProductToManufacturerSearchModel());
+            var model = await _manufacturerModelFactory.PrepareAddProductToManufacturerSearchModelAsync(new AddProductToManufacturerSearchModel());
 
             return View(model);
         }
@@ -576,11 +576,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAddPopupList(AddProductToManufacturerSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _manufacturerModelFactory.PrepareAddProductToManufacturerListModel(searchModel);
+            var model = await _manufacturerModelFactory.PrepareAddProductToManufacturerListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -589,23 +589,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> ProductAddPopup(AddProductToManufacturerModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             //get selected products
-            var selectedProducts = await _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
                 var existingProductmanufacturers = await _manufacturerService
-                    .GetProductManufacturersByManufacturerId(model.ManufacturerId, showHidden: true);
+                    .GetProductManufacturersByManufacturerIdAsync(model.ManufacturerId, showHidden: true);
                 foreach (var product in selectedProducts)
                 {
                     //whether product manufacturer with such parameters already exists
-                    if (_manufacturerService.FindProductManufacturer(existingProductmanufacturers, product.Id, model.ManufacturerId) != null)
+                    if (_manufacturerService.FindProductManufacturerAsync(existingProductmanufacturers, product.Id, model.ManufacturerId) != null)
                         continue;
 
                     //insert the new product manufacturer mapping
-                    await _manufacturerService.InsertProductManufacturer(new ProductManufacturer
+                    await _manufacturerService.InsertProductManufacturerAsync(new ProductManufacturer
                     {
                         ManufacturerId = model.ManufacturerId,
                         ProductId = product.Id,

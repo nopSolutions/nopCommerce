@@ -119,7 +119,7 @@ namespace Nop.Web.Framework.UI
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
-            hash = _urlRecordService.GetSeName(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls).Result;
+            hash = _urlRecordService.GetSeNameAsync(hash, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls).Result;
 
             return hash;
         }
@@ -388,7 +388,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
 
-                    var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
 
                     if (shouldRebuild)
                     {
@@ -401,7 +401,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.Set(cacheKey, false);
+                        _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render
@@ -618,7 +618,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
 
-                    var shouldRebuild = _staticCacheManager.Get(_staticCacheManager.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
 
                     if (shouldRebuild)
                     {
@@ -631,7 +631,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> { bundle });
                         }
 
-                        _staticCacheManager.Set(cacheKey, false);
+                        _staticCacheManager.SetAsync(cacheKey, false);
                     }
 
                     //render

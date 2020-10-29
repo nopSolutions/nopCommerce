@@ -44,7 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Review type search model</param>
         /// <returns>Review type search model</returns>
-        public virtual Task<ReviewTypeSearchModel> PrepareReviewTypeSearchModel(ReviewTypeSearchModel searchModel)
+        public virtual Task<ReviewTypeSearchModel> PrepareReviewTypeSearchModelAsync(ReviewTypeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -60,13 +60,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Review type search model</param>
         /// <returns>Review type list model</returns>
-        public virtual async Task<ReviewTypeListModel> PrepareReviewTypeListModel(ReviewTypeSearchModel searchModel)
+        public virtual async Task<ReviewTypeListModel> PrepareReviewTypeListModelAsync(ReviewTypeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get review types
-            var reviewTypes = (await _reviewTypeService.GetAllReviewTypes()).ToPagedList(searchModel);
+            var reviewTypes = (await _reviewTypeService.GetAllReviewTypesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ReviewTypeListModel().PrepareToGrid(searchModel, reviewTypes, () =>
@@ -85,7 +85,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="reviewType">Review type</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Review type model</returns>
-        public virtual async Task<ReviewTypeModel> PrepareReviewTypeModel(ReviewTypeModel model,
+        public virtual async Task<ReviewTypeModel> PrepareReviewTypeModelAsync(ReviewTypeModel model,
             ReviewType reviewType, bool excludeProperties = false)
         {
             Action<ReviewTypeLocalizedModel, int> localizedModelConfiguration = null;
@@ -98,14 +98,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(reviewType, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalized(reviewType, entity => entity.Description, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Name, languageId, false, false);
+                    locale.Description = await _localizationService.GetLocalizedAsync(reviewType, entity => entity.Description, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

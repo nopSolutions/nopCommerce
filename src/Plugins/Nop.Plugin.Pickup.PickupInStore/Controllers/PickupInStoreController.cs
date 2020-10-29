@@ -70,11 +70,11 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _storePickupPointModelFactory.PrepareStorePickupPointSearchModel(new StorePickupPointSearchModel());
+            var model = await _storePickupPointModelFactory.PrepareStorePickupPointSearchModelAsync(new StorePickupPointSearchModel());
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml", model);
         }
@@ -82,18 +82,18 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         [HttpPost]
         public async Task<IActionResult> List(StorePickupPointSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModel(searchModel);
+            var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var model = new StorePickupPointModel
@@ -108,23 +108,23 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 }
             };
 
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var country in await _countryService.GetAllCountries(showHidden: true))
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"), Value = "0" });
+            foreach (var country in await _countryService.GetAllCountriesAsync(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = country.Name, Value = country.Id.ToString() });
 
             var states = !model.Address.CountryId.HasValue ? new List<StateProvince>()
-                : await _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true);
+                : await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.Address.CountryId.Value, showHidden: true);
             if (states.Any())
             {
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectState"), Value = "0" });
                 foreach (var state in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = state.Name, Value = state.Id.ToString() });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Address.Other"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.Other"), Value = "0" });
 
-            model.AvailableStores.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores"), Value = "0" });
-            foreach (var store in await _storeService.GetAllStores())
+            model.AvailableStores.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.StoreScope.AllStores"), Value = "0" });
+            foreach (var store in await _storeService.GetAllStoresAsync())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
@@ -133,7 +133,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(StorePickupPointModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var address = new Address
@@ -146,7 +146,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 ZipPostalCode = model.Address.ZipPostalCode,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            await _addressService.InsertAddress(address);
+            await _addressService.InsertAddressAsync(address);
 
             var pickupPoint = new StorePickupPoint
             {
@@ -161,7 +161,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 Longitude = model.Longitude,
                 TransitDays = model.TransitDays
             };
-            await _storePickupPointService.InsertStorePickupPoint(pickupPoint);
+            await _storePickupPointService.InsertStorePickupPointAsync(pickupPoint);
 
             ViewBag.RefreshPage = true;
 
@@ -170,10 +170,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var pickupPoint = await _storePickupPointService.GetStorePickupPointById(id);
+            var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
             if (pickupPoint == null)
                 return RedirectToAction("Configure");
 
@@ -191,7 +191,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 TransitDays = pickupPoint.TransitDays
             };
 
-            var address = await _addressService.GetAddressById(pickupPoint.AddressId);
+            var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId);
             if (address != null)
             {
                 model.Address = new AddressModel
@@ -210,23 +210,23 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 };
             }
 
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var country in await _countryService.GetAllCountries(showHidden: true))
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectCountry"), Value = "0" });
+            foreach (var country in await _countryService.GetAllCountriesAsync(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = country.Name, Value = country.Id.ToString(), Selected = (address != null && country.Id == address.CountryId) });
 
             var states = !model.Address.CountryId.HasValue ? new List<StateProvince>()
-                : await _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true);
+                : await _stateProvinceService.GetStateProvincesByCountryIdAsync(model.Address.CountryId.Value, showHidden: true);
             if (states.Any())
             {
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.SelectState"), Value = "0" });
                 foreach (var state in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = state.Name, Value = state.Id.ToString(), Selected = (address != null && state.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Address.Other"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Address.Other"), Value = "0" });
 
-            model.AvailableStores.Add(new SelectListItem { Text = await _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores"), Value = "0" });
-            foreach (var store in await _storeService.GetAllStores())
+            model.AvailableStores.Add(new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Configuration.Settings.StoreScope.AllStores"), Value = "0" });
+            foreach (var store in await _storeService.GetAllStoresAsync())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString(), Selected = store.Id == model.StoreId });
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
@@ -235,17 +235,17 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(StorePickupPointModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return await Edit(model.Id);
 
-            var pickupPoint = await _storePickupPointService.GetStorePickupPointById(model.Id);
+            var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(model.Id);
             if (pickupPoint == null)
                 return RedirectToAction("Configure");
 
-            var address = await _addressService.GetAddressById(pickupPoint.AddressId) ?? new Address { CreatedOnUtc = DateTime.UtcNow };
+            var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId) ?? new Address { CreatedOnUtc = DateTime.UtcNow };
             address.Address1 = model.Address.Address1;
             address.City = model.Address.City;
             address.County = model.Address.County;
@@ -253,9 +253,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             address.StateProvinceId = model.Address.StateProvinceId;
             address.ZipPostalCode = model.Address.ZipPostalCode;
             if (address.Id > 0)
-                await _addressService.UpdateAddress(address);
+                await _addressService.UpdateAddressAsync(address);
             else
-                await _addressService.InsertAddress(address);
+                await _addressService.InsertAddressAsync(address);
 
             pickupPoint.Name = model.Name;
             pickupPoint.Description = model.Description;
@@ -267,7 +267,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             pickupPoint.Latitude = model.Latitude;
             pickupPoint.Longitude = model.Longitude;
             pickupPoint.TransitDays = model.TransitDays;
-            await _storePickupPointService.UpdateStorePickupPoint(pickupPoint);
+            await _storePickupPointService.UpdateStorePickupPointAsync(pickupPoint);
 
             ViewBag.RefreshPage = true;
 
@@ -277,18 +277,18 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var pickupPoint = await _storePickupPointService.GetStorePickupPointById(id);
+            var pickupPoint = await _storePickupPointService.GetStorePickupPointByIdAsync(id);
             if (pickupPoint == null)
                 return RedirectToAction("Configure");
 
-            var address = await _addressService.GetAddressById(pickupPoint.AddressId);
+            var address = await _addressService.GetAddressByIdAsync(pickupPoint.AddressId);
             if (address != null)
-                await _addressService.DeleteAddress(address);
+                await _addressService.DeleteAddressAsync(address);
 
-            await _storePickupPointService.DeleteStorePickupPoint(pickupPoint);
+            await _storePickupPointService.DeleteStorePickupPointAsync(pickupPoint);
 
             return new NullJsonResult();
         }

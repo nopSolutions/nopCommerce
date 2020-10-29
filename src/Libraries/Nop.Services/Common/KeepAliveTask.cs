@@ -27,7 +27,7 @@ namespace Nop.Services.Common
         /// <summary>
         /// Executes a task
         /// </summary>
-        public async System.Threading.Tasks.Task Execute()
+        public async System.Threading.Tasks.Task ExecuteAsync()
         {
             await _storeHttpClient.KeepAliveAsync();
         }

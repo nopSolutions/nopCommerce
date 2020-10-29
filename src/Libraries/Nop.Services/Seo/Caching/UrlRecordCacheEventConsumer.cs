@@ -13,10 +13,10 @@ namespace Nop.Services.Seo.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(UrlRecord entity)
+        protected override async Task ClearCacheAsync(UrlRecord entity)
         {
-            await Remove(NopSeoDefaults.UrlRecordCacheKey, entity.EntityId, entity.EntityName, entity.LanguageId);
-            await Remove(NopSeoDefaults.UrlRecordBySlugCacheKey, entity.Slug);
+            await RemoveAsync(NopSeoDefaults.UrlRecordCacheKey, entity.EntityId, entity.EntityName, entity.LanguageId);
+            await RemoveAsync(NopSeoDefaults.UrlRecordBySlugCacheKey, entity.Slug);
         }
     }
 }

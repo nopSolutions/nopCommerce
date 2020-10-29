@@ -108,7 +108,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     }
                     catch (Exception exception)
                     {
-                        _logger.Error("Error occurred on CAPTCHA validation", exception, _workContext.GetCurrentCustomer().Result).Wait();
+                        _logger.ErrorAsync("Error occurred on CAPTCHA validation", exception, _workContext.GetCurrentCustomerAsync().Result).Wait();
                     }
                 }
 

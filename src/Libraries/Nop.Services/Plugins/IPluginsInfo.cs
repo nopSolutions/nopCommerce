@@ -12,13 +12,13 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Save plugins info to the file
         /// </summary>
-        Task Save();
+        Task SaveAsync();
 
         /// <summary>
         /// Get plugins info
         /// </summary>
         /// <returns>True if data are loaded, otherwise False</returns>
-        Task<bool> LoadPluginInfo();
+        Task<bool> LoadPluginInfoAsync();
 
         /// <summary>
         /// Create copy from another instance of IPluginsInfo interface

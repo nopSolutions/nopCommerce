@@ -10,7 +10,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "VendorsPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">

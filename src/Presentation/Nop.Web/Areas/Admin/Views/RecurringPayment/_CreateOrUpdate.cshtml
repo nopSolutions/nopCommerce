@@ -2,10 +2,10 @@
 
 @{
     const string hideInfoBlockAttributeName = "RecurringPaymentPage.HideInfoBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
 
     const string hideHistoryBlockAttributeName = "RecurringPaymentPage.HideHistoryBlock";
-    var hideHistoryBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideHistoryBlockAttributeName, defaultValue: true);
+    var hideHistoryBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideHistoryBlockAttributeName, defaultValue: true);
 }
 
 <div asp-validation-summary="All"></div>

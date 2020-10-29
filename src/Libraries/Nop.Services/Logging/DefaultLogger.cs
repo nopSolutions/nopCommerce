@@ -79,29 +79,29 @@ namespace Nop.Services.Logging
         /// Deletes a log item
         /// </summary>
         /// <param name="log">Log item</param>
-        public virtual async Task DeleteLog(Log log)
+        public virtual async Task DeleteLogAsync(Log log)
         {
             if (log == null)
                 throw new ArgumentNullException(nameof(log));
 
-            await _logRepository.Delete(log, false);
+            await _logRepository.DeleteAsync(log, false);
         }
 
         /// <summary>
         /// Deletes a log items
         /// </summary>
         /// <param name="logs">Log items</param>
-        public virtual async Task DeleteLogs(IList<Log> logs)
+        public virtual async Task DeleteLogsAsync(IList<Log> logs)
         {
-            await _logRepository.Delete(logs, false);
+            await _logRepository.DeleteAsync(logs, false);
         }
 
         /// <summary>
         /// Clears a log
         /// </summary>
-        public virtual async Task ClearLog()
+        public virtual async Task ClearLogAsync()
         {
-            await _logRepository.Truncate();
+            await _logRepository.TruncateAsync();
         }
 
         /// <summary>
@@ -114,11 +114,11 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        public virtual async Task<IPagedList<Log>> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+        public virtual async Task<IPagedList<Log>> GetAllLogsAsync(DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = "", LogLevel? logLevel = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var logs = await _logRepository.GetAllPaged(query =>
+            var logs = await _logRepository.GetAllPagedAsync(query =>
             {
                 if (fromUtc.HasValue)
                     query = query.Where(l => fromUtc.Value <= l.CreatedOnUtc);
@@ -145,9 +145,9 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual async Task<Log> GetLogById(int logId)
+        public virtual async Task<Log> GetLogByIdAsync(int logId)
         {
-            return await _logRepository.GetById(logId);
+            return await _logRepository.GetByIdAsync(logId);
         }
 
         /// <summary>
@@ -155,9 +155,9 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        public virtual async Task<IList<Log>> GetLogByIds(int[] logIds)
+        public virtual async Task<IList<Log>> GetLogByIdsAsync(int[] logIds)
         {
-            return await _logRepository.GetByIds(logIds);
+            return await _logRepository.GetByIdsAsync(logIds);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Nop.Services.Logging
         /// <param name="fullMessage">The full message</param>
         /// <param name="customer">The customer to associate log record with</param>
         /// <returns>A log item</returns>
-        public virtual async Task<Log> InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
+        public virtual async Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
             //check ignore word/phrase list?
             if (IgnoreLog(shortMessage) || IgnoreLog(fullMessage))
@@ -179,14 +179,14 @@ namespace Nop.Services.Logging
                 LogLevel = logLevel,
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
-                IpAddress = await _webHelper.GetCurrentIpAddress(),
+                IpAddress = await _webHelper.GetCurrentIpAddressAsync(),
                 CustomerId = customer?.Id,
-                PageUrl = await _webHelper.GetThisPageUrl(true),
-                ReferrerUrl = await _webHelper.GetUrlReferrer(),
+                PageUrl = await _webHelper.GetThisPageUrlAsync(true),
+                ReferrerUrl = await _webHelper.GetUrlReferrerAsync(),
                 CreatedOnUtc = DateTime.UtcNow
             };
 
-            await _logRepository.Insert(log, false);
+            await _logRepository.InsertAsync(log, false);
 
             return log;
         }
@@ -197,14 +197,14 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
-        public virtual async Task Information(string message, Exception exception = null, Customer customer = null)
+        public virtual async Task InformationAsync(string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (IsEnabled(LogLevel.Information))
-                await InsertLog(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
+                await InsertLogAsync(LogLevel.Information, message, exception?.ToString() ?? string.Empty, customer);
         }
 
         /// <summary>
@@ -213,14 +213,14 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
-        public virtual async Task Warning(string message, Exception exception = null, Customer customer = null)
+        public virtual async Task WarningAsync(string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (IsEnabled(LogLevel.Warning))
-                await InsertLog(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, customer);
+                await InsertLogAsync(LogLevel.Warning, message, exception?.ToString() ?? string.Empty, customer);
         }
 
         /// <summary>
@@ -229,14 +229,14 @@ namespace Nop.Services.Logging
         /// <param name="message">Message</param>
         /// <param name="exception">Exception</param>
         /// <param name="customer">Customer</param>
-        public virtual async Task Error(string message, Exception exception = null, Customer customer = null)
+        public virtual async Task ErrorAsync(string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception
             if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (IsEnabled(LogLevel.Error))
-                await InsertLog(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
+                await InsertLogAsync(LogLevel.Error, message, exception?.ToString() ?? string.Empty, customer);
         }
 
         #endregion

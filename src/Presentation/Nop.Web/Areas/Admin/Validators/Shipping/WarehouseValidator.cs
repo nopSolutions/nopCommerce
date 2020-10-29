@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Shipping
     {
         public WarehouseValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Shipping.Warehouses.Fields.Name.Required").Result);
 
             SetDatabaseValidationRules<Warehouse>(dataProvider);
         }

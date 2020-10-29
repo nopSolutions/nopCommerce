@@ -11,11 +11,11 @@ namespace Nop.Core
         /// <summary>
         /// Gets the current store
         /// </summary>
-        Task<Store> GetCurrentStore();
+        Task<Store> GetCurrentStoreAsync();
 
         /// <summary>
         /// Gets active store scope configuration
         /// </summary>
-        Task<int> GetActiveStoreScopeConfiguration();
+        Task<int> GetActiveStoreScopeConfigurationAsync();
     }
 }

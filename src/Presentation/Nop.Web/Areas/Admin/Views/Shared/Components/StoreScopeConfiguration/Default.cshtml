@@ -3,7 +3,7 @@
 @inject Nop.Core.IWebHelper webHelper
 
 @{
-    var returnUrl = webHelper.GetRawUrl(Context.Request);
+    var returnUrl = webHelper.GetRawUrlAsync(Context.Request);
     var stores = Model.Stores.Select(store => new SelectListItem
     {
         Text = store.Name,

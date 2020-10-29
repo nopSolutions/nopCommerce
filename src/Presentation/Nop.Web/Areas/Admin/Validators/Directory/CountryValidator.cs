@@ -13,22 +13,22 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.Name.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.Name.Required").Result);
             RuleFor(p => p.Name).Length(1, 100);
 
             RuleFor(x => x.TwoLetterIsoCode)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Required").Result);
             RuleFor(x => x.TwoLetterIsoCode)
                 .Length(2)
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Length").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Length").Result);
 
             RuleFor(x => x.ThreeLetterIsoCode)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Required").Result);
             RuleFor(x => x.ThreeLetterIsoCode)
                 .Length(3)
-                .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Length").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Length").Result);
 
             SetDatabaseValidationRules<Country>(dataProvider);
         }

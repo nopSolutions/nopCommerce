@@ -13,9 +13,9 @@ namespace Nop.Services.Security.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(PermissionRecord entity)
+        protected override async Task ClearCacheAsync(PermissionRecord entity)
         {
-            await RemoveByPrefix(NopSecurityDefaults.PermissionAllowedPrefix, entity.SystemName);
+            await RemoveByPrefixAsync(NopSecurityDefaults.PermissionAllowedPrefix, entity.SystemName);
         }
     }
 }

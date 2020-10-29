@@ -65,11 +65,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionSearchModel(new NewsletterSubscriptionSearchModel());
+            var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionSearchModelAsync(new NewsletterSubscriptionSearchModel());
 
             return View(model);
         }
@@ -77,11 +77,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SubscriptionList(NewsletterSubscriptionSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModel(searchModel);
+            var model = await _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -89,17 +89,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SubscriptionUpdate(NewsletterSubscriptionModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
+            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByIdAsync(model.Id);
 
             //fill entity from model
             subscription = model.ToEntity(subscription);
-            await _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
+            await _newsLetterSubscriptionService.UpdateNewsLetterSubscriptionAsync(subscription);
 
             return new NullJsonResult();
         }
@@ -107,13 +107,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> SubscriptionDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(id)
+            var subscription = await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByIdAsync(id)
                 ?? throw new ArgumentException("No subscription found with the specified id", nameof(id));
 
-            await _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
+            await _newsLetterSubscriptionService.DeleteNewsLetterSubscriptionAsync(subscription);
 
             return new NullJsonResult();
         }
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("exportcsv")]
         public virtual async Task<IActionResult> ExportCsv(NewsletterSubscriptionSearchModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
             bool? isActive = null;
@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var endDateValue = model.EndDate == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
+            var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(model.SearchEmail,
                 startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId);
 
             var result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
@@ -149,21 +149,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ImportCsv(IFormFile importcsvfile)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
             try
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    var count = await _importManager.ImportNewsletterSubscribersFromTxt(importcsvfile.OpenReadStream());
+                    var count = await _importManager.ImportNewsletterSubscribersFromTxtAsync(importcsvfile.OpenReadStream());
 
-                    _notificationService.SuccessNotification(string.Format(await _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
+                    _notificationService.SuccessNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
 
                     return RedirectToAction("List");
                 }
 
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Common.UploadFile"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
                 return RedirectToAction("List");
             }
             catch (Exception exc)

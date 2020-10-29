@@ -53,7 +53,7 @@ namespace Nop.Services.Themes
         /// Get all themes
         /// </summary>
         /// <returns>List of the theme descriptor</returns>
-        public async Task<IList<ThemeDescriptor>> GetThemes()
+        public async Task<IList<ThemeDescriptor>> GetThemesAsync()
         {
             if (_themeDescriptors != null)
                 return _themeDescriptors;
@@ -64,7 +64,7 @@ namespace Nop.Services.Themes
             var themeDirectoryPath = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
             foreach (var descriptionFile in _fileProvider.GetFiles(themeDirectoryPath, NopPluginDefaults.ThemeDescriptionFileName, false))
             {
-                var text = await _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
+                var text = await _fileProvider.ReadAllTextAsync(descriptionFile, Encoding.UTF8);
                 if (string.IsNullOrEmpty(text))
                     continue;
 
@@ -86,12 +86,12 @@ namespace Nop.Services.Themes
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>Theme descriptor</returns>
-        public async Task<ThemeDescriptor> GetThemeBySystemName(string systemName)
+        public async Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            return (await GetThemes()).SingleOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return (await GetThemesAsync()).SingleOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
@@ -99,12 +99,12 @@ namespace Nop.Services.Themes
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>True if the theme exists; otherwise false</returns>
-        public async Task<bool> ThemeExists(string systemName)
+        public async Task<bool> ThemeExistsAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return false;
 
-            return (await GetThemes()).Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return (await GetThemesAsync()).Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         #endregion

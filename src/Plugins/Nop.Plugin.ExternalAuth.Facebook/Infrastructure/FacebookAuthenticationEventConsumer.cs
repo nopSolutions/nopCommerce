@@ -34,7 +34,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
         /// Handle event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
+        public async Task HandleEventAsync(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
         {
             if (eventMessage?.Customer == null || eventMessage.AuthenticationParameters == null)
                 return;
@@ -46,11 +46,11 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
             //store some of the customer fields
             var firstName = eventMessage.AuthenticationParameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.GivenName)?.Value;
             if (!string.IsNullOrEmpty(firstName))
-                await _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
+                await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.FirstNameAttribute, firstName);
 
             var lastName = eventMessage.AuthenticationParameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value;
             if (!string.IsNullOrEmpty(lastName))
-                await _genericAttributeService.SaveAttribute(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);
+                await _genericAttributeService.SaveAttributeAsync(eventMessage.Customer, NopCustomerDefaults.LastNameAttribute, lastName);
         }
 
         #endregion

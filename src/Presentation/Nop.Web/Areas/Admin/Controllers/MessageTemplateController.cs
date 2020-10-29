@@ -64,53 +64,53 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
+        protected virtual async Task UpdateLocalesAsync(MessageTemplate mt, MessageTemplateModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(mt,
+                await _localizedEntityService.SaveLocalizedValueAsync(mt,
                     x => x.BccEmailAddresses,
                     localized.BccEmailAddresses,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(mt,
+                await _localizedEntityService.SaveLocalizedValueAsync(mt,
                     x => x.Subject,
                     localized.Subject,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(mt,
+                await _localizedEntityService.SaveLocalizedValueAsync(mt,
                     x => x.Body,
                     localized.Body,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(mt,
+                await _localizedEntityService.SaveLocalizedValueAsync(mt,
                     x => x.EmailAccountId,
                     localized.EmailAccountId,
                     localized.LanguageId);
             }
         }
 
-        protected virtual async Task SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
+        protected virtual async Task SaveStoreMappingsAsync(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
             messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();
-            await _messageTemplateService.UpdateMessageTemplate(messageTemplate);
+            await _messageTemplateService.UpdateMessageTemplateAsync(messageTemplate);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappings(messageTemplate);
-            var allStores = await _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(messageTemplate);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMapping(messageTemplate, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(messageTemplate, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -126,11 +126,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _messageTemplateModelFactory.PrepareMessageTemplateSearchModel(new MessageTemplateSearchModel());
+            var model = await _messageTemplateModelFactory.PrepareMessageTemplateSearchModelAsync(new MessageTemplateSearchModel());
 
             return View(model);
         }
@@ -138,27 +138,27 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(MessageTemplateSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _messageTemplateModelFactory.PrepareMessageTemplateListModel(searchModel);
+            var model = await _messageTemplateModelFactory.PrepareMessageTemplateListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //try to get a message template with the specified id
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(id);
             if (messageTemplate == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _messageTemplateModelFactory.PrepareMessageTemplateModel(null, messageTemplate);
+            var model = await _messageTemplateModelFactory.PrepareMessageTemplateModelAsync(null, messageTemplate);
 
             return View(model);
         }
@@ -167,11 +167,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Edit(MessageTemplateModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //try to get a message template with the specified id
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(model.Id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
             if (messageTemplate == null)
                 return RedirectToAction("List");
 
@@ -184,19 +184,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = 0;
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                await _messageTemplateService.UpdateMessageTemplate(messageTemplate);
+                await _messageTemplateService.UpdateMessageTemplateAsync(messageTemplate);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditMessageTemplate",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditMessageTemplate"), messageTemplate.Id), messageTemplate);
+                await _customerActivityService.InsertActivityAsync("EditMessageTemplate",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditMessageTemplate"), messageTemplate.Id), messageTemplate);
 
                 //stores
-                await SaveStoreMappings(messageTemplate, model);
+                await SaveStoreMappingsAsync(messageTemplate, model);
 
                 //locales
-                await UpdateLocales(messageTemplate, model);
+                await UpdateLocalesAsync(messageTemplate, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -205,7 +205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _messageTemplateModelFactory.PrepareMessageTemplateModel(model, messageTemplate, true);
+            model = await _messageTemplateModelFactory.PrepareMessageTemplateModelAsync(model, messageTemplate, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -214,21 +214,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //try to get a message template with the specified id
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(id);
             if (messageTemplate == null)
                 return RedirectToAction("List");
 
-            await _messageTemplateService.DeleteMessageTemplate(messageTemplate);
+            await _messageTemplateService.DeleteMessageTemplateAsync(messageTemplate);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteMessageTemplate",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id), messageTemplate);
+            await _customerActivityService.InsertActivityAsync("DeleteMessageTemplate",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteMessageTemplate"), messageTemplate.Id), messageTemplate);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -237,19 +237,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("message-template-copy")]
         public virtual async Task<IActionResult> CopyTemplate(MessageTemplateModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //try to get a message template with the specified id
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(model.Id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
             if (messageTemplate == null)
                 return RedirectToAction("List");
 
             try
             {
-                var newMessageTemplate = await _messageTemplateService.CopyMessageTemplate(messageTemplate);
+                var newMessageTemplate = await _messageTemplateService.CopyMessageTemplateAsync(messageTemplate);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Copied"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Copied"));
 
                 return RedirectToAction("Edit", new { id = newMessageTemplate.Id });
             }
@@ -262,17 +262,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> TestTemplate(int id, int languageId = 0)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //try to get a message template with the specified id
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(id);
             if (messageTemplate == null)
                 return RedirectToAction("List");
 
             //prepare model
             var model = await _messageTemplateModelFactory
-                .PrepareTestMessageTemplateModel(new TestMessageTemplateModel(), messageTemplate, languageId);
+                .PrepareTestMessageTemplateModelAsync(new TestMessageTemplateModel(), messageTemplate, languageId);
 
             return View(model);
         }
@@ -281,11 +281,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("send-test")]
         public virtual async Task<IActionResult> TestTemplate(TestMessageTemplateModel model, IFormCollection form)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             //try to get a message template with the specified id
-            var messageTemplate = await _messageTemplateService.GetMessageTemplateById(model.Id);
+            var messageTemplate = await _messageTemplateService.GetMessageTemplateByIdAsync(model.Id);
             if (messageTemplate == null)
                 return RedirectToAction("List");
 
@@ -310,11 +310,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                     tokens.Add(new Token(tokenKey, tokenValue));
                 }
 
-            await _workflowMessageService.SendTestEmail(messageTemplate.Id, model.SendTo, tokens, model.LanguageId);
+            await _workflowMessageService.SendTestEmailAsync(messageTemplate.Id, model.SendTo, tokens, model.LanguageId);
 
             if (ModelState.IsValid)
             {
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Test.Success"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.MessageTemplates.Test.Success"));
             }
 
             return RedirectToAction("Edit", new { id = messageTemplate.Id });

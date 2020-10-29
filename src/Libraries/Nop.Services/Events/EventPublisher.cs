@@ -19,7 +19,7 @@ namespace Nop.Services.Events
         /// </summary>
         /// <typeparam name="TEvent">Type of event</typeparam>
         /// <param name="event">Event object</param>
-        public virtual async Task Publish<TEvent>(TEvent @event)
+        public virtual async Task PublishAsync<TEvent>(TEvent @event)
         {
             //get all event consumers
             var consumers = EngineContext.Current.ResolveAll<IConsumer<TEvent>>().ToList();
@@ -29,7 +29,7 @@ namespace Nop.Services.Events
                 try
                 {
                     //try to handle published event
-                    await consumer.HandleEvent(@event);
+                    await consumer.HandleEventAsync(@event);
                 }
                 catch (Exception exception)
                 {
@@ -40,7 +40,7 @@ namespace Nop.Services.Events
                         if (logger == null)
                             return;
 
-                        await logger.Error(exception.Message, exception);
+                        await logger.ErrorAsync(exception.Message, exception);
                     }
                     catch
                     {

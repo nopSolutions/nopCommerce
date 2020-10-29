@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> DownloadFile(Guid downloadGuid)
         {
-            var download = await _downloadService.GetDownloadByGuid(downloadGuid);
+            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
             if (download == null)
                 return Content("No download record found with the specified id");
 
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DownloadUrl = downloadUrl,
                 IsNew = true
             };
-            await _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownloadAsync(download);
 
             return Json(new { success = true, downloadId = download.Id });
         }
@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-            var fileBinary = await _downloadService.GetDownloadBits(httpPostedFile);
+            var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                await _downloadService.InsertDownload(download);
+                await _downloadService.InsertDownloadAsync(download);
 
                 //when returning JSON the mime-type must be set to text/plain
                 //otherwise some browsers will pop-up a "Save As" dialog.
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                await _logger.Error(exc.Message, exc, await _workContext.GetCurrentCustomer());
+                await _logger.ErrorAsync(exc.Message, exc, await _workContext.GetCurrentCustomerAsync());
 
                 return Json(new
                 {

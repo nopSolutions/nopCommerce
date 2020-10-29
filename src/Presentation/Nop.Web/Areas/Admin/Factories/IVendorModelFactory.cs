@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
         /// <returns>Vendor search model</returns>
-        Task<VendorSearchModel> PrepareVendorSearchModel(VendorSearchModel searchModel);
+        Task<VendorSearchModel> PrepareVendorSearchModelAsync(VendorSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged vendor list model
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
         /// <returns>Vendor list model</returns>
-        Task<VendorListModel> PrepareVendorListModel(VendorSearchModel searchModel);
+        Task<VendorListModel> PrepareVendorListModelAsync(VendorSearchModel searchModel);
 
         /// <summary>
         /// Prepare vendor model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Vendor model</returns>
-        Task<VendorModel> PrepareVendorModel(VendorModel model, Vendor vendor, bool excludeProperties = false);
+        Task<VendorModel> PrepareVendorModelAsync(VendorModel model, Vendor vendor, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged vendor note list model
@@ -38,6 +38,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
         /// <returns>Vendor note list model</returns>
-        Task<VendorNoteListModel> PrepareVendorNoteListModel(VendorNoteSearchModel searchModel, Vendor vendor);
+        Task<VendorNoteListModel> PrepareVendorNoteListModelAsync(VendorNoteSearchModel searchModel, Vendor vendor);
     }
 }

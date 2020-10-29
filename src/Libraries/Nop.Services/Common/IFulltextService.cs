@@ -11,16 +11,16 @@ namespace Nop.Services.Common
         /// Gets value indicating whether Full-Text is supported
         /// </summary>
         /// <returns>Result</returns>
-        Task<bool> IsFullTextSupported();
+        Task<bool> IsFullTextSupportedAsync();
 
         /// <summary>
         /// Enable Full-Text support
         /// </summary>
-        Task EnableFullText();
+        Task EnableFullTextAsync();
 
         /// <summary>
         /// Disable Full-Text support
         /// </summary>
-        Task DisableFullText();
+        Task DisableFullTextAsync();
     }
 }

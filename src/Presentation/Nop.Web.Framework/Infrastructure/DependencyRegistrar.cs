@@ -325,7 +325,7 @@ namespace Nop.Web.Framework.Infrastructure
 
                     try
                     {
-                        store = c.Resolve<IStoreContext>().GetCurrentStore().Result;
+                        store = c.Resolve<IStoreContext>().GetCurrentStoreAsync().Result;
                     }
                     catch
                     {
@@ -345,7 +345,7 @@ namespace Nop.Web.Framework.Infrastructure
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
                     try
                     {
-                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId).Result;
+                        return c.Resolve<ISettingService>().LoadSettingAsync<TSettings>(currentStoreId).Result;
                     }
                     catch
                     {

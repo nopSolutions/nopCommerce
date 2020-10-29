@@ -24,7 +24,7 @@ namespace Nop.Web.Components
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = await _catalogModelFactory.PrepareVendorNavigationModel();
+            var model = await _catalogModelFactory.PrepareVendorNavigationModelAsync();
             if (!model.Vendors.Any())
                 return Content("");
 

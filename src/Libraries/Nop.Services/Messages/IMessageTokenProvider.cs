@@ -24,7 +24,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="store">Store</param>
         /// <param name="emailAccount">Email account</param>
-        Task AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount);
+        Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount);
 
         /// <summary>
         /// Add order tokens
@@ -33,7 +33,7 @@ namespace Nop.Services.Messages
         /// <param name="order"></param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="vendorId">Vendor identifier</param>
-        Task AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0);
+        Task AddOrderTokensAsync(IList<Token> tokens, Order order, int languageId, int vendorId = 0);
 
         /// <summary>
         /// Add refunded order tokens
@@ -41,7 +41,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="order">Order</param>
         /// <param name="refundedAmount">Refunded amount of order</param>
-        Task AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount);
+        Task AddOrderRefundedTokensAsync(IList<Token> tokens, Order order, decimal refundedAmount);
 
         /// <summary>
         /// Add shipment tokens
@@ -49,21 +49,21 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="shipment">Shipment item</param>
         /// <param name="languageId">Language identifier</param>
-        Task AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId);
+        Task AddShipmentTokensAsync(IList<Token> tokens, Shipment shipment, int languageId);
 
         /// <summary>
         /// Add order note tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="orderNote">Order note</param>
-        Task AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote);
+        Task AddOrderNoteTokensAsync(IList<Token> tokens, OrderNote orderNote);
 
         /// <summary>
         /// Add recurring payment tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="recurringPayment">Recurring payment</param>
-        Task AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment);
+        Task AddRecurringPaymentTokensAsync(IList<Token> tokens, RecurringPayment recurringPayment);
 
         /// <summary>
         /// Add return request tokens
@@ -71,63 +71,63 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        Task AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem);
+        Task AddReturnRequestTokensAsync(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem);
 
         /// <summary>
         /// Add gift card tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="giftCard">Gift card</param>
-        Task AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard);
+        Task AddGiftCardTokensAsync(IList<Token> tokens, GiftCard giftCard);
 
         /// <summary>
         /// Add customer tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="customerId">Customer identifier</param>
-        Task AddCustomerTokens(IList<Token> tokens, int customerId);
+        Task AddCustomerTokensAsync(IList<Token> tokens, int customerId);
 
         /// <summary>
         /// Add customer tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="customer">Customer</param>
-        Task AddCustomerTokens(IList<Token> tokens, Customer customer);
+        Task AddCustomerTokensAsync(IList<Token> tokens, Customer customer);
 
         /// <summary>
         /// Add vendor tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="vendor">Vendor</param>
-        Task AddVendorTokens(IList<Token> tokens, Vendor vendor);
+        Task AddVendorTokensAsync(IList<Token> tokens, Vendor vendor);
 
         /// <summary>
         /// Add newsletter subscription tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="subscription">Newsletter subscription</param>
-        Task AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
+        Task AddNewsLetterSubscriptionTokensAsync(IList<Token> tokens, NewsLetterSubscription subscription);
 
         /// <summary>
         /// Add product review tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="productReview">Product review</param>
-        Task AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
+        Task AddProductReviewTokensAsync(IList<Token> tokens, ProductReview productReview);
 
         /// <summary>
         /// Add blog comment tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="blogComment">Blog post comment</param>
-        Task AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment);
+        Task AddBlogCommentTokensAsync(IList<Token> tokens, BlogComment blogComment);
 
         /// <summary>
         /// Add news comment tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="newsComment">News comment</param>
-        Task AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment);
+        Task AddNewsCommentTokensAsync(IList<Token> tokens, NewsComment newsComment);
         
         /// <summary>
         /// Add product tokens
@@ -135,7 +135,7 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="product">Product</param>
         /// <param name="languageId">Language identifier</param>
-        Task AddProductTokens(IList<Token> tokens, Product product, int languageId);
+        Task AddProductTokensAsync(IList<Token> tokens, Product product, int languageId);
 
         /// <summary>
         /// Add product attribute combination tokens
@@ -143,14 +143,14 @@ namespace Nop.Services.Messages
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="combination">Product attribute combination</param>
         /// <param name="languageId">Language identifier</param>
-        Task AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, int languageId);
+        Task AddAttributeCombinationTokensAsync(IList<Token> tokens, ProductAttributeCombination combination, int languageId);
 
         /// <summary>
         /// Add forum tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="forum">Forum</param>
-        Task AddForumTokens(IList<Token> tokens, Forum forum);
+        Task AddForumTokensAsync(IList<Token> tokens, Forum forum);
 
         /// <summary>
         /// Add forum topic tokens
@@ -159,7 +159,7 @@ namespace Nop.Services.Messages
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="appendedPostIdentifierAnchor">Forum post identifier</param>
-        Task AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
+        Task AddForumTopicTokensAsync(IList<Token> tokens, ForumTopic forumTopic,
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null);
 
         /// <summary>
@@ -167,34 +167,34 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="forumPost">Forum post</param>
-        Task AddForumPostTokens(IList<Token> tokens, ForumPost forumPost);
+        Task AddForumPostTokensAsync(IList<Token> tokens, ForumPost forumPost);
 
         /// <summary>
         /// Add private message tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="privateMessage">Private message</param>
-        Task AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage);
+        Task AddPrivateMessageTokensAsync(IList<Token> tokens, PrivateMessage privateMessage);
 
         /// <summary>
         /// Add tokens of BackInStock subscription
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="subscription">BackInStock subscription</param>
-        Task AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription);
+        Task AddBackInStockTokensAsync(IList<Token> tokens, BackInStockSubscription subscription);
 
         /// <summary>
         /// Get collection of allowed (supported) message tokens for campaigns
         /// </summary>
         /// <returns>Collection of allowed (supported) message tokens for campaigns</returns>
-        Task<IEnumerable<string>> GetListOfCampaignAllowedTokens();
+        Task<IEnumerable<string>> GetListOfCampaignAllowedTokensAsync();
 
         /// <summary>
         /// Get collection of allowed (supported) message tokens
         /// </summary>
         /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
         /// <returns>Collection of allowed message tokens</returns>
-        Task<IEnumerable<string>> GetListOfAllowedTokens(IEnumerable<string> tokenGroups = null);
+        Task<IEnumerable<string>> GetListOfAllowedTokensAsync(IEnumerable<string> tokenGroups = null);
 
         /// <summary>
         /// Get token groups of message template

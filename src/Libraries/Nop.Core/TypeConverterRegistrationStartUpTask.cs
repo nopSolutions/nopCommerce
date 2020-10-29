@@ -15,7 +15,7 @@ namespace Nop.Core
         /// <summary>
         /// Executes a task
         /// </summary>
-        public Task Execute()
+        public Task ExecuteAsync()
         {
             //lists
             TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));

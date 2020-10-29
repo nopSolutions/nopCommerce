@@ -29,9 +29,9 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var products = await _productService.GetAllProductsDisplayedOnHomepage();
+            var products = await _productService.GetAllProductsDisplayedOnHomepageAsync();
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
+            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
@@ -40,7 +40,7 @@ namespace Nop.Web.Components
             if (!products.Any())
                 return Content("");
 
-            var model = (await _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
 
             return View(model);
         }

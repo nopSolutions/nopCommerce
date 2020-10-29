@@ -13,13 +13,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Newsletter subscription search model</param>
         /// <returns>Newsletter subscription search model</returns>
-        Task<NewsletterSubscriptionSearchModel> PrepareNewsletterSubscriptionSearchModel(NewsletterSubscriptionSearchModel searchModel);
+        Task<NewsletterSubscriptionSearchModel> PrepareNewsletterSubscriptionSearchModelAsync(NewsletterSubscriptionSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged newsletter subscription list model
         /// </summary>
         /// <param name="searchModel">Newsletter subscription search model</param>
         /// <returns>Newsletter subscription list model</returns>
-        Task<NewsletterSubscriptionListModel> PrepareNewsletterSubscriptionListModel(NewsletterSubscriptionSearchModel searchModel);
+        Task<NewsletterSubscriptionListModel> PrepareNewsletterSubscriptionListModelAsync(NewsletterSubscriptionSearchModel searchModel);
     }
 }

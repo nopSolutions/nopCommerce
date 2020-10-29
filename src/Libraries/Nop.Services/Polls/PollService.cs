@@ -49,9 +49,9 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
         /// <returns>Poll</returns>
-        public virtual async Task<Poll> GetPollById(int pollId)
+        public virtual async Task<Poll> GetPollByIdAsync(int pollId)
         {
-            return await _pollRepository.GetById(pollId, cache => default);
+            return await _pollRepository.GetByIdAsync(pollId, cache => default);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Nop.Services.Polls
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
-        public virtual async Task<IPagedList<Poll>> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
+        public virtual async Task<IPagedList<Poll>> GetPollsAsync(int storeId, int languageId = 0, bool showHidden = false,
             bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -117,34 +117,34 @@ namespace Nop.Services.Polls
             query = query.OrderBy(poll => poll.DisplayOrder).ThenBy(poll => poll.Id);
 
             //return paged list of polls
-            return await query.ToPagedList(pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
         /// Deletes a poll
         /// </summary>
         /// <param name="poll">The poll</param>
-        public virtual async Task DeletePoll(Poll poll)
+        public virtual async Task DeletePollAsync(Poll poll)
         {
-            await _pollRepository.Delete(poll);
+            await _pollRepository.DeleteAsync(poll);
         }
 
         /// <summary>
         /// Inserts a poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual async Task InsertPoll(Poll poll)
+        public virtual async Task InsertPollAsync(Poll poll)
         {
-            await _pollRepository.Insert(poll);
+            await _pollRepository.InsertAsync(poll);
         }
 
         /// <summary>
         /// Updates the poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual async Task UpdatePoll(Poll poll)
+        public virtual async Task UpdatePollAsync(Poll poll)
         {
-            await _pollRepository.Update(poll);
+            await _pollRepository.UpdateAsync(poll);
         }
 
         /// <summary>
@@ -152,18 +152,18 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="pollAnswerId">Poll answer identifier</param>
         /// <returns>Poll answer</returns>
-        public virtual async Task<PollAnswer> GetPollAnswerById(int pollAnswerId)
+        public virtual async Task<PollAnswer> GetPollAnswerByIdAsync(int pollAnswerId)
         {
-            return await _pollAnswerRepository.GetById(pollAnswerId, cache => default);
+            return await _pollAnswerRepository.GetByIdAsync(pollAnswerId, cache => default);
         }
 
         /// <summary>
         /// Deletes a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual async Task DeletePollAnswer(PollAnswer pollAnswer)
+        public virtual async Task DeletePollAnswerAsync(PollAnswer pollAnswer)
         {
-            await _pollAnswerRepository.Delete(pollAnswer);
+            await _pollAnswerRepository.DeleteAsync(pollAnswer);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public virtual async Task<IPagedList<PollAnswer>> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<PollAnswer>> GetPollAnswerByPollAsync(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollAnswerRepository.Table.Where(pa => pa.PollId == pollId);
 
@@ -181,25 +181,25 @@ namespace Nop.Services.Polls
             query = query.OrderBy(pa => pa.DisplayOrder).ThenBy(pa => pa.Id);
 
             //return paged list of polls
-            return await query.ToPagedList(pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
         /// Inserts a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual async Task InsertPollAnswer(PollAnswer pollAnswer)
+        public virtual async Task InsertPollAnswerAsync(PollAnswer pollAnswer)
         {
-            await _pollAnswerRepository.Insert(pollAnswer);
+            await _pollAnswerRepository.InsertAsync(pollAnswer);
         }
 
         /// <summary>
         /// Updates the poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual async Task UpdatePollAnswer(PollAnswer pollAnswer)
+        public virtual async Task UpdatePollAnswerAsync(PollAnswer pollAnswer)
         {
-            await _pollAnswerRepository.Update(pollAnswer);
+            await _pollAnswerRepository.UpdateAsync(pollAnswer);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Nop.Services.Polls
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
-        public virtual async Task<bool> AlreadyVoted(int pollId, int customerId)
+        public virtual async Task<bool> AlreadyVotedAsync(int pollId, int customerId)
         {
             if (pollId == 0 || customerId == 0)
                 return false;
@@ -224,9 +224,9 @@ namespace Nop.Services.Polls
         /// Inserts a poll voting record
         /// </summary>
         /// <param name="pollVotingRecord">Voting record</param>
-        public virtual async Task InsertPollVotingRecord(PollVotingRecord pollVotingRecord)
+        public virtual async Task InsertPollVotingRecordAsync(PollVotingRecord pollVotingRecord)
         {
-            await _pollVotingRecordRepository.Insert(pollVotingRecord);
+            await _pollVotingRecordRepository.InsertAsync(pollVotingRecord);
         }
 
         /// <summary>
@@ -236,12 +236,12 @@ namespace Nop.Services.Polls
         /// <returns>Poll answer</returns>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        public virtual async Task<IPagedList<PollVotingRecord>> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<PollVotingRecord>> GetPollVotingRecordsByPollAnswerAsync(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollVotingRecordRepository.Table.Where(pa => pa.PollAnswerId == pollAnswerId);
 
             //return paged list of poll voting records
-            return await query.ToPagedList(pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         #endregion

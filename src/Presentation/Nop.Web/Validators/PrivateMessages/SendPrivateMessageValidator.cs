@@ -9,8 +9,8 @@ namespace Nop.Web.Validators.PrivateMessages
     {
         public SendPrivateMessageValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("PrivateMessages.SubjectCannotBeEmpty").Result);
-            RuleFor(x => x.Message).NotEmpty().WithMessage(localizationService.GetResource("PrivateMessages.MessageCannotBeEmpty").Result);
+            RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResourceAsync("PrivateMessages.SubjectCannotBeEmpty").Result);
+            RuleFor(x => x.Message).NotEmpty().WithMessage(localizationService.GetResourceAsync("PrivateMessages.MessageCannotBeEmpty").Result);
         }
     }
 }

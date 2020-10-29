@@ -51,7 +51,7 @@ namespace Nop.Services.Shipping.Tracking
         /// <returns>Tracker (IShipmentTracker)</returns>
         protected virtual IShipmentTracker GetTrackerByTrackingNumber(string trackingNumber)
         {
-            return GetAllTrackers().FirstOrDefault(c => c.IsMatch(trackingNumber).Result);
+            return GetAllTrackers().FirstOrDefault(c => c.IsMatchAsync(trackingNumber).Result);
         }
 
         #endregion
@@ -63,11 +63,11 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>True if the tracker can track, otherwise false.</returns>
-        public virtual async Task<bool> IsMatch(string trackingNumber)
+        public virtual async Task<bool> IsMatchAsync(string trackingNumber)
         {
             var tracker = GetTrackerByTrackingNumber(trackingNumber);
             if (tracker != null)
-                return await tracker.IsMatch(trackingNumber);
+                return await tracker.IsMatchAsync(trackingNumber);
             return false;
         }
 
@@ -76,14 +76,14 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
         /// <returns>URL of a tracking page.</returns>
-        public virtual async Task<string> GetUrl(string trackingNumber)
+        public virtual async Task<string> GetUrlAsync(string trackingNumber)
         {
             var tracker = GetTrackerByTrackingNumber(trackingNumber);
 
             if (tracker == null)
                 return null;
 
-            return await tracker.GetUrl(trackingNumber);
+            return await tracker.GetUrlAsync(trackingNumber);
         }
 
         /// <summary>
@@ -91,14 +91,14 @@ namespace Nop.Services.Shipping.Tracking
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track</param>
         /// <returns>List of Shipment Events.</returns>
-        public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEvents(string trackingNumber)
+        public virtual async Task<IList<ShipmentStatusEvent>> GetShipmentEventsAsync(string trackingNumber)
         {
             if (string.IsNullOrEmpty(trackingNumber))
                 return new List<ShipmentStatusEvent>();
 
             var tracker = GetTrackerByTrackingNumber(trackingNumber);
             if (tracker != null)
-                return await tracker.GetShipmentEvents(trackingNumber);
+                return await tracker.GetShipmentEventsAsync(trackingNumber);
             return new List<ShipmentStatusEvent>();
         }
 

@@ -14,7 +14,7 @@ namespace Nop.Services.Stores
         /// Deletes a store mapping record
         /// </summary>
         /// <param name="storeMapping">Store mapping record</param>
-        Task DeleteStoreMapping(StoreMapping storeMapping);
+        Task DeleteStoreMappingAsync(StoreMapping storeMapping);
 
         //TODO: may be deleted
         /// <summary>
@@ -22,7 +22,7 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeMappingId">Store mapping record identifier</param>
         /// <returns>Store mapping record</returns>
-        Task<StoreMapping> GetStoreMappingById(int storeMappingId);
+        Task<StoreMapping> GetStoreMappingByIdAsync(int storeMappingId);
 
         /// <summary>
         /// Gets store mapping records
@@ -30,7 +30,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Store mapping records</returns>
-        Task<IList<StoreMapping>> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
+        Task<IList<StoreMapping>> GetStoreMappingsAsync<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Inserts a store mapping record
@@ -38,7 +38,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store id</param>
         /// <param name="entity">Entity</param>
-        Task InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
+        Task InsertStoreMappingAsync<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)
@@ -46,7 +46,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Store identifiers</returns>
-        Task<int[]> GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
+        Task<int[]> GetStoresIdsWithAccessAsync<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Authorize whether entity could be accessed in the current store (mapped to this store)
@@ -54,7 +54,7 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        Task<bool> Authorize<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
+        Task<bool> AuthorizeAsync<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Authorize whether entity could be accessed in a store (mapped to this store)
@@ -63,6 +63,6 @@ namespace Nop.Services.Stores
         /// <param name="entity">Entity</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        Task<bool> Authorize<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
+        Task<bool> AuthorizeAsync<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
     }
 }

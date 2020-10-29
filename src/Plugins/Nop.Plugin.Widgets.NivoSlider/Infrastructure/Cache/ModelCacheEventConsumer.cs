@@ -31,17 +31,17 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
             _staticCacheManager = staticCacheManager;
         }
 
-        public async Task HandleEvent(EntityInsertedEvent<Setting> eventMessage)
+        public async Task HandleEventAsync(EntityInsertedEvent<Setting> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
+        public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
-        public async Task HandleEvent(EntityDeletedEvent<Setting> eventMessage)
+        public async Task HandleEventAsync(EntityDeletedEvent<Setting> eventMessage)
         {
-            await _staticCacheManager.RemoveByPrefix(PICTURE_URL_PATTERN_KEY);
+            await _staticCacheManager.RemoveByPrefixAsync(PICTURE_URL_PATTERN_KEY);
         }
     }
 }

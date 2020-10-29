@@ -72,10 +72,10 @@ namespace Nop.Services.Common
         public virtual async Task<string> GetCopyrightWarningAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
+            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopCopyrightWarningPath,
-                (await _storeContext.GetCurrentStore()).Url,
-                await _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                (await _storeContext.GetCurrentStoreAsync()).Url,
+                await _webHelper.IsLocalRequestAsync(_httpContextAccessor.HttpContext.Request),
                 language).ToLowerInvariant();
 
             //get the message
@@ -89,12 +89,12 @@ namespace Nop.Services.Common
         public virtual async Task<RssFeed> GetNewsRssAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
+            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopNewsRssPath,
                 NopVersion.CURRENT_VERSION,
-                await _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                await _webHelper.IsLocalRequestAsync(_httpContextAccessor.HttpContext.Request),
                 _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                await _webHelper.GetStoreLocation(),
+                await _webHelper.GetStoreLocationAsync(),
                 language).ToLowerInvariant();
 
             //get news feed
@@ -113,9 +113,9 @@ namespace Nop.Services.Common
             //prepare URL to request
             var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
                 NopVersion.CURRENT_VERSION,
-                await _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
+                await _webHelper.IsLocalRequestAsync(_httpContextAccessor.HttpContext.Request),
                 WebUtility.UrlEncode(email),
-                await _webHelper.GetStoreLocation(),
+                await _webHelper.GetStoreLocationAsync(),
                 languageCode)
                 .ToLowerInvariant();
 
@@ -129,7 +129,7 @@ namespace Nop.Services.Common
         public virtual async Task<string> GetExtensionsCategoriesAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
+            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopExtensionsCategoriesPath, language).ToLowerInvariant();
 
             //get XML response
@@ -143,7 +143,7 @@ namespace Nop.Services.Common
         public virtual async Task<string> GetExtensionsVersionsAsync()
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
+            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopExtensionsVersionsPath, language).ToLowerInvariant();
 
             //get XML response
@@ -165,7 +165,7 @@ namespace Nop.Services.Common
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //prepare URL to request
-            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguage());
+            var language = _languageService.GetTwoLetterIsoLanguageName(await _workContext.GetWorkingLanguageAsync());
             var url = string.Format(NopCommonDefaults.NopExtensionsPath,
                 categoryId, versionId, price, WebUtility.UrlEncode(searchTerm), pageIndex, pageSize, language).ToLowerInvariant();
 

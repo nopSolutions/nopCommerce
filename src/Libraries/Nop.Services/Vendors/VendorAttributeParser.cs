@@ -78,7 +78,7 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>List of vendor attributes</returns>
-        public virtual async Task<IList<VendorAttribute>> ParseVendorAttributes(string attributesXml)
+        public virtual async Task<IList<VendorAttribute>> ParseVendorAttributesAsync(string attributesXml)
         {
             var result = new List<VendorAttribute>();
             if (string.IsNullOrEmpty(attributesXml))
@@ -87,7 +87,7 @@ namespace Nop.Services.Vendors
             var ids = ParseVendorAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _vendorAttributeService.GetVendorAttributeById(id);
+                var attribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(id);
                 if (attribute != null)
                 {
                     result.Add(attribute);
@@ -102,13 +102,13 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>List of vendor attribute values</returns>
-        public virtual async Task<IList<VendorAttributeValue>> ParseVendorAttributeValues(string attributesXml)
+        public virtual async Task<IList<VendorAttributeValue>> ParseVendorAttributeValuesAsync(string attributesXml)
         {
             var values = new List<VendorAttributeValue>();
             if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = await ParseVendorAttributes(attributesXml);
+            var attributes = await ParseVendorAttributesAsync(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -123,7 +123,7 @@ namespace Nop.Services.Vendors
                     if (!int.TryParse(valueStr, out var id)) 
                         continue;
 
-                    var value = await _vendorAttributeService.GetVendorAttributeValueById(id);
+                    var value = await _vendorAttributeService.GetVendorAttributeValueByIdAsync(id);
                     if (value != null)
                         values.Add(value);
                 }
@@ -252,15 +252,15 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarningsAsync(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = await ParseVendorAttributes(attributesXml);
+            var attributes1 = await ParseVendorAttributesAsync(attributesXml);
 
             //validate required vendor attributes (whether they're chosen/selected/entered)
-            var attributes2 = await _vendorAttributeService.GetAllVendorAttributes();
+            var attributes2 = await _vendorAttributeService.GetAllVendorAttributesAsync();
             foreach (var a2 in attributes2)
             {
                 if (!a2.IsRequired) 
@@ -288,7 +288,7 @@ namespace Nop.Services.Vendors
                     continue;
 
                 //if not found
-                var notFoundWarning = string.Format(await _localizationService.GetResource("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalized(a2, a => a.Name));
+                var notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalizedAsync(a2, a => a.Name));
 
                 warnings.Add(notFoundWarning);
             }

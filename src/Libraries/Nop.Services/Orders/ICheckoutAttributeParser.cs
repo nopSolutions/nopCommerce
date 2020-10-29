@@ -14,7 +14,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected checkout attributes</returns>
-        Task<IList<CheckoutAttribute>> ParseCheckoutAttributes(string attributesXml);
+        Task<IList<CheckoutAttribute>> ParseCheckoutAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get checkout attribute values
@@ -46,7 +46,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="cart">Shopping cart items</param>
         /// <returns>Updated attributes in XML format</returns>
-        Task<string> EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart);
+        Task<string> EnsureOnlyActiveAttributesAsync(string attributesXml, IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
@@ -54,7 +54,7 @@ namespace Nop.Services.Orders
         /// <param name="attribute">Checkout attribute</param>
         /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
         /// <returns>Result</returns>
-        Task<bool?> IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml);
+        Task<bool?> IsConditionMetAsync(CheckoutAttribute attribute, string selectedAttributesXml);
 
         /// <summary>
         /// Remove an attribute

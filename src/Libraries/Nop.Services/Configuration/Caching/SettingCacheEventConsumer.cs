@@ -14,7 +14,7 @@ namespace Nop.Services.Configuration.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override Task ClearCache(Setting entity, EntityEventType entityEventType)
+        protected override Task ClearCacheAsync(Setting entity, EntityEventType entityEventType)
         {
             //clear setting cache in SettingService
             return Task.CompletedTask;

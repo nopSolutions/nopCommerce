@@ -39,14 +39,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="taxConfigurationModel">Tax configuration model</param>
         /// <returns>Tax configuration model</returns>
-        public virtual async Task<TaxConfigurationModel> PrepareTaxConfigurationModel(TaxConfigurationModel taxConfigurationModel)
+        public virtual async Task<TaxConfigurationModel> PrepareTaxConfigurationModelAsync(TaxConfigurationModel taxConfigurationModel)
         {
             if (taxConfigurationModel == null)
                 throw new ArgumentNullException(nameof(taxConfigurationModel));
 
             //prepare nested search models
-            await PrepareTaxProviderSearchModel(taxConfigurationModel.TaxProviders);
-            await PrepareTaxCategorySearchModel(taxConfigurationModel.TaxCategories);
+            await PrepareTaxProviderSearchModelAsync(taxConfigurationModel.TaxProviders);
+            await PrepareTaxCategorySearchModelAsync(taxConfigurationModel.TaxCategories);
 
             return taxConfigurationModel;
         }
@@ -56,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider search model</returns>
-        public virtual Task<TaxProviderSearchModel> PrepareTaxProviderSearchModel(TaxProviderSearchModel searchModel)
+        public virtual Task<TaxProviderSearchModel> PrepareTaxProviderSearchModelAsync(TaxProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider list model</returns>
-        public virtual Task<TaxProviderListModel> PrepareTaxProviderListModel(TaxProviderSearchModel searchModel)
+        public virtual Task<TaxProviderListModel> PrepareTaxProviderListModelAsync(TaxProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category search model</returns>
-        public virtual Task<TaxCategorySearchModel> PrepareTaxCategorySearchModel(TaxCategorySearchModel searchModel)
+        public virtual Task<TaxCategorySearchModel> PrepareTaxCategorySearchModelAsync(TaxCategorySearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -120,13 +120,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category list model</returns>
-        public virtual async Task<TaxCategoryListModel> PrepareTaxCategoryListModel(TaxCategorySearchModel searchModel)
+        public virtual async Task<TaxCategoryListModel> PrepareTaxCategoryListModelAsync(TaxCategorySearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax categories
-            var taxCategories = (await _taxCategoryService.GetAllTaxCategories()).ToPagedList(searchModel);
+            var taxCategories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxCategoryListModel().PrepareToGrid(searchModel, taxCategories, () =>

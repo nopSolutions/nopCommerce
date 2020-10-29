@@ -16,7 +16,7 @@
                 new ColumnProperty(nameof(CustomerRewardPointsModel.StoreName))
                 {
                     Title = T("Admin.Customers.Customers.RewardPoints.Fields.Store").Text,
-                    Visible = (await storeService.GetAllStores()).Count > 1
+                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
                 },
                 new ColumnProperty(nameof(CustomerRewardPointsModel.Points))
                 {

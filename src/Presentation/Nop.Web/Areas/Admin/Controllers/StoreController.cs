@@ -57,11 +57,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task UpdateAttributeLocales(Store store, StoreModel model)
+        protected virtual async Task UpdateAttributeLocalesAsync(Store store, StoreModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(store,
+                await _localizedEntityService.SaveLocalizedValueAsync(store,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -74,11 +74,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _storeModelFactory.PrepareStoreSearchModel(new StoreSearchModel());
+            var model = await _storeModelFactory.PrepareStoreSearchModelAsync(new StoreSearchModel());
 
             return View(model);
         }
@@ -86,22 +86,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(StoreSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _storeModelFactory.PrepareStoreListModel(searchModel);
+            var model = await _storeModelFactory.PrepareStoreListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _storeModelFactory.PrepareStoreModel(new StoreModel(), null);
+            var model = await _storeModelFactory.PrepareStoreModelAsync(new StoreModel(), null);
 
             return View(model);
         }
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(StoreModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -120,22 +120,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
 
-                await _storeService.InsertStore(store);
+                await _storeService.InsertStoreAsync(store);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewStore",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewStore"), store.Id), store);
+                await _customerActivityService.InsertActivityAsync("AddNewStore",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewStore"), store.Id), store);
 
                 //locales
-                await UpdateAttributeLocales(store, model);
+                await UpdateAttributeLocalesAsync(store, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Stores.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Stores.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = await _storeModelFactory.PrepareStoreModel(model, null, true);
+            model = await _storeModelFactory.PrepareStoreModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -143,16 +143,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
             //try to get a store with the specified id
-            var store = await _storeService.GetStoreById(id);
+            var store = await _storeService.GetStoreByIdAsync(id);
             if (store == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _storeModelFactory.PrepareStoreModel(null, store);
+            var model = await _storeModelFactory.PrepareStoreModelAsync(null, store);
 
             return View(model);
         }
@@ -161,11 +161,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Edit(StoreModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
             //try to get a store with the specified id
-            var store = await _storeService.GetStoreById(model.Id);
+            var store = await _storeService.GetStoreByIdAsync(model.Id);
             if (store == null)
                 return RedirectToAction("List");
 
@@ -177,22 +177,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
 
-                await _storeService.UpdateStore(store);
+                await _storeService.UpdateStoreAsync(store);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditStore",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditStore"), store.Id), store);
+                await _customerActivityService.InsertActivityAsync("EditStore",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditStore"), store.Id), store);
 
                 //locales
-                await UpdateAttributeLocales(store, model);
+                await UpdateAttributeLocalesAsync(store, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Stores.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Stores.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = await _storeModelFactory.PrepareStoreModel(model, store, true);
+            model = await _storeModelFactory.PrepareStoreModelAsync(model, store, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -201,41 +201,41 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageStores))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
 
             //try to get a store with the specified id
-            var store = await _storeService.GetStoreById(id);
+            var store = await _storeService.GetStoreByIdAsync(id);
             if (store == null)
                 return RedirectToAction("List");
 
             try
             {
-                await _storeService.DeleteStore(store);
+                await _storeService.DeleteStoreAsync(store);
 
                 //activity log
-                await _customerActivityService.InsertActivity("DeleteStore",
-                    string.Format(await _localizationService.GetResource("ActivityLog.DeleteStore"), store.Id), store);
+                await _customerActivityService.InsertActivityAsync("DeleteStore",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteStore"), store.Id), store);
 
                 //when we delete a store we should also ensure that all "per store" settings will also be deleted
                 var settingsToDelete = (await _settingService
-                    .GetAllSettings())
+                    .GetAllSettingsAsync())
                     .Where(s => s.StoreId == id)
                     .ToList();
-                await _settingService.DeleteSettings(settingsToDelete);
+                await _settingService.DeleteSettingsAsync(settingsToDelete);
 
                 //when we had two stores and now have only one store, we also should delete all "per store" settings
-                var allStores = await _storeService.GetAllStores();
+                var allStores = await _storeService.GetAllStoresAsync();
                 if (allStores.Count == 1)
                 {
                     settingsToDelete = (await _settingService
-                        .GetAllSettings())
+                        .GetAllSettingsAsync())
                         .Where(s => s.StoreId == allStores[0].Id)
                         .ToList();
-                    await _settingService.DeleteSettings(settingsToDelete);
+                    await _settingService.DeleteSettingsAsync(settingsToDelete);
                 }
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Stores.Deleted"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Stores.Deleted"));
 
                 return RedirectToAction("List");
             }

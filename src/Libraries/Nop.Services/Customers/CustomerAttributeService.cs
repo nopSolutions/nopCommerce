@@ -39,18 +39,18 @@ namespace Nop.Services.Customers
         /// Deletes a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual async Task DeleteCustomerAttribute(CustomerAttribute customerAttribute)
+        public virtual async Task DeleteCustomerAttributeAsync(CustomerAttribute customerAttribute)
         {
-            await _customerAttributeRepository.Delete(customerAttribute);
+            await _customerAttributeRepository.DeleteAsync(customerAttribute);
         }
 
         /// <summary>
         /// Gets all customer attributes
         /// </summary>
         /// <returns>Customer attributes</returns>
-        public virtual async Task<IList<CustomerAttribute>> GetAllCustomerAttributes()
+        public virtual async Task<IList<CustomerAttribute>> GetAllCustomerAttributesAsync()
         {
-            return await _customerAttributeRepository.GetAll(query =>
+            return await _customerAttributeRepository.GetAllAsync(query =>
             {
                 return from ca in query
                     orderby ca.DisplayOrder, ca.Id
@@ -63,36 +63,36 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute</returns>
-        public virtual async Task<CustomerAttribute> GetCustomerAttributeById(int customerAttributeId)
+        public virtual async Task<CustomerAttribute> GetCustomerAttributeByIdAsync(int customerAttributeId)
         {
-            return await _customerAttributeRepository.GetById(customerAttributeId, cache => default);
+            return await _customerAttributeRepository.GetByIdAsync(customerAttributeId, cache => default);
         }
 
         /// <summary>
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual async Task InsertCustomerAttribute(CustomerAttribute customerAttribute)
+        public virtual async Task InsertCustomerAttributeAsync(CustomerAttribute customerAttribute)
         {
-            await _customerAttributeRepository.Insert(customerAttribute);
+            await _customerAttributeRepository.InsertAsync(customerAttribute);
         }
 
         /// <summary>
         /// Updates the customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual async Task UpdateCustomerAttribute(CustomerAttribute customerAttribute)
+        public virtual async Task UpdateCustomerAttributeAsync(CustomerAttribute customerAttribute)
         {
-            await _customerAttributeRepository.Update(customerAttribute);
+            await _customerAttributeRepository.UpdateAsync(customerAttribute);
         }
 
         /// <summary>
         /// Deletes a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual async Task DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        public virtual async Task DeleteCustomerAttributeValueAsync(CustomerAttributeValue customerAttributeValue)
         {
-            await _customerAttributeValueRepository.Delete(customerAttributeValue);
+            await _customerAttributeValueRepository.DeleteAsync(customerAttributeValue);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerAttributeId">The customer attribute identifier</param>
         /// <returns>Customer attribute values</returns>
-        public virtual async Task<IList<CustomerAttributeValue>> GetCustomerAttributeValues(int customerAttributeId)
+        public virtual async Task<IList<CustomerAttributeValue>> GetCustomerAttributeValuesAsync(int customerAttributeId)
         {
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesByAttributeCacheKey, customerAttributeId);
 
@@ -109,7 +109,7 @@ namespace Nop.Services.Customers
                 where cav.CustomerAttributeId == customerAttributeId
                 select cav;
 
-            var customerAttributeValues = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var customerAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return customerAttributeValues;
         }
@@ -119,27 +119,27 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerAttributeValueId">Customer attribute value identifier</param>
         /// <returns>Customer attribute value</returns>
-        public virtual async Task<CustomerAttributeValue> GetCustomerAttributeValueById(int customerAttributeValueId)
+        public virtual async Task<CustomerAttributeValue> GetCustomerAttributeValueByIdAsync(int customerAttributeValueId)
         {
-            return await _customerAttributeValueRepository.GetById(customerAttributeValueId, cache => default);
+            return await _customerAttributeValueRepository.GetByIdAsync(customerAttributeValueId, cache => default);
         }
 
         /// <summary>
         /// Inserts a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual async Task InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        public virtual async Task InsertCustomerAttributeValueAsync(CustomerAttributeValue customerAttributeValue)
         {
-            await _customerAttributeValueRepository.Insert(customerAttributeValue);
+            await _customerAttributeValueRepository.InsertAsync(customerAttributeValue);
         }
 
         /// <summary>
         /// Updates the customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual async Task UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        public virtual async Task UpdateCustomerAttributeValueAsync(CustomerAttributeValue customerAttributeValue)
         {
-            await _customerAttributeValueRepository.Update(customerAttributeValue);
+            await _customerAttributeValueRepository.UpdateAsync(customerAttributeValue);
         }
 
         #endregion

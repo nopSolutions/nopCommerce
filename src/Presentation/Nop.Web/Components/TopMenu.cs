@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var model = await _catalogModelFactory.PrepareTopMenuModel();
+            var model = await _catalogModelFactory.PrepareTopMenuModelAsync();
             return View(model);
         }
     }

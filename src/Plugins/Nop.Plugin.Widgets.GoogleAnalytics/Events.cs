@@ -82,19 +82,19 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             return _widgetPluginManager.IsPluginActive("Widgets.GoogleAnalytics");
         }
 
-        private async Task ProcessOrderEvent(Order order, bool add)
+        private async Task ProcessOrderEventAsync(Order order, bool add)
         {
             try
             {
                 //settings per store
-                var store = await _storeService.GetStoreById(order.StoreId) ?? await _storeContext.GetCurrentStore();
-                var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>(store.Id);
+                var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+                var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
                 var request = new GoogleRequest
                 {
                     AccountCode = googleAnalyticsSettings.GoogleId,
                     Culture = "en-US",
-                    HostName = new Uri(await _webHelper.GetThisPageUrl(false)).Host,
+                    HostName = new Uri(await _webHelper.GetThisPageUrlAsync(false)).Host,
                     PageTitle = add ? "AddTransaction" : "CancelTransaction"
                 };
 
@@ -109,22 +109,22 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     orderTotal = -orderTotal;
                 }
 
-                var billingAddress = await _addressService.GetAddressById(order.BillingAddressId);
+                var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                 var trans = new Transaction(FixIllegalJavaScriptChars(orderId),
                     FixIllegalJavaScriptChars(billingAddress.City),
-                    await _countryService.GetCountryByAddress(billingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
-                    await _stateProvinceService.GetStateProvinceByAddress(billingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
+                    await _countryService.GetCountryByAddressAsync(billingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
+                    await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
                     store.Name,
                     orderShipping,
                     orderTax,
                     orderTotal);
 
-                foreach (var item in await _orderService.GetOrderItems(order.Id))
+                foreach (var item in await _orderService.GetOrderItemsAsync(order.Id))
                 {
-                    var product = await _productService.GetProductById(item.ProductId);
+                    var product = await _productService.GetProductByIdAsync(item.ProductId);
                     //get category
-                    var category = (await _categoryService.GetCategoryById((await _categoryService.GetProductCategoriesByProductId(product.Id)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
+                    var category = (await _categoryService.GetCategoryByIdAsync((await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     var qty = item.Quantity;
                     if (!add)
@@ -148,7 +148,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             }
             catch (Exception ex)
             {
-                await _logger.InsertLog(LogLevel.Error, "Google Analytics. Error canceling transaction from server side", ex.ToString());
+                await _logger.InsertLogAsync(LogLevel.Error, "Google Analytics. Error canceling transaction from server side", ex.ToString());
             }
         }
 
@@ -156,7 +156,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// Handles the event
         /// </summary>
         /// <param name="eventMessage">The event message</param>
-        public async Task HandleEvent(EntityDeletedEvent<Order> eventMessage)
+        public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
         {
             //ensure the plugin is installed and active
             if (!IsPluginEnabled())
@@ -165,8 +165,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             var order = eventMessage.Entity;
 
             //settings per store
-            var store = await _storeService.GetStoreById(order.StoreId) ?? await _storeContext.GetCurrentStore();
-            var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>(store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
             //ecommerce is disabled
             if (!googleAnalyticsSettings.EnableEcommerce)
@@ -186,14 +186,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             }
 
             if (sendRequest)
-                await ProcessOrderEvent(order, false);
+                await ProcessOrderEventAsync(order, false);
         }
 
         /// <summary>
         /// Handles the event
         /// </summary>
         /// <param name="eventMessage">The event message</param>
-        public async Task HandleEvent(OrderCancelledEvent eventMessage)
+        public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
         {
             //ensure the plugin is installed and active
             if (!IsPluginEnabled())
@@ -202,8 +202,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             var order = eventMessage.Order;
 
             //settings per store
-            var store = await _storeService.GetStoreById(order.StoreId) ?? await _storeContext.GetCurrentStore();
-            var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>(store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
             //ecommerce is disabled
             if (!googleAnalyticsSettings.EnableEcommerce)
@@ -214,14 +214,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             var sendRequest = googleAnalyticsSettings.UseJsToSendEcommerceInfo || order.PaymentStatus == PaymentStatus.Paid;
 
             if (sendRequest)
-                await ProcessOrderEvent(order, false);
+                await ProcessOrderEventAsync(order, false);
         }
 
         /// <summary>
         /// Handles the event
         /// </summary>
         /// <param name="eventMessage">The event message</param>
-        public async Task HandleEvent(OrderPaidEvent eventMessage)
+        public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             //ensure the plugin is installed and active
             if (!IsPluginEnabled())
@@ -230,8 +230,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             var order = eventMessage.Order;
 
             //settings per store
-            var store = await _storeService.GetStoreById(order.StoreId) ?? await _storeContext.GetCurrentStore();
-            var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>(store.Id);
+            var store = await _storeService.GetStoreByIdAsync(order.StoreId) ?? await _storeContext.GetCurrentStoreAsync();
+            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(store.Id);
 
             //ecommerce is disabled
             if (!googleAnalyticsSettings.EnableEcommerce)
@@ -241,7 +241,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             var sendRequest = !googleAnalyticsSettings.UseJsToSendEcommerceInfo;
 
             if (sendRequest)
-                await ProcessOrderEvent(order, true);
+                await ProcessOrderEventAsync(order, true);
         }
     }
 }

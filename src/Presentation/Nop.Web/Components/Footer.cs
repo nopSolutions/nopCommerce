@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _commonModelFactory.PrepareFooterModel();
+            var model = await _commonModelFactory.PrepareFooterModelAsync();
             return View(model);
         }
     }

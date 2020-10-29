@@ -28,9 +28,9 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         /// <summary>
         /// Execute task
         /// </summary>
-        public async Task Execute()
+        public async Task ExecuteAsync()
         {
-            await _sendinBlueEmailManager.Synchronize();
+            await _sendinBlueEmailManager.SynchronizeAsync();
         }
 
         #endregion

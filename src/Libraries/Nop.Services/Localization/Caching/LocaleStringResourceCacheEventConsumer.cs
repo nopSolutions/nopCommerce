@@ -13,12 +13,12 @@ namespace Nop.Services.Localization.Caching
         /// Clear cache by entity event type
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(LocaleStringResource entity)
+        protected override async Task ClearCacheAsync(LocaleStringResource entity)
         {
-            await Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity.LanguageId);
-            await Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity.LanguageId);
-            await Remove(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity.LanguageId);
-            await RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity.LanguageId);
+            await RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, entity.LanguageId);
+            await RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, entity.LanguageId);
+            await RemoveAsync(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, entity.LanguageId);
+            await RemoveByPrefixAsync(NopLocalizationDefaults.LocaleStringResourcesByNamePrefix, entity.LanguageId);
         }
     }
 }

@@ -13,9 +13,9 @@ namespace Nop.Services.Security.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(AclRecord entity)
+        protected override async Task ClearCacheAsync(AclRecord entity)
         {
-            await Remove(NopSecurityDefaults.AclRecordCacheKey, entity.EntityId, entity.EntityName);
+            await RemoveAsync(NopSecurityDefaults.AclRecordCacheKey, entity.EntityId, entity.EntityName);
         }
     }
 }

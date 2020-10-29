@@ -492,7 +492,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="filePath">The file for reading</param>
         /// <returns>A byte array containing the contents of the file</returns>
-        public virtual async Task<byte[]> ReadAllBytes(string filePath)
+        public virtual async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
             return File.Exists(filePath) ? await File.ReadAllBytesAsync(filePath) : Array.Empty<byte>();
         }
@@ -503,7 +503,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="path">The file to open for reading</param>
         /// <param name="encoding">The encoding applied to the contents of the file</param>
         /// <returns>A string containing all lines of the file</returns>
-        public virtual async Task<string> ReadAllText(string path, Encoding encoding)
+        public virtual async Task<string> ReadAllTextAsync(string path, Encoding encoding)
         {
             await using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var streamReader = new StreamReader(fileStream, encoding);
@@ -530,7 +530,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="filePath">The file to write to</param>
         /// <param name="bytes">The bytes to write to the file</param>
-        public virtual async Task WriteAllBytes(string filePath, byte[] bytes)
+        public virtual async Task WriteAllBytesAsync(string filePath, byte[] bytes)
         {
             await File.WriteAllBytesAsync(filePath, bytes);
         }
@@ -542,7 +542,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="path">The file to write to</param>
         /// <param name="contents">The string to write to the file</param>
         /// <param name="encoding">The encoding to apply to the string</param>
-        public virtual async Task WriteAllText(string path, string contents, Encoding encoding)
+        public virtual async Task WriteAllTextAsync(string path, string contents, Encoding encoding)
         {
             await File.WriteAllTextAsync(path, contents, encoding);
         }

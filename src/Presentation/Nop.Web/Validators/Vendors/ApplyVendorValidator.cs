@@ -9,10 +9,10 @@ namespace Nop.Web.Validators.Vendors
     {
         public ApplyVendorValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Vendors.ApplyAccount.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Vendors.ApplyAccount.Name.Required").Result);
 
-            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Vendors.ApplyAccount.Email.Required").Result);
-            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail").Result);
+            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResourceAsync("Vendors.ApplyAccount.Email.Required").Result);
+            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResourceAsync("Common.WrongEmail").Result);
         }
     }
 }

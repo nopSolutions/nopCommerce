@@ -76,7 +76,7 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page; pass null to disable paging</param>
         /// <returns>Profile index model</returns>
-        public virtual async Task<ProfileIndexModel> PrepareProfileIndexModel(Customer customer, int? page)
+        public virtual async Task<ProfileIndexModel> PrepareProfileIndexModelAsync(Customer customer, int? page)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -90,8 +90,8 @@ namespace Nop.Web.Factories
                 pagingPosts = true;
             }
 
-            var name = await _customerService.FormatUsername(customer);
-            var title = string.Format(await _localizationService.GetResource("Profile.ProfileOf"), name);
+            var name = await _customerService.FormatUsernameAsync(customer);
+            var title = string.Format(await _localizationService.GetResourceAsync("Profile.ProfileOf"), name);
 
             var model = new ProfileIndexModel
             {
@@ -109,7 +109,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Profile info model</returns>
-        public virtual async Task<ProfileInfoModel> PrepareProfileInfoModel(Customer customer)
+        public virtual async Task<ProfileInfoModel> PrepareProfileInfoModelAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -118,8 +118,8 @@ namespace Nop.Web.Factories
             var avatarUrl = "";
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                avatarUrl = await _pictureService.GetPictureUrl(
-                 await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                avatarUrl = await _pictureService.GetPictureUrlAsync(
+                 await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
@@ -132,11 +132,11 @@ namespace Nop.Web.Factories
             {
                 locationEnabled = true;
 
-                var countryId = await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
-                var country = await _countryService.GetCountryById(countryId);
+                var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var country = await _countryService.GetCountryByIdAsync(countryId);
                 if (country != null)
                 {
-                    location = await _localizationService.GetLocalized(country, x => x.Name);
+                    location = await _localizationService.GetLocalizedAsync(country, x => x.Name);
                 }
                 else
                 {
@@ -145,7 +145,7 @@ namespace Nop.Web.Factories
             }
 
             //private message
-            var pmEnabled = _forumSettings.AllowPrivateMessages && !await _customerService.IsGuest(customer);
+            var pmEnabled = _forumSettings.AllowPrivateMessages && !await _customerService.IsGuestAsync(customer);
 
             //total forum posts
             var totalPostsEnabled = false;
@@ -153,7 +153,7 @@ namespace Nop.Web.Factories
             if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
-                totalPosts = await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.ForumPostCountAttribute);
+                totalPosts = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.ForumPostCountAttribute);
             }
 
             //registration date
@@ -171,7 +171,7 @@ namespace Nop.Web.Factories
             var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                var dob = await _genericAttributeService.GetAttribute<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                var dob = await _genericAttributeService.GetAttributeAsync<DateTime?>(customer, NopCustomerDefaults.DateOfBirthAttribute);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;
@@ -203,7 +203,7 @@ namespace Nop.Web.Factories
         /// <param name="customer">Customer</param>
         /// <param name="page">Number of posts page</param>
         /// <returns>Profile posts model</returns>
-        public virtual async Task<ProfilePostsModel> PrepareProfilePostsModel(Customer customer, int page)
+        public virtual async Task<ProfilePostsModel> PrepareProfilePostsModelAsync(Customer customer, int page)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -215,7 +215,7 @@ namespace Nop.Web.Factories
 
             var pageSize = _forumSettings.LatestCustomerPostsPageSize;
 
-            var list = await _forumService.GetAllPosts(0, customer.Id, string.Empty, false, page, pageSize);
+            var list = await _forumService.GetAllPostsAsync(0, customer.Id, string.Empty, false, page, pageSize);
 
             var latestPosts = new List<PostsModel>();
 
@@ -224,22 +224,22 @@ namespace Nop.Web.Factories
                 var posted = string.Empty;
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                 {
-                    var languageCode = (await _workContext.GetWorkingLanguage()).LanguageCulture;
+                    var languageCode = (await _workContext.GetWorkingLanguageAsync()).LanguageCulture;
                     var postedAgo = forumPost.CreatedOnUtc.RelativeFormat(languageCode);
-                    posted = string.Format(await _localizationService.GetResource("Common.RelativeDateTime.Past"), postedAgo);
+                    posted = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postedAgo);
                 }
                 else
                 {
                     posted = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                 }
 
-                var topic = await _forumService.GetTopicById(forumPost.TopicId);
+                var topic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);
 
                 latestPosts.Add(new PostsModel
                 {
                     ForumTopicId = topic.Id,
                     ForumTopicTitle = topic.Subject,
-                    ForumTopicSlug = await _forumService.GetTopicSeName(topic),
+                    ForumTopicSlug = await _forumService.GetTopicSeNameAsync(topic),
                     ForumPostText = _forumService.FormatPostText(forumPost),
                     Posted = posted
                 });

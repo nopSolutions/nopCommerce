@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
         /// Add cookie value for the recently viewed products
         /// </summary>
         /// <param name="recentlyViewedProductIds">Collection of the recently viewed products identifiers</param>
-        protected virtual async Task AddRecentlyViewedProductsCookie(IEnumerable<int> recentlyViewedProductIds)
+        protected virtual async Task AddRecentlyViewedProductsCookieAsync(IEnumerable<int> recentlyViewedProductIds)
         {
             //delete current cookie if exists
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.RecentlyViewedProductsCookie}";
@@ -95,7 +95,7 @@ namespace Nop.Services.Catalog
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
                 HttpOnly = true,
-                Secure = await _webHelper.IsCurrentConnectionSecured()
+                Secure = await _webHelper.IsCurrentConnectionSecuredAsync()
             };
 
             //add cookie
@@ -111,13 +111,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="number">Number of products to load</param>
         /// <returns>"recently viewed products" list</returns>
-        public virtual async Task<IList<Product>> GetRecentlyViewedProducts(int number)
+        public virtual async Task<IList<Product>> GetRecentlyViewedProductsAsync(int number)
         {
             //get list of recently viewed product identifiers
             var productIds = GetRecentlyViewedProductsIds(number);
 
             //return list of product
-            return (await _productService.GetProductsByIds(productIds.ToArray()))
+            return (await _productService.GetProductsByIdsAsync(productIds.ToArray()))
                 .Where(product => product.Published && !product.Deleted).ToList();
         }
 
@@ -125,7 +125,7 @@ namespace Nop.Services.Catalog
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual async Task AddProductToRecentlyViewedList(int productId)
+        public virtual async Task AddProductToRecentlyViewedListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
@@ -145,7 +145,7 @@ namespace Nop.Services.Catalog
             productIds = productIds.Take(_catalogSettings.RecentlyViewedProductsNumber).ToList();
 
             //set cookie
-            await AddRecentlyViewedProductsCookie(productIds);
+            await AddRecentlyViewedProductsCookieAsync(productIds);
         }
 
         #endregion

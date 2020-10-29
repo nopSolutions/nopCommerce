@@ -53,7 +53,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterGoogleAuthenticator(AuthModel model)
         {
-            var currentCustomer = await _workContext.GetCurrentCustomer();
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
             var isValidToken = _googleAuthenticatorService.ValidateTwoFactorToken(model.SecretKey, model.Code);
             if (isValidToken)
@@ -67,11 +67,11 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 {
                     _googleAuthenticatorService.AddGoogleAuthenticatorAccount(currentCustomer.Email, model.SecretKey);
                 }
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Successful"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Successful"));
             }
             else
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
                 return RedirectToRoute("CustomerMultiFactorAuthenticationProviderConfig", new { providerSysName = GoogleAuthenticatorDefaults.SystemName });
             }
             
@@ -86,7 +86,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
             var returnUrl = customerMultiFactorAuthenticationInfo.ReturnUrl;
             var isPersist = customerMultiFactorAuthenticationInfo.RememberMe;
 
-            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsername(username) : await _customerService.GetCustomerByEmail(username);
+            var customer = _customerSettings.UsernamesEnabled ? await _customerService.GetCustomerByUsernameAsync(username) : await _customerService.GetCustomerByEmailAsync(username);
             if (customer == null)
                 return RedirectToRoute("Login");
 
@@ -98,16 +98,16 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 {
                     HttpContext.Session.Set<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo, null);
 
-                    return await _customerRegistrationService.SignInCustomer(customer, returnUrl, isPersist);
+                    return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, isPersist);
                 }
                 else
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Unsuccessful"));
                 }
             }
             else
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Plugins.MultiFactorAuth.GoogleAuthenticator.Record.Notfound"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Record.Notfound"));
             }
 
             return RedirectToRoute("MultiFactorVerification");

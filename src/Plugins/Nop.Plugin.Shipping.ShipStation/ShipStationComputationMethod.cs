@@ -53,7 +53,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -74,7 +74,7 @@ namespace Nop.Plugin.Shipping.ShipStation
 
             try
             {
-                foreach (var rate in await _shipStationService.GetAllRates(getShippingOptionRequest))
+                foreach (var rate in await _shipStationService.GetAllRatesAsync(getShippingOptionRequest))
                 {
                     response.ShippingOptions.Add(new ShippingOption
                     {
@@ -97,7 +97,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -110,23 +110,23 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation().Result}Admin/ShipStation/Configure";
+            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/ShipStation/Configure";
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
             //settings
             var settings = new ShipStationSettings
             {
                 PackingPackageVolume = 5184
             };
-            await _settingService.SaveSetting(settings);
+            await _settingService.SaveSettingAsync(settings);
 
             //locales
-            await _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume"] = "Pack by volume",
@@ -146,22 +146,22 @@ namespace Nop.Plugin.Shipping.ShipStation
                 ["Plugins.Shipping.ShipStation.Fields.UserName.Hint"] = "Specify ShipStation user name"
             });
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             //settings
-            await _settingService.DeleteSetting<ShipStationSettings>();
+            await _settingService.DeleteSettingAsync<ShipStationSettings>();
 
             //locales
-            await _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
-            await _localizationService.DeleteLocaleResources("Plugins.Shipping.ShipStation");
+            await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Shipping.ShipStation");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Shipping.ShipStation");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

@@ -14,9 +14,9 @@ namespace Nop.Services.Vendors.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(VendorAttribute entity)
+        protected override async Task ClearCacheAsync(VendorAttribute entity)
         {
-            await Remove(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, entity);
+            await RemoveAsync(NopVendorDefaults.VendorAttributeValuesByAttributeCacheKey, entity);
         }
     }
 }

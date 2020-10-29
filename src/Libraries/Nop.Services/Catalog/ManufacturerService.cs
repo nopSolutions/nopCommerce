@@ -72,32 +72,32 @@ namespace Nop.Services.Catalog
         /// Clean up manufacturer references for a specified discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public virtual async Task ClearDiscountManufacturerMapping(Discount discount)
+        public virtual async Task ClearDiscountManufacturerMappingAsync(Discount discount)
         {
             if (discount is null)
                 throw new ArgumentNullException(nameof(discount));
 
             var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-            await _discountManufacturerMappingRepository.Delete(mappings.ToList());
+            await _discountManufacturerMappingRepository.DeleteAsync(mappings.ToList());
         }
 
         /// <summary>
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual async Task DeleteManufacturer(Manufacturer manufacturer)
+        public virtual async Task DeleteManufacturerAsync(Manufacturer manufacturer)
         {
-            await _manufacturerRepository.Delete(manufacturer);
+            await _manufacturerRepository.DeleteAsync(manufacturer);
         }
 
         /// <summary>
         /// Delete manufacturers
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
-        public virtual async Task DeleteManufacturers(IList<Manufacturer> manufacturers)
+        public virtual async Task DeleteManufacturersAsync(IList<Manufacturer> manufacturers)
         {
-            await _manufacturerRepository.Delete(manufacturers);
+            await _manufacturerRepository.DeleteAsync(manufacturers);
         }
 
         /// <summary>
@@ -114,14 +114,14 @@ namespace Nop.Services.Catalog
         /// false - load only "Unpublished" products
         /// </param>
         /// <returns>Manufacturers</returns>
-        public virtual async Task<IPagedList<Manufacturer>> GetAllManufacturers(string manufacturerName = "",
+        public virtual async Task<IPagedList<Manufacturer>> GetAllManufacturersAsync(string manufacturerName = "",
             int storeId = 0,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            return await _manufacturerRepository.GetAllPaged(query =>
+            return await _manufacturerRepository.GetAllPagedAsync(query =>
             {
                 if (!showHidden)
                     query = query.Where(m => m.Published);
@@ -140,7 +140,7 @@ namespace Nop.Services.Catalog
                 if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
-                    var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.GetCurrentCustomer().Result).Result;
+                    var allowedCustomerRolesIds = _customerService.GetCustomerRoleIdsAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
                     query = from m in query
                         join acl in _aclRepository.Table
                             on new {c1 = m.Id, c2 = nameof(Manufacturer)} equals new
@@ -176,20 +176,20 @@ namespace Nop.Services.Catalog
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Manufacturer identifiers</returns>
-        public virtual async Task<IList<int>> GetAppliedManufacturerIds(Discount discount, Customer customer)
+        public virtual async Task<IList<int>> GetAppliedManufacturerIdsAsync(Discount discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopDiscountDefaults.ManufacturerIdsByDiscountCacheKey, 
                 discount,
-                await _customerService.GetCustomerRoleIds(customer),
-                await _storeContext.GetCurrentStore());
+                await _customerService.GetCustomerRoleIdsAsync(customer),
+                await _storeContext.GetCurrentStoreAsync());
 
             var query = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)
                 .Select(dmm => dmm.EntityId);
 
-            var result = await _staticCacheManager.Get(cacheKey, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var result = await _staticCacheManager.GetAsync(cacheKey, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return result;
         }
@@ -199,9 +199,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        public virtual async Task<Manufacturer> GetManufacturerById(int manufacturerId)
+        public virtual async Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId)
         {
-            return await _manufacturerRepository.GetById(manufacturerId, cache => default);
+            return await _manufacturerRepository.GetByIdAsync(manufacturerId, cache => default);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of manufacturers</returns>
-        public virtual async Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscount(int? discountId = null,
+        public virtual async Task<IPagedList<Manufacturer>> GetManufacturersWithAppliedDiscountAsync(int? discountId = null,
             bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var manufacturers = _manufacturerRepository.Table;
@@ -228,7 +228,7 @@ namespace Nop.Services.Catalog
 
             manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
 
-            return await manufacturers.ToPagedList(pageIndex, pageSize);
+            return await manufacturers.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -236,36 +236,36 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerIds">manufacturer identifiers</param>
         /// <returns>Manufacturers</returns>
-        public virtual async Task<IList<Manufacturer>> GetManufacturersByIds(int[] manufacturerIds)
+        public virtual async Task<IList<Manufacturer>> GetManufacturersByIdsAsync(int[] manufacturerIds)
         {
-            return await _manufacturerRepository.GetByIds(manufacturerIds);
+            return await _manufacturerRepository.GetByIdsAsync(manufacturerIds);
         }
 
         /// <summary>
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual async Task InsertManufacturer(Manufacturer manufacturer)
+        public virtual async Task InsertManufacturerAsync(Manufacturer manufacturer)
         {
-            await _manufacturerRepository.Insert(manufacturer);
+            await _manufacturerRepository.InsertAsync(manufacturer);
         }
 
         /// <summary>
         /// Updates the manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual async Task UpdateManufacturer(Manufacturer manufacturer)
+        public virtual async Task UpdateManufacturerAsync(Manufacturer manufacturer)
         {
-            await _manufacturerRepository.Update(manufacturer);
+            await _manufacturerRepository.UpdateAsync(manufacturer);
         }
 
         /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual async Task DeleteProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual async Task DeleteProductManufacturerAsync(ProductManufacturer productManufacturer)
         {
-            await _productManufacturerRepository.Delete(productManufacturer);
+            await _productManufacturerRepository.DeleteAsync(productManufacturer);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerId(int manufacturerId,
+        public virtual async Task<IPagedList<ProductManufacturer>> GetProductManufacturersByManufacturerIdAsync(int manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             if (manufacturerId == 0)
@@ -295,7 +295,7 @@ namespace Nop.Services.Catalog
                 if (!_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
-                    var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
+                    var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
                     query = from pm in query
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                         join acl in _aclRepository.Table
@@ -318,7 +318,7 @@ namespace Nop.Services.Catalog
                 if (!_catalogSettings.IgnoreStoreLimitations)
                 {
                     //store mapping
-                    var currentStoreId = (await _storeContext.GetCurrentStore()).Id;
+                    var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
                     query = from pm in query
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                         join sm in _storeMappingRepository.Table
@@ -341,7 +341,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct();
             }
 
-            var productManufacturers = await query.ToPagedList(pageIndex, pageSize);
+            var productManufacturers = await query.ToPagedListAsync(pageIndex, pageSize);
 
             return productManufacturers;
         }
@@ -352,14 +352,14 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        public virtual async Task<IList<ProductManufacturer>> GetProductManufacturersByProductId(int productId,
+        public virtual async Task<IList<ProductManufacturer>> GetProductManufacturersByProductIdAsync(int productId,
             bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId,
-                showHidden, await _workContext.GetCurrentCustomer(), await _storeContext.GetCurrentStore());
+                showHidden, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync());
 
             var query = from pm in _productManufacturerRepository.Table
                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
@@ -374,7 +374,7 @@ namespace Nop.Services.Catalog
                 if (!_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
-                    var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIds(await _workContext.GetCurrentCustomer());
+                    var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
                     query = from pm in query
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                         join acl in _aclRepository.Table
@@ -397,7 +397,7 @@ namespace Nop.Services.Catalog
                 if (!_catalogSettings.IgnoreStoreLimitations)
                 {
                     //store mapping
-                    var currentStoreId = (await _storeContext.GetCurrentStore()).Id;
+                    var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
                     query = from pm in query
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                         join sm in _storeMappingRepository.Table
@@ -420,7 +420,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct();
             }
 
-            var productManufacturers = await _staticCacheManager.Get(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var productManufacturers = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
             return productManufacturers;
         }
@@ -430,27 +430,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        public virtual async Task<ProductManufacturer> GetProductManufacturerById(int productManufacturerId)
+        public virtual async Task<ProductManufacturer> GetProductManufacturerByIdAsync(int productManufacturerId)
         {
-            return await _productManufacturerRepository.GetById(productManufacturerId, cache => default);
+            return await _productManufacturerRepository.GetByIdAsync(productManufacturerId, cache => default);
         }
 
         /// <summary>
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual async Task InsertProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual async Task InsertProductManufacturerAsync(ProductManufacturer productManufacturer)
         {
-            await _productManufacturerRepository.Insert(productManufacturer);
+            await _productManufacturerRepository.InsertAsync(productManufacturer);
         }
 
         /// <summary>
         /// Updates the product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual async Task UpdateProductManufacturer(ProductManufacturer productManufacturer)
+        public virtual async Task UpdateProductManufacturerAsync(ProductManufacturer productManufacturer)
         {
-            await _productManufacturerRepository.Update(productManufacturer);
+            await _productManufacturerRepository.UpdateAsync(productManufacturer);
         }
 
         /// <summary>
@@ -458,7 +458,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">Products IDs</param>
         /// <returns>Manufacturer IDs for products</returns>
-        public virtual async Task<IDictionary<int, int[]>> GetProductManufacturerIds(int[] productIds)
+        public virtual async Task<IDictionary<int, int[]>> GetProductManufacturerIdsAsync(int[] productIds)
         {
             var query = _productManufacturerRepository.Table;
 
@@ -473,7 +473,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
         /// <returns>List of names and/or IDs not existing manufacturers</returns>
-        public virtual async Task<string[]> GetNotExistingManufacturers(string[] manufacturerIdsNames)
+        public virtual async Task<string[]> GetNotExistingManufacturersAsync(string[] manufacturerIdsNames)
         {
             if (manufacturerIdsNames == null)
                 throw new ArgumentNullException(nameof(manufacturerIdsNames));
@@ -501,7 +501,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
-        public virtual ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId)
+        public virtual ProductManufacturer FindProductManufacturerAsync(IList<ProductManufacturer> source, int productId, int manufacturerId)
         {
             foreach (var productManufacturer in source)
                 if (productManufacturer.ProductId == productId && productManufacturer.ManufacturerId == manufacturerId)
@@ -516,7 +516,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Result</returns>
-        public async Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturer(int manufacturerId, int discountId)
+        public async Task<DiscountManufacturerMapping> GetDiscountAppliedToManufacturerAsync(int manufacturerId, int discountId)
         {
             return await _discountManufacturerMappingRepository.Table.FirstOrDefaultAsync(dcm => dcm.EntityId == manufacturerId && dcm.DiscountId == discountId);
         }
@@ -525,18 +525,18 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        public async Task InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
+        public async Task InsertDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
         {
-            await _discountManufacturerMappingRepository.Insert(discountManufacturerMapping);
+            await _discountManufacturerMappingRepository.InsertAsync(discountManufacturerMapping);
         }
 
         /// <summary>
         /// Deletes a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        public async Task DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
+        public async Task DeleteDiscountManufacturerMappingAsync(DiscountManufacturerMapping discountManufacturerMapping)
         {
-            await _discountManufacturerMappingRepository.Delete(discountManufacturerMapping);
+            await _discountManufacturerMappingRepository.DeleteAsync(discountManufacturerMapping);
         }
 
         #endregion

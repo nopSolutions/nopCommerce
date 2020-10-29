@@ -35,10 +35,10 @@ namespace Nop.Web.Framework.Factories
         /// <typeparam name="T">Localized model type</typeparam>
         /// <param name="configure">Model configuration action</param>
         /// <returns>List of localized model</returns>
-        public virtual async Task<IList<T>> PrepareLocalizedModels<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel
+        public virtual async Task<IList<T>> PrepareLocalizedModelsAsync<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel
         {
             //get all available languages
-            var availableLanguages = await _languageService.GetAllLanguages(true);
+            var availableLanguages = await _languageService.GetAllLanguagesAsync(true);
 
             //prepare models
             var localizedModels = availableLanguages.Select(language =>

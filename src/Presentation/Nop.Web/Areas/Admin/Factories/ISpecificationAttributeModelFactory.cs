@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Specification attribute group search model</param>
         /// <returns>Specification attribute group search model</returns>
-        Task<SpecificationAttributeGroupSearchModel> PrepareSpecificationAttributeGroupSearchModel(SpecificationAttributeGroupSearchModel searchModel);
+        Task<SpecificationAttributeGroupSearchModel> PrepareSpecificationAttributeGroupSearchModelAsync(SpecificationAttributeGroupSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged specification attribute group list model
         /// </summary>
         /// <param name="searchModel">Specification attribute group search model</param>
         /// <returns>Specification attribute group list model</returns>
-        Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModel(SpecificationAttributeGroupSearchModel searchModel);
+        Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModelAsync(SpecificationAttributeGroupSearchModel searchModel);
 
         /// <summary>
         /// Prepare specification attribute group model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="specificationAttributeGroup">Specification attribute group</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Specification attribute group model</returns>
-        Task<SpecificationAttributeGroupModel> PrepareSpecificationAttributeGroupModel(SpecificationAttributeGroupModel model,
+        Task<SpecificationAttributeGroupModel> PrepareSpecificationAttributeGroupModelAsync(SpecificationAttributeGroupModel model,
             SpecificationAttributeGroup specificationAttributeGroup, bool excludeProperties = false);
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Specification attribute search model</param>
         /// <param name="group">Specification attribute group</param>
         /// <returns>Specification attribute list model</returns>
-        Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModel(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group);
+        Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModelAsync(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group);
 
         /// <summary>
         /// Prepare specification attribute model
@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Specification attribute model</returns>
-        Task<SpecificationAttributeModel> PrepareSpecificationAttributeModel(SpecificationAttributeModel model,
+        Task<SpecificationAttributeModel> PrepareSpecificationAttributeModelAsync(SpecificationAttributeModel model,
             SpecificationAttribute specificationAttribute, bool excludeProperties = false);
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Specification attribute option search model</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>Specification attribute option list model</returns>
-        Task<SpecificationAttributeOptionListModel> PrepareSpecificationAttributeOptionListModel(
+        Task<SpecificationAttributeOptionListModel> PrepareSpecificationAttributeOptionListModelAsync(
             SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute);
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="specificationAttributeOption">Specification attribute option</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Specification attribute option model</returns>
-        Task<SpecificationAttributeOptionModel> PrepareSpecificationAttributeOptionModel(SpecificationAttributeOptionModel model,
+        Task<SpecificationAttributeOptionModel> PrepareSpecificationAttributeOptionModelAsync(SpecificationAttributeOptionModel model,
             SpecificationAttribute specificationAttribute, SpecificationAttributeOption specificationAttributeOption, 
             bool excludeProperties = false);
 
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Search model of products that use the specification attribute</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>List model of products that use the specification attribute</returns>
-        Task<SpecificationAttributeProductListModel> PrepareSpecificationAttributeProductListModel(
+        Task<SpecificationAttributeProductListModel> PrepareSpecificationAttributeProductListModelAsync(
             SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute);
     }
 }

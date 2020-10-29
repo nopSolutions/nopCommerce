@@ -73,7 +73,7 @@
                                 {
                                     Title = T("Plugins.Widgets.FacebookPixel.Configuration.Fields.Store").Text,
                                     Width = "200",
-                                    Visible = (await storeService.GetAllStores()).Count > 1
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                 },
                                 new ColumnProperty(nameof(FacebookPixelModel.Enabled))
                                 {

@@ -10,7 +10,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "ProductReviewsPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 @inject IStoreService storeService
 
@@ -178,7 +178,7 @@
                             new ColumnProperty(nameof(ProductReviewModel.StoreName))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Store").Text,
-                                Visible = (await storeService.GetAllStores()).Count > 1 ? true : false,
+                                Visible = (await storeService.GetAllStoresAsync()).Count > 1 ? true : false,
                                 Width = "150"
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ProductName))

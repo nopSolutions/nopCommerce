@@ -52,9 +52,9 @@ namespace Nop.Services.Blogs
         /// Deletes a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public virtual async Task DeleteBlogPost(BlogPost blogPost)
+        public virtual async Task DeleteBlogPostAsync(BlogPost blogPost)
         {
-            await _blogPostRepository.Delete(blogPost);
+            await _blogPostRepository.DeleteAsync(blogPost);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>Blog post</returns>
-        public virtual async Task<BlogPost> GetBlogPostById(int blogPostId)
+        public virtual async Task<BlogPost> GetBlogPostByIdAsync(int blogPostId)
         {
-            return await _blogPostRepository.GetById(blogPostId, cache => default);
+            return await _blogPostRepository.GetByIdAsync(blogPostId, cache => default);
         }
 
         /// <summary>
@@ -79,11 +79,11 @@ namespace Nop.Services.Blogs
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="title">Filter by blog post title</param>
         /// <returns>Blog posts</returns>
-        public virtual async Task<IPagedList<BlogPost>> GetAllBlogPosts(int storeId = 0, int languageId = 0,
+        public virtual async Task<IPagedList<BlogPost>> GetAllBlogPostsAsync(int storeId = 0, int languageId = 0,
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            return await _blogPostRepository.GetAllPaged(query =>
+            return await _blogPostRepository.GetAllPagedAsync(query =>
             {
                 if (dateFrom.HasValue)
                     query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
@@ -129,18 +129,18 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual async Task<IPagedList<BlogPost>> GetAllBlogPostsByTag(int storeId = 0,
+        public virtual async Task<IPagedList<BlogPost>> GetAllBlogPostsByTagAsync(int storeId = 0,
             int languageId = 0, string tag = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             tag = tag.Trim();
 
             //we load all records and only then filter them by tag
-            var blogPostsAll = await GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
+            var blogPostsAll = await GetAllBlogPostsAsync(storeId: storeId, languageId: languageId, showHidden: showHidden);
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
-                var tags = await ParseTags(blogPost);
+                var tags = await ParseTagsAsync(blogPost);
                 if (!string.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     taggedBlogPosts.Add(blogPost);
             }
@@ -157,19 +157,19 @@ namespace Nop.Services.Blogs
         /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        public virtual async Task<IList<BlogPostTag>> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
+        public virtual async Task<IList<BlogPostTag>> GetAllBlogPostTagsAsync(int storeId, int languageId, bool showHidden = false)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogTagsCacheKey, languageId, storeId, showHidden);
 
-            var blogPostTags = await _staticCacheManager.Get(cacheKey, async () =>
+            var blogPostTags = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var rezBlogPostTags = new List<BlogPostTag>();
 
-                var blogPosts = await GetAllBlogPosts(storeId, languageId, showHidden: showHidden);
+                var blogPosts = await GetAllBlogPostsAsync(storeId, languageId, showHidden: showHidden);
 
                 foreach (var blogPost in blogPosts)
                 {
-                    var tags = await ParseTags(blogPost);
+                    var tags = await ParseTagsAsync(blogPost);
                     foreach (var tag in tags)
                     {
                         var foundBlogPostTag = rezBlogPostTags.Find(bpt =>
@@ -198,18 +198,18 @@ namespace Nop.Services.Blogs
         /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public virtual async Task InsertBlogPost(BlogPost blogPost)
+        public virtual async Task InsertBlogPostAsync(BlogPost blogPost)
         {
-            await _blogPostRepository.Insert(blogPost);
+            await _blogPostRepository.InsertAsync(blogPost);
         }
 
         /// <summary>
         /// Updates the blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public virtual async Task UpdateBlogPost(BlogPost blogPost)
+        public virtual async Task UpdateBlogPostAsync(BlogPost blogPost)
         {
-            await _blogPostRepository.Update(blogPost);
+            await _blogPostRepository.UpdateAsync(blogPost);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace Nop.Services.Blogs
         /// <param name="dateFrom">Date from</param>
         /// <param name="dateTo">Date to</param>
         /// <returns>Filtered posts</returns>
-        public virtual Task<IList<BlogPost>> GetPostsByDate(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
+        public virtual Task<IList<BlogPost>> GetPostsByDateAsync(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
         {
             if (blogPosts == null)
                 throw new ArgumentNullException(nameof(blogPosts));
@@ -236,7 +236,7 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Tags</returns>
-        public virtual Task<IList<string>> ParseTags(BlogPost blogPost) 
+        public virtual Task<IList<string>> ParseTagsAsync(BlogPost blogPost) 
         {
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
@@ -286,10 +286,10 @@ namespace Nop.Services.Blogs
         /// <param name="toUtc">Item creation to; null to load all records</param>
         /// <param name="commentText">Search comment text; null to load all records</param>
         /// <returns>Comments</returns>
-        public virtual async Task<IList<BlogComment>> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
+        public virtual async Task<IList<BlogComment>> GetAllCommentsAsync(int customerId = 0, int storeId = 0, int? blogPostId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
-            return await _blogCommentRepository.GetAll(query =>
+            return await _blogCommentRepository.GetAllAsync(query =>
             {
                 if (approved.HasValue)
                     query = query.Where(comment => comment.IsApproved == approved);
@@ -323,9 +323,9 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
         /// <returns>Blog comment</returns>
-        public virtual async Task<BlogComment> GetBlogCommentById(int blogCommentId)
+        public virtual async Task<BlogComment> GetBlogCommentByIdAsync(int blogCommentId)
         {
-            return await _blogCommentRepository.GetById(blogCommentId, cache => default);
+            return await _blogCommentRepository.GetByIdAsync(blogCommentId, cache => default);
         }
 
         /// <summary>
@@ -333,9 +333,9 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="commentIds">Blog comment identifiers</param>
         /// <returns>Blog comments</returns>
-        public virtual async Task<IList<BlogComment>> GetBlogCommentsByIds(int[] commentIds)
+        public virtual async Task<IList<BlogComment>> GetBlogCommentsByIdsAsync(int[] commentIds)
         {
-            return await _blogCommentRepository.GetByIds(commentIds);
+            return await _blogCommentRepository.GetByIdsAsync(commentIds);
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace Nop.Services.Blogs
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="isApproved">A value indicating whether to count only approved or not approved comments; pass null to get number of all comments</param>
         /// <returns>Number of blog comments</returns>
-        public virtual async Task<int> GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
+        public virtual async Task<int> GetBlogCommentsCountAsync(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
         {
             var query = _blogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
 
@@ -357,43 +357,43 @@ namespace Nop.Services.Blogs
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
             
-            return await _staticCacheManager.Get(cacheKey, () => query.CountAsync());
+            return await _staticCacheManager.GetAsync(cacheKey, () => query.CountAsync());
         }
 
         /// <summary>
         /// Deletes a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        public virtual async Task DeleteBlogComment(BlogComment blogComment)
+        public virtual async Task DeleteBlogCommentAsync(BlogComment blogComment)
         {
-            await _blogCommentRepository.Delete(blogComment);
+            await _blogCommentRepository.DeleteAsync(blogComment);
         }
 
         /// <summary>
         /// Deletes blog comments
         /// </summary>
         /// <param name="blogComments">Blog comments</param>
-        public virtual async Task DeleteBlogComments(IList<BlogComment> blogComments)
+        public virtual async Task DeleteBlogCommentsAsync(IList<BlogComment> blogComments)
         {
-            await _blogCommentRepository.Delete(blogComments);
+            await _blogCommentRepository.DeleteAsync(blogComments);
         }
 
         /// <summary>
         /// Inserts a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        public virtual async Task InsertBlogComment(BlogComment blogComment)
+        public virtual async Task InsertBlogCommentAsync(BlogComment blogComment)
         {
-            await _blogCommentRepository.Insert(blogComment);
+            await _blogCommentRepository.InsertAsync(blogComment);
         }
 
         /// <summary>
         /// Update a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        public virtual async Task UpdateBlogComment(BlogComment blogComment)
+        public virtual async Task UpdateBlogCommentAsync(BlogComment blogComment)
         {
-            await _blogCommentRepository.Update(blogComment);
+            await _blogCommentRepository.UpdateAsync(blogComment);
         }
 
         #endregion

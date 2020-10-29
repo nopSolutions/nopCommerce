@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Checkout attribute search model</param>
         /// <returns>Checkout attribute search model</returns>
-        Task<CheckoutAttributeSearchModel> PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel searchModel);
+        Task<CheckoutAttributeSearchModel> PrepareCheckoutAttributeSearchModelAsync(CheckoutAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged checkout attribute list model
         /// </summary>
         /// <param name="searchModel">Checkout attribute search model</param>
         /// <returns>Checkout attribute list model</returns>
-        Task<CheckoutAttributeListModel> PrepareCheckoutAttributeListModel(CheckoutAttributeSearchModel searchModel);
+        Task<CheckoutAttributeListModel> PrepareCheckoutAttributeListModelAsync(CheckoutAttributeSearchModel searchModel);
 
         /// <summary>
         /// Prepare checkout attribute model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Checkout attribute model</returns>
-        Task<CheckoutAttributeModel> PrepareCheckoutAttributeModel(CheckoutAttributeModel model,
+        Task<CheckoutAttributeModel> PrepareCheckoutAttributeModelAsync(CheckoutAttributeModel model,
             CheckoutAttribute checkoutAttribute, bool excludeProperties = false);
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Checkout attribute value search model</param>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Checkout attribute value list model</returns>
-        Task<CheckoutAttributeValueListModel> PrepareCheckoutAttributeValueListModel(CheckoutAttributeValueSearchModel searchModel,
+        Task<CheckoutAttributeValueListModel> PrepareCheckoutAttributeValueListModelAsync(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute);
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Checkout attribute value model</returns>
-        Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModel(CheckoutAttributeValueModel model,
+        Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModelAsync(CheckoutAttributeValueModel model,
             CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue, bool excludeProperties = false);
     }
 }

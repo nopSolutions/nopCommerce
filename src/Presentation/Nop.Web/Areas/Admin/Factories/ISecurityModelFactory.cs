@@ -13,6 +13,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Permission mapping model</param>
         /// <returns>Permission mapping model</returns>
-        Task<PermissionMappingModel> PreparePermissionMappingModel(PermissionMappingModel model);
+        Task<PermissionMappingModel> PreparePermissionMappingModelAsync(PermissionMappingModel model);
     }
 }

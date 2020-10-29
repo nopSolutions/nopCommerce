@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int pageNumber, string tab)
         {
-            var model = await _privateMessagesModelFactory.PrepareSentModel(pageNumber, tab);
+            var model = await _privateMessagesModelFactory.PrepareSentModelAsync(pageNumber, tab);
             return View(model);
         }
     }

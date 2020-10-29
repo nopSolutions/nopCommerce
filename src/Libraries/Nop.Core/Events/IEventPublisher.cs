@@ -12,6 +12,6 @@
          /// </summary>
          /// <typeparam name="TEvent">Type of event</typeparam>
          /// <param name="event">Event object</param>
-         Task Publish<TEvent>(TEvent @event);
+         Task PublishAsync<TEvent>(TEvent @event);
      }
  }

@@ -30,8 +30,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
         {
             var model = new PaymentInfoModel
             {
-                DescriptionText = await _localizationService.GetLocalizedSetting(_checkMoneyOrderPaymentSettings,
-                    x => x.DescriptionText, (await _workContext.GetWorkingLanguage()).Id, (await _storeContext.GetCurrentStore()).Id)
+                DescriptionText = await _localizationService.GetLocalizedSettingAsync(_checkMoneyOrderPaymentSettings,
+                    x => x.DescriptionText, (await _workContext.GetWorkingLanguageAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentInfo.cshtml", model);

@@ -4,7 +4,7 @@
 @inject IWorkContext workContext
 @inject LocalizationSettings localizationSettings
 @{
-    var supportRtl = (await workContext.GetWorkingLanguage()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
     string url = null;
     if (!string.IsNullOrEmpty(Model.ControllerName) && !string.IsNullOrEmpty(Model.ActionName))
     {

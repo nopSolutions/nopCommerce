@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Methods()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             //prepare model
@@ -61,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Methods(ExternalAuthenticationMethodSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
@@ -73,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> MethodUpdate(ExternalAuthenticationMethodModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
             var method = _authenticationPluginManager.LoadPluginBySystemName(model.SystemName);
@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as disabled
                     _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(method.PluginDescriptor.SystemName);
-                    await _settingService.SaveSetting(_externalAuthenticationSettings);
+                    await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
                 }
             }
             else
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //mark as active
                     _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(method.PluginDescriptor.SystemName);
-                    await _settingService.SaveSetting(_externalAuthenticationSettings);
+                    await _settingService.SaveSettingAsync(_externalAuthenticationSettings);
                 }
             }
 
@@ -103,7 +103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.Save();
 
             //raise event
-            await _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
+            await _eventPublisher.PublishAsync(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

@@ -52,22 +52,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task UpdateAttributeLocales(AddressAttribute addressAttribute, AddressAttributeModel model)
+        protected virtual async Task UpdateAttributeLocalesAsync(AddressAttribute addressAttribute, AddressAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(addressAttribute,
+                await _localizedEntityService.SaveLocalizedValueAsync(addressAttribute,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
             }
         }
 
-        protected virtual async Task UpdateValueLocales(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
+        protected virtual async Task UpdateValueLocalesAsync(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(addressAttributeValue,
+                await _localizedEntityService.SaveLocalizedValueAsync(addressAttributeValue,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //select an appropriate panel
@@ -103,22 +103,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(AddressAttributeSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _addressAttributeModelFactory.PrepareAddressAttributeListModel(searchModel);
+            var model = await _addressAttributeModelFactory.PrepareAddressAttributeListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _addressAttributeModelFactory.PrepareAddressAttributeModel(new AddressAttributeModel(), null);
+            var model = await _addressAttributeModelFactory.PrepareAddressAttributeModelAsync(new AddressAttributeModel(), null);
 
             return View(model);
         }
@@ -126,23 +126,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(AddressAttributeModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var addressAttribute = model.ToEntity<AddressAttribute>();
-                await _addressAttributeService.InsertAddressAttribute(addressAttribute);
+                await _addressAttributeService.InsertAddressAttributeAsync(addressAttribute);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewAddressAttribute",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewAddressAttribute"), addressAttribute.Id),
+                await _customerActivityService.InsertActivityAsync("AddNewAddressAttribute",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewAddressAttribute"), addressAttribute.Id),
                     addressAttribute);
 
                 //locales
-                await UpdateAttributeLocales(addressAttribute, model);
+                await UpdateAttributeLocalesAsync(addressAttribute, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Address.AddressAttributes.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _addressAttributeModelFactory.PrepareAddressAttributeModel(model, null, true);
+            model = await _addressAttributeModelFactory.PrepareAddressAttributeModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -159,16 +159,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(id);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(id);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _addressAttributeModelFactory.PrepareAddressAttributeModel(null, addressAttribute);
+            var model = await _addressAttributeModelFactory.PrepareAddressAttributeModelAsync(null, addressAttribute);
 
             return View(model);
         }
@@ -176,28 +176,28 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(AddressAttributeModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(model.Id);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(model.Id);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 addressAttribute = model.ToEntity(addressAttribute);
-                await _addressAttributeService.UpdateAddressAttribute(addressAttribute);
+                await _addressAttributeService.UpdateAddressAttributeAsync(addressAttribute);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditAddressAttribute",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditAddressAttribute"), addressAttribute.Id),
+                await _customerActivityService.InsertActivityAsync("EditAddressAttribute",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAddressAttribute"), addressAttribute.Id),
                     addressAttribute);
 
                 //locales
-                await UpdateAttributeLocales(addressAttribute, model);
+                await UpdateAttributeLocalesAsync(addressAttribute, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Address.AddressAttributes.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Address.AddressAttributes.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _addressAttributeModelFactory.PrepareAddressAttributeModel(model, addressAttribute, true);
+            model = await _addressAttributeModelFactory.PrepareAddressAttributeModelAsync(model, addressAttribute, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -215,22 +215,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(id);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(id);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
-            await _addressAttributeService.DeleteAddressAttribute(addressAttribute);
+            await _addressAttributeService.DeleteAddressAttributeAsync(addressAttribute);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteAddressAttribute",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id),
+            await _customerActivityService.InsertActivityAsync("DeleteAddressAttribute",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteAddressAttribute"), addressAttribute.Id),
                 addressAttribute);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Address.AddressAttributes.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Address.AddressAttributes.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -242,32 +242,32 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ValueList(AddressAttributeValueSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedDataTablesJson();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(searchModel.AddressAttributeId)
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(searchModel.AddressAttributeId)
                 ?? throw new ArgumentException("No address attribute found with the specified id");
 
             //prepare model
-            var model = await _addressAttributeModelFactory.PrepareAddressAttributeValueListModel(searchModel, addressAttribute);
+            var model = await _addressAttributeModelFactory.PrepareAddressAttributeValueListModelAsync(searchModel, addressAttribute);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> ValueCreatePopup(int addressAttributeId)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(addressAttributeId);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(addressAttributeId);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
             var model = await _addressAttributeModelFactory
-                .PrepareAddressAttributeValueModel(new AddressAttributeValueModel(), addressAttribute, null);
+                .PrepareAddressAttributeValueModelAsync(new AddressAttributeValueModel(), addressAttribute, null);
 
             return View(model);
         }
@@ -275,25 +275,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ValueCreatePopup(AddressAttributeValueModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(model.AddressAttributeId);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(model.AddressAttributeId);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 var addressAttributeValue = model.ToEntity<AddressAttributeValue>();
-                await _addressAttributeService.InsertAddressAttributeValue(addressAttributeValue);
+                await _addressAttributeService.InsertAddressAttributeValueAsync(addressAttributeValue);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewAddressAttributeValue",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewAddressAttributeValue"), addressAttributeValue.Id),
+                await _customerActivityService.InsertActivityAsync("AddNewAddressAttributeValue",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewAddressAttributeValue"), addressAttributeValue.Id),
                     addressAttributeValue);
 
-                await UpdateValueLocales(addressAttributeValue, model);
+                await UpdateValueLocalesAsync(addressAttributeValue, model);
 
                 ViewBag.RefreshPage = true;
 
@@ -301,7 +301,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModel(model, addressAttribute, null, true);
+            model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModelAsync(model, addressAttribute, null, true);
             
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -309,21 +309,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ValueEditPopup(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute value with the specified id
-            var addressAttributeValue = await _addressAttributeService.GetAddressAttributeValueById(id);
+            var addressAttributeValue = await _addressAttributeService.GetAddressAttributeValueByIdAsync(id);
             if (addressAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(addressAttributeValue.AddressAttributeId);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(addressAttributeValue.AddressAttributeId);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModel(null, addressAttribute, addressAttributeValue);
+            var model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModelAsync(null, addressAttribute, addressAttributeValue);
 
             return View(model);
         }
@@ -331,29 +331,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ValueEditPopup(AddressAttributeValueModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute value with the specified id
-            var addressAttributeValue = await _addressAttributeService.GetAddressAttributeValueById(model.Id);
+            var addressAttributeValue = await _addressAttributeService.GetAddressAttributeValueByIdAsync(model.Id);
             if (addressAttributeValue == null)
                 return RedirectToAction("List");
 
             //try to get an address attribute with the specified id
-            var addressAttribute = await _addressAttributeService.GetAddressAttributeById(addressAttributeValue.AddressAttributeId);
+            var addressAttribute = await _addressAttributeService.GetAddressAttributeByIdAsync(addressAttributeValue.AddressAttributeId);
             if (addressAttribute == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 addressAttributeValue = model.ToEntity(addressAttributeValue);
-                await _addressAttributeService.UpdateAddressAttributeValue(addressAttributeValue);
+                await _addressAttributeService.UpdateAddressAttributeValueAsync(addressAttributeValue);
 
-                await UpdateValueLocales(addressAttributeValue, model);
+                await UpdateValueLocalesAsync(addressAttributeValue, model);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditAddressAttributeValue",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditAddressAttributeValue"), addressAttributeValue.Id),
+                await _customerActivityService.InsertActivityAsync("EditAddressAttributeValue",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditAddressAttributeValue"), addressAttributeValue.Id),
                     addressAttributeValue);
 
                 ViewBag.RefreshPage = true;
@@ -362,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModel(model, addressAttribute, addressAttributeValue, true);
+            model = await _addressAttributeModelFactory.PrepareAddressAttributeValueModelAsync(model, addressAttribute, addressAttributeValue, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -371,18 +371,18 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ValueDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             //try to get an address attribute value with the specified id
-            var addressAttributeValue = await _addressAttributeService.GetAddressAttributeValueById(id)
+            var addressAttributeValue = await _addressAttributeService.GetAddressAttributeValueByIdAsync(id)
                 ?? throw new ArgumentException("No address attribute value found with the specified id", nameof(id));
 
-            await _addressAttributeService.DeleteAddressAttributeValue(addressAttributeValue);
+            await _addressAttributeService.DeleteAddressAttributeValueAsync(addressAttributeValue);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteAddressAttributeValue",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteAddressAttributeValue"), addressAttributeValue.Id),
+            await _customerActivityService.InsertActivityAsync("DeleteAddressAttributeValue",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteAddressAttributeValue"), addressAttributeValue.Id),
                 addressAttributeValue);
 
             return new NullJsonResult();

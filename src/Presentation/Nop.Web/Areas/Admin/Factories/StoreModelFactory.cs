@@ -47,7 +47,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Store search model</param>
         /// <returns>Store search model</returns>
-        public virtual Task<StoreSearchModel> PrepareStoreSearchModel(StoreSearchModel searchModel)
+        public virtual Task<StoreSearchModel> PrepareStoreSearchModelAsync(StoreSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -63,13 +63,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Store search model</param>
         /// <returns>Store list model</returns>
-        public virtual async Task<StoreListModel> PrepareStoreListModel(StoreSearchModel searchModel)
+        public virtual async Task<StoreListModel> PrepareStoreListModelAsync(StoreSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get stores
-            var stores = (await _storeService.GetAllStores()).ToPagedList(searchModel);
+            var stores = (await _storeService.GetAllStoresAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new StoreListModel().PrepareToGrid(searchModel, stores, () =>
@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="store">Store</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Store model</returns>
-        public virtual async Task<StoreModel> PrepareStoreModel(StoreModel model, Store store, bool excludeProperties = false)
+        public virtual async Task<StoreModel> PrepareStoreModelAsync(StoreModel model, Store store, bool excludeProperties = false)
         {
             Action<StoreLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -100,17 +100,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(store, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(store, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, 
-                defaultItemText: await _localizationService.GetResource("Admin.Common.EmptyItemText"));
+            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, 
+                defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.EmptyItemText"));
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

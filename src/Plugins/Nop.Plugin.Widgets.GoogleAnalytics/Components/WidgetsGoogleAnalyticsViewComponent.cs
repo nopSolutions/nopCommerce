@@ -83,14 +83,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             return text;
         }
 
-        private async Task<Order> GetLastOrder()
+        private async Task<Order> GetLastOrderAsync()
         {
-            var order = (await _orderService.SearchOrders(storeId: (await _storeContext.GetCurrentStore()).Id,
-                customerId: (await _workContext.GetCurrentCustomer()).Id, pageSize: 1)).FirstOrDefault();
+            var order = (await _orderService.SearchOrdersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+                customerId: (await _workContext.GetCurrentCustomerAsync()).Id, pageSize: 1)).FirstOrDefault();
             return order;
         }
 
-        private async Task<string> GetEcommerceScript(Order order)
+        private async Task<string> GetEcommerceScriptAsync(Order order)
         {
             var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", _googleAnalyticsSettings.GoogleId);
@@ -101,14 +101,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
             //whether to include customer identifier
             var customerIdCode = string.Empty;
-            if (_googleAnalyticsSettings.IncludeCustomerId && !await _customerService.IsGuest(await _workContext.GetCurrentCustomer()))
-                customerIdCode = $"gtag('set', {{'user_id': '{(await _workContext.GetCurrentCustomer()).Id}'}});{Environment.NewLine}";
+            if (_googleAnalyticsSettings.IncludeCustomerId && !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
+                customerIdCode = $"gtag('set', {{'user_id': '{(await _workContext.GetCurrentCustomerAsync()).Id}'}});{Environment.NewLine}";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{CUSTOMER_TRACKING}", customerIdCode);
 
             //ecommerce info
-            var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>((await _storeContext.GetCurrentStore()).Id);
+            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>((await _storeContext.GetCurrentStoreAsync()).Id);
             //ensure that ecommerce tracking code is renderred only once (avoid duplicated data in Google Analytics)
-            if (order != null && !await _genericAttributeService.GetAttribute<bool>(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
+            if (order != null && !await _genericAttributeService.GetAttributeAsync<bool>(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
             {
                 var usCulture = new CultureInfo("en-US");
 
@@ -124,9 +124,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     ]
                 });";
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", FixIllegalJavaScriptChars(order.CustomOrderNumber));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", FixIllegalJavaScriptChars((await _storeContext.GetCurrentStore()).Name));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", FixIllegalJavaScriptChars((await _storeContext.GetCurrentStoreAsync()).Name));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
-                var currencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+                var currencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CURRENCY}", currencyCode);
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
                 var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
@@ -134,7 +134,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
                 var sb = new StringBuilder();
                 var listingPosition = 1;
-                foreach (var item in await _orderService.GetOrderItems(order.Id))
+                foreach (var item in await _orderService.GetOrderItemsAsync(order.Id))
                 {
                     if (!string.IsNullOrEmpty(sb.ToString()))
                         sb.AppendLine(",");
@@ -149,7 +149,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     }
                     ";
 
-                    var product = await _productService.GetProductById(item.ProductId);
+                    var product = await _productService.GetProductByIdAsync(item.ProductId);
 
                     var sku = _productService.FormatSku(product, item.AttributesXml);
 
@@ -158,7 +158,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
-                    var category = (await _categoryService.GetCategoryById((await _categoryService.GetProductCategoriesByProductId(item.ProductId)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
+                    var category = (await _categoryService.GetCategoryByIdAsync((await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).FirstOrDefault()?.CategoryId ?? 0))?.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{LISTPOSITION}", listingPosition.ToString());
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
@@ -173,7 +173,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
                 analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE_TRACKING}", analyticsEcommerceScript);
 
-                await _genericAttributeService.SaveAttribute(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME, true);
+                await _genericAttributeService.SaveAttributeAsync(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME, true);
             }
             else
             {
@@ -205,17 +205,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     action.ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase);
                 if (isOrderCompletedPage && _googleAnalyticsSettings.EnableEcommerce && _googleAnalyticsSettings.UseJsToSendEcommerceInfo)
                 {
-                    var lastOrder = await GetLastOrder();
-                    script += GetEcommerceScript(lastOrder);
+                    var lastOrder = await GetLastOrderAsync();
+                    script += GetEcommerceScriptAsync(lastOrder);
                 }
                 else
                 {
-                    script += GetEcommerceScript(null);
+                    script += GetEcommerceScriptAsync(null);
                 }
             }
             catch (Exception ex)
             {
-                await _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for Google eCommerce tracking", ex.ToString());
+                await _logger.InsertLogAsync(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for Google eCommerce tracking", ex.ToString());
             }
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
         }

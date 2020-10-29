@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="methodsModel">Payment methods model</param>        
         /// <returns>Payment methods model</returns>
-        Task<PaymentMethodsModel> PreparePaymentMethodsModel(PaymentMethodsModel methodsModel);
+        Task<PaymentMethodsModel> PreparePaymentMethodsModelAsync(PaymentMethodsModel methodsModel);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -21,14 +21,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method search model</returns>
-        Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModel(PaymentMethodSearchModel searchModel);
+        Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged payment method list model
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method list model</returns>
-        Task<PaymentMethodListModel> PreparePaymentMethodListModel(PaymentMethodSearchModel searchModel);
+        Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -36,6 +36,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Payment method restriction model</param>
         /// <returns>Payment method restriction model</returns>
-        Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModel(PaymentMethodRestrictionModel model);
+        Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model);
     }
 }

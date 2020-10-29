@@ -64,11 +64,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _emailAccountModelFactory.PrepareEmailAccountSearchModel(new EmailAccountSearchModel());
+            var model = await _emailAccountModelFactory.PrepareEmailAccountSearchModelAsync(new EmailAccountSearchModel());
 
             return View(model);
         }
@@ -76,37 +76,37 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(EmailAccountSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _emailAccountModelFactory.PrepareEmailAccountListModel(searchModel);
+            var model = await _emailAccountModelFactory.PrepareEmailAccountListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> MarkAsDefaultEmail(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
-            var defaultEmailAccount = await _emailAccountService.GetEmailAccountById(id);
+            var defaultEmailAccount = await _emailAccountService.GetEmailAccountByIdAsync(id);
             if (defaultEmailAccount == null)
                 return RedirectToAction("List");
 
             _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
-            await _settingService.SaveSetting(_emailAccountSettings);
+            await _settingService.SaveSettingAsync(_emailAccountSettings);
 
             return RedirectToAction("List");
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _emailAccountModelFactory.PrepareEmailAccountModel(new EmailAccountModel(), null);
+            var model = await _emailAccountModelFactory.PrepareEmailAccountModelAsync(new EmailAccountModel(), null);
 
             return View(model);
         }
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(EmailAccountModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -123,19 +123,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //set password manually
                 emailAccount.Password = model.Password;
-                await _emailAccountService.InsertEmailAccount(emailAccount);
+                await _emailAccountService.InsertEmailAccountAsync(emailAccount);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewEmailAccount",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewEmailAccount"), emailAccount.Id), emailAccount);
+                await _customerActivityService.InsertActivityAsync("AddNewEmailAccount",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewEmailAccount"), emailAccount.Id), emailAccount);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Added"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = await _emailAccountModelFactory.PrepareEmailAccountModel(model, null, true);
+            model = await _emailAccountModelFactory.PrepareEmailAccountModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -143,16 +143,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //try to get an email account with the specified id
-            var emailAccount = await _emailAccountService.GetEmailAccountById(id);
+            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(id);
             if (emailAccount == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _emailAccountModelFactory.PrepareEmailAccountModel(null, emailAccount);
+            var model = await _emailAccountModelFactory.PrepareEmailAccountModelAsync(null, emailAccount);
 
             return View(model);
         }
@@ -161,30 +161,30 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public virtual async Task<IActionResult> Edit(EmailAccountModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //try to get an email account with the specified id
-            var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
+            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(model.Id);
             if (emailAccount == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 emailAccount = model.ToEntity(emailAccount);
-                await _emailAccountService.UpdateEmailAccount(emailAccount);
+                await _emailAccountService.UpdateEmailAccountAsync(emailAccount);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditEmailAccount",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditEmailAccount"), emailAccount.Id), emailAccount);
+                await _customerActivityService.InsertActivityAsync("EditEmailAccount",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditEmailAccount"), emailAccount.Id), emailAccount);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Updated"));
 
                 return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
             }
 
             //prepare model
-            model = await _emailAccountModelFactory.PrepareEmailAccountModel(model, emailAccount, true);
+            model = await _emailAccountModelFactory.PrepareEmailAccountModelAsync(model, emailAccount, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -194,19 +194,19 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("changepassword")]
         public virtual async Task<IActionResult> ChangePassword(EmailAccountModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //try to get an email account with the specified id
-            var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
+            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(model.Id);
             if (emailAccount == null)
                 return RedirectToAction("List");
 
             //do not validate model
             emailAccount.Password = model.Password;
-            await _emailAccountService.UpdateEmailAccount(emailAccount);
+            await _emailAccountService.UpdateEmailAccountAsync(emailAccount);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged"));
 
             return RedirectToAction("Edit", new { id = emailAccount.Id });
         }
@@ -215,17 +215,17 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("sendtestemail")]
         public virtual async Task<IActionResult> SendTestEmail(EmailAccountModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //try to get an email account with the specified id
-            var emailAccount = await _emailAccountService.GetEmailAccountById(model.Id);
+            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(model.Id);
             if (emailAccount == null)
                 return RedirectToAction("List");
 
             if (!CommonHelper.IsValidEmail(model.SendTestEmailTo))
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Common.WrongEmail"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
                 return View(model);
             }
 
@@ -234,11 +234,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (string.IsNullOrWhiteSpace(model.SendTestEmailTo))
                     throw new NopException("Enter test email address");
 
-                var subject = (await _storeContext.GetCurrentStore()).Name + ". Testing email functionality.";
+                var subject = (await _storeContext.GetCurrentStoreAsync()).Name + ". Testing email functionality.";
                 var body = "Email works fine.";
-                await _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
+                await _emailSender.SendEmailAsync(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.SendTestEmail.Success"));
             }
             catch (Exception exc)
             {
@@ -246,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _emailAccountModelFactory.PrepareEmailAccountModel(model, emailAccount, true);
+            model = await _emailAccountModelFactory.PrepareEmailAccountModelAsync(model, emailAccount, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -255,23 +255,23 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             //try to get an email account with the specified id
-            var emailAccount = await _emailAccountService.GetEmailAccountById(id);
+            var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(id);
             if (emailAccount == null)
                 return RedirectToAction("List");
 
             try
             {
-                await _emailAccountService.DeleteEmailAccount(emailAccount);
+                await _emailAccountService.DeleteEmailAccountAsync(emailAccount);
 
                 //activity log
-                await _customerActivityService.InsertActivity("DeleteEmailAccount",
-                    string.Format(await _localizationService.GetResource("ActivityLog.DeleteEmailAccount"), emailAccount.Id), emailAccount);
+                await _customerActivityService.InsertActivityAsync("DeleteEmailAccount",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteEmailAccount"), emailAccount.Id), emailAccount);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.EmailAccounts.Deleted"));
 
                 return RedirectToAction("List");
             }

@@ -40,13 +40,13 @@ namespace Nop.Web.Framework.Factories
         /// </summary>
         /// <typeparam name="TModel">ACL supported model type</typeparam>
         /// <param name="model">Model</param>
-        public virtual async Task PrepareModelCustomerRoles<TModel>(TModel model) where TModel : IAclSupportedModel
+        public virtual async Task PrepareModelCustomerRolesAsync<TModel>(TModel model) where TModel : IAclSupportedModel
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
             //prepare available customer roles
-            var availableRoles = await _customerService.GetAllCustomerRoles(showHidden: true);
+            var availableRoles = await _customerService.GetAllCustomerRolesAsync(showHidden: true);
             model.AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
             {
                 Text = role.Name,
@@ -63,7 +63,7 @@ namespace Nop.Web.Framework.Factories
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
         /// <param name="ignoreAclMappings">Whether to ignore existing ACL mappings</param>
-        public virtual async Task PrepareModelCustomerRoles<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
+        public virtual async Task PrepareModelCustomerRolesAsync<TModel, TEntity>(TModel model, TEntity entity, bool ignoreAclMappings)
             where TModel : IAclSupportedModel where TEntity : BaseEntity, IAclSupported
         {
             if (model == null)
@@ -71,9 +71,9 @@ namespace Nop.Web.Framework.Factories
 
             //prepare customer roles with granted access
             if (!ignoreAclMappings && entity != null)
-                model.SelectedCustomerRoleIds = (await _aclService.GetCustomerRoleIdsWithAccess(entity)).ToList();
+                model.SelectedCustomerRoleIds = (await _aclService.GetCustomerRoleIdsWithAccessAsync(entity)).ToList();
 
-            await PrepareModelCustomerRoles(model);
+            await PrepareModelCustomerRolesAsync(model);
         }
 
         #endregion

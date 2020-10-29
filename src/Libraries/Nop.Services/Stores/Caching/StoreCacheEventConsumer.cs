@@ -16,10 +16,10 @@ namespace Nop.Services.Stores.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Store entity)
+        protected override async Task ClearCacheAsync(Store entity)
         {
-            await RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
-            await RemoveByPrefix(NopLocalizationDefaults.LanguagesByStorePrefix, entity);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopLocalizationDefaults.LanguagesByStorePrefix, entity);
         }
     }
 }

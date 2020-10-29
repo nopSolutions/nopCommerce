@@ -13,9 +13,9 @@ namespace Nop.Services.Discounts.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(DiscountRequirement entity)
+        protected override async Task ClearCacheAsync(DiscountRequirement entity)
         {
-            await Remove(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity.DiscountId);
+            await RemoveAsync(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity.DiscountId);
         }
     }
 }

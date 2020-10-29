@@ -50,16 +50,16 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var report = (await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, await _storeContext.GetCurrentStore()),
-                async () => await _orderReportService.BestSellersReport(
-                        storeId: (await _storeContext.GetCurrentStore()).Id,
+            var report = (await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, await _storeContext.GetCurrentStoreAsync()),
+                async () => await _orderReportService.BestSellersReportAsync(
+                        storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)))
                     .ToList();
 
             //load products
-            var products = await _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
+            var products = await _productService.GetProductsByIdsAsync(report.Select(x => x.ProductId).ToArray());
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
+            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
@@ -67,7 +67,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //prepare model
-            var model = (await _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

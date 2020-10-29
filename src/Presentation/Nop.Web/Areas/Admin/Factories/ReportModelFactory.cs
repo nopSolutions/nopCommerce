@@ -70,20 +70,20 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
-        protected virtual async Task<IPagedList<BestsellersReportLine>> GetBestsellersReport(BestsellerSearchModel searchModel)
+        protected virtual async Task<IPagedList<BestsellersReportLine>> GetBestsellersReportAsync(BestsellerSearchModel searchModel)
         {
             //get parameters to filter bestsellers
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            if (await _workContext.GetCurrentVendor() != null)
-                searchModel.VendorId = (await _workContext.GetCurrentVendor()).Id;
+            if (await _workContext.GetCurrentVendorAsync() != null)
+                searchModel.VendorId = (await _workContext.GetCurrentVendorAsync()).Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get bestsellers
-            var bestsellers = await _orderReportService.BestSellersReport(showHidden: true,
+            var bestsellers = await _orderReportService.BestSellersReportAsync(showHidden: true,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 os: orderStatus,
@@ -110,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Low stock product search model</param>
         /// <returns>Low stock product search model</returns>
-        public virtual async Task<LowStockProductSearchModel> PrepareLowStockProductSearchModel(LowStockProductSearchModel searchModel)
+        public virtual async Task<LowStockProductSearchModel> PrepareLowStockProductSearchModelAsync(LowStockProductSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -119,17 +119,17 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResource("Admin.Reports.LowStock.SearchPublished.All")
+                Text = await _localizationService.GetResourceAsync("Admin.Reports.LowStock.SearchPublished.All")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResource("Admin.Reports.LowStock.SearchPublished.PublishedOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.Reports.LowStock.SearchPublished.PublishedOnly")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResource("Admin.Reports.LowStock.SearchPublished.UnpublishedOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.Reports.LowStock.SearchPublished.UnpublishedOnly")
             });
 
             //prepare page parameters
@@ -143,18 +143,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Low stock product search model</param>
         /// <returns>Low stock product list model</returns>
-        public virtual async Task<LowStockProductListModel> PrepareLowStockProductListModel(LowStockProductSearchModel searchModel)
+        public virtual async Task<LowStockProductListModel> PrepareLowStockProductListModelAsync(LowStockProductSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter comments
             var publishedOnly = searchModel.SearchPublishedId == 0 ? null : searchModel.SearchPublishedId == 1 ? true : (bool?)false;
-            var vendorId = (await _workContext.GetCurrentVendor())?.Id ?? 0;
+            var vendorId = (await _workContext.GetCurrentVendorAsync())?.Id ?? 0;
 
             //get low stock product and product combinations
-            var products = await _productService.GetLowStockProducts(vendorId: vendorId, loadPublishedOnly: publishedOnly);
-            var combinations = await _productService.GetLowStockProductCombinations(vendorId: vendorId, loadPublishedOnly: publishedOnly);
+            var products = await _productService.GetLowStockProductsAsync(vendorId: vendorId, loadPublishedOnly: publishedOnly);
+            var combinations = await _productService.GetLowStockProductCombinationsAsync(vendorId: vendorId, loadPublishedOnly: publishedOnly);
 
             //prepare low stock product models
             var lowStockProductModels = new List<LowStockProductModel>();
@@ -162,22 +162,22 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Id = product.Id,
                 Name = product.Name,
-                ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod).Result,
-                StockQuantity = _productService.GetTotalStockQuantity(product).Result,
+                ManageInventoryMethod = _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod).Result,
+                StockQuantity = _productService.GetTotalStockQuantityAsync(product).Result,
                 Published = product.Published
             }));
 
             lowStockProductModels.AddRange(combinations.Select(combination => {
 
-                var product = _productService.GetProductById(combination.ProductId).Result;
+                var product = _productService.GetProductByIdAsync(combination.ProductId).Result;
 
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,
                     Name = product.Name,
                     Attributes = _productAttributeFormatter
-                        .FormatAttributes(product, combination.AttributesXml, _workContext.GetCurrentCustomer().Result, "<br />", true, true, true, false).Result,
-                    ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod).Result,
+                        .FormatAttributesAsync(product, combination.AttributesXml, _workContext.GetCurrentCustomerAsync().Result, "<br />", true, true, true, false).Result,
+                    ManageInventoryMethod = _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod).Result,
                     StockQuantity = combination.StockQuantity,
                     Published = product.Published
                 };
@@ -200,35 +200,35 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller search model</returns>
-        public virtual async Task<BestsellerSearchModel> PrepareBestsellerSearchModel(BestsellerSearchModel searchModel)
+        public virtual async Task<BestsellerSearchModel> PrepareBestsellerSearchModelAsync(BestsellerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
+            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available order statuses
-            await _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
 
             //prepare available payment statuses
-            await _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available billing countries
-            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBilling(showHidden: true))
+            searchModel.AvailableCountries = (await _countryService.GetAllCountriesForBillingAsync(showHidden: true))
                 .Select(country => new SelectListItem { Text = country.Name, Value = country.Id.ToString() }).ToList();
-            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            searchModel.AvailableCountries.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = "0" });
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -241,12 +241,12 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller list model</returns>
-        public virtual async Task<BestsellerListModel> PrepareBestsellerListModel(BestsellerSearchModel searchModel)
+        public virtual async Task<BestsellerListModel> PrepareBestsellerListModelAsync(BestsellerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            var bestsellers = await GetBestsellersReport(searchModel);
+            var bestsellers = await GetBestsellersReportAsync(searchModel);
 
             //prepare list model
             var model = new BestsellerListModel().PrepareToGrid(searchModel, bestsellers, () =>
@@ -261,8 +261,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = _productService.GetProductById(bestseller.ProductId).Result?.Name;
-                    bestsellerModel.TotalAmount = _priceFormatter.FormatPrice(bestseller.TotalAmount, true, false).Result;
+                    bestsellerModel.ProductName = _productService.GetProductByIdAsync(bestseller.ProductId).Result?.Name;
+                    bestsellerModel.TotalAmount = _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false).Result;
 
                     return bestsellerModel;
                 });
@@ -276,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller total amount</returns>
-        public virtual async Task<string> GetBestsellerTotalAmount(BestsellerSearchModel searchModel)
+        public virtual async Task<string> GetBestsellerTotalAmountAsync(BestsellerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -284,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter bestsellers
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
-            var currentVendor = await _workContext.GetCurrentVendor();
+            var currentVendor = await _workContext.GetCurrentVendorAsync();
             if (currentVendor != null)
                 searchModel.VendorId = currentVendor.Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get a total amount
-            var totalAmount = await _orderReportService.BestSellersReportTotalAmount(
+            var totalAmount = await _orderReportService.BestSellersReportTotalAmountAsync(
                 showHidden: true,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -305,7 +305,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 manufacturerId: searchModel.ManufacturerId,
                 storeId: searchModel.StoreId);
 
-            return await _priceFormatter.FormatPrice(totalAmount, true, false);
+            return await _priceFormatter.FormatPriceAsync(totalAmount, true, false);
         }
 
         #endregion
@@ -317,24 +317,24 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Never sold report search model</param>
         /// <returns>Never sold report search model</returns>
-        public virtual async Task<NeverSoldReportSearchModel> PrepareNeverSoldSearchModel(NeverSoldReportSearchModel searchModel)
+        public virtual async Task<NeverSoldReportSearchModel> PrepareNeverSoldSearchModelAsync(NeverSoldReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendor() != null;
+            searchModel.IsLoggedInAsVendor = await _workContext.GetCurrentVendorAsync() != null;
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -347,21 +347,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Never sold report search model</param>
         /// <returns>Never sold report list model</returns>
-        public virtual async Task<NeverSoldReportListModel> PrepareNeverSoldListModel(NeverSoldReportSearchModel searchModel)
+        public virtual async Task<NeverSoldReportListModel> PrepareNeverSoldListModelAsync(NeverSoldReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get parameters to filter neverSoldReports
-            if (await _workContext.GetCurrentVendor() != null)
-                searchModel.SearchVendorId = (await _workContext.GetCurrentVendor()).Id;
+            if (await _workContext.GetCurrentVendorAsync() != null)
+                searchModel.SearchVendorId = (await _workContext.GetCurrentVendorAsync()).Id;
             var startDateValue = !searchModel.StartDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
             var endDateValue = !searchModel.EndDate.HasValue ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get report items
-            var items = await _orderReportService.ProductsNeverSold(showHidden: true,
+            var items = await _orderReportService.ProductsNeverSoldAsync(showHidden: true,
                 vendorId: searchModel.SearchVendorId,
                 storeId: searchModel.SearchStoreId,
                 categoryId: searchModel.SearchCategoryId,
@@ -393,16 +393,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Country report search model</param>
         /// <returns>Country report search model</returns>
-        public virtual async Task<CountryReportSearchModel> PrepareCountrySalesSearchModel(CountryReportSearchModel searchModel)
+        public virtual async Task<CountryReportSearchModel> PrepareCountrySalesSearchModelAsync(CountryReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available order statuses
-            await _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
 
             //prepare available payment statuses
-            await _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -415,7 +415,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Country report search model</param>
         /// <returns>Country report list model</returns>
-        public virtual async Task<CountryReportListModel> PrepareCountrySalesListModel(CountryReportSearchModel searchModel)
+        public virtual async Task<CountryReportListModel> PrepareCountrySalesListModelAsync(CountryReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -429,7 +429,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get items
-            var items = (await _orderReportService.GetCountryReport(os: orderStatus,
+            var items = (await _orderReportService.GetCountryReportAsync(os: orderStatus,
                 ps: paymentStatus,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue)).ToPagedList(searchModel);
@@ -446,8 +446,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    countryReportModel.SumOrders = _priceFormatter.FormatPrice(item.SumOrders, true, false).Result;
-                    countryReportModel.CountryName = _countryService.GetCountryById(item.CountryId ?? 0).Result?.Name;
+                    countryReportModel.SumOrders = _priceFormatter.FormatPriceAsync(item.SumOrders, true, false).Result;
+                    countryReportModel.CountryName = _countryService.GetCountryByIdAsync(item.CountryId ?? 0).Result?.Name;
 
                     return countryReportModel;
                 });
@@ -465,15 +465,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer reports search model</param>
         /// <returns>Customer reports search model</returns>
-        public virtual async Task<CustomerReportsSearchModel> PrepareCustomerReportsSearchModel(CustomerReportsSearchModel searchModel)
+        public virtual async Task<CustomerReportsSearchModel> PrepareCustomerReportsSearchModelAsync(CustomerReportsSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare nested search models
-            await PrepareBestCustomersReportByOrderTotalSearchModel(searchModel.BestCustomersByOrderTotal);
-            await PrepareBestCustomersReportSearchModel(searchModel.BestCustomersByNumberOfOrders);
-            await PrepareRegisteredCustomersReportSearchModel(searchModel.RegisteredCustomers);
+            await PrepareBestCustomersReportByOrderTotalSearchModelAsync(searchModel.BestCustomersByOrderTotal);
+            await PrepareBestCustomersReportSearchModelAsync(searchModel.BestCustomersByNumberOfOrders);
+            await PrepareRegisteredCustomersReportSearchModelAsync(searchModel.RegisteredCustomers);
 
             return searchModel;
         }
@@ -483,15 +483,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report search model</returns>
-        protected virtual async Task<BestCustomersReportSearchModel> PrepareBestCustomersReportSearchModel(BestCustomersReportSearchModel searchModel)
+        protected virtual async Task<BestCustomersReportSearchModel> PrepareBestCustomersReportSearchModelAsync(BestCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available order, payment and shipping statuses
-            await _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-            await _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-            await _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+            await _baseAdminModelFactory.PrepareShippingStatusesAsync(searchModel.AvailableShippingStatuses);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -504,15 +504,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report search model</returns>
-        protected virtual async Task<BestCustomersReportSearchModel> PrepareBestCustomersReportByOrderTotalSearchModel(BestCustomersReportSearchModel searchModel)
+        protected virtual async Task<BestCustomersReportSearchModel> PrepareBestCustomersReportByOrderTotalSearchModelAsync(BestCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available order, payment and shipping statuses
-            await _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-            await _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-            await _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+            await _baseAdminModelFactory.PrepareShippingStatusesAsync(searchModel.AvailableShippingStatuses);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -526,7 +526,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Registered customers report search model</param>
         /// <returns>Registered customers report search model</returns>
-        protected virtual Task<RegisteredCustomersReportSearchModel> PrepareRegisteredCustomersReportSearchModel(RegisteredCustomersReportSearchModel searchModel)
+        protected virtual Task<RegisteredCustomersReportSearchModel> PrepareRegisteredCustomersReportSearchModelAsync(RegisteredCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -542,7 +542,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report list model</returns>
-        public virtual async Task<BestCustomersReportListModel> PrepareBestCustomersReportListModel(BestCustomersReportSearchModel searchModel)
+        public virtual async Task<BestCustomersReportListModel> PrepareBestCustomersReportListModelAsync(BestCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -557,7 +557,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var shippingStatus = searchModel.ShippingStatusId > 0 ? (ShippingStatus?)searchModel.ShippingStatusId : null;
 
             //get report items
-            var reportItems = await _customerReportService.GetBestCustomersReport(createdFromUtc: startDateValue,
+            var reportItems = await _customerReportService.GetBestCustomersReportAsync(createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 os: orderStatus,
                 ps: paymentStatus,
@@ -574,16 +574,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     var bestCustomersReportModel = new BestCustomersReportModel
                    {
                        CustomerId = item.CustomerId,
-                       OrderTotal = _priceFormatter.FormatPrice(item.OrderTotal, true, false).Result,
+                       OrderTotal = _priceFormatter.FormatPriceAsync(item.OrderTotal, true, false).Result,
                        OrderCount = item.OrderCount
                    };
 
                     //fill in additional values (not existing in the entity)
-                    var customer = _customerService.GetCustomerById(item.CustomerId).Result;
+                    var customer = _customerService.GetCustomerByIdAsync(item.CustomerId).Result;
                    if (customer != null)
                    {
-                       bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer).Result ? customer.Email :
-                           _localizationService.GetResource("Admin.Customers.Guest").Result;
+                       bestCustomersReportModel.CustomerName = _customerService.IsRegisteredAsync(customer).Result ? customer.Email :
+                           _localizationService.GetResourceAsync("Admin.Customers.Guest").Result;
                    }
 
                    return bestCustomersReportModel;
@@ -598,7 +598,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Registered customers report search model</param>
         /// <returns>Registered customers report list model</returns>
-        public virtual async Task<RegisteredCustomersReportListModel> PrepareRegisteredCustomersReportListModel(RegisteredCustomersReportSearchModel searchModel)
+        public virtual async Task<RegisteredCustomersReportListModel> PrepareRegisteredCustomersReportListModelAsync(RegisteredCustomersReportSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -608,23 +608,23 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 new RegisteredCustomersReportModel
                 {
-                    Period = await _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(7)
+                    Period = await _localizationService.GetResourceAsync("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.7days"),
+                    Customers = await _customerReportService.GetRegisteredCustomersReportAsync(7)
                 },
                 new RegisteredCustomersReportModel
                 {
-                    Period = await _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(14)
+                    Period = await _localizationService.GetResourceAsync("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.14days"),
+                    Customers = await _customerReportService.GetRegisteredCustomersReportAsync(14)
                 },
                 new RegisteredCustomersReportModel
                 {
-                    Period = await _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(30)
+                    Period = await _localizationService.GetResourceAsync("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.month"),
+                    Customers = await _customerReportService.GetRegisteredCustomersReportAsync(30)
                 },
                 new RegisteredCustomersReportModel
                 {
-                    Period = await _localizationService.GetResource("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year"),
-                    Customers = await _customerReportService.GetRegisteredCustomersReport(365)
+                    Period = await _localizationService.GetResourceAsync("Admin.Reports.Customers.RegisteredCustomers.Fields.Period.year"),
+                    Customers = await _customerReportService.GetRegisteredCustomersReportAsync(365)
                 }
             };
 

@@ -20,7 +20,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="appSettings">App settings</param>
         /// <param name="fileProvider">File provider</param>
-        public static async Task SaveAppSettings(AppSettings appSettings, INopFileProvider fileProvider = null)
+        public static async Task SaveAppSettingsAsync(AppSettings appSettings, INopFileProvider fileProvider = null)
         {
             Singleton<AppSettings>.Instance = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
 
@@ -31,12 +31,12 @@ namespace Nop.Services.Configuration
             fileProvider.CreateFile(filePath);
 
             //check additional configuration parameters
-            var additionalData = JsonConvert.DeserializeObject<AppSettings>(await fileProvider.ReadAllText(filePath, Encoding.UTF8))?.AdditionalData;
+            var additionalData = JsonConvert.DeserializeObject<AppSettings>(await fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8))?.AdditionalData;
             appSettings.AdditionalData = additionalData;
 
             //save app settings to the file
             var text = JsonConvert.SerializeObject(appSettings, Formatting.Indented);
-            await fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            await fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
         }
 
         #endregion

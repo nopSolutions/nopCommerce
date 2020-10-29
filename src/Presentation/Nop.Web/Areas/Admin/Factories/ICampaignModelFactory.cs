@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign search model</returns>
-        Task<CampaignSearchModel> PrepareCampaignSearchModel(CampaignSearchModel searchModel);
+        Task<CampaignSearchModel> PrepareCampaignSearchModelAsync(CampaignSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged campaign list model
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign list model</returns>
-        Task<CampaignListModel> PrepareCampaignListModel(CampaignSearchModel searchModel);
+        Task<CampaignListModel> PrepareCampaignListModelAsync(CampaignSearchModel searchModel);
 
         /// <summary>
         /// Prepare campaign model
@@ -30,6 +30,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="campaign">Campaign</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Campaign model</returns>
-        Task<CampaignModel> PrepareCampaignModel(CampaignModel model, Campaign campaign, bool excludeProperties = false);
+        Task<CampaignModel> PrepareCampaignModelAsync(CampaignModel model, Campaign campaign, bool excludeProperties = false);
     }
 }

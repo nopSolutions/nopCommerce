@@ -15,14 +15,14 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attributes</returns>
-        Task<IList<AddressAttribute>> ParseAddressAttributes(string attributesXml);
+        Task<IList<AddressAttribute>> ParseAddressAttributesAsync(string attributesXml);
 
         /// <summary>
         /// Get address attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Address attribute values</returns>
-        Task<IList<AddressAttributeValue>> ParseAddressAttributeValues(string attributesXml);
+        Task<IList<AddressAttributeValue>> ParseAddressAttributeValuesAsync(string attributesXml);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -48,13 +48,13 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        Task<IList<string>> GetAttributeWarnings(string attributesXml);
+        Task<IList<string>> GetAttributeWarningsAsync(string attributesXml);
 
         /// <summary>
         /// Get custom address attributes from the passed form
         /// </summary>
         /// <param name="form">Form values</param>
         /// <returns>Attributes in XML format</returns>
-        Task<string> ParseCustomAddressAttributes(IFormCollection form);
+        Task<string> ParseCustomAddressAttributesAsync(IFormCollection form);
     }
 }

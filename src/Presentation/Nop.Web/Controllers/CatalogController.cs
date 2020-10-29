@@ -94,7 +94,7 @@ namespace Nop.Web.Controllers
         
         public virtual async Task<IActionResult> Category(int categoryId, CatalogPagingFilteringModel command)
         {
-            var category = await _categoryService.GetCategoryById(categoryId);
+            var category = await _categoryService.GetCategoryByIdAsync(categoryId);
             if (category == null || category.Deleted)
                 return InvokeHttp404();
 
@@ -102,34 +102,34 @@ namespace Nop.Web.Controllers
                 //published?
                 !category.Published ||
                 //ACL (access control list) 
-                !await _aclService.Authorize(category) ||
+                !await _aclService.AuthorizeAsync(category) ||
                 //Store mapping
-                !await _storeMappingService.Authorize(category);
+                !await _storeMappingService.AuthorizeAsync(category);
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageCategories);
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories);
             if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(), 
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), 
                 NopCustomerDefaults.LastContinueShoppingPageAttribute, 
-                _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStore()).Id);
+                _webHelper.GetThisPageUrlAsync(false),
+                (await _storeContext.GetCurrentStoreAsync()).Id);
 
             //display "edit" (manage) link
-            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = AreaNames.Admin }));
 
             //activity log
-            await _customerActivityService.InsertActivity("PublicStore.ViewCategory",
-                string.Format(await _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewCategory",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewCategory"), category.Name), category);
 
             //model
-            var model = await _catalogModelFactory.PrepareCategoryModel(category, command);
+            var model = await _catalogModelFactory.PrepareCategoryModelAsync(category, command);
 
             //template
-            var templateViewPath = await _catalogModelFactory.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
+            var templateViewPath = await _catalogModelFactory.PrepareCategoryTemplateViewPathAsync(category.CategoryTemplateId);
             return View(templateViewPath, model);
         }
 
@@ -137,7 +137,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogRoot()
         {
-            var model = await _catalogModelFactory.PrepareRootCategories();
+            var model = await _catalogModelFactory.PrepareRootCategoriesAsync();
 
             return Json(model);
         }
@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> GetCatalogSubCategories(int id)
         {
-            var model = await _catalogModelFactory.PrepareSubCategories(id);
+            var model = await _catalogModelFactory.PrepareSubCategoriesAsync(id);
 
             return Json(model);
         }
@@ -157,7 +157,7 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
-            var manufacturer = await _manufacturerService.GetManufacturerById(manufacturerId);
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
             if (manufacturer == null || manufacturer.Deleted)
                 return InvokeHttp404();
 
@@ -165,41 +165,41 @@ namespace Nop.Web.Controllers
                 //published?
                 !manufacturer.Published ||
                 //ACL (access control list) 
-                !await _aclService.Authorize(manufacturer) ||
+                !await _aclService.AuthorizeAsync(manufacturer) ||
                 //Store mapping
-                !await _storeMappingService.Authorize(manufacturer);
+                !await _storeMappingService.AuthorizeAsync(manufacturer);
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers);
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers);
             if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(), 
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), 
                 NopCustomerDefaults.LastContinueShoppingPageAttribute, 
-                _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStore()).Id);
+                _webHelper.GetThisPageUrlAsync(false),
+                (await _storeContext.GetCurrentStoreAsync()).Id);
             
             //display "edit" (manage) link
-            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageManufacturers))
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = AreaNames.Admin }));
 
             //activity log
-            await _customerActivityService.InsertActivity("PublicStore.ViewManufacturer",
-                string.Format(await _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name), manufacturer);
+            await _customerActivityService.InsertActivityAsync("PublicStore.ViewManufacturer",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name), manufacturer);
 
             //model
-            var model = await _catalogModelFactory.PrepareManufacturerModel(manufacturer, command);
+            var model = await _catalogModelFactory.PrepareManufacturerModelAsync(manufacturer, command);
             
             //template
-            var templateViewPath = await _catalogModelFactory.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
+            var templateViewPath = await _catalogModelFactory.PrepareManufacturerTemplateViewPathAsync(manufacturer.ManufacturerTemplateId);
             
             return View(templateViewPath, model);
         }
 
         public virtual async Task<IActionResult> ManufacturerAll()
         {
-            var model = await _catalogModelFactory.PrepareManufacturerAllModels();
+            var model = await _catalogModelFactory.PrepareManufacturerAllModelsAsync();
             
             return View(model);
         }
@@ -210,22 +210,22 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
-            var vendor = await _vendorService.GetVendorById(vendorId);
+            var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
             if (vendor == null || vendor.Deleted || !vendor.Active)
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(),
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                _webHelper.GetThisPageUrl(false),
-                (await _storeContext.GetCurrentStore()).Id);
+                _webHelper.GetThisPageUrlAsync(false),
+                (await _storeContext.GetCurrentStoreAsync()).Id);
             
             //display "edit" (manage) link
-            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageVendors))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = AreaNames.Admin }));
 
             //model
-            var model = await _catalogModelFactory.PrepareVendorModel(vendor, command);
+            var model = await _catalogModelFactory.PrepareVendorModelAsync(vendor, command);
 
             return View(model);
         }
@@ -236,7 +236,7 @@ namespace Nop.Web.Controllers
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return RedirectToRoute("Homepage");
 
-            var model = await _catalogModelFactory.PrepareVendorAllModels();
+            var model = await _catalogModelFactory.PrepareVendorAllModelsAsync();
             return View(model);
         }
 
@@ -246,18 +246,18 @@ namespace Nop.Web.Controllers
         
         public virtual async Task<IActionResult> ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
-            var productTag = await _productTagService.GetProductTagById(productTagId);
+            var productTag = await _productTagService.GetProductTagByIdAsync(productTagId);
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = await _catalogModelFactory.PrepareProductsByTagModel(productTag, command);
+            var model = await _catalogModelFactory.PrepareProductsByTagModelAsync(productTag, command);
             
             return View(model);
         }
 
         public virtual async Task<IActionResult> ProductTagsAll()
         {
-            var model = await _catalogModelFactory.PrepareProductTagsAllModel();
+            var model = await _catalogModelFactory.PrepareProductTagsAllModelAsync();
             
             return View(model);
         }
@@ -269,15 +269,15 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
-            await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(),
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.LastContinueShoppingPageAttribute,
-                _webHelper.GetThisPageUrl(true),
-                (await _storeContext.GetCurrentStore()).Id);
+                _webHelper.GetThisPageUrlAsync(true),
+                (await _storeContext.GetCurrentStoreAsync()).Id);
 
             if (model == null)
                 model = new SearchModel();
 
-            model = await _catalogModelFactory.PrepareSearchModel(model, command);
+            model = await _catalogModelFactory.PrepareSearchModelAsync(model, command);
            
             return View(model);
         }
@@ -291,16 +291,16 @@ namespace Nop.Web.Controllers
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;            
 
-            var products = await _productService.SearchProducts(0,
-                storeId: (await _storeContext.GetCurrentStore()).Id,
+            var products = await _productService.SearchProductsAsync(0,
+                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 keywords: term,
-                languageId: (await _workContext.GetWorkingLanguage()).Id,
+                languageId: (await _workContext.GetWorkingLanguageAsync()).Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
             var showLinkToResultSearch = _catalogSettings.ShowLinkToAllResultInSearchAutoComplete && (products.TotalCount > productNumber);
 
-            var models =  (await _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
+            var models =  (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
             var result = (from p in models
                     select new
                     {

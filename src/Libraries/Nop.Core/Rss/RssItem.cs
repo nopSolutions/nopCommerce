@@ -88,7 +88,7 @@ namespace Nop.Core.Rss
         /// <summary>
         /// Get content text
         /// </summary>
-        public string ContentText => XmlHelper.XmlDecode(Content?.Value ?? string.Empty).Result;
+        public string ContentText => XmlHelper.XmlDecodeAsync(Content?.Value ?? string.Empty).Result;
 
         /// <summary>
         /// Link

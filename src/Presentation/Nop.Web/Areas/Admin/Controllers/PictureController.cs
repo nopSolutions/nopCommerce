@@ -48,7 +48,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ? Request.Form[qqFileNameParameter].ToString()
                 : string.Empty;
 
-            var picture = await _pictureService.InsertPicture(httpPostedFile, qqFileName);
+            var picture = await _pictureService.InsertPictureAsync(httpPostedFile, qqFileName);
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
@@ -56,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = (await _pictureService.GetPictureUrl(picture, 100)).url
+                imageUrl = (await _pictureService.GetPictureUrlAsync(picture, 100)).url
             });
         }
 

@@ -33,9 +33,9 @@ namespace Nop.Services.Common
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual async Task DeleteSearchTerm(SearchTerm searchTerm)
+        public virtual async Task DeleteSearchTermAsync(SearchTerm searchTerm)
         {
-            await _searchTermRepository.Delete(searchTerm);
+            await _searchTermRepository.DeleteAsync(searchTerm);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        public virtual async Task<SearchTerm> GetSearchTermById(int searchTermId)
+        public virtual async Task<SearchTerm> GetSearchTermByIdAsync(int searchTermId)
         {
-            return await _searchTermRepository.GetById(searchTermId, cache => default);
+            return await _searchTermRepository.GetByIdAsync(searchTermId, cache => default);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Nop.Services.Common
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Search term</returns>
-        public virtual async Task<SearchTerm> GetSearchTermByKeyword(string keyword, int storeId)
+        public virtual async Task<SearchTerm> GetSearchTermByKeywordAsync(string keyword, int storeId)
         {
             if (string.IsNullOrEmpty(keyword))
                 return null;
@@ -74,7 +74,7 @@ namespace Nop.Services.Common
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>A list search term report lines</returns>
-        public virtual async Task<IPagedList<SearchTermReportLine>> GetStats(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<SearchTermReportLine>> GetStatsAsync(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = (from st in _searchTermRepository.Table
                          group st by st.Keyword into groupedResult
@@ -90,7 +90,7 @@ namespace Nop.Services.Common
                             Count = r.Count
                         });
 
-            var result = await query.ToPagedList(pageIndex, pageSize);
+            var result = await query.ToPagedListAsync(pageIndex, pageSize);
 
             return result;
         }
@@ -99,18 +99,18 @@ namespace Nop.Services.Common
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual async Task InsertSearchTerm(SearchTerm searchTerm)
+        public virtual async Task InsertSearchTermAsync(SearchTerm searchTerm)
         {
-            await _searchTermRepository.Insert(searchTerm);
+            await _searchTermRepository.InsertAsync(searchTerm);
         }
 
         /// <summary>
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual async Task UpdateSearchTerm(SearchTerm searchTerm)
+        public virtual async Task UpdateSearchTermAsync(SearchTerm searchTerm)
         {
-            await _searchTermRepository.Update(searchTerm);
+            await _searchTermRepository.UpdateAsync(searchTerm);
         }
 
         #endregion

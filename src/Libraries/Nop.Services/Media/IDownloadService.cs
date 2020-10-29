@@ -15,39 +15,39 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        Task<Download> GetDownloadById(int downloadId);
+        Task<Download> GetDownloadByIdAsync(int downloadId);
 
         /// <summary>
         /// Gets a download by GUID
         /// </summary>
         /// <param name="downloadGuid">Download GUID</param>
         /// <returns>Download</returns>
-        Task<Download> GetDownloadByGuid(Guid downloadGuid);
+        Task<Download> GetDownloadByGuidAsync(Guid downloadGuid);
 
         /// <summary>
         /// Deletes a download
         /// </summary>
         /// <param name="download">Download</param>
-        Task DeleteDownload(Download download);
+        Task DeleteDownloadAsync(Download download);
 
         /// <summary>
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        Task InsertDownload(Download download);
+        Task InsertDownloadAsync(Download download);
 
         //TODO: may be deleted
         /// <summary>
         /// Updates the download
         /// </summary>
         /// <param name="download">Download</param>
-        Task UpdateDownload(Download download);
+        Task UpdateDownloadAsync(Download download);
 
         /// <summary>
         /// Gets the download binary array
         /// </summary>
         /// <param name="file">File</param>
         /// <returns>Download binary array</returns>
-        Task<byte[]> GetDownloadBits(IFormFile file);
+        Task<byte[]> GetDownloadBitsAsync(IFormFile file);
     }
 }

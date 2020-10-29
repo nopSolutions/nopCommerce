@@ -13,9 +13,9 @@ namespace Nop.Services.Messages.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(MessageTemplate entity)
+        protected override async Task ClearCacheAsync(MessageTemplate entity)
         {
-            await RemoveByPrefix(NopMessageDefaults.MessageTemplatesByNamePrefix, entity.Name);
+            await RemoveByPrefixAsync(NopMessageDefaults.MessageTemplatesByNamePrefix, entity.Name);
         }
     }
 }

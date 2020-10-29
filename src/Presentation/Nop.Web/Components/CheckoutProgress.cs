@@ -17,7 +17,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(CheckoutProgressStep step)
         {
-            var model = await _checkoutModelFactory.PrepareCheckoutProgressModel(step);
+            var model = await _checkoutModelFactory.PrepareCheckoutProgressModelAsync(step);
             return View(model);
         }
     }

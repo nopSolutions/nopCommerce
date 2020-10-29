@@ -64,30 +64,30 @@ namespace Nop.Web.Controllers
         // Product details page > back in stock subscribe
         public virtual async Task<IActionResult> SubscribePopup(int productId)
         {
-            var product = await _productService.GetProductById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
             var model = new BackInStockSubscribeModel
             {
                 ProductId = product.Id,
-                ProductName = await _localizationService.GetLocalized(product, x => x.Name),
-                ProductSeName = await _urlRecordService.GetSeName(product),
-                IsCurrentCustomerRegistered = await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()),
+                ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                ProductSeName = await _urlRecordService.GetSeNameAsync(product),
+                IsCurrentCustomerRegistered = await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()),
                 MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
                 CurrentNumberOfBackInStockSubscriptions = (await _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerId((await _workContext.GetCurrentCustomer()).Id, (await _storeContext.GetCurrentStore()).Id, 0, 1))
+                .GetAllSubscriptionsByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id, 0, 1))
                 .TotalCount
             };
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                await _productService.GetTotalStockQuantity(product) <= 0)
+                await _productService.GetTotalStockQuantityAsync(product) <= 0)
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
                 model.AlreadySubscribed = await _backInStockSubscriptionService
-                    .FindSubscription((await _workContext.GetCurrentCustomer()).Id, product.Id, (await _storeContext.GetCurrentStore()).Id) != null;
+                    .FindSubscriptionAsync((await _workContext.GetCurrentCustomerAsync()).Id, product.Id, (await _storeContext.GetCurrentStoreAsync()).Id) != null;
             }
 
             return PartialView(model);
@@ -97,57 +97,57 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SubscribePopupPOST(int productId)
         {
-            var product = await _productService.GetProductById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
-            if (!await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()))
-                return Content(await _localizationService.GetResource("BackInStockSubscriptions.OnlyRegistered"));
+            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
+                return Content(await _localizationService.GetResourceAsync("BackInStockSubscriptions.OnlyRegistered"));
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                await _productService.GetTotalStockQuantity(product) <= 0)
+                await _productService.GetTotalStockQuantityAsync(product) <= 0)
             {
                 //out of stock
                 var subscription = await _backInStockSubscriptionService
-                    .FindSubscription((await _workContext.GetCurrentCustomer()).Id, product.Id, (await _storeContext.GetCurrentStore()).Id);
+                    .FindSubscriptionAsync((await _workContext.GetCurrentCustomerAsync()).Id, product.Id, (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (subscription != null)
                 {
                     //subscription already exists
                     //unsubscribe
-                    await _backInStockSubscriptionService.DeleteSubscription(subscription);
+                    await _backInStockSubscriptionService.DeleteSubscriptionAsync(subscription);
 
-                    _notificationService.SuccessNotification(await _localizationService.GetResource("BackInStockSubscriptions.Notification.Unsubscribed"));
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("BackInStockSubscriptions.Notification.Unsubscribed"));
                     return new OkResult();
                 }
 
                 //subscription does not exist
                 //subscribe
                 if ((await _backInStockSubscriptionService
-                    .GetAllSubscriptionsByCustomerId((await _workContext.GetCurrentCustomer()).Id, (await _storeContext.GetCurrentStore()).Id, 0, 1))
+                    .GetAllSubscriptionsByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id, 0, 1))
                     .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
                     return Json(new
                     {
-                        result = string.Format(await _localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions)
+                        result = string.Format(await _localizationService.GetResourceAsync("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions)
                     });
                 }
                 subscription = new BackInStockSubscription
                 {
-                    CustomerId = (await _workContext.GetCurrentCustomer()).Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     ProductId = product.Id,
-                    StoreId = (await _storeContext.GetCurrentStore()).Id,
+                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
-                await _backInStockSubscriptionService.InsertSubscription(subscription);
+                await _backInStockSubscriptionService.InsertSubscriptionAsync(subscription);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("BackInStockSubscriptions.Notification.Subscribed"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("BackInStockSubscriptions.Notification.Subscribed"));
                 return new OkResult();
             }
 
             //subscription not possible
-            return Content(await _localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
+            return Content(await _localizationService.GetResourceAsync("BackInStockSubscriptions.NotAllowed"));
         }
 
         // My account / Back in stock subscriptions
@@ -165,15 +165,15 @@ namespace Nop.Web.Controllers
             }
             var pageSize = 10;
 
-            var customer = await _workContext.GetCurrentCustomer();
-            var list = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
-                (await _storeContext.GetCurrentStore()).Id, pageIndex, pageSize);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var list = await _backInStockSubscriptionService.GetAllSubscriptionsByCustomerIdAsync(customer.Id,
+                (await _storeContext.GetCurrentStoreAsync()).Id, pageIndex, pageSize);
 
             var model = new CustomerBackInStockSubscriptionsModel();
 
             foreach (var subscription in list)
             {
-                var product = await _productService.GetProductById(subscription.ProductId);
+                var product = await _productService.GetProductByIdAsync(subscription.ProductId);
 
                 if (product != null)
                 {
@@ -181,8 +181,8 @@ namespace Nop.Web.Controllers
                     {
                         Id = subscription.Id,
                         ProductId = product.Id,
-                        ProductName = await _localizationService.GetLocalized(product, x => x.Name),
-                        SeName = await _urlRecordService.GetSeName(product),
+                        ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(product),
                     };
                     model.Subscriptions.Add(subscriptionModel);
                 }
@@ -215,10 +215,10 @@ namespace Nop.Web.Controllers
                     var id = key.Replace("biss", "").Trim();
                     if (int.TryParse(id, out var subscriptionId))
                     {
-                        var subscription = await _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
-                        if (subscription != null && subscription.CustomerId == (await _workContext.GetCurrentCustomer()).Id)
+                        var subscription = await _backInStockSubscriptionService.GetSubscriptionByIdAsync(subscriptionId);
+                        if (subscription != null && subscription.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id)
                         {
-                            await _backInStockSubscriptionService.DeleteSubscription(subscription);
+                            await _backInStockSubscriptionService.DeleteSubscriptionAsync(subscription);
                         }
                     }
                 }

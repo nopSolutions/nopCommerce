@@ -59,7 +59,7 @@ namespace Nop.Services.Messages
         /// <param name="filePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name</param>
         /// <returns>A leaf-node MIME part that contains an attachment.</returns>
-        protected async Task<MimePart> CreateMimeAttachment(string filePath, string attachmentFileName = null)
+        protected async Task<MimePart> CreateMimeAttachmentAsync(string filePath, string attachmentFileName = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException(nameof(filePath));
@@ -69,7 +69,7 @@ namespace Nop.Services.Messages
 
             return CreateMimeAttachment(
                     attachmentFileName,
-                    await _fileProvider.ReadAllBytes(filePath),
+                    await _fileProvider.ReadAllBytesAsync(filePath),
                     _fileProvider.GetCreationTime(filePath),
                     _fileProvider.GetLastWriteTime(filePath),
                     _fileProvider.GetLastAccessTime(filePath));
@@ -124,7 +124,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachment)</param>
         /// <param name="headers">Headers</param>
-        public virtual async Task SendEmail(EmailAccount emailAccount, string subject, string body,
+        public virtual async Task SendEmailAsync(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
             string replyTo = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
@@ -177,13 +177,13 @@ namespace Nop.Services.Messages
             //create the file attachment for this e-mail message
             if (!string.IsNullOrEmpty(attachmentFilePath) && _fileProvider.FileExists(attachmentFilePath))
             {
-                multipart.Add(await CreateMimeAttachment(attachmentFilePath, attachmentFileName));
+                multipart.Add(await CreateMimeAttachmentAsync(attachmentFilePath, attachmentFileName));
             }
 
             //another attachment?
             if (attachedDownloadId > 0)
             {
-                var download = await _downloadService.GetDownloadById(attachedDownloadId);
+                var download = await _downloadService.GetDownloadByIdAsync(attachedDownloadId);
                 //we do not support URLs as attachments
                 if (!download?.UseDownloadUrl ?? false)
                 {
@@ -194,7 +194,7 @@ namespace Nop.Services.Messages
             message.Body = multipart;
 
             //send email
-            using var smtpClient = await _smtpBuilder.Build(emailAccount);
+            using var smtpClient = await _smtpBuilder.BuildAsync(emailAccount);
             smtpClient.Send(message);
             smtpClient.Disconnect(true);
         }

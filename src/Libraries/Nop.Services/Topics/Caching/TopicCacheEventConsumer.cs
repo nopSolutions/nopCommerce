@@ -13,9 +13,9 @@ namespace Nop.Services.Topics.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Topic entity)
+        protected override async Task ClearCacheAsync(Topic entity)
         {
-            await RemoveByPrefix(NopTopicDefaults.TopicBySystemNamePrefix, entity.SystemName);
+            await RemoveByPrefixAsync(NopTopicDefaults.TopicBySystemNamePrefix, entity.SystemName);
         }
     }
 }

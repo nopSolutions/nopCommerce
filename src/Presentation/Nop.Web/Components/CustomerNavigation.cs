@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int selectedTabId = 0)
         {
-            var model = await _customerModelFactory.PrepareCustomerNavigationModel(selectedTabId);
+            var model = await _customerModelFactory.PrepareCustomerNavigationModelAsync(selectedTabId);
             return View(model);
         }
     }

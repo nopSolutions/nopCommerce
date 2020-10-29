@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="blogContentModel">Blog content model</param>
         /// <param name="filterByBlogPostId">Blog post ID</param>
         /// <returns>Blog content model</returns>
-        Task<BlogContentModel> PrepareBlogContentModel(BlogContentModel blogContentModel, int? filterByBlogPostId);
+        Task<BlogContentModel> PrepareBlogContentModelAsync(BlogContentModel blogContentModel, int? filterByBlogPostId);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -23,14 +23,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Blog post search model</param>
         /// <returns>Blog post search model</returns>
-        Task<BlogPostSearchModel> PrepareBlogPostSearchModel(BlogPostSearchModel searchModel);
+        Task<BlogPostSearchModel> PrepareBlogPostSearchModelAsync(BlogPostSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged blog post list model
         /// </summary>
         /// <param name="searchModel">Blog post search model</param>
         /// <returns>Blog post list model</returns>
-        Task<BlogPostListModel> PrepareBlogPostListModel(BlogPostSearchModel searchModel);
+        Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPostSearchModel searchModel);
 
         /// <summary>
         /// Prepare blog post model
@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="blogPost">Blog post</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Blog post model</returns>
-        Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties = false);
+        Task<BlogPostModel> PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare blog comment search model
@@ -47,7 +47,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Blog comment search model</returns>
-        Task<BlogCommentSearchModel> PrepareBlogCommentSearchModel(BlogCommentSearchModel searchModel, BlogPost blogPost);
+        Task<BlogCommentSearchModel> PrepareBlogCommentSearchModelAsync(BlogCommentSearchModel searchModel, BlogPost blogPost);
 
         /// <summary>
         /// Prepare paged blog comment list model
@@ -55,6 +55,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPostId">Blog post ID</param>
         /// <returns>Blog comment list model</returns>
-        Task<BlogCommentListModel> PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, int? blogPostId);
+        Task<BlogCommentListModel> PrepareBlogCommentListModelAsync(BlogCommentSearchModel searchModel, int? blogPostId);
     }
 }

@@ -79,35 +79,35 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> CustomerReturnRequests()
         {
-            if (!await _customerService.IsRegistered(await _workContext.GetCurrentCustomer()))
+            if (!await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
                 return Challenge();
 
-            var model = await _returnRequestModelFactory.PrepareCustomerReturnRequestsModel();
+            var model = await _returnRequestModelFactory.PrepareCustomerReturnRequestsModelAsync();
             return View(model);
         }
 
         public virtual async Task<IActionResult> ReturnRequest(int orderId)
         {
-            var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomer()).Id != order.CustomerId)
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
                 return Challenge();
 
-            if (!await _orderProcessingService.IsReturnRequestAllowed(order))
+            if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
                 return RedirectToRoute("Homepage");
 
             var model = new SubmitReturnRequestModel();
-            model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
+            model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModelAsync(model, order);
             return View(model);
         }
 
         [HttpPost, ActionName("ReturnRequest")]
         public virtual async Task<IActionResult> ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
-            var order = await _orderService.GetOrderById(orderId);
-            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomer()).Id != order.CustomerId)
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null || order.Deleted || (await _workContext.GetCurrentCustomerAsync()).Id != order.CustomerId)
                 return Challenge();
 
-            if (!await _orderProcessingService.IsReturnRequestAllowed(order))
+            if (!await _orderProcessingService.IsReturnRequestAllowedAsync(order))
                 return RedirectToRoute("Homepage");
 
             var count = 0;
@@ -115,13 +115,13 @@ namespace Nop.Web.Controllers
             var downloadId = 0;
             if (_orderSettings.ReturnRequestsAllowFiles)
             {
-                var download = await _downloadService.GetDownloadByGuid(model.UploadedFileGuid);
+                var download = await _downloadService.GetDownloadByGuidAsync(model.UploadedFileGuid);
                 if (download != null)
                     downloadId = download.Id;
             }
 
             //returnable products
-            var orderItems = await _orderService.GetOrderItems(order.Id, isNotReturnable: false);
+            var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
             foreach (var orderItem in orderItems)
             {
                 var quantity = 0; //parse quantity
@@ -133,18 +133,18 @@ namespace Nop.Web.Controllers
                     }
                 if (quantity > 0)
                 {
-                    var rrr = await _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
-                    var rra = await _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
+                    var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
+                    var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
 
                     var rr = new ReturnRequest
                     {
                         CustomNumber = "",
-                        StoreId = (await _storeContext.GetCurrentStore()).Id,
+                        StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                         OrderItemId = orderItem.Id,
                         Quantity = quantity,
-                        CustomerId = (await _workContext.GetCurrentCustomer()).Id,
-                        ReasonForReturn = rrr != null ? await _localizationService.GetLocalized(rrr, x => x.Name) : "not available",
-                        RequestedAction = rra != null ? await _localizationService.GetLocalized(rra, x => x.Name) : "not available",
+                        CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
+                        ReasonForReturn = rrr != null ? await _localizationService.GetLocalizedAsync(rrr, x => x.Name) : "not available",
+                        RequestedAction = rra != null ? await _localizationService.GetLocalizedAsync(rra, x => x.Name) : "not available",
                         CustomerComments = model.Comments,
                         UploadedFileId = downloadId,
                         StaffNotes = string.Empty,
@@ -153,27 +153,27 @@ namespace Nop.Web.Controllers
                         UpdatedOnUtc = DateTime.UtcNow
                     };
 
-                    await _returnRequestService.InsertReturnRequest(rr);
+                    await _returnRequestService.InsertReturnRequestAsync(rr);
 
                     //set return request custom number
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
-                    await _customerService.UpdateCustomer(await _workContext.GetCurrentCustomer());
-                    await _returnRequestService.UpdateReturnRequest(rr);
+                    await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
+                    await _returnRequestService.UpdateReturnRequestAsync(rr);
 
                     //notify store owner
-                    await _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, order, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendNewReturnRequestStoreOwnerNotificationAsync(rr, orderItem, order, _localizationSettings.DefaultAdminLanguageId);
                     //notify customer
-                    await _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order);
+                    await _workflowMessageService.SendNewReturnRequestCustomerNotificationAsync(rr, orderItem, order);
 
                     count++;
                 }
             }
 
-            model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModel(model, order);
+            model = await _returnRequestModelFactory.PrepareSubmitReturnRequestModelAsync(model, order);
             if (count > 0)
-                model.Result = await _localizationService.GetResource("ReturnRequests.Submitted");
+                model.Result = await _localizationService.GetResourceAsync("ReturnRequests.Submitted");
             else
-                model.Result = await _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
+                model.Result = await _localizationService.GetResourceAsync("ReturnRequests.NoItemsSubmitted");
 
             return View(model);
         }
@@ -202,7 +202,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var fileBinary = await _downloadService.GetDownloadBits(httpPostedFile);
+            var fileBinary = await _downloadService.GetDownloadBitsAsync(httpPostedFile);
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
@@ -227,7 +227,7 @@ namespace Nop.Web.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = string.Format(await _localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), validationFileMaximumSize),
+                        message = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.MaximumUploadedFileSize"), validationFileMaximumSize),
                         downloadGuid = Guid.Empty,
                     });
                 }
@@ -245,14 +245,14 @@ namespace Nop.Web.Controllers
                 Extension = fileExtension,
                 IsNew = true
             };
-            await _downloadService.InsertDownload(download);
+            await _downloadService.InsertDownloadAsync(download);
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new
             {
                 success = true,
-                message = await _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                message = await _localizationService.GetResourceAsync("ShoppingCart.FileUploaded"),
                 downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             });

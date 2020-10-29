@@ -16,14 +16,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review search model</returns>
-        Task<ProductReviewSearchModel> PrepareProductReviewSearchModel(ProductReviewSearchModel searchModel);
+        Task<ProductReviewSearchModel> PrepareProductReviewSearchModelAsync(ProductReviewSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product review list model
         /// </summary>
         /// <param name="searchModel">Product review search model</param>
         /// <returns>Product review list model</returns>
-        Task<ProductReviewListModel> PrepareProductReviewListModel(ProductReviewSearchModel searchModel);
+        Task<ProductReviewListModel> PrepareProductReviewListModelAsync(ProductReviewSearchModel searchModel);
 
         /// <summary>
         /// Prepare product review model
@@ -32,7 +32,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="productReview">Product review</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Product review model</returns>
-        Task<ProductReviewModel> PrepareProductReviewModel(ProductReviewModel model,
+        Task<ProductReviewModel> PrepareProductReviewModelAsync(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties = false);
 
         #endregion
@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Product review and review type mapping search model</param>
         /// <param name="productReview">Product review</param>
         /// <returns>Product review and review type mapping list model</returns>
-        Task<ProductReviewReviewTypeMappingListModel> PrepareProductReviewReviewTypeMappingListModel(ProductReviewReviewTypeMappingSearchModel searchModel,
+        Task<ProductReviewReviewTypeMappingListModel> PrepareProductReviewReviewTypeMappingListModelAsync(ProductReviewReviewTypeMappingSearchModel searchModel,
             ProductReview productReview);
 
         #endregion

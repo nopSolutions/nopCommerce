@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.Factories
         /// <typeparam name="TModel">Discount supported model type</typeparam>
         /// <param name="model">Model</param>
         /// <param name="availableDiscounts">List of all available discounts</param>
-        public virtual Task<TModel> PrepareModelDiscounts<TModel>(TModel model, IList<Discount> availableDiscounts) where TModel : IDiscountSupportedModel
+        public virtual Task<TModel> PrepareModelDiscountsAsync<TModel>(TModel model, IList<Discount> availableDiscounts) where TModel : IDiscountSupportedModel
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -63,7 +63,7 @@ namespace Nop.Web.Framework.Factories
         /// <param name="entity">Entity</param>
         /// <param name="availableDiscounts">List of all available discounts</param>
         /// <param name="ignoreAppliedDiscounts">Whether to ignore existing applied discounts</param>
-        public virtual async Task<TModel> PrepareModelDiscounts<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
+        public virtual async Task<TModel> PrepareModelDiscountsAsync<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
             IList<Discount> availableDiscounts, bool ignoreAppliedDiscounts)
             where TModel : IDiscountSupportedModel where TMapping : DiscountMapping
         {
@@ -72,9 +72,9 @@ namespace Nop.Web.Framework.Factories
 
             //prepare already applied discounts
             if (!ignoreAppliedDiscounts && entity != null)
-                model.SelectedDiscountIds = (await _discountService.GetAppliedDiscounts(entity)).Select(discount => discount.Id).ToList();
+                model.SelectedDiscountIds = (await _discountService.GetAppliedDiscountsAsync(entity)).Select(discount => discount.Id).ToList();
 
-            return await PrepareModelDiscounts(model, availableDiscounts);
+            return await PrepareModelDiscountsAsync(model, availableDiscounts);
         }
 
         #endregion

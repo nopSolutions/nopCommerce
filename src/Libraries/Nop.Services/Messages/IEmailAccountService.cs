@@ -13,31 +13,31 @@ namespace Nop.Services.Messages
         /// Inserts an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        Task InsertEmailAccount(EmailAccount emailAccount);
+        Task InsertEmailAccountAsync(EmailAccount emailAccount);
 
         /// <summary>
         /// Updates an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        Task UpdateEmailAccount(EmailAccount emailAccount);
+        Task UpdateEmailAccountAsync(EmailAccount emailAccount);
 
         /// <summary>
         /// Deletes an email account
         /// </summary>
         /// <param name="emailAccount">Email account</param>
-        Task DeleteEmailAccount(EmailAccount emailAccount);
+        Task DeleteEmailAccountAsync(EmailAccount emailAccount);
 
         /// <summary>
         /// Gets an email account by identifier
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        Task<EmailAccount> GetEmailAccountById(int emailAccountId);
+        Task<EmailAccount> GetEmailAccountByIdAsync(int emailAccountId);
 
         /// <summary>
         /// Gets all email accounts
         /// </summary>
         /// <returns>Email accounts list</returns>
-        Task<IList<EmailAccount>> GetAllEmailAccounts();
+        Task<IList<EmailAccount>> GetAllEmailAccountsAsync();
     }
 }

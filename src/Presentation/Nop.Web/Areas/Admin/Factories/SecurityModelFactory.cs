@@ -44,19 +44,19 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Permission mapping model</param>
         /// <returns>Permission mapping model</returns>
-        public virtual async Task<PermissionMappingModel> PreparePermissionMappingModel(PermissionMappingModel model)
+        public virtual async Task<PermissionMappingModel> PreparePermissionMappingModelAsync(PermissionMappingModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var customerRoles = await _customerService.GetAllCustomerRoles(true);
+            var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
             model.AvailableCustomerRoles = customerRoles.Select(role => role.ToModel<CustomerRoleModel>()).ToList();
 
-            foreach (var permissionRecord in await _permissionService.GetAllPermissionRecords())
+            foreach (var permissionRecord in await _permissionService.GetAllPermissionRecordsAsync())
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel
                 {
-                    Name = await _localizationService.GetLocalizedPermissionName(permissionRecord),
+                    Name = await _localizationService.GetLocalizedPermissionNameAsync(permissionRecord),
                     SystemName = permissionRecord.SystemName
                 });
 
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!model.Allowed.ContainsKey(permissionRecord.SystemName))
                         model.Allowed[permissionRecord.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[permissionRecord.SystemName][role.Id] = 
-                        (await _permissionService.GetMappingByPermissionRecordId(permissionRecord.Id)).Any(mapping => mapping.CustomerRoleId == role.Id);
+                        (await _permissionService.GetMappingByPermissionRecordIdAsync(permissionRecord.Id)).Any(mapping => mapping.CustomerRoleId == role.Id);
                 }
             }
 

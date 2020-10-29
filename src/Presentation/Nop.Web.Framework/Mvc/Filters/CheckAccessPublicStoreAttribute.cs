@@ -89,7 +89,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //check whether current customer has access to a public store
-                if (_permissionService.Authorize(StandardPermissionProvider.PublicStoreAllowNavigation).Result)
+                if (_permissionService.AuthorizeAsync(StandardPermissionProvider.PublicStoreAllowNavigation).Result)
                     return;
 
                 //customer hasn't access to a public store

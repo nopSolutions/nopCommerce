@@ -26,7 +26,7 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReport(DateTime? createdFromUtc,
+        Task<IPagedList<BestCustomerReportLine>> GetBestCustomersReportAsync(DateTime? createdFromUtc,
             DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364);
 
@@ -35,6 +35,6 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
-        Task<int> GetRegisteredCustomersReport(int days);
+        Task<int> GetRegisteredCustomersReportAsync(int days);
     }
 }

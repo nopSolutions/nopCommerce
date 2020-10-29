@@ -123,7 +123,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
                 {
                     //get identifiers of topics are accessible when a store is closed
-                    var allowedTopicIds = _topicService.GetAllTopics(_storeContext.GetCurrentStore().Result.Id).Result
+                    var allowedTopicIds = _topicService.GetAllTopicsAsync(_storeContext.GetCurrentStoreAsync().Result.Id).Result
                         .Where(topic => topic.AccessibleWhenStoreClosed).Select(topic => topic.Id);
 
                     //check whether requested topic is allowed
@@ -133,7 +133,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 }
 
                 //check whether current customer has access to a closed store
-                if (_permissionService.Authorize(StandardPermissionProvider.AccessClosedStore).Result)
+                if (_permissionService.AuthorizeAsync(StandardPermissionProvider.AccessClosedStore).Result)
                     return;
 
                 //store is closed and no access, so redirect to 'StoreClosed' page

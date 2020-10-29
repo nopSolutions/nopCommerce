@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Queued email search model</param>
         /// <returns>Queued email search model</returns>
-        public virtual Task<QueuedEmailSearchModel> PrepareQueuedEmailSearchModel(QueuedEmailSearchModel searchModel)
+        public virtual Task<QueuedEmailSearchModel> PrepareQueuedEmailSearchModelAsync(QueuedEmailSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Queued email search model</param>
         /// <returns>Queued email list model</returns>
-        public virtual async Task<QueuedEmailListModel> PrepareQueuedEmailListModel(QueuedEmailSearchModel searchModel)
+        public virtual async Task<QueuedEmailListModel> PrepareQueuedEmailListModelAsync(QueuedEmailSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //get queued emails
-            var queuedEmails = await _queuedEmailService.SearchEmails(fromEmail: searchModel.SearchFromEmail,
+            var queuedEmails = await _queuedEmailService.SearchEmailsAsync(fromEmail: searchModel.SearchFromEmail,
                 toEmail: searchModel.SearchToEmail,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -121,8 +121,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     queuedEmailModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    queuedEmailModel.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId).Result);
-                    queuedEmailModel.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority).Result;
+                    queuedEmailModel.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId).Result);
+                    queuedEmailModel.PriorityName = _localizationService.GetLocalizedEnumAsync(queuedEmail.Priority).Result;
                     if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                     {
                         queuedEmailModel.DontSendBeforeDate = _dateTimeHelper
@@ -146,7 +146,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="queuedEmail">Queued email</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Queued email model</returns>
-        public virtual async Task<QueuedEmailModel> PrepareQueuedEmailModel(QueuedEmailModel model, QueuedEmail queuedEmail, bool excludeProperties = false)
+        public virtual async Task<QueuedEmailModel> PrepareQueuedEmailModelAsync(QueuedEmailModel model, QueuedEmail queuedEmail, bool excludeProperties = false)
         {
             if (queuedEmail == null)
                 return model;
@@ -154,8 +154,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             model ??= queuedEmail.ToModel<QueuedEmailModel>();
 
-            model.EmailAccountName = GetEmailAccountName(await _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId));
-            model.PriorityName = await _localizationService.GetLocalizedEnum(queuedEmail.Priority);
+            model.EmailAccountName = GetEmailAccountName(await _emailAccountService.GetEmailAccountByIdAsync(queuedEmail.EmailAccountId));
+            model.PriorityName = await _localizationService.GetLocalizedEnumAsync(queuedEmail.Priority);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
             if (queuedEmail.SentOnUtc.HasValue)

@@ -112,7 +112,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="function">Function</param>
         /// <returns>Result; error message if exists</returns>
-        private async Task<(TResult Result, string ErrorMessage)> HandleFunction<TResult>(PayPalSmartPaymentButtonsSettings settings, Func<Task<TResult>> function)
+        private async Task<(TResult Result, string ErrorMessage)> HandleFunctionAsync<TResult>(PayPalSmartPaymentButtonsSettings settings, Func<Task<TResult>> function)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
 
                 //log errors
                 var logMessage = $"{Defaults.SystemName} error: {System.Environment.NewLine}{message}";
-                await _logger.Error(logMessage, exception, await _workContext.GetCurrentCustomer());
+                await _logger.ErrorAsync(logMessage, exception, await _workContext.GetCurrentCustomerAsync());
 
                 return (default, message);
             }
@@ -225,14 +225,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <returns>Script; error message if exists</returns>
-        public async Task<(string Script, string ErrorMessage)> GetScript(PayPalSmartPaymentButtonsSettings settings)
+        public async Task<(string Script, string ErrorMessage)> GetScriptAsync(PayPalSmartPaymentButtonsSettings settings)
         {
-            return await HandleFunction(settings, async () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var parameters = new Dictionary<string, string>
                 {
                     ["client-id"] = settings.ClientId,
-                    ["currency"] = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode?.ToUpper(),
+                    ["currency"] = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode?.ToUpper(),
                     ["intent"] = settings.PaymentType.ToString().ToLower(),
                     ["commit"] = false.ToString().ToLower(),
                     ["vault"] = false.ToString().ToLower(),
@@ -259,22 +259,22 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="orderGuid">Order GUID</param>
         /// <returns>Created order; error message if exists</returns>
-        public async Task<(Order Order, string ErrorMessage)> CreateOrder(PayPalSmartPaymentButtonsSettings settings, Guid orderGuid)
+        public async Task<(Order Order, string ErrorMessage)> CreateOrderAsync(PayPalSmartPaymentButtonsSettings settings, Guid orderGuid)
         {
-            return await HandleFunction(settings, async () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
-                var currency = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+                var currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
                 if (string.IsNullOrEmpty(currency))
                     throw new NopException("Primary store currency not set");
 
-                var billingAddress = await _addresService.GetAddressById((await _workContext.GetCurrentCustomer()).BillingAddressId ?? 0);
+                var billingAddress = await _addresService.GetAddressByIdAsync((await _workContext.GetCurrentCustomerAsync()).BillingAddressId ?? 0);
                 if (billingAddress == null)
                     throw new NopException("Customer billing address not set");
 
-                var shippingAddress = await _addresService.GetAddressById((await _workContext.GetCurrentCustomer()).ShippingAddressId ?? 0);
+                var shippingAddress = await _addresService.GetAddressByIdAsync((await _workContext.GetCurrentCustomerAsync()).ShippingAddressId ?? 0);
 
-                var billStateProvince = await _stateProvinceService.GetStateProvinceByAddress(billingAddress);
-                var shipStateProvince = await _stateProvinceService.GetStateProvinceByAddress(shippingAddress);
+                var billStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(billingAddress);
+                var shipStateProvince = await _stateProvinceService.GetStateProvinceByAddressAsync(shippingAddress);
 
                 //prepare order details
                 var orderDetails = new OrderRequest { CheckoutPaymentIntent = settings.PaymentType.ToString().ToUpper() };
@@ -282,7 +282,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 //prepare some common properties
                 orderDetails.ApplicationContext = new ApplicationContext
                 {
-                    BrandName = CommonHelper.EnsureMaximumLength((await _storeContext.GetCurrentStore()).Name, 127),
+                    BrandName = CommonHelper.EnsureMaximumLength((await _storeContext.GetCurrentStoreAsync()).Name, 127),
                     LandingPage = LandingPageType.Billing.ToString().ToUpper(),
                     UserAction = UserActionType.Continue.ToString().ToUpper(),
                     ShippingPreference = (shippingAddress != null ? ShippingPreferenceType.Set_provided_address : ShippingPreferenceType.No_shipping)
@@ -304,7 +304,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                         AddressLine2 = CommonHelper.EnsureMaximumLength(billingAddress.Address2, 300),
                         AdminArea2 = CommonHelper.EnsureMaximumLength(billingAddress.City, 120),
                         AdminArea1 = CommonHelper.EnsureMaximumLength(billStateProvince?.Abbreviation, 300),
-                        CountryCode = (await _countryService.GetCountryById(billingAddress.CountryId ?? 0))?.TwoLetterIsoCode,
+                        CountryCode = (await _countryService.GetCountryByIdAsync(billingAddress.CountryId ?? 0))?.TwoLetterIsoCode,
                         PostalCode = CommonHelper.EnsureMaximumLength(billingAddress.ZipPostalCode, 60)
                     }
                 };
@@ -316,18 +316,18 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
 
                 //prepare purchase unit details
                 var shoppingCart = (await _shoppingCartService
-                    .GetShoppingCart(await _workContext.GetCurrentCustomer(), Core.Domain.Orders.ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id))
+                    .GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), Core.Domain.Orders.ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .ToList();
-                var taxTotal = Math.Round((await _orderTotalCalculationService.GetTaxTotal(shoppingCart, false)).taxTotal, 2);
-                var shippingTotal = Math.Round(await _orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart) ?? decimal.Zero, 2);
-                var orderTotal = Math.Round((await _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? decimal.Zero, 2);
+                var taxTotal = Math.Round((await _orderTotalCalculationService.GetTaxTotalAsync(shoppingCart, false)).taxTotal, 2);
+                var shippingTotal = Math.Round(await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(shoppingCart) ?? decimal.Zero, 2);
+                var orderTotal = Math.Round((await _orderTotalCalculationService.GetShoppingCartTotalAsync(shoppingCart, usePaymentMethodAdditionalFee: false)).shoppingCartTotal ?? decimal.Zero, 2);
 
                 var purchaseUnit = new PurchaseUnitRequest
                 {
                     ReferenceId = CommonHelper.EnsureMaximumLength(orderGuid.ToString(), 256),
                     CustomId = CommonHelper.EnsureMaximumLength(orderGuid.ToString(), 127),
-                    Description = CommonHelper.EnsureMaximumLength($"Purchase at '{(await _storeContext.GetCurrentStore()).Name}'", 127),
-                    SoftDescriptor = CommonHelper.EnsureMaximumLength((await _storeContext.GetCurrentStore()).Name, 22)
+                    Description = CommonHelper.EnsureMaximumLength($"Purchase at '{(await _storeContext.GetCurrentStoreAsync()).Name}'", 127),
+                    SoftDescriptor = CommonHelper.EnsureMaximumLength((await _storeContext.GetCurrentStoreAsync()).Name, 22)
                 };
 
                 //prepare shipping address details
@@ -342,7 +342,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                             AddressLine2 = CommonHelper.EnsureMaximumLength(shippingAddress.Address2, 300),
                             AdminArea2 = CommonHelper.EnsureMaximumLength(shippingAddress.City, 120),
                             AdminArea1 = CommonHelper.EnsureMaximumLength(shipStateProvince?.Abbreviation, 300),
-                            CountryCode = (await _countryService.GetCountryById(billingAddress.CountryId ?? 0))?.TwoLetterIsoCode,
+                            CountryCode = (await _countryService.GetCountryByIdAsync(billingAddress.CountryId ?? 0))?.TwoLetterIsoCode,
                             PostalCode = CommonHelper.EnsureMaximumLength(shippingAddress.ZipPostalCode, 60)
                         }
                     };
@@ -352,10 +352,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 var itemTotal = decimal.Zero;
                 purchaseUnit.Items = shoppingCart.Select(item =>
                 {
-                    var product = _productService.GetProductById(item.ProductId).Result;
+                    var product = _productService.GetProductByIdAsync(item.ProductId).Result;
 
-                    var itemPrice = Math.Round(_taxService.GetProductPrice(product,
-                        _shoppingCartService.GetUnitPrice(item, true).Result.unitPrice, false, _workContext.GetCurrentCustomer().Result).Result.price, 2);
+                    var itemPrice = Math.Round(_taxService.GetProductPriceAsync(product,
+                        _shoppingCartService.GetUnitPriceAsync(item, true).Result.unitPrice, false, _workContext.GetCurrentCustomerAsync().Result).Result.price, 2);
                     itemTotal += itemPrice * item.Quantity;
                     return new Item
                     {
@@ -371,13 +371,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
 
                 //add checkout attributes as order items
                 var checkoutAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(await _genericAttributeService
-                    .GetAttribute<string>(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStore()).Id));
+                    .GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id));
 
                 foreach (var (attribute, values) in checkoutAttributeValues)
                 {
                     foreach (var attributeValue in values)
                     {
-                        var (attributePrice, _) = await _taxService.GetCheckoutAttributePrice(attribute, attributeValue, false, await _workContext.GetCurrentCustomer());
+                        var (attributePrice, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, await _workContext.GetCurrentCustomerAsync());
                         var roundedAttributePrice = Math.Round(attributePrice, 2);
 
                         itemTotal += roundedAttributePrice;
@@ -420,9 +420,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="orderId">Order id</param>
         /// <returns>Authorized order; error message if exists</returns>
-        public async Task<(Order Order, string ErrorMessage)> Authorize(PayPalSmartPaymentButtonsSettings settings, string orderId)
+        public async Task<(Order Order, string ErrorMessage)> AuthorizeAsync(PayPalSmartPaymentButtonsSettings settings, string orderId)
         {
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 var request = new OrdersAuthorizeRequest(orderId).RequestBody(new AuthorizeRequest());
 
@@ -436,9 +436,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="orderId">Order id</param>
         /// <returns>Captured order; error message if exists</returns>
-        public async Task<(Order Order, string ErrorMessage)> Capture(PayPalSmartPaymentButtonsSettings settings, string orderId)
+        public async Task<(Order Order, string ErrorMessage)> CaptureAsync(PayPalSmartPaymentButtonsSettings settings, string orderId)
         {
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 var request = new OrdersCaptureRequest(orderId).RequestBody(new OrderActionRequest());
 
@@ -452,10 +452,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="authorizationId">Authorization id</param>
         /// <returns>Capture details; error message if exists</returns>
-        public async Task<(PayPalCheckoutSdk.Payments.Capture Capture, string ErrorMessage)> CaptureAuthorization
+        public async Task<(PayPalCheckoutSdk.Payments.Capture Capture, string ErrorMessage)> CaptureAuthorizationAsync
             (PayPalSmartPaymentButtonsSettings settings, string authorizationId)
         {
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 var request = new AuthorizationsCaptureRequest(authorizationId).RequestBody(new CaptureRequest());
 
@@ -469,9 +469,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="authorizationId">Authorization id</param>
         /// <returns>Voided order; Error message if exists</returns>
-        public async Task<(object Order, string ErrorMessage)> Void(PayPalSmartPaymentButtonsSettings settings, string authorizationId)
+        public async Task<(object Order, string ErrorMessage)> VoidAsync(PayPalSmartPaymentButtonsSettings settings, string authorizationId)
         {
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 var request = new AuthorizationsVoidRequest(authorizationId);
 
@@ -487,10 +487,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="currency">Currency code</param>
         /// <param name="amount">Amount to refund</param>
         /// <returns>Refund details; error message if exists</returns>
-        public async Task<(PayPalCheckoutSdk.Payments.Refund refund, string errorMessage)> Refund
+        public async Task<(PayPalCheckoutSdk.Payments.Refund refund, string errorMessage)> RefundAsync
             (PayPalSmartPaymentButtonsSettings settings, string captureId, string currency, decimal? amount = null)
         {
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 var refundRequest = new RefundRequest();
                 if (amount.HasValue)
@@ -506,10 +506,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <returns>Access token; error message if exists</returns>
-        public async Task<(AccessToken AccessToken, string ErrorMessage)> GetAccessToken(PayPalSmartPaymentButtonsSettings settings)
+        public async Task<(AccessToken AccessToken, string ErrorMessage)> GetAccessTokenAsync(PayPalSmartPaymentButtonsSettings settings)
         {
             //try to get access token
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 var environment = settings.UseSandbox
                     ? new SandboxEnvironment(settings.ClientId, settings.SecretKey) as PayPalEnvironment
@@ -526,9 +526,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="url">Webhook listener URL</param>
         /// <returns>Webhook; error message if exists</returns>
-        public async Task<(Webhook webhook, string errorMessage)> CreateWebHook(PayPalSmartPaymentButtonsSettings settings, string url)
+        public async Task<(Webhook webhook, string errorMessage)> CreateWebHookAsync(PayPalSmartPaymentButtonsSettings settings, string url)
         {
-            return await HandleFunction(settings, () =>
+            return await HandleFunctionAsync(settings, () =>
             {
                 //check whether webhook already exists
                 var webhooks = HandleCoreRequest<WebhookListRequest, WebhookList>(settings, new WebhookListRequest());
@@ -557,9 +557,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// Delete webhook
         /// </summary>
         /// <param name="settings">Plugin settings</param>
-        public async Task DeleteWebhook(PayPalSmartPaymentButtonsSettings settings)
+        public async Task DeleteWebhookAsync(PayPalSmartPaymentButtonsSettings settings)
         {
-            await HandleFunction(settings, () =>
+            await HandleFunctionAsync(settings, () =>
             {
                 var request = new WebhookDeleteRequest(settings.WebhookId);
 
@@ -572,9 +572,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// </summary>
         /// <param name="settings">Plugin settings</param>
         /// <param name="request">HTTP request</param>
-        public async Task HandleWebhook(PayPalSmartPaymentButtonsSettings settings, Microsoft.AspNetCore.Http.HttpRequest request)
+        public async Task HandleWebhookAsync(PayPalSmartPaymentButtonsSettings settings, Microsoft.AspNetCore.Http.HttpRequest request)
         {
-            await HandleFunction(settings, async () =>
+            await HandleFunctionAsync(settings, async () =>
             {
                 //get request details
                 var rawRequestString = string.Empty;
@@ -625,11 +625,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 if (!Guid.TryParse(orderReference, out var orderGuid))
                     return false;
 
-                var order = await _orderService.GetOrderByGuid(orderGuid);
+                var order = await _orderService.GetOrderByGuidAsync(orderGuid);
                 if (order == null)
                     return false;
 
-                await _orderService.InsertOrderNote(new Core.Domain.Orders.OrderNote()
+                await _orderService.InsertOrderNoteAsync(new Core.Domain.Orders.OrderNote()
                 {
                     OrderId = order.Id,
                     Note = $"Webhook details: {System.Environment.NewLine}{rawRequestString}",
@@ -649,8 +649,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                             {
                                 order.AuthorizationTransactionId = authorization.Id;
                                 order.AuthorizationTransactionResult = authorization.Status;
-                                await _orderService.UpdateOrder(order);
-                                await _orderProcessingService.MarkAsAuthorized(order);
+                                await _orderService.UpdateOrderAsync(order);
+                                await _orderProcessingService.MarkAsAuthorizedAsync(order);
                             }
                         }
                         break;
@@ -660,8 +660,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                     case "pending":
                         order.CaptureTransactionResult = authorization.Status;
                         order.OrderStatus = Core.Domain.Orders.OrderStatus.Pending;
-                        await _orderService.UpdateOrder(order);
-                        await _orderProcessingService.CheckOrderStatus(order);
+                        await _orderService.UpdateOrderAsync(order);
+                        await _orderProcessingService.CheckOrderStatusAsync(order);
                         break;
 
                     case "voided":
@@ -669,8 +669,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                         {
                             order.AuthorizationTransactionId = authorization.Id;
                             order.AuthorizationTransactionResult = authorization.Status;
-                            await _orderService.UpdateOrder(order);
-                            await _orderProcessingService.VoidOffline(order);
+                            await _orderService.UpdateOrderAsync(order);
+                            await _orderProcessingService.VoidOfflineAsync(order);
                         }
                         break;
                 }
@@ -686,8 +686,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                             {
                                 order.CaptureTransactionId = capture.Id;
                                 order.CaptureTransactionResult = capture.Status;
-                                await _orderService.UpdateOrder(order);
-                                await _orderProcessingService.MarkOrderAsPaid(order);
+                                await _orderService.UpdateOrderAsync(order);
+                                await _orderProcessingService.MarkOrderAsPaidAsync(order);
                             }
                         }
                         break;
@@ -696,13 +696,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                     case "declined":
                         order.CaptureTransactionResult = $"{capture.Status}. {capture.StatusDetails?.Reason}";
                         order.OrderStatus = Core.Domain.Orders.OrderStatus.Pending;
-                        await _orderService.UpdateOrder(order);
-                        await _orderProcessingService.CheckOrderStatus(order);
+                        await _orderService.UpdateOrderAsync(order);
+                        await _orderProcessingService.CheckOrderStatusAsync(order);
                         break;
 
                     case "refunded":
                         if (_orderProcessingService.CanRefundOffline(order))
-                            await _orderProcessingService.RefundOffline(order);
+                            await _orderProcessingService.RefundOfflineAsync(order);
                         break;
                 }
 
@@ -711,7 +711,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 switch (refund?.Status?.ToLowerInvariant())
                 {
                     case "completed":
-                        var refundIds = await _genericAttributeService.GetAttribute<List<string>>(order, Defaults.RefundIdAttributeName)
+                        var refundIds = await _genericAttributeService.GetAttributeAsync<List<string>>(order, Defaults.RefundIdAttributeName)
                             ?? new List<string>();
                         if (!refundIds.Contains(refund.Id))
                         {
@@ -719,9 +719,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                             {
                                 if (_orderProcessingService.CanPartiallyRefundOffline(order, refundedAmount))
                                 {
-                                    await _orderProcessingService.PartiallyRefundOffline(order, refundedAmount);
+                                    await _orderProcessingService.PartiallyRefundOfflineAsync(order, refundedAmount);
                                     refundIds.Add(refund.Id);
-                                    await _genericAttributeService.SaveAttribute(order, Defaults.RefundIdAttributeName, refundIds);
+                                    await _genericAttributeService.SaveAttributeAsync(order, Defaults.RefundIdAttributeName, refundIds);
                                 }
                             }
                         }

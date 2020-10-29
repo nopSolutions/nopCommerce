@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Gift card search model</param>
         /// <returns>Gift card search model</returns>
-        public virtual async Task<GiftCardSearchModel> PrepareGiftCardSearchModel(GiftCardSearchModel searchModel)
+        public virtual async Task<GiftCardSearchModel> PrepareGiftCardSearchModelAsync(GiftCardSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -96,17 +96,17 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResource("Admin.GiftCards.List.Activated.All")
+                Text = await _localizationService.GetResourceAsync("Admin.GiftCards.List.Activated.All")
             });
             searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResource("Admin.GiftCards.List.Activated.ActivatedOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.GiftCards.List.Activated.ActivatedOnly")
             });
             searchModel.ActivatedList.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResource("Admin.GiftCards.List.Activated.DeactivatedOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.GiftCards.List.Activated.DeactivatedOnly")
             });
 
             //prepare page parameters
@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Gift card search model</param>
         /// <returns>Gift card list model</returns>
-        public virtual async Task<GiftCardListModel> PrepareGiftCardListModel(GiftCardSearchModel searchModel)
+        public virtual async Task<GiftCardListModel> PrepareGiftCardListModelAsync(GiftCardSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -129,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var isActivatedOnly = searchModel.ActivatedId == 0 ? null : searchModel.ActivatedId == 1 ? true : (bool?)false;
 
             //get gift cards
-            var giftCards = await _giftCardService.GetAllGiftCards(isGiftCardActivated: isActivatedOnly,
+            var giftCards = await _giftCardService.GetAllGiftCardsAsync(isGiftCardActivated: isActivatedOnly,
                 giftCardCouponCode: searchModel.CouponCode,
                 recipientName: searchModel.RecipientName,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
@@ -146,8 +146,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    giftCardModel.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard).Result, true, false).Result;
-                    giftCardModel.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false).Result;
+                    giftCardModel.RemainingAmountStr = _priceFormatter.FormatPriceAsync(_giftCardService.GetGiftCardRemainingAmountAsync(giftCard).Result, true, false).Result;
+                    giftCardModel.AmountStr = _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false).Result;
 
                     return giftCardModel;
                 });
@@ -163,18 +163,18 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="giftCard">Gift card</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Gift card model</returns>
-        public virtual async Task<GiftCardModel> PrepareGiftCardModel(GiftCardModel model, GiftCard giftCard, bool excludeProperties = false)
+        public virtual async Task<GiftCardModel> PrepareGiftCardModelAsync(GiftCardModel model, GiftCard giftCard, bool excludeProperties = false)
         {
             if (giftCard != null)
             {
                 //fill in model values from the entity
                 model ??= giftCard.ToModel<GiftCardModel>();
 
-                var order = await _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+                var order = await _orderService.GetOrderByOrderItemAsync(giftCard.PurchasedWithOrderItemId ?? 0);
 
                 model.PurchasedWithOrderId = order?.Id;
-                model.RemainingAmountStr = await _priceFormatter.FormatPrice(await _giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
-                model.AmountStr = await _priceFormatter.FormatPrice(giftCard.Amount, true, false);
+                model.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard), true, false);
+                model.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
                 model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
@@ -182,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareGiftCardUsageHistorySearchModel(model.GiftCardUsageHistorySearchModel, giftCard);
             }
 
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
 
             return model;
         }
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Gift card usage history search model</param>
         /// <param name="giftCard">Gift card</param>
         /// <returns>Gift card usage history list model</returns>
-        public virtual async Task<GiftCardUsageHistoryListModel> PrepareGiftCardUsageHistoryListModel(GiftCardUsageHistorySearchModel searchModel,
+        public virtual async Task<GiftCardUsageHistoryListModel> PrepareGiftCardUsageHistoryListModelAsync(GiftCardUsageHistorySearchModel searchModel,
             GiftCard giftCard)
         {
             if (searchModel == null)
@@ -203,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(giftCard));
 
             //get gift card usage history
-            var usageHistory = (await _giftCardService.GetGiftCardUsageHistory(giftCard))
+            var usageHistory = (await _giftCardService.GetGiftCardUsageHistoryAsync(giftCard))
                 .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList()
                 .ToPagedList(searchModel);
 
@@ -220,8 +220,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;
-                    giftCardUsageHistoryModel.CustomOrderNumber = _orderService.GetOrderById(historyEntry.UsedWithOrderId).Result?.CustomOrderNumber;
-                    giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPrice(historyEntry.UsedValue, true, false).Result;
+                    giftCardUsageHistoryModel.CustomOrderNumber = _orderService.GetOrderByIdAsync(historyEntry.UsedWithOrderId).Result?.CustomOrderNumber;
+                    giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPriceAsync(historyEntry.UsedValue, true, false).Result;
 
                     return giftCardUsageHistoryModel;
                 });

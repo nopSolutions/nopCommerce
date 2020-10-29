@@ -41,15 +41,15 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
         /// <returns>Store pickup point list model</returns>
-        public async Task<StorePickupPointListModel> PrepareStorePickupPointListModel(StorePickupPointSearchModel searchModel)
+        public async Task<StorePickupPointListModel> PrepareStorePickupPointListModelAsync(StorePickupPointSearchModel searchModel)
         {
-            var pickupPoints = await _storePickupPointService.GetAllStorePickupPoints(pageIndex: searchModel.Page - 1,
+            var pickupPoints = await _storePickupPointService.GetAllStorePickupPointsAsync(pageIndex: searchModel.Page - 1,
                 pageSize: searchModel.PageSize);
             var model = new StorePickupPointListModel().PrepareToGrid(searchModel, pickupPoints, () =>
             {
                 return pickupPoints.Select(point =>
                 {
-                    var store = _storeService.GetStoreById(point.StoreId).Result;
+                    var store = _storeService.GetStoreByIdAsync(point.StoreId).Result;
                     return new StorePickupPointModel
                     {
                         Id = point.Id,
@@ -58,7 +58,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                         PickupFee = point.PickupFee,
                         DisplayOrder = point.DisplayOrder,
                         StoreName = store?.Name ?? (point.StoreId == 0
-                                        ? _localizationService.GetResource(
+                                        ? _localizationService.GetResourceAsync(
                                             "Admin.Configuration.Settings.StoreScope.AllStores").Result
                                         : string.Empty)
                     };
@@ -73,7 +73,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
         /// </summary>
         /// <param name="searchModel">Store pickup point search model</param>
         /// <returns>Store pickup point search model</returns>
-        public Task<StorePickupPointSearchModel> PrepareStorePickupPointSearchModel(StorePickupPointSearchModel searchModel)
+        public Task<StorePickupPointSearchModel> PrepareStorePickupPointSearchModelAsync(StorePickupPointSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));

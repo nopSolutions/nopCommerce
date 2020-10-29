@@ -13,9 +13,9 @@ namespace Nop.Services.Media.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Picture entity)
+        protected override async Task ClearCacheAsync(Picture entity)
         {
-            await RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
+            await RemoveByPrefixAsync(NopMediaDefaults.ThumbsExistsPrefix);
         }
     }
 }

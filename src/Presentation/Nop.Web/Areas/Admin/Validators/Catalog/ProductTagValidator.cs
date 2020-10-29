@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
     {
         public ProductTagValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductTags.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Catalog.ProductTags.Fields.Name.Required").Result);
 
             SetDatabaseValidationRules<ProductTag>(dataProvider);
         }

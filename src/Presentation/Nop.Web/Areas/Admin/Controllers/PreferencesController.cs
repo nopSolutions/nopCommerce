@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
-            await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(), name, value);
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), name, value);
 
             return Json(new
             {

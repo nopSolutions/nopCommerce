@@ -14,8 +14,8 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
     {
         public ReviewTypeValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Settings.ReviewType.Fields.Name.Required").Result);
-            RuleFor(x => x.Description).NotEmpty().WithMessage(localizationService.GetResource("Admin.Settings.ReviewType.Fields.Description.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Settings.ReviewType.Fields.Name.Required").Result);
+            RuleFor(x => x.Description).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Settings.ReviewType.Fields.Description.Required").Result);
 
             SetDatabaseValidationRules<ReviewType>(dataProvider);
         }

@@ -108,9 +108,9 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetLanguage(int langid, string returnUrl = "")
         {
-            var language = await _languageService.GetLanguageById(langid);
+            var language = await _languageService.GetLanguageByIdAsync(langid);
             if (!language?.Published ?? false)
-                language = await _workContext.GetWorkingLanguage();
+                language = await _workContext.GetWorkingLanguageAsync();
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -120,14 +120,14 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if ((await returnUrl.IsLocalizedUrl(Request.PathBase, true)).Item1)
+                if ((await returnUrl.IsLocalizedUrlAsync(Request.PathBase, true)).Item1)
                     returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(Request.PathBase, true);
 
                 //and add code of passed language
                 returnUrl = returnUrl.AddLanguageSeoCodeToUrl(Request.PathBase, true, language);
             }
 
-            await _workContext.SetWorkingLanguage(language);
+            await _workContext.SetWorkingLanguageAsync(language);
 
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -140,9 +140,9 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> SetCurrency(int customerCurrency, string returnUrl = "")
         {
-            var currency = await _currencyService.GetCurrencyById(customerCurrency);
+            var currency = await _currencyService.GetCurrencyByIdAsync(customerCurrency);
             if (currency != null)
-                await _workContext.SetWorkingCurrency(currency);
+                await _workContext.SetWorkingCurrencyAsync(currency);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -160,7 +160,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
-            await _workContext.SetTaxDisplayType(taxDisplayType);
+            await _workContext.SetTaxDisplayTypeAsync(taxDisplayType);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> ContactUs()
         {
             var model = new ContactUsModel();
-            model = await _commonModelFactory.PrepareContactUsModel(model, false);
+            model = await _commonModelFactory.PrepareContactUsModelAsync(model, false);
             
             return View(model);
         }
@@ -193,25 +193,25 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResource("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            model = await _commonModelFactory.PrepareContactUsModel(model, true);
+            model = await _commonModelFactory.PrepareContactUsModelAsync(model, true);
 
             if (ModelState.IsValid)
             {
                 var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
                 var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-                await _workflowMessageService.SendContactUsMessage((await _workContext.GetWorkingLanguage()).Id,
+                await _workflowMessageService.SendContactUsMessageAsync((await _workContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
 
                 model.SuccessfullySent = true;
-                model.Result = await _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
+                model.Result = await _localizationService.GetResourceAsync("ContactUs.YourEnquiryHasBeenSent");
 
                 //activity log
-                await _customerActivityService.InsertActivity("PublicStore.ContactUs",
-                    await _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
+                await _customerActivityService.InsertActivityAsync("PublicStore.ContactUs",
+                    await _localizationService.GetResourceAsync("ActivityLog.PublicStore.ContactUs"));
 
                 return View(model);
             }
@@ -225,12 +225,12 @@ namespace Nop.Web.Controllers
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("Homepage");
 
-            var vendor = await _vendorService.GetVendorById(vendorId);
+            var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
             if (vendor == null || !vendor.Active || vendor.Deleted)
                 return RedirectToRoute("Homepage");
 
             var model = new ContactVendorModel();
-            model = await _commonModelFactory.PrepareContactVendorModel(model, vendor, false);
+            model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, false);
             
             return View(model);
         }
@@ -242,28 +242,28 @@ namespace Nop.Web.Controllers
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("Homepage");
 
-            var vendor = await _vendorService.GetVendorById(model.VendorId);
+            var vendor = await _vendorService.GetVendorByIdAsync(model.VendorId);
             if (vendor == null || !vendor.Active || vendor.Deleted)
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResource("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            model = await _commonModelFactory.PrepareContactVendorModel(model, vendor, true);
+            model = await _commonModelFactory.PrepareContactVendorModelAsync(model, vendor, true);
 
             if (ModelState.IsValid)
             {
                 var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
                 var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-                await _workflowMessageService.SendContactVendorMessage(vendor, (await _workContext.GetWorkingLanguage()).Id,
+                await _workflowMessageService.SendContactVendorMessageAsync(vendor, (await _workContext.GetWorkingLanguageAsync()).Id,
                     model.Email.Trim(), model.FullName, subject, body);
 
                 model.SuccessfullySent = true;
-                model.Result = await _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
+                model.Result = await _localizationService.GetResourceAsync("ContactVendor.YourEnquiryHasBeenSent");
 
                 return View(model);
             }
@@ -277,7 +277,7 @@ namespace Nop.Web.Controllers
             if (!_sitemapSettings.SitemapEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _commonModelFactory.PrepareSitemapModel(pageModel);
+            var model = await _commonModelFactory.PrepareSitemapModelAsync(pageModel);
             
             return View(model);
         }
@@ -288,14 +288,14 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> SitemapXml(int? id)
         {
             var siteMap = _sitemapXmlSettings.SitemapXmlEnabled
-                ? await _commonModelFactory.PrepareSitemapXml(id) : string.Empty;
+                ? await _commonModelFactory.PrepareSitemapXmlAsync(id) : string.Empty;
 
             return Content(siteMap, "text/xml");
         }
 
         public virtual async Task<IActionResult> SetStoreTheme(string themeName, string returnUrl = "")
         {
-            await _themeContext.SetWorkingThemeName(themeName);
+            await _themeContext.SetWorkingThemeNameAsync(themeName);
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -321,7 +321,7 @@ namespace Nop.Web.Controllers
                 return Json(new { stored = false });
 
             //save setting
-            await _genericAttributeService.SaveAttribute(await _workContext.GetCurrentCustomer(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, (await _storeContext.GetCurrentStore()).Id);
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.EuCookieLawAcceptedAttribute, true, (await _storeContext.GetCurrentStoreAsync()).Id);
             return Json(new { stored = true });
         }
 
@@ -332,7 +332,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual async Task<IActionResult> RobotsTextFile()
         {
-            var robotsFileContent = await _commonModelFactory.PrepareRobotsTextFile();
+            var robotsFileContent = await _commonModelFactory.PrepareRobotsTextFileAsync();
             
             return Content(robotsFileContent, MimeTypes.TextPlain);
         }

@@ -113,7 +113,7 @@ namespace Nop.Services.Plugins
 
             //save the file
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
-            fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            fileProvider.WriteAllTextAsync(filePath, text, Encoding.UTF8);
         }
 
         #endregion

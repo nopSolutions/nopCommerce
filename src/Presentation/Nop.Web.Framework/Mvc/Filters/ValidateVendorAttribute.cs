@@ -92,11 +92,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //whether current customer is vendor
-                if (!_customerService.IsVendor(_workContext.GetCurrentCustomer().Result).Result)
+                if (!_customerService.IsVendorAsync(_workContext.GetCurrentCustomerAsync().Result).Result)
                     return;
 
                 //ensure that this user has active vendor record associated
-                if (_workContext.GetCurrentVendor().Result == null)
+                if (_workContext.GetCurrentVendorAsync().Result == null)
                     filterContext.Result = new ChallengeResult();
             }
 

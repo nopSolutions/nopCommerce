@@ -17,7 +17,7 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
         /// <returns>Billing address model</returns>
-        Task<CheckoutBillingAddressModel> PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
+        Task<CheckoutBillingAddressModel> PrepareBillingAddressModelAsync(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false,
             string overrideAttributesXml = "");
@@ -30,7 +30,7 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
         /// <returns>Shipping address model</returns>
-        Task<CheckoutShippingAddressModel> PrepareShippingAddressModel(IList<ShoppingCartItem> cart, int? selectedCountryId = null,
+        Task<CheckoutShippingAddressModel> PrepareShippingAddressModelAsync(IList<ShoppingCartItem> cart, int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "");
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nop.Web.Factories
         /// <param name="cart">Cart</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <returns>Shipping method model</returns>
-        Task<CheckoutShippingMethodModel> PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress);
+        Task<CheckoutShippingMethodModel> PrepareShippingMethodModelAsync(IList<ShoppingCartItem> cart, Address shippingAddress);
 
         /// <summary>
         /// Prepare payment method model
@@ -47,41 +47,41 @@ namespace Nop.Web.Factories
         /// <param name="cart">Cart</param>
         /// <param name="filterByCountryId">Filter by country identifier</param>
         /// <returns>Payment method model</returns>
-        Task<CheckoutPaymentMethodModel> PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId);
+        Task<CheckoutPaymentMethodModel> PreparePaymentMethodModelAsync(IList<ShoppingCartItem> cart, int filterByCountryId);
 
         /// <summary>
         /// Prepare payment info model
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>Payment info model</returns>
-        Task<CheckoutPaymentInfoModel> PreparePaymentInfoModel(IPaymentMethod paymentMethod);
+        Task<CheckoutPaymentInfoModel> PreparePaymentInfoModelAsync(IPaymentMethod paymentMethod);
 
         /// <summary>
         /// Prepare confirm order model
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Confirm order model</returns>
-        Task<CheckoutConfirmModel> PrepareConfirmOrderModel(IList<ShoppingCartItem> cart);
+        Task<CheckoutConfirmModel> PrepareConfirmOrderModelAsync(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Prepare checkout completed model
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Checkout completed model</returns>
-        Task<CheckoutCompletedModel> PrepareCheckoutCompletedModel(Order order);
+        Task<CheckoutCompletedModel> PrepareCheckoutCompletedModelAsync(Order order);
 
         /// <summary>
         /// Prepare checkout progress model
         /// </summary>
         /// <param name="step">Step</param>
         /// <returns>Checkout progress model</returns>
-        Task<CheckoutProgressModel> PrepareCheckoutProgressModel(CheckoutProgressStep step);
+        Task<CheckoutProgressModel> PrepareCheckoutProgressModelAsync(CheckoutProgressStep step);
 
         /// <summary>
         /// Prepare one page checkout model
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>One page checkout model</returns>
-        Task<OnePageCheckoutModel> PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart);
+        Task<OnePageCheckoutModel> PrepareOnePageCheckoutModelAsync(IList<ShoppingCartItem> cart);
     }
 }

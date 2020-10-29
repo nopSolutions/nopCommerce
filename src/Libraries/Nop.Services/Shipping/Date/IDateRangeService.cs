@@ -15,32 +15,32 @@ namespace Nop.Services.Shipping.Date
         /// Delete a delivery date
         /// </summary>
         /// <param name="deliveryDate">The delivery date</param>
-        Task DeleteDeliveryDate(DeliveryDate deliveryDate);
+        Task DeleteDeliveryDateAsync(DeliveryDate deliveryDate);
 
         /// <summary>
         /// Get a delivery date
         /// </summary>
         /// <param name="deliveryDateId">The delivery date identifier</param>
         /// <returns>Delivery date</returns>
-        Task<DeliveryDate> GetDeliveryDateById(int deliveryDateId);
+        Task<DeliveryDate> GetDeliveryDateByIdAsync(int deliveryDateId);
 
         /// <summary>
         /// Get all delivery dates
         /// </summary>
         /// <returns>Delivery dates</returns>
-        Task<IList<DeliveryDate>> GetAllDeliveryDates();
+        Task<IList<DeliveryDate>> GetAllDeliveryDatesAsync();
 
         /// <summary>
         /// Insert a delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        Task InsertDeliveryDate(DeliveryDate deliveryDate);
+        Task InsertDeliveryDateAsync(DeliveryDate deliveryDate);
 
         /// <summary>
         /// Update the delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        Task UpdateDeliveryDate(DeliveryDate deliveryDate);
+        Task UpdateDeliveryDateAsync(DeliveryDate deliveryDate);
 
         #endregion
 
@@ -51,31 +51,31 @@ namespace Nop.Services.Shipping.Date
         /// </summary>
         /// <param name="productAvailabilityRangeId">The product availability range identifier</param>
         /// <returns>Product availability range</returns>
-        Task<ProductAvailabilityRange> GetProductAvailabilityRangeById(int productAvailabilityRangeId);
+        Task<ProductAvailabilityRange> GetProductAvailabilityRangeByIdAsync(int productAvailabilityRangeId);
 
         /// <summary>
         /// Get all product availability ranges
         /// </summary>
         /// <returns>Product availability ranges</returns>
-        Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRanges();
+        Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRangesAsync();
 
         /// <summary>
         /// Insert the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        Task InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        Task InsertProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange);
 
         /// <summary>
         /// Update the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        Task UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        Task UpdateProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange);
 
         /// <summary>
         /// Delete the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        Task DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        Task DeleteProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange);
 
         #endregion
     }

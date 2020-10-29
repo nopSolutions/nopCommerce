@@ -39,17 +39,17 @@ namespace Nop.Web.Controllers
                 customerId = id.Value;
             }
 
-            var customer = await _customerService.GetCustomerById(customerId);
-            if (customer == null || await _customerService.IsGuest(customer))
+            var customer = await _customerService.GetCustomerByIdAsync(customerId);
+            if (customer == null || await _customerService.IsGuestAsync(customer))
             {
                 return RedirectToRoute("Homepage");
             }
 
             //display "edit" (manage) link
-            if (await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
                 DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
 
-            var model = await _profileModelFactory.PrepareProfileIndexModel(customer, pageNumber);
+            var model = await _profileModelFactory.PrepareProfileIndexModelAsync(customer, pageNumber);
             return View(model);
         }
     }

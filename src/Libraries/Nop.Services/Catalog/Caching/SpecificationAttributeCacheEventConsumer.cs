@@ -14,14 +14,14 @@ namespace Nop.Services.Catalog.Caching
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
-        protected override async Task ClearCache(SpecificationAttribute entity, EntityEventType entityEventType)
+        protected override async Task ClearCacheAsync(SpecificationAttribute entity, EntityEventType entityEventType)
         {
-            await Remove(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
+            await RemoveAsync(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey);
 
             if (entityEventType != EntityEventType.Insert)
             {
-                await RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
-                await RemoveByPrefix(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.ProductSpecificationAttributeAllByProductPrefix);
+                await RemoveByPrefixAsync(NopCatalogDefaults.SpecificationAttributeGroupByProductPrefix);
             }
         }
     }

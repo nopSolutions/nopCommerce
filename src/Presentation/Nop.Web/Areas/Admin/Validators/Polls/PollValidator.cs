@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Polls
     {
         public PollValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.Polls.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.ContentManagement.Polls.Fields.Name.Required").Result);
 
             SetDatabaseValidationRules<Poll>(dataProvider);
         }

@@ -82,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor associated customer models</param>
         /// <param name="vendor">Vendor</param>
-        protected virtual async Task PrepareAssociatedCustomerModels(IList<VendorAssociatedCustomerModel> models, Vendor vendor)
+        protected virtual async Task PrepareAssociatedCustomerModelsAsync(IList<VendorAssociatedCustomerModel> models, Vendor vendor)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
-            var associatedCustomers = await _customerService.GetAllCustomers(vendorId: vendor.Id);
+            var associatedCustomers = await _customerService.GetAllCustomersAsync(vendorId: vendor.Id);
             foreach (var customer in associatedCustomers)
             {
                 models.Add(new VendorAssociatedCustomerModel
@@ -106,13 +106,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="models">List of vendor attribute models</param>
         /// <param name="vendor">Vendor</param>
-        protected virtual async Task PrepareVendorAttributeModels(IList<VendorModel.VendorAttributeModel> models, Vendor vendor)
+        protected virtual async Task PrepareVendorAttributeModelsAsync(IList<VendorModel.VendorAttributeModel> models, Vendor vendor)
         {
             if (models == null)
                 throw new ArgumentNullException(nameof(models));
 
             //get available vendor attributes
-            var vendorAttributes = await _vendorAttributeService.GetAllVendorAttributes();
+            var vendorAttributes = await _vendorAttributeService.GetAllVendorAttributesAsync();
             foreach (var attribute in vendorAttributes)
             {
                 var attributeModel = new VendorModel.VendorAttributeModel
@@ -126,7 +126,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = await _vendorAttributeService.GetVendorAttributeValues(attribute.Id);
+                    var attributeValues = await _vendorAttributeService.GetVendorAttributeValuesAsync(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new VendorModel.VendorAttributeValueModel
@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //set already selected attributes
                 if (vendor != null)
                 {
-                    var selectedVendorAttributes = await _genericAttributeService.GetAttribute<string>(vendor, NopVendorDefaults.VendorAttributes);
+                    var selectedVendorAttributes = await _genericAttributeService.GetAttributeAsync<string>(vendor, NopVendorDefaults.VendorAttributes);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = await _vendorAttributeParser.ParseVendorAttributeValues(selectedVendorAttributes);
+                                    var selectedValues = await _vendorAttributeParser.ParseVendorAttributeValuesAsync(selectedVendorAttributes);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModel(AddressModel model, Address address)
+        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -217,13 +217,13 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FaxEnabled = true;
 
             //prepare available countries
-            await _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
 
             //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
+            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
 
             //prepare custom address attributes
-            await _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
+            await _addressAttributeModelFactory.PrepareCustomAddressAttributesAsync(model.CustomAddressAttributes, address);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
         /// <returns>Vendor search model</returns>
-        public virtual Task<VendorSearchModel> PrepareVendorSearchModel(VendorSearchModel searchModel)
+        public virtual Task<VendorSearchModel> PrepareVendorSearchModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -273,13 +273,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Vendor search model</param>
         /// <returns>Vendor list model</returns>
-        public virtual async Task<VendorListModel> PrepareVendorListModel(VendorSearchModel searchModel)
+        public virtual async Task<VendorListModel> PrepareVendorListModelAsync(VendorSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get vendors
-            var vendors = await _vendorService.GetAllVendors(showHidden: true,
+            var vendors = await _vendorService.GetAllVendorsAsync(showHidden: true,
                 name: searchModel.SearchName,
                 email: searchModel.SearchEmail,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
@@ -291,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return vendors.Select(vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
-                    vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false).Result;
+                    vendorModel.SeName = _urlRecordService.GetSeNameAsync(vendor, 0, true, false).Result;
 
                     return vendorModel;
                 });
@@ -307,7 +307,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="vendor">Vendor</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Vendor model</returns>
-        public virtual async Task<VendorModel> PrepareVendorModel(VendorModel model, Vendor vendor, bool excludeProperties = false)
+        public virtual async Task<VendorModel> PrepareVendorModelAsync(VendorModel model, Vendor vendor, bool excludeProperties = false)
         {
             Action<VendorLocalizedModel, int> localizedModelConfiguration = null;
 
@@ -317,22 +317,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = vendor.ToModel<VendorModel>();
-                    model.SeName = await _urlRecordService.GetSeName(vendor, 0, true, false);
+                    model.SeName = await _urlRecordService.GetSeNameAsync(vendor, 0, true, false);
                 }
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(vendor, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalized(vendor, entity => entity.Description, languageId, false, false);
-                    locale.MetaKeywords = await _localizationService.GetLocalized(vendor, entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = await _localizationService.GetLocalized(vendor, entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = await _localizationService.GetLocalized(vendor, entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = await _urlRecordService.GetSeName(vendor, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(vendor, entity => entity.Name, languageId, false, false);
+                    locale.Description = await _localizationService.GetLocalizedAsync(vendor, entity => entity.Description, languageId, false, false);
+                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(vendor, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(vendor, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = await _localizationService.GetLocalizedAsync(vendor, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = await _urlRecordService.GetSeNameAsync(vendor, languageId, false, false);
                 };
 
                 //prepare associated customers
-                await PrepareAssociatedCustomerModels(model.AssociatedCustomers, vendor);
+                await PrepareAssociatedCustomerModelsAsync(model.AssociatedCustomers, vendor);
 
                 //prepare nested search models
                 PrepareVendorNoteSearchModel(model.VendorNoteSearchModel, vendor);
@@ -349,16 +349,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare model vendor attributes
-            await PrepareVendorAttributeModels(model.VendorAttributes, vendor);
+            await PrepareVendorAttributeModelsAsync(model.VendorAttributes, vendor);
 
             //prepare address model
-            var address = await _addressService.GetAddressById(vendor?.AddressId ?? 0);
+            var address = await _addressService.GetAddressByIdAsync(vendor?.AddressId ?? 0);
             if (!excludeProperties && address != null)
                 model.Address = address.ToModel(model.Address);
-            await PrepareAddressModel(model.Address, address);
+            await PrepareAddressModelAsync(model.Address, address);
 
             return model;
         }
@@ -369,7 +369,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Vendor note search model</param>
         /// <param name="vendor">Vendor</param>
         /// <returns>Vendor note list model</returns>
-        public virtual async Task<VendorNoteListModel> PrepareVendorNoteListModel(VendorNoteSearchModel searchModel, Vendor vendor)
+        public virtual async Task<VendorNoteListModel> PrepareVendorNoteListModelAsync(VendorNoteSearchModel searchModel, Vendor vendor)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -378,7 +378,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendor));
 
             //get vendor notes
-            var vendorNotes = await _vendorService.GetVendorNotesByVendor(vendor.Id, searchModel.Page - 1, searchModel.PageSize);
+            var vendorNotes = await _vendorService.GetVendorNotesByVendorAsync(vendor.Id, searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
             var model = new VendorNoteListModel().PrepareToGrid(searchModel, vendorNotes, () =>

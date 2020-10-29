@@ -72,27 +72,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task SaveStoreMappings(Language language, LanguageModel model)
+        protected virtual async Task SaveStoreMappingsAsync(Language language, LanguageModel model)
         {
             language.LimitedToStores = model.SelectedStoreIds.Any();
-            await _languageService.UpdateLanguage(language);
+            await _languageService.UpdateLanguageAsync(language);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappings(language);
-            var allStores = await _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(language);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMapping(language, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(language, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -108,11 +108,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _languageModelFactory.PrepareLanguageSearchModel(new LanguageSearchModel());
+            var model = await _languageModelFactory.PrepareLanguageSearchModelAsync(new LanguageSearchModel());
 
             return View(model);
         }
@@ -120,22 +120,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(LanguageSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _languageModelFactory.PrepareLanguageListModel(searchModel);
+            var model = await _languageModelFactory.PrepareLanguageListModelAsync(searchModel);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _languageModelFactory.PrepareLanguageModel(new LanguageModel(), null);
+            var model = await _languageModelFactory.PrepareLanguageModelAsync(new LanguageModel(), null);
 
             return View(model);
         }
@@ -143,22 +143,22 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(LanguageModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 var language = model.ToEntity<Language>();
-                await _languageService.InsertLanguage(language);
+                await _languageService.InsertLanguageAsync(language);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewLanguage",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewLanguage"), language.Id), language);
+                await _customerActivityService.InsertActivityAsync("AddNewLanguage",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewLanguage"), language.Id), language);
 
                 //Stores
-                await SaveStoreMappings(language, model);
+                await SaveStoreMappingsAsync(language, model);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Languages.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _languageModelFactory.PrepareLanguageModel(model, null, true);
+            model = await _languageModelFactory.PrepareLanguageModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -175,16 +175,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = await _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageByIdAsync(id);
             if (language == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _languageModelFactory.PrepareLanguageModel(null, language);
+            var model = await _languageModelFactory.PrepareLanguageModelAsync(null, language);
 
             return View(model);
         }
@@ -192,37 +192,37 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(LanguageModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = await _languageService.GetLanguageById(model.Id);
+            var language = await _languageService.GetLanguageByIdAsync(model.Id);
             if (language == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published language
-                var allLanguages = await _languageService.GetAllLanguages();
+                var allLanguages = await _languageService.GetAllLanguagesAsync();
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id && !model.Published)
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.PublishedLanguageRequired"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
                 //update
                 language = model.ToEntity(language);
-                await _languageService.UpdateLanguage(language);
+                await _languageService.UpdateLanguageAsync(language);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditLanguage",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditLanguage"), language.Id), language);
+                await _customerActivityService.InsertActivityAsync("EditLanguage",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditLanguage"), language.Id), language);
 
                 //Stores
-                await SaveStoreMappings(language, model);
+                await SaveStoreMappingsAsync(language, model);
 
                 //notification
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Languages.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -231,7 +231,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _languageModelFactory.PrepareLanguageModel(model, language, true);
+            model = await _languageModelFactory.PrepareLanguageModelAsync(model, language, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -240,31 +240,31 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = await _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageByIdAsync(id);
             if (language == null)
                 return RedirectToAction("List");
 
             //ensure we have at least one published language
-            var allLanguages = await _languageService.GetAllLanguages();
+            var allLanguages = await _languageService.GetAllLanguagesAsync();
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
-                _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
+                _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.PublishedLanguageRequired"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
 
             //delete
-            await _languageService.DeleteLanguage(language);
+            await _languageService.DeleteLanguageAsync(language);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteLanguage",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id), language);
+            await _customerActivityService.InsertActivityAsync("DeleteLanguage",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteLanguage"), language.Id), language);
 
             //notification
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -272,7 +272,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<JsonResult> GetAvailableFlagFileNames()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return Json("Access denied");
 
             var flagNames = _fileProvider
@@ -296,16 +296,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Resources(LocaleResourceSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedDataTablesJson();
 
             //try to get a language with the specified id
-            var language = await _languageService.GetLanguageById(searchModel.LanguageId);
+            var language = await _languageService.GetLanguageByIdAsync(searchModel.LanguageId);
             if (language == null)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _languageModelFactory.PrepareLocaleResourceListModel(searchModel, language);
+            var model = await _languageModelFactory.PrepareLocaleResourceListModelAsync(searchModel, language);
 
             return Json(model);
         }
@@ -314,7 +314,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ResourceUpdate([Validate] LocaleResourceModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             if (model.ResourceName != null)
@@ -327,21 +327,21 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return ErrorJson(ModelState.SerializeErrors());
             }
 
-            var resource = await _localizationService.GetLocaleStringResourceById(model.Id);
+            var resource = await _localizationService.GetLocaleStringResourceByIdAsync(model.Id);
             // if the resourceName changed, ensure it isn't being used by another resource
             if (!resource.ResourceName.Equals(model.ResourceName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var res = await _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
+                var res = await _localizationService.GetLocaleStringResourceByNameAsync(model.ResourceName, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
-                    return ErrorJson(string.Format(await _localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
+                    return ErrorJson(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
                 }
             }
 
             //fill entity from model
             resource = model.ToEntity(resource);
 
-            await _localizationService.UpdateLocaleStringResource(resource);
+            await _localizationService.UpdateLocaleStringResourceAsync(resource);
 
             return new NullJsonResult();
         }
@@ -350,7 +350,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             if (model.ResourceName != null)
@@ -363,7 +363,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return ErrorJson(ModelState.SerializeErrors());
             }
 
-            var res = await _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
+            var res = await _localizationService.GetLocaleStringResourceByNameAsync(model.ResourceName, model.LanguageId, false);
             if (res == null)
             {
                 //fill entity from model
@@ -371,11 +371,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 resource.LanguageId = languageId;
 
-                await _localizationService.InsertLocaleStringResource(resource);
+                await _localizationService.InsertLocaleStringResourceAsync(resource);
             }
             else
             {
-                return ErrorJson(string.Format(await _localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
+                return ErrorJson(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
             }
 
             return Json(new { Result = true });
@@ -384,14 +384,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ResourceDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //try to get a locale resource with the specified id
-            var resource = await _localizationService.GetLocaleStringResourceById(id)
+            var resource = await _localizationService.GetLocaleStringResourceByIdAsync(id)
                 ?? throw new ArgumentException("No resource found with the specified id", nameof(id));
 
-            await _localizationService.DeleteLocaleStringResource(resource);
+            await _localizationService.DeleteLocaleStringResourceAsync(resource);
 
             return new NullJsonResult();
         }
@@ -402,17 +402,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ExportXml(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = await _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageByIdAsync(id);
             if (language == null)
                 return RedirectToAction("List");
 
             try
             {
-                var xml = await _localizationService.ExportResourcesToXml(language);
+                var xml = await _localizationService.ExportResourcesToXmlAsync(language);
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "language_pack.xml");
             }
             catch (Exception exc)
@@ -425,11 +425,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ImportXml(int id, IFormFile importxmlfile)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = await _languageService.GetLanguageById(id);
+            var language = await _languageService.GetLanguageByIdAsync(id);
             if (language == null)
                 return RedirectToAction("List");
 
@@ -438,15 +438,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (importxmlfile != null && importxmlfile.Length > 0)
                 {
                     using var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8);
-                    await _localizationService.ImportResourcesFromXml(language, sr);
+                    await _localizationService.ImportResourcesFromXmlAsync(language, sr);
                 }
                 else
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Configuration.Languages.Imported"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Languages.Imported"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
             catch (Exception exc)

@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Language search model</param>
         /// <returns>Language search model</returns>
-        Task<LanguageSearchModel> PrepareLanguageSearchModel(LanguageSearchModel searchModel);
+        Task<LanguageSearchModel> PrepareLanguageSearchModelAsync(LanguageSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged language list model
         /// </summary>
         /// <param name="searchModel">Language search model</param>
         /// <returns>Language list model</returns>
-        Task<LanguageListModel> PrepareLanguageListModel(LanguageSearchModel searchModel);
+        Task<LanguageListModel> PrepareLanguageListModelAsync(LanguageSearchModel searchModel);
 
         /// <summary>
         /// Prepare language model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="language">Language</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Language model</returns>
-        Task<LanguageModel> PrepareLanguageModel(LanguageModel model, Language language, bool excludeProperties = false);
+        Task<LanguageModel> PrepareLanguageModelAsync(LanguageModel model, Language language, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged locale resource list model
@@ -38,6 +38,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Locale resource search model</param>
         /// <param name="language">Language</param>
         /// <returns>Locale resource list model</returns>
-        Task<LocaleResourceListModel> PrepareLocaleResourceListModel(LocaleResourceSearchModel searchModel, Language language);
+        Task<LocaleResourceListModel> PrepareLocaleResourceListModelAsync(LocaleResourceSearchModel searchModel, Language language);
     }
 }

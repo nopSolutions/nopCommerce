@@ -65,10 +65,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml)
+        public virtual async Task<string> FormatAttributesAsync(string attributesXml)
         {
-            var customer = await _workContext.GetCurrentCustomer();
-            return await FormatAttributes(attributesXml, customer);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            return await FormatAttributesAsync(attributesXml, customer);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Nop.Services.Orders
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperlink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public virtual async Task<string> FormatAttributes(string attributesXml,
+        public virtual async Task<string> FormatAttributesAsync(string attributesXml,
             Customer customer,
             string separator = "<br />",
             bool htmlEncode = true,
@@ -90,7 +90,7 @@ namespace Nop.Services.Orders
         {
             var result = new StringBuilder();
 
-            var attributes = await _checkoutAttributeParser.ParseCheckoutAttributes(attributesXml);
+            var attributes = await _checkoutAttributeParser.ParseCheckoutAttributesAsync(attributesXml);
             for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
@@ -105,7 +105,7 @@ namespace Nop.Services.Orders
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id);
+                            var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
@@ -116,7 +116,7 @@ namespace Nop.Services.Orders
                         {
                             //file upload
                             Guid.TryParse(valueStr, out var downloadGuid);
-                            var download = await _downloadService.GetDownloadByGuid(downloadGuid);
+                            var download = await _downloadService.GetDownloadByGuidAsync(downloadGuid);
                             if (download != null)
                             {
                                 string attributeText;
@@ -127,7 +127,7 @@ namespace Nop.Services.Orders
                                 if (allowHyperlinks)
                                 {
                                     //hyperlinks are allowed
-                                    var downloadLink = $"{await _webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}";
+                                    var downloadLink = $"{await _webHelper.GetStoreLocationAsync(false)}download/getfileupload/?downloadId={download.DownloadGuid}";
                                     attributeText = $"<a href=\"{downloadLink}\" class=\"fileuploadattribute\">{fileName}</a>";
                                 }
                                 else
@@ -136,7 +136,7 @@ namespace Nop.Services.Orders
                                     attributeText = fileName;
                                 }
 
-                                var attributeName = await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id);
+                                var attributeName = await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
@@ -146,7 +146,7 @@ namespace Nop.Services.Orders
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = $"{await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id)}: {valueStr}";
+                            formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -156,20 +156,20 @@ namespace Nop.Services.Orders
                     {
                         if (int.TryParse(valueStr, out var attributeValueId))
                         {
-                            var attributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
+                            var attributeValue = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(attributeValueId);
 
                             if (attributeValue != null)
                             {
-                                formattedAttribute = $"{await _localizationService.GetLocalized(attribute, a => a.Name, (await _workContext.GetWorkingLanguage()).Id)}: {await _localizationService.GetLocalized(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguage()).Id)}";
+                                formattedAttribute = $"{await _localizationService.GetLocalizedAsync(attribute, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}: {await _localizationService.GetLocalizedAsync(attributeValue, a => a.Name, (await _workContext.GetWorkingLanguageAsync()).Id)}";
                                 if (renderPrices)
                                 {
-                                    var priceAdjustmentBase = (await _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer)).price;
-                                    var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, await _workContext.GetWorkingCurrency());
+                                    var priceAdjustmentBase = (await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, customer)).price;
+                                    var priceAdjustment = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceAdjustmentBase, await _workContext.GetWorkingCurrencyAsync());
                                     if (priceAdjustmentBase > 0)
                                     {
                                         formattedAttribute += string.Format(
-                                                await _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
-                                                "+", await _priceFormatter.FormatPrice(priceAdjustment), string.Empty);
+                                                await _localizationService.GetResourceAsync("FormattedAttributes.PriceAdjustment"),
+                                                "+", await _priceFormatter.FormatPriceAsync(priceAdjustment), string.Empty);
                                     }
                                 }
                             }

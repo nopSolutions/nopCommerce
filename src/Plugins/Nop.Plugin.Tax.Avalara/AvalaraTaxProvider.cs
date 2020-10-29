@@ -66,13 +66,13 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
         /// <returns>Tax</returns>
-        public async Task<TaxRateResult> GetTaxRate(TaxRateRequest taxRateRequest)
+        public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
             if (taxRateRequest.Address == null)
                 return new TaxRateResult { Errors = new List<string> { "Address is not set" } };
 
             //get tax rate
-            var taxRate = await _avalaraTaxManager.GetTaxRate(taxRateRequest);
+            var taxRate = await _avalaraTaxManager.GetTaxRateAsync(taxRateRequest);
             if (!taxRate.HasValue)
                 return new TaxRateResult { Errors = new List<string> { "No response from the service" } };
 
@@ -84,7 +84,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
         /// <returns>Tax total</returns>
-        public async Task<TaxTotalResult> GetTaxTotal(TaxTotalRequest taxTotalRequest)
+        public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
         {
             //cache tax total within the request
             var key = $"nop.TaxTotal-{taxTotalRequest.UsePaymentMethodAdditionalFee}";
@@ -92,7 +92,7 @@ namespace Nop.Plugin.Tax.Avalara
                 result is TaxTotalResult taxTotalResult))
             {
                 //create a transaction
-                var transaction = await _avalaraTaxManager.CreateTaxTotalTransaction(taxTotalRequest);
+                var transaction = await _avalaraTaxManager.CreateTaxTotalTransactionAsync(taxTotalRequest);
                 if (transaction?.totalTax == null)
                     return new TaxTotalResult { Errors = new List<string> { "No response from the service" } };
 
@@ -167,10 +167,10 @@ namespace Nop.Plugin.Tax.Avalara
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
             //settings
-            await _settingService.SaveSetting(new AvalaraTaxSettings
+            await _settingService.SaveSettingAsync(new AvalaraTaxSettings
             {
                 CompanyCode = Guid.Empty.ToString(),
                 UseSandbox = true,
@@ -182,11 +182,11 @@ namespace Nop.Plugin.Tax.Avalara
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(AvalaraTaxDefaults.SystemName))
             {
                 _widgetSettings.ActiveWidgetSystemNames.Add(AvalaraTaxDefaults.SystemName);
-                await _settingService.SaveSetting(_widgetSettings);
+                await _settingService.SaveSettingAsync(_widgetSettings);
             }
 
             //locales
-            await _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.Create"] = "Create request",
                 ["Enums.Nop.Plugin.Tax.Avalara.Domain.LogType.CreateResponse"] = "Create response",
@@ -272,31 +272,31 @@ namespace Nop.Plugin.Tax.Avalara
                 ["Plugins.Tax.Avalara.VerifyCredentials.Verified"] = "Credentials verified"
             });
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             //generic attributes
-            await _avalaraTaxManager.DeleteAttributes();
+            await _avalaraTaxManager.DeleteAttributesAsync();
 
             //settings            
             _taxSettings.ActiveTaxProviderSystemName = _taxPluginManager.LoadAllPlugins()
                 .FirstOrDefault(taxProvider => !taxProvider.PluginDescriptor.SystemName.Equals(AvalaraTaxDefaults.SystemName))
                 ?.PluginDescriptor.SystemName;
-            await _settingService.SaveSetting(_taxSettings);
+            await _settingService.SaveSettingAsync(_taxSettings);
             _widgetSettings.ActiveWidgetSystemNames.Remove(AvalaraTaxDefaults.SystemName);
-            await _settingService.SaveSetting(_widgetSettings);
-            await _settingService.DeleteSetting<AvalaraTaxSettings>();
+            await _settingService.SaveSettingAsync(_widgetSettings);
+            await _settingService.DeleteSettingAsync<AvalaraTaxSettings>();
 
             //locales
-            await _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Tax.Avalara.Domain");
-            await _localizationService.DeleteLocaleResources("Plugins.Tax.Avalara");
+            await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Tax.Avalara.Domain");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Tax.Avalara");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

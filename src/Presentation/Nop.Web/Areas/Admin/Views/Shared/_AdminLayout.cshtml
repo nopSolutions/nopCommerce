@@ -19,12 +19,12 @@
 @using Nop.Web.Framework.UI
 
 @{
-    var returnUrl = await webHelper.GetRawUrl(Context.Request);
+    var returnUrl = await webHelper.GetRawUrlAsync(Context.Request);
 
     //Kendo UI
     var kendoVersion = "2020.1.406";
 
-    var currentKendoCulture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguage()).LanguageCulture;
+    var currentKendoCulture = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).LanguageCulture;
 
     var currentCulture = CultureInfo.CurrentCulture;
 
@@ -45,7 +45,7 @@
 
     var jQueryUI = "1.10.3";
 
-    var supportRtl = (await workContext.GetWorkingLanguage()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     //CSS resources
     if (supportRtl)
@@ -119,18 +119,18 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
-    var canManageMaintenance = await permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
+    var canManageMaintenance = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance);
 
     //avatar
-    var currentCustomer = await workContext.GetCurrentCustomer();
+    var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
     //event
-    await eventPublisher.Publish(new PageRenderingEvent(this.Html));
+    await eventPublisher.PublishAsync(new PageRenderingEvent(this.Html));
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguage())"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(await workContext.GetWorkingLanguageAsync())"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
     <head>
         <title>@adminPageTitle</title>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -213,10 +213,10 @@
                                 <li>
                                     @await Component.InvokeAsync("AdminLanguageSelector")
                                 </li>
-                                @if (await customerService.IsRegistered(currentCustomer))
+                                @if (await customerService.IsRegisteredAsync(currentCustomer))
                                 {
                                     <li class="account-info">
-                                        @await customerService.GetCustomerFullName(currentCustomer)
+                                        @await customerService.GetCustomerFullNameAsync(currentCustomer)
                                     </li>
                                     <li>
                                         <a asp-controller="Customer" asp-action="Logout" asp-area="">@T("Admin.Header.Logout")</a>

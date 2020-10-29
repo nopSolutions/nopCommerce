@@ -50,21 +50,21 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, await _storeContext.GetCurrentStore()),
-                async () => await _orderReportService.GetAlsoPurchasedProductsIds((await _storeContext.GetCurrentStore()).Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
+            var productIds = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, await _storeContext.GetCurrentStoreAsync()),
+                async () => await _orderReportService.GetAlsoPurchasedProductsIdsAsync((await _storeContext.GetCurrentStoreAsync()).Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
             );
 
             //load products
-            var products = await _productService.GetProductsByIds(productIds);
+            var products = await _productService.GetProductsByIdsAsync(productIds);
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
+            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
             if (!products.Any())
                 return Content("");
 
-            var model = (await _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize)).ToList();
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, true, true, productThumbPictureSize)).ToList();
             return View(model);
         }
     }

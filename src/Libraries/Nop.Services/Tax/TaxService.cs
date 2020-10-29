@@ -92,7 +92,7 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        protected virtual async Task<bool> IsEuConsumer(Customer customer)
+        protected virtual async Task<bool> IsEuConsumerAsync(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -100,22 +100,22 @@ namespace Nop.Services.Tax
             Country country = null;
 
             //get country from billing address
-            if (_addressSettings.CountryEnabled && await _customerService.GetCustomerShippingAddress(customer) is Address billingAddress)
-                country = await _countryService.GetCountryByAddress(billingAddress);
+            if (_addressSettings.CountryEnabled && await _customerService.GetCustomerShippingAddressAsync(customer) is Address billingAddress)
+                country = await _countryService.GetCountryByAddressAsync(billingAddress);
 
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
             {
-                var countryId = await _genericAttributeService.GetAttribute<Customer, int>(customer.Id, NopCustomerDefaults.CountryIdAttribute);
-                country = await _countryService.GetCountryById(countryId);
+                var countryId = await _genericAttributeService.GetAttributeAsync<Customer, int>(customer.Id, NopCustomerDefaults.CountryIdAttribute);
+                country = await _countryService.GetCountryByIdAsync(countryId);
             }
 
             //get country by IP address
             if (country == null)
             {
-                var ipAddress = await _webHelper.GetCurrentIpAddress();
+                var ipAddress = await _webHelper.GetCurrentIpAddressAsync();
                 var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
-                country = await _countryService.GetCountryByTwoLetterIsoCode(countryIsoCode);
+                country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
             }
 
             //we cannot detect country
@@ -127,7 +127,7 @@ namespace Nop.Services.Tax
                 return false;
 
             //company (business) or consumer?
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
             if (customerVatStatus == VatNumberStatus.Valid)
                 return false;
 
@@ -139,11 +139,11 @@ namespace Nop.Services.Tax
         /// Gets a default tax address
         /// </summary>
         /// <returns>Address</returns>
-        protected virtual async Task<Address> LoadDefaultTaxAddress()
+        protected virtual async Task<Address> LoadDefaultTaxAddressAsync()
         {
             var addressId = _taxSettings.DefaultTaxAddressId;
 
-            return await _addressService.GetAddressById(addressId);
+            return await _addressService.GetAddressByIdAsync(addressId);
         }
 
         /// <summary>
@@ -151,13 +151,13 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
         /// <returns>Address</returns>
-        protected virtual async Task<Address> LoadPickupPointTaxAddress(PickupPoint pickupPoint)
+        protected virtual async Task<Address> LoadPickupPointTaxAddressAsync(PickupPoint pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException(nameof(pickupPoint));
 
-            var country = await _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
-            var state = await _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
+            var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(pickupPoint.CountryCode);
+            var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(pickupPoint.StateAbbreviation, country?.Id);
 
             return new Address
             {
@@ -178,7 +178,7 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="price">Price</param>
         /// <returns>Package for tax calculation</returns>
-        protected virtual async Task<TaxRateRequest> PrepareTaxRateRequest(Product product, int taxCategoryId, Customer customer, decimal price)
+        protected virtual async Task<TaxRateRequest> PrepareTaxRateRequestAsync(Product product, int taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -189,7 +189,7 @@ namespace Nop.Services.Tax
                 Product = product,
                 Price = price,
                 TaxCategoryId = taxCategoryId > 0 ? taxCategoryId : product?.TaxCategoryId ?? 0,
-                CurrentStoreId = (await _storeContext.GetCurrentStore()).Id
+                CurrentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id
             };
 
             var basedOn = _taxSettings.TaxBasedOn;
@@ -204,7 +204,7 @@ namespace Nop.Services.Tax
                 //January 1st 2015 passed? Yes, not required anymore
                 //DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc) &&
                 //Europe Union consumer?
-                await IsEuConsumer(customer);
+                await IsEuConsumerAsync(customer);
             if (overriddenBasedOn)
             {
                 //We must charge VAT in the EU country where the customer belongs (not where the business is based)
@@ -214,11 +214,11 @@ namespace Nop.Services.Tax
             //tax is based on pickup point address
             if (!overriddenBasedOn && _taxSettings.TaxBasedOnPickupPointAddress && _shippingSettings.AllowPickupInStore)
             {
-                var pickupPoint = await _genericAttributeService.GetAttribute<PickupPoint>(customer,
-                    NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStore()).Id);
+                var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(customer,
+                    NopCustomerDefaults.SelectedPickupPointAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (pickupPoint != null)
                 {
-                    taxRateRequest.Address = await LoadPickupPointTaxAddress(pickupPoint);
+                    taxRateRequest.Address = await LoadPickupPointTaxAddressAsync(pickupPoint);
                     return taxRateRequest;
                 }
             }
@@ -230,16 +230,16 @@ namespace Nop.Services.Tax
             switch (basedOn)
             {
                 case TaxBasedOn.BillingAddress:
-                    var billingAddress = await _customerService.GetCustomerBillingAddress(customer);
+                    var billingAddress = await _customerService.GetCustomerBillingAddressAsync(customer);
                     taxRateRequest.Address = billingAddress;
                     break;
                 case TaxBasedOn.ShippingAddress:
-                    var shippingAddress = await _customerService.GetCustomerShippingAddress(customer);
+                    var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
                     taxRateRequest.Address = shippingAddress;
                     break;
                 case TaxBasedOn.DefaultAddress:
                 default:
-                    taxRateRequest.Address = await LoadDefaultTaxAddress();
+                    taxRateRequest.Address = await LoadDefaultTaxAddressAsync();
                     break;
             }
 
@@ -275,35 +275,35 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="price">Price (taxable value)</param>
         /// <returns>Calculated tax rate. A value indicating whether a request is taxable</returns>
-        protected virtual async Task<(decimal taxRate, bool isTaxable)> GetTaxRate(Product product, int taxCategoryId,
+        protected virtual async Task<(decimal taxRate, bool isTaxable)> GetTaxRateAsync(Product product, int taxCategoryId,
             Customer customer, decimal price)
         {
             var taxRate = decimal.Zero;
 
             //active tax provider
-            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, (await _storeContext.GetCurrentStore()).Id);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (activeTaxProvider == null)
                 return (taxRate, true);
 
             //tax request
-            var taxRateRequest = await PrepareTaxRateRequest(product, taxCategoryId, customer, price);
+            var taxRateRequest = await PrepareTaxRateRequestAsync(product, taxCategoryId, customer, price);
 
-            var isTaxable = !await IsTaxExempt(product, taxRateRequest.Customer);
+            var isTaxable = !await IsTaxExemptAsync(product, taxRateRequest.Customer);
 
             //tax exempt
 
             //make EU VAT exempt validation (the European Union Value Added Tax)
             if (isTaxable &&
                 _taxSettings.EuVatEnabled &&
-                await IsVatExempt(taxRateRequest.Address, taxRateRequest.Customer))
+                await IsVatExemptAsync(taxRateRequest.Address, taxRateRequest.Customer))
                 //VAT is not chargeable
                 isTaxable = false;
 
             //get tax rate
-            var taxRateResult = await activeTaxProvider.GetTaxRate(taxRateRequest);
+            var taxRateResult = await activeTaxProvider.GetTaxRateAsync(taxRateRequest);
 
             //tax rate is calculated, now consumers can adjust it
-            await _eventPublisher.Publish(new TaxRateCalculatedEvent(taxRateResult));
+            await _eventPublisher.PublishAsync(new TaxRateCalculatedEvent(taxRateResult));
 
             if (taxRateResult.Success)
             {
@@ -315,7 +315,7 @@ namespace Nop.Services.Tax
             }
             else if (_taxSettings.LogErrors)
                 foreach (var error in taxRateResult.Errors)
-                    await _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+                    await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
 
             return (taxRate, isTaxable);
         }
@@ -332,11 +332,11 @@ namespace Nop.Services.Tax
         /// <param name="product">Product</param>
         /// <param name="price">Price</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetProductPrice(Product product, decimal price)
+        public virtual async Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price)
         {
-            var customer = await _workContext.GetCurrentCustomer();
+            var customer = await _workContext.GetCurrentCustomerAsync();
 
-            return await GetProductPrice(product, price, customer);
+            return await GetProductPriceAsync(product, price, customer);
         }
 
         /// <summary>
@@ -346,11 +346,11 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetProductPrice(Product product, decimal price,
+        public virtual async Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price,
             Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
-            return await GetProductPrice(product, price, includingTax, customer);
+            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
+            return await GetProductPriceAsync(product, price, includingTax, customer);
         }
 
         /// <summary>
@@ -361,12 +361,12 @@ namespace Nop.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetProductPrice(Product product, decimal price,
+        public virtual async Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, decimal price,
             bool includingTax, Customer customer)
         {
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
             var taxCategoryId = 0;
-            return await GetProductPrice(product, taxCategoryId, price, includingTax, customer, priceIncludesTax);
+            return await GetProductPriceAsync(product, taxCategoryId, price, includingTax, customer, priceIncludesTax);
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetProductPrice(Product product, int taxCategoryId,
+        public virtual async Task<(decimal price, decimal taxRate)> GetProductPriceAsync(Product product, int taxCategoryId,
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax)
         {
@@ -391,7 +391,7 @@ namespace Nop.Services.Tax
 
             bool isTaxable;
 
-            (taxRate, isTaxable) = await GetTaxRate(product, taxCategoryId, customer, price);
+            (taxRate, isTaxable) = await GetTaxRateAsync(product, taxCategoryId, customer, price);
 
             if (priceIncludesTax)
             {
@@ -449,11 +449,11 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetShippingPrice(decimal price, Customer customer)
+        public virtual async Task<(decimal price, decimal taxRate)> GetShippingPriceAsync(decimal price, Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
+            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
 
-            return await GetShippingPrice(price, includingTax, customer);
+            return await GetShippingPriceAsync(price, includingTax, customer);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace Nop.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetShippingPrice(decimal price, bool includingTax, Customer customer)
+        public virtual async Task<(decimal price, decimal taxRate)> GetShippingPriceAsync(decimal price, bool includingTax, Customer customer)
         {
             var taxRate = decimal.Zero;
 
@@ -475,7 +475,7 @@ namespace Nop.Services.Tax
             var taxClassId = _taxSettings.ShippingTaxClassId;
             var priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
 
-            return await GetProductPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax);
+            return await GetProductPriceAsync(null, taxClassId, price, includingTax, customer, priceIncludesTax);
         }
 
         #endregion
@@ -488,11 +488,11 @@ namespace Nop.Services.Tax
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFee(decimal price, Customer customer)
+        public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
+            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
             
-            return await GetPaymentMethodAdditionalFee(price, includingTax, customer);
+            return await GetPaymentMethodAdditionalFeeAsync(price, includingTax, customer);
         }
 
         /// <summary>
@@ -502,7 +502,7 @@ namespace Nop.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
+        public virtual async Task<(decimal price, decimal taxRate)> GetPaymentMethodAdditionalFeeAsync(decimal price, bool includingTax, Customer customer)
         {
             var taxRate = decimal.Zero;
 
@@ -513,7 +513,7 @@ namespace Nop.Services.Tax
 
             var taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
             var priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
-            return await GetProductPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax);
+            return await GetProductPriceAsync(null, taxClassId, price, includingTax, customer, priceIncludesTax);
         }
 
         #endregion
@@ -526,11 +526,11 @@ namespace Nop.Services.Tax
         /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav)
+        public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav)
         {
-            var customer = await _workContext.GetCurrentCustomer();
+            var customer = await _workContext.GetCurrentCustomerAsync();
 
-            return await GetCheckoutAttributePrice(ca, cav, customer);
+            return await GetCheckoutAttributePriceAsync(ca, cav, customer);
         }
 
         /// <summary>
@@ -540,11 +540,11 @@ namespace Nop.Services.Tax
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
+        public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
         {
-            var includingTax = await _workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
+            var includingTax = await _workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
 
-            return await GetCheckoutAttributePrice(ca, cav, includingTax, customer);
+            return await GetCheckoutAttributePriceAsync(ca, cav, includingTax, customer);
         }
 
         /// <summary>
@@ -555,7 +555,7 @@ namespace Nop.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price. Tax rate</returns>
-        public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
+        public virtual async Task<(decimal price, decimal taxRate)> GetCheckoutAttributePriceAsync(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
             if (cav == null)
@@ -570,7 +570,7 @@ namespace Nop.Services.Tax
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
             var taxClassId = ca.TaxCategoryId;
 
-            return await GetProductPrice(null, taxClassId, price, includingTax, customer, priceIncludesTax);
+            return await GetProductPriceAsync(null, taxClassId, price, includingTax, customer, priceIncludesTax);
         }
 
         #endregion
@@ -582,7 +582,7 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="fullVatNumber">Two letter ISO code of a country and VAT number (e.g. GB 111 1111 111)</param>
         /// <returns>VAT Number status. Name (if received). Address (if received)</returns>
-        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatus(string fullVatNumber)
+        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string fullVatNumber)
         {
             var name = string.Empty;
             var address = string.Empty;
@@ -601,7 +601,7 @@ namespace Nop.Services.Tax
             var twoLetterIsoCode = match.Groups[1].Value;
             var vatNumber = match.Groups[2].Value;
 
-            return await GetVatNumberStatus(twoLetterIsoCode, vatNumber);
+            return await GetVatNumberStatusAsync(twoLetterIsoCode, vatNumber);
         }
         
         /// <summary>
@@ -610,7 +610,7 @@ namespace Nop.Services.Tax
         /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
         /// <param name="vatNumber">VAT number</param>
         /// <returns>VAT Number status. Name (if received). Address (if received)</returns>
-        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
+        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address)> GetVatNumberStatusAsync(string twoLetterIsoCode, string vatNumber)
         {
             var name = string.Empty;
             var address = string.Empty;
@@ -627,7 +627,7 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatUseWebService)
                 return (VatNumberStatus.Unknown, name, address);
 
-            var rez = await DoVatCheck(twoLetterIsoCode, vatNumber);
+            var rez = await DoVatCheckAsync(twoLetterIsoCode, vatNumber);
 
             return (rez.vatNumberStatus, rez.name, rez.address);
         }
@@ -638,7 +638,7 @@ namespace Nop.Services.Tax
         /// <param name="twoLetterIsoCode">Two letter ISO code of a country</param>
         /// <param name="vatNumber">VAT number</param>
         /// <returns>VAT number status. Company name. Address. Exception</returns>
-        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheck(string twoLetterIsoCode, string vatNumber)
+        public virtual async Task<(VatNumberStatus vatNumberStatus, string name, string address, Exception exception)> DoVatCheckAsync(string twoLetterIsoCode, string vatNumber)
         {
             if (vatNumber == null)
                 vatNumber = string.Empty;
@@ -687,14 +687,14 @@ namespace Nop.Services.Tax
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>A value indicating whether a product is tax exempt</returns>
-        public virtual async Task<bool> IsTaxExempt(Product product, Customer customer)
+        public virtual async Task<bool> IsTaxExemptAsync(Product product, Customer customer)
         {
             if (customer != null)
             {
                 if (customer.IsTaxExempt)
                     return true;
 
-                if ((await _customerService.GetCustomerRoles(customer)).Any(cr => cr.TaxExempt))
+                if ((await _customerService.GetCustomerRolesAsync(customer)).Any(cr => cr.TaxExempt))
                     return true;
             }
 
@@ -713,7 +713,7 @@ namespace Nop.Services.Tax
         /// <param name="address">Address</param>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        public virtual async Task<bool> IsVatExempt(Address address, Customer customer)
+        public virtual async Task<bool> IsVatExemptAsync(Address address, Customer customer)
         {
             if (!_taxSettings.EuVatEnabled)
                 return false;
@@ -721,7 +721,7 @@ namespace Nop.Services.Tax
             if (customer == null || address == null)
                 return false;
 
-            var country = await _countryService.GetCountryById(address.CountryId ?? 0);
+            var country = await _countryService.GetCountryByIdAsync(address.CountryId ?? 0);
             if (country == null)
                 return false;
 
@@ -731,7 +731,7 @@ namespace Nop.Services.Tax
 
             // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
             // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
+            var customerVatStatus = (VatNumberStatus)await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute);
             
             return country.Id != _taxSettings.EuVatShopCountryId &&
                    customerVatStatus == VatNumberStatus.Valid &&
@@ -748,31 +748,31 @@ namespace Nop.Services.Tax
         /// <param name="cart">Shopping cart</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Result</returns>
-        public virtual async Task<TaxTotalResult> GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
+        public virtual async Task<TaxTotalResult> GetTaxTotalAsync(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
-            var customer = await _customerService.GetShoppingCartCustomer(cart);
-            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, (await _storeContext.GetCurrentStore()).Id);
+            var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (activeTaxProvider == null)
                 return null;
 
             //get result by using primary tax provider
-            var taxTotalResult = await activeTaxProvider.GetTaxTotal(new TaxTotalRequest
+            var taxTotalResult = await activeTaxProvider.GetTaxTotalAsync(new TaxTotalRequest
             {
                 ShoppingCart = cart,
                 Customer = customer,
-                StoreId = (await _storeContext.GetCurrentStore()).Id,
+                StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                 UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
             });
 
             //tax total is calculated, now consumers can adjust it
-            await _eventPublisher.Publish(new TaxTotalCalculatedEvent(taxTotalResult));
+            await _eventPublisher.PublishAsync(new TaxTotalCalculatedEvent(taxTotalResult));
 
             //error logging
             if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)
             {
                 foreach (var error in taxTotalResult.Errors)
                 {
-                    await _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+                    await _logger.ErrorAsync($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
                 }
             }
 

@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _catalogModelFactory.PrepareSearchBoxModel();
+            var model = await _catalogModelFactory.PrepareSearchBoxModelAsync();
             return View(model);
         }
     }

@@ -23,7 +23,7 @@ namespace Nop.Web.Components
             if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                 return Content("");
 
-            var model = await _commonModelFactory.PrepareTaxTypeSelectorModel();
+            var model = await _commonModelFactory.PrepareTaxTypeSelectorModelAsync();
             return View(model);
         }
     }

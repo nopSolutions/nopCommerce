@@ -52,7 +52,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the current store
         /// </summary>
-        public virtual async Task<Store> GetCurrentStore()
+        public virtual async Task<Store> GetCurrentStoreAsync()
         {
             if (_cachedStore != null)
                 return _cachedStore;
@@ -60,7 +60,7 @@ namespace Nop.Web.Framework
             //try to determine the current store by HOST header
             string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
 
-            var allStores = await _storeService.GetAllStores();
+            var allStores = await _storeService.GetAllStoresAsync();
             var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
 
             if (store == null)
@@ -75,22 +75,22 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets active store scope configuration
         /// </summary>
-        public virtual async Task<int> GetActiveStoreScopeConfiguration()
+        public virtual async Task<int> GetActiveStoreScopeConfigurationAsync()
         {
             if (_cachedActiveStoreScopeConfiguration.HasValue)
                 return _cachedActiveStoreScopeConfiguration.Value;
 
             //ensure that we have 2 (or more) stores
-            if ((await _storeService.GetAllStores()).Count > 1)
+            if ((await _storeService.GetAllStoresAsync()).Count > 1)
             {
                 //do not inject IWorkContext via constructor because it'll cause circular references
-                var currentCustomer = await EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomer();
+                var currentCustomer = await EngineContext.Current.Resolve<IWorkContext>().GetCurrentCustomerAsync();
 
                 //try to get store identifier from attributes
                 var storeId = await _genericAttributeService
-                    .GetAttribute<int>(currentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
+                    .GetAttributeAsync<int>(currentCustomer, NopCustomerDefaults.AdminAreaStoreScopeConfigurationAttribute);
 
-                _cachedActiveStoreScopeConfiguration = (await _storeService.GetStoreById(storeId))?.Id ?? 0;
+                _cachedActiveStoreScopeConfiguration = (await _storeService.GetStoreByIdAsync(storeId))?.Id ?? 0;
             }
             else
                 _cachedActiveStoreScopeConfiguration = 0;

@@ -150,13 +150,13 @@ namespace Nop.Web.Models.Catalog
             /// <param name="url">URL</param>
             /// <param name="webHelper">Web helper</param>
             /// <returns>New URL</returns>
-            protected virtual async Task<string> ExcludeQueryStringParams(string url, IWebHelper webHelper)
+            protected virtual async Task<string> ExcludeQueryStringParamsAsync(string url, IWebHelper webHelper)
             {
                 //comma separated list of parameters to exclude
                 const string excludedQueryStringParams = "pagenumber";
                 var excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var exclude in excludedQueryStringParamsSplitted)
-                    url = await webHelper.RemoveQueryString(url, exclude);
+                    url = await webHelper.RemoveQueryStringAsync(url, exclude);
                 return url;
             }
 
@@ -170,9 +170,9 @@ namespace Nop.Web.Models.Catalog
             /// <param name="webHelper">Web helper</param>
             /// <param name="priceRangesStr">Price ranges in string format</param>
             /// <returns>Price ranges</returns>
-            public virtual async Task<PriceRange> GetSelectedPriceRange(IWebHelper webHelper, string priceRangesStr)
+            public virtual async Task<PriceRange> GetSelectedPriceRangeAsync(IWebHelper webHelper, string priceRangesStr)
             {
-                var range = await webHelper.QueryString<string>(QUERYSTRINGPARAM);
+                var range = await webHelper.QueryStringAsync<string>(QUERYSTRINGPARAM);
                 if (string.IsNullOrEmpty(range))
                     return null;
                 var fromTo = range.Trim().Split(new[] { '-' });
@@ -201,23 +201,23 @@ namespace Nop.Web.Models.Catalog
             /// <param name="priceRangeStr">Price range in string format</param>
             /// <param name="webHelper">Web helper</param>
             /// <param name="priceFormatter">Price formatter</param>
-            public virtual async Task LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
+            public virtual async Task LoadPriceRangeFiltersAsync(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
                 var priceRangeList = GetPriceRangeList(priceRangeStr);
                 if (priceRangeList.Any())
                 {
                     Enabled = true;
 
-                    var selectedPriceRange = await GetSelectedPriceRange(webHelper, priceRangeStr);
+                    var selectedPriceRange = await GetSelectedPriceRangeAsync(webHelper, priceRangeStr);
 
                     Items = priceRangeList.ToList().Select(x =>
                     {
                         //from&to
                         var item = new PriceRangeFilterItem();
                         if (x.From.HasValue)
-                            item.From = priceFormatter.FormatPrice(x.From.Value, true, false).Result;
+                            item.From = priceFormatter.FormatPriceAsync(x.From.Value, true, false).Result;
                         if (x.To.HasValue)
-                            item.To = priceFormatter.FormatPrice(x.To.Value, true, false).Result;
+                            item.To = priceFormatter.FormatPriceAsync(x.To.Value, true, false).Result;
                         var fromQuery = string.Empty;
                         if (x.From.HasValue)
                             fromQuery = x.From.Value.ToString(new CultureInfo("en-US"));
@@ -232,8 +232,8 @@ namespace Nop.Web.Models.Catalog
                             item.Selected = true;
 
                         //filter URL
-                        var url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true).Result, QUERYSTRINGPARAM, $"{fromQuery}-{toQuery}").Result;
-                        url = ExcludeQueryStringParams(url, webHelper).Result;
+                        var url = webHelper.ModifyQueryStringAsync(webHelper.GetThisPageUrlAsync(true).Result, QUERYSTRINGPARAM, $"{fromQuery}-{toQuery}").Result;
+                        url = ExcludeQueryStringParamsAsync(url, webHelper).Result;
                         item.FilterUrl = url;
 
                         return item;
@@ -242,8 +242,8 @@ namespace Nop.Web.Models.Catalog
                     if (selectedPriceRange != null)
                     {
                         //remove filter URL
-                        var url = await webHelper.RemoveQueryString(await webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
-                        url = await ExcludeQueryStringParams(url, webHelper);
+                        var url = await webHelper.RemoveQueryStringAsync(await webHelper.GetThisPageUrlAsync(true), QUERYSTRINGPARAM);
+                        url = await ExcludeQueryStringParamsAsync(url, webHelper);
                         RemoveFilterUrl = url;
                     }
                 }
@@ -328,13 +328,13 @@ namespace Nop.Web.Models.Catalog
             /// <param name="url">URL</param>
             /// <param name="webHelper">Web helper</param>
             /// <returns>New URL</returns>
-            protected virtual async Task<string> ExcludeQueryStringParams(string url, IWebHelper webHelper)
+            protected virtual async Task<string> ExcludeQueryStringParamsAsync(string url, IWebHelper webHelper)
             {
                 //comma separated list of parameters to exclude
                 const string excludedQueryStringParams = "pagenumber";
                 var excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var exclude in excludedQueryStringParamsSplitted)
-                    url = await webHelper.RemoveQueryString(url, exclude);
+                    url = await webHelper.RemoveQueryStringAsync(url, exclude);
                 return url;
             }
 
@@ -347,11 +347,11 @@ namespace Nop.Web.Models.Catalog
             /// </summary>
             /// <param name="webHelper">Web helper</param>
             /// <returns>IDs</returns>
-            public virtual async Task<List<int>> GetAlreadyFilteredSpecOptionIds(IWebHelper webHelper)
+            public virtual async Task<List<int>> GetAlreadyFilteredSpecOptionIdsAsync(IWebHelper webHelper)
             {
                 var result = new List<int>();
 
-                var alreadyFilteredSpecsStr = await webHelper.QueryString<string>(QUERYSTRINGPARAM);
+                var alreadyFilteredSpecsStr = await webHelper.QueryStringAsync<string>(QUERYSTRINGPARAM);
                 if (string.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
                     return result;
 
@@ -374,27 +374,27 @@ namespace Nop.Web.Models.Catalog
             /// <param name="webHelper">Web helper</param>
             /// <param name="workContext">Work context</param>
             /// <param name="staticCacheManager">Cache manager</param>
-            public virtual async Task PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
+            public virtual async Task PrepareSpecsFiltersAsync(IList<int> alreadyFilteredSpecOptionIds,
                 int[] filterableSpecificationAttributeOptionIds,
                     ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
                 IWebHelper webHelper, IWorkContext workContext, IStaticCacheManager staticCacheManager)
             {
                 Enabled = false;
 
-                var cacheKey = staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, await workContext.GetWorkingLanguage());
+                var cacheKey = staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, await workContext.GetWorkingLanguageAsync());
 
-                var allOptions = await specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
-                var allFilters = await staticCacheManager.Get(cacheKey, () => Task.FromResult(allOptions.Select(sao =>
+                var allOptions = await specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(filterableSpecificationAttributeOptionIds);
+                var allFilters = await staticCacheManager.GetAsync(cacheKey, () => Task.FromResult(allOptions.Select(sao =>
                 {
-                    var specAttribute = specificationAttributeService.GetSpecificationAttributeById(sao.SpecificationAttributeId).Result;
+                    var specAttribute = specificationAttributeService.GetSpecificationAttributeByIdAsync(sao.SpecificationAttributeId).Result;
 
                     return new SpecificationAttributeOptionFilter
                     {
                         SpecificationAttributeId = specAttribute.Id,
-                        SpecificationAttributeName = localizationService.GetLocalized(specAttribute, x => x.Name, workContext.GetWorkingLanguage().Result.Id).Result,
+                        SpecificationAttributeName = localizationService.GetLocalizedAsync(specAttribute, x => x.Name, workContext.GetWorkingLanguageAsync().Result.Id).Result,
                         SpecificationAttributeDisplayOrder = specAttribute.DisplayOrder,
                         SpecificationAttributeOptionId = sao.Id,
-                        SpecificationAttributeOptionName = localizationService.GetLocalized(sao, x => x.Name, workContext.GetWorkingLanguage().Result.Id).Result,
+                        SpecificationAttributeOptionName = localizationService.GetLocalizedAsync(sao, x => x.Name, workContext.GetWorkingLanguageAsync().Result.Id).Result,
                         SpecificationAttributeOptionColorRgb = sao.ColorSquaresRgb,
                         SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
                     };
@@ -411,8 +411,8 @@ namespace Nop.Web.Models.Catalog
 
                 //prepare the model properties
                 Enabled = true;
-                var removeFilterUrl = await webHelper.RemoveQueryString(await webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
-                RemoveFilterUrl = await ExcludeQueryStringParams(removeFilterUrl, webHelper);
+                var removeFilterUrl = await webHelper.RemoveQueryStringAsync(await webHelper.GetThisPageUrlAsync(true), QUERYSTRINGPARAM);
+                RemoveFilterUrl = await ExcludeQueryStringParamsAsync(removeFilterUrl, webHelper);
 
                 //get already filtered specification options
                 var alreadyFilteredOptions = allFilters.Where(x => alreadyFilteredSpecOptionIds.Contains(x.SpecificationAttributeOptionId));
@@ -429,7 +429,7 @@ namespace Nop.Web.Models.Catalog
                 {
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<int> { x.SpecificationAttributeOptionId });
-                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true).Result, QUERYSTRINGPARAM,
+                    var filterUrl = webHelper.ModifyQueryStringAsync(webHelper.GetThisPageUrlAsync(true).Result, QUERYSTRINGPARAM,
                         alreadyFiltered.OrderBy(id => id).Select(id => id.ToString()).ToArray()).Result;
 
                     return new SpecificationFilterItem
@@ -437,7 +437,7 @@ namespace Nop.Web.Models.Catalog
                         SpecificationAttributeName = x.SpecificationAttributeName,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOptionName,
                         SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb,
-                        FilterUrl = ExcludeQueryStringParams(filterUrl, webHelper).Result
+                        FilterUrl = ExcludeQueryStringParamsAsync(filterUrl, webHelper).Result
                     };
                 }).ToList();
             }

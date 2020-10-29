@@ -15,14 +15,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Low stock product search model</param>
         /// <returns>Low stock product search model</returns>
-        Task<LowStockProductSearchModel> PrepareLowStockProductSearchModel(LowStockProductSearchModel searchModel);
+        Task<LowStockProductSearchModel> PrepareLowStockProductSearchModelAsync(LowStockProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged low stock product list model
         /// </summary>
         /// <param name="searchModel">Low stock product search model</param>
         /// <returns>Low stock product list model</returns>
-        Task<LowStockProductListModel> PrepareLowStockProductListModel(LowStockProductSearchModel searchModel);
+        Task<LowStockProductListModel> PrepareLowStockProductListModelAsync(LowStockProductSearchModel searchModel);
 
         #endregion
 
@@ -33,21 +33,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller search model</returns>
-        Task<BestsellerSearchModel> PrepareBestsellerSearchModel(BestsellerSearchModel searchModel);
+        Task<BestsellerSearchModel> PrepareBestsellerSearchModelAsync(BestsellerSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged bestseller list model
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller list model</returns>
-        Task<BestsellerListModel> PrepareBestsellerListModel(BestsellerSearchModel searchModel);
+        Task<BestsellerListModel> PrepareBestsellerListModelAsync(BestsellerSearchModel searchModel);
 
         /// <summary>
         /// Get bestsellers total amount
         /// </summary>
         /// <param name="searchModel">Bestseller search model</param>
         /// <returns>Bestseller total amount</returns>
-        Task<string> GetBestsellerTotalAmount(BestsellerSearchModel searchModel);
+        Task<string> GetBestsellerTotalAmountAsync(BestsellerSearchModel searchModel);
 
         #endregion
 
@@ -58,14 +58,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Never sold report search model</param>
         /// <returns>Never sold report search model</returns>
-        Task<NeverSoldReportSearchModel> PrepareNeverSoldSearchModel(NeverSoldReportSearchModel searchModel);
+        Task<NeverSoldReportSearchModel> PrepareNeverSoldSearchModelAsync(NeverSoldReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged never sold report list model
         /// </summary>
         /// <param name="searchModel">Never sold report search model</param>
         /// <returns>Never sold report list model</returns>
-        Task<NeverSoldReportListModel> PrepareNeverSoldListModel(NeverSoldReportSearchModel searchModel);
+        Task<NeverSoldReportListModel> PrepareNeverSoldListModelAsync(NeverSoldReportSearchModel searchModel);
 
         #endregion
 
@@ -76,14 +76,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Country report search model</param>
         /// <returns>Country report search model</returns>
-        Task<CountryReportSearchModel> PrepareCountrySalesSearchModel(CountryReportSearchModel searchModel);
+        Task<CountryReportSearchModel> PrepareCountrySalesSearchModelAsync(CountryReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged country report list model
         /// </summary>
         /// <param name="searchModel">Country report search model</param>
         /// <returns>Country report list model</returns>
-        Task<CountryReportListModel> PrepareCountrySalesListModel(CountryReportSearchModel searchModel);
+        Task<CountryReportListModel> PrepareCountrySalesListModelAsync(CountryReportSearchModel searchModel);
 
         #endregion
 
@@ -94,21 +94,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Customer reports search model</param>
         /// <returns>Customer reports search model</returns>
-        Task<CustomerReportsSearchModel> PrepareCustomerReportsSearchModel(CustomerReportsSearchModel searchModel);
+        Task<CustomerReportsSearchModel> PrepareCustomerReportsSearchModelAsync(CustomerReportsSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged best customers report list modelSearchModel searchModel
         /// </summary>
         /// <param name="searchModel">Best customers report search model</param>
         /// <returns>Best customers report list model</returns>
-        Task<BestCustomersReportListModel> PrepareBestCustomersReportListModel(BestCustomersReportSearchModel searchModel);
+        Task<BestCustomersReportListModel> PrepareBestCustomersReportListModelAsync(BestCustomersReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged registered customers report list model
         /// </summary>
         /// <param name="searchModel">Registered customers report search model</param>
         /// <returns>Registered customers report list model</returns>
-        Task<RegisteredCustomersReportListModel> PrepareRegisteredCustomersReportListModel(RegisteredCustomersReportSearchModel searchModel);
+        Task<RegisteredCustomersReportListModel> PrepareRegisteredCustomersReportListModelAsync(RegisteredCustomersReportSearchModel searchModel);
 
         #endregion
     }

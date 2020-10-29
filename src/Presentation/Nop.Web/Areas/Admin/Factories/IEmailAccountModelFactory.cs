@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account search model</returns>
-        Task<EmailAccountSearchModel> PrepareEmailAccountSearchModel(EmailAccountSearchModel searchModel);
+        Task<EmailAccountSearchModel> PrepareEmailAccountSearchModelAsync(EmailAccountSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged email account list model
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account list model</returns>
-        Task<EmailAccountListModel> PrepareEmailAccountListModel(EmailAccountSearchModel searchModel);
+        Task<EmailAccountListModel> PrepareEmailAccountListModelAsync(EmailAccountSearchModel searchModel);
 
         /// <summary>
         /// Prepare email account model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="emailAccount">Email account</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Email account model</returns>
-        Task<EmailAccountModel> PrepareEmailAccountModel(EmailAccountModel model,
+        Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
             EmailAccount emailAccount, bool excludeProperties = false);
     }
 }

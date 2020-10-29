@@ -63,16 +63,25 @@ namespace Nop.Data
             return commands;
         }
 
-        protected virtual async Task<SqlConnectionStringBuilder> GetConnectionStringBuilder()
+        protected virtual async Task<SqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
         {
-            var connectionString = (await DataSettingsManager.LoadSettings()).ConnectionString;
+            var connectionString = (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
         }
 
-        #endregion
+        /// <summary>
+        /// Execute commands from the SQL script
+        /// </summary>
+        /// <param name="sql">SQL script</param>
+        protected async Task ExecuteSqlScriptAsync(string sql)
+        {
+            var sqlCommands = GetCommandsFromScript(sql);
 
-        #region Methods
+            using var currentConnection = CreateDataConnection();
+            foreach (var command in sqlCommands)
+                await currentConnection.ExecuteAsync(command);
+        }
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -81,11 +90,15 @@ namespace Nop.Data
         /// <returns>Connection to a database</returns>
         protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            if(string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
 
             return new SqlConnection(connectionString);
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Create the database
@@ -97,7 +110,7 @@ namespace Nop.Data
             if (DatabaseExists())
                 return;
 
-            var builder = GetConnectionStringBuilder().Result;
+            var builder = GetConnectionStringBuilderAsync().Result;
 
             //gets database name
             var databaseName = builder.InitialCatalog;
@@ -145,7 +158,7 @@ namespace Nop.Data
         {
             try
             {
-                using (var connection = new SqlConnection(GetConnectionStringBuilder().Result.ConnectionString))
+                using (var connection = new SqlConnection(GetConnectionStringBuilderAsync().Result.ConnectionString))
                 {
                     //just try to connect
                     connection.Open();
@@ -164,26 +177,13 @@ namespace Nop.Data
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
-        protected async Task ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        protected async Task ExecuteSqlScriptFromFileAsync(INopFileProvider fileProvider, string filePath)
         {
             filePath = fileProvider.MapPath(filePath);
             if (!fileProvider.FileExists(filePath))
                 return;
 
-            await ExecuteSqlScript(await fileProvider.ReadAllText(filePath, Encoding.Default));
-        }
-
-        /// <summary>
-        /// Execute commands from the SQL script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        public async Task ExecuteSqlScript(string sql)
-        {
-            var sqlCommands = GetCommandsFromScript(sql);
-
-            using var currentConnection = CreateDataConnection();
-            foreach (var command in sqlCommands)
-                await currentConnection.ExecuteAsync(command);
+            await ExecuteSqlScriptAsync(await fileProvider.ReadAllTextAsync(filePath, Encoding.Default));
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Nop.Data
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath).Wait();
+            ExecuteSqlScriptFromFileAsync(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath).Wait();
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual async Task SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity
+        public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
             await using var currentConnection = CreateDataConnection();
             var currentIdent = GetTableIdent<TEntity>();
@@ -235,7 +235,7 @@ namespace Nop.Data
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual async Task BackupDatabase(string fileName)
+        public virtual async Task BackupDatabaseAsync(string fileName)
         {
             using var currentConnection = CreateDataConnection();
             var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
@@ -246,7 +246,7 @@ namespace Nop.Data
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual async Task RestoreDatabase(string backupFileName)
+        public virtual async Task RestoreDatabaseAsync(string backupFileName)
         {
             using var currentConnection = CreateDataConnection();
             var commandText = string.Format(
@@ -272,7 +272,7 @@ namespace Nop.Data
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual async Task ReIndexTables()
+        public virtual async Task ReIndexTablesAsync()
         {
             using var currentConnection = CreateDataConnection();
             var commandText = $@"

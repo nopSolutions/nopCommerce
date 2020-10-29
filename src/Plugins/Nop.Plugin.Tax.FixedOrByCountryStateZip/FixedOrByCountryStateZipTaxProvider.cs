@@ -83,14 +83,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// </summary>
         /// <param name="taxRateRequest">Tax rate request</param>
         /// <returns>Tax</returns>
-        public async Task<TaxRateResult> GetTaxRate(TaxRateRequest taxRateRequest)
+        public async Task<TaxRateResult> GetTaxRateAsync(TaxRateRequest taxRateRequest)
         {
             var result = new TaxRateResult();
 
             //the tax rate calculation by fixed rate
             if (!_countryStateZipSettings.CountryStateZipEnabled)
             {
-                result.TaxRate = await _settingService.GetSettingByKey<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxRateRequest.TaxCategoryId));
+                result.TaxRate = await _settingService.GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxRateRequest.TaxCategoryId));
                 return result;
             }
 
@@ -103,7 +103,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             //first, load all tax rate records (cached) - loaded only once
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY);
-            var allTaxRates = await _staticCacheManager.Get(cacheKey, async () => (await _taxRateService.GetAllTaxRates()).Select(taxRate => new TaxRate
+            var allTaxRates = await _staticCacheManager.GetAsync(cacheKey, async () => (await _taxRateService.GetAllTaxRatesAsync()).Select(taxRate => new TaxRate
             {
                 Id = taxRate.Id,
                 StoreId = taxRate.StoreId,
@@ -147,7 +147,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// </summary>
         /// <param name="taxTotalRequest">Tax total request</param>
         /// <returns>Tax total</returns>
-        public async Task<TaxTotalResult> GetTaxTotal(TaxTotalRequest taxTotalRequest)
+        public async Task<TaxTotalResult> GetTaxTotalAsync(TaxTotalRequest taxTotalRequest)
         {
             if (!(_httpContextAccessor.HttpContext.Items.TryGetValue("nop.TaxTotal", out var result) && result is TaxTotalResult taxTotalResult))
             {
@@ -155,7 +155,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
                 //order sub total (items + checkout attributes)
                 var (_, _, _, _, orderSubTotalTaxRates) = await _orderTotalCalculationService
-                    .GetShoppingCartSubTotal(taxTotalRequest.ShoppingCart, false);
+                    .GetShoppingCartSubTotalAsync(taxTotalRequest.ShoppingCart, false);
                 var subTotalTaxTotal = decimal.Zero;
                 foreach (var kvp in orderSubTotalTaxRates)
                 {
@@ -177,9 +177,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 if (_taxSettings.ShippingIsTaxable)
                 {
                     var (shippingExclTax, _, _) = await _orderTotalCalculationService
-                        .GetShoppingCartShippingTotal(taxTotalRequest.ShoppingCart, false);
+                        .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, false);
                     var (shippingInclTax, taxRate, _) = await _orderTotalCalculationService
-                        .GetShoppingCartShippingTotal(taxTotalRequest.ShoppingCart, true);
+                        .GetShoppingCartShippingTotalAsync(taxTotalRequest.ShoppingCart, true);
                     if (shippingExclTax.HasValue && shippingInclTax.HasValue)
                     {
                         shippingTax = shippingInclTax.Value - shippingExclTax.Value;
@@ -213,14 +213,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             if (taxTotalRequest.UsePaymentMethodAdditionalFee && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
             {
                 var paymentMethodSystemName = taxTotalRequest.Customer != null
-                    ? await _genericAttributeService.GetAttribute<string>(taxTotalRequest.Customer,
+                    ? await _genericAttributeService.GetAttributeAsync<string>(taxTotalRequest.Customer,
                         NopCustomerDefaults.SelectedPaymentMethodAttribute, taxTotalRequest.StoreId)
                     : string.Empty;
-                var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFee(taxTotalRequest.ShoppingCart, paymentMethodSystemName);
+                var paymentMethodAdditionalFee = await _paymentService.GetAdditionalHandlingFeeAsync(taxTotalRequest.ShoppingCart, paymentMethodSystemName);
                 var (paymentMethodAdditionalFeeExclTax, _) = await _taxService
-                    .GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, taxTotalRequest.Customer);
+                    .GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, false, taxTotalRequest.Customer);
                 var (paymentMethodAdditionalFeeInclTax, taxRate) = await _taxService
-                    .GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, taxTotalRequest.Customer);
+                    .GetPaymentMethodAdditionalFeeAsync(paymentMethodAdditionalFee, true, taxTotalRequest.Customer);
                 var paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
 
                 if (paymentMethodAdditionalFeeTax < decimal.Zero)
@@ -245,19 +245,19 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation().Result}Admin/FixedOrByCountryStateZip/Configure";
+            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/FixedOrByCountryStateZip/Configure";
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
             //settings
-            await _settingService.SaveSetting(new FixedOrByCountryStateZipTaxSettings());
+            await _settingService.SaveSettingAsync(new FixedOrByCountryStateZipTaxSettings());
 
             //locales
-            await _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Plugins.Tax.FixedOrByCountryStateZip.Fixed"] = "Fixed rate",
                 ["Plugins.Tax.FixedOrByCountryStateZip.TaxByCountryStateZip"] = "By Country",
@@ -279,27 +279,27 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 ["Plugins.Tax.FixedOrByCountryStateZip.AddRecordTitle"] = "New tax rate"
             });
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             //settings
-            await _settingService.DeleteSetting<FixedOrByCountryStateZipTaxSettings>();
+            await _settingService.DeleteSettingAsync<FixedOrByCountryStateZipTaxSettings>();
 
             //fixed rates
-            var fixedRates = (await _taxCategoryService.GetAllTaxCategories())
-                .Select(taxCategory => _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)).Result)
+            var fixedRates = (await _taxCategoryService.GetAllTaxCategoriesAsync())
+                .Select(taxCategory => _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)).Result)
                 .Where(setting => setting != null).ToList();
-            await _settingService.DeleteSettings(fixedRates);
+            await _settingService.DeleteSettingsAsync(fixedRates);
 
             //locales
-            await _localizationService.DeleteLocaleResources("Plugins.Tax.FixedOrByCountryStateZip");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Tax.FixedOrByCountryStateZip");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

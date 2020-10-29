@@ -101,13 +101,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer search model</param>
         /// <returns>Manufacturer search model</returns>
-        public virtual async Task<ManufacturerSearchModel> PrepareManufacturerSearchModel(ManufacturerSearchModel searchModel)
+        public virtual async Task<ManufacturerSearchModel> PrepareManufacturerSearchModelAsync(ManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -115,17 +115,17 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "0",
-                Text = await _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.All")
+                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.List.SearchPublished.All")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "1",
-                Text = await _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.PublishedOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.List.SearchPublished.PublishedOnly")
             });
             searchModel.AvailablePublishedOptions.Add(new SelectListItem
             {
                 Value = "2",
-                Text = await _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.UnpublishedOnly")
+                Text = await _localizationService.GetResourceAsync("Admin.Catalog.Manufacturers.List.SearchPublished.UnpublishedOnly")
             });
 
             //prepare page parameters
@@ -139,13 +139,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Manufacturer search model</param>
         /// <returns>Manufacturer list model</returns>
-        public virtual async Task<ManufacturerListModel> PrepareManufacturerListModel(ManufacturerSearchModel searchModel)
+        public virtual async Task<ManufacturerListModel> PrepareManufacturerListModelAsync(ManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get manufacturers
-            var manufacturers = await _manufacturerService.GetAllManufacturers(showHidden: true,
+            var manufacturers = await _manufacturerService.GetAllManufacturersAsync(showHidden: true,
                 manufacturerName: searchModel.SearchManufacturerName,
                 storeId: searchModel.SearchStoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return manufacturers.Select(manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
-                    manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false).Result;
+                    manufacturerModel.SeName = _urlRecordService.GetSeNameAsync(manufacturer, 0, true, false).Result;
 
                     return manufacturerModel;
                 });
@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="manufacturer">Manufacturer</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Manufacturer model</returns>
-        public virtual async Task<ManufacturerModel> PrepareManufacturerModel(ManufacturerModel model,
+        public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(ManufacturerModel model,
             Manufacturer manufacturer, bool excludeProperties = false)
         {
             Action<ManufacturerLocalizedModel, int> localizedModelConfiguration = null;
@@ -185,7 +185,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = manufacturer.ToModel<ManufacturerModel>();
-                    model.SeName = await _urlRecordService.GetSeName(manufacturer, 0, true, false);
+                    model.SeName = await _urlRecordService.GetSeNameAsync(manufacturer, 0, true, false);
                 }
 
                 //prepare nested search model
@@ -194,12 +194,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(manufacturer, entity => entity.Name, languageId, false, false);
-                    locale.Description = await _localizationService.GetLocalized(manufacturer, entity => entity.Description, languageId, false, false);
-                    locale.MetaKeywords = await _localizationService.GetLocalized(manufacturer, entity => entity.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = await _localizationService.GetLocalized(manufacturer, entity => entity.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = await _localizationService.GetLocalized(manufacturer, entity => entity.MetaTitle, languageId, false, false);
-                    locale.SeName = await _urlRecordService.GetSeName(manufacturer, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(manufacturer, entity => entity.Name, languageId, false, false);
+                    locale.Description = await _localizationService.GetLocalizedAsync(manufacturer, entity => entity.Description, languageId, false, false);
+                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(manufacturer, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(manufacturer, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = await _localizationService.GetLocalizedAsync(manufacturer, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = await _urlRecordService.GetSeNameAsync(manufacturer, languageId, false, false);
                 };
             }
 
@@ -214,20 +214,20 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available manufacturer templates
-            await _baseAdminModelFactory.PrepareManufacturerTemplates(model.AvailableManufacturerTemplates, false);
+            await _baseAdminModelFactory.PrepareManufacturerTemplatesAsync(model.AvailableManufacturerTemplates, false);
 
             //prepare model discounts
-            var availableDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
-            await _discountSupportedModelFactory.PrepareModelDiscounts(model, manufacturer, availableDiscounts, excludeProperties);
+            var availableDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToManufacturers, showHidden: true);
+            await _discountSupportedModelFactory.PrepareModelDiscountsAsync(model, manufacturer, availableDiscounts, excludeProperties);
 
             //prepare model customer roles
-            await _aclSupportedModelFactory.PrepareModelCustomerRoles(model, manufacturer, excludeProperties);
+            await _aclSupportedModelFactory.PrepareModelCustomerRolesAsync(model, manufacturer, excludeProperties);
 
             //prepare model stores
-            await _storeMappingSupportedModelFactory.PrepareModelStores(model, manufacturer, excludeProperties);
+            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, manufacturer, excludeProperties);
 
             return model;
         }
@@ -238,7 +238,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Manufacturer product search model</param>
         /// <param name="manufacturer">Manufacturer</param>
         /// <returns>Manufacturer product list model</returns>
-        public virtual async Task<ManufacturerProductListModel> PrepareManufacturerProductListModel(ManufacturerProductSearchModel searchModel,
+        public virtual async Task<ManufacturerProductListModel> PrepareManufacturerProductListModelAsync(ManufacturerProductSearchModel searchModel,
             Manufacturer manufacturer)
         {
             if (searchModel == null)
@@ -248,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(manufacturer));
 
             //get product manufacturers
-            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerId(showHidden: true,
+            var productManufacturers = await _manufacturerService.GetProductManufacturersByManufacturerIdAsync(showHidden: true,
                 manufacturerId: manufacturer.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -261,7 +261,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var manufacturerProductModel = productManufacturer.ToModel<ManufacturerProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    manufacturerProductModel.ProductName = _productService.GetProductById(productManufacturer.ProductId).Result?.Name;
+                    manufacturerProductModel.ProductName = _productService.GetProductByIdAsync(productManufacturer.ProductId).Result?.Name;
 
                     return manufacturerProductModel;
                 });
@@ -275,25 +275,25 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the manufacturer</param>
         /// <returns>Product search model to add to the manufacturer</returns>
-        public virtual async Task<AddProductToManufacturerSearchModel> PrepareAddProductToManufacturerSearchModel(AddProductToManufacturerSearchModel searchModel)
+        public virtual async Task<AddProductToManufacturerSearchModel> PrepareAddProductToManufacturerSearchModelAsync(AddProductToManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available categories
-            await _baseAdminModelFactory.PrepareCategories(searchModel.AvailableCategories);
+            await _baseAdminModelFactory.PrepareCategoriesAsync(searchModel.AvailableCategories);
 
             //prepare available manufacturers
-            await _baseAdminModelFactory.PrepareManufacturers(searchModel.AvailableManufacturers);
+            await _baseAdminModelFactory.PrepareManufacturersAsync(searchModel.AvailableManufacturers);
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             //prepare available vendors
-            await _baseAdminModelFactory.PrepareVendors(searchModel.AvailableVendors);
+            await _baseAdminModelFactory.PrepareVendorsAsync(searchModel.AvailableVendors);
 
             //prepare available product types
-            await _baseAdminModelFactory.PrepareProductTypes(searchModel.AvailableProductTypes);
+            await _baseAdminModelFactory.PrepareProductTypesAsync(searchModel.AvailableProductTypes);
 
             //prepare page parameters
             searchModel.SetPopupGridPageSize();
@@ -306,13 +306,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Product search model to add to the manufacturer</param>
         /// <returns>Product list model to add to the manufacturer</returns>
-        public virtual async Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModel(AddProductToManufacturerSearchModel searchModel)
+        public virtual async Task<AddProductToManufacturerListModel> PrepareAddProductToManufacturerListModelAsync(AddProductToManufacturerSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProducts(false, showHidden: true,
+            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 storeId: searchModel.SearchStoreId,
@@ -327,7 +327,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false).Result;
+                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
 
                     return productModel;
                 });

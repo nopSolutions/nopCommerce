@@ -15,21 +15,21 @@ namespace Nop.Services.Customers
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
         /// <returns>Result</returns>
-        Task<CustomerLoginResults> ValidateCustomer(string usernameOrEmail, string password);
+        Task<CustomerLoginResults> ValidateCustomerAsync(string usernameOrEmail, string password);
 
         /// <summary>
         /// Register customer
         /// </summary>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        Task<CustomerRegistrationResult> RegisterCustomer(CustomerRegistrationRequest request);
+        Task<CustomerRegistrationResult> RegisterCustomerAsync(CustomerRegistrationRequest request);
 
         /// <summary>
         /// Change password
         /// </summary>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        Task<ChangePasswordResult> ChangePassword(ChangePasswordRequest request);
+        Task<ChangePasswordResult> ChangePasswordAsync(ChangePasswordRequest request);
 
         /// <summary>
         /// Login passed user
@@ -38,7 +38,7 @@ namespace Nop.Services.Customers
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <param name="isPersist">Is remember me</param>
         /// <returns>Result of an authentication</returns>
-        Task<IActionResult> SignInCustomer(Customer customer, string returnUrl, bool isPersist = false);
+        Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false);
 
         /// <summary>
         /// Sets a user email
@@ -46,13 +46,13 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="newEmail">New email</param>
         /// <param name="requireValidation">Require validation of new email address</param>
-        Task SetEmail(Customer customer, string newEmail, bool requireValidation);
+        Task SetEmailAsync(Customer customer, string newEmail, bool requireValidation);
 
         /// <summary>
         /// Sets a customer username
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="newUsername">New Username</param>
-        Task SetUsername(Customer customer, string newUsername);
+        Task SetUsernameAsync(Customer customer, string newUsername);
     }
 }

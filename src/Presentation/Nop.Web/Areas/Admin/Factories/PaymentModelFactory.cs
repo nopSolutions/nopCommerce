@@ -48,14 +48,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="methodsModel">Payment methods model</param>
         /// <returns>Payment methods model</returns>
-        public virtual async Task<PaymentMethodsModel> PreparePaymentMethodsModel(PaymentMethodsModel methodsModel)
+        public virtual async Task<PaymentMethodsModel> PreparePaymentMethodsModelAsync(PaymentMethodsModel methodsModel)
         {
             if (methodsModel == null)
                 throw new ArgumentNullException(nameof(methodsModel));
 
             //prepare nested search models
-            await PreparePaymentMethodSearchModel(methodsModel.PaymentsMethod);
-            await PreparePaymentMethodRestrictionModel(methodsModel.PaymentMethodRestriction);
+            await PreparePaymentMethodSearchModelAsync(methodsModel.PaymentsMethod);
+            await PreparePaymentMethodRestrictionModelAsync(methodsModel.PaymentMethodRestriction);
 
             return methodsModel;
         }
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method search model</returns>
-        public virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModel(PaymentMethodSearchModel searchModel)
+        public virtual Task<PaymentMethodSearchModel> PreparePaymentMethodSearchModelAsync(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method list model</returns>
-        public virtual Task<PaymentMethodListModel> PreparePaymentMethodListModel(PaymentMethodSearchModel searchModel)
+        public virtual Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -100,8 +100,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
-                    paymentMethodModel.LogoUrl = _paymentPluginManager.GetPluginLogoUrl(method).Result;
-                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType).Result;
+                    paymentMethodModel.LogoUrl = _paymentPluginManager.GetPluginLogoUrlAsync(method).Result;
+                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType).Result;
 
                     return paymentMethodModel;
                 });
@@ -115,16 +115,16 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Payment method restriction model</param>
         /// <returns>Payment method restriction model</returns>
-        public virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModel(PaymentMethodRestrictionModel model)
+        public virtual async Task<PaymentMethodRestrictionModel> PreparePaymentMethodRestrictionModelAsync(PaymentMethodRestrictionModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var countries = await _countryService.GetAllCountries(showHidden: true);
+            var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id).Result?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id).Result?.Count ?? 0;
 
                 return countryModel;
             }).ToList();
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var method in _paymentPluginManager.LoadAllPlugins())
             {
                 var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
-                paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
+                paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
 
                 model.AvailablePaymentMethods.Add(paymentMethodModel);
 

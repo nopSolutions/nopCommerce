@@ -17,11 +17,11 @@ namespace Nop.Web.Areas.Admin.Validators.Localization
             {
                 RuleFor(model => model.ResourceName)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Resources.Fields.Name.Required").Result);
+                    .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.Fields.Name.Required").Result);
 
                 RuleFor(model => model.ResourceValue)
                     .NotEmpty()
-                    .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Resources.Fields.Value.Required").Result);
+                    .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Languages.Resources.Fields.Value.Required").Result);
 
                 SetDatabaseValidationRules<LocaleStringResource>(dataProvider);
             });

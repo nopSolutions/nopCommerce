@@ -102,94 +102,94 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual async Task UpdateLocales(Category category, CategoryModel model)
+        protected virtual async Task UpdateLocalesAsync(Category category, CategoryModel model)
         {
             foreach (var localized in model.Locales)
             {
-                await _localizedEntityService.SaveLocalizedValue(category,
+                await _localizedEntityService.SaveLocalizedValueAsync(category,
                     x => x.Name,
                     localized.Name,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(category,
+                await _localizedEntityService.SaveLocalizedValueAsync(category,
                     x => x.Description,
                     localized.Description,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(category,
+                await _localizedEntityService.SaveLocalizedValueAsync(category,
                     x => x.MetaKeywords,
                     localized.MetaKeywords,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(category,
+                await _localizedEntityService.SaveLocalizedValueAsync(category,
                     x => x.MetaDescription,
                     localized.MetaDescription,
                     localized.LanguageId);
 
-                await _localizedEntityService.SaveLocalizedValue(category,
+                await _localizedEntityService.SaveLocalizedValueAsync(category,
                     x => x.MetaTitle,
                     localized.MetaTitle,
                     localized.LanguageId);
 
                 //search engine name
-                var seName = await _urlRecordService.ValidateSeName(category, localized.SeName, localized.Name, false);
-                await _urlRecordService.SaveSlug(category, seName, localized.LanguageId);
+                var seName = await _urlRecordService.ValidateSeNameAsync(category, localized.SeName, localized.Name, false);
+                await _urlRecordService.SaveSlugAsync(category, seName, localized.LanguageId);
             }
         }
 
-        protected virtual async Task UpdatePictureSeoNames(Category category)
+        protected virtual async Task UpdatePictureSeoNamesAsync(Category category)
         {
-            var picture = await _pictureService.GetPictureById(category.PictureId);
+            var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
             if (picture != null)
-                await _pictureService.SetSeoFilename(picture.Id, await _pictureService.GetPictureSeName(category.Name));
+                await _pictureService.SetSeoFilenameAsync(picture.Id, await _pictureService.GetPictureSeNameAsync(category.Name));
         }
 
-        protected virtual async Task SaveCategoryAcl(Category category, CategoryModel model)
+        protected virtual async Task SaveCategoryAclAsync(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
-            await _categoryService.UpdateCategory(category);
+            await _categoryService.UpdateCategoryAsync(category);
 
-            var existingAclRecords = await _aclService.GetAclRecords(category);
-            var allCustomerRoles = await _customerService.GetAllCustomerRoles(true);
+            var existingAclRecords = await _aclService.GetAclRecordsAsync(category);
+            var allCustomerRoles = await _customerService.GetAllCustomerRolesAsync(true);
             foreach (var customerRole in allCustomerRoles)
             {
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
                     if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
-                        await _aclService.InsertAclRecord(category, customerRole.Id);
+                        await _aclService.InsertAclRecordAsync(category, customerRole.Id);
                 }
                 else
                 {
                     //remove role
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
-                        await _aclService.DeleteAclRecord(aclRecordToDelete);
+                        await _aclService.DeleteAclRecordAsync(aclRecordToDelete);
                 }
             }
         }
 
-        protected virtual async Task SaveStoreMappings(Category category, CategoryModel model)
+        protected virtual async Task SaveStoreMappingsAsync(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();
-            await _categoryService.UpdateCategory(category);
+            await _categoryService.UpdateCategoryAsync(category);
 
-            var existingStoreMappings = await _storeMappingService.GetStoreMappings(category);
-            var allStores = await _storeService.GetAllStores();
+            var existingStoreMappings = await _storeMappingService.GetStoreMappingsAsync(category);
+            var allStores = await _storeService.GetAllStoresAsync();
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        await _storeMappingService.InsertStoreMapping(category, store.Id);
+                        await _storeMappingService.InsertStoreMappingAsync(category, store.Id);
                 }
                 else
                 {
                     //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
-                        await _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                        await _storeMappingService.DeleteStoreMappingAsync(storeMappingToDelete);
                 }
             }
         }
@@ -205,11 +205,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> List()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareCategorySearchModel(new CategorySearchModel());
+            var model = await _categoryModelFactory.PrepareCategorySearchModelAsync(new CategorySearchModel());
 
             return View(model);
         }
@@ -217,11 +217,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(CategorySearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareCategoryListModel(searchModel);
+            var model = await _categoryModelFactory.PrepareCategoryListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -232,11 +232,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareCategoryModel(new CategoryModel(), null);
+            var model = await _categoryModelFactory.PrepareCategoryModelAsync(new CategoryModel(), null);
 
             return View(model);
         }
@@ -244,7 +244,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Create(CategoryModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -252,39 +252,39 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var category = model.ToEntity<Category>();
                 category.CreatedOnUtc = DateTime.UtcNow;
                 category.UpdatedOnUtc = DateTime.UtcNow;
-                await _categoryService.InsertCategory(category);
+                await _categoryService.InsertCategoryAsync(category);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeName(category, model.SeName, category.Name, true);
-                await _urlRecordService.SaveSlug(category, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(category, model.SeName, category.Name, true);
+                await _urlRecordService.SaveSlugAsync(category, model.SeName, 0);
 
                 //locales
-                await UpdateLocales(category, model);
+                await UpdateLocalesAsync(category, model);
 
                 //discounts
-                var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
+                var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        await _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
+                        await _categoryService.InsertDiscountCategoryMappingAsync(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                 }
 
-                await _categoryService.UpdateCategory(category);
+                await _categoryService.UpdateCategoryAsync(category);
 
                 //update picture seo file name
-                await UpdatePictureSeoNames(category);
+                await UpdatePictureSeoNamesAsync(category);
 
                 //ACL (customer roles)
-                await SaveCategoryAcl(category, model);
+                await SaveCategoryAclAsync(category, model);
 
                 //stores
-                await SaveStoreMappings(category, model);
+                await SaveStoreMappingsAsync(category, model);
 
                 //activity log
-                await _customerActivityService.InsertActivity("AddNewCategory",
-                    string.Format(await _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name), category);
+                await _customerActivityService.InsertActivityAsync("AddNewCategory",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.AddNewCategory"), category.Name), category);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Categories.Added"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Added"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _categoryModelFactory.PrepareCategoryModel(model, null, true);
+            model = await _categoryModelFactory.PrepareCategoryModelAsync(model, null, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -301,16 +301,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //try to get a category with the specified id
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null || category.Deleted)
                 return RedirectToAction("List");
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareCategoryModel(null, category);
+            var model = await _categoryModelFactory.PrepareCategoryModelAsync(null, category);
 
             return View(model);
         }
@@ -318,11 +318,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual async Task<IActionResult> Edit(CategoryModel model, bool continueEditing)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //try to get a category with the specified id
-            var category = await _categoryService.GetCategoryById(model.Id);
+            var category = await _categoryService.GetCategoryByIdAsync(model.Id);
             if (category == null || category.Deleted)
                 return RedirectToAction("List");
 
@@ -333,63 +333,63 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //if parent category changes, we need to clear cache for previous parent category
                 if (category.ParentCategoryId != model.ParentCategoryId)
                 {
-                    await _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
-                    await _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
+                    await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
+                    await _staticCacheManager.RemoveByPrefixAsync(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
                 }
 
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;
-                await _categoryService.UpdateCategory(category);
+                await _categoryService.UpdateCategoryAsync(category);
 
                 //search engine name
-                model.SeName = await _urlRecordService.ValidateSeName(category, model.SeName, category.Name, true);
-                await _urlRecordService.SaveSlug(category, model.SeName, 0);
+                model.SeName = await _urlRecordService.ValidateSeNameAsync(category, model.SeName, category.Name, true);
+                await _urlRecordService.SaveSlugAsync(category, model.SeName, 0);
 
                 //locales
-                await UpdateLocales(category, model);
+                await UpdateLocalesAsync(category, model);
 
                 //discounts
-                var allDiscounts = await _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
+                var allDiscounts = await _discountService.GetAllDiscountsAsync(DiscountType.AssignedToCategories, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (await _categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
-                            await _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
+                        if (await _categoryService.GetDiscountAppliedToCategoryAsync(category.Id, discount.Id) is null)
+                            await _categoryService.InsertDiscountCategoryMappingAsync(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (await _categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is DiscountCategoryMapping mapping)
-                            await _categoryService.DeleteDiscountCategoryMapping(mapping);
+                        if (await _categoryService.GetDiscountAppliedToCategoryAsync(category.Id, discount.Id) is DiscountCategoryMapping mapping)
+                            await _categoryService.DeleteDiscountCategoryMappingAsync(mapping);
                     }
                 }
 
-                await _categoryService.UpdateCategory(category);
+                await _categoryService.UpdateCategoryAsync(category);
 
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != category.PictureId)
                 {
-                    var prevPicture = await _pictureService.GetPictureById(prevPictureId);
+                    var prevPicture = await _pictureService.GetPictureByIdAsync(prevPictureId);
                     if (prevPicture != null)
-                        await _pictureService.DeletePicture(prevPicture);
+                        await _pictureService.DeletePictureAsync(prevPicture);
                 }
 
                 //update picture seo file name
-                await UpdatePictureSeoNames(category);
+                await UpdatePictureSeoNamesAsync(category);
 
                 //ACL
-                await SaveCategoryAcl(category, model);
+                await SaveCategoryAclAsync(category, model);
 
                 //stores
-                await SaveStoreMappings(category, model);
+                await SaveStoreMappingsAsync(category, model);
 
                 //activity log
-                await _customerActivityService.InsertActivity("EditCategory",
-                    string.Format(await _localizationService.GetResource("ActivityLog.EditCategory"), category.Name), category);
+                await _customerActivityService.InsertActivityAsync("EditCategory",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.EditCategory"), category.Name), category);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Categories.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Updated"));
 
                 if (!continueEditing)
                     return RedirectToAction("List");
@@ -398,7 +398,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //prepare model
-            model = await _categoryModelFactory.PrepareCategoryModel(model, category, true);
+            model = await _categoryModelFactory.PrepareCategoryModelAsync(model, category, true);
 
             //if we got this far, something failed, redisplay form
             return View(model);
@@ -407,21 +407,21 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //try to get a category with the specified id
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
                 return RedirectToAction("List");
 
-            await _categoryService.DeleteCategory(category);
+            await _categoryService.DeleteCategoryAsync(category);
 
             //activity log
-            await _customerActivityService.InsertActivity("DeleteCategory",
-                string.Format(await _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name), category);
+            await _customerActivityService.InsertActivityAsync("DeleteCategory",
+                string.Format(await _localizationService.GetResourceAsync("ActivityLog.DeleteCategory"), category.Name), category);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Deleted"));
 
             return RedirectToAction("List");
         }
@@ -429,12 +429,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> DeleteSelected(ICollection<int> selectedIds)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             if (selectedIds != null)
             {
-                await _categoryService.DeleteCategories((await _categoryService.GetCategoriesByIds(selectedIds.ToArray())).Where(p => _workContext.GetCurrentVendor().Result == null).ToList());
+                await _categoryService.DeleteCategoriesAsync((await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).Where(p => _workContext.GetCurrentVendorAsync().Result == null).ToList());
             }
 
             return Json(new { Result = true });
@@ -446,12 +446,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ExportXml()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             try
             {
-                var xml = await _exportManager.ExportCategoriesToXml();
+                var xml = await _exportManager.ExportCategoriesToXmlAsync();
 
                 return File(Encoding.UTF8.GetBytes(xml), "application/xml", "categories.xml");
             }
@@ -464,13 +464,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> ExportXlsx()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             try
             {
                 var bytes = await _exportManager
-                    .ExportCategoriesToXlsx((await _categoryService.GetAllCategories(showHidden: true)).ToList());
+                    .ExportCategoriesToXlsxAsync((await _categoryService.GetAllCategoriesAsync(showHidden: true)).ToList());
 
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }
@@ -484,26 +484,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //a vendor cannot import categories
-            if (await _workContext.GetCurrentVendor() != null)
+            if (await _workContext.GetCurrentVendorAsync() != null)
                 return AccessDeniedView();
 
             try
             {
                 if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    await _importManager.ImportCategoriesFromXlsx(importexcelfile.OpenReadStream());
+                    await _importManager.ImportCategoriesFromXlsxAsync(importexcelfile.OpenReadStream());
                 }
                 else
                 {
-                    _notificationService.ErrorNotification(await _localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Catalog.Categories.Imported"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Imported"));
 
                 return RedirectToAction("List");
             }
@@ -521,56 +521,56 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductList(CategoryProductSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedDataTablesJson();
 
             //try to get a category with the specified id
-            var category = await _categoryService.GetCategoryById(searchModel.CategoryId)
+            var category = await _categoryService.GetCategoryByIdAsync(searchModel.CategoryId)
                 ?? throw new ArgumentException("No category found with the specified id");
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareCategoryProductListModel(searchModel, category);
+            var model = await _categoryModelFactory.PrepareCategoryProductListModelAsync(searchModel, category);
 
             return Json(model);
         }
 
         public virtual async Task<IActionResult> ProductUpdate(CategoryProductModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //try to get a product category with the specified id
-            var productCategory = await _categoryService.GetProductCategoryById(model.Id)
+            var productCategory = await _categoryService.GetProductCategoryByIdAsync(model.Id)
                 ?? throw new ArgumentException("No product category mapping found with the specified id");
 
             //fill entity from product
             productCategory = model.ToEntity(productCategory);
-            await _categoryService.UpdateProductCategory(productCategory);
+            await _categoryService.UpdateProductCategoryAsync(productCategory);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> ProductDelete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //try to get a product category with the specified id
-            var productCategory = await _categoryService.GetProductCategoryById(id)
+            var productCategory = await _categoryService.GetProductCategoryByIdAsync(id)
                 ?? throw new ArgumentException("No product category mapping found with the specified id", nameof(id));
 
-            await _categoryService.DeleteProductCategory(productCategory);
+            await _categoryService.DeleteProductCategoryAsync(productCategory);
 
             return new NullJsonResult();
         }
 
         public virtual async Task<IActionResult> ProductAddPopup(int categoryId)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareAddProductToCategorySearchModel(new AddProductToCategorySearchModel());
+            var model = await _categoryModelFactory.PrepareAddProductToCategorySearchModelAsync(new AddProductToCategorySearchModel());
 
             return View(model);
         }
@@ -578,11 +578,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> ProductAddPopupList(AddProductToCategorySearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = await _categoryModelFactory.PrepareAddProductToCategoryListModel(searchModel);
+            var model = await _categoryModelFactory.PrepareAddProductToCategoryListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -591,14 +591,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public virtual async Task<IActionResult> ProductAddPopup(AddProductToCategoryModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             //get selected products
-            var selectedProducts = await _productService.GetProductsByIds(model.SelectedProductIds.ToArray());
+            var selectedProducts = await _productService.GetProductsByIdsAsync(model.SelectedProductIds.ToArray());
             if (selectedProducts.Any())
             {
-                var existingProductCategories = await _categoryService.GetProductCategoriesByCategoryId(model.CategoryId, showHidden: true);
+                var existingProductCategories = await _categoryService.GetProductCategoriesByCategoryIdAsync(model.CategoryId, showHidden: true);
                 foreach (var product in selectedProducts)
                 {
                     //whether product category with such parameters already exists
@@ -606,7 +606,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         continue;
 
                     //insert the new product category mapping
-                    await _categoryService.InsertProductCategory(new ProductCategory
+                    await _categoryService.InsertProductCategoryAsync(new ProductCategory
                     {
                         CategoryId = model.CategoryId,
                         ProductId = product.Id,

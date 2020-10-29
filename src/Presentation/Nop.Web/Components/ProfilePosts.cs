@@ -20,11 +20,11 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int customerProfileId, int pageNumber)
         {
-            var customer = await _customerService.GetCustomerById(customerProfileId);
+            var customer = await _customerService.GetCustomerByIdAsync(customerProfileId);
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var model = await _profileModelFactory.PrepareProfilePostsModel(customer, pageNumber);
+            var model = await _profileModelFactory.PrepareProfilePostsModelAsync(customer, pageNumber);
             return View(model);
         }
     }

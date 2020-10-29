@@ -49,12 +49,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
-            var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(storeScope);
 
             var model = new ConfigurationModel
             {
@@ -69,12 +69,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
             if (storeScope > 0)
             {
-                model.GoogleId_OverrideForStore = await _settingService.SettingExists(googleAnalyticsSettings, x => x.GoogleId, storeScope);
-                model.TrackingScript_OverrideForStore = await _settingService.SettingExists(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
-                model.EnableEcommerce_OverrideForStore = await _settingService.SettingExists(googleAnalyticsSettings, x => x.EnableEcommerce, storeScope);
-                model.UseJsToSendEcommerceInfo_OverrideForStore = await _settingService.SettingExists(googleAnalyticsSettings, x => x.UseJsToSendEcommerceInfo, storeScope);
-                model.IncludingTax_OverrideForStore = await _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
-                model.IncludeCustomerId_OverrideForStore = await _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludeCustomerId, storeScope);
+                model.GoogleId_OverrideForStore = await _settingService.SettingExistsAsync(googleAnalyticsSettings, x => x.GoogleId, storeScope);
+                model.TrackingScript_OverrideForStore = await _settingService.SettingExistsAsync(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
+                model.EnableEcommerce_OverrideForStore = await _settingService.SettingExistsAsync(googleAnalyticsSettings, x => x.EnableEcommerce, storeScope);
+                model.UseJsToSendEcommerceInfo_OverrideForStore = await _settingService.SettingExistsAsync(googleAnalyticsSettings, x => x.UseJsToSendEcommerceInfo, storeScope);
+                model.IncludingTax_OverrideForStore = await _settingService.SettingExistsAsync(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+                model.IncludeCustomerId_OverrideForStore = await _settingService.SettingExistsAsync(googleAnalyticsSettings, x => x.IncludeCustomerId, storeScope);
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/Configure.cshtml", model);
@@ -83,12 +83,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         [HttpPost]
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = await _storeContext.GetActiveStoreScopeConfiguration();
-            var googleAnalyticsSettings = await _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var googleAnalyticsSettings = await _settingService.LoadSettingAsync<GoogleAnalyticsSettings>(storeScope);
 
             googleAnalyticsSettings.GoogleId = model.GoogleId;
             googleAnalyticsSettings.TrackingScript = model.TrackingScript;
@@ -100,17 +100,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            await _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.GoogleId, model.GoogleId_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.TrackingScript, model.TrackingScript_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.EnableEcommerce, model.EnableEcommerce_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.UseJsToSendEcommerceInfo, model.UseJsToSendEcommerceInfo_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.IncludingTax, model.IncludingTax_OverrideForStore, storeScope, false);
-            await _settingService.SaveSettingOverridablePerStore(googleAnalyticsSettings, x => x.IncludeCustomerId, model.IncludeCustomerId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(googleAnalyticsSettings, x => x.GoogleId, model.GoogleId_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(googleAnalyticsSettings, x => x.TrackingScript, model.TrackingScript_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(googleAnalyticsSettings, x => x.EnableEcommerce, model.EnableEcommerce_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(googleAnalyticsSettings, x => x.UseJsToSendEcommerceInfo, model.UseJsToSendEcommerceInfo_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(googleAnalyticsSettings, x => x.IncludingTax, model.IncludingTax_OverrideForStore, storeScope, false);
+            await _settingService.SaveSettingOverridablePerStoreAsync(googleAnalyticsSettings, x => x.IncludeCustomerId, model.IncludeCustomerId_OverrideForStore, storeScope, false);
 
             //now clear settings cache
-            await _settingService.ClearCache();
+            await _settingService.ClearCacheAsync();
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             return await Configure();
         }

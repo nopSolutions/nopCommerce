@@ -40,9 +40,9 @@ namespace Nop.Services.Orders
         /// Deletes a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        public virtual async Task DeleteReturnRequest(ReturnRequest returnRequest)
+        public virtual async Task DeleteReturnRequestAsync(ReturnRequest returnRequest)
         {
-            await _returnRequestRepository.Delete(returnRequest);
+            await _returnRequestRepository.DeleteAsync(returnRequest);
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
         /// <returns>Return request</returns>
-        public virtual async Task<ReturnRequest> GetReturnRequestById(int returnRequestId)
+        public virtual async Task<ReturnRequest> GetReturnRequestByIdAsync(int returnRequestId)
         {
-            return await _returnRequestRepository.GetById(returnRequestId);
+            return await _returnRequestRepository.GetByIdAsync(returnRequestId);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Return requests</returns>
-        public virtual async Task<IPagedList<ReturnRequest>> SearchReturnRequests(int storeId = 0, int customerId = 0,
+        public virtual async Task<IPagedList<ReturnRequest>> SearchReturnRequestsAsync(int storeId = 0, int customerId = 0,
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
@@ -97,7 +97,7 @@ namespace Nop.Services.Orders
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
 
-            var returnRequests = await query.ToPagedList(pageIndex, pageSize, getOnlyTotalCount);
+            var returnRequests = await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
 
             return returnRequests;
         }
@@ -106,18 +106,18 @@ namespace Nop.Services.Orders
         /// Delete a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
-        public virtual async Task DeleteReturnRequestAction(ReturnRequestAction returnRequestAction)
+        public virtual async Task DeleteReturnRequestActionAsync(ReturnRequestAction returnRequestAction)
         {
-            await _returnRequestActionRepository.Delete(returnRequestAction);
+            await _returnRequestActionRepository.DeleteAsync(returnRequestAction);
         }
 
         /// <summary>
         /// Gets all return request actions
         /// </summary>
         /// <returns>Return request actions</returns>
-        public virtual async Task<IList<ReturnRequestAction>> GetAllReturnRequestActions()
+        public virtual async Task<IList<ReturnRequestAction>> GetAllReturnRequestActionsAsync()
         {
-            return await _returnRequestActionRepository.GetAll(query =>
+            return await _returnRequestActionRepository.GetAllAsync(query =>
             {
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
@@ -130,63 +130,63 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestActionId">Return request action identifier</param>
         /// <returns>Return request action</returns>
-        public virtual async Task<ReturnRequestAction> GetReturnRequestActionById(int returnRequestActionId)
+        public virtual async Task<ReturnRequestAction> GetReturnRequestActionByIdAsync(int returnRequestActionId)
         {
-            return await _returnRequestActionRepository.GetById(returnRequestActionId, cache => default);
+            return await _returnRequestActionRepository.GetByIdAsync(returnRequestActionId, cache => default);
         }
 
         /// <summary>
         /// Inserts a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        public virtual async Task InsertReturnRequest(ReturnRequest returnRequest)
+        public virtual async Task InsertReturnRequestAsync(ReturnRequest returnRequest)
         {
-            await _returnRequestRepository.Insert(returnRequest);
+            await _returnRequestRepository.InsertAsync(returnRequest);
         }
 
         /// <summary>
         /// Inserts a return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
-        public virtual async Task InsertReturnRequestAction(ReturnRequestAction returnRequestAction)
+        public virtual async Task InsertReturnRequestActionAsync(ReturnRequestAction returnRequestAction)
         {
-            await _returnRequestActionRepository.Insert(returnRequestAction);
+            await _returnRequestActionRepository.InsertAsync(returnRequestAction);
         }
 
         /// <summary>
         /// Updates the return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        public virtual async Task UpdateReturnRequest(ReturnRequest returnRequest)
+        public virtual async Task UpdateReturnRequestAsync(ReturnRequest returnRequest)
         {
-            await _returnRequestRepository.Update(returnRequest);
+            await _returnRequestRepository.UpdateAsync(returnRequest);
         }
 
         /// <summary>
         /// Updates the return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
-        public virtual async Task UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
+        public virtual async Task UpdateReturnRequestActionAsync(ReturnRequestAction returnRequestAction)
         {
-            await _returnRequestActionRepository.Update(returnRequestAction);
+            await _returnRequestActionRepository.UpdateAsync(returnRequestAction);
         }
 
         /// <summary>
         /// Delete a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
-        public virtual async Task DeleteReturnRequestReason(ReturnRequestReason returnRequestReason)
+        public virtual async Task DeleteReturnRequestReasonAsync(ReturnRequestReason returnRequestReason)
         {
-            await _returnRequestReasonRepository.Delete(returnRequestReason);
+            await _returnRequestReasonRepository.DeleteAsync(returnRequestReason);
         }
 
         /// <summary>
         /// Gets all return request reasons
         /// </summary>
         /// <returns>Return request reasons</returns>
-        public virtual async Task<IList<ReturnRequestReason>> GetAllReturnRequestReasons()
+        public virtual async Task<IList<ReturnRequestReason>> GetAllReturnRequestReasonsAsync()
         {
-            return await _returnRequestReasonRepository.GetAll(query =>
+            return await _returnRequestReasonRepository.GetAllAsync(query =>
             {
                 return from rra in query
                     orderby rra.DisplayOrder, rra.Id
@@ -199,27 +199,27 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestReasonId">Return request reason identifier</param>
         /// <returns>Return request reason</returns>
-        public virtual async Task<ReturnRequestReason> GetReturnRequestReasonById(int returnRequestReasonId)
+        public virtual async Task<ReturnRequestReason> GetReturnRequestReasonByIdAsync(int returnRequestReasonId)
         {
-            return await _returnRequestReasonRepository.GetById(returnRequestReasonId, cache => default);
+            return await _returnRequestReasonRepository.GetByIdAsync(returnRequestReasonId, cache => default);
         }
 
         /// <summary>
         /// Inserts a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
-        public virtual async Task InsertReturnRequestReason(ReturnRequestReason returnRequestReason)
+        public virtual async Task InsertReturnRequestReasonAsync(ReturnRequestReason returnRequestReason)
         {
-            await _returnRequestReasonRepository.Insert(returnRequestReason);
+            await _returnRequestReasonRepository.InsertAsync(returnRequestReason);
         }
 
         /// <summary>
         /// Updates the  return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
-        public virtual async Task UpdateReturnRequestReason(ReturnRequestReason returnRequestReason)
+        public virtual async Task UpdateReturnRequestReasonAsync(ReturnRequestReason returnRequestReason)
         {
-            await _returnRequestReasonRepository.Update(returnRequestReason);
+            await _returnRequestReasonRepository.UpdateAsync(returnRequestReason);
         }
 
         #endregion

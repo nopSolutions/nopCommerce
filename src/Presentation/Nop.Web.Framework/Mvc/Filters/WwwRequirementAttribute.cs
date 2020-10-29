@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var urlWith3W = $"{urlScheme}www.";
 
                 //get requested URL
-                var currentUrl = _webHelper.GetThisPageUrl(true).Result;
+                var currentUrl = _webHelper.GetThisPageUrlAsync(true).Result;
 
                 //whether requested URL starts with WWW
                 var urlStartsWith3W = currentUrl.StartsWith(urlWith3W, StringComparison.OrdinalIgnoreCase);
@@ -100,7 +100,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //ignore this rule for localhost
-                if (_webHelper.IsLocalRequest(filterContext.HttpContext.Request).Result)
+                if (_webHelper.IsLocalRequestAsync(filterContext.HttpContext.Request).Result)
                     return;
 
                 switch (_seoSettings.WwwRequirement)

@@ -17,7 +17,7 @@ namespace Nop.Web.Infrastructure
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
                     var langservice = endpointRouteBuilder.ServiceProvider.GetRequiredService<ILanguageService>();
-                    var languages = langservice.GetAllLanguages().Result;
+                    var languages = langservice.GetAllLanguagesAsync().Result;
                     return "{language:lang=" + languages.FirstOrDefault().UniqueSeoCode + $"}}/{seoCode}";
                 }
             }

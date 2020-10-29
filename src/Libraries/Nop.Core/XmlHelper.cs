@@ -20,13 +20,13 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">String</param>
         /// <returns>Encoded string</returns>
-        public static async Task<string> XmlEncode(string str)
+        public static async Task<string> XmlEncodeAsync(string str)
         {
             if (str == null)
                 return null;
             str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
             
-            return await XmlEncodeAsIs(str);
+            return await XmlEncodeAsIsAsync(str);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">String</param>
         /// <returns>Encoded string</returns>
-        public static async Task<string> XmlEncodeAsIs(string str)
+        public static async Task<string> XmlEncodeAsIsAsync(string str)
         {
             if (str == null)
                 return null;
@@ -60,13 +60,13 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">Attribute</param>
         /// <returns>Encoded attribute</returns>
-        public static async Task<string> XmlEncodeAttribute(string str)
+        public static async Task<string> XmlEncodeAttributeAsync(string str)
         {
             if (str == null)
                 return null;
             str = Regex.Replace(str, @"[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD]", string.Empty, RegexOptions.Compiled);
             
-            return await XmlEncodeAttributeAsIs(str);
+            return await XmlEncodeAttributeAsIsAsync(str);
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">Attribute</param>
         /// <returns>Encoded attribute</returns>
-        public static async Task<string> XmlEncodeAttributeAsIs(string str)
+        public static async Task<string> XmlEncodeAttributeAsIsAsync(string str)
         {
-            var rez = await XmlEncodeAsIs(str);
+            var rez = await XmlEncodeAsIsAsync(str);
 
             return rez.Replace("\"", "&quot;");
         }
@@ -86,7 +86,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">Attribute</param>
         /// <returns>Decoded attribute</returns>
-        public static Task<string> XmlDecode(string str)
+        public static Task<string> XmlDecodeAsync(string str)
         {
             var sb = new StringBuilder(str);
             
@@ -100,7 +100,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="dateTime">Datetime</param>
         /// <returns>Serialized datetime</returns>
-        public static async Task<string> SerializeDateTime(DateTime dateTime)
+        public static async Task<string> SerializeDateTimeAsync(DateTime dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
             var sb = new StringBuilder();
@@ -115,7 +115,7 @@ namespace Nop.Core
         /// </summary>
         /// <param name="dateTime">Datetime</param>
         /// <returns>Deserialized datetime</returns>
-        public static Task<DateTime> DeserializeDateTime(string dateTime)
+        public static Task<DateTime> DeserializeDateTimeAsync(string dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
             using var sr = new StringReader(dateTime);

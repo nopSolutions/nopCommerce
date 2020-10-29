@@ -86,7 +86,7 @@ namespace Nop.Core.Caching
 
             //do not cache null value
             if (result == null)
-                Remove(key);
+                RemoveAsync(key);
 
             return result;
         }
@@ -96,7 +96,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        public Task Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
+        public Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
             cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
             _memoryCache.Remove(cacheKey.Key);
@@ -111,7 +111,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public async Task<T> Get<T>(CacheKey key, Func<Task<T>> acquire)
+        public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
@@ -125,7 +125,7 @@ namespace Nop.Core.Caching
 
             //do not cache null value
             if (result == null)
-                await Remove(key);
+                await RemoveAsync(key);
 
             return result;
         }
@@ -135,7 +135,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        public Task Set(CacheKey key, object data)
+        public Task SetAsync(CacheKey key, object data)
         {
             if ((key?.CacheTime ?? 0) <= 0 || data == null)
                 return Task.CompletedTask;
@@ -150,7 +150,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
-        public Task<bool> IsSet(CacheKey key)
+        public Task<bool> IsSetAsync(CacheKey key)
         {
             return Task.FromResult(_memoryCache.TryGetValue(key.Key, out _));
         }
@@ -165,7 +165,7 @@ namespace Nop.Core.Caching
         public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
         {
             //ensure that lock is acquired
-            if (IsSet(new CacheKey(key)).Result)
+            if (IsSetAsync(new CacheKey(key)).Result)
                 return false;
 
             try
@@ -180,19 +180,8 @@ namespace Nop.Core.Caching
             finally
             {
                 //release lock even if action fails
-                Remove(key).Wait();
+                _memoryCache.Remove(key);
             }
-        }
-
-        /// <summary>
-        /// Remove the value with the specified key from the cache
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        public Task Remove(string key)
-        {
-            _memoryCache.Remove(key);
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -200,7 +189,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        public Task RemoveByPrefix(string prefix, params object[] prefixParameters)
+        public Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters)
         {
             prefix = PrepareKeyPrefix(prefix, prefixParameters);
 
@@ -214,7 +203,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public Task Clear()
+        public Task ClearAsync()
         {
             _clearToken.Cancel();
             _clearToken.Dispose();

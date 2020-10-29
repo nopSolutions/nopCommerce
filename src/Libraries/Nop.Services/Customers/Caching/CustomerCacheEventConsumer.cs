@@ -18,25 +18,25 @@ namespace Nop.Services.Customers.Caching
         /// Handle password changed event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        public async Task HandleEvent(CustomerPasswordChangedEvent eventMessage)
+        public async Task HandleEventAsync(CustomerPasswordChangedEvent eventMessage)
         {
-            await Remove(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId);
         }
 
         /// <summary>
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Customer entity)
+        protected override async Task ClearCacheAsync(Customer entity)
         {
-            await RemoveByPrefix(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
-            await RemoveByPrefix(NopCustomerServicesDefaults.CustomerAddressesPrefix);
-            await RemoveByPrefix(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerCustomerRolesPrefix);
+            await RemoveByPrefixAsync(NopCustomerServicesDefaults.CustomerAddressesPrefix);
+            await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
 
             if (string.IsNullOrEmpty(entity.SystemName))
                 return;
 
-            await Remove(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
         }
 
         #endregion

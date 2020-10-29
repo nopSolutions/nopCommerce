@@ -14,7 +14,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        Task<string> Generate(int? id);
+        Task<string> GenerateAsync(int? id);
 
         /// <summary>
         /// This will build an XML sitemap for better index with search engines.
@@ -22,6 +22,6 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        Task Generate(Stream stream, int? id);
+        Task GenerateAsync(Stream stream, int? id);
     }
 }

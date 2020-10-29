@@ -27,6 +27,7 @@ namespace Nop.Services.Plugins
         /// <returns>Plugin</returns>
         TPlugin LoadPluginBySystemName(string systemName, Customer customer = null, int storeId = 0);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Load primary active plugin
         /// </summary>
@@ -58,6 +59,6 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <returns>Logo URL</returns>
-        Task<string> GetPluginLogoUrl(TPlugin plugin);
+        Task<string> GetPluginLogoUrlAsync(TPlugin plugin);
     }
 }

@@ -21,23 +21,23 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Install plugin
         /// </summary>
-        Task Install();
+        Task InstallAsync();
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        Task Uninstall();
+        Task UninstallAsync();
 
         /// <summary>
         /// Update plugin
         /// </summary>
         /// <param name="currentVersion">Current version of plugin</param>
         /// <param name="targetVersion">New version of plugin</param>
-        Task Update(string currentVersion, string targetVersion);
+        Task UpdateAsync(string currentVersion, string targetVersion);
 
         /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
-        Task PreparePluginToUninstall();
+        Task PreparePluginToUninstallAsync();
     }
 }

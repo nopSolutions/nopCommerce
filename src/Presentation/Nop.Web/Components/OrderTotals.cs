@@ -28,9 +28,9 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(bool isEditable)
         {
-            var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-            var model = await _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
+            var model = await _shoppingCartModelFactory.PrepareOrderTotalsModelAsync(cart, isEditable);
             return View(model);
         }
     }

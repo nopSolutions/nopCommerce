@@ -34,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             //prepare model
-            var model = await _commonModelFactory.PrepareLanguageSelectorModel();
+            var model = await _commonModelFactory.PrepareLanguageSelectorModelAsync();
 
             return View(model);
         }

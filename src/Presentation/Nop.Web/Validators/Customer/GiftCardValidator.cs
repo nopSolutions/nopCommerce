@@ -9,7 +9,7 @@ namespace Nop.Web.Validators.Customer
     {
         public GiftCardValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.GiftCardCode).NotEmpty().WithMessage(localizationService.GetResource("CheckGiftCardBalance.GiftCardCouponCode.Empty").Result);            
+            RuleFor(x => x.GiftCardCode).NotEmpty().WithMessage(localizationService.GetResourceAsync("CheckGiftCardBalance.GiftCardCouponCode.Empty").Result);            
         }
     }
 }

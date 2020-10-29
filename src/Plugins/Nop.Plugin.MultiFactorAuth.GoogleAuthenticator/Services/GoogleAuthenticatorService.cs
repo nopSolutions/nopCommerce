@@ -64,8 +64,8 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _repository.Insert(configuration);
-            _staticCacheManager.RemoveByPrefix(GoogleAuthenticatorDefaults.PrefixCacheKey);
+            _repository.InsertAsync(configuration);
+            _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _repository.Update(configuration);
-            _staticCacheManager.RemoveByPrefix(GoogleAuthenticatorDefaults.PrefixCacheKey);
+            _repository.UpdateAsync(configuration);
+            _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            _repository.Delete(configuration);
-            _staticCacheManager.RemoveByPrefix(GoogleAuthenticatorDefaults.PrefixCacheKey);
+            _repository.DeleteAsync(configuration);
+            _staticCacheManager.RemoveByPrefixAsync(GoogleAuthenticatorDefaults.PrefixCacheKey);
         }
 
         /// <summary>
@@ -99,13 +99,13 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// </summary>
         /// <param name="configurationId">Configuration identifier</param>
         /// <returns>Configuration</returns>
-        internal async Task<GoogleAuthenticatorRecord> GetConfigurationById(int configurationId)
+        internal async Task<GoogleAuthenticatorRecord> GetConfigurationByIdAsync(int configurationId)
         {
             if (configurationId == 0)
                 return null;
 
-            return await _staticCacheManager.Get(_staticCacheManager.PrepareKeyForDefaultCache(GoogleAuthenticatorDefaults.ConfigurationCacheKey, configurationId), async () =>
-                await _repository.GetById(configurationId));
+            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(GoogleAuthenticatorDefaults.ConfigurationCacheKey, configurationId), async () =>
+                await _repository.GetByIdAsync(configurationId));
         }
 
         internal GoogleAuthenticatorRecord GetConfigurationByCustomerEmail(string email)
@@ -127,14 +127,14 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Paged list of configurations</returns>
-        public async Task<IPagedList<GoogleAuthenticatorRecord>> GetPagedConfigurations(string email = null, int pageIndex = 0, int pageSize = int.MaxValue)
+        public async Task<IPagedList<GoogleAuthenticatorRecord>> GetPagedConfigurationsAsync(string email = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _repository.Table;
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Customer.Contains(email));
             query = query.OrderBy(configuration => configuration.Id);
 
-            return await query.ToPagedList(pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services
         {
             return TwoFactorAuthenticator.GenerateSetupCode(
                 _googleAuthenticatorSettings.BusinessPrefix, 
-                _workContext.GetCurrentCustomer().Result.Email, 
+                _workContext.GetCurrentCustomerAsync().Result.Email, 
                 secretkey, false, _googleAuthenticatorSettings.QRPixelsPerModule);
         }
 

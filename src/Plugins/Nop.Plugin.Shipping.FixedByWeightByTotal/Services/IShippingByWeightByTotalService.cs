@@ -15,7 +15,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of the shipping by weight record</returns>
-        Task<IPagedList<ShippingByWeightByTotalRecord>> GetAll(int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<ShippingByWeightByTotalRecord>> GetAllAsync(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Get a shipping by weight record by passed parameters
@@ -29,7 +29,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="weight">Weight</param>
         /// <param name="orderSubtotal">Order subtotal</param>
         /// <returns>Shipping by weight record</returns>
-        Task<ShippingByWeightByTotalRecord> FindRecords(int shippingMethodId, int storeId, int warehouseId,  
+        Task<ShippingByWeightByTotalRecord> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId,  
             int countryId, int stateProvinceId, string zip, decimal weight, decimal orderSubtotal);
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>List of the shipping by weight record</returns>
-        Task<IPagedList<ShippingByWeightByTotalRecord>> FindRecords(int shippingMethodId, int storeId, int warehouseId,
+        Task<IPagedList<ShippingByWeightByTotalRecord>> FindRecordsAsync(int shippingMethodId, int storeId, int warehouseId,
             int countryId, int stateProvinceId, string zip, decimal? weight, decimal? orderSubtotal, int pageIndex, int pageSize);
 
         /// <summary>
@@ -54,24 +54,24 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// </summary>
         /// <param name="shippingByWeightRecordId">Record identifier</param>
         /// <returns>Shipping by weight record</returns>
-        Task<ShippingByWeightByTotalRecord> GetById(int shippingByWeightRecordId);
+        Task<ShippingByWeightByTotalRecord> GetByIdAsync(int shippingByWeightRecordId);
 
         /// <summary>
         /// Insert the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
-        Task InsertShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord);
+        Task InsertShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord);
 
         /// <summary>
         /// Update the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
-        Task UpdateShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord);
+        Task UpdateShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord);
 
         /// <summary>
         /// Delete the shipping by weight record
         /// </summary>
         /// <param name="shippingByWeightRecord">Shipping by weight record</param>
-        Task DeleteShippingByWeightRecord(ShippingByWeightByTotalRecord shippingByWeightRecord);
+        Task DeleteShippingByWeightRecordAsync(ShippingByWeightByTotalRecord shippingByWeightRecord);
     }
 }

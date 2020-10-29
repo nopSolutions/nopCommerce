@@ -69,7 +69,7 @@ namespace Nop.Web.Controllers
             // use Request.RawUrl, for instance to parse out what was invoked
             // this regex will extract anything between a "/" and a ".aspx"
             var regex = new Regex(@"(?<=/).+(?=\.aspx)", RegexOptions.Compiled);
-            var rawUrl = await _webHelper.GetRawUrl(HttpContext.Request);
+            var rawUrl = await _webHelper.GetRawUrlAsync(HttpContext.Request);
             var aspxfileName = regex.Match(rawUrl).Value.ToLowerInvariant();
 
             switch (aspxfileName)
@@ -77,35 +77,35 @@ namespace Nop.Web.Controllers
                 //URL without rewriting
                 case "product":
                     {
-                        return await RedirectProduct(await _webHelper.QueryString<string>("productid"), false);
+                        return await RedirectProduct(await _webHelper.QueryStringAsync<string>("productid"), false);
                     }
                 case "category":
                     {
-                        return await RedirectCategory(await _webHelper.QueryString<string>("categoryid"), false);
+                        return await RedirectCategory(await _webHelper.QueryStringAsync<string>("categoryid"), false);
                     }
                 case "manufacturer":
                     {
-                        return await RedirectManufacturer(await _webHelper.QueryString<string>("manufacturerid"), false);
+                        return await RedirectManufacturer(await _webHelper.QueryStringAsync<string>("manufacturerid"), false);
                     }
                 case "producttag":
                     {
-                        return await RedirectProductTag(await _webHelper.QueryString<string>("tagid"), false);
+                        return await RedirectProductTag(await _webHelper.QueryStringAsync<string>("tagid"), false);
                     }
                 case "news":
                     {
-                        return await RedirectNewsItem(await _webHelper.QueryString<string>("newsid"), false);
+                        return await RedirectNewsItem(await _webHelper.QueryStringAsync<string>("newsid"), false);
                     }
                 case "blog":
                     {
-                        return await RedirectBlogPost(await _webHelper.QueryString<string>("blogpostid"), false);
+                        return await RedirectBlogPost(await _webHelper.QueryStringAsync<string>("blogpostid"), false);
                     }
                 case "topic":
                     {
-                        return await RedirectTopic(await _webHelper.QueryString<string>("topicid"), false);
+                        return await RedirectTopic(await _webHelper.QueryStringAsync<string>("topicid"), false);
                     }
                 case "profile":
                     {
-                        return await RedirectUserProfile(await _webHelper.QueryString<string>("UserId"));
+                        return await RedirectUserProfile(await _webHelper.QueryStringAsync<string>("UserId"));
                     }
                 case "compareproducts":
                     {
@@ -167,40 +167,40 @@ namespace Nop.Web.Controllers
         {
             //we can't use dash in MVC
             var productId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var product = await _productService.GetProductById(productId);
+            var product = await _productService.GetProductByIdAsync(productId);
             if (product == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Product", new { SeName = await _urlRecordService.GetSeName(product) });
+            return RedirectToRoutePermanent("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) });
         }
 
         public virtual async Task<IActionResult> RedirectCategory(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var categoryid = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var category = await _categoryService.GetCategoryById(categoryid);
+            var category = await _categoryService.GetCategoryByIdAsync(categoryid);
             if (category == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Category", new { SeName = await _urlRecordService.GetSeName(category) });
+            return RedirectToRoutePermanent("Category", new { SeName = await _urlRecordService.GetSeNameAsync(category) });
         }
 
         public virtual async Task<IActionResult> RedirectManufacturer(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var manufacturerId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var manufacturer = await _manufacturerService.GetManufacturerById(manufacturerId);
+            var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
             if (manufacturer == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Manufacturer", new { SeName = await _urlRecordService.GetSeName(manufacturer) });
+            return RedirectToRoutePermanent("Manufacturer", new { SeName = await _urlRecordService.GetSeNameAsync(manufacturer) });
         }
 
         public virtual async Task<IActionResult> RedirectProductTag(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var tagId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var tag = await _productTagService.GetProductTagById(tagId);
+            var tag = await _productTagService.GetProductTagByIdAsync(tagId);
             if (tag == null)
                 return RedirectToRoutePermanent("Homepage");
 
@@ -211,73 +211,73 @@ namespace Nop.Web.Controllers
         {
             //we can't use dash in MVC
             var newsId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var newsItem = await _newsService.GetNewsById(newsId);
+            var newsItem = await _newsService.GetNewsByIdAsync(newsId);
             if (newsItem == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = await _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public virtual async Task<IActionResult> RedirectBlogPost(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var blogPostId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var blogPost = await _blogService.GetBlogPostById(blogPostId);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(blogPostId);
             if (blogPost == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = await _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public virtual async Task<IActionResult> RedirectTopic(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var topicId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var topic = await _topicService.GetTopicById(topicId);
+            var topic = await _topicService.GetTopicByIdAsync(topicId);
             if (topic == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Topic", new { SeName = await _urlRecordService.GetSeName(topic) });
+            return RedirectToRoutePermanent("Topic", new { SeName = await _urlRecordService.GetSeNameAsync(topic) });
         }
 
         public virtual async Task<IActionResult> RedirectForumGroup(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var forumGroupId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var forumGroup = await _forumService.GetForumGroupById(forumGroupId);
+            var forumGroup = await _forumService.GetForumGroupByIdAsync(forumGroupId);
             if (forumGroup == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = await _forumService.GetForumGroupSeName(forumGroup) });
+            return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = await _forumService.GetForumGroupSeNameAsync(forumGroup) });
         }
 
         public virtual async Task<IActionResult> RedirectForum(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var forumId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var forum = await _forumService.GetForumById(forumId);
+            var forum = await _forumService.GetForumByIdAsync(forumId);
             if (forum == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeName(forum) });
+            return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = await _forumService.GetForumSeNameAsync(forum) });
         }
 
         public virtual async Task<IActionResult> RedirectForumTopic(string id, bool idIncludesSename = true)
         {
             //we can't use dash in MVC
             var forumTopicId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
-            var topic = await _forumService.GetTopicById(forumTopicId);
+            var topic = await _forumService.GetTopicByIdAsync(forumTopicId);
             if (topic == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeName(topic) });
+            return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) });
         }
 
         public virtual async Task<IActionResult> RedirectUserProfile(string id)
         {
             //we can't use dash in MVC
             var userId = Convert.ToInt32(id);
-            var user = await _customerService.GetCustomerById(userId);
+            var user = await _customerService.GetCustomerByIdAsync(userId);
             if (user == null)
                 return RedirectToRoutePermanent("Homepage");
 

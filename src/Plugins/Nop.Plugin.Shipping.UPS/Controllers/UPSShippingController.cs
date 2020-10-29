@@ -62,7 +62,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         public async Task<IActionResult> Configure()
         {
             //whether user has the authority to manage configuration
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             //prepare common model
@@ -110,11 +110,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             //check measures
             var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
-            if (await _measureService.GetMeasureWeightBySystemKeyword(weightSystemName) == null)
+            if (await _measureService.GetMeasureWeightBySystemKeywordAsync(weightSystemName) == null)
                 _notificationService.ErrorNotification($"Could not load '{weightSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure weight</a>", false);
 
             var dimensionSystemName = _upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
-            if (await _measureService.GetMeasureDimensionBySystemKeyword(dimensionSystemName) == null)
+            if (await _measureService.GetMeasureDimensionBySystemKeywordAsync(dimensionSystemName) == null)
                 _notificationService.ErrorNotification($"Could not load '{dimensionSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure dimension</a>", false);
 
             return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);
@@ -124,7 +124,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         public async Task<IActionResult> Configure(UPSShippingModel model)
         {
             //whether user has the authority to manage configuration
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -162,9 +162,9 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
             _upsSettings.CarrierServicesOffered = string.Join(':', model.CarrierServices.Select(service => $"[{service}]"));
 
-            await _settingService.SaveSetting(_upsSettings);
+            await _settingService.SaveSettingAsync(_upsSettings);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             return await Configure();
         }

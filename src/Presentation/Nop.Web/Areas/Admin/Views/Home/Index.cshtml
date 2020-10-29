@@ -7,10 +7,10 @@
     //page title
     ViewBag.PageTitle = T("Admin.Dashboard").Text;
 
-    var canManageOrders = await permissionService.Authorize(StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = await permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = await permissionService.Authorize(StandardPermissionProvider.ManageProducts);
-    var canManageReturnRequests = await permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests);
+    var canManageOrders = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts);
+    var canManageReturnRequests = await permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests);
 }
 
 <div class="content-header">

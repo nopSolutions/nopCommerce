@@ -29,25 +29,25 @@ namespace Nop.Services.Common
         /// Gets value indicating whether Full-Text is supported
         /// </summary>
         /// <returns>Result</returns>
-        public virtual async Task<bool> IsFullTextSupported()
+        public virtual async Task<bool> IsFullTextSupportedAsync()
         {
-            return await _dataProvider.ExecuteStoredProcedure<bool>("FullText_IsSupported");
+            return await _dataProvider.ExecuteStoredProcedureAsync<bool>("FullText_IsSupported");
         }
 
         /// <summary>
         /// Enable Full-Text support
         /// </summary>
-        public virtual async Task EnableFullText()
+        public virtual async Task EnableFullTextAsync()
         {
-            await _dataProvider.ExecuteStoredProcedure("FullText_Enable");
+            await _dataProvider.ExecuteStoredProcedureAsync("FullText_Enable");
         }
 
         /// <summary>
         /// Disable Full-Text support
         /// </summary>
-        public virtual async Task DisableFullText()
+        public virtual async Task DisableFullTextAsync()
         {
-            await _dataProvider.ExecuteStoredProcedure("FullText_Disable");
+            await _dataProvider.ExecuteStoredProcedureAsync("FullText_Disable");
         }
 
         #endregion

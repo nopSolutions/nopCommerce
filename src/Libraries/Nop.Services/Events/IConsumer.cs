@@ -12,6 +12,6 @@ namespace Nop.Services.Events
         /// Handle event
         /// </summary>
         /// <param name="eventMessage">Event</param>
-        Task HandleEvent(T eventMessage);
+        Task HandleEventAsync(T eventMessage);
     }
 }

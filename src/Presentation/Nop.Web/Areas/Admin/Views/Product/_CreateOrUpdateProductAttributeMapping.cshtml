@@ -2,13 +2,13 @@
 
 @{
     const string hideInfoBlockAttributeName = "ProductAttributeMappingPage.HideCommonBlock";
-    var hideInfoBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideInfoBlockAttributeName);
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
 
     const string hideValuesBlockAttributeName = "ProductAttributeMappingPage.HideValuesBlock";
-    var hideValuesBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideValuesBlockAttributeName);
+    var hideValuesBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideValuesBlockAttributeName);
 
     const string hideConditionBlockAttributeName = "ProductAttributeMappingPage.HideConditionBlock";
-    var hideConditionBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideConditionBlockAttributeName);
+    var hideConditionBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideConditionBlockAttributeName);
 }
 
 <div asp-validation-summary="All"></div>

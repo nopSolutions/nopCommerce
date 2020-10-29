@@ -159,7 +159,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <returns>Customer time zone; if customer is null, then default store time zone</returns>
-        public virtual async Task<TimeZoneInfo> GetCustomerTimeZone(Customer customer)
+        public virtual async Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer)
         {
             if (!_dateTimeSettings.AllowCustomersToSetTimeZone) 
                 return DefaultStoreTimeZone;
@@ -168,7 +168,7 @@ namespace Nop.Services.Helpers
 
             var timeZoneId = string.Empty;
             if (customer != null)
-                timeZoneId = await _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
+                timeZoneId = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.TimeZoneIdAttribute);
 
             try
             {
@@ -213,7 +213,7 @@ namespace Nop.Services.Helpers
                 }
 
                 _dateTimeSettings.DefaultStoreTimeZoneId = defaultTimeZoneId;
-                _settingService.SaveSetting(_dateTimeSettings).Wait();
+                _settingService.SaveSettingAsync(_dateTimeSettings).Wait();
             }
         }
 
@@ -222,7 +222,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         public virtual TimeZoneInfo CurrentTimeZone
         {
-            get => GetCustomerTimeZone(_workContext.GetCurrentCustomer().Result).Result;
+            get => GetCustomerTimeZoneAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
             set
             {
                 if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
@@ -234,7 +234,7 @@ namespace Nop.Services.Helpers
                     timeZoneId = value.Id;
                 }
 
-                _genericAttributeService.SaveAttribute(_workContext.GetCurrentCustomer().Result,
+                _genericAttributeService.SaveAttributeAsync(_workContext.GetCurrentCustomerAsync().Result,
                     NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId).Wait();
             }
         }

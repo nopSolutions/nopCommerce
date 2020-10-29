@@ -32,10 +32,10 @@ namespace Nop.Web.Areas.Admin.Components
             if (!enabled)
             {
                 //overridden settings
-                var stores = await _storeService.GetAllStores();
+                var stores = await _storeService.GetAllStoresAsync();
                 foreach (var store in stores)
                 {
-                    var catalogSettings = await _settingService.LoadSetting<CatalogSettings>(store.Id);
+                    var catalogSettings = await _settingService.LoadSettingAsync<CatalogSettings>(store.Id);
                     enabled = catalogSettings.IgnoreStoreLimitations;
 
                     if (enabled)

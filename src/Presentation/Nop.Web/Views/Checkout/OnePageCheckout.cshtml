@@ -11,7 +11,7 @@
     Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.accordion.js");
     Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.onepagecheckout.js");
 
-    var storeLocation = await webHelper.GetStoreLocation();
+    var storeLocation = await webHelper.GetStoreLocationAsync();
 
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
@@ -63,7 +63,7 @@
                     <script asp-location="Footer">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/',
                             @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()),
-                            @((await _customerService.IsGuest(await workContext.GetCurrentCustomer())).ToString().ToLowerInvariant()));
+                            @((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
                             Billing.newAddress(!$('#billing-address-select').val());
                         }

@@ -13,9 +13,9 @@
          /// <typeparam name="T">Entity type</typeparam>
          /// <param name="eventPublisher">Event publisher</param>
          /// <param name="entity">Entity</param>
-         public static async Task EntityInserted<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
+         public static async Task EntityInsertedAsync<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
          {
-             await eventPublisher.Publish(new EntityInsertedEvent<T>(entity));
+             await eventPublisher.PublishAsync(new EntityInsertedEvent<T>(entity));
          }
 
          /// <summary>
@@ -24,9 +24,9 @@
          /// <typeparam name="T">Entity type</typeparam>
          /// <param name="eventPublisher">Event publisher</param>
          /// <param name="entity">Entity</param>
-         public static async Task EntityUpdated<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
+         public static async Task EntityUpdatedAsync<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
          {
-             await eventPublisher.Publish(new EntityUpdatedEvent<T>(entity));
+             await eventPublisher.PublishAsync(new EntityUpdatedEvent<T>(entity));
          }
 
          /// <summary>
@@ -35,9 +35,9 @@
          /// <typeparam name="T">Entity type</typeparam>
          /// <param name="eventPublisher">Event publisher</param>
          /// <param name="entity">Entity</param>
-         public static async Task EntityDeleted<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
+         public static async Task EntityDeletedAsync<T>(this IEventPublisher eventPublisher, T entity) where T : BaseEntity
          {
-             await eventPublisher.Publish(new EntityDeletedEvent<T>(entity));
+             await eventPublisher.PublishAsync(new EntityDeletedEvent<T>(entity));
          }
      }
  }

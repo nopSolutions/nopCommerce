@@ -11,8 +11,8 @@ namespace Nop.Web.Areas.Admin.Validators.Tasks
     {
         public ScheduleTaskValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.ScheduleTasks.Name.Required").Result);
-            RuleFor(x => x.Seconds).GreaterThan(0).WithMessage(localizationService.GetResource("Admin.System.ScheduleTasks.Seconds.Positive").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.System.ScheduleTasks.Name.Required").Result);
+            RuleFor(x => x.Seconds).GreaterThan(0).WithMessage(localizationService.GetResourceAsync("Admin.System.ScheduleTasks.Seconds.Positive").Result);
 
             SetDatabaseValidationRules<ScheduleTask>(dataProvider);
         }

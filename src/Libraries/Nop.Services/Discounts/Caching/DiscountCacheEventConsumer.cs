@@ -13,11 +13,11 @@ namespace Nop.Services.Discounts.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(Discount entity)
+        protected override async Task ClearCacheAsync(Discount entity)
         {
-            await Remove(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity);
-            await RemoveByPrefix(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity);
-            await RemoveByPrefix(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity);
+            await RemoveAsync(NopDiscountDefaults.DiscountRequirementsByDiscountCacheKey, entity);
+            await RemoveByPrefixAsync(NopDiscountDefaults.CategoryIdsByDiscountPrefix, entity);
+            await RemoveByPrefixAsync(NopDiscountDefaults.ManufacturerIdsByDiscountPrefix, entity);
         }
     }
 }

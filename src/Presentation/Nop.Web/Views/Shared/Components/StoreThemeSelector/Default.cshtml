@@ -4,7 +4,7 @@
 
 @if (Model.AvailableStoreThemes.Count > 1)
 {
-    var returnUrl = webHelper.GetRawUrl(Context.Request);
+    var returnUrl = webHelper.GetRawUrlAsync(Context.Request);
     var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
     {
         Text = x.Title,

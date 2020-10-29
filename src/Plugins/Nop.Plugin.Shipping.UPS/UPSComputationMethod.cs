@@ -49,7 +49,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Represents a response of getting shipping rate options</returns>
-        public async Task<GetShippingOptionResponse> GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
+        public async Task<GetShippingOptionResponse> GetShippingOptionsAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
@@ -60,7 +60,7 @@ namespace Nop.Plugin.Shipping.UPS
             if (getShippingOptionRequest.ShippingAddress?.CountryId == null)
                 return new GetShippingOptionResponse { Errors = new[] { "Shipping address is not set" } };
 
-            return await _upsService.GetRates(getShippingOptionRequest);
+            return await _upsService.GetRatesAsync(getShippingOptionRequest);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
-        public Task<decimal?> GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
+        public Task<decimal?> GetFixedRateAsync(GetShippingOptionRequest getShippingOptionRequest)
         {
             return null;
         }
@@ -78,16 +78,16 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocation().Result}Admin/UPSShipping/Configure";
+            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/UPSShipping/Configure";
         }
 
         /// <summary>
         /// Install plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
             //settings
-            await _settingService.SaveSetting(new UPSSettings
+            await _settingService.SaveSettingAsync(new UPSSettings
             {
                 UseSandbox = true,
                 CustomerClassification = CustomerClassification.StandardListRates,
@@ -101,7 +101,7 @@ namespace Nop.Plugin.Shipping.UPS
             });
 
             //locales
-            await _localizationService.AddLocaleResource(new Dictionary<string, string>
+            await _localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions"] = "Pack by dimensions",
                 ["Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage"] = "Pack by one item per package",
@@ -152,22 +152,22 @@ namespace Nop.Plugin.Shipping.UPS
                 ["Plugins.Shipping.UPS.Tracker.Pickup"] = "Pickup"
             });
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             //settings
-            await _settingService.DeleteSetting<UPSSettings>();
+            await _settingService.DeleteSettingAsync<UPSSettings>();
 
             //locales
-            await _localizationService.DeleteLocaleResources("Enums.Nop.Plugin.Shipping.UPS");
-            await _localizationService.DeleteLocaleResources("Plugins.Shipping.UPS");
+            await _localizationService.DeleteLocaleResourcesAsync("Enums.Nop.Plugin.Shipping.UPS");
+            await _localizationService.DeleteLocaleResourcesAsync("Plugins.Shipping.UPS");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

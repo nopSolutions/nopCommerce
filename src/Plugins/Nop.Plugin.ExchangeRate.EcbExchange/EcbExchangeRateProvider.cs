@@ -44,7 +44,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public async Task<IList<Core.Domain.Directory.ExchangeRate>> GetCurrencyLiveRatesAsync(string exchangeRateCurrencyCode)
         {
             if (exchangeRateCurrencyCode == null)
                 throw new ArgumentNullException(nameof(exchangeRateCurrencyCode));
@@ -96,7 +96,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             }
             catch (Exception ex)
             {
-                await _logger.Error("ECB exchange rate provider", ex);
+                await _logger.ErrorAsync("ECB exchange rate provider", ex);
             }
 
             //return result for the euro
@@ -106,7 +106,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             //use only currencies that are supported by ECB
             var exchangeRateCurrency = ratesToEuro.FirstOrDefault(rate => rate.CurrencyCode.Equals(exchangeRateCurrencyCode, StringComparison.InvariantCultureIgnoreCase));
             if (exchangeRateCurrency == null)
-                throw new NopException(await _localizationService.GetResource("Plugins.ExchangeRate.EcbExchange.Error"));
+                throw new NopException(await _localizationService.GetResourceAsync("Plugins.ExchangeRate.EcbExchange.Error"));
 
             //return result for the selected (not euro) currency
             return ratesToEuro.Select(rate => new Core.Domain.Directory.ExchangeRate
@@ -120,23 +120,23 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         /// <summary>
         /// Install the plugin
         /// </summary>
-        public override async Task Install()
+        public override async Task InstallAsync()
         {
             //locales
-            await _localizationService.AddOrUpdateLocaleResource("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
+            await _localizationService.AddOrUpdateLocaleResourceAsync("Plugins.ExchangeRate.EcbExchange.Error", "You can use ECB (European central bank) exchange rate provider only when the primary exchange rate currency is supported by ECB");
 
-            await base.Install();
+            await base.InstallAsync();
         }
 
         /// <summary>
         /// Uninstall the plugin
         /// </summary>
-        public override async Task Uninstall()
+        public override async Task UninstallAsync()
         {
             //locales
-            await _localizationService.DeleteLocaleResource("Plugins.ExchangeRate.EcbExchange.Error");
+            await _localizationService.DeleteLocaleResourceAsync("Plugins.ExchangeRate.EcbExchange.Error");
 
-            await base.Uninstall();
+            await base.UninstallAsync();
         }
 
         #endregion

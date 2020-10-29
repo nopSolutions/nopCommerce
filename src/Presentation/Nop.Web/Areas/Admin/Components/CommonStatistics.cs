@@ -41,20 +41,20 @@ namespace Nop.Web.Areas.Admin.Components
         /// <returns>View component result</returns>
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
-                !await _permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||
-                !await _permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests) ||
-                !await _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests) ||
+                !await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
             {
                 return Content(string.Empty);
             }
 
             //a vendor doesn't have access to this report
-            if (await _workContext.GetCurrentVendor() != null)
+            if (await _workContext.GetCurrentVendorAsync() != null)
                 return Content(string.Empty);
 
             //prepare model
-            var model = await _commonModelFactory.PrepareCommonStatisticsModel();
+            var model = await _commonModelFactory.PrepareCommonStatisticsModelAsync();
 
             return View(model);
         }

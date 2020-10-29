@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _commonModelFactory.PrepareCurrencySelectorModel();
+            var model = await _commonModelFactory.PrepareCurrencySelectorModelAsync();
             if (model.AvailableCurrencies.Count == 1)
                 return Content("");
 

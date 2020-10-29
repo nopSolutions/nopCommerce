@@ -77,7 +77,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected customer attributes</returns>
-        public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributes(string attributesXml)
+        public virtual async Task<IList<CustomerAttribute>> ParseCustomerAttributesAsync(string attributesXml)
         {
             var result = new List<CustomerAttribute>();
             if (string.IsNullOrEmpty(attributesXml))
@@ -86,7 +86,7 @@ namespace Nop.Services.Customers
             var ids = ParseCustomerAttributeIds(attributesXml);
             foreach (var id in ids)
             {
-                var attribute = await _customerAttributeService.GetCustomerAttributeById(id);
+                var attribute = await _customerAttributeService.GetCustomerAttributeByIdAsync(id);
                 if (attribute != null) 
                     result.Add(attribute);
             }
@@ -99,13 +99,13 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Customer attribute values</returns>
-        public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValues(string attributesXml)
+        public virtual async Task<IList<CustomerAttributeValue>> ParseCustomerAttributeValuesAsync(string attributesXml)
         {
             var values = new List<CustomerAttributeValue>();
             if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
-            var attributes = await ParseCustomerAttributes(attributesXml);
+            var attributes = await ParseCustomerAttributesAsync(attributesXml);
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
@@ -120,7 +120,7 @@ namespace Nop.Services.Customers
                     if (!int.TryParse(valueStr, out var id)) 
                         continue;
 
-                    var value = await _customerAttributeService.GetCustomerAttributeValueById(id);
+                    var value = await _customerAttributeService.GetCustomerAttributeValueByIdAsync(id);
                     if (value != null)
                         values.Add(value);
                 }
@@ -249,15 +249,15 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual async Task<IList<string>> GetAttributeWarnings(string attributesXml)
+        public virtual async Task<IList<string>> GetAttributeWarningsAsync(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = await ParseCustomerAttributes(attributesXml);
+            var attributes1 = await ParseCustomerAttributesAsync(attributesXml);
 
             //validate required customer attributes (whether they're chosen/selected/entered)
-            var attributes2 = await _customerAttributeService.GetAllCustomerAttributes();
+            var attributes2 = await _customerAttributeService.GetAllCustomerAttributesAsync();
             foreach (var a2 in attributes2)
             {
                 if (!a2.IsRequired) 
@@ -279,7 +279,7 @@ namespace Nop.Services.Customers
                     continue;
 
                 //if not found
-                var notFoundWarning = string.Format(await _localizationService.GetResource("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalized(a2, a => a.Name));
+                var notFoundWarning = string.Format(await _localizationService.GetResourceAsync("ShoppingCart.SelectAttribute"), await _localizationService.GetLocalizedAsync(a2, a => a.Name));
 
                 warnings.Add(notFoundWarning);
             }

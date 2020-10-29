@@ -9,7 +9,7 @@ namespace Nop.Services.Authentication.MultiFactor
     /// </summary>
     public partial interface IMultiFactorAuthenticationPluginManager : IPluginManager<IMultiFactorAuthenticationMethod>
     {
-        // <summary>
+        /// <summary>
         /// Check is active multi-factor authentication methods
         /// </summary>
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>

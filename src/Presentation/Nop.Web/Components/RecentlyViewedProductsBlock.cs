@@ -42,10 +42,10 @@ namespace Nop.Web.Components
                 return Content("");
 
             var preparePictureModel = productThumbPictureSize.HasValue;
-            var products = await _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+            var products = await _recentlyViewedProductsService.GetRecentlyViewedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber);
 
             //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p).Result && _storeMappingService.Authorize(p).Result).ToList();
+            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
@@ -54,7 +54,7 @@ namespace Nop.Web.Components
 
             //prepare model
             var model = new List<ProductOverviewModel>();
-            model.AddRange(await _productModelFactory.PrepareProductOverviewModels(products,
+            model.AddRange(await _productModelFactory.PrepareProductOverviewModelsAsync(products,
                 preparePriceModel.GetValueOrDefault(),
                 preparePictureModel,
                 productThumbPictureSize));

@@ -32,18 +32,18 @@ namespace Nop.Services.Catalog
         /// Delete category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual async Task DeleteCategoryTemplate(CategoryTemplate categoryTemplate)
+        public virtual async Task DeleteCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            await _categoryTemplateRepository.Delete(categoryTemplate);
+            await _categoryTemplateRepository.DeleteAsync(categoryTemplate);
         }
 
         /// <summary>
         /// Gets all category templates
         /// </summary>
         /// <returns>Category templates</returns>
-        public virtual async Task<IList<CategoryTemplate>> GetAllCategoryTemplates()
+        public virtual async Task<IList<CategoryTemplate>> GetAllCategoryTemplatesAsync()
         {
-            var templates = await _categoryTemplateRepository.GetAll(query =>
+            var templates = await _categoryTemplateRepository.GetAllAsync(query =>
             {
                 return from pt in query
                     orderby pt.DisplayOrder, pt.Id
@@ -58,27 +58,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        public virtual async Task<CategoryTemplate> GetCategoryTemplateById(int categoryTemplateId)
+        public virtual async Task<CategoryTemplate> GetCategoryTemplateByIdAsync(int categoryTemplateId)
         {
-            return await _categoryTemplateRepository.GetById(categoryTemplateId, cache => default);
+            return await _categoryTemplateRepository.GetByIdAsync(categoryTemplateId, cache => default);
         }
 
         /// <summary>
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual async Task InsertCategoryTemplate(CategoryTemplate categoryTemplate)
+        public virtual async Task InsertCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            await _categoryTemplateRepository.Insert(categoryTemplate);
+            await _categoryTemplateRepository.InsertAsync(categoryTemplate);
         }
 
         /// <summary>
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual async Task UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
+        public virtual async Task UpdateCategoryTemplateAsync(CategoryTemplate categoryTemplate)
         {
-            await _categoryTemplateRepository.Update(categoryTemplate);
+            await _categoryTemplateRepository.UpdateAsync(categoryTemplate);
         }
 
         #endregion

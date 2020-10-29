@@ -98,17 +98,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //prepare plugin configuration model
             var model = new ConfigurationModel();
-            await _baseAdminModelFactory.PrepareStores(model.FacebookPixelSearchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.FacebookPixelSearchModel.AvailableStores);
             model.FacebookPixelSearchModel.HideStoresList = model.FacebookPixelSearchModel.AvailableStores.SelectionIsNotPossible();
             model.FacebookPixelSearchModel.HideSearchBlock = await _genericAttributeService
-                .GetAttribute<bool>(await _workContext.GetCurrentCustomer(), FacebookPixelDefaults.HideSearchBlockAttribute);
+                .GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), FacebookPixelDefaults.HideSearchBlockAttribute);
             model.FacebookPixelSearchModel.SetGridPageSize();
-            model.HideList = !(await _facebookPixelService.GetPagedConfigurations()).Any();
+            model.HideList = !(await _facebookPixelService.GetPagedConfigurationsAsync()).Any();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Configure.cshtml", model);
         }
@@ -116,10 +116,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> List(FacebookPixelSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedDataTablesJson();
 
-            var configurations = await _facebookPixelService.GetPagedConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
+            var configurations = await _facebookPixelService.GetPagedConfigurationsAsync(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
             var model = new FacebookPixelListModel().PrepareToGrid(searchModel, configurations, () =>
             {
                 //fill in model values from the configuration
@@ -129,7 +129,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
                     PixelId = configuration.PixelId,
                     Enabled = configuration.Enabled,
                     StoreId = configuration.StoreId,
-                    StoreName = _storeService.GetStoreById(configuration.StoreId).Result?.Name
+                    StoreName = _storeService.GetStoreByIdAsync(configuration.StoreId).Result?.Name
                 });
             });
 
@@ -138,7 +138,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
         public virtual async Task<IActionResult> Create()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //set default values
@@ -152,7 +152,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             };
 
             //prepare other model properties
-            await _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores, false);
             model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Create.cshtml", model);
@@ -161,23 +161,23 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Create(FacebookPixelModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
             {
                 //save configuration
-                model.StoreId = model.StoreId > 0 ? model.StoreId : (await _storeContext.GetCurrentStore()).Id;
+                model.StoreId = model.StoreId > 0 ? model.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
                 var configuration = model.ToEntity<FacebookPixelConfiguration>();
-                await _facebookPixelService.InsertConfiguration(configuration);
+                await _facebookPixelService.InsertConfigurationAsync(configuration);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
                 return RedirectToAction("Configure", "FacebookPixel");
             }
 
             //if we got this far, something failed, redisplay form
-            await _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores, false);
             model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Create.cshtml", model);
@@ -185,10 +185,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
 
         public virtual async Task<IActionResult> Edit(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var configuration = await _facebookPixelService.GetConfigurationById(id);
+            var configuration = await _facebookPixelService.GetConfigurationByIdAsync(id);
             if (configuration == null)
                 return RedirectToAction("Configure", "FacebookPixel");
 
@@ -196,9 +196,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             var model = configuration.ToModel<FacebookPixelModel>();
 
             //prepare other model properties
-            await _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores, false);
             model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
-            model.HideCustomEventsSearch = !(await _facebookPixelService.GetCustomEvents(configuration.Id)).Any();
+            model.HideCustomEventsSearch = !(await _facebookPixelService.GetCustomEventsAsync(configuration.Id)).Any();
             model.CustomEventSearchModel.ConfigurationId = configuration.Id;
             model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones = PreparePublicWidgetZones();
             model.CustomEventSearchModel.SetGridPageSize();
@@ -209,10 +209,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Edit(FacebookPixelModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var configuration = await _facebookPixelService.GetConfigurationById(model.Id);
+            var configuration = await _facebookPixelService.GetConfigurationByIdAsync(model.Id);
             if (configuration == null)
                 return RedirectToAction("Configure", "FacebookPixel");
 
@@ -220,20 +220,20 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             {
                 //save configuration
                 var customEvents = configuration.CustomEvents;
-                model.StoreId = model.StoreId > 0 ? model.StoreId : (await _storeContext.GetCurrentStore()).Id;
+                model.StoreId = model.StoreId > 0 ? model.StoreId : (await _storeContext.GetCurrentStoreAsync()).Id;
                 configuration = model.ToEntity<FacebookPixelConfiguration>();
                 configuration.CustomEvents = customEvents;
-                await _facebookPixelService.UpdateConfiguration(configuration);
+                await _facebookPixelService.UpdateConfigurationAsync(configuration);
 
-                _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
                 return RedirectToAction("Configure", "FacebookPixel");
             }
 
             //if we got this far, something failed, redisplay form
-            await _baseAdminModelFactory.PrepareStores(model.AvailableStores, false);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores, false);
             model.HideStoresList = model.AvailableStores.SelectionIsNotPossible();
-            model.HideCustomEventsSearch = !(await _facebookPixelService.GetCustomEvents(configuration.Id)).Any();
+            model.HideCustomEventsSearch = !(await _facebookPixelService.GetCustomEventsAsync(configuration.Id)).Any();
             model.CustomEventSearchModel.ConfigurationId = configuration.Id;
             model.CustomEventSearchModel.AddCustomEvent.AvailableWidgetZones = PreparePublicWidgetZones();
             model.CustomEventSearchModel.SetGridPageSize();
@@ -244,17 +244,17 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> Delete(int id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var configuration = await _facebookPixelService.GetConfigurationById(id);
+            var configuration = await _facebookPixelService.GetConfigurationByIdAsync(id);
             if (configuration == null)
                 return RedirectToAction("Configure", "FacebookPixel");
 
             //delete configuration
-            await _facebookPixelService.DeleteConfiguration(configuration);
+            await _facebookPixelService.DeleteConfigurationAsync(configuration);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             return RedirectToAction("Configure", "FacebookPixel");
         }
@@ -262,13 +262,13 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CustomEventList(CustomEventSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedDataTablesJson();
 
-            var configuration = await _facebookPixelService.GetConfigurationById(searchModel.ConfigurationId)
+            var configuration = await _facebookPixelService.GetConfigurationByIdAsync(searchModel.ConfigurationId)
                 ?? throw new ArgumentException("No configuration found with the specified id", nameof(searchModel.ConfigurationId));
 
-            var customEvents = (await _facebookPixelService.GetCustomEvents(configuration.Id, searchModel.WidgetZone)).ToPagedList(searchModel);
+            var customEvents = (await _facebookPixelService.GetCustomEventsAsync(configuration.Id, searchModel.WidgetZone)).ToPagedList(searchModel);
             var model = new CustomEventListModel().PrepareToGrid(searchModel, customEvents, () =>
             {
                 //fill in model values from the configuration
@@ -287,14 +287,14 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CustomEventAdd(int configurationId, [Validate] CustomEventModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
             //save custom events configuration
-            await _facebookPixelService.SaveCustomEvents(configurationId, model.EventName, model.WidgetZones);
+            await _facebookPixelService.SaveCustomEventsAsync(configurationId, model.EventName, model.WidgetZones);
 
             return Json(new { Result = true });
         }
@@ -302,19 +302,19 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         [HttpPost]
         public virtual async Task<IActionResult> CustomEventDelete(int configurationId, string id)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             //save custom events configuration
             var eventName = id;
-            await _facebookPixelService.SaveCustomEvents(configurationId, eventName, null);
+            await _facebookPixelService.SaveCustomEventsAsync(configurationId, eventName, null);
 
             return new NullJsonResult();
         }
 
         public async Task<IActionResult> CookieSettingsWarning(bool disableForUsersNotAcceptingCookieConsent)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
             if (!disableForUsersNotAcceptingCookieConsent || _storeInformationSettings.DisplayEuCookieLawWarning)
@@ -323,7 +323,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             //display a warning when "DisplayEuCookieLawWarning" setting is disabled, 
             //but merchant want to disable Facebook Pixel for users not accepting Cookie Consent
             var url = Url.Action("GeneralCommon", "Setting");
-            var warning = string.Format(await _localizationService.GetResource("Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"), url);
+            var warning = string.Format(await _localizationService.GetResourceAsync("Plugins.Widgets.FacebookPixel.Configuration.CookieSettingsWarning"), url);
             return Json(new { Result = warning });
         }
 

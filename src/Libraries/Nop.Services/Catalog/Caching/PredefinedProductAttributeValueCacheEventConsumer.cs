@@ -13,9 +13,9 @@ namespace Nop.Services.Catalog.Caching
         /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override async Task ClearCache(PredefinedProductAttributeValue entity)
+        protected override async Task ClearCacheAsync(PredefinedProductAttributeValue entity)
         {
-            await Remove(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, entity.ProductAttributeId);
+            await RemoveAsync(NopCatalogDefaults.PredefinedProductAttributeValuesByAttributeCacheKey, entity.ProductAttributeId);
         }
     }
 }

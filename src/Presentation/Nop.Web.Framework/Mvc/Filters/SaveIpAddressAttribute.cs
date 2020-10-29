@@ -82,16 +82,16 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get current IP address
-                var currentIpAddress = _webHelper.GetCurrentIpAddress().Result;
+                var currentIpAddress = _webHelper.GetCurrentIpAddressAsync().Result;
                 if (string.IsNullOrEmpty(currentIpAddress))
                     return;
 
                 //update customer's IP address
                 if (_workContext.OriginalCustomerIfImpersonated == null &&
-                     !currentIpAddress.Equals(_workContext.GetCurrentCustomer().Result.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
+                     !currentIpAddress.Equals(_workContext.GetCurrentCustomerAsync().Result.LastIpAddress, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    _workContext.GetCurrentCustomer().Result.LastIpAddress = currentIpAddress;
-                    _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result).Wait();
+                    _workContext.GetCurrentCustomerAsync().Result.LastIpAddress = currentIpAddress;
+                    _customerService.UpdateCustomerAsync(_workContext.GetCurrentCustomerAsync().Result).Wait();
                 }
             }
 

@@ -87,13 +87,13 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get current page
-                var pageUrl = _webHelper.GetThisPageUrl(true).Result;
+                var pageUrl = _webHelper.GetThisPageUrlAsync(true).Result;
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
 
                 //get previous last page
                 var previousPageAttribute = _genericAttributeService
-                    .GetAttributesForEntity(_workContext.GetCurrentCustomer().Result.Id, nameof(Customer)).Result
+                    .GetAttributesForEntityAsync(_workContext.GetCurrentCustomerAsync().Result.Id, nameof(Customer)).Result
                     .FirstOrDefault(attribute => attribute.Key
                         .Equals(NopCustomerDefaults.LastVisitedPageAttribute, StringComparison.InvariantCultureIgnoreCase));
 
@@ -101,9 +101,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (previousPageAttribute == null)
                 {
                     //insert without event notification
-                    _genericAttributeRepository.Insert(new GenericAttribute
+                    _genericAttributeRepository.InsertAsync(new GenericAttribute
                     {
-                        EntityId = _workContext.GetCurrentCustomer().Result.Id,
+                        EntityId = _workContext.GetCurrentCustomerAsync().Result.Id,
                         Key = NopCustomerDefaults.LastVisitedPageAttribute,
                         KeyGroup = nameof(Customer),
                         Value = pageUrl,
@@ -115,7 +115,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     //update without event notification
                     previousPageAttribute.Value = pageUrl;
                     previousPageAttribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
-                    _genericAttributeRepository.Update(previousPageAttribute, false);
+                    _genericAttributeRepository.UpdateAsync(previousPageAttribute, false);
                 }
             }
 

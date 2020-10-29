@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Category search model</param>
         /// <returns>Category search model</returns>
-        Task<CategorySearchModel> PrepareCategorySearchModel(CategorySearchModel searchModel);
+        Task<CategorySearchModel> PrepareCategorySearchModelAsync(CategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged category list model
         /// </summary>
         /// <param name="searchModel">Category search model</param>
         /// <returns>Category list model</returns>
-        Task<CategoryListModel> PrepareCategoryListModel(CategorySearchModel searchModel);
+        Task<CategoryListModel> PrepareCategoryListModelAsync(CategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare category model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="category">Category</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Category model</returns>
-        Task<CategoryModel> PrepareCategoryModel(CategoryModel model, Category category, bool excludeProperties = false);
+        Task<CategoryModel> PrepareCategoryModelAsync(CategoryModel model, Category category, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged category product list model
@@ -38,20 +38,20 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Category product search model</param>
         /// <param name="category">Category</param>
         /// <returns>Category product list model</returns>
-        Task<CategoryProductListModel> PrepareCategoryProductListModel(CategoryProductSearchModel searchModel, Category category);
+        Task<CategoryProductListModel> PrepareCategoryProductListModelAsync(CategoryProductSearchModel searchModel, Category category);
 
         /// <summary>
         /// Prepare product search model to add to the category
         /// </summary>
         /// <param name="searchModel">Product search model to add to the category</param>
         /// <returns>Product search model to add to the category</returns>
-        Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModel(AddProductToCategorySearchModel searchModel);
+        Task<AddProductToCategorySearchModel> PrepareAddProductToCategorySearchModelAsync(AddProductToCategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged product list model to add to the category
         /// </summary>
         /// <param name="searchModel">Product search model to add to the category</param>
         /// <returns>Product list model to add to the category</returns>
-        Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModel(AddProductToCategorySearchModel searchModel);
+        Task<AddProductToCategoryListModel> PrepareAddProductToCategoryListModelAsync(AddProductToCategorySearchModel searchModel);
     }
 }

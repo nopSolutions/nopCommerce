@@ -35,7 +35,7 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="ignoreIfSeveralStores">A value indicating whether to ignore localization if we have multiple stores</param>
         /// <param name="cssClass">CSS class for localizedTemplate</param>
         /// <returns></returns>
-        public static async Task<IHtmlContent> LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
+        public static async Task<IHtmlContent> LocalizedEditorAsync<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
             Func<T, HelperResult> standardTemplate,
@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Extensions
             if (ignoreIfSeveralStores)
             {
                 var storeService = EngineContext.Current.Resolve<IStoreService>();
-                if ((await storeService.GetAllStores()).Count >= 2)
+                if ((await storeService.GetAllStoresAsync()).Count >= 2)
                 {
                     localizationSupported = false;
                 }
@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.Extensions
                 var standardTabName = $"{name}-standard-tab";
                 var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
                 tabStrip.AppendLine($"<li{(standardTabSelected ? " class=\"active\"" : null)}>");
-                tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{await EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{await EngineContext.Current.Resolve<ILocalizationService>().GetResourceAsync("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -82,7 +82,7 @@ namespace Nop.Web.Framework.Extensions
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
-                    var language = await languageService.GetLanguageById(locale.LanguageId);
+                    var language = await languageService.GetLanguageByIdAsync(locale.LanguageId);
                     if (language == null)
                         throw new Exception("Language cannot be loaded");
 
@@ -104,7 +104,7 @@ namespace Nop.Web.Framework.Extensions
                 for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                 {
                     //languages
-                    var language = await languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
+                    var language = await languageService.GetLanguageByIdAsync(helper.ViewData.Model.Locales[i].LanguageId);
                     if (language == null)
                         throw new Exception("Language cannot be loaded");
 

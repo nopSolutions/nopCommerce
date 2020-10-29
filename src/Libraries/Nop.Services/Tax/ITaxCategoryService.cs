@@ -13,31 +13,31 @@ namespace Nop.Services.Tax
         /// Deletes a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        Task DeleteTaxCategory(TaxCategory taxCategory);
+        Task DeleteTaxCategoryAsync(TaxCategory taxCategory);
 
         /// <summary>
         /// Gets all tax categories
         /// </summary>
         /// <returns>Tax categories</returns>
-        Task<IList<TaxCategory>> GetAllTaxCategories();
+        Task<IList<TaxCategory>> GetAllTaxCategoriesAsync();
 
         /// <summary>
         /// Gets a tax category
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        Task<TaxCategory> GetTaxCategoryById(int taxCategoryId);
+        Task<TaxCategory> GetTaxCategoryByIdAsync(int taxCategoryId);
 
         /// <summary>
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        Task InsertTaxCategory(TaxCategory taxCategory);
+        Task InsertTaxCategoryAsync(TaxCategory taxCategory);
 
         /// <summary>
         /// Updates the tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        Task UpdateTaxCategory(TaxCategory taxCategory);
+        Task UpdateTaxCategoryAsync(TaxCategory taxCategory);
     }
 }

@@ -5,19 +5,19 @@
     Html.SetActiveMenuItemSystemName("App settings");
 
     const string hideCacheBlockAttributeName = "AppSettingsPage.HideCacheBlock";
-    var hideCacheBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCacheBlockAttributeName);
+    var hideCacheBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCacheBlockAttributeName);
     const string hideHostingBlockAttributeName = "AppSettingsPage.HideHostingBlock";
-    var hideHostingBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideHostingBlockAttributeName);
+    var hideHostingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideHostingBlockAttributeName);
     const string hideRedisBlockAttributeName = "AppSettingsPage.HideRedisBlock";
-    var hideRedisBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideRedisBlockAttributeName);
+    var hideRedisBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideRedisBlockAttributeName);
     const string hideAzureBlobBlockAttributeName = "AppSettingsPage.HideAzureBlobBlock";
-    var hideAzureBlobBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideAzureBlobBlockAttributeName);
+    var hideAzureBlobBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideAzureBlobBlockAttributeName);
     const string hideInstallationBlockAttributeName = "AppSettingsPage.HideInstallationBlock";
-    var hideInstallationBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideInstallationBlockAttributeName);
+    var hideInstallationBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInstallationBlockAttributeName);
     const string hidePluginBlockAttributeName = "AppSettingsPage.HidePluginBlock";
-    var hidePluginBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hidePluginBlockAttributeName);
+    var hidePluginBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hidePluginBlockAttributeName);
     const string hideCommonBlockAttributeName = "AppSettingsPage.HideCommonBlock";
-    var hideCommonBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideCommonBlockAttributeName);
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideCommonBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="AppSettings" method="post">

@@ -14,20 +14,20 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest);
+        Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        Task PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest);
+        Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest);
 
         /// <summary>
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        Task<bool> CanRePostProcessPayment(Order order);
+        Task<bool> CanRePostProcessPaymentAsync(Order order);
 
         /// <summary>
         /// Gets an additional handling fee of a payment method
@@ -35,7 +35,7 @@ namespace Nop.Services.Payments
         /// <param name="cart">Shopping cart</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Additional handling fee</returns>
-        Task<decimal> GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName);
+        Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart, string paymentMethodSystemName);
 
         /// <summary>
         /// Gets a value indicating whether capture is supported by payment method
@@ -49,7 +49,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
-        Task<CapturePaymentResult> Capture(CapturePaymentRequest capturePaymentRequest);
+        Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest);
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported by payment method
@@ -70,7 +70,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        Task<RefundPaymentResult> Refund(RefundPaymentRequest refundPaymentRequest);
+        Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest);
 
         /// <summary>
         /// Gets a value indicating whether void is supported by payment method
@@ -84,7 +84,7 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        Task<VoidPaymentResult> Void(VoidPaymentRequest voidPaymentRequest);
+        Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest);
 
         /// <summary>
         /// Gets a recurring payment type of payment method
@@ -98,14 +98,14 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        Task<ProcessPaymentResult> ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest);
+        Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        Task<CancelRecurringPaymentResult> CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest);
+        Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest);
 
         /// <summary>
         /// Gets masked credit card number
@@ -121,7 +121,7 @@ namespace Nop.Services.Payments
         /// <param name="fee">Fee value</param>
         /// <param name="usePercentage">Is fee amount specified as percentage or fixed value?</param>
         /// <returns>Result</returns>
-        Task<decimal> CalculateAdditionalFee(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage);
+        Task<decimal> CalculateAdditionalFeeAsync(IList<ShoppingCartItem> cart, decimal fee, bool usePercentage);
 
         /// <summary>
         /// Serialize CustomValues of ProcessPaymentRequest

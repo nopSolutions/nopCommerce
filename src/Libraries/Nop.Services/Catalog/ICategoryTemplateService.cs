@@ -13,31 +13,31 @@ namespace Nop.Services.Catalog
         /// Delete category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        Task DeleteCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task DeleteCategoryTemplateAsync(CategoryTemplate categoryTemplate);
 
         /// <summary>
         /// Gets all category templates
         /// </summary>
         /// <returns>Category templates</returns>
-        Task<IList<CategoryTemplate>> GetAllCategoryTemplates();
+        Task<IList<CategoryTemplate>> GetAllCategoryTemplatesAsync();
 
         /// <summary>
         /// Gets a category template
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        Task<CategoryTemplate> GetCategoryTemplateById(int categoryTemplateId);
+        Task<CategoryTemplate> GetCategoryTemplateByIdAsync(int categoryTemplateId);
 
         /// <summary>
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        Task InsertCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task InsertCategoryTemplateAsync(CategoryTemplate categoryTemplate);
 
         /// <summary>
         /// Updates the category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        Task UpdateCategoryTemplate(CategoryTemplate categoryTemplate);
+        Task UpdateCategoryTemplateAsync(CategoryTemplate categoryTemplate);
     }
 }

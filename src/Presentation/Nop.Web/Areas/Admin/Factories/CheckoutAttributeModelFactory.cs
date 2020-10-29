@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Condition attributes model</param>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        protected virtual async Task PrepareConditionAttributesModel(ConditionModel model, CheckoutAttribute checkoutAttribute)
+        protected virtual async Task PrepareConditionAttributesModelAsync(ConditionModel model, CheckoutAttribute checkoutAttribute)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -80,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
 
             //get selected checkout attribute
-            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
+            var selectedAttribute = (await _checkoutAttributeParser.ParseCheckoutAttributesAsync(checkoutAttribute.ConditionAttributeXml)).FirstOrDefault();
             model.SelectedAttributeId = selectedAttribute?.Id ?? 0;
 
             //get selected checkout attribute values identifiers
@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id));
 
             //get available condition checkout attributes (ignore this attribute and non-combinable attributes)
-            var availableConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes())
+            var availableConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync())
                 .Where(attribute => attribute.Id != checkoutAttribute.Id && attribute.CanBeUsedAsCondition());
 
             model.ConditionAttributes = availableConditionAttributes.Select(attribute => new AttributeConditionModel
@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Id = attribute.Id,
                 Name = attribute.Name,
                 AttributeControlType = attribute.AttributeControlType,
-                Values = _checkoutAttributeService.GetCheckoutAttributeValues(attribute.Id).Result.Select(value => new SelectListItem
+                Values = _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id).Result.Select(value => new SelectListItem
                 {
                     Text = value.Name,
                     Value = value.Id.ToString(),
@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Checkout attribute search model</param>
         /// <returns>Checkout attribute search model</returns>
-        public virtual Task<CheckoutAttributeSearchModel> PrepareCheckoutAttributeSearchModel(CheckoutAttributeSearchModel searchModel)
+        public virtual Task<CheckoutAttributeSearchModel> PrepareCheckoutAttributeSearchModelAsync(CheckoutAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -153,13 +153,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Checkout attribute search model</param>
         /// <returns>Checkout attribute list model</returns>
-        public virtual async Task<CheckoutAttributeListModel> PrepareCheckoutAttributeListModel(CheckoutAttributeSearchModel searchModel)
+        public virtual async Task<CheckoutAttributeListModel> PrepareCheckoutAttributeListModelAsync(CheckoutAttributeSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get checkout attributes
-            var checkoutAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributes()).ToPagedList(searchModel);
+            var checkoutAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CheckoutAttributeListModel().PrepareToGrid(searchModel, checkoutAttributes, () =>
@@ -170,7 +170,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType).Result;
+                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType).Result;
 
                     return attributeModel;
                 });
@@ -186,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Checkout attribute model</returns>
-        public virtual async Task<CheckoutAttributeModel> PrepareCheckoutAttributeModel(CheckoutAttributeModel model,
+        public virtual async Task<CheckoutAttributeModel> PrepareCheckoutAttributeModelAsync(CheckoutAttributeModel model,
             CheckoutAttribute checkoutAttribute, bool excludeProperties = false)
         {
             Action<CheckoutAttributeLocalizedModel, int> localizedModelConfiguration = null;
@@ -202,9 +202,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalized(checkoutAttribute, entity => entity.Name, languageId, false, false).Result;
-                    locale.TextPrompt = _localizationService.GetLocalized(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false).Result;
-                    locale.DefaultValue = _localizationService.GetLocalized(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false).Result;
+                    locale.Name = _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.Name, languageId, false, false).Result;
+                    locale.TextPrompt = _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false).Result;
+                    locale.DefaultValue = _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false).Result;
                 };
 
                 //whether to fill in some of properties
@@ -212,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.TaxCategoryId = checkoutAttribute.TaxCategoryId;
 
                 //prepare condition attributes model
-                await PrepareConditionAttributesModel(model.ConditionModel, checkoutAttribute);
+                await PrepareConditionAttributesModelAsync(model.ConditionModel, checkoutAttribute);
             }
 
             //currently any checkout attribute can have condition
@@ -220,13 +220,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             //prepare available tax categories
-            await _baseAdminModelFactory.PrepareTaxCategories(model.AvailableTaxCategories);
+            await _baseAdminModelFactory.PrepareTaxCategoriesAsync(model.AvailableTaxCategories);
 
             //prepare model stores
-            await _storeMappingSupportedModelFactory.PrepareModelStores(model, checkoutAttribute, excludeProperties);
+            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, checkoutAttribute, excludeProperties);
 
             return model;
         }
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Checkout attribute value search model</param>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Checkout attribute value list model</returns>
-        public virtual async Task<CheckoutAttributeValueListModel> PrepareCheckoutAttributeValueListModel(CheckoutAttributeValueSearchModel searchModel,
+        public virtual async Task<CheckoutAttributeValueListModel> PrepareCheckoutAttributeValueListModelAsync(CheckoutAttributeValueSearchModel searchModel,
             CheckoutAttribute checkoutAttribute)
         {
             if (searchModel == null)
@@ -248,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get checkout attribute values
             var checkoutAttributeValues = (await _checkoutAttributeService
-                .GetCheckoutAttributeValues(checkoutAttribute.Id)).ToPagedList(searchModel);
+                .GetCheckoutAttributeValuesAsync(checkoutAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CheckoutAttributeValueListModel().PrepareToGrid(searchModel, checkoutAttributeValues, () =>
@@ -279,7 +279,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Checkout attribute value model</returns>
-        public virtual async Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModel(CheckoutAttributeValueModel model,
+        public virtual async Task<CheckoutAttributeValueModel> PrepareCheckoutAttributeValueModelAsync(CheckoutAttributeValueModel model,
             CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue, bool excludeProperties = false)
         {
             if (checkoutAttribute == null)
@@ -295,18 +295,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(checkoutAttributeValue, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(checkoutAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
             model.CheckoutAttributeId = checkoutAttribute.Id;
-            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
-            model.BaseWeightIn = (await _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)).Name;
+            model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
+            model.BaseWeightIn = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId)).Name;
             model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }

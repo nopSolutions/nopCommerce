@@ -205,10 +205,10 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="TLocalizedModelLocal">Localizable model</typeparam>
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
-        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService, 
             IList<TLocalizedModelLocal> locales) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
-            await AddLocales(languageService, locales, null);
+            await AddLocalesAsync(languageService, locales, null);
         }
 
         /// <summary>
@@ -218,10 +218,10 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual async Task AddLocales<TLocalizedModelLocal>(ILanguageService languageService, 
+        protected virtual async Task AddLocalesAsync<TLocalizedModelLocal>(ILanguageService languageService, 
             IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedLocaleModel
         {
-            foreach (var language in await languageService.GetAllLanguages(true))
+            foreach (var language in await languageService.GetAllLanguagesAsync(true))
             {
                 var locale = Activator.CreateInstance<TLocalizedModelLocal>();
                 locale.LanguageId = language.Id;
@@ -247,7 +247,7 @@ namespace Nop.Web.Framework.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
             //return Challenge();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(Request) });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrlAsync(Request) });
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Nop.Web.Framework.Controllers
         protected JsonResult AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description").Result);
+            return ErrorJson(localizationService.GetResourceAsync("Admin.AccessDenied.Description").Result);
         }
 
         #endregion

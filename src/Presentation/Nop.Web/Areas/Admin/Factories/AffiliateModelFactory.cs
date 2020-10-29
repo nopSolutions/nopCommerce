@@ -73,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModel(AddressModel model, Address address = null)
+        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address = null)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -103,10 +103,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FaxEnabled = true;
 
             //prepare available countries
-            await _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
 
             //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
+            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated order search model</returns>
-        protected virtual async Task<AffiliatedOrderSearchModel> PrepareAffiliatedOrderSearchModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
+        protected virtual async Task<AffiliatedOrderSearchModel> PrepareAffiliatedOrderSearchModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -126,9 +126,9 @@ namespace Nop.Web.Areas.Admin.Factories
             searchModel.AffliateId = affiliate.Id;
 
             //prepare available order, payment and shipping statuses
-            await _baseAdminModelFactory.PrepareOrderStatuses(searchModel.AvailableOrderStatuses);
-            await _baseAdminModelFactory.PreparePaymentStatuses(searchModel.AvailablePaymentStatuses);
-            await _baseAdminModelFactory.PrepareShippingStatuses(searchModel.AvailableShippingStatuses);
+            await _baseAdminModelFactory.PrepareOrderStatusesAsync(searchModel.AvailableOrderStatuses);
+            await _baseAdminModelFactory.PreparePaymentStatusesAsync(searchModel.AvailablePaymentStatuses);
+            await _baseAdminModelFactory.PrepareShippingStatusesAsync(searchModel.AvailableShippingStatuses);
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer search model</returns>
-        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
+        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModelAsync(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Affiliate search model</returns>
-        public virtual Task<AffiliateSearchModel> PrepareAffiliateSearchModel(AffiliateSearchModel searchModel)
+        public virtual Task<AffiliateSearchModel> PrepareAffiliateSearchModelAsync(AffiliateSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -183,13 +183,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Affiliate list model</returns>
-        public virtual async Task<AffiliateListModel> PrepareAffiliateListModel(AffiliateSearchModel searchModel)
+        public virtual async Task<AffiliateListModel> PrepareAffiliateListModelAsync(AffiliateSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get affiliates
-            var affiliates = await _affiliateService.GetAllAffiliates(searchModel.SearchFriendlyUrlName,
+            var affiliates = await _affiliateService.GetAllAffiliatesAsync(searchModel.SearchFriendlyUrlName,
                 searchModel.SearchFirstName,
                 searchModel.SearchLastName,
                 searchModel.LoadOnlyWithOrders,
@@ -203,12 +203,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 return affiliates.Select(affiliate =>
                 {
-                    var address = _addressService.GetAddressById(affiliate.AddressId).Result;
+                    var address = _addressService.GetAddressByIdAsync(affiliate.AddressId).Result;
 
                     var affiliateModel = affiliate.ToModel<AffiliateModel>();
                     affiliateModel.Address = address.ToModel<AddressModel>();
-                    affiliateModel.Address.CountryName = _countryService.GetCountryByAddress(address).Result?.Name;
-                    affiliateModel.Address.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address).Result?.Name;
+                    affiliateModel.Address.CountryName = _countryService.GetCountryByAddressAsync(address).Result?.Name;
+                    affiliateModel.Address.StateProvinceName = _stateProvinceService.GetStateProvinceByAddressAsync(address).Result?.Name;
 
                     return affiliateModel;
                 });
@@ -224,22 +224,22 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="affiliate">Affiliate</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Affiliate model</returns>
-        public virtual async Task<AffiliateModel> PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false)
+        public virtual async Task<AffiliateModel> PrepareAffiliateModelAsync(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (affiliate != null)
             {
                 model ??= affiliate.ToModel<AffiliateModel>();
-                model.Url = await _affiliateService.GenerateUrl(affiliate);
+                model.Url = await _affiliateService.GenerateUrlAsync(affiliate);
 
                 //prepare nested search models
-                await PrepareAffiliatedOrderSearchModel(model.AffiliatedOrderSearchModel, affiliate);
-                PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
+                await PrepareAffiliatedOrderSearchModelAsync(model.AffiliatedOrderSearchModel, affiliate);
+                PrepareAffiliatedCustomerSearchModelAsync(model.AffiliatedCustomerSearchModel, affiliate);
 
                 //prepare address model
-                var address = await _addressService.GetAddressById(affiliate.AddressId);
+                var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
                 model.Address = address.ToModel(model.Address);
-                await PrepareAddressModel(model.Address, address);
+                await PrepareAddressModelAsync(model.Address, address);
 
                 //whether to fill in some of properties
                 if (!excludeProperties)
@@ -251,7 +251,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
             else
             {
-                await PrepareAddressModel(model.Address);
+                await PrepareAddressModelAsync(model.Address);
             }
 
             return model;
@@ -263,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated order list model</returns>
-        public virtual async Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
+        public virtual async Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -281,7 +281,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var shippingStatusIds = searchModel.ShippingStatusId > 0 ? new List<int> { searchModel.ShippingStatusId } : null;
 
             //get orders
-            var orders = await _orderService.SearchOrders(createdFromUtc: startDateValue,
+            var orders = await _orderService.SearchOrdersAsync(createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
                 osIds: orderStatusIds,
                 psIds: paymentStatusIds,
@@ -298,10 +298,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    affiliatedOrderModel.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus).Result;
-                    affiliatedOrderModel.PaymentStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus).Result;
-                    affiliatedOrderModel.ShippingStatus = _localizationService.GetLocalizedEnum(order.ShippingStatus).Result;
-                    affiliatedOrderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false).Result;
+                    affiliatedOrderModel.OrderStatus = _localizationService.GetLocalizedEnumAsync(order.OrderStatus).Result;
+                    affiliatedOrderModel.PaymentStatus = _localizationService.GetLocalizedEnumAsync(order.PaymentStatus).Result;
+                    affiliatedOrderModel.ShippingStatus = _localizationService.GetLocalizedEnumAsync(order.ShippingStatus).Result;
+                    affiliatedOrderModel.OrderTotal = _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false).Result;
                     affiliatedOrderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     return affiliatedOrderModel;
@@ -317,7 +317,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer list model</returns>
-        public virtual async Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel,
+        public virtual async Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel,
             Affiliate affiliate)
         {
             if (searchModel == null)
@@ -327,7 +327,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(affiliate));
 
             //get customers
-            var customers = await _customerService.GetAllCustomers(affiliateId: affiliate.Id,
+            var customers = await _customerService.GetAllCustomersAsync(affiliateId: affiliate.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

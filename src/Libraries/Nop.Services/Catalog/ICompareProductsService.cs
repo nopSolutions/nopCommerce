@@ -19,18 +19,18 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" list
         /// </summary>
         /// <returns>"Compare products" list</returns>
-        Task<IList<Product>> GetComparedProducts();
+        Task<IList<Product>> GetComparedProductsAsync();
 
         /// <summary>
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        Task RemoveProductFromCompareList(int productId);
+        Task RemoveProductFromCompareListAsync(int productId);
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        Task AddProductToCompareList(int productId);
+        Task AddProductToCompareListAsync(int productId);
     }
 }

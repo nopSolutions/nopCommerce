@@ -7,7 +7,7 @@
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestActionSettingsTop })
     <div class="panel panel-default">
         <div class="panel-body">
-            @(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
+            @(Html.LocalizedEditorAsync<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
             @<div>
                 <div class="form-group">
                     <div class="col-md-3">

@@ -79,13 +79,13 @@ namespace Nop.Data
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
-        protected async Task ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        protected async Task ExecuteSqlScriptFromFileAsync(INopFileProvider fileProvider, string filePath)
         {
             filePath = fileProvider.MapPath(filePath);
             if (!fileProvider.FileExists(filePath))
                 return;
 
-            await ExecuteSqlScript(await fileProvider.ReadAllText(filePath, Encoding.Default));
+            await ExecuteSqlScriptAsync(await fileProvider.ReadAllTextAsync(filePath, Encoding.Default));
         }
 
         /// <summary>
@@ -98,6 +98,18 @@ namespace Nop.Data
             ConfigureDataContext(dataContext);
 
             return dataContext;
+        }
+
+        /// <summary>
+        /// Execute commands from the SQL script
+        /// </summary>
+        /// <param name="sql">SQL script</param>
+        public async Task ExecuteSqlScriptAsync(string sql)
+        {
+            var sqlCommands = GetCommandsFromScript(sql);
+            using var currentConnection = CreateDataConnection();
+            foreach (var command in sqlCommands)
+                await currentConnection.ExecuteAsync(command);
         }
 
         #endregion
@@ -191,18 +203,6 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Execute commands from the SQL script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        public async Task ExecuteSqlScript(string sql)
-        {
-            var sqlCommands = GetCommandsFromScript(sql);
-            using var currentConnection = CreateDataConnection();
-            foreach (var command in sqlCommands)
-                await currentConnection.ExecuteAsync(command);
-        }
-
-        /// <summary>
         /// Initialize database
         /// </summary>
         public void InitializeDatabase()
@@ -212,7 +212,7 @@ namespace Nop.Data
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath).Wait();
+            ExecuteSqlScriptFromFileAsync(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath).Wait();
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual async Task SetTableIdent<TEntity>(int ident) where TEntity : BaseEntity
+        public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
             var currentIdent = GetTableIdent<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
@@ -278,7 +278,7 @@ namespace Nop.Data
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual Task BackupDatabase(string fileName)
+        public virtual Task BackupDatabaseAsync(string fileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -287,7 +287,7 @@ namespace Nop.Data
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual Task RestoreDatabase(string backupFileName)
+        public virtual Task RestoreDatabaseAsync(string backupFileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -295,7 +295,7 @@ namespace Nop.Data
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual async Task ReIndexTables()
+        public virtual async Task ReIndexTablesAsync()
         {
             using var currentConnection = CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();

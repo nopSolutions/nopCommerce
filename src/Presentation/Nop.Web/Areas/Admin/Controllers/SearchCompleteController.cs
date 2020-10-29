@@ -35,7 +35,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual async Task<IActionResult> SearchAutoComplete(string term)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel))
                 return Content(string.Empty);
 
             const int searchTermMinimumLength = 3;
@@ -44,14 +44,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             var vendorId = 0;
-            if (await _workContext.GetCurrentVendor() != null)
+            if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                vendorId = (await _workContext.GetCurrentVendor()).Id;
+                vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
             }
 
             //products
             const int productNumber = 15;
-            var products = await _productService.SearchProducts(0,
+            var products = await _productService.SearchProductsAsync(0,
                 vendorId: vendorId,
                 keywords: term,
                 pageSize: productNumber,

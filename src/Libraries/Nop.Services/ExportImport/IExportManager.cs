@@ -18,64 +18,64 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
-        Task<string> ExportManufacturersToXml(IList<Manufacturer> manufacturers);
+        Task<string> ExportManufacturersToXmlAsync(IList<Manufacturer> manufacturers);
 
         /// <summary>
         /// Export manufacturers to XLSX
         /// </summary>
         /// <param name="manufacturers">Manufactures</param>
-        Task<byte[]> ExportManufacturersToXlsx(IEnumerable<Manufacturer> manufacturers);
+        Task<byte[]> ExportManufacturersToXlsxAsync(IEnumerable<Manufacturer> manufacturers);
 
         /// <summary>
         /// Export category list to XML
         /// </summary>
         /// <returns>Result in XML format</returns>
-        Task<string> ExportCategoriesToXml();
+        Task<string> ExportCategoriesToXmlAsync();
 
         /// <summary>
         /// Export categories to XLSX
         /// </summary>
         /// <param name="categories">Categories</param>
-        Task<byte[]> ExportCategoriesToXlsx(IList<Category> categories);
+        Task<byte[]> ExportCategoriesToXlsxAsync(IList<Category> categories);
 
         /// <summary>
         /// Export product list to XML
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
-        Task<string> ExportProductsToXml(IList<Product> products);
+        Task<string> ExportProductsToXmlAsync(IList<Product> products);
 
         /// <summary>
         /// Export products to XLSX
         /// </summary>
         /// <param name="products">Products</param>
-        Task<byte[]> ExportProductsToXlsx(IEnumerable<Product> products);
+        Task<byte[]> ExportProductsToXlsxAsync(IEnumerable<Product> products);
 
         /// <summary>
         /// Export order list to XML
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
-        Task<string> ExportOrdersToXml(IList<Order> orders);
+        Task<string> ExportOrdersToXmlAsync(IList<Order> orders);
 
         /// <summary>
         /// Export orders to XLSX
         /// </summary>
         /// <param name="orders">Orders</param>
-        Task<byte[]> ExportOrdersToXlsx(IList<Order> orders);
+        Task<byte[]> ExportOrdersToXlsxAsync(IList<Order> orders);
 
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
         /// <param name="customers">Customers</param>
-        Task<byte[]> ExportCustomersToXlsx(IList<Customer> customers);
+        Task<byte[]> ExportCustomersToXlsxAsync(IList<Customer> customers);
 
         /// <summary>
         /// Export customer list to XML
         /// </summary>
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
-        Task<string> ExportCustomersToXml(IList<Customer> customers);
+        Task<string> ExportCustomersToXmlAsync(IList<Customer> customers);
 
         /// <summary>
         /// Export newsletter subscribers to TXT
@@ -89,7 +89,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="states">States</param>
         /// <returns>Result in TXT (string) format</returns>
-        Task<string> ExportStatesToTxt(IList<StateProvince> states);
+        Task<string> ExportStatesToTxtAsync(IList<StateProvince> states);
 
         /// <summary>
         /// Export customer info (GDPR request) to XLSX 
@@ -97,6 +97,6 @@ namespace Nop.Services.ExportImport
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Customer GDPR info</returns>
-        Task<byte[]> ExportCustomerGdprInfoToXlsx(Customer customer, int storeId);
+        Task<byte[]> ExportCustomerGdprInfoToXlsxAsync(Customer customer, int storeId);
     }
 }

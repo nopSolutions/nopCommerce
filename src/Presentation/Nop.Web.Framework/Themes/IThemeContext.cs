@@ -11,11 +11,11 @@ namespace Nop.Web.Framework.Themes
         /// <summary>
         /// Get current theme system name
         /// </summary>
-        Task<string> GetWorkingThemeName();
+        Task<string> GetWorkingThemeNameAsync();
 
         /// <summary>
         /// Set current theme system name
         /// </summary>
-        Task SetWorkingThemeName(string workingThemeName);
+        Task SetWorkingThemeNameAsync(string workingThemeName);
     }
 }

@@ -35,31 +35,31 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
-            var nivoSliderSettings = await _settingService.LoadSetting<NivoSliderSettings>((await _storeContext.GetCurrentStore()).Id);
+            var nivoSliderSettings = await _settingService.LoadSettingAsync<NivoSliderSettings>((await _storeContext.GetCurrentStoreAsync()).Id);
 
             var model = new PublicInfoModel
             {
-                Picture1Url = await GetPictureUrl(nivoSliderSettings.Picture1Id),
+                Picture1Url = await GetPictureUrlAsync(nivoSliderSettings.Picture1Id),
                 Text1 = nivoSliderSettings.Text1,
                 Link1 = nivoSliderSettings.Link1,
                 AltText1 = nivoSliderSettings.AltText1,
 
-                Picture2Url = await GetPictureUrl(nivoSliderSettings.Picture2Id),
+                Picture2Url = await GetPictureUrlAsync(nivoSliderSettings.Picture2Id),
                 Text2 = nivoSliderSettings.Text2,
                 Link2 = nivoSliderSettings.Link2,
                 AltText2 = nivoSliderSettings.AltText2,
 
-                Picture3Url = await GetPictureUrl(nivoSliderSettings.Picture3Id),
+                Picture3Url = await GetPictureUrlAsync(nivoSliderSettings.Picture3Id),
                 Text3 = nivoSliderSettings.Text3,
                 Link3 = nivoSliderSettings.Link3,
                 AltText3 = nivoSliderSettings.AltText3,
 
-                Picture4Url = await GetPictureUrl(nivoSliderSettings.Picture4Id),
+                Picture4Url = await GetPictureUrlAsync(nivoSliderSettings.Picture4Id),
                 Text4 = nivoSliderSettings.Text4,
                 Link4 = nivoSliderSettings.Link4,
                 AltText4 = nivoSliderSettings.AltText4,
 
-                Picture5Url = await GetPictureUrl(nivoSliderSettings.Picture5Id),
+                Picture5Url = await GetPictureUrlAsync(nivoSliderSettings.Picture5Id),
                 Text5 = nivoSliderSettings.Text5,
                 Link5 = nivoSliderSettings.Link5,
                 AltText5 = nivoSliderSettings.AltText5
@@ -74,15 +74,15 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             return View("~/Plugins/Widgets.NivoSlider/Views/PublicInfo.cshtml", model);
         }
 
-        protected async Task<string> GetPictureUrl(int pictureId)
+        protected async Task<string> GetPictureUrlAsync(int pictureId)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
-                pictureId, await _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
+                pictureId, await _webHelper.IsCurrentConnectionSecuredAsync() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
-            return await _staticCacheManager.Get(cacheKey, async () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 //little hack here. nulls aren't cacheable so set it to ""
-                var url = await _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false) ?? "";
+                var url = await _pictureService.GetPictureUrlAsync(pictureId, showDefaultPicture: false) ?? "";
                 return url;
             });
         }

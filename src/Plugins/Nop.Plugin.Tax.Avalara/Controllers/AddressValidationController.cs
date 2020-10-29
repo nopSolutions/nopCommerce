@@ -41,18 +41,18 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         public async Task<IActionResult> UseValidatedAddress(int addressId, bool isNewAddress)
         {
             //try to get an address by the passed identifier
-            var address = await _addressService.GetAddressById(addressId);
+            var address = await _addressService.GetAddressByIdAsync(addressId);
             if (address != null)
             {
                 //add address to customer collection if it's a new
-                if (isNewAddress) await _customerService.InsertCustomerAddress(await _workContext.GetCurrentCustomer(), address);
+                if (isNewAddress) await _customerService.InsertCustomerAddressAsync(await _workContext.GetCurrentCustomerAsync(), address);
 
                 //and update appropriate customer address
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress)
-                    (await _workContext.GetCurrentCustomer()).BillingAddressId = address.Id;
+                    (await _workContext.GetCurrentCustomerAsync()).BillingAddressId = address.Id;
                 if (_taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress)
-                    (await _workContext.GetCurrentCustomer()).ShippingAddressId = address.Id;
-                await _customerService.UpdateCustomer(await _workContext.GetCurrentCustomer());
+                    (await _workContext.GetCurrentCustomerAsync()).ShippingAddressId = address.Id;
+                await _customerService.UpdateCustomerAsync(await _workContext.GetCurrentCustomerAsync());
             }
 
             //nothing to return

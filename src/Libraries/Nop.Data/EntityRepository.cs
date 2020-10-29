@@ -50,24 +50,24 @@ namespace Nop.Data
         /// <param name="id">Entity entry identifier</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entry</returns>
-        public virtual async Task<TEntity> GetById(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        public virtual async Task<TEntity> GetByIdAsync(int? id, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
             if (!id.HasValue || id == 0)
                 return null;
 
-            async Task<TEntity> getEntity()
+            async Task<TEntity> getEntityAsync()
             {
                 return await Entities.FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
             }
 
             if (getCacheKey == null)
-                return await getEntity();
+                return await getEntityAsync();
 
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
                 ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
             
-            return await _staticCacheManager.Get(cacheKey, getEntity);
+            return await _staticCacheManager.GetAsync(cacheKey, getEntityAsync);
         }
 
         /// <summary>
@@ -76,12 +76,12 @@ namespace Nop.Data
         /// <param name="ids">Entity entry identifiers</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entries</returns>
-        public virtual async Task<IList<TEntity>> GetByIds(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        public virtual async Task<IList<TEntity>> GetByIdsAsync(IList<int> ids, Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
             if (!ids?.Any() ?? true)
                 return new List<TEntity>();
 
-            async Task<IList<TEntity>> getByIds()
+            async Task<IList<TEntity>> getByIdsAsync()
             {
                 var query = Table;
                 if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) != null)
@@ -103,12 +103,12 @@ namespace Nop.Data
             }
 
             if (getCacheKey == null)
-                return await getByIds();
+                return await getByIdsAsync();
 
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
                 ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdsCacheKey, ids);
-            return await _staticCacheManager.Get(cacheKey, getByIds);
+            return await _staticCacheManager.GetAsync(cacheKey, getByIdsAsync);
         }
 
         /// <summary>
@@ -117,22 +117,22 @@ namespace Nop.Data
         /// <param name="func">Function to select entries</param>
         /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
         /// <returns>Entity entries</returns>
-        public virtual async Task<IList<TEntity>> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+        public virtual async Task<IList<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
             Func<IStaticCacheManager, CacheKey> getCacheKey = null)
         {
-            async Task<IList<TEntity>> getAll()
+            async Task<IList<TEntity>> getAllAsync()
             {
                 var query = func != null ? func(Table) : Table;
                 return await query.ToListAsync();
             }
 
             if (getCacheKey == null)
-                return await getAll();
+                return await getAllAsync();
 
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
                 ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
-            return await _staticCacheManager.Get(cacheKey, getAll);
+            return await _staticCacheManager.GetAsync(cacheKey, getAllAsync);
         }
 
         /// <summary>
@@ -143,12 +143,12 @@ namespace Nop.Data
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
         /// <returns>Paged list of entity entries</returns>
-        public virtual async Task<IPagedList<TEntity>> GetAllPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
+        public virtual async Task<IPagedList<TEntity>> GetAllPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = func != null ? func(Table) : Table;
 
-            return await query.ToPagedList(pageIndex, pageSize, getOnlyTotalCount);
+            return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
         }
 
         /// <summary>
@@ -156,16 +156,16 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
-        public virtual async Task Insert(TEntity entity, bool publishEvent = true)
+        public virtual async Task InsertAsync(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            await _dataProvider.InsertEntity(entity);
+            await _dataProvider.InsertEntityAsync(entity);
 
             //event notification
             if (publishEvent)
-                await _eventPublisher.EntityInserted(entity);
+                await _eventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -173,13 +173,13 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
-        public virtual async Task Insert(IList<TEntity> entities, bool publishEvent = true)
+        public virtual async Task InsertAsync(IList<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             using var transaction = new TransactionScope();
-            await _dataProvider.BulkInsertEntities(entities);
+            await _dataProvider.BulkInsertEntitiesAsync(entities);
             transaction.Complete();
 
             if (!publishEvent)
@@ -187,7 +187,7 @@ namespace Nop.Data
 
             //event notification
             foreach (var entity in entities)
-                await _eventPublisher.EntityInserted(entity);
+                await _eventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entity">Entity</param>
         /// <returns>Copy of the passed entity</returns>
-        public virtual async Task<TEntity> LoadOriginalCopy(TEntity entity)
+        public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity)
         {
             return await _dataProvider.GetTable<TEntity>().ToAsyncEnumerable()
                 .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(entity.Id));
@@ -207,16 +207,16 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
-        public virtual async Task Update(TEntity entity, bool publishEvent = true)
+        public virtual async Task UpdateAsync(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            await _dataProvider.UpdateEntity(entity);
+            await _dataProvider.UpdateEntityAsync(entity);
 
             //event notification
             if (publishEvent)
-                await _eventPublisher.EntityUpdated(entity);
+                await _eventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
-        public virtual async Task Update(IList<TEntity> entities, bool publishEvent = true)
+        public virtual async Task UpdateAsync(IList<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -233,7 +233,7 @@ namespace Nop.Data
                 return;
 
             foreach (var entity in entities)
-                await Update(entity, publishEvent);
+                await UpdateAsync(entity, publishEvent);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
-        public virtual async Task Delete(TEntity entity, bool publishEvent = true)
+        public virtual async Task DeleteAsync(TEntity entity, bool publishEvent = true)
         {
             switch (entity)
             {
@@ -250,17 +250,17 @@ namespace Nop.Data
 
                 case ISoftDeletedEntity softDeletedEntity:
                     softDeletedEntity.Deleted = true;
-                    await _dataProvider.UpdateEntity(entity);
+                    await _dataProvider.UpdateEntityAsync(entity);
                     break;
 
                 default:
-                    await _dataProvider.DeleteEntity(entity);
+                    await _dataProvider.DeleteEntityAsync(entity);
                     break;
             }
 
             //event notification
             if (publishEvent)
-                await _eventPublisher.EntityDeleted(entity);
+                await _eventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
-        public virtual async Task Delete(IList<TEntity> entities, bool publishEvent = true)
+        public virtual async Task DeleteAsync(IList<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -280,31 +280,31 @@ namespace Nop.Data
                     if (entity is ISoftDeletedEntity softDeletedEntity)
                     {
                         softDeletedEntity.Deleted = true;
-                        await _dataProvider.UpdateEntity(entity);
+                        await _dataProvider.UpdateEntityAsync(entity);
                     }
                 }
             }
             else
-                await _dataProvider.BulkDeleteEntities(entities);
+                await _dataProvider.BulkDeleteEntitiesAsync(entities);
 
             //event notification
             if (!publishEvent)
                 return;
 
             foreach (var entity in entities)
-                await _eventPublisher.EntityDeleted(entity);
+                await _eventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
         /// Delete entity entries by the passed predicate
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
-        public virtual async Task Delete(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            await _dataProvider.BulkDeleteEntities(predicate);
+            await _dataProvider.BulkDeleteEntitiesAsync(predicate);
         }
         
         /// <summary>
@@ -313,16 +313,16 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Entity entries</returns>
-        public virtual async Task<IList<TEntity>> EntityFromSql(string procedureName, params DataParameter[] parameters)
+        public virtual async Task<IList<TEntity>> EntityFromSqlAsync(string procedureName, params DataParameter[] parameters)
         {
-            return await _dataProvider.QueryProc<TEntity>(procedureName, parameters?.ToArray());
+            return await _dataProvider.QueryProcAsync<TEntity>(procedureName, parameters?.ToArray());
         }
 
         /// <summary>
         /// Truncates database table
         /// </summary>
         /// <param name="resetIdentity">Performs reset identity column</param>
-        public virtual async Task Truncate(bool resetIdentity = false)
+        public virtual async Task TruncateAsync(bool resetIdentity = false)
         {
             await _dataProvider.GetTable<TEntity>().TruncateAsync(resetIdentity);
         }

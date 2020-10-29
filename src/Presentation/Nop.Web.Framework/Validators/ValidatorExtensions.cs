@@ -77,15 +77,15 @@ namespace Nop.Web.Framework.Validators
             regExp += customerSettings.PasswordRequireNonAlphanumeric ? "(?=.*?[#?!@$%^&*-])" : "";
             regExp += $".{{{customerSettings.PasswordMinLength},}}$";
 
-            var message = string.Format(localizationService.GetResource("Validation.Password.Rule").Result,
-                string.Format(localizationService.GetResource("Validation.Password.LengthValidation").Result, customerSettings.PasswordMinLength),
-                customerSettings.PasswordRequireUppercase ? localizationService.GetResource("Validation.Password.RequireUppercase").Result : "",
-                customerSettings.PasswordRequireLowercase ? localizationService.GetResource("Validation.Password.RequireLowercase").Result : "",
-                customerSettings.PasswordRequireDigit ? localizationService.GetResource("Validation.Password.RequireDigit").Result : "",
-                customerSettings.PasswordRequireNonAlphanumeric ? localizationService.GetResource("Validation.Password.RequireNonAlphanumeric").Result : "");
+            var message = string.Format(localizationService.GetResourceAsync("Validation.Password.Rule").Result,
+                string.Format(localizationService.GetResourceAsync("Validation.Password.LengthValidation").Result, customerSettings.PasswordMinLength),
+                customerSettings.PasswordRequireUppercase ? localizationService.GetResourceAsync("Validation.Password.RequireUppercase").Result : "",
+                customerSettings.PasswordRequireLowercase ? localizationService.GetResourceAsync("Validation.Password.RequireLowercase").Result : "",
+                customerSettings.PasswordRequireDigit ? localizationService.GetResourceAsync("Validation.Password.RequireDigit").Result : "",
+                customerSettings.PasswordRequireNonAlphanumeric ? localizationService.GetResourceAsync("Validation.Password.RequireNonAlphanumeric").Result : "");
 
             var options = ruleBuilder
-                .NotEmpty().WithMessage(localizationService.GetResource("Validation.Password.IsNotEmpty").Result)
+                .NotEmpty().WithMessage(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty").Result)
                 .Matches(regExp).WithMessage(message);
 
             return options;

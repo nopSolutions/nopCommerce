@@ -38,18 +38,18 @@ namespace Nop.Services.Shipping.Date
         /// </summary>
         /// <param name="deliveryDateId">The delivery date identifier</param>
         /// <returns>Delivery date</returns>
-        public virtual async Task<DeliveryDate> GetDeliveryDateById(int deliveryDateId)
+        public virtual async Task<DeliveryDate> GetDeliveryDateByIdAsync(int deliveryDateId)
         {
-            return await _deliveryDateRepository.GetById(deliveryDateId, cache => default);
+            return await _deliveryDateRepository.GetByIdAsync(deliveryDateId, cache => default);
         }
 
         /// <summary>
         /// Get all delivery dates
         /// </summary>
         /// <returns>Delivery dates</returns>
-        public virtual async Task<IList<DeliveryDate>> GetAllDeliveryDates()
+        public virtual async Task<IList<DeliveryDate>> GetAllDeliveryDatesAsync()
         {
-            var deliveryDates = await _deliveryDateRepository.GetAll(query =>
+            var deliveryDates = await _deliveryDateRepository.GetAllAsync(query =>
             {
                 return from dd in query
                     orderby dd.DisplayOrder, dd.Id
@@ -63,27 +63,27 @@ namespace Nop.Services.Shipping.Date
         /// Insert a delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        public virtual async Task InsertDeliveryDate(DeliveryDate deliveryDate)
+        public virtual async Task InsertDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            await _deliveryDateRepository.Insert(deliveryDate);
+            await _deliveryDateRepository.InsertAsync(deliveryDate);
         }
 
         /// <summary>
         /// Update the delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        public virtual async Task UpdateDeliveryDate(DeliveryDate deliveryDate)
+        public virtual async Task UpdateDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            await _deliveryDateRepository.Update(deliveryDate);
+            await _deliveryDateRepository.UpdateAsync(deliveryDate);
         }
 
         /// <summary>
         /// Delete a delivery date
         /// </summary>
         /// <param name="deliveryDate">The delivery date</param>
-        public virtual async Task DeleteDeliveryDate(DeliveryDate deliveryDate)
+        public virtual async Task DeleteDeliveryDateAsync(DeliveryDate deliveryDate)
         {
-            await _deliveryDateRepository.Delete(deliveryDate);
+            await _deliveryDateRepository.DeleteAsync(deliveryDate);
         }
 
         #endregion
@@ -95,18 +95,18 @@ namespace Nop.Services.Shipping.Date
         /// </summary>
         /// <param name="productAvailabilityRangeId">The product availability range identifier</param>
         /// <returns>Product availability range</returns>
-        public virtual async Task<ProductAvailabilityRange> GetProductAvailabilityRangeById(int productAvailabilityRangeId)
+        public virtual async Task<ProductAvailabilityRange> GetProductAvailabilityRangeByIdAsync(int productAvailabilityRangeId)
         {
-            return productAvailabilityRangeId != 0 ? await _productAvailabilityRangeRepository.GetById(productAvailabilityRangeId, cache => default) : null;
+            return productAvailabilityRangeId != 0 ? await _productAvailabilityRangeRepository.GetByIdAsync(productAvailabilityRangeId, cache => default) : null;
         }
 
         /// <summary>
         /// Get all product availability ranges
         /// </summary>
         /// <returns>Product availability ranges</returns>
-        public virtual async Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRanges()
+        public virtual async Task<IList<ProductAvailabilityRange>> GetAllProductAvailabilityRangesAsync()
         {
-            return await _productAvailabilityRangeRepository.GetAll(query =>
+            return await _productAvailabilityRangeRepository.GetAllAsync(query =>
             {
                 return from par in query
                     orderby par.DisplayOrder, par.Id
@@ -118,27 +118,27 @@ namespace Nop.Services.Shipping.Date
         /// Insert the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual async Task InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        public virtual async Task InsertProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            await _productAvailabilityRangeRepository.Insert(productAvailabilityRange);
+            await _productAvailabilityRangeRepository.InsertAsync(productAvailabilityRange);
         }
 
         /// <summary>
         /// Update the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual async Task UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        public virtual async Task UpdateProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            await _productAvailabilityRangeRepository.Update(productAvailabilityRange);
+            await _productAvailabilityRangeRepository.UpdateAsync(productAvailabilityRange);
         }
 
         /// <summary>
         /// Delete the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual async Task DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        public virtual async Task DeleteProductAvailabilityRangeAsync(ProductAvailabilityRange productAvailabilityRange)
         {
-            await _productAvailabilityRangeRepository.Delete(productAvailabilityRange);
+            await _productAvailabilityRangeRepository.DeleteAsync(productAvailabilityRange);
         }
 
         #endregion

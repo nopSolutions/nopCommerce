@@ -34,10 +34,10 @@ namespace Nop.Web.Components
                 return View(overriddenModel);
 
             //if not passed, then create a new model
-            var cart = await _shoppingCartService.GetShoppingCart(await _workContext.GetCurrentCustomer(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStore()).Id);
+            var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
 
             var model = new ShoppingCartModel();
-            model = await _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart,
+            model = await _shoppingCartModelFactory.PrepareShoppingCartModelAsync(model, cart,
                 isEditable: false,
                 prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
             return View(model);

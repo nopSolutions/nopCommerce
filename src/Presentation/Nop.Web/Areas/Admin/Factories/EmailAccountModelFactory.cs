@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account search model</returns>
-        public virtual Task<EmailAccountSearchModel> PrepareEmailAccountSearchModel(EmailAccountSearchModel searchModel)
+        public virtual Task<EmailAccountSearchModel> PrepareEmailAccountSearchModelAsync(EmailAccountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -55,13 +55,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Email account search model</param>
         /// <returns>Email account list model</returns>
-        public virtual async Task<EmailAccountListModel> PrepareEmailAccountListModel(EmailAccountSearchModel searchModel)
+        public virtual async Task<EmailAccountListModel> PrepareEmailAccountListModelAsync(EmailAccountSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get email accounts
-            var emailAccounts = (await _emailAccountService.GetAllEmailAccounts()).ToPagedList(searchModel);
+            var emailAccounts = (await _emailAccountService.GetAllEmailAccountsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new EmailAccountListModel().PrepareToGrid(searchModel, emailAccounts, () =>
@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="emailAccount">Email account</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Email account model</returns>
-        public virtual Task<EmailAccountModel> PrepareEmailAccountModel(EmailAccountModel model,
+        public virtual Task<EmailAccountModel> PrepareEmailAccountModelAsync(EmailAccountModel model,
             EmailAccount emailAccount, bool excludeProperties = false)
         {
             //fill in model values from the entity

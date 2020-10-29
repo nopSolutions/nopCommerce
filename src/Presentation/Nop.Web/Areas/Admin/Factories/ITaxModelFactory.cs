@@ -13,28 +13,28 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider search model</returns>
-        Task<TaxProviderSearchModel> PrepareTaxProviderSearchModel(TaxProviderSearchModel searchModel);
+        Task<TaxProviderSearchModel> PrepareTaxProviderSearchModelAsync(TaxProviderSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged tax provider list model
         /// </summary>
         /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider list model</returns>
-        Task<TaxProviderListModel> PrepareTaxProviderListModel(TaxProviderSearchModel searchModel);
+        Task<TaxProviderListModel> PrepareTaxProviderListModelAsync(TaxProviderSearchModel searchModel);
 
         /// <summary>
         /// Prepare tax category search model
         /// </summary>
         /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category search model</returns>
-        Task<TaxCategorySearchModel> PrepareTaxCategorySearchModel(TaxCategorySearchModel searchModel);
+        Task<TaxCategorySearchModel> PrepareTaxCategorySearchModelAsync(TaxCategorySearchModel searchModel);
 
         /// <summary>
         /// Prepare paged tax category list model
         /// </summary>
         /// <param name="searchModel">Tax category search model</param>
         /// <returns>Tax category list model</returns>
-        Task<TaxCategoryListModel> PrepareTaxCategoryListModel(TaxCategorySearchModel searchModel);
+        Task<TaxCategoryListModel> PrepareTaxCategoryListModelAsync(TaxCategorySearchModel searchModel);
 
         //TODO: may be deleted
         /// <summary>
@@ -42,6 +42,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax configuration model</param>
         /// <returns>Tax configuration model</returns>
-        Task<TaxConfigurationModel> PrepareTaxConfigurationModel(TaxConfigurationModel searchModel);
+        Task<TaxConfigurationModel> PrepareTaxConfigurationModelAsync(TaxConfigurationModel searchModel);
     }
 }

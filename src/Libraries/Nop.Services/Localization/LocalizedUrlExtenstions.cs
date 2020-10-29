@@ -20,7 +20,7 @@ namespace Nop.Services.Localization
         /// <param name="pathBase">Application path base</param>
         /// <param name="isRawPath">A value indicating whether passed URL is raw URL</param>
         /// <returns>True if passed URL contains SEO code; otherwise false. Language whose SEO code is in the URL if URL is localized</returns>
-        public static async Task<(bool, Language)> IsLocalizedUrl(this string url, PathString pathBase, bool isRawPath)
+        public static async Task<(bool, Language)> IsLocalizedUrlAsync(this string url, PathString pathBase, bool isRawPath)
         {
             if (string.IsNullOrEmpty(url))
                 return (false, null);
@@ -36,7 +36,7 @@ namespace Nop.Services.Localization
 
             //suppose that the first segment is the language code and try to get language
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
-            var language = (await languageService.GetAllLanguages())
+            var language = (await languageService.GetAllLanguagesAsync())
                 .FirstOrDefault(urlLanguage => urlLanguage.UniqueSeoCode.Equals(firstSegment, StringComparison.InvariantCultureIgnoreCase));
 
             //if language exists and published passed URL is localized

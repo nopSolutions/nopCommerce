@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int? forumGroupId, int? forumId, int? forumTopicId)
         {
-            var model = await _forumModelFactory.PrepareForumBreadcrumbModel(forumGroupId, forumId, forumTopicId);
+            var model = await _forumModelFactory.PrepareForumBreadcrumbModelAsync(forumGroupId, forumId, forumTopicId);
             return View(model);
         }
     }

@@ -36,9 +36,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        public virtual async Task<Download> GetDownloadById(int downloadId)
+        public virtual async Task<Download> GetDownloadByIdAsync(int downloadId)
         {
-            return await _downloadRepository.GetById(downloadId);
+            return await _downloadRepository.GetByIdAsync(downloadId);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadGuid">Download GUID</param>
         /// <returns>Download</returns>
-        public virtual async Task<Download> GetDownloadByGuid(Guid downloadGuid)
+        public virtual async Task<Download> GetDownloadByGuidAsync(Guid downloadGuid)
         {
             if (downloadGuid == Guid.Empty)
                 return null;
@@ -62,27 +62,27 @@ namespace Nop.Services.Media
         /// Deletes a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual async Task DeleteDownload(Download download)
+        public virtual async Task DeleteDownloadAsync(Download download)
         {
-            await _downloadRepository.Delete(download);
+            await _downloadRepository.DeleteAsync(download);
         }
 
         /// <summary>
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual async Task InsertDownload(Download download)
+        public virtual async Task InsertDownloadAsync(Download download)
         {
-            await _downloadRepository.Insert(download);
+            await _downloadRepository.InsertAsync(download);
         }
 
         /// <summary>
         /// Updates the download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual async Task UpdateDownload(Download download)
+        public virtual async Task UpdateDownloadAsync(Download download)
         {
-            await _downloadRepository.Update(download);
+            await _downloadRepository.UpdateAsync(download);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="file">File</param>
         /// <returns>Download binary array</returns>
-        public virtual async Task<byte[]> GetDownloadBits(IFormFile file)
+        public virtual async Task<byte[]> GetDownloadBitsAsync(IFormFile file)
         {
             await using var fileStream = file.OpenReadStream();
             await using var ms = new MemoryStream();

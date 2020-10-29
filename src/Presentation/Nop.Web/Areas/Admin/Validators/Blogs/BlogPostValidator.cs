@@ -14,20 +14,20 @@ namespace Nop.Web.Areas.Admin.Validators.Blogs
         {
             RuleFor(x => x.Title)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Title.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Fields.Title.Required").Result);
 
             RuleFor(x => x.Body)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Body.Required").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Fields.Body.Required").Result);
 
             //blog tags should not contain dots
             //current implementation does not support it because it can be handled as file extension
             RuleFor(x => x.Tags)
                 .Must(x => x == null || !x.Contains("."))
-                .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots").Result);
+                .WithMessage(localizationService.GetResourceAsync("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots").Result);
 
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
-                .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation").Result, NopSeoDefaults.SearchEngineNameLength));
+                .WithMessage(string.Format(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation").Result, NopSeoDefaults.SearchEngineNameLength));
 
             SetDatabaseValidationRules<BlogPost>(dataProvider);
         }

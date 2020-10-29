@@ -13,63 +13,63 @@ namespace Nop.Services.Common
         /// Deletes an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        Task DeleteAddressAttribute(AddressAttribute addressAttribute);
+        Task DeleteAddressAttributeAsync(AddressAttribute addressAttribute);
 
         /// <summary>
         /// Gets all address attributes
         /// </summary>
         /// <returns>Address attributes</returns>
-        Task<IList<AddressAttribute>> GetAllAddressAttributes();
+        Task<IList<AddressAttribute>> GetAllAddressAttributesAsync();
 
         /// <summary>
         /// Gets an address attribute 
         /// </summary>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute</returns>
-        Task<AddressAttribute> GetAddressAttributeById(int addressAttributeId);
+        Task<AddressAttribute> GetAddressAttributeByIdAsync(int addressAttributeId);
 
         /// <summary>
         /// Inserts an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        Task InsertAddressAttribute(AddressAttribute addressAttribute);
+        Task InsertAddressAttributeAsync(AddressAttribute addressAttribute);
 
         /// <summary>
         /// Updates the address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        Task UpdateAddressAttribute(AddressAttribute addressAttribute);
+        Task UpdateAddressAttributeAsync(AddressAttribute addressAttribute);
 
         /// <summary>
         /// Deletes an address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        Task DeleteAddressAttributeValue(AddressAttributeValue addressAttributeValue);
+        Task DeleteAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue);
 
         /// <summary>
         /// Gets address attribute values by address attribute identifier
         /// </summary>
         /// <param name="addressAttributeId">The address attribute identifier</param>
         /// <returns>Address attribute values</returns>
-        Task<IList<AddressAttributeValue>> GetAddressAttributeValues(int addressAttributeId);
+        Task<IList<AddressAttributeValue>> GetAddressAttributeValuesAsync(int addressAttributeId);
 
         /// <summary>
         /// Gets an address attribute value
         /// </summary>
         /// <param name="addressAttributeValueId">Address attribute value identifier</param>
         /// <returns>Address attribute value</returns>
-        Task<AddressAttributeValue> GetAddressAttributeValueById(int addressAttributeValueId);
+        Task<AddressAttributeValue> GetAddressAttributeValueByIdAsync(int addressAttributeValueId);
 
         /// <summary>
         /// Inserts a address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        Task InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue);
+        Task InsertAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue);
 
         /// <summary>
         /// Updates the address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        Task UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue);
+        Task UpdateAddressAttributeValueAsync(AddressAttributeValue addressAttributeValue);
     }
 }

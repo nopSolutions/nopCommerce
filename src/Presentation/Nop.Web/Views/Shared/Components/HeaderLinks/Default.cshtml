@@ -13,7 +13,7 @@
         {
             var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url) 
                 ? url.ToString()
-                : await webHelper.GetRawUrl(Context.Request);
+                : await webHelper.GetRawUrlAsync(Context.Request);
 
             <li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
             <li><a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login">@T("Account.Login")</a></li>

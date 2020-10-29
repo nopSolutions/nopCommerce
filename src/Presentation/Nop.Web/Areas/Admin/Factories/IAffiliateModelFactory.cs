@@ -14,14 +14,14 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Affiliate search model</returns>
-        Task<AffiliateSearchModel> PrepareAffiliateSearchModel(AffiliateSearchModel searchModel);
+        Task<AffiliateSearchModel> PrepareAffiliateSearchModelAsync(AffiliateSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged affiliate list model
         /// </summary>
         /// <param name="searchModel">Affiliate search model</param>
         /// <returns>Affiliate list model</returns>
-        Task<AffiliateListModel> PrepareAffiliateListModel(AffiliateSearchModel searchModel);
+        Task<AffiliateListModel> PrepareAffiliateListModelAsync(AffiliateSearchModel searchModel);
 
         /// <summary>
         /// Prepare affiliate model
@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="affiliate">Affiliate</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Affiliate model</returns>
-        Task<AffiliateModel> PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false);
+        Task<AffiliateModel> PrepareAffiliateModelAsync(AffiliateModel model, Affiliate affiliate, bool excludeProperties = false);
 
         /// <summary>
         /// Prepare paged affiliated order list model
@@ -38,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated order search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated order list model</returns>
-        Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModel(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
+        Task<AffiliatedOrderListModel> PrepareAffiliatedOrderListModelAsync(AffiliatedOrderSearchModel searchModel, Affiliate affiliate);
 
         /// <summary>
         /// Prepare paged affiliated customer list model
@@ -46,7 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer list model</returns>
-        Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModel(AffiliatedCustomerSearchModel searchModel, 
+        Task<AffiliatedCustomerListModel> PrepareAffiliatedCustomerListModelAsync(AffiliatedCustomerSearchModel searchModel, 
             Affiliate affiliate);
     }
 }

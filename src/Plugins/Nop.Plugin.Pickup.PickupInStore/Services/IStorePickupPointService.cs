@@ -16,31 +16,31 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Pickup points</returns>
-        Task<IPagedList<StorePickupPoint>> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+        Task<IPagedList<StorePickupPoint>> GetAllStorePickupPointsAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets a pickup point
         /// </summary>
         /// <param name="pickupPointId">Pickup point identifier</param>
         /// <returns>Pickup point</returns>
-        Task<StorePickupPoint> GetStorePickupPointById(int pickupPointId);
+        Task<StorePickupPoint> GetStorePickupPointByIdAsync(int pickupPointId);
 
         /// <summary>
         /// Inserts a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        Task InsertStorePickupPoint(StorePickupPoint pickupPoint);
+        Task InsertStorePickupPointAsync(StorePickupPoint pickupPoint);
 
         /// <summary>
         /// Updates a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        Task UpdateStorePickupPoint(StorePickupPoint pickupPoint);
+        Task UpdateStorePickupPointAsync(StorePickupPoint pickupPoint);
 
         /// <summary>
         /// Deletes a pickup point
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
-        Task DeleteStorePickupPoint(StorePickupPoint pickupPoint);
+        Task DeleteStorePickupPointAsync(StorePickupPoint pickupPoint);
     }
 }

@@ -22,7 +22,7 @@ namespace Nop.Web.Components
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var model = await _blogModelFactory.PrepareBlogPostYearModel();
+            var model = await _blogModelFactory.PrepareBlogPostYearModelAsync();
             return View(model);
         }
     }

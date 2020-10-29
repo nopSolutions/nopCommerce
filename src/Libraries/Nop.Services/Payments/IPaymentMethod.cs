@@ -18,83 +18,83 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        Task<ProcessPaymentResult> ProcessPayment(ProcessPaymentRequest processPaymentRequest);
+        Task<ProcessPaymentResult> ProcessPaymentAsync(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
         /// Post process payment (used by payment gateways that require redirecting to a third-party URL)
         /// </summary>
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
-        Task PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest);
+        Task PostProcessPaymentAsync(PostProcessPaymentRequest postProcessPaymentRequest);
 
         /// <summary>
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        Task<bool> HidePaymentMethod(IList<ShoppingCartItem> cart);
+        Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>Additional handling fee</returns>
-        Task<decimal> GetAdditionalHandlingFee(IList<ShoppingCartItem> cart);
+        Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Captures payment
         /// </summary>
         /// <param name="capturePaymentRequest">Capture payment request</param>
         /// <returns>Capture payment result</returns>
-        Task<CapturePaymentResult> Capture(CapturePaymentRequest capturePaymentRequest);
+        Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest);
 
         /// <summary>
         /// Refunds a payment
         /// </summary>
         /// <param name="refundPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        Task<RefundPaymentResult> Refund(RefundPaymentRequest refundPaymentRequest);
+        Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest);
 
         /// <summary>
         /// Voids a payment
         /// </summary>
         /// <param name="voidPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        Task<VoidPaymentResult> Void(VoidPaymentRequest voidPaymentRequest);
+        Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest);
 
         /// <summary>
         /// Process recurring payment
         /// </summary>
         /// <param name="processPaymentRequest">Payment info required for an order processing</param>
         /// <returns>Process payment result</returns>
-        Task<ProcessPaymentResult> ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest);
+        Task<ProcessPaymentResult> ProcessRecurringPaymentAsync(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
         /// Cancels a recurring payment
         /// </summary>
         /// <param name="cancelPaymentRequest">Request</param>
         /// <returns>Result</returns>
-        Task<CancelRecurringPaymentResult> CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest);
+        Task<CancelRecurringPaymentResult> CancelRecurringPaymentAsync(CancelRecurringPaymentRequest cancelPaymentRequest);
 
         /// <summary>
         /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Result</returns>
-        Task<bool> CanRePostProcessPayment(Order order);
+        Task<bool> CanRePostProcessPaymentAsync(Order order);
 
         /// <summary>
         /// Validate payment form
         /// </summary>
         /// <param name="form">The parsed form values</param>
         /// <returns>List of validating errors</returns>
-        Task<IList<string>> ValidatePaymentForm(IFormCollection form);
+        Task<IList<string>> ValidatePaymentFormAsync(IFormCollection form);
 
         /// <summary>
         /// Get payment information
         /// </summary>
         /// <param name="form">The parsed form values</param>
         /// <returns>Payment info holder</returns>
-        Task<ProcessPaymentRequest> GetPaymentInfo(IFormCollection form);
+        Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form);
 
         /// <summary>
         /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)

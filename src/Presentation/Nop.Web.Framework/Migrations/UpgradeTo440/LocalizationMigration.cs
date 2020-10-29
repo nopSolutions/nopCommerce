@@ -21,7 +21,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResources(new List<string>
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 "Account.Fields.VatNumber.Status",
                 "Account.Fields.VatNumberStatus",
@@ -111,7 +111,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Tax.SelectType",
             }).Wait();
 
-            localizationService.AddLocaleResource(new Dictionary<string, string>
+            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",
@@ -296,14 +296,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
 
-            foreach (var lang in languageService.GetAllLanguages(true).Result)
+            foreach (var lang in languageService.GetAllLanguagesAsync(true).Result)
                 foreach (var locale in localesToRename)
                 {
-                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false).Result;
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
                     if (lsr != null)
                     {
                         lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResource(lsr);
+                        localizationService.UpdateLocaleStringResourceAsync(lsr);
                     }
                 }
         }

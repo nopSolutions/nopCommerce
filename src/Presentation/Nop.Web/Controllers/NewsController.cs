@@ -94,30 +94,30 @@ namespace Nop.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var model = await _newsModelFactory.PrepareNewsItemListModel(command);
+            var model = await _newsModelFactory.PrepareNewsItemListModelAsync(command);
             return View(model);
         }
 
         public virtual async Task<IActionResult> ListRss(int languageId)
         {
             var feed = new RssFeed(
-                $"{await _localizationService.GetLocalized(await _storeContext.GetCurrentStore(), x => x.Name)}: News",
+                $"{await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)}: News",
                 "News",
-                new Uri(await _webHelper.GetStoreLocation()),
+                new Uri(await _webHelper.GetStoreLocationAsync()),
                 DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
-                return new RssActionResult(feed, await _webHelper.GetThisPageUrl(false));
+                return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
 
             var items = new List<RssItem>();
-            var newsItems = await _newsService.GetAllNews(languageId, (await _storeContext.GetCurrentStore()).Id);
+            var newsItems = await _newsService.GetAllNewsAsync(languageId, (await _storeContext.GetCurrentStoreAsync()).Id);
             foreach (var n in newsItems)
             {
-                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeName(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
-                items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{(await _storeContext.GetCurrentStore()).Id}:news:blog:{n.Id}", n.CreatedOnUtc));
+                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult(feed, await _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
         }
 
         public virtual async Task<IActionResult> NewsItem(int newsItemId)
@@ -125,7 +125,7 @@ namespace Nop.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var newsItem = await _newsService.GetNewsById(newsItemId);
+            var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
             if (newsItem == null)
                 return InvokeHttp404();
 
@@ -135,15 +135,15 @@ namespace Nop.Web.Controllers
                 //availability dates
                 !_newsService.IsNewsAvailable(newsItem) ||
                 //Store mapping
-                !await _storeMappingService.Authorize(newsItem);
+                !await _storeMappingService.AuthorizeAsync(newsItem);
             //Check whether the current user has a "Manage news" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = await _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.Authorize(StandardPermissionProvider.ManageNews);
+            var hasAdminAccess = await _permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel) && await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageNews);
             if (notAvailable && !hasAdminAccess)
                 return InvokeHttp404();
 
             var model = new NewsItemModel();
-            model = await _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
+            model = await _newsModelFactory.PrepareNewsItemModelAsync(model, newsItem, true);
 
             //display "edit" (manage) link
             if (hasAdminAccess)
@@ -161,19 +161,19 @@ namespace Nop.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("Homepage");
 
-            var newsItem = await _newsService.GetNewsById(newsItemId);
+            var newsItem = await _newsService.GetNewsByIdAsync(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
                 return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", await _localizationService.GetResource("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            if (await _customerService.IsGuest(await _workContext.GetCurrentCustomer()) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
             {
-                ModelState.AddModelError("", await _localizationService.GetResource("News.Comments.OnlyRegisteredUsersLeaveComments"));
+                ModelState.AddModelError("", await _localizationService.GetResourceAsync("News.Comments.OnlyRegisteredUsersLeaveComments"));
             }
 
             if (ModelState.IsValid)
@@ -181,39 +181,39 @@ namespace Nop.Web.Controllers
                 var comment = new NewsComment
                 {
                     NewsItemId = newsItem.Id,
-                    CustomerId = (await _workContext.GetCurrentCustomer()).Id,
+                    CustomerId = (await _workContext.GetCurrentCustomerAsync()).Id,
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,
                     IsApproved = !_newsSettings.NewsCommentsMustBeApproved,
-                    StoreId = (await _storeContext.GetCurrentStore()).Id,
+                    StoreId = (await _storeContext.GetCurrentStoreAsync()).Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
 
-                await _newsService.InsertNewsComment(comment);
+                await _newsService.InsertNewsCommentAsync(comment);
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)
-                    await _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+                    await _workflowMessageService.SendNewsCommentNotificationMessageAsync(comment, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                await _customerActivityService.InsertActivity("PublicStore.AddNewsComment",
-                    await _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"), comment);
+                await _customerActivityService.InsertActivityAsync("PublicStore.AddNewsComment",
+                    await _localizationService.GetResourceAsync("ActivityLog.PublicStore.AddNewsComment"), comment);
 
                 //raise event
                 if (comment.IsApproved)
-                    await _eventPublisher.Publish(new NewsCommentApprovedEvent(comment));
+                    await _eventPublisher.PublishAsync(new NewsCommentApprovedEvent(comment));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.news.addcomment.result"] = comment.IsApproved
-                    ? await _localizationService.GetResource("News.Comments.SuccessfullyAdded")
-                    : await _localizationService.GetResource("News.Comments.SeeAfterApproving");
+                    ? await _localizationService.GetResourceAsync("News.Comments.SuccessfullyAdded")
+                    : await _localizationService.GetResourceAsync("News.Comments.SeeAfterApproving");
 
-                return RedirectToRoute("NewsItem", new { SeName = await _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form
-            model = await _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
+            model = await _newsModelFactory.PrepareNewsItemModelAsync(model, newsItem, true);
             return View(model);
         }
 

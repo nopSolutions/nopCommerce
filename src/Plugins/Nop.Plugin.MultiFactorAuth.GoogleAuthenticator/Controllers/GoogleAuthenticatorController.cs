@@ -65,7 +65,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
 
         public async Task<IActionResult> Configure()
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             //prepare model
@@ -75,7 +75,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 BusinessPrefix = _googleAuthenticatorSettings.BusinessPrefix                
             };
             model.GoogleAuthenticatorSearchModel.HideSearchBlock = await _genericAttributeService
-                .GetAttribute<bool>(await _workContext.GetCurrentCustomer(), GoogleAuthenticatorDefaults.HideSearchBlockAttribute);
+                .GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), GoogleAuthenticatorDefaults.HideSearchBlockAttribute);
 
             return View("~/Plugins/MultiFactorAuth.GoogleAuthenticator/Views/Configure.cshtml", model);
         }
@@ -83,7 +83,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         [HttpPost]        
         public async Task<IActionResult> Configure(ConfigurationModel model)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
@@ -92,9 +92,9 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
             //set new settings values
             _googleAuthenticatorSettings.QRPixelsPerModule = model.QRPixelsPerModule;
             _googleAuthenticatorSettings.BusinessPrefix = model.BusinessPrefix;
-            await _settingService.SaveSetting(_googleAuthenticatorSettings);
+            await _settingService.SaveSettingAsync(_googleAuthenticatorSettings);
 
-            _notificationService.SuccessNotification(await _localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Plugins.Saved"));
 
             return await Configure();
         }
@@ -102,11 +102,11 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
         [HttpPost]
         public async Task<IActionResult> GoogleAuthenticatorList(GoogleAuthenticatorSearchModel searchModel)
         {
-            if (!await _permissionService.Authorize(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
+            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
             //get GoogleAuthenticator configuration records
-            var configurations = await _googleAuthenticatorService.GetPagedConfigurations(searchModel.SearchEmail,
+            var configurations = await _googleAuthenticatorService.GetPagedConfigurationsAsync(searchModel.SearchEmail,
                 searchModel.Page - 1, searchModel.PageSize);
             var model = new GoogleAuthenticatorListModel().PrepareToGrid(searchModel, configurations, () =>
             {
@@ -129,7 +129,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 return ErrorJson(ModelState.SerializeErrors());
 
             //delete configuration
-            var configuration = await _googleAuthenticatorService.GetConfigurationById(model.Id);
+            var configuration = await _googleAuthenticatorService.GetConfigurationByIdAsync(model.Id);
             if (configuration != null)
             {
                 _googleAuthenticatorService.DeleteConfiguration(configuration);

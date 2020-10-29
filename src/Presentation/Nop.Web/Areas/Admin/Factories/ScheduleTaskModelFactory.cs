@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task search model</returns>
-        public virtual Task<ScheduleTaskSearchModel> PrepareScheduleTaskSearchModel(ScheduleTaskSearchModel searchModel)
+        public virtual Task<ScheduleTaskSearchModel> PrepareScheduleTaskSearchModelAsync(ScheduleTaskSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -56,13 +56,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Schedule task search model</param>
         /// <returns>Schedule task list model</returns>
-        public virtual async Task<ScheduleTaskListModel> PrepareScheduleTaskListModel(ScheduleTaskSearchModel searchModel)
+        public virtual async Task<ScheduleTaskListModel> PrepareScheduleTaskListModelAsync(ScheduleTaskSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get schedule tasks
-            var scheduleTasks = (await _scheduleTaskService.GetAllTasks(true)).ToPagedList(searchModel);
+            var scheduleTasks = (await _scheduleTaskService.GetAllTasksAsync(true)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ScheduleTaskListModel().PrepareToGrid(searchModel, scheduleTasks, () =>

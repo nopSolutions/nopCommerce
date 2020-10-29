@@ -13,47 +13,47 @@ namespace Nop.Services.Common
         /// Deletes an address
         /// </summary>
         /// <param name="address">Address</param>
-        Task DeleteAddress(Address address);
+        Task DeleteAddressAsync(Address address);
 
         /// <summary>
         /// Gets total number of addresses by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Number of addresses</returns>
-        Task<int> GetAddressTotalByCountryId(int countryId);
+        Task<int> GetAddressTotalByCountryIdAsync(int countryId);
 
         /// <summary>
         /// Gets total number of addresses by state/province identifier
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <returns>Number of addresses</returns>
-        Task<int> GetAddressTotalByStateProvinceId(int stateProvinceId);
+        Task<int> GetAddressTotalByStateProvinceIdAsync(int stateProvinceId);
 
         /// <summary>
         /// Gets an address by address identifier
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        Task<Address> GetAddressById(int addressId);
+        Task<Address> GetAddressByIdAsync(int addressId);
 
         /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        Task InsertAddress(Address address);
+        Task InsertAddressAsync(Address address);
 
         /// <summary>
         /// Updates the address
         /// </summary>
         /// <param name="address">Address</param>
-        Task UpdateAddress(Address address);
+        Task UpdateAddressAsync(Address address);
 
         /// <summary>
         /// Gets a value indicating whether address is valid (can be saved)
         /// </summary>
         /// <param name="address">Address to validate</param>
         /// <returns>Result</returns>
-        Task<bool> IsAddressValid(Address address);
+        Task<bool> IsAddressValidAsync(Address address);
 
         //TODO: migrate to an extension method
         /// <summary>

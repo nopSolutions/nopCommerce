@@ -185,7 +185,7 @@ namespace Nop.Web.Models.Common
         {
             get => (!string.IsNullOrEmpty(firstButtonText)) ?
                     firstButtonText :
-                    _localizationService.GetResource("Pager.First").Result;
+                    _localizationService.GetResourceAsync("Pager.First").Result;
             set => firstButtonText = value;
         }
 
@@ -196,7 +196,7 @@ namespace Nop.Web.Models.Common
         {
             get => (!string.IsNullOrEmpty(lastButtonText)) ?
                     lastButtonText :
-                    _localizationService.GetResource("Pager.Last").Result;
+                    _localizationService.GetResourceAsync("Pager.Last").Result;
             set => lastButtonText = value;
         }
 
@@ -207,7 +207,7 @@ namespace Nop.Web.Models.Common
         {
             get => (!string.IsNullOrEmpty(nextButtonText)) ?
                     nextButtonText :
-                    _localizationService.GetResource("Pager.Next").Result;
+                    _localizationService.GetResourceAsync("Pager.Next").Result;
             set => nextButtonText = value;
         }
 
@@ -218,7 +218,7 @@ namespace Nop.Web.Models.Common
         {
             get => (!string.IsNullOrEmpty(previousButtonText)) ?
                     previousButtonText :
-                    _localizationService.GetResource("Pager.Previous").Result;
+                    _localizationService.GetResourceAsync("Pager.Previous").Result;
             set => previousButtonText = value;
         }
 
@@ -229,7 +229,7 @@ namespace Nop.Web.Models.Common
         {
             get => (!string.IsNullOrEmpty(currentPageText)) ?
                     currentPageText :
-                    _localizationService.GetResource("Pager.CurrentPage").Result;
+                    _localizationService.GetResourceAsync("Pager.CurrentPage").Result;
             set => currentPageText = value;
         }
 

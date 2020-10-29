@@ -17,7 +17,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _catalogModelFactory.PrepareHomepageCategoryModels();
+            var model = await _catalogModelFactory.PrepareHomepageCategoryModelsAsync();
             if (!model.Any())
                 return Content("");
 

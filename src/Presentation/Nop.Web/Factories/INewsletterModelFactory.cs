@@ -12,13 +12,13 @@ namespace Nop.Web.Factories
         /// Prepare the newsletter box model
         /// </summary>
         /// <returns>Newsletter box model</returns>
-        Task<NewsletterBoxModel> PrepareNewsletterBoxModel();
+        Task<NewsletterBoxModel> PrepareNewsletterBoxModelAsync();
 
         /// <summary>
         /// Prepare the subscription activation model
         /// </summary>
         /// <param name="active">Whether the subscription has been activated</param>
         /// <returns>Subscription activation model</returns>
-        Task<SubscriptionActivationModel> PrepareSubscriptionActivationModel(bool active);
+        Task<SubscriptionActivationModel> PrepareSubscriptionActivationModelAsync(bool active);
     }
 }

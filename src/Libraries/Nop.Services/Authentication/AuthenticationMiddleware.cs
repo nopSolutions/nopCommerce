@@ -47,7 +47,7 @@ namespace Nop.Services.Authentication
         /// </summary>
         /// <param name="context">HTTP context</param>
         /// <returns>Task</returns>
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
             {
@@ -78,7 +78,7 @@ namespace Nop.Services.Authentication
                     var logger =
                         EngineContext.Current.Resolve<ILogger>();
 
-                    await logger.Error(ex.Message, ex);
+                    await logger.ErrorAsync(ex.Message, ex);
                 }
             }
 

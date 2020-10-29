@@ -73,16 +73,16 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (affiliate == null || affiliate.Deleted || !affiliate.Active)
                     return;
 
-                if (affiliate.Id == _workContext.GetCurrentCustomer().Result.AffiliateId)
+                if (affiliate.Id == _workContext.GetCurrentCustomerAsync().Result.AffiliateId)
                     return;
 
                 //ignore search engines
-                if (_workContext.GetCurrentCustomer().Result.IsSearchEngineAccount())
+                if (_workContext.GetCurrentCustomerAsync().Result.IsSearchEngineAccount())
                     return;
 
                 //update affiliate identifier
-                _workContext.GetCurrentCustomer().Result.AffiliateId = affiliate.Id;
-                _customerService.UpdateCustomer(_workContext.GetCurrentCustomer().Result).Wait();
+                _workContext.GetCurrentCustomerAsync().Result.AffiliateId = affiliate.Id;
+                _customerService.UpdateCustomerAsync(_workContext.GetCurrentCustomerAsync().Result).Wait();
             }
 
             #endregion
@@ -109,9 +109,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //try to find by ID
                 var affiliateIds = request.Query[AFFILIATE_ID_QUERY_PARAMETER_NAME];
                 if (affiliateIds.Any() && int.TryParse(affiliateIds.FirstOrDefault(), out int affiliateId)
-                    && affiliateId > 0 && affiliateId != _workContext.GetCurrentCustomer().Result.AffiliateId)
+                    && affiliateId > 0 && affiliateId != _workContext.GetCurrentCustomerAsync().Result.AffiliateId)
                 {
-                    SetCustomerAffiliateId(_affiliateService.GetAffiliateById(affiliateId).Result);
+                    SetCustomerAffiliateId(_affiliateService.GetAffiliateByIdAsync(affiliateId).Result);
                     return;
                 }
 
@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     var affiliateName = affiliateNames.FirstOrDefault();
                     if (!string.IsNullOrEmpty(affiliateName))
-                        SetCustomerAffiliateId(_affiliateService.GetAffiliateByFriendlyUrlName(affiliateName).Result);
+                        SetCustomerAffiliateId(_affiliateService.GetAffiliateByFriendlyUrlNameAsync(affiliateName).Result);
                 }
             }
 

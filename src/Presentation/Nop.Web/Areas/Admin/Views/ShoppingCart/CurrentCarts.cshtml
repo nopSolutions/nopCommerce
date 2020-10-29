@@ -4,7 +4,7 @@
 @inject IStoreService storeService
 
 @{
-    var stores = await storeService.GetAllStores();
+    var stores = await storeService.GetAllStoresAsync();
 
     //page title
     ViewBag.PageTitle = T("Admin.CurrentCarts.CartsAndWishlists").Text;
@@ -14,7 +14,7 @@
 
 @{
     const string hideSearchBlockAttributeName = "CurrentCartsPage.HideSearchBlock";
-    var hideSearchBlock = await genericAttributeService.GetAttribute<bool>(await workContext.GetCurrentCustomer(), hideSearchBlockAttributeName);
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
@@ -217,7 +217,7 @@
                                 {
                                     Title = T("Admin.CurrentCarts.Store").Text,
                                     Width = "150",
-                                    Visible = (await storeService.GetAllStores()).Count > 1
+                                    Visible = (await storeService.GetAllStoresAsync()).Count > 1
                                 },
                                 new ColumnProperty(nameof(ShoppingCartItemModel.UpdatedOn))
                                 {

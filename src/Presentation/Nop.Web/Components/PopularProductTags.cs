@@ -17,7 +17,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await _catalogModelFactory.PreparePopularProductTagsModel();
+            var model = await _catalogModelFactory.PreparePopularProductTagsModelAsync();
 
             if (!model.Tags.Any())
                 return Content("");

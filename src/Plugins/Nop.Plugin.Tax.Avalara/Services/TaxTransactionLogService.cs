@@ -38,7 +38,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Paged list of tax transaction log items</returns>
-        public virtual async Task<IPagedList<TaxTransactionLog>> GetTaxTransactionLog(int? customerId = null,
+        public virtual async Task<IPagedList<TaxTransactionLog>> GetTaxTransactionLogAsync(int? customerId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
@@ -59,7 +59,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             query = query.OrderByDescending(logItem => logItem.CreatedDateUtc).ThenByDescending(logItem => logItem.Id);
 
             //return paged log
-            return await query.ToPagedList(pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -67,51 +67,51 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="logItemId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual async Task<TaxTransactionLog> GetTaxTransactionLogById(int logItemId)
+        public virtual async Task<TaxTransactionLog> GetTaxTransactionLogByIdAsync(int logItemId)
         {
-            return await _taxTransactionLogRepository.GetById(logItemId);
+            return await _taxTransactionLogRepository.GetByIdAsync(logItemId);
         }
 
         /// <summary>
         /// Insert the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual async Task InsertTaxTransactionLog(TaxTransactionLog logItem)
+        public virtual async Task InsertTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            await _taxTransactionLogRepository.Insert(logItem, false);
+            await _taxTransactionLogRepository.InsertAsync(logItem, false);
         }
 
         /// <summary>
         /// Update the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual async Task UpdateTaxTransactionLog(TaxTransactionLog logItem)
+        public virtual async Task UpdateTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            await _taxTransactionLogRepository.Update(logItem, false);
+            await _taxTransactionLogRepository.UpdateAsync(logItem, false);
         }
 
         /// <summary>
         /// Delete the log item
         /// </summary>
         /// <param name="logItem">Log item</param>
-        public virtual async Task DeleteTaxTransactionLog(TaxTransactionLog logItem)
+        public virtual async Task DeleteTaxTransactionLogAsync(TaxTransactionLog logItem)
         {
-            await _taxTransactionLogRepository.Delete(logItem, false);
+            await _taxTransactionLogRepository.DeleteAsync(logItem, false);
         }
 
         /// <summary>
         /// Delete log items
         /// </summary>
         /// <param name="ids">Log items identifiers</param>
-        public virtual async Task DeleteTaxTransactionLog(int[] ids)
+        public virtual async Task DeleteTaxTransactionLogAsync(int[] ids)
         {
-            await _taxTransactionLogRepository.Delete(logItem => ids.Contains(logItem.Id));
+            await _taxTransactionLogRepository.DeleteAsync(logItem => ids.Contains(logItem.Id));
         }
 
         #endregion

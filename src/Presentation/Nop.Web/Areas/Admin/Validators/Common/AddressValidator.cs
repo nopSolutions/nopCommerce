@@ -13,59 +13,59 @@ namespace Nop.Web.Areas.Admin.Validators.Common
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.FirstName.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.FirstName.Required").Result)
                 .When(x => x.FirstNameEnabled && x.FirstNameRequired);
             RuleFor(x => x.LastName)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.LastName.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.LastName.Required").Result)
                 .When(x => x.LastNameEnabled && x.LastNameRequired);
             RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Email.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.Email.Required").Result)
                 .When(x => x.EmailEnabled && x.EmailRequired);
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Common.WrongEmail").Result)
                 .When(x => x.EmailEnabled && x.EmailRequired);
             RuleFor(x => x.Company)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Company.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.Company.Required").Result)
                 .When(x => x.CompanyEnabled && x.CompanyRequired);
             RuleFor(x => x.CountryId)
                 .NotNull()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Country.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.Country.Required").Result)
                 .When(x => x.CountryEnabled && x.CountryRequired);
             RuleFor(x => x.CountryId)
                 .NotEqual(0)
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Country.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.Country.Required").Result)
                 .When(x => x.CountryEnabled && x.CountryRequired);
             RuleFor(x => x.County)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.County.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.County.Required").Result)
                 .When(x => x.CountyEnabled && x.CountyRequired);
             RuleFor(x => x.City)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.City.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.City.Required").Result)
                 .When(x => x.CityEnabled && x.CityRequired);
             RuleFor(x => x.Address1)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Address1.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.Address1.Required").Result)
                 .When(x => x.StreetAddressEnabled && x.StreetAddressRequired);
             RuleFor(x => x.Address2)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Address2.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.Address2.Required").Result)
                 .When(x => x.StreetAddress2Enabled && x.StreetAddress2Required);
             RuleFor(x => x.ZipPostalCode)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.ZipPostalCode.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.ZipPostalCode.Required").Result)
                 .When(x => x.ZipPostalCodeEnabled && x.ZipPostalCodeRequired);
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.PhoneNumber.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.PhoneNumber.Required").Result)
                 .When(x => x.PhoneEnabled && x.PhoneRequired);
             RuleFor(x => x.FaxNumber)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Admin.Address.Fields.FaxNumber.Required").Result)
+                .WithMessage(localizationService.GetResourceAsync("Admin.Address.Fields.FaxNumber.Required").Result)
                 .When(x => x.FaxEnabled && x.FaxRequired);
 
             SetDatabaseValidationRules<Address>(dataProvider);

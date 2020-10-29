@@ -65,7 +65,7 @@
             }
             if (Model.DisplayTaxShippingInfo)
             {
-                var inclTax = await workContext.GetTaxDisplayType() == TaxDisplayType.IncludingTax;
+                var inclTax = await workContext.GetTaxDisplayTypeAsync() == TaxDisplayType.IncludingTax;
                 //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info">

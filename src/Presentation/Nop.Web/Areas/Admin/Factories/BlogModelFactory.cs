@@ -77,15 +77,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="blogContentModel">Blog content model</param>
         /// <param name="filterByBlogPostId">Blog post ID</param>
         /// <returns>Blog content model</returns>
-        public virtual async Task<BlogContentModel> PrepareBlogContentModel(BlogContentModel blogContentModel, int? filterByBlogPostId)
+        public virtual async Task<BlogContentModel> PrepareBlogContentModelAsync(BlogContentModel blogContentModel, int? filterByBlogPostId)
         {
             if (blogContentModel == null)
                 throw new ArgumentNullException(nameof(blogContentModel));
 
             //prepare nested search models
-            await PrepareBlogPostSearchModel(blogContentModel.BlogPosts);
-            var blogPost = await _blogService.GetBlogPostById(filterByBlogPostId ?? 0);
-            await PrepareBlogCommentSearchModel(blogContentModel.BlogComments, blogPost);
+            await PrepareBlogPostSearchModelAsync(blogContentModel.BlogPosts);
+            var blogPost = await _blogService.GetBlogPostByIdAsync(filterByBlogPostId ?? 0);
+            await PrepareBlogCommentSearchModelAsync(blogContentModel.BlogComments, blogPost);
 
             return blogContentModel;
         }
@@ -95,13 +95,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Blog post search model</param>
         /// <returns>Blog post search model</returns>
-        public virtual async Task<BlogPostSearchModel> PrepareBlogPostSearchModel(BlogPostSearchModel searchModel)
+        public virtual async Task<BlogPostSearchModel> PrepareBlogPostSearchModelAsync(BlogPostSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -116,13 +116,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Blog post search model</param>
         /// <returns>Blog post list model</returns>
-        public virtual async Task<BlogPostListModel> PrepareBlogPostListModel(BlogPostSearchModel searchModel)
+        public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPostSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get blog posts
-            var blogPosts = await _blogService.GetAllBlogPosts(storeId: searchModel.SearchStoreId, showHidden: true,
+            var blogPosts = await _blogService.GetAllBlogPostsAsync(storeId: searchModel.SearchStoreId, showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title : searchModel.SearchTitle);
 
             //prepare list model
@@ -144,10 +144,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     blogPostModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    blogPostModel.LanguageName = _languageService.GetLanguageById(blogPost.LanguageId).Result?.Name;
-                    blogPostModel.ApprovedComments = _blogService.GetBlogCommentsCount(blogPost, isApproved: true).Result;
-                    blogPostModel.NotApprovedComments = _blogService.GetBlogCommentsCount(blogPost, isApproved: false).Result;
-                    blogPostModel.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false).Result;
+                    blogPostModel.LanguageName = _languageService.GetLanguageByIdAsync(blogPost.LanguageId).Result?.Name;
+                    blogPostModel.ApprovedComments = _blogService.GetBlogCommentsCountAsync(blogPost, isApproved: true).Result;
+                    blogPostModel.NotApprovedComments = _blogService.GetBlogCommentsCountAsync(blogPost, isApproved: false).Result;
+                    blogPostModel.SeName = _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, true, false).Result;
 
                     return blogPostModel;
                 });
@@ -163,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="blogPost">Blog post</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Blog post model</returns>
-        public virtual async Task<BlogPostModel> PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties = false)
+        public virtual async Task<BlogPostModel> PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (blogPost != null)
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = blogPost.ToModel<BlogPostModel>();
-                    model.SeName = await _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, true, false);
+                    model.SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, true, false);
                 }
                 model.StartDateUtc = blogPost.StartDateUtc;
                 model.EndDateUtc = blogPost.EndDateUtc;
@@ -184,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.IncludeInSitemap = true;
             }
 
-            var blogTags = await _blogService.GetAllBlogPostTags(0, 0, true);
+            var blogTags = await _blogService.GetAllBlogPostTagsAsync(0, 0, true);
             var blogTagsSb = new StringBuilder();
             blogTagsSb.Append("var initialBlogTags = [");
             for (var i = 0; i < blogTags.Count; i++)
@@ -201,10 +201,10 @@ namespace Nop.Web.Areas.Admin.Factories
             model.InitialBlogTags = blogTagsSb.ToString();
 
             //prepare available languages
-            await _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, false);
+            await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, false);
 
             //prepare available stores
-            await _storeMappingSupportedModelFactory.PrepareModelStores(model, blogPost, excludeProperties);
+            await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(model, blogPost, excludeProperties);
 
             return model;
         }
@@ -215,7 +215,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Blog comment search model</returns>
-        public virtual async Task<BlogCommentSearchModel> PrepareBlogCommentSearchModel(BlogCommentSearchModel searchModel, BlogPost blogPost)
+        public virtual async Task<BlogCommentSearchModel> PrepareBlogCommentSearchModelAsync(BlogCommentSearchModel searchModel, BlogPost blogPost)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -223,17 +223,17 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare "approved" property (0 - all; 1 - approved only; 2 - disapproved only)
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.All"),
+                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.All"),
                 Value = "0"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly"),
+                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.ApprovedOnly"),
                 Value = "1"
             });
             searchModel.AvailableApprovedOptions.Add(new SelectListItem
             {
-                Text = await _localizationService.GetResource("Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly"),
+                Text = await _localizationService.GetResourceAsync("Admin.ContentManagement.Blog.Comments.List.SearchApproved.DisapprovedOnly"),
                 Value = "2"
             });
 
@@ -251,7 +251,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Blog comment search model</param>
         /// <param name="blogPostId">Blog post ID</param>
         /// <returns>Blog comment list model</returns>
-        public virtual async Task<BlogCommentListModel> PrepareBlogCommentListModel(BlogCommentSearchModel searchModel, int? blogPostId)
+        public virtual async Task<BlogCommentListModel> PrepareBlogCommentListModelAsync(BlogCommentSearchModel searchModel, int? blogPostId)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -264,7 +264,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var isApprovedOnly = searchModel.SearchApprovedId == 0 ? null : searchModel.SearchApprovedId == 1 ? true : (bool?)false;
 
             //get comments
-            var comments = (await _blogService.GetAllComments(blogPostId: blogPostId,
+            var comments = (await _blogService.GetAllCommentsAsync(blogPostId: blogPostId,
                 approved: isApprovedOnly,
                 fromUtc: createdOnFromValue,
                 toUtc: createdOnToValue,
@@ -274,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new BlogCommentListModel().PrepareToGrid(searchModel, comments, () =>
             {                
                 //prepare store names (to avoid loading for each comment)
-                var storeNames = _storeService.GetAllStores().Result.ToDictionary(store => store.Id, store => store.Name);
+                var storeNames = _storeService.GetAllStoresAsync().Result.ToDictionary(store => store.Id, store => store.Name);
 
                 return comments.Select(blogComment =>
                 {
@@ -282,10 +282,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
                     
                     //set title from linked blog post
-                    commentModel.BlogPostTitle = _blogService.GetBlogPostById(blogComment.BlogPostId).Result?.Title;
+                    commentModel.BlogPostTitle = _blogService.GetBlogPostByIdAsync(blogComment.BlogPostId).Result?.Title;
 
-                    if (_customerService.GetCustomerById(blogComment.CustomerId).Result is Customer customer)
-                        commentModel.CustomerInfo = _customerService.IsRegistered(customer).Result ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest").Result;
+                    if (_customerService.GetCustomerByIdAsync(blogComment.CustomerId).Result is Customer customer)
+                        commentModel.CustomerInfo = _customerService.IsRegisteredAsync(customer).Result ? customer.Email : _localizationService.GetResourceAsync("Admin.Customers.Guest").Result;
 
                     //fill in additional values (not existing in the entity)
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);

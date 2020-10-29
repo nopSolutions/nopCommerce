@@ -23,7 +23,7 @@ namespace Nop.Web.Components
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
 
-            var model = await _commonModelFactory.PrepareStoreThemeSelectorModel();
+            var model = await _commonModelFactory.PrepareStoreThemeSelectorModelAsync();
             return View(model);
         }
     }

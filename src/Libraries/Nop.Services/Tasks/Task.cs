@@ -73,11 +73,11 @@ namespace Nop.Services.Tasks
 
             ScheduleTask.LastStartUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            scheduleTaskService.UpdateTask(ScheduleTask).Wait();
-            task.Execute().Wait();
+            scheduleTaskService.UpdateTaskAsync(ScheduleTask).Wait();
+            task.ExecuteAsync().Wait();
             ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
             //update appropriate datetime properties
-            scheduleTaskService.UpdateTask(ScheduleTask).Wait();
+            scheduleTaskService.UpdateTaskAsync(ScheduleTask).Wait();
         }
 
         /// <summary>
@@ -145,18 +145,18 @@ namespace Nop.Services.Tasks
                 var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-                var scheduleTaskUrl = $"{(await storeContext.GetCurrentStore()).Url}{NopTaskDefaults.ScheduleTaskPath}";
+                var scheduleTaskUrl = $"{(await storeContext.GetCurrentStoreAsync()).Url}{NopTaskDefaults.ScheduleTaskPath}";
 
                 ScheduleTask.Enabled = !ScheduleTask.StopOnError;
                 ScheduleTask.LastEndUtc = DateTime.UtcNow;
-                await scheduleTaskService.UpdateTask(ScheduleTask);
+                await scheduleTaskService.UpdateTaskAsync(ScheduleTask);
 
-                var message = string.Format(await localizationService.GetResource("ScheduleTasks.Error"), ScheduleTask.Name,
-                    exc.Message, ScheduleTask.Type, (await storeContext.GetCurrentStore()).Name, scheduleTaskUrl);
+                var message = string.Format(await localizationService.GetResourceAsync("ScheduleTasks.Error"), ScheduleTask.Name,
+                    exc.Message, ScheduleTask.Type, (await storeContext.GetCurrentStoreAsync()).Name, scheduleTaskUrl);
 
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                await logger.Error(message, exc);
+                await logger.ErrorAsync(message, exc);
                 if (throwException)
                     throw;
             }

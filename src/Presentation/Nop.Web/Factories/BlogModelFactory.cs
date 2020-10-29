@@ -82,27 +82,27 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="blogComment">Blog comment entity</param>
         /// <returns>Blog comment model</returns>
-        public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModel(BlogComment blogComment)
+        public virtual async Task<BlogCommentModel> PrepareBlogPostCommentModelAsync(BlogComment blogComment)
         {
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
-            var customer = await _customerService.GetCustomerById(blogComment.CustomerId);
+            var customer = await _customerService.GetCustomerByIdAsync(blogComment.CustomerId);
 
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = await _customerService.FormatUsername(customer),
+                CustomerName = await _customerService.FormatUsernameAsync(customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuest(customer)
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !await _customerService.IsGuestAsync(customer)
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                model.CustomerAvatarUrl = await _pictureService.GetPictureUrl(
-                    await _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                model.CustomerAvatarUrl = await _pictureService.GetPictureUrlAsync(
+                    await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -115,7 +115,7 @@ namespace Nop.Web.Factories
         /// <param name="model">Blog post model</param>
         /// <param name="blogPost">Blog post entity</param>
         /// <param name="prepareComments">Whether to prepare blog comments</param>
-        public virtual async Task PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
+        public virtual async Task PrepareBlogPostModelAsync(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -127,30 +127,30 @@ namespace Nop.Web.Factories
             model.MetaTitle = blogPost.MetaTitle;
             model.MetaDescription = blogPost.MetaDescription;
             model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = await _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = await _blogService.ParseTags(blogPost);
+            model.Tags = await _blogService.ParseTagsAsync(blogPost);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
-            var storeId = _blogSettings.ShowBlogCommentsPerStore ? (await _storeContext.GetCurrentStore()).Id : 0;
+            var storeId = _blogSettings.ShowBlogCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
             
-            model.NumberOfComments = await _blogService.GetBlogCommentsCount(blogPost, storeId, true);
+            model.NumberOfComments = await _blogService.GetBlogCommentsCountAsync(blogPost, storeId, true);
 
             if (prepareComments)
             {                
-                var blogComments = await _blogService.GetAllComments(
+                var blogComments = await _blogService.GetAllCommentsAsync(
                     blogPostId: blogPost.Id, 
                     approved: true,
                     storeId: storeId);
 
                 foreach (var bc in blogComments)
                 {
-                    var commentModel = await PrepareBlogPostCommentModel(bc);
+                    var commentModel = await PrepareBlogPostCommentModelAsync(bc);
                     model.Comments.Add(commentModel);
                 }
             }
@@ -161,7 +161,7 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="command">Blog paging filtering model</param>
         /// <returns>Blog post list model</returns>
-        public virtual async Task<BlogPostListModel> PrepareBlogPostListModel(BlogPagingFilteringModel command)
+        public virtual async Task<BlogPostListModel> PrepareBlogPostListModelAsync(BlogPagingFilteringModel command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
@@ -173,7 +173,7 @@ namespace Nop.Web.Factories
                     Tag = command.Tag,
                     Month = command.Month
                 },
-                WorkingLanguageId = (await _workContext.GetWorkingLanguage()).Id
+                WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id
             };
 
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
@@ -185,14 +185,14 @@ namespace Nop.Web.Factories
             IPagedList<BlogPost> blogPosts;
             if (string.IsNullOrEmpty(command.Tag))
             {
-                blogPosts = await _blogService.GetAllBlogPosts((await _storeContext.GetCurrentStore()).Id,
-                    (await _workContext.GetWorkingLanguage()).Id,
+                blogPosts = await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                    (await _workContext.GetWorkingLanguageAsync()).Id,
                     dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
             }
             else
             {
-                blogPosts = await _blogService.GetAllBlogPostsByTag((await _storeContext.GetCurrentStore()).Id,
-                    (await _workContext.GetWorkingLanguage()).Id,
+                blogPosts = await _blogService.GetAllBlogPostsByTagAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                    (await _workContext.GetWorkingLanguageAsync()).Id,
                     command.Tag, command.PageNumber - 1, command.PageSize);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
@@ -201,7 +201,7 @@ namespace Nop.Web.Factories
                 .Select(x =>
                 {
                     var blogPostModel = new BlogPostModel();
-                    PrepareBlogPostModel(blogPostModel, x, false).Wait();
+                    PrepareBlogPostModelAsync(blogPostModel, x, false).Wait();
                     return blogPostModel;
                 })
                 .ToList();
@@ -213,13 +213,13 @@ namespace Nop.Web.Factories
         /// Prepare blog post tag list model
         /// </summary>
         /// <returns>Blog post tag list model</returns>
-        public virtual async Task<BlogPostTagListModel> PrepareBlogPostTagListModel()
+        public virtual async Task<BlogPostTagListModel> PrepareBlogPostTagListModelAsync()
         {
             var model = new BlogPostTagListModel();
 
             //get tags
             var tags = (await _blogService
-                .GetAllBlogPostTags((await _storeContext.GetCurrentStore()).Id, (await _workContext.GetWorkingLanguage()).Id))
+                .GetAllBlogPostTagsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetWorkingLanguageAsync()).Id))
                 .OrderByDescending(x => x.BlogPostCount)
                 .Take(_blogSettings.NumberOfTags);
 
@@ -237,15 +237,15 @@ namespace Nop.Web.Factories
         /// Prepare blog post year models
         /// </summary>
         /// <returns>List of blog post year model</returns>
-        public virtual async Task<List<BlogPostYearModel>> PrepareBlogPostYearModel()
+        public virtual async Task<List<BlogPostYearModel>> PrepareBlogPostYearModelAsync()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, await _workContext.GetWorkingLanguage(), await _storeContext.GetCurrentStore());
-            var cachedModel = await _staticCacheManager.Get(cacheKey, async () =>
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
+            var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = await _blogService.GetAllBlogPosts((await _storeContext.GetCurrentStore()).Id,
-                    (await _workContext.GetWorkingLanguage()).Id);
+                var blogPosts = await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
+                    (await _workContext.GetWorkingLanguageAsync()).Id);
                 if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
@@ -254,7 +254,7 @@ namespace Nop.Web.Factories
                     var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var list = await _blogService.GetPostsByDate(blogPosts, new DateTime(first.Year, first.Month, 1),
+                        var list = await _blogService.GetPostsByDateAsync(blogPosts, new DateTime(first.Year, first.Month, 1),
                             new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                         if (list.Any())
                         {

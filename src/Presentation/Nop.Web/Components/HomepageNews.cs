@@ -22,7 +22,7 @@ namespace Nop.Web.Components
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = await _newsModelFactory.PrepareHomepageNewsItemsModel();
+            var model = await _newsModelFactory.PrepareHomepageNewsItemsModelAsync();
             return View(model);
         }
     }

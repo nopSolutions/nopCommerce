@@ -54,13 +54,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign search model</returns>
-        public virtual async Task<CampaignSearchModel> PrepareCampaignSearchModel(CampaignSearchModel searchModel)
+        public virtual async Task<CampaignSearchModel> PrepareCampaignSearchModelAsync(CampaignSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
@@ -75,13 +75,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Campaign search model</param>
         /// <returns>Campaign list model</returns>
-        public virtual async Task<CampaignListModel> PrepareCampaignListModel(CampaignSearchModel searchModel)
+        public virtual async Task<CampaignListModel> PrepareCampaignListModelAsync(CampaignSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get campaigns
-            var campaigns = (await _campaignService.GetAllCampaigns(searchModel.StoreId)).ToPagedList(searchModel);
+            var campaigns = (await _campaignService.GetAllCampaignsAsync(searchModel.StoreId)).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new CampaignListModel().PrepareToGrid(searchModel, campaigns, () =>
@@ -113,7 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="campaign">Campaign</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Campaign model</returns>
-        public virtual async Task<CampaignModel> PrepareCampaignModel(CampaignModel model, Campaign campaign, bool excludeProperties = false)
+        public virtual async Task<CampaignModel> PrepareCampaignModelAsync(CampaignModel model, Campaign campaign, bool excludeProperties = false)
         {
             //fill in model values from the entity
             if (campaign != null)
@@ -123,20 +123,20 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }
 
-            model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokensAsync());
 
             //whether to fill in some of properties
             if (!excludeProperties)
                 model.EmailAccountId = _emailAccountSettings.DefaultEmailAccountId;
 
             //prepare available stores
-            await _baseAdminModelFactory.PrepareStores(model.AvailableStores);
+            await _baseAdminModelFactory.PrepareStoresAsync(model.AvailableStores);
 
             //prepare available customer roles
-            await _baseAdminModelFactory.PrepareCustomerRoles(model.AvailableCustomerRoles);
+            await _baseAdminModelFactory.PrepareCustomerRolesAsync(model.AvailableCustomerRoles);
 
             //prepare available email accounts
-            await _baseAdminModelFactory.PrepareEmailAccounts(model.AvailableEmailAccounts, false);
+            await _baseAdminModelFactory.PrepareEmailAccountsAsync(model.AvailableEmailAccounts, false);
 
             return model;
         }

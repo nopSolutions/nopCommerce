@@ -13,32 +13,32 @@ namespace Nop.Services.Stores
         /// Deletes a store
         /// </summary>
         /// <param name="store">Store</param>
-        Task DeleteStore(Store store);
+        Task DeleteStoreAsync(Store store);
 
         /// <summary>
         /// Gets all stores
         /// </summary>
         /// <returns>Stores</returns>
-        Task<IList<Store>> GetAllStores();
+        Task<IList<Store>> GetAllStoresAsync();
 
         /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Store</returns>
-        Task<Store> GetStoreById(int storeId);
+        Task<Store> GetStoreByIdAsync(int storeId);
 
         /// <summary>
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
-        Task InsertStore(Store store);
+        Task InsertStoreAsync(Store store);
 
         /// <summary>
         /// Updates the store
         /// </summary>
         /// <param name="store">Store</param>
-        Task UpdateStore(Store store);
+        Task UpdateStoreAsync(Store store);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -61,6 +61,6 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
         /// <returns>List of names and/or IDs not existing stores</returns>
-        Task<string[]> GetNotExistingStores(string[] storeIdsNames);
+        Task<string[]> GetNotExistingStoresAsync(string[] storeIdsNames);
     }
 }

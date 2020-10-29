@@ -49,9 +49,9 @@ namespace Nop.Services.Catalog
         /// Delete a back in stock subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        public virtual async Task DeleteSubscription(BackInStockSubscription subscription)
+        public virtual async Task DeleteSubscriptionAsync(BackInStockSubscription subscription)
         {
-            await _backInStockSubscriptionRepository.Delete(subscription);
+            await _backInStockSubscriptionRepository.DeleteAsync(subscription);
         }
 
         /// <summary>
@@ -62,10 +62,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerId(int customerId,
+        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByCustomerIdAsync(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _backInStockSubscriptionRepository.GetAllPaged(query =>
+            return await _backInStockSubscriptionRepository.GetAllPagedAsync(query =>
             {
                 //customer
                 query = query.Where(biss => biss.CustomerId == customerId);
@@ -94,10 +94,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductId(int productId,
+        public virtual async Task<IPagedList<BackInStockSubscription>> GetAllSubscriptionsByProductIdAsync(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            return await _backInStockSubscriptionRepository.GetAllPaged(query =>
+            return await _backInStockSubscriptionRepository.GetAllPagedAsync(query =>
             {
                 //product
                 query = query.Where(biss => biss.ProductId == productId);
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual async Task<BackInStockSubscription> FindSubscription(int customerId, int productId, int storeId)
+        public virtual async Task<BackInStockSubscription> FindSubscriptionAsync(int customerId, int productId, int storeId)
         {
             var query = from biss in _backInStockSubscriptionRepository.Table
                         orderby biss.CreatedOnUtc descending
@@ -142,27 +142,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="subscriptionId">Subscription identifier</param>
         /// <returns>Subscription</returns>
-        public virtual async Task<BackInStockSubscription> GetSubscriptionById(int subscriptionId)
+        public virtual async Task<BackInStockSubscription> GetSubscriptionByIdAsync(int subscriptionId)
         {
-            return await _backInStockSubscriptionRepository.GetById(subscriptionId, cache => default);
+            return await _backInStockSubscriptionRepository.GetByIdAsync(subscriptionId, cache => default);
         }
 
         /// <summary>
         /// Inserts subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        public virtual async Task InsertSubscription(BackInStockSubscription subscription)
+        public virtual async Task InsertSubscriptionAsync(BackInStockSubscription subscription)
         {
-            await _backInStockSubscriptionRepository.Insert(subscription);
+            await _backInStockSubscriptionRepository.InsertAsync(subscription);
         }
 
         /// <summary>
         /// Updates subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        public virtual async Task UpdateSubscription(BackInStockSubscription subscription)
+        public virtual async Task UpdateSubscriptionAsync(BackInStockSubscription subscription)
         {
-            await _backInStockSubscriptionRepository.Update(subscription);
+            await _backInStockSubscriptionRepository.UpdateAsync(subscription);
         }
 
         /// <summary>
@@ -170,22 +170,22 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
-        public virtual async Task<int> SendNotificationsToSubscribers(Product product)
+        public virtual async Task<int> SendNotificationsToSubscribersAsync(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
             var result = 0;
-            var subscriptions = await GetAllSubscriptionsByProductId(product.Id);
+            var subscriptions = await GetAllSubscriptionsByProductIdAsync(product.Id);
             foreach (var subscription in subscriptions)
             {
-                var customerLanguageId = await _genericAttributeService.GetAttribute<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
+                var customerLanguageId = await _genericAttributeService.GetAttributeAsync<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
 
-                result += (await _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId)).Count;
+                result += (await _workflowMessageService.SendBackInStockNotificationAsync(subscription, customerLanguageId)).Count;
             }
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)
-                await DeleteSubscription(subscriptions[i]);
+                await DeleteSubscriptionAsync(subscriptions[i]);
 
             return result;
         }

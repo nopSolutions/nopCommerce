@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Specification attribute group search model</param>
         /// <returns>Specification attribute group search model</returns>
-        public virtual Task<SpecificationAttributeGroupSearchModel> PrepareSpecificationAttributeGroupSearchModel(SpecificationAttributeGroupSearchModel searchModel)
+        public virtual Task<SpecificationAttributeGroupSearchModel> PrepareSpecificationAttributeGroupSearchModelAsync(SpecificationAttributeGroupSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -114,21 +114,21 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Specification attribute group search model</param>
         /// <returns>Specification attribute group list model</returns>
-        public virtual async Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModel(SpecificationAttributeGroupSearchModel searchModel)
+        public virtual async Task<SpecificationAttributeGroupListModel> PrepareSpecificationAttributeGroupListModelAsync(SpecificationAttributeGroupSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get specification attribute groups
             var specificationAttributeGroups = await _specificationAttributeService
-                .GetSpecificationAttributeGroups(searchModel.Page - 1, searchModel.PageSize);
+                .GetSpecificationAttributeGroupsAsync(searchModel.Page - 1, searchModel.PageSize);
 
             if (searchModel.Page == 1)
             {
                 //dislpay default group with non-grouped specification attributes on first page
                 specificationAttributeGroups.Insert(0, new SpecificationAttributeGroup
                 {
-                    Name = await _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
+                    Name = await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttributeGroup.DefaultGroupName")
                 });
             }
 
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="specificationAttributeGroup">Specification attribute group</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Specification attribute group model</returns>
-        public virtual async Task<SpecificationAttributeGroupModel> PrepareSpecificationAttributeGroupModel(SpecificationAttributeGroupModel model,
+        public virtual async Task<SpecificationAttributeGroupModel> PrepareSpecificationAttributeGroupModelAsync(SpecificationAttributeGroupModel model,
             SpecificationAttributeGroup specificationAttributeGroup, bool excludeProperties = false)
         {
             Action<SpecificationAttributeGroupLocalizedModel, int> localizedModelConfiguration = null;
@@ -162,13 +162,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(specificationAttributeGroup, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(specificationAttributeGroup, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -179,13 +179,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Specification attribute search model</param>
         /// <param name="group">Specification attribute group</param>
         /// <returns>Specification attribute list model</returns>
-        public virtual async Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModel(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group)
+        public virtual async Task<SpecificationAttributeListModel> PrepareSpecificationAttributeListModelAsync(SpecificationAttributeSearchModel searchModel, SpecificationAttributeGroup group)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get specification attributes
-            var specificationAttributes = (await _specificationAttributeService.GetSpecificationAttributesByGroupId(group?.Id)).ToPagedList(searchModel);
+            var specificationAttributes = (await _specificationAttributeService.GetSpecificationAttributesByGroupIdAsync(group?.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new SpecificationAttributeListModel().PrepareToGrid(searchModel, specificationAttributes, () =>
@@ -204,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Specification attribute model</returns>
-        public virtual async Task<SpecificationAttributeModel> PrepareSpecificationAttributeModel(SpecificationAttributeModel model,
+        public virtual async Task<SpecificationAttributeModel> PrepareSpecificationAttributeModelAsync(SpecificationAttributeModel model,
             SpecificationAttribute specificationAttribute, bool excludeProperties = false)
         {
             Action<SpecificationAttributeLocalizedModel, int> localizedModelConfiguration = null;
@@ -221,17 +221,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(specificationAttribute, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(specificationAttribute, entity => entity.Name, languageId, false, false);
                 };
             }
 
             //prepare localized models
             if (!excludeProperties)
             {
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
-                await _baseAdminModelFactory.PrepareSpecificationAttributeGroups(model.AvailableGroups,
-                    defaultItemText: await _localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.None"));
+                await _baseAdminModelFactory.PrepareSpecificationAttributeGroupsAsync(model.AvailableGroups,
+                    defaultItemText: await _localizationService.GetResourceAsync("Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Fields.SpecificationAttributeGroup.None"));
             }
 
             return model;
@@ -243,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Specification attribute option search model</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>Specification attribute option list model</returns>
-        public virtual async Task<SpecificationAttributeOptionListModel> PrepareSpecificationAttributeOptionListModel(
+        public virtual async Task<SpecificationAttributeOptionListModel> PrepareSpecificationAttributeOptionListModelAsync(
             SpecificationAttributeOptionSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
             if (searchModel == null)
@@ -254,7 +254,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get specification attribute options
             var options = (await _specificationAttributeService
-                .GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id)).ToPagedList(searchModel);
+                .GetSpecificationAttributeOptionsBySpecificationAttributeAsync(specificationAttribute.Id)).ToPagedList(searchModel);
 
             //prepare list model
             var model = new SpecificationAttributeOptionListModel().PrepareToGrid(searchModel, options, () =>
@@ -266,7 +266,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //in order to save performance to do not check whether a product is deleted, etc
                     optionModel.NumberOfAssociatedProducts = _specificationAttributeService
-                        .GetProductSpecificationAttributeCount(specificationAttributeOptionId: option.Id).Result;
+                        .GetProductSpecificationAttributeCountAsync(specificationAttributeOptionId: option.Id).Result;
 
                     return optionModel;
                 });
@@ -283,7 +283,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="specificationAttributeOption">Specification attribute option</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Specification attribute option model</returns>
-        public virtual async Task<SpecificationAttributeOptionModel> PrepareSpecificationAttributeOptionModel(SpecificationAttributeOptionModel model,
+        public virtual async Task<SpecificationAttributeOptionModel> PrepareSpecificationAttributeOptionModelAsync(SpecificationAttributeOptionModel model,
             SpecificationAttribute specificationAttribute, SpecificationAttributeOption specificationAttributeOption,
             bool excludeProperties = false)
         {
@@ -302,7 +302,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = await _localizationService.GetLocalized(specificationAttributeOption, entity => entity.Name, languageId, false, false);
+                    locale.Name = await _localizationService.GetLocalizedAsync(specificationAttributeOption, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -310,7 +310,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare localized models
             if (!excludeProperties)
-                model.Locales = await _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+                model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(localizedModelConfiguration);
 
             return model;
         }
@@ -321,7 +321,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Search model of products that use the specification attribute</param>
         /// <param name="specificationAttribute">Specification attribute</param>
         /// <returns>List model of products that use the specification attribute</returns>
-        public virtual async Task<SpecificationAttributeProductListModel> PrepareSpecificationAttributeProductListModel(
+        public virtual async Task<SpecificationAttributeProductListModel> PrepareSpecificationAttributeProductListModelAsync(
             SpecificationAttributeProductSearchModel searchModel, SpecificationAttribute specificationAttribute)
         {
             if (searchModel == null)
@@ -331,7 +331,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             //get products
-            var products = await _specificationAttributeService.GetProductsBySpecificationAttributeId(
+            var products = await _specificationAttributeService.GetProductsBySpecificationAttributeIdAsync(
                 specificationAttributeId: specificationAttribute.Id,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 

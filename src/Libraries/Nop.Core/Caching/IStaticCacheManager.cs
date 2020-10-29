@@ -15,40 +15,40 @@ namespace Nop.Core.Caching
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
         /// <returns>The cached value associated with the specified key</returns>
-        Task<T> Get<T>(CacheKey key, Func<Task<T>> acquire);
+        Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire);
 
         /// <summary>
         /// Remove the value with the specified key from the cache
         /// </summary>
         /// <param name="cacheKey">Cache key</param>
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
-        Task Remove(CacheKey cacheKey, params object[] cacheKeyParameters);
+        Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters);
 
         /// <summary>
         /// Add the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        Task Set(CacheKey key, object data);
+        Task SetAsync(CacheKey key, object data);
 
         /// <summary>
         /// Get a value indicating whether the value associated with the specified key is cached
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
-        Task<bool> IsSet(CacheKey key);
+        Task<bool> IsSetAsync(CacheKey key);
 
         /// <summary>
         /// Remove items by cache key prefix
         /// </summary>
         /// <param name="prefix">Cache key prefix</param>
         /// <param name="prefixParameters">Parameters to create cache key prefix</param>
-        Task RemoveByPrefix(string prefix, params object[] prefixParameters);
+        Task RemoveByPrefixAsync(string prefix, params object[] prefixParameters);
 
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        Task Clear();
+        Task ClearAsync();
 
         #region Cache key
 

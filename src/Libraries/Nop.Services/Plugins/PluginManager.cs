@@ -44,7 +44,7 @@ namespace Nop.Services.Plugins
         /// <returns>Key</returns>
         protected virtual string GetKey(Customer customer, int storeId, string systemName = null)
         {
-            return $"{storeId}-{(customer != null ? string.Join(',', _customerService.GetCustomerRoleIds(customer).Result) : null)}-{systemName}";
+            return $"{storeId}-{(customer != null ? string.Join(',', _customerService.GetCustomerRoleIdsAsync(customer).Result) : null)}-{systemName}";
         }
 
         #endregion
@@ -151,9 +151,9 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <returns>Logo URL</returns>
-        public virtual async Task<string> GetPluginLogoUrl(TPlugin plugin)
+        public virtual async Task<string> GetPluginLogoUrlAsync(TPlugin plugin)
         {
-            return await _pluginService.GetPluginLogoUrl(plugin.PluginDescriptor);
+            return await _pluginService.GetPluginLogoUrlAsync(plugin.PluginDescriptor);
         }
 
         #endregion

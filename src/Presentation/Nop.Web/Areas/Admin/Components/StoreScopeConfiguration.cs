@@ -34,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             //prepare model
-            var model = await _settingModelFactory.PrepareStoreScopeConfigurationModel();
+            var model = await _settingModelFactory.PrepareStoreScopeConfigurationModelAsync();
 
             if (model.Stores.Count < 2)
                 return Content(string.Empty);
