@@ -17,6 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             AddressSettings = new AddressSettingsModel();
             DateTimeSettings = new DateTimeSettingsModel();
             ExternalAuthenticationSettings = new ExternalAuthenticationSettingsModel();
+            MultiFactorAuthenticationSettings = new MultiFactorAuthenticationSettingsModel();
             CustomerAttributeSearchModel = new CustomerAttributeSearchModel();
             AddressAttributeSearchModel = new AddressAttributeSearchModel();
         }
@@ -34,6 +35,8 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public DateTimeSettingsModel DateTimeSettings { get; set; }
 
         public ExternalAuthenticationSettingsModel ExternalAuthenticationSettings { get; set; }
+
+        public MultiFactorAuthenticationSettingsModel MultiFactorAuthenticationSettings { get; set; }
 
         public CustomerAttributeSearchModel CustomerAttributeSearchModel { get; set; }
 

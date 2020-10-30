@@ -15,6 +15,8 @@ namespace Nop.Web.Models.Customer
         public bool IsEnabled { get; set; }
 
         public List<MultiFactorAuthenticationProviderModel> Providers { get; set; }
+
+        public string Message { get; set; }
         
     }
 }

@@ -91,6 +91,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly MediaSettings _mediaSettings;
+        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -139,6 +140,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             MediaSettings mediaSettings,
+            MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
@@ -183,6 +185,7 @@ namespace Nop.Web.Controllers
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
             _mediaSettings = mediaSettings;
+            _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             _storeInformationSettings = storeInformationSettings;
             _taxSettings = taxSettings;
         }
@@ -1863,14 +1866,23 @@ namespace Nop.Web.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
+                {                    
                     //save MultiFactorIsEnabledAttribute
                     if (!model.IsEnabled)
                     {
-                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
+                        if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication)
+                        {
+                            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
 
-                        //raise change multi-factor authentication provider event       
-                        _eventPublisher.Publish(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+                            //raise change multi-factor authentication provider event       
+                            _eventPublisher.Publish(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+                        }
+                        else
+                        {
+                            model = _customerModelFactory.PrepareMultiFactorAuthenticationModel(model);                            
+                            model.Message = _localizationService.GetResource("Account.MultiFactorAuthentication.Warning.ForceActivation");
+                            return View(model);
+                        }
                     }
                     else
                     {

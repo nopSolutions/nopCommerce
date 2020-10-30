@@ -34,7 +34,7 @@
             <h1>@T("PageTitle.MultiFactorAuthentication")</h1>
         }
     </div>
-    <div class="page-body">
+    <div class="page-body">        
         <div class="description">
             @T("Account.MultiFactorAuthentication.Description")
         </div>
@@ -44,6 +44,12 @@
                     <strong>@T("Account.MultiFactorAuthentication.Settings")</strong>
                 </div>
                 <div class="form-fields">
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="message-error">
+                            @Model.Message
+                        </div>
+                    }
                     <div class="inputs">
                         <label asp-for="IsEnabled" asp-postfix=":"></label>
                         <input asp-for="IsEnabled" />

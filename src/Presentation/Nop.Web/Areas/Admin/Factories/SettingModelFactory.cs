@@ -240,12 +240,29 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //load settings for a chosen store scope
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
-            var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeId);
+            var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeId);            
 
             //fill in model values from the entity
-            var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();
+            var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();            
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare multi-factor authentication settings model
+        /// </summary>
+        /// <returns>MultiFactorAuthenticationSettingsModel</returns>
+        protected virtual MultiFactorAuthenticationSettingsModel PrepareMultiFactorAuthenticationSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var multiFactorAuthenticationSettings = _settingService.LoadSetting<MultiFactorAuthenticationSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = multiFactorAuthenticationSettings.ToSettingsModel<MultiFactorAuthenticationSettingsModel>();
+
+            return model;
+
         }
 
         /// <summary>
@@ -1356,6 +1373,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare customer settings model
             model.CustomerSettings = PrepareCustomerSettingsModel();
+
+            //prepare multi-factor authentication settings model
+            model.MultiFactorAuthenticationSettings = PrepareMultiFactorAuthenticationSettingsModel();
 
             //prepare address settings model
             model.AddressSettings = PrepareAddressSettingsModel();

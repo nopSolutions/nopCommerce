@@ -43,20 +43,34 @@
     <div asp-validation-summary="All"></div>
 
     <section class="content">
-        <div class="container-fluid">           
+        <div class="container-fluid">
             <div class="form-horizontal">
-                    @await Component.InvokeAsync("SettingMode")
-                    <nop-cards id="customersettings-cards">
-                        <nop-card asp-name="customersettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.Common", Model)</nop-card>
-                        <nop-card asp-name="customersettings-security" asp-icon="fa fa-shield" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-card>
-                        <nop-card asp-name="customersettings-account" asp-icon="fa fa-user" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Account")" asp-hide-block-attribute-name="@hideAccountBlockAttributeName" asp-hide="@hideAccountBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Account", Model)</nop-card>
-                        <nop-card asp-name="customersettings-profile" asp-icon="fa fa-user-circle-o" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")" asp-hide-block-attribute-name="@hideProfileBlockAttributeName" asp-hide="@hideProfileBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Profile", Model)</nop-card>
-                        <nop-card asp-name="customersettings-customerformfields" asp-icon="fa fa-align-justify" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" asp-hide-block-attribute-name="@hideCustomerFormFieldsBlockAttributeName" asp-hide="@hideCustomerFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-card>
-                        <nop-card asp-name="customersettings-addressformfields" asp-icon="fa fa-address-book-o" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" asp-hide-block-attribute-name="@hideAddressFormFieldsBlockAttributeName" asp-hide="@hideAddressFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-card>
+                @await Component.InvokeAsync("SettingMode")
+                <nop-cards id="customersettings-cards">
+                    <nop-card asp-name="customersettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.Common", Model)</nop-card>
+                    <nop-card asp-name="customersettings-security" asp-icon="fa fa-shield" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-card>
+                    <nop-card asp-name="customersettings-account" asp-icon="fa fa-user" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Account")" asp-hide-block-attribute-name="@hideAccountBlockAttributeName" asp-hide="@hideAccountBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Account", Model)</nop-card>
+                    <nop-card asp-name="customersettings-profile" asp-icon="fa fa-user-circle-o" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")" asp-hide-block-attribute-name="@hideProfileBlockAttributeName" asp-hide="@hideProfileBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Profile", Model)</nop-card>
+                    <nop-card asp-name="customersettings-customerformfields" asp-icon="fa fa-align-justify" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" asp-hide-block-attribute-name="@hideCustomerFormFieldsBlockAttributeName" asp-hide="@hideCustomerFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-card>
+                    <nop-card asp-name="customersettings-addressformfields" asp-icon="fa fa-address-book-o" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" asp-hide-block-attribute-name="@hideAddressFormFieldsBlockAttributeName" asp-hide="@hideAddressFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-card>
 
-                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
-                    </nop-cards>
-                </div>            
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
         </div>
     </section>
+    <script>
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)").click(toggleForceMultifactorAuthentication);
+            toggleForceMultifactorAuthentication();
+        });
+
+        function toggleForceMultifactorAuthentication() {
+            warningValidation('@Url.Action("ForceMultifactorAuthenticationWarning", "Setting")',
+                '@Html.NameFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)',
+                {
+                    forceMultifactorAuthentication: $('#@Html.IdFor(model => model.MultiFactorAuthenticationSettings.ForceMultifactorAuthentication)').is(':checked')
+                });
+        }
+    </script>
 </form>
