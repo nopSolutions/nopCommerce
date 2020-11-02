@@ -17,7 +17,7 @@ namespace Nop.Services.Catalog.Caching
             RemoveByPrefix(NopCatalogDefaults.ProductCategoriesByProductPrefix, entity.ProductId);
             RemoveByPrefix(NopCatalogDefaults.CategoryProductsNumberPrefix);
             RemoveByPrefix(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
-            RemoveByPrefix(NopCatalogDefaults.CategoryFeaturedProductsIdsPrefixCacheKey, entity.CategoryId);
+            RemoveByPrefix(NopCatalogDefaults.CategoryFeaturedProductsIdsPrefix, entity.CategoryId);
         }
     }
 }

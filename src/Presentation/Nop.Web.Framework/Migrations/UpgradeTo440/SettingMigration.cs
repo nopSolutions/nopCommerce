@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             //#5102 Delete Full-text settings
             settingRepository.Delete(setting =>
                 setting.Name == "commonsettings.usefulltextsearch" ||
-                setting.Name == "commonsettings.fulltextsearchmode");
+                setting.Name == "commonsettings.fulltextmode");
         }
 
         public override void Down()
