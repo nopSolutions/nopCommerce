@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -62,7 +61,9 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         public virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
         {
-            var mappingRecord = await _productProductTagMappingRepository.Table.FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
+            var mappingRecord = await _productProductTagMappingRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
 
             if (mappingRecord is null)
                 throw new Exception("Mapping record not found");
@@ -195,7 +196,7 @@ namespace Nop.Services.Catalog
                         where pt.Name == name
                         select pt;
 
-            var productTag = await query.FirstOrDefaultAsync();
+            var productTag = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
             return productTag;
         }
 
@@ -228,7 +229,9 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            return await _productProductTagMappingRepository.Table.AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
+            return await _productProductTagMappingRepository.Table
+                .ToAsyncEnumerable()
+                .AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
         }
 
         /// <summary>

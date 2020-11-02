@@ -326,7 +326,7 @@
         </script>
         @{
             //scroll to a selected panel (if specified)
-            var selectedPanelName = this.Html.GetSelectedPanelName();
+            var selectedPanelName = await Html.GetSelectedPanelName();
             if (!String.IsNullOrEmpty(selectedPanelName))
             {
                 <script>

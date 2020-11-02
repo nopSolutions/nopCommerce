@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -323,7 +322,11 @@ namespace Nop.Services.Catalog
 
             var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var ids = await _discountCategoryMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id).Select(dmm => dmm.EntityId).Distinct().ToListAsync();
+                var ids = await _discountCategoryMappingRepository.Table
+                    .Where(dmm => dmm.DiscountId == discount.Id).Select(dmm => dmm.EntityId)
+                    .Distinct()
+                    .ToAsyncEnumerable()
+                    .ToListAsync();
 
                 if (!discount.AppliedToSubCategories)
                     return ids;
@@ -422,7 +425,9 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual async Task<DiscountCategoryMapping> GetDiscountAppliedToCategoryAsync(int categoryId, int discountId)
         {
-            return await _discountCategoryMappingRepository.Table.FirstOrDefaultAsync(dcm => dcm.EntityId == categoryId && dcm.DiscountId == discountId);
+            return await _discountCategoryMappingRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(dcm => dcm.EntityId == categoryId && dcm.DiscountId == discountId);
         }
 
         /// <summary>
@@ -645,14 +650,20 @@ namespace Nop.Services.Catalog
             var query = _categoryRepository.Table;
             var queryFilter = categoryIdsNames.Distinct().ToArray();
             //filtering by name
-            var filter = await query.Select(c => c.Name).Where(c => queryFilter.Contains(c)).ToListAsync();
+            var filter = await query.Select(c => c.Name)
+                .Where(c => queryFilter.Contains(c))
+                .ToAsyncEnumerable()
+                .ToListAsync();
 
             //if some names not found
             if (!queryFilter.Except(filter).ToArray().Any())
                 return queryFilter.ToArray();
 
             //filtering by IDs
-            filter = await query.Select(c => c.Id.ToString()).Where(c => queryFilter.Contains(c)).ToListAsync();
+            filter = await query.Select(c => c.Id.ToString())
+                .Where(c => queryFilter.Contains(c))
+                .ToAsyncEnumerable()
+                .ToListAsync();
 
             return queryFilter.Except(filter).ToArray();
         }
@@ -667,7 +678,9 @@ namespace Nop.Services.Catalog
             var query = _productCategoryRepository.Table;
 
             return (await query.Where(p => productIds.Contains(p.ProductId))
-                .Select(p => new { p.ProductId, p.CategoryId }).ToListAsync())
+                .Select(p => new { p.ProductId, p.CategoryId })
+                .ToAsyncEnumerable()
+                .ToListAsync())
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
         }

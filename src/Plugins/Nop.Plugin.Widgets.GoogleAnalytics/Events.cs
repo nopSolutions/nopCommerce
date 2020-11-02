@@ -144,7 +144,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     trans.Items.Add(productItem);
                 }
 
-                request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));
+                await request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));
             }
             catch (Exception ex)
             {

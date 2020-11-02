@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
@@ -70,7 +69,7 @@ namespace Nop.Services.Common
                         where a.CountryId == countryId
                         select a;
 
-            return await query.CountAsync();
+            return await query.ToAsyncEnumerable().CountAsync();
         }
 
         /// <summary>
@@ -87,7 +86,7 @@ namespace Nop.Services.Common
                         where a.StateProvinceId == stateProvinceId
                         select a;
 
-            return await query.CountAsync();
+            return await query.ToAsyncEnumerable().CountAsync();
         }
 
         /// <summary>

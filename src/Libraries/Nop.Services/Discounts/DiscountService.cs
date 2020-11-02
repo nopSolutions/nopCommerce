@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -224,7 +223,7 @@ namespace Nop.Services.Discounts
             return await (from d in _discountRepository.Table
                     join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
                     where ad.EntityId == entity.Id
-                    select d).ToListAsync();
+                    select d).ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -391,7 +390,10 @@ namespace Nop.Services.Discounts
             if (discountRequirement is null)
                 throw new ArgumentNullException(nameof(discountRequirement));
 
-            return await _discountRequirementRepository.Table.Where(dr => dr.ParentId == discountRequirement.Id).ToListAsync();
+            return await _discountRequirementRepository.Table
+                .Where(dr => dr.ParentId == discountRequirement.Id)
+                .ToAsyncEnumerable()
+                .ToListAsync();
         }
 
         /// <summary>

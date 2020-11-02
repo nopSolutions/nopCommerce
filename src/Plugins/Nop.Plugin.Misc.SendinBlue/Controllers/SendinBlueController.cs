@@ -131,18 +131,20 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(await _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.BillingAddressPhone"), "2"));
             model.AddSms.DefaultSelectedPhoneTypeId = model.AddSms.AvailablePhoneTypes.First().Value;
 
-            model.AddSms.AvailableMessages = (await _messageTemplateService.GetAllMessageTemplatesAsync(storeId)).Select(messageTemplate =>
+            var stores = await _storeService.GetAllStoresAsync();
+            var messageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
+            model.AddSms.AvailableMessages = await messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
             {
                 var name = messageTemplate.Name;
                 if (storeId == 0 && messageTemplate.LimitedToStores)
                 {
-                    var storeIds = _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate).Result;
-                    var storeNames = _storeService.GetAllStoresAsync().Result.Where(store => storeIds.Contains(store.Id)).Select(store => store.Name);
+                    var storeIds = await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate);
+                    var storeNames = stores.Where(store => storeIds.Contains(store.Id)).Select(store => store.Name);
                     name = $"{name} ({string.Join(',', storeNames)})";
                 }
 
                 return new SelectListItem(name, messageTemplate.Id.ToString());
-            }).ToList();
+            }).ToListAsync();
             var defaultSelectedMessage = model.AddSms.AvailableMessages.FirstOrDefault();
             model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
@@ -375,15 +377,18 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             var messageTemplates = (await _messageTemplateService.GetAllMessageTemplatesAsync(storeId)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SendinBlueMessageTemplateListModel().PrepareToGrid(searchModel, messageTemplates, () =>
+            var model = await new SendinBlueMessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.Select(messageTemplate =>
+                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
                 {
                     //standard template of message is edited in the admin area, SendinBlue template is edited in the SendinBlue account
-                    var templateId = _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute).Result;
-                    var stores = _storeService.GetAllStoresAsync().Result
-                        .Where(store => !messageTemplate.LimitedToStores || _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate).Result.Contains(store.Id))
-                        .Aggregate(string.Empty, (current, next) => $"{current}, {next.Name}").Trim(',');
+                    var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
+                    var stores = (await (await _storeService.GetAllStoresAsync())
+                        .ToAsyncEnumerable()
+                        .WhereAwait(async store => !messageTemplate.LimitedToStores
+                            || (await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate)).Contains(store.Id))
+                        .AggregateAsync(string.Empty, (current, next) => $"{current}, {next.Name}"))
+                        .Trim(',');
 
                     return new SendinBlueMessageTemplateModel
                     {
@@ -480,31 +485,36 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>(storeId);
 
             //get message templates which are sending in SMS
-            var messageTemplates = (await _messageTemplateService.GetAllMessageTemplatesAsync(storeId))
-                .Where(messageTemplate => _genericAttributeService.GetAttributeAsync<bool>(messageTemplate, SendinBlueDefaults.UseSmsAttribute).Result)
-                .ToList().ToPagedList(searchModel);
+            var allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
+            var messageTemplates = await allMessageTemplates
+                .ToAsyncEnumerable()
+                .WhereAwait(async messageTemplate => await _genericAttributeService.GetAttributeAsync<bool>(messageTemplate, SendinBlueDefaults.UseSmsAttribute))
+                .ToPagedListAsync(searchModel);
 
             //prepare list model
-            var model = new SmsListModel().PrepareToGrid(searchModel, messageTemplates, () =>
+            var model = await new SmsListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.Select(messageTemplate =>
+                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
                 {
-                    var phoneTypeID = _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute).Result;
+                    var phoneTypeID = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute);
+
                     var smsModel = new SmsModel
                     {
                         Id = messageTemplate.Id,
                         MessageId = messageTemplate.Id,
                         Name = messageTemplate.Name,
                         PhoneTypeId = phoneTypeID,
-                        Text = _genericAttributeService.GetAttributeAsync<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute).Result
+
+                        Text = await _genericAttributeService.GetAttributeAsync<string>(messageTemplate, SendinBlueDefaults.SmsTextAttribute)
                     };
 
                     if (storeId == 0)
                     {
                         if (storeId == 0 && messageTemplate.LimitedToStores)
                         {
-                            var storeIds = _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate).Result;
-                            var storeNames = _storeService.GetAllStoresAsync().Result.Where(store => storeIds.Contains(store.Id)).Select(store => store.Name);
+                            var storeIds = await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate);
+                            var storeNames = (await _storeService.GetAllStoresAsync()).Where(store => storeIds.Contains(store.Id)).Select(store => store.Name);
+
                             smsModel.Name = $"{smsModel.Name} ({string.Join(',', storeNames)})";
                         }
                     }
@@ -514,13 +524,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                     switch (phoneTypeID)
                     {
                         case 0:
-                            smsModel.PhoneType = _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.MyPhone").Result;
+                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.MyPhone");
                             break;
                         case 1:
-                            smsModel.PhoneType = _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.CustomerPhone").Result;
+                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.CustomerPhone");
                             break;
                         case 2:
-                            smsModel.PhoneType = _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.BillingAddressPhone").Result;
+                            smsModel.PhoneType = await _localizationService.GetResourceAsync("Plugins.Misc.SendinBlue.BillingAddressPhone");
                             break;
                         default:
                             break;

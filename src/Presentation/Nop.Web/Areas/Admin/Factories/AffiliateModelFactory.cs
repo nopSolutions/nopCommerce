@@ -198,17 +198,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.Page - 1, searchModel.PageSize, true);
 
             //prepare list model
-            var model = new AffiliateListModel().PrepareToGrid(searchModel, affiliates, () =>
+            var model = await new AffiliateListModel().PrepareToGridAsync(searchModel, affiliates, () =>
             {
                 //fill in model values from the entity
-                return affiliates.Select(affiliate =>
+                return affiliates.ToAsyncEnumerable().SelectAwait(async affiliate =>
                 {
-                    var address = _addressService.GetAddressByIdAsync(affiliate.AddressId).Result;
+                    var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
 
                     var affiliateModel = affiliate.ToModel<AffiliateModel>();
                     affiliateModel.Address = address.ToModel<AddressModel>();
-                    affiliateModel.Address.CountryName = _countryService.GetCountryByAddressAsync(address).Result?.Name;
-                    affiliateModel.Address.StateProvinceName = _stateProvinceService.GetStateProvinceByAddressAsync(address).Result?.Name;
+                    affiliateModel.Address.CountryName = (await _countryService.GetCountryByAddressAsync(address))?.Name;
+                    affiliateModel.Address.StateProvinceName = (await _stateProvinceService.GetStateProvinceByAddressAsync(address))?.Name;
 
                     return affiliateModel;
                 });
@@ -290,18 +290,19 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new AffiliatedOrderListModel().PrepareToGrid(searchModel, orders, () =>
+            var model = await new AffiliatedOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                return orders.Select(order =>
+                return orders.ToAsyncEnumerable().SelectAwait(async order =>
                 {
                     var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
 
                     //fill in additional values (not existing in the entity)
-                    affiliatedOrderModel.OrderStatus = _localizationService.GetLocalizedEnumAsync(order.OrderStatus).Result;
-                    affiliatedOrderModel.PaymentStatus = _localizationService.GetLocalizedEnumAsync(order.PaymentStatus).Result;
-                    affiliatedOrderModel.ShippingStatus = _localizationService.GetLocalizedEnumAsync(order.ShippingStatus).Result;
-                    affiliatedOrderModel.OrderTotal = _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false).Result;
+                    affiliatedOrderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
+                    affiliatedOrderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
+                    affiliatedOrderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
+                    affiliatedOrderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
+
                     affiliatedOrderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     return affiliatedOrderModel;

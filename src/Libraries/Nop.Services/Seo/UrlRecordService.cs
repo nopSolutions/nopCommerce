@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
@@ -1320,7 +1319,7 @@ namespace Nop.Services.Seo
                               ur.LanguageId == languageId
                         orderby ur.Id descending
                         select ur;
-            var allUrlRecords = await query.ToListAsync();
+            var allUrlRecords = await query.ToAsyncEnumerable().ToListAsync();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
             UrlRecord nonActiveRecordWithSpecifiedSlug;
 

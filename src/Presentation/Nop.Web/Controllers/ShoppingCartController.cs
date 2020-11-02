@@ -392,7 +392,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? RenderViewComponentToString("FlyoutShoppingCart")
+                            ? await RenderViewComponentToString("FlyoutShoppingCart")
                             : string.Empty;
 
                         return Json(new
@@ -412,7 +412,7 @@ namespace Nop.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
-        public virtual async Task<IActionResult> SelectShippingOption([FromQuery]string name, [FromQuery]EstimateShippingModel model, IFormCollection form)
+        public virtual async Task<IActionResult> SelectShippingOption([FromQuery] string name, [FromQuery] EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
                 model = new EstimateShippingModel();
@@ -425,9 +425,10 @@ namespace Nop.Web.Controllers
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
-                    errors = errors 
+                    errors = errors
                 });
 
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -470,7 +471,8 @@ namespace Nop.Web.Controllers
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
                     errors = errors
                 });
@@ -483,7 +485,7 @@ namespace Nop.Web.Controllers
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.SelectedShippingOptionAttribute, selectedShippingOption, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-            var orderTotalsSectionHtml = RenderViewComponentToString("OrderTotals", new { isEditable = true });
+            var orderTotalsSectionHtml = await RenderViewComponentToString("OrderTotals", new { isEditable = true });
 
             return Json(new
             {
@@ -677,7 +679,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? RenderViewComponentToString("FlyoutShoppingCart")
+                            ? await RenderViewComponentToString("FlyoutShoppingCart")
                             : string.Empty;
 
                         return Json(new
@@ -881,15 +883,16 @@ namespace Nop.Web.Controllers
 
                 if (pictureId > 0)
                 {
-                    var productAttributePictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributePictureModelKey, 
+                    var productAttributePictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributePictureModelKey,
                         pictureId, _webHelper.IsCurrentConnectionSecuredAsync(), await _storeContext.GetCurrentStoreAsync());
                     var pictureModel = await _staticCacheManager.GetAsync(productAttributePictureCacheKey, async () =>
                     {
                         var picture = await _pictureService.GetPictureByIdAsync(pictureId);
                         string fullSizeImageUrl, imageUrl;
+
                         (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
-                        (imageUrl, picture) =  await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductDetailsPictureSize);
-                        
+                        (imageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture, _mediaSettings.ProductDetailsPictureSize);
+
                         return picture == null ? new PictureModel() : new PictureModel
                         {
                             FullSizeImageUrl = fullSizeImageUrl,
@@ -957,8 +960,8 @@ namespace Nop.Web.Controllers
             }
 
             //update blocks
-            var ordetotalssectionhtml = RenderViewComponentToString("OrderTotals", new { isEditable });
-            var selectedcheckoutattributesssectionhtml = RenderViewComponentToString("SelectedCheckoutAttributes");
+            var ordetotalssectionhtml = await RenderViewComponentToString("OrderTotals", new { isEditable });
+            var selectedcheckoutattributesssectionhtml = await RenderViewComponentToString("SelectedCheckoutAttributes");
 
             return Json(new
             {
@@ -1180,7 +1183,7 @@ namespace Nop.Web.Controllers
                     (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && _shoppingCartService
                          .GetProductsRequiringProduct(cart, cartItem.Product).Any()))
                 .ToList();
-            
+
             //try to update cart items with new quantities and get warnings
             var warnings = orderedCart.Select(cartItem => new
             {
@@ -1245,7 +1248,7 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed 
+            var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed
                                      && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
 
             if (anonymousPermissed || !await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -1389,7 +1392,8 @@ namespace Nop.Web.Controllers
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return Json(new { 
+                return Json(new
+                {
                     success = false,
                     errors = errors
                 });

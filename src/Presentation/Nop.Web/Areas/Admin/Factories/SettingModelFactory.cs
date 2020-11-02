@@ -1144,18 +1144,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var sortOptions = Enum.GetValues(typeof(ProductSortingEnum)).OfType<ProductSortingEnum>().ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SortOptionListModel().PrepareToGrid(searchModel, sortOptions, () =>
+            var model = await new SortOptionListModel().PrepareToGridAsync(searchModel, sortOptions, () =>
             {
-                return sortOptions.Select(option =>
+                return sortOptions.ToAsyncEnumerable().SelectAwait(async option =>
                 {
                     //fill in model values from the entity
-                    var sortOptionModel = new SortOptionModel
-                    {
-                        Id = (int)option
-                    };
+                    var sortOptionModel = new SortOptionModel { Id = (int)option };
 
                     //fill in additional values (not existing in the entity)
-                    sortOptionModel.Name = _localizationService.GetLocalizedEnumAsync(option).Result;
+                    sortOptionModel.Name = await _localizationService.GetLocalizedEnumAsync(option);
                     sortOptionModel.IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains((int)option);
                     sortOptionModel.DisplayOrder = catalogSettings
                         .ProductSortingEnumDisplayOrder.TryGetValue((int)option, out var value) ? value : (int)option;
@@ -1419,14 +1416,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var consentList = (await _gdprService.GetAllConsentsAsync()).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new GdprConsentListModel().PrepareToGrid(searchModel, consentList, () =>
+            var model = await new GdprConsentListModel().PrepareToGridAsync(searchModel, consentList, () =>
             {
-                return consentList.Select(consent =>
+                return consentList.ToAsyncEnumerable().SelectAwait(async consent =>
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
-                    var gdprConsent = _gdprService.GetConsentByIdAsync(gdprConsentModel.Id).Result;
-                    gdprConsentModel.Message = _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.Message).Result;
-                    gdprConsentModel.RequiredMessage = _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.RequiredMessage).Result;
+
+                    var gdprConsent = await _gdprService.GetConsentByIdAsync(gdprConsentModel.Id);
+                    gdprConsentModel.Message = await _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.Message);
+                    gdprConsentModel.RequiredMessage = await _localizationService.GetLocalizedAsync(gdprConsent, entity => entity.RequiredMessage);
 
                     return gdprConsentModel;
                 });
@@ -1577,17 +1575,17 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedSettings = settings.ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SettingListModel().PrepareToGrid(searchModel, pagedSettings, () =>
+            var model = await new SettingListModel().PrepareToGridAsync(searchModel, pagedSettings, () =>
             {
-                return pagedSettings.Select(setting =>
+                return pagedSettings.ToAsyncEnumerable().SelectAwait(async setting =>
                 {
                     //fill in model values from the entity
                     var settingModel = setting.ToModel<SettingModel>();
 
                     //fill in additional values (not existing in the entity)
                     settingModel.Store = setting.StoreId > 0
-                        ? _storeService.GetStoreByIdAsync(setting.StoreId).Result?.Name ?? "Deleted"
-                        : _localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores").Result;
+                        ? (await _storeService.GetStoreByIdAsync(setting.StoreId))?.Name ?? "Deleted"
+                        : await _localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
 
                     return settingModel;
                 });

@@ -157,7 +157,7 @@ namespace Nop.Web.Controllers
         protected virtual async Task<PickupPoint> ParsePickupOptionAsync(IFormCollection form)
         {
             var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
-            
+
             var selectedPoint = (await _shippingService.GetPickupPointsAsync((await _workContext.GetCurrentCustomerAsync()).BillingAddressId ?? 0,
                 await _workContext.GetCurrentCustomerAsync(), pickupPoint[1], (await _storeContext.GetCurrentStoreAsync()).Id)).PickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
 
@@ -321,7 +321,7 @@ namespace Nop.Web.Controllers
         /// <param name="model"></param>
         /// <param name="opc"></param>
         /// <returns></returns>
-        [IgnoreAntiforgeryToken]        
+        [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> SaveEditAddress(CheckoutBillingAddressModel model, bool opc = false)
         {
             try
@@ -357,7 +357,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "billing",
-                        html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                        html = await RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                     }
                 });
             }
@@ -404,7 +404,7 @@ namespace Nop.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "billing",
-                    html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                    html = await RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                 }
             });
         }
@@ -586,7 +586,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
-                return RedirectToRoute("CheckoutShippingMethod");        
+                return RedirectToRoute("CheckoutShippingMethod");
 
             //model
             var model = await _checkoutModelFactory.PrepareShippingAddressModelAsync(cart, prePopulateNewAddressWithCustomerFields: true);
@@ -637,7 +637,7 @@ namespace Nop.Web.Controllers
 
             if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
                 return RedirectToRoute("CheckoutShippingMethod");
-            
+
             //pickup point
             if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
@@ -646,7 +646,7 @@ namespace Nop.Web.Controllers
                 {
                     var pickupOption = await ParsePickupOptionAsync(form);
                     await SavePickupOptionAsync(pickupOption);
-                    
+
                     return RedirectToRoute("CheckoutPaymentMethod");
                 }
 
@@ -1161,7 +1161,7 @@ namespace Nop.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "shipping-method",
-                    html = RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                    html = await RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
                 },
                 goto_section = "shipping_method"
             });
@@ -1209,7 +1209,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-method",
-                        html = RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                        html = await RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
                     },
                     goto_section = "payment_method"
                 });
@@ -1225,7 +1225,7 @@ namespace Nop.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "confirm-order",
-                    html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                 },
                 goto_section = "confirm_order"
             });
@@ -1248,7 +1248,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });
@@ -1261,7 +1261,7 @@ namespace Nop.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "payment-info",
-                    html = RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                    html = await RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                 },
                 goto_section = "payment_info"
             });
@@ -1345,7 +1345,7 @@ namespace Nop.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "billing",
-                                html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                                html = await RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                             },
                             wrong_billing_address = true,
                         });
@@ -1410,7 +1410,7 @@ namespace Nop.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "shipping",
-                            html = RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                            html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                         },
                         goto_section = "shipping"
                     });
@@ -1505,7 +1505,7 @@ namespace Nop.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
-                                html = RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                                html = await RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             }
                         });
                     }
@@ -1672,7 +1672,7 @@ namespace Nop.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1741,7 +1741,7 @@ namespace Nop.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1754,7 +1754,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-info",
-                        html = RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                        html = await RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                     }
                 });
             }
@@ -1850,7 +1850,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = await RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });

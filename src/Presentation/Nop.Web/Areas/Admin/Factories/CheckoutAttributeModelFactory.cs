@@ -162,15 +162,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var checkoutAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CheckoutAttributeListModel().PrepareToGrid(searchModel, checkoutAttributes, () =>
+            var model = await new CheckoutAttributeListModel().PrepareToGridAsync(searchModel, checkoutAttributes, () =>
             {
-                return checkoutAttributes.Select(attribute =>
+                return checkoutAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType).Result;
+                    attributeModel.AttributeControlTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
 
                     return attributeModel;
                 });

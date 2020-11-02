@@ -115,7 +115,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             return Convert.ToInt32(Math.Ceiling(await _measureService.ConvertFromPrimaryMeasureDimensionAsync(quantity, usedMeasureDimension)));
         }
 
-        protected virtual bool TryGetError(string data)
+        protected virtual async Task<bool> TryGetError(string data)
         {
             var flag = false;
             try
@@ -125,7 +125,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 if (rez.ContainsKey("message"))
                 {
                     flag = true;
-                    _logger.ErrorAsync(rez["message"]).Wait();
+
+                    await _logger.ErrorAsync(rez["message"]);
                 }
             }
             catch (JsonSerializationException)
@@ -258,7 +259,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
 
             var data = client.UploadString($"{API_URL}{LIST_RATES_CMD}", JsonConvert.SerializeObject(postData));
 
-            return TryGetError(data) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);
+            return (await TryGetError(data)) ? new List<ShipStationServiceRate>() : JsonConvert.DeserializeObject<List<ShipStationServiceRate>>(data);
         }
         
         protected virtual async Task<IList<Carrier>> GetCarriersAsync()
@@ -267,7 +268,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             {
                 var data = await SendGetRequestAsync($"{API_URL}{LIST_CARRIERS_CMD}");
                 
-                return TryGetError(data) ? new List<Carrier>() : JsonConvert.DeserializeObject<List<Carrier>>(data);
+                return (await TryGetError(data)) ? new List<Carrier>() : JsonConvert.DeserializeObject<List<Carrier>>(data);
             });
 
             if (!rez.Any())

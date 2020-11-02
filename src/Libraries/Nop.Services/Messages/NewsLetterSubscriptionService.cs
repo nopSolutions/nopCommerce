@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -183,7 +182,7 @@ namespace Nop.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return await newsLetterSubscriptions.FirstOrDefaultAsync();
+            return await newsLetterSubscriptions.ToAsyncEnumerable().FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -204,7 +203,7 @@ namespace Nop.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return await newsLetterSubscriptions.FirstOrDefaultAsync();
+            return await newsLetterSubscriptions.ToAsyncEnumerable().FirstOrDefaultAsync();
         }
 
         /// <summary>

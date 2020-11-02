@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
@@ -77,7 +76,7 @@ namespace Nop.Services.Affiliates
                         orderby a.Id
                         where a.FriendlyUrlName == friendlyUrlName
                         select a;
-            var affiliate = await query.FirstOrDefaultAsync();
+            var affiliate = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return affiliate;
         }

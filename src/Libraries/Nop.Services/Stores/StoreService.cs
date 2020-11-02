@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 
@@ -145,7 +144,10 @@ namespace Nop.Services.Stores
             var query = _storeRepository.Table;
             var queryFilter = storeIdsNames.Distinct().ToArray();
             //filtering by name
-            var filter = await query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToListAsync();
+            var filter = await query.Select(store => store.Name)
+                .Where(store => queryFilter.Contains(store))
+                .ToAsyncEnumerable()
+                .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
@@ -153,7 +155,10 @@ namespace Nop.Services.Stores
                 return queryFilter.ToArray();
 
             //filtering by IDs
-            filter = await query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToListAsync();
+            filter = await query.Select(store => store.Id.ToString())
+                .Where(store => queryFilter.Contains(store))
+                .ToAsyncEnumerable()
+                .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
             return queryFilter.ToArray();

@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Payment method search model</param>
         /// <returns>Payment method list model</returns>
-        public virtual Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel)
+        public virtual async Task<PaymentMethodListModel> PreparePaymentMethodListModelAsync(PaymentMethodSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -90,9 +90,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var paymentMethods = _paymentPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new PaymentMethodListModel().PrepareToGrid(searchModel, paymentMethods, () =>
+            var model = await new PaymentMethodListModel().PrepareToGridAsync(searchModel, paymentMethods, () =>
             {
-                return paymentMethods.Select(method =>
+                return paymentMethods.ToAsyncEnumerable().SelectAwait(async method =>
                 {
                     //fill in model values from the entity
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
@@ -100,14 +100,15 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
-                    paymentMethodModel.LogoUrl = _paymentPluginManager.GetPluginLogoUrlAsync(method).Result;
-                    paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType).Result;
+
+                    paymentMethodModel.LogoUrl = await _paymentPluginManager.GetPluginLogoUrlAsync(method);
+                    paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
 
                     return paymentMethodModel;
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>

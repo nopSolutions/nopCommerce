@@ -184,7 +184,7 @@
                         </div>
                         
                         <div id="AttributeValueCustomHtmlTextSection">
-                            @(Html.LocalizedEditorAsync<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
+                            @(await Html.LocalizedEditorAsync<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
                             @<div>
                                 <div class="form-group">
                                     <div class="col-md-3">
@@ -211,7 +211,7 @@
                         </div>
 
                         <div id="AttributeValueCustomTextSection">
-                            @(Html.LocalizedEditorAsync<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
+                            @(await Html.LocalizedEditorAsync<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
                             @<div>
                                 <div class="form-group">
                                     <div class="col-md-3">

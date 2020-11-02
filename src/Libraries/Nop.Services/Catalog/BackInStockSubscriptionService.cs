@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -132,7 +131,7 @@ namespace Nop.Services.Catalog
                               biss.StoreId == storeId
                         select biss;
 
-            var subscription = await query.FirstOrDefaultAsync();
+            var subscription = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return subscription;
         }

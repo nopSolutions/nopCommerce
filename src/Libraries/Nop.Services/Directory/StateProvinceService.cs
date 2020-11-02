@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
@@ -107,7 +106,7 @@ namespace Nop.Services.Directory
                             where sp.CountryId == countryId &&
                             (showHidden || sp.Published)
                             select sp;
-                var stateProvinces = await query.ToListAsync();
+                var stateProvinces = await query.ToAsyncEnumerable().ToListAsync();
 
                 if (languageId > 0)
                     //we should sort states by localized names when they have the same display order

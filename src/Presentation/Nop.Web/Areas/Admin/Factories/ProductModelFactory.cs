@@ -355,9 +355,9 @@ namespace Nop.Web.Areas.Admin.Factories
                                         await _productAttributeParser.ParseProductAttributeValuesAsync(productAttributeMapping
                                             .ConditionAttributeXml);
                                     foreach (var attributeValue in selectedValues)
-                                    foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
                                 }
 
                                 break;
@@ -721,9 +721,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 overridePublished: overridePublished);
 
             //prepare list model
-            var model = new ProductListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new ProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     //fill in model values from the entity
                     var productModel = product.ToModel<ProductModel>();
@@ -732,12 +732,12 @@ namespace Nop.Web.Areas.Admin.Factories
                     productModel.FullDescription = string.Empty;
 
                     //fill in additional values (not existing in the entity)
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
-                    var defaultProductPicture = _pictureService.GetPicturesByProductIdAsync(product.Id, 1).Result.FirstOrDefault();
-                    (productModel.PictureThumbnailUrl, _) = _pictureService.GetPictureUrlAsync(defaultProductPicture, 75).Result;
-                    productModel.ProductTypeName = _localizationService.GetLocalizedEnumAsync(product.ProductType).Result;
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    var defaultProductPicture = (await _pictureService.GetPicturesByProductIdAsync(product.Id, 1)).FirstOrDefault();
+                    (productModel.PictureThumbnailUrl, _) = await _pictureService.GetPictureUrlAsync(defaultProductPicture, 75);
+                    productModel.ProductTypeName = await _localizationService.GetLocalizedEnumAsync(product.ProductType);
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        productModel.StockQuantityStr = _productService.GetTotalStockQuantityAsync(product).Result.ToString();
+                        productModel.StockQuantityStr = (await _productService.GetTotalStockQuantityAsync(product)).ToString();
 
                     return productModel;
                 });
@@ -933,7 +933,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 productTagsSb.Append("'");
                 productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
                 productTagsSb.Append("'");
-                if (i != productTags.Count - 1) 
+                if (i != productTags.Count - 1)
                     productTagsSb.Append(",");
             }
             productTagsSb.Append("]");
@@ -1001,12 +1001,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddRequiredProductListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddRequiredProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
+
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1034,15 +1035,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetRelatedProductsByProductId1Async(productId1: product.Id, showHidden: true)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new RelatedProductListModel().PrepareToGrid(searchModel, relatedProducts, () =>
+            var model = await new RelatedProductListModel().PrepareToGridAsync(searchModel, relatedProducts, () =>
             {
-                return relatedProducts.Select(relatedProduct =>
+                return relatedProducts.ToAsyncEnumerable().SelectAwait(async relatedProduct =>
                 {
                     //fill in model values from the entity
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    relatedProductModel.Product2Name = _productService.GetProductByIdAsync(relatedProduct.ProductId2).Result?.Name;
+                    relatedProductModel.Product2Name = (await _productService.GetProductByIdAsync(relatedProduct.ProductId2))?.Name;
 
                     return relatedProductModel;
                 });
@@ -1108,12 +1109,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddRelatedProductListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddRelatedProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
+
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1141,9 +1143,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetCrossSellProductsByProductId1Async(productId1: product.Id, showHidden: true)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CrossSellProductListModel().PrepareToGrid(searchModel, crossSellProducts, () =>
+            var model = await new CrossSellProductListModel().PrepareToGridAsync(searchModel, crossSellProducts, () =>
             {
-                return crossSellProducts.Select(crossSellProduct =>
+                return crossSellProducts.ToAsyncEnumerable().SelectAwait(async crossSellProduct =>
                 {
                     //fill in model values from the entity
                     var crossSellProductModel = new CrossSellProductModel
@@ -1153,7 +1155,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    crossSellProductModel.Product2Name = _productService.GetProductByIdAsync(crossSellProduct.ProductId2).Result?.Name;
+                    crossSellProductModel.Product2Name = (await _productService.GetProductByIdAsync(crossSellProduct.ProductId2))?.Name;
 
                     return crossSellProductModel;
                 });
@@ -1220,12 +1222,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddCrossSellProductListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddCrossSellProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
+
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1326,16 +1329,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddAssociatedProductListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddAssociatedProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     //fill in model values from the entity
                     var productModel = product.ToModel<ProductModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
-                    var parentGroupedProduct = _productService.GetProductByIdAsync(product.ParentGroupedProductId).Result;
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
+                    var parentGroupedProduct = await _productService.GetProductByIdAsync(product.ParentGroupedProductId);
+
                     if (parentGroupedProduct == null)
                         return productModel;
 
@@ -1367,18 +1371,19 @@ namespace Nop.Web.Areas.Admin.Factories
             var productPictures = (await _productService.GetProductPicturesByProductIdAsync(product.Id)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductPictureListModel().PrepareToGrid(searchModel, productPictures, () =>
+            var model = await new ProductPictureListModel().PrepareToGridAsync(searchModel, productPictures, () =>
             {
-                return productPictures.Select(productPicture =>
+                return productPictures.ToAsyncEnumerable().SelectAwait(async productPicture =>
                 {
                     //fill in model values from the entity
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var picture = _pictureService.GetPictureByIdAsync(productPicture.PictureId).Result
-                                  ?? throw new Exception("Picture cannot be loaded");
+                    var picture = (await _pictureService.GetPictureByIdAsync(productPicture.PictureId))
+                        ?? throw new Exception("Picture cannot be loaded");
 
-                    productPictureModel.PictureUrl = _pictureService.GetPictureUrlAsync(picture).Result.url;
+                    productPictureModel.PictureUrl = (await _pictureService.GetPictureUrlAsync(picture)).url;
+
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;
 
@@ -1409,18 +1414,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductSpecificationAttributesAsync(product.Id)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductSpecificationAttributeListModel().PrepareToGrid(searchModel, productSpecificationAttributes, () =>
+            var model = await new ProductSpecificationAttributeListModel().PrepareToGridAsync(searchModel, productSpecificationAttributes, () =>
             {
-                return productSpecificationAttributes.Select(attribute =>
+                return productSpecificationAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
 
-                    var specAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(attribute.SpecificationAttributeOptionId).Result;
-                    var specAttribute = _specificationAttributeService.GetSpecificationAttributeByIdAsync(specAttributeOption.SpecificationAttributeId).Result;
+                    var specAttributeOption = await _specificationAttributeService
+                        .GetSpecificationAttributeOptionByIdAsync(attribute.SpecificationAttributeOptionId);
+                    var specAttribute = await _specificationAttributeService
+                        .GetSpecificationAttributeByIdAsync(specAttributeOption.SpecificationAttributeId);
 
                     //fill in additional values (not existing in the entity)
-                    productSpecificationAttributeModel.AttributeTypeName = _localizationService.GetLocalizedEnumAsync(attribute.AttributeType).Result;
+                    productSpecificationAttributeModel.AttributeTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeType);
+
                     productSpecificationAttributeModel.AttributeId = specAttribute.Id;
                     productSpecificationAttributeModel.AttributeName = GetSpecificationAttributeName(specAttribute);
 
@@ -1431,10 +1439,11 @@ namespace Nop.Web.Areas.Admin.Factories
                             productSpecificationAttributeModel.SpecificationAttributeOptionId = specAttributeOption.Id;
                             break;
                         case SpecificationAttributeType.CustomText:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalizedAsync(attribute, x => x.CustomValue, _workContext.GetWorkingLanguageAsync().Result.Id).Result);
+                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(await _localizationService.GetLocalizedAsync(attribute, x => x.CustomValue, (await _workContext.GetWorkingLanguageAsync())?.Id));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
-                            productSpecificationAttributeModel.ValueRaw = _localizationService.GetLocalizedAsync(attribute, x => x.CustomValue, _workContext.GetWorkingLanguageAsync().Result.Id).Result;
+                            productSpecificationAttributeModel.ValueRaw = await _localizationService
+                                .GetLocalizedAsync(attribute, x => x.CustomValue, (await _workContext.GetWorkingLanguageAsync())?.Id);
                             break;
                         case SpecificationAttributeType.Hyperlink:
                             productSpecificationAttributeModel.ValueRaw = attribute.CustomValue;
@@ -1577,20 +1586,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product tags
-            var productTags = (await _productTagService.GetAllProductTagsAsync(tagName : searchModel.SearchTagName))
+            var productTags = (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
                 .OrderByDescending(tag => _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true).Result).ToList()
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ProductTagListModel().PrepareToGrid(searchModel, productTags, () =>
+            var model = await new ProductTagListModel().PrepareToGridAsync(searchModel, productTags, () =>
             {
-                return productTags.Select(tag =>
+                return productTags.ToAsyncEnumerable().SelectAwait(async tag =>
                 {
                     //fill in model values from the entity
                     var productTagModel = tag.ToModel<ProductTagModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productTagModel.ProductCount = _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true).Result;
+                    productTagModel.ProductCount = await _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true);
 
                     return productTagModel;
                 });
@@ -1653,11 +1662,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new ProductOrderListModel().PrepareToGrid(searchModel, orders, () =>
+            var model = await new ProductOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
-                return orders.Select(order =>
+                return orders.ToAsyncEnumerable().SelectAwait(async order =>
                 {
-                    var billingAddress = _addressService.GetAddressByIdAsync(order.BillingAddressId).Result;
+                    var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -1671,10 +1680,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    orderModel.StoreName = _storeService.GetStoreByIdAsync(order.StoreId).Result?.Name ?? "Deleted";
-                    orderModel.OrderStatus = _localizationService.GetLocalizedEnumAsync(order.OrderStatus).Result;
-                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnumAsync(order.PaymentStatus).Result;
-                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnumAsync(order.ShippingStatus).Result;
+                    orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
+                    orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
+                    orderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
+                    orderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
 
                     return orderModel;
                 });
@@ -1703,21 +1712,21 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToList().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TierPriceListModel().PrepareToGrid(searchModel, tierPrices, () =>
+            var model = await new TierPriceListModel().PrepareToGridAsync(searchModel, tierPrices, () =>
             {
-                return tierPrices.Select(price =>
+                return tierPrices.ToAsyncEnumerable().SelectAwait(async price =>
                 {
                     //fill in model values from the entity
                     var tierPriceModel = price.ToModel<TierPriceModel>();
 
                     //fill in additional values (not existing in the entity)   
                     tierPriceModel.Store = price.StoreId > 0
-                        ? (_storeService.GetStoreByIdAsync(price.StoreId).Result?.Name ?? "Deleted")
-                        : _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.Store.All").Result;
+                        ? ((await _storeService.GetStoreByIdAsync(price.StoreId))?.Name ?? "Deleted")
+                        : await _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.Store.All");
                     tierPriceModel.CustomerRoleId = price.CustomerRoleId ?? 0;
                     tierPriceModel.CustomerRole = price.CustomerRoleId.HasValue
-                        ? _customerService.GetCustomerRoleByIdAsync(price.CustomerRoleId.Value).Result.Name
-                        : _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All").Result;
+                        ? (await _customerService.GetCustomerRoleByIdAsync(price.CustomerRoleId.Value))?.Name
+                        : await _localizationService.GetResourceAsync("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All");
 
                     return tierPriceModel;
                 });
@@ -1743,7 +1752,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (tierPrice != null)
             {
                 //fill in model values from the entity
-                if (model == null) 
+                if (model == null)
                     model = tierPrice.ToModel<TierPriceModel>();
             }
 
@@ -1776,9 +1785,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new StockQuantityHistoryListModel().PrepareToGrid(searchModel, stockQuantityHistory, () =>
+            var model = await new StockQuantityHistoryListModel().PrepareToGridAsync(searchModel, stockQuantityHistory, () =>
             {
-                return stockQuantityHistory.Select(historyEntry =>
+                return stockQuantityHistory.ToAsyncEnumerable().SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var stockQuantityHistoryModel = historyEntry.ToModel<StockQuantityHistoryModel>();
@@ -1788,18 +1797,16 @@ namespace Nop.Web.Areas.Admin.Factories
                         _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    var combination =
-                        _productAttributeService.GetProductAttributeCombinationByIdAsync(historyEntry.CombinationId ?? 0).Result;
+                    var combination = await _productAttributeService.GetProductAttributeCombinationByIdAsync(historyEntry.CombinationId ?? 0);
                     if (combination != null)
                     {
-                        stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributesAsync(
-                            product,
-                            combination.AttributesXml, _workContext.GetCurrentCustomerAsync().Result, renderGiftCardAttributes: false).Result;
+                        stockQuantityHistoryModel.AttributeCombination = await _productAttributeFormatter
+                            .FormatAttributesAsync(product, combination.AttributesXml, (await _workContext.GetCurrentCustomerAsync()), renderGiftCardAttributes: false);
                     }
 
                     stockQuantityHistoryModel.WarehouseName = historyEntry.WarehouseId.HasValue
-                        ? _shippingService.GetWarehouseByIdAsync(historyEntry.WarehouseId.Value).Result?.Name ?? "Deleted"
-                        : _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Warehouse.None").Result;
+                        ? (await _shippingService.GetWarehouseByIdAsync(historyEntry.WarehouseId.Value))?.Name ?? "Deleted"
+                        : await _localizationService.GetResourceAsync("Admin.Catalog.Products.Fields.Warehouse.None");
 
                     return stockQuantityHistoryModel;
                 });
@@ -1828,29 +1835,32 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductAttributeMappingsByProductIdAsync(product.Id)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductAttributeMappingListModel().PrepareToGrid(searchModel, productAttributeMappings, () =>
+            var model = await new ProductAttributeMappingListModel().PrepareToGridAsync(searchModel, productAttributeMappings, () =>
             {
-                return productAttributeMappings.Select(attributeMapping =>
+                return productAttributeMappings.ToAsyncEnumerable().SelectAwait(async attributeMapping =>
                 {
                     //fill in model values from the entity
                     var productAttributeMappingModel = attributeMapping.ToModel<ProductAttributeMappingModel>();
 
                     //fill in additional values (not existing in the entity)
                     productAttributeMappingModel.ConditionString = string.Empty;
-                    productAttributeMappingModel.ValidationRulesString = PrepareProductAttributeMappingValidationRulesStringAsync(attributeMapping).Result;
-                    productAttributeMappingModel.ProductAttribute = _productAttributeService
-                        .GetProductAttributeByIdAsync(attributeMapping.ProductAttributeId).Result?.Name;
-                    productAttributeMappingModel.AttributeControlType = _localizationService.GetLocalizedEnumAsync(attributeMapping.AttributeControlType).Result;
-                    var conditionAttribute = _productAttributeParser
-                        .ParseProductAttributeMappingsAsync(attributeMapping.ConditionAttributeXml).Result.FirstOrDefault();
+
+                    productAttributeMappingModel.ValidationRulesString = await PrepareProductAttributeMappingValidationRulesStringAsync(attributeMapping);
+                    productAttributeMappingModel.ProductAttribute = (await _productAttributeService.GetProductAttributeByIdAsync(attributeMapping.ProductAttributeId))?.Name;
+                    productAttributeMappingModel.AttributeControlType = await _localizationService.GetLocalizedEnumAsync(attributeMapping.AttributeControlType);
+                    var conditionAttribute = (await _productAttributeParser
+                        .ParseProductAttributeMappingsAsync(attributeMapping.ConditionAttributeXml))
+                        .FirstOrDefault();
                     if (conditionAttribute == null)
                         return productAttributeMappingModel;
 
-                    var conditionValue = _productAttributeParser.ParseProductAttributeValuesAsync(attributeMapping.ConditionAttributeXml).Result.FirstOrDefault();
+                    var conditionValue = (await _productAttributeParser
+                        .ParseProductAttributeValuesAsync(attributeMapping.ConditionAttributeXml))
+                        .FirstOrDefault();
                     if (conditionValue != null)
                     {
                         productAttributeMappingModel.ConditionString =
-                            $"{WebUtility.HtmlEncode(_productAttributeService.GetProductAttributeByIdAsync(conditionAttribute.ProductAttributeId).Result.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
+                            $"{WebUtility.HtmlEncode((await _productAttributeService.GetProductAttributeByIdAsync(conditionAttribute.ProductAttributeId)).Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
                     }
 
                     return productAttributeMappingModel;
@@ -1952,15 +1962,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetProductAttributeValuesAsync(productAttributeMapping.Id)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ProductAttributeValueListModel().PrepareToGrid(searchModel, productAttributeValues, () =>
+            var model = await new ProductAttributeValueListModel().PrepareToGridAsync(searchModel, productAttributeValues, () =>
             {
-                return productAttributeValues.Select(value =>
+                return productAttributeValues.ToAsyncEnumerable().SelectAwait(async value =>
                 {
                     //fill in model values from the entity
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
-                    
+
                     //fill in additional values (not existing in the entity)
-                    productAttributeValueModel.AttributeValueTypeName = _localizationService.GetLocalizedEnumAsync(value.AttributeValueType).Result;
+                    productAttributeValueModel.AttributeValueTypeName = await _localizationService.GetLocalizedEnumAsync(value.AttributeValueType);
+
                     productAttributeValueModel.Name = productAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares
                         ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
                     if (value.AttributeValueType == AttributeValueType.Simple)
@@ -1973,14 +1984,14 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     if (value.AttributeValueType == AttributeValueType.AssociatedToProduct)
                     {
-                        productAttributeValueModel
-                            .AssociatedProductName = _productService.GetProductByIdAsync(value.AssociatedProductId).Result?.Name ?? string.Empty;
+                        productAttributeValueModel.AssociatedProductName = (await _productService.GetProductByIdAsync(value.AssociatedProductId))?.Name ?? string.Empty;
                     }
 
-                    var pictureThumbnailUrl = _pictureService.GetPictureUrlAsync(value.PictureId, 75, false).Result;
+                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(value.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetDefaultPictureUrlAsync(targetSize: 1).Result;
+                        pictureThumbnailUrl = await _pictureService.GetDefaultPictureUrlAsync(targetSize: 1);
+
                     productAttributeValueModel.PictureThumbnailUrl = pictureThumbnailUrl;
 
                     return productAttributeValueModel;
@@ -2126,13 +2137,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AssociateProductToAttributeValueListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AssociateProductToAttributeValueListModel().PrepareToGridAsync(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
+
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -2160,27 +2172,29 @@ namespace Nop.Web.Areas.Admin.Factories
             var productAttributeCombinations = (await _productAttributeService
                 .GetAllProductAttributeCombinationsAsync(product.Id)).ToPagedList(searchModel);
 
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
             //prepare grid model
-            var model = new ProductAttributeCombinationListModel().PrepareToGrid(searchModel, productAttributeCombinations, () =>
+            var model = await new ProductAttributeCombinationListModel().PrepareToGridAsync(searchModel, productAttributeCombinations, () =>
             {
-                return productAttributeCombinations.Select(combination =>
+                return productAttributeCombinations.ToAsyncEnumerable().SelectAwait(async combination =>
                 {
                     //fill in model values from the entity
                     var productAttributeCombinationModel = combination.ToModel<ProductAttributeCombinationModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productAttributeCombinationModel.AttributesXml = _productAttributeFormatter
-                        .FormatAttributesAsync(product, combination.AttributesXml, _workContext.GetCurrentCustomerAsync().Result, "<br />", true, true, true, false).Result;
-                    var pictureThumbnailUrl = _pictureService.GetPictureUrlAsync(combination.PictureId, 75, false).Result;
+                    productAttributeCombinationModel.AttributesXml = await _productAttributeFormatter
+                        .FormatAttributesAsync(product, combination.AttributesXml, currentCustomer, "<br />", true, true, true, false);
+                    var pictureThumbnailUrl = await _pictureService.GetPictureUrlAsync(combination.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetDefaultPictureUrlAsync(targetSize: 1).Result;
-                        
+                        pictureThumbnailUrl = await _pictureService.GetDefaultPictureUrlAsync(targetSize: 1);
+
                     productAttributeCombinationModel.PictureThumbnailUrl = pictureThumbnailUrl;
-                    var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(_workContext.GetCurrentCustomerAsync().Result,
+                    var warnings = (await _shoppingCartService.GetShoppingCartItemAttributeWarningsAsync(currentCustomer,
                         ShoppingCartType.ShoppingCart, product,
                         attributesXml: combination.AttributesXml,
-                        ignoreNonCombinableAttributes: true).Result.Aggregate(string.Empty, (message, warning) => $"{message}{warning}<br />");
+                        ignoreNonCombinableAttributes: true)
+                        ).Aggregate(string.Empty, (message, warning) => $"{message}{warning}<br />");
                     productAttributeCombinationModel.Warnings = new List<string> { warnings };
 
                     return productAttributeCombinationModel;

@@ -758,7 +758,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             try
             {
-                _nopHttpClient.PingAsync().Wait();
+                await _nopHttpClient.PingAsync();
 
                 //connection is OK
                 models.Add(new SystemWarningModel
@@ -854,7 +854,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Backup file search model</param>
         /// <returns>Backup file list model</returns>
-        public virtual Task<BackupFileListModel> PrepareBackupFileListModelAsync(BackupFileSearchModel searchModel)
+        public virtual async Task<BackupFileListModel> PrepareBackupFileListModelAsync(BackupFileSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -863,18 +863,20 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
+            var model = await new BackupFileListModel().PrepareToGridAsync(searchModel, backupFiles, () =>
             {
-                return backupFiles.Select(file => new BackupFileModel
+                return backupFiles.ToAsyncEnumerable().SelectAwait(async file => new BackupFileModel
                 {
                     Name = _fileProvider.GetFileName(file),
+
                     //fill in additional values (not existing in the entity)
                     Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
-                    Link = $"{_webHelper.GetStoreLocationAsync(false).Result}db_backups/{_fileProvider.GetFileName(file)}"
+
+                    Link = $"{(await _webHelper.GetStoreLocationAsync(false))}db_backups/{_fileProvider.GetFileName(file)}"
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>
@@ -941,9 +943,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             //prepare list model
-            var model = new UrlRecordListModel().PrepareToGrid(searchModel, urlRecords, () =>
+            var model = await new UrlRecordListModel().PrepareToGridAsync(searchModel, urlRecords, () =>
             {
-                return urlRecords.Select(urlRecord =>
+                return urlRecords.ToAsyncEnumerable().SelectAwait(async urlRecord =>
                 {
                     //fill in model values from the entity
                     var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();
@@ -951,8 +953,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     urlRecordModel.Name = urlRecord.Slug;
                     urlRecordModel.Language = urlRecord.LanguageId == 0
-                        ? _localizationService.GetResourceAsync("Admin.System.SeNames.Language.Standard").Result
-                        : _languageService.GetLanguageByIdAsync(urlRecord.LanguageId).Result?.Name ?? "Unknown";
+                        ? await _localizationService.GetResourceAsync("Admin.System.SeNames.Language.Standard")
+                        : (await _languageService.GetLanguageByIdAsync(urlRecord.LanguageId))?.Name ?? "Unknown";
 
                     //details URL
                     var detailsUrl = string.Empty;

@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -153,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Shipping provider search model</param>
         /// <returns>Shipping provider list model</returns>
-        public virtual Task<ShippingProviderListModel> PrepareShippingProviderListModelAsync(ShippingProviderSearchModel searchModel)
+        public virtual async Task<ShippingProviderListModel> PrepareShippingProviderListModelAsync(ShippingProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -162,9 +162,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var shippingProviders = _shippingPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ShippingProviderListModel().PrepareToGrid(searchModel, shippingProviders, () =>
+            var model = await new ShippingProviderListModel().PrepareToGridAsync(searchModel, shippingProviders, () =>
             {
-                return shippingProviders.Select(provider =>
+                return shippingProviders.ToAsyncEnumerable().SelectAwait(async provider =>
                 {
                     //fill in model values from the entity
                     var shippingProviderModel = provider.ToPluginModel<ShippingProviderModel>();
@@ -172,13 +172,14 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shippingProviderModel.IsActive = _shippingPluginManager.IsPluginActive(provider);
                     shippingProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    shippingProviderModel.LogoUrl = _shippingPluginManager.GetPluginLogoUrlAsync(provider).Result;
+
+                    shippingProviderModel.LogoUrl = await _shippingPluginManager.GetPluginLogoUrlAsync(provider);
 
                     return shippingProviderModel;
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>
@@ -202,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Pickup point provider search model</param>
         /// <returns>Pickup point provider list model</returns>
-        public virtual Task<PickupPointProviderListModel> PreparePickupPointProviderListModelAsync(PickupPointProviderSearchModel searchModel)
+        public virtual async Task<PickupPointProviderListModel> PreparePickupPointProviderListModelAsync(PickupPointProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -211,9 +212,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var pickupPointProviders = _pickupPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new PickupPointProviderListModel().PrepareToGrid(searchModel, pickupPointProviders, () =>
+            var model = await new PickupPointProviderListModel().PrepareToGridAsync(searchModel, pickupPointProviders, () =>
             {
-                return pickupPointProviders.Select(provider =>
+                return pickupPointProviders.ToAsyncEnumerable().SelectAwait(async provider =>
                 {
                     //fill in model values from the entity
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
@@ -221,13 +222,14 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     pickupPointProviderModel.IsActive = _pickupPluginManager.IsPluginActive(provider);
                     pickupPointProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    pickupPointProviderModel.LogoUrl = _pickupPluginManager.GetPluginLogoUrlAsync(provider).Result;
+
+                    pickupPointProviderModel.LogoUrl = await _pickupPluginManager.GetPluginLogoUrlAsync(provider);
 
                     return pickupPointProviderModel;
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>
@@ -452,7 +454,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get warehouses
             var warehouses = (await _shippingService.GetAllWarehousesAsync(
-                name : searchModel.SearchName))
+                name: searchModel.SearchName))
                 .ToPagedList(searchModel);
 
             //prepare list model

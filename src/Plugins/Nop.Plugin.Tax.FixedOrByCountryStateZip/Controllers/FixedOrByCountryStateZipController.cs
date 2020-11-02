@@ -120,14 +120,15 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 
             var categories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
-            var gridModel = new FixedTaxRateListModel().PrepareToGrid(searchModel, categories, () =>
+            var gridModel = await new FixedTaxRateListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.Select(taxCategory => new FixedTaxRateModel
+                return categories.ToAsyncEnumerable().SelectAwait(async taxCategory => new FixedTaxRateModel
                 {
                     TaxCategoryId = taxCategory.Id,
                     TaxCategoryName = taxCategory.Name,
-                    Rate = _settingService.GetSettingByKeyAsync<decimal>(
-                        string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)).Result
+
+                    Rate = await _settingService
+                        .GetSettingByKeyAsync<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id))
                 });
             });
 
@@ -139,12 +140,12 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
-            
+
             await _settingService.SetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, model.TaxCategoryId), model.Rate);
 
             return new NullJsonResult();
         }
-        
+
         #endregion
 
         #region Tax by country/state/zip
@@ -156,20 +157,21 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
                 return AccessDeniedDataTablesJson();
 
             var records = await _taxRateService.GetAllTaxRatesAsync(searchModel.Page - 1, searchModel.PageSize);
-            
-            var gridModel = new CountryStateZipListModel().PrepareToGrid(searchModel, records, () =>
+
+            var gridModel = await new CountryStateZipListModel().PrepareToGridAsync(searchModel, records, () =>
             {
-                return records.Select(record => new CountryStateZipModel
+                return records.ToAsyncEnumerable().SelectAwait(async record => new CountryStateZipModel
                 {
                     Id = record.Id,
                     StoreId = record.StoreId,
-                    StoreName = _storeService.GetStoreByIdAsync(record.StoreId).Result?.Name ?? "*",
+                    StoreName = (await _storeService.GetStoreByIdAsync(record.StoreId))?.Name ?? "*",
                     TaxCategoryId = record.TaxCategoryId,
-                    TaxCategoryName = _taxCategoryService.GetTaxCategoryByIdAsync(record.TaxCategoryId).Result?.Name ?? string.Empty,
+                    TaxCategoryName = (await _taxCategoryService.GetTaxCategoryByIdAsync(record.TaxCategoryId))?.Name ?? string.Empty,
                     CountryId = record.CountryId,
-                    CountryName = _countryService.GetCountryByIdAsync(record.CountryId).Result?.Name ?? "Unavailable",
+                    CountryName = (await _countryService.GetCountryByIdAsync(record.CountryId))?.Name ?? "Unavailable",
                     StateProvinceId = record.StateProvinceId,
-                    StateProvinceName = _stateProvinceService.GetStateProvinceByIdAsync(record.StateProvinceId).Result?.Name ?? "*",
+                    StateProvinceName = (await _stateProvinceService.GetStateProvinceByIdAsync(record.StateProvinceId))?.Name ?? "*",
+
                     Zip = !string.IsNullOrEmpty(record.Zip) ? record.Zip : "*",
                     Percentage = record.Percentage
                 });
@@ -183,7 +185,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
-            
+
             await _taxRateService.InsertTaxRateAsync(new TaxRate
             {
                 StoreId = model.AddStoreId,

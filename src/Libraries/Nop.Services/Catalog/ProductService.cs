@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -438,7 +437,8 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
-            var result = await _staticCacheManager.GetAsync(cacheKey, async () => await query.Select(p => p.Id).Distinct().CountAsync());
+            var result = await _staticCacheManager.GetAsync(cacheKey, 
+                async () => await query.Select(p => p.Id).Distinct().ToAsyncEnumerable().CountAsync());
 
             return result;
         }
@@ -755,7 +755,7 @@ namespace Nop.Services.Catalog
             query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
-            var products = await query.ToListAsync();
+            var products = await query.ToAsyncEnumerable().ToListAsync();
 
             //ACL mapping
             if (!showHidden) 
@@ -782,7 +782,10 @@ namespace Nop.Services.Catalog
             var approvedTotalReviews = 0;
             var notApprovedTotalReviews = 0;
 
-            var reviews = await _productReviewRepository.Table.Where(r => r.ProductId == product.Id).ToListAsync();
+            var reviews = await _productReviewRepository.Table
+                .Where(r => r.ProductId == product.Id)
+                .ToAsyncEnumerable()
+                .ToListAsync();
             foreach (var pr in reviews)
                 if (pr.IsApproved)
                 {
@@ -893,7 +896,7 @@ namespace Nop.Services.Catalog
                         where !p.Deleted &&
                         p.Sku == sku
                         select p;
-            var product = await query.FirstOrDefaultAsync();
+            var product = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
 
             return product;
         }
@@ -915,7 +918,7 @@ namespace Nop.Services.Catalog
             if (vendorId != 0)
                 query = query.Where(p => p.VendorId == vendorId);
 
-            return await query.ToListAsync();
+            return await query.ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -954,7 +957,7 @@ namespace Nop.Services.Catalog
             if (vendorId == 0)
                 return 0;
 
-            return await _productRepository.Table.CountAsync(p => p.VendorId == vendorId && !p.Deleted);
+            return await _productRepository.Table.ToAsyncEnumerable().CountAsync(p => p.VendorId == vendorId && !p.Deleted);
         }
 
         /// <summary>
@@ -1057,9 +1060,9 @@ namespace Nop.Services.Catalog
             if (warehouseId > 0) 
                 pwi = pwi.Where(x => x.WarehouseId == warehouseId);
 
-            var result = await pwi.SumAsync(x => x.StockQuantity);
+            var result = await pwi.ToAsyncEnumerable().SumAsync(x => x.StockQuantity);
             if (useReservedQuantity) 
-                result -= await pwi.SumAsync(x => x.ReservedQuantity);
+                result -= await pwi.ToAsyncEnumerable().SumAsync(x => x.ReservedQuantity);
 
             return result;
         }
@@ -1256,7 +1259,9 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual async Task<bool> HasAnyDownloadableProductAsync(int[] productIds)
         {
-            return await _productRepository.Table.AnyAsync(p => productIds.Contains(p.Id) && p.IsDownload);
+            return await _productRepository.Table
+                .ToAsyncEnumerable()
+                .AnyAsync(p => productIds.Contains(p.Id) && p.IsDownload);
         }
 
         /// <summary>
@@ -1266,7 +1271,9 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual async Task<bool> HasAnyGiftCardProductAsync(int[] productIds)
         {
-            return await _productRepository.Table.AnyAsync(p => productIds.Contains(p.Id) && p.IsGiftCard);
+            return await _productRepository.Table
+                .ToAsyncEnumerable()
+                .AnyAsync(p => productIds.Contains(p.Id) && p.IsGiftCard);
         }
 
         /// <summary>
@@ -1276,7 +1283,9 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual async Task<bool> HasAnyRecurringProductAsync(int[] productIds)
         {
-            return await _productRepository.Table.AnyAsync(p => productIds.Contains(p.Id) && p.IsRecurring);
+            return await _productRepository.Table
+                .ToAsyncEnumerable()
+                .AnyAsync(p => productIds.Contains(p.Id) && p.IsRecurring);
         }
 
         #endregion
@@ -1467,6 +1476,7 @@ namespace Nop.Services.Catalog
             var productInventory = await _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
                 .OrderByDescending(pwi => pwi.ReservedQuantity)
                 .ThenByDescending(pwi => pwi.StockQuantity)
+                .ToAsyncEnumerable()
                 .ToListAsync();
 
             if (!productInventory.Any())
@@ -1512,7 +1522,9 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock || !product.UseMultipleWarehouses)
                 return;
 
-            var pwi = await _productWarehouseInventoryRepository.Table.FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
+            var pwi = await _productWarehouseInventoryRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
             if (pwi == null)
                 return;
 
@@ -1544,7 +1556,9 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock || !product.UseMultipleWarehouses)
                 return 0;
 
-            var pwi = await _productWarehouseInventoryRepository.Table.FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
+            var pwi = await _productWarehouseInventoryRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
             if (pwi == null)
                 return 0;
 
@@ -1686,7 +1700,7 @@ namespace Nop.Services.Catalog
                               (showHidden || p.Published)
                         orderby csp.Id
                         select csp;
-            var crossSellProducts = await query.ToListAsync();
+            var crossSellProducts = await query.ToAsyncEnumerable().ToListAsync();
 
             return crossSellProducts;
         }
@@ -1908,7 +1922,7 @@ namespace Nop.Services.Catalog
                         orderby pp.DisplayOrder, pp.Id
                         select pp;
 
-            var productPictures = await query.ToListAsync();
+            var productPictures = await query.ToAsyncEnumerable().ToListAsync();
 
             return productPictures;
         }
@@ -1948,7 +1962,10 @@ namespace Nop.Services.Catalog
         /// <returns>All picture identifiers grouped by product ID</returns>
         public async Task<IDictionary<int, int[]>> GetProductsImagesIdsAsync(int[] productsIds)
         {
-            var productPictures = await _productPictureRepository.Table.Where(p => productsIds.Contains(p.ProductId)).ToListAsync();
+            var productPictures = await _productPictureRepository.Table
+                .Where(p => productsIds.Contains(p.ProductId))
+                .ToAsyncEnumerable()
+                .ToListAsync();
 
             return productPictures.GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
         }
@@ -2119,7 +2136,9 @@ namespace Nop.Services.Catalog
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var prh = await _productReviewHelpfulnessRepository.Table.SingleOrDefaultAsync(h => h.ProductReviewId == productReview.Id && h.CustomerId == _workContext.GetCurrentCustomerAsync().Result.Id);
+            var prh = await _productReviewHelpfulnessRepository.Table
+                .ToAsyncEnumerable()
+                .SingleOrDefaultAsync(h => h.ProductReviewId == productReview.Id && h.CustomerId == _workContext.GetCurrentCustomerAsync().Result.Id);
 
             if (prh is null)
             {
@@ -2154,7 +2173,8 @@ namespace Nop.Services.Catalog
 
             var productReviewHelpfulness = _productReviewHelpfulnessRepository.Table.Where(prh => prh.ProductReviewId == productReview.Id);
 
-            return (await productReviewHelpfulness.CountAsync(prh => prh.WasHelpful), await productReviewHelpfulness.CountAsync(prh => !prh.WasHelpful));
+            return (await productReviewHelpfulness.ToAsyncEnumerable().CountAsync(prh => prh.WasHelpful), 
+                await productReviewHelpfulness.ToAsyncEnumerable().CountAsync(prh => !prh.WasHelpful));
         }
 
         /// <summary>
@@ -2228,7 +2248,7 @@ namespace Nop.Services.Catalog
             return await (from w in _warehouseRepository.Table
                     join pwi in _productWarehouseInventoryRepository.Table on w.Id equals pwi.WarehouseId
                     where pwi.ProductId == productId
-                    select w).ToListAsync();
+                    select w).ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -2350,7 +2370,7 @@ namespace Nop.Services.Catalog
                 where dcm.DiscountId == discount.Id
                 select new { product = p, dcm };
 
-            foreach (var pdcm in await mappingsWithProducts.ToListAsync())
+            foreach (var pdcm in await mappingsWithProducts.ToAsyncEnumerable().ToListAsync())
             {
                 await _discountProductMappingRepository.DeleteAsync(pdcm.dcm);
 
@@ -2376,7 +2396,9 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual async Task<DiscountProductMapping> GetDiscountAppliedToProductAsync(int productId, int discountId)
         {
-            return await _discountProductMappingRepository.Table.FirstOrDefaultAsync(dcm => dcm.EntityId == productId && dcm.DiscountId == discountId);
+            return await _discountProductMappingRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(dcm => dcm.EntityId == productId && dcm.DiscountId == discountId);
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -107,7 +106,7 @@ namespace Nop.Services.Security
                         orderby pr.Id
                         select pr;
 
-            var permissionRecord = await query.FirstOrDefaultAsync();
+            var permissionRecord = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
             return permissionRecord;
         }
 
@@ -313,7 +312,7 @@ namespace Nop.Services.Security
 
             query = query.Where(x => x.PermissionRecordId == permissionId);
 
-            return await query.ToListAsync();
+            return await query.ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>

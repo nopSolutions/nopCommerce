@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -101,14 +100,14 @@ namespace Nop.Services.Forums
             var queryNumTopics = from ft in _forumTopicRepository.Table
                                  where ft.ForumId == forumId
                                  select ft.Id;
-            var numTopics = await queryNumTopics.CountAsync();
+            var numTopics = await queryNumTopics.ToAsyncEnumerable().CountAsync();
 
             //number of posts
             var queryNumPosts = from ft in _forumTopicRepository.Table
                                 join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
                                 where ft.ForumId == forumId
                                 select fp.Id;
-            var numPosts = await queryNumPosts.CountAsync();
+            var numPosts = await queryNumPosts.ToAsyncEnumerable().CountAsync();
 
             //last values
             var lastTopicId = 0;
@@ -126,7 +125,7 @@ namespace Nop.Services.Forums
                                       LastPostCustomerId = fp.CustomerId,
                                       LastPostTime = fp.CreatedOnUtc
                                   };
-            var lastValues = await queryLastValues.FirstOrDefaultAsync();
+            var lastValues = await queryLastValues.ToAsyncEnumerable().FirstOrDefaultAsync();
             if (lastValues != null)
             {
                 lastTopicId = lastValues.LastTopicId;
@@ -162,7 +161,7 @@ namespace Nop.Services.Forums
             var queryNumPosts = from fp in _forumPostRepository.Table
                                 where fp.TopicId == forumTopicId
                                 select fp.Id;
-            var numPosts = await queryNumPosts.CountAsync();
+            var numPosts = await queryNumPosts.ToAsyncEnumerable().CountAsync();
 
             //last values
             var lastPostId = 0;
@@ -177,7 +176,7 @@ namespace Nop.Services.Forums
                                       LastPostCustomerId = fp.CustomerId,
                                       LastPostTime = fp.CreatedOnUtc
                                   };
-            var lastValues = await queryLastValues.FirstOrDefaultAsync();
+            var lastValues = await queryLastValues.ToAsyncEnumerable().FirstOrDefaultAsync();
             if (lastValues != null)
             {
                 lastPostId = lastValues.LastPostId;
@@ -211,7 +210,7 @@ namespace Nop.Services.Forums
             var query = from fp in _forumPostRepository.Table
                         where fp.CustomerId == customerId
                         select fp.Id;
-            var numPosts = await query.CountAsync();
+            var numPosts = await query.ToAsyncEnumerable().CountAsync();
 
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.ForumPostCountAttribute, numPosts);
         }
@@ -1116,7 +1115,9 @@ namespace Nop.Services.Forums
             if (customer == null)
                 return null;
 
-            return await _forumPostVoteRepository.Table.FirstOrDefaultAsync(pv => pv.ForumPostId == postId && pv.CustomerId == customer.Id);
+            return await _forumPostVoteRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(pv => pv.ForumPostId == postId && pv.CustomerId == customer.Id);
         }
 
         /// <summary>
@@ -1130,7 +1131,9 @@ namespace Nop.Services.Forums
             if (customer == null)
                 return 0;
 
-            return await _forumPostVoteRepository.Table.CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > сreatedFromUtc);
+            return await _forumPostVoteRepository.Table
+                .ToAsyncEnumerable()
+                .CountAsync(pv => pv.CustomerId == customer.Id && pv.CreatedOnUtc > сreatedFromUtc);
         }
 
         /// <summary>

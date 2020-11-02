@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -84,7 +83,7 @@ namespace Nop.Services.Security
                         where ur.EntityId == entityId &&
                         ur.EntityName == entityName
                         select ur;
-            var aclRecords = await query.ToListAsync();
+            var aclRecords = await query.ToAsyncEnumerable().ToListAsync();
 
             return aclRecords;
         }

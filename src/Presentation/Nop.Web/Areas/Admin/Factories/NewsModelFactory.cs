@@ -123,12 +123,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var newsItems = await _newsService.GetAllNewsAsync(showHidden: true,
                 storeId: searchModel.SearchStoreId,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
-                title : searchModel.SearchTitle);
+                title: searchModel.SearchTitle);
 
             //prepare list model
-            var model = new NewsItemListModel().PrepareToGrid(searchModel, newsItems, () =>
+            var model = await new NewsItemListModel().PrepareToGridAsync(searchModel, newsItems, () =>
             {
-                return newsItems.Select(newsItem =>
+                return newsItems.ToAsyncEnumerable().SelectAwait(async newsItem =>
                 {
                     //fill in model values from the entity
                     var newsItemModel = newsItem.ToModel<NewsItemModel>();
@@ -144,10 +144,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     newsItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    newsItemModel.SeName = _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false).Result;
-                    newsItemModel.LanguageName = _languageService.GetLanguageByIdAsync(newsItem.LanguageId).Result?.Name;
-                    newsItemModel.ApprovedComments = _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: true).Result;
-                    newsItemModel.NotApprovedComments = _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: false).Result;
+                    newsItemModel.SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, true, false);
+                    newsItemModel.LanguageName = (await _languageService.GetLanguageByIdAsync(newsItem.LanguageId))?.Name;
+                    newsItemModel.ApprovedComments = await _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: true);
+                    newsItemModel.NotApprovedComments = await _newsService.GetNewsCommentsCountAsync(newsItem, isApproved: false);
 
                     return newsItemModel;
                 });
@@ -255,13 +255,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText)).ToPagedList(searchModel);
 
-            //prepare list model
-            var model = new NewsCommentListModel().PrepareToGrid(searchModel, comments, () =>
-            {
-                //prepare store names (to avoid loading for each comment)
-                var storeNames = _storeService.GetAllStoresAsync().Result.ToDictionary(store => store.Id, store => store.Name);
+            //prepare store names (to avoid loading for each comment)
+            var storeNames = (await _storeService.GetAllStoresAsync())
+                .ToDictionary(store => store.Id, store => store.Name);
 
-                return comments.Select(newsComment =>
+            //prepare list model
+            var model = await new NewsCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
+            {
+                return comments.ToAsyncEnumerable().SelectAwait(async newsComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = newsComment.ToModel<NewsCommentModel>();
@@ -270,10 +271,14 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    commentModel.NewsItemTitle = _newsService.GetNewsByIdAsync(newsComment.NewsItemId).Result?.Title;
+                    commentModel.NewsItemTitle = (await _newsService.GetNewsByIdAsync(newsComment.NewsItemId))?.Title;
 
-                    if (_customerService.GetCustomerByIdAsync(newsComment.CustomerId).Result is Customer customer)
-                        commentModel.CustomerInfo = _customerService.IsRegisteredAsync(customer).Result ? customer.Email : _localizationService.GetResourceAsync("Admin.Customers.Guest").Result;
+                    if ((await _customerService.GetCustomerByIdAsync(newsComment.CustomerId)) is Customer customer)
+                    {
+                        commentModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
+                            ? customer.Email
+                            : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                    }
 
                     commentModel.CommentText = HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";

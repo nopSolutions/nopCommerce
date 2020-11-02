@@ -965,12 +965,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OrderListModel().PrepareToGrid(searchModel, orders, () =>
+            var model = await new OrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                return orders.Select(order =>
+                return orders.ToAsyncEnumerable().SelectAwait(async order =>
                 {
-                    var billingAddress = _addressService.GetAddressByIdAsync(order.BillingAddressId).Result;
+                    var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
                     //fill in model values from the entity
                     var orderModel = new OrderModel
@@ -989,11 +989,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    orderModel.StoreName = _storeService.GetStoreByIdAsync(order.StoreId).Result?.Name ?? "Deleted";
-                    orderModel.OrderStatus = _localizationService.GetLocalizedEnumAsync(order.OrderStatus).Result;
-                    orderModel.PaymentStatus = _localizationService.GetLocalizedEnumAsync(order.PaymentStatus).Result;
-                    orderModel.ShippingStatus = _localizationService.GetLocalizedEnumAsync(order.ShippingStatus).Result;
-                    orderModel.OrderTotal = _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false).Result;
+                    orderModel.StoreName = (await _storeService.GetStoreByIdAsync(order.StoreId))?.Name ?? "Deleted";
+                    orderModel.OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus);
+                    orderModel.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
+                    orderModel.ShippingStatus = await _localizationService.GetLocalizedEnumAsync(order.ShippingStatus);
+                    orderModel.OrderTotal = await _priceFormatter.FormatPriceAsync(order.OrderTotal, true, false);
 
                     return orderModel;
                 });
@@ -1209,7 +1209,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get products
-            var (products, _) = await _productService.SearchProductsAsync(false,showHidden: true,
+            var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 productType: searchModel.SearchProductTypeId > 0 ? (ProductType?)searchModel.SearchProductTypeId : null,
@@ -1217,13 +1217,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToOrderListModel().PrepareToGrid(searchModel, products, () =>
+            var model = await new AddProductToOrderListModel().PrepareToGridAsync(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                return products.Select(product =>
+                return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-                    productModel.SeName = _urlRecordService.GetSeNameAsync(product, 0, true, false).Result;
+
+                    productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;
                 });
@@ -1379,10 +1380,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.PageSize);
 
             //prepare list model
-            var model = new ShipmentListModel().PrepareToGrid(searchModel, shipments, () =>
+            var model = await new ShipmentListModel().PrepareToGridAsync(searchModel, shipments, () =>
             {
                 //fill in model values from the entity
-                return shipments.Select(shipment =>
+                return shipments.ToAsyncEnumerable().SelectAwait(async shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1390,21 +1391,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     //convert dates to the user time
                     shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
                         ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
-                        : _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet").Result;
+                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
                     shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
                         ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString()
-                        : _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet").Result;
+                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
 
                     //fill in additional values (not existing in the entity)
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
                     shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
 
-                    var order = _orderService.GetOrderByIdAsync(shipment.OrderId).Result;
+                    var order = await _orderService.GetOrderByIdAsync(shipment.OrderId);
 
                     shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     if (shipment.TotalWeight.HasValue)
-                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId).Result?.Name}]";
+                        shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{(await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name}]";
 
                     return shipmentModel;
                 });
@@ -1569,10 +1570,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedShipments = shipments.ToPagedList(searchModel);
 
             //prepare list model
-            var model = new OrderShipmentListModel().PrepareToGrid(searchModel, pagedShipments, () =>
+            var model = await new OrderShipmentListModel().PrepareToGridAsync(searchModel, pagedShipments, () =>
             {
                 //fill in model values from the entity
-                return pagedShipments.Select(shipment =>
+                return pagedShipments.ToAsyncEnumerable().SelectAwait(async shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1580,10 +1581,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //convert dates to the user time
                     shipmentModel.ShippedDate = shipment.ShippedDateUtc.HasValue
                         ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
-                        : _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet").Result;
+                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.ShippedDate.NotYet");
                     shipmentModel.DeliveryDate = shipment.DeliveryDateUtc.HasValue
                         ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString()
-                        : _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet").Result;
+                        : await _localizationService.GetResourceAsync("Admin.Orders.Shipments.DeliveryDate.NotYet");
 
                     //fill in additional values (not existing in the entity)
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
@@ -1591,7 +1592,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
 
-                    var baseWeight = _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId).Result?.Name;
+                    var baseWeight = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name;
 
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
@@ -1621,10 +1622,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var shipmentItems = (await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ShipmentItemListModel().PrepareToGrid(searchModel, shipmentItems, () =>
+            var model = await new ShipmentItemListModel().PrepareToGridAsync(searchModel, shipmentItems, () =>
             {
                 //fill in model values from the entity
-                return shipmentItems.Select(item =>
+                return shipmentItems.ToAsyncEnumerable().SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var shipmentItemModel = new ShipmentItemModel
@@ -1634,19 +1635,21 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    var orderItem = _orderService.GetOrderItemByIdAsync(item.OrderItemId).Result;
+                    var orderItem = await _orderService.GetOrderItemByIdAsync(item.OrderItemId);
                     if (orderItem == null)
                         return shipmentItemModel;
 
-                    var product = _productService.GetProductByIdAsync(orderItem.ProductId).Result;
+                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
                     shipmentItemModel.OrderItemId = orderItem.Id;
                     shipmentItemModel.ProductId = orderItem.ProductId;
                     shipmentItemModel.ProductName = product.Name;
-                    shipmentItemModel.ShippedFromWarehouse = _shippingService.GetWarehouseByIdAsync(item.WarehouseId).Result?.Name;
 
-                    var baseWeight = _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId).Result?.Name;
-                    var baseDimension = _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId).Result?.Name;
+                    shipmentItemModel.ShippedFromWarehouse = (await _shippingService.GetWarehouseByIdAsync(item.WarehouseId))?.Name;
+
+                    var baseWeight = (await _measureService.GetMeasureWeightByIdAsync(_measureSettings.BaseWeightId))?.Name;
+                    var baseDimension = (await _measureService.GetMeasureDimensionByIdAsync(_measureSettings.BaseDimensionId))?.Name;
+
                     if (orderItem.ItemWeight.HasValue)
                         shipmentItemModel.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
 
@@ -1678,10 +1681,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var orderNotes = (await _orderService.GetOrderNotesByOrderIdAsync(order.Id)).OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new OrderNoteListModel().PrepareToGrid(searchModel, orderNotes, () =>
+            var model = await new OrderNoteListModel().PrepareToGridAsync(searchModel, orderNotes, () =>
             {
                 //fill in model values from the entity
-                return orderNotes.Select(orderNote =>
+                return orderNotes.ToAsyncEnumerable().SelectAwait(async orderNote =>
                 {
                     //fill in model values from the entity
                     var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
@@ -1691,7 +1694,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     orderNoteModel.Note = _orderService.FormatOrderNoteText(orderNote);
-                    orderNoteModel.DownloadGuid = _downloadService.GetDownloadByIdAsync(orderNote.DownloadId).Result?.DownloadGuid ?? Guid.Empty;
+
+                    orderNoteModel.DownloadGuid = (await _downloadService.GetDownloadByIdAsync(orderNote.DownloadId))?.DownloadGuid ?? Guid.Empty;
 
                     return orderNoteModel;
                 });
@@ -1733,10 +1737,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestsellerBriefListModel().PrepareToGrid(searchModel, bestsellers, () =>
+            var model = await new BestsellerBriefListModel().PrepareToGridAsync(searchModel, bestsellers, () =>
             {
                 //fill in model values from the entity
-                return bestsellers.Select(bestseller =>
+                return bestsellers.ToAsyncEnumerable().SelectAwait(async bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -1746,8 +1750,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = _productService.GetProductByIdAsync(bestseller.ProductId).Result?.Name;
-                    bestsellerModel.TotalAmount = _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false).Result;
+                    bestsellerModel.ProductName = (await _productService.GetProductByIdAsync(bestseller.ProductId))?.Name;
+                    bestsellerModel.TotalAmount = await _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;
                 });
@@ -1775,17 +1779,17 @@ namespace Nop.Web.Areas.Admin.Factories
             var pagedList = new PagedList<OrderAverageReportLineSummary>(report, 0, int.MaxValue);
 
             //prepare list model
-            var model = new OrderAverageReportListModel().PrepareToGrid(searchModel, pagedList, () =>
+            var model = await new OrderAverageReportListModel().PrepareToGridAsync(searchModel, pagedList, () =>
             {
                 //fill in model values from the entity
-                return pagedList.Select(reportItem => new OrderAverageReportModel
+                return pagedList.ToAsyncEnumerable().SelectAwait(async reportItem => new OrderAverageReportModel
                 {
-                    OrderStatus = _localizationService.GetLocalizedEnumAsync(reportItem.OrderStatus).Result,
-                    SumTodayOrders = _priceFormatter.FormatPriceAsync(reportItem.SumTodayOrders, true, false).Result,
-                    SumThisWeekOrders = _priceFormatter.FormatPriceAsync(reportItem.SumThisWeekOrders, true, false).Result,
-                    SumThisMonthOrders = _priceFormatter.FormatPriceAsync(reportItem.SumThisMonthOrders, true, false).Result,
-                    SumThisYearOrders = _priceFormatter.FormatPriceAsync(reportItem.SumThisYearOrders, true, false).Result,
-                    SumAllTimeOrders = _priceFormatter.FormatPriceAsync(reportItem.SumAllTimeOrders, true, false).Result
+                    OrderStatus = await _localizationService.GetLocalizedEnumAsync(reportItem.OrderStatus),
+                    SumTodayOrders = await _priceFormatter.FormatPriceAsync(reportItem.SumTodayOrders, true, false),
+                    SumThisWeekOrders = await _priceFormatter.FormatPriceAsync(reportItem.SumThisWeekOrders, true, false),
+                    SumThisMonthOrders = await _priceFormatter.FormatPriceAsync(reportItem.SumThisMonthOrders, true, false),
+                    SumThisYearOrders = await _priceFormatter.FormatPriceAsync(reportItem.SumThisYearOrders, true, false),
+                    SumAllTimeOrders = await _priceFormatter.FormatPriceAsync(reportItem.SumAllTimeOrders, true, false)
                 });
             });
 

@@ -38,7 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-        
+
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
@@ -61,7 +61,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -96,15 +96,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorAttributes = (await _vendorAttributeService.GetAllVendorAttributesAsync()).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeListModel().PrepareToGrid(searchModel, vendorAttributes, () =>
+            var model = await new VendorAttributeListModel().PrepareToGridAsync(searchModel, vendorAttributes, () =>
             {
-                return vendorAttributes.Select(attribute =>
+                return vendorAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<VendorAttributeModel>();
 
                     //fill in additional values (not existing in the entity)
-                    attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType).Result;
+                    attributeModel.AttributeControlTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeControlType);
 
                     return attributeModel;
                 });

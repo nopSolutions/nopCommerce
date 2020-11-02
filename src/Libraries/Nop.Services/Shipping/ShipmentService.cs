@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -225,7 +224,7 @@ namespace Nop.Services.Shipping
             if (shipped.HasValue) 
                 shipments = shipments.Where(s => s.ShippedDateUtc.HasValue == shipped);
 
-            return await shipments.Where(shipment => shipment.OrderId == orderId).ToListAsync();
+            return await shipments.Where(shipment => shipment.OrderId == orderId).ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -265,7 +264,7 @@ namespace Nop.Services.Shipping
             if (shipmentId == 0)
                 return null;
 
-            return await _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToListAsync();
+            return await _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>
@@ -354,7 +353,7 @@ namespace Nop.Services.Shipping
                     select si;
 
             //some null validation
-            var result = Convert.ToInt32(await query.SumAsync(si => (int?)si.Quantity));
+            var result = Convert.ToInt32(await query.ToAsyncEnumerable().SumAsync(si => (int?)si.Quantity));
             return result;
         }
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LinqToDB;
 using System.Threading;
 using System.Threading.Tasks;
-using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -723,7 +723,7 @@ namespace Nop.Services.Media
             if (recordsToReturn > 0)
                 query = query.Take(recordsToReturn);
 
-            var pics = await query.ToListAsync();
+            var pics = await query.ToAsyncEnumerable().ToListAsync();
 
             return pics;
         }
@@ -933,7 +933,9 @@ namespace Nop.Services.Media
         /// <returns>Picture binary</returns>
         public virtual async Task<PictureBinary> GetPictureBinaryByPictureIdAsync(int pictureId)
         {
-            return await _pictureBinaryRepository.Table.FirstOrDefaultAsync(pb => pb.PictureId == pictureId);
+            return await _pictureBinaryRepository.Table
+                .ToAsyncEnumerable()
+                .FirstOrDefaultAsync(pb => pb.PictureId == pictureId);
         }
 
         /// <summary>
@@ -1005,7 +1007,7 @@ namespace Nop.Services.Media
                         Hash = Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
                     });
 
-            return await hashes.ToDictionaryAsync(p => p.PictureId, p => p.Hash);
+            return await hashes.ToAsyncEnumerable().ToDictionaryAsync(p => p.PictureId, p => p.Hash);
         }
 
         /// <summary>

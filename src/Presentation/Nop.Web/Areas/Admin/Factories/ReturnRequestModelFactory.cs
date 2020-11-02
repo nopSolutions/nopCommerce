@@ -114,28 +114,29 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ReturnRequestListModel().PrepareToGrid(searchModel, returnRequests, () =>
+            var model = await new ReturnRequestListModel().PrepareToGridAsync(searchModel, returnRequests, () =>
             {
-                return returnRequests.Select(returnRequest =>
+                return returnRequests.ToAsyncEnumerable().SelectAwait(async returnRequest =>
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
 
-                    var customer = _customerService.GetCustomerByIdAsync(returnRequest.CustomerId).Result;
+                    var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = _customerService.IsRegisteredAsync(customer).Result
-                        ? customer.Email : _localizationService.GetResourceAsync("Admin.Customers.Guest").Result;
-                    returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus).Result;
-                    var orderItem = _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId).Result;
+                    returnRequestModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
+                        ? customer.Email
+                        : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
+                    returnRequestModel.ReturnRequestStatusStr = await _localizationService.GetLocalizedEnumAsync(returnRequest.ReturnRequestStatus);
+                    var orderItem = await _orderService.GetOrderItemByIdAsync(returnRequest.OrderItemId);
                     if (orderItem == null)
                         return returnRequestModel;
 
-                    var order = _orderService.GetOrderByIdAsync(orderItem.OrderId).Result;
-                    var product = _productService.GetProductByIdAsync(orderItem.ProductId).Result;
+                    var order = await _orderService.GetOrderByIdAsync(orderItem.OrderId);
+                    var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
                     returnRequestModel.ProductId = orderItem.ProductId;
                     returnRequestModel.ProductName = product.Name;

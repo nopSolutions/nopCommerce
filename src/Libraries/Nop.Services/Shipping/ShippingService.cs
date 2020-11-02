@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -221,8 +220,9 @@ namespace Nop.Services.Shipping
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
-            var result = await _shippingMethodCountryMappingRepository.Table.AnyAsync(smcm =>
-                smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
+            var result = await _shippingMethodCountryMappingRepository.Table
+                .ToAsyncEnumerable()
+                .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
             
             return result;
         }
@@ -239,7 +239,7 @@ namespace Nop.Services.Shipping
             var query = _shippingMethodCountryMappingRepository.Table.Where(smcm =>
                 smcm.ShippingMethodId == shippingMethodId && smcm.CountryId == countryId);
 
-            return await query.ToListAsync();
+            return await query.ToAsyncEnumerable().ToListAsync();
         }
 
         /// <summary>

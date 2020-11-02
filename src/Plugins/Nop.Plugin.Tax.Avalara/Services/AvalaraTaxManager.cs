@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalara.AvaTax.RestClient;
-using LinqToDB;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
@@ -807,6 +806,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var categoriesIds = await _taxCategoryRepository.Table
                     .Where(taxCategory => systemTaxCodes.Contains(taxCategory.Name))
                     .Select(taxCategory => taxCategory.Id)
+                    .ToAsyncEnumerable()
                     .ToListAsync();
 
                 //delete tax categories

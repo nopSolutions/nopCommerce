@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-        
+
         #endregion
 
         #region Methods
@@ -135,9 +135,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new GiftCardListModel().PrepareToGrid(searchModel, giftCards, () =>
+            var model = await new GiftCardListModel().PrepareToGridAsync(searchModel, giftCards, () =>
             {
-                return giftCards.Select(giftCard =>
+                return giftCards.ToAsyncEnumerable().SelectAwait(async giftCard =>
                 {
                     //fill in model values from the entity
                     var giftCardModel = giftCard.ToModel<GiftCardModel>();
@@ -146,8 +146,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    giftCardModel.RemainingAmountStr = _priceFormatter.FormatPriceAsync(_giftCardService.GetGiftCardRemainingAmountAsync(giftCard).Result, true, false).Result;
-                    giftCardModel.AmountStr = _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false).Result;
+                    var giftAmount = await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard);
+                    giftCardModel.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(giftAmount, true, false);
+                    giftCardModel.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
 
                     return giftCardModel;
                 });
@@ -208,9 +209,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new GiftCardUsageHistoryListModel().PrepareToGrid(searchModel, usageHistory, () =>
+            var model = await new GiftCardUsageHistoryListModel().PrepareToGridAsync(searchModel, usageHistory, () =>
             {
-                return usageHistory.Select(historyEntry =>
+                return usageHistory.ToAsyncEnumerable().SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();
@@ -220,8 +221,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;
-                    giftCardUsageHistoryModel.CustomOrderNumber = _orderService.GetOrderByIdAsync(historyEntry.UsedWithOrderId).Result?.CustomOrderNumber;
-                    giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPriceAsync(historyEntry.UsedValue, true, false).Result;
+                    giftCardUsageHistoryModel.CustomOrderNumber = (await _orderService.GetOrderByIdAsync(historyEntry.UsedWithOrderId))?.CustomOrderNumber;
+                    giftCardUsageHistoryModel.UsedValue = await _priceFormatter.FormatPriceAsync(historyEntry.UsedValue, true, false);
 
                     return giftCardUsageHistoryModel;
                 });

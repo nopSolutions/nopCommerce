@@ -158,30 +158,32 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare low stock product models
             var lowStockProductModels = new List<LowStockProductModel>();
-            lowStockProductModels.AddRange(products.Select(product => new LowStockProductModel
+            lowStockProductModels.AddRange(await products.ToAsyncEnumerable().SelectAwait(async product => new LowStockProductModel
             {
                 Id = product.Id,
                 Name = product.Name,
-                ManageInventoryMethod = _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod).Result,
-                StockQuantity = _productService.GetTotalStockQuantityAsync(product).Result,
+
+                ManageInventoryMethod = await _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod),
+                StockQuantity = await _productService.GetTotalStockQuantityAsync(product),
                 Published = product.Published
-            }));
+            }).ToListAsync());
 
-            lowStockProductModels.AddRange(combinations.Select(combination => {
-
-                var product = _productService.GetProductByIdAsync(combination.ProductId).Result;
-
+            lowStockProductModels.AddRange(await combinations.ToAsyncEnumerable().SelectAwait(async combination =>
+            {
+                var product = await _productService.GetProductByIdAsync(combination.ProductId);
                 return new LowStockProductModel
                 {
                     Id = combination.ProductId,
                     Name = product.Name,
-                    Attributes = _productAttributeFormatter
-                        .FormatAttributesAsync(product, combination.AttributesXml, _workContext.GetCurrentCustomerAsync().Result, "<br />", true, true, true, false).Result,
-                    ManageInventoryMethod = _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod).Result,
+
+                    Attributes = await _productAttributeFormatter
+                        .FormatAttributesAsync(product, combination.AttributesXml, await _workContext.GetCurrentCustomerAsync(), "<br />", true, true, true, false),
+                    ManageInventoryMethod = await _localizationService.GetLocalizedEnumAsync(product.ManageInventoryMethod),
+
                     StockQuantity = combination.StockQuantity,
                     Published = product.Published
                 };
-            }));
+            }).ToListAsync());
 
             var pagesList = lowStockProductModels.ToPagedList(searchModel);
 
@@ -249,9 +251,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var bestsellers = await GetBestsellersReportAsync(searchModel);
 
             //prepare list model
-            var model = new BestsellerListModel().PrepareToGrid(searchModel, bestsellers, () =>
+            var model = await new BestsellerListModel().PrepareToGridAsync(searchModel, bestsellers, () =>
             {
-                return bestsellers.Select(bestseller =>
+                return bestsellers.ToAsyncEnumerable().SelectAwait(async bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -261,8 +263,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    bestsellerModel.ProductName = _productService.GetProductByIdAsync(bestseller.ProductId).Result?.Name;
-                    bestsellerModel.TotalAmount = _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false).Result;
+                    bestsellerModel.ProductName = (await _productService.GetProductByIdAsync(bestseller.ProductId))?.Name;
+                    bestsellerModel.TotalAmount = await _priceFormatter.FormatPriceAsync(bestseller.TotalAmount, true, false);
 
                     return bestsellerModel;
                 });
@@ -280,7 +282,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get parameters to filter bestsellers
             var orderStatus = searchModel.OrderStatusId > 0 ? (OrderStatus?)searchModel.OrderStatusId : null;
             var paymentStatus = searchModel.PaymentStatusId > 0 ? (PaymentStatus?)searchModel.PaymentStatusId : null;
@@ -435,9 +437,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 endTimeUtc: endDateValue)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryReportListModel().PrepareToGrid(searchModel, items, () =>
+            var model = await new CountryReportListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.Select(item =>
+                return items.ToAsyncEnumerable().SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var countryReportModel = new CountryReportModel
@@ -446,8 +448,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    countryReportModel.SumOrders = _priceFormatter.FormatPriceAsync(item.SumOrders, true, false).Result;
-                    countryReportModel.CountryName = _countryService.GetCountryByIdAsync(item.CountryId ?? 0).Result?.Name;
+                    countryReportModel.SumOrders = await _priceFormatter.FormatPriceAsync(item.SumOrders, true, false);
+                    countryReportModel.CountryName = (await _countryService.GetCountryByIdAsync(item.CountryId ?? 0))?.Name;
 
                     return countryReportModel;
                 });
@@ -566,24 +568,26 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new BestCustomersReportListModel().PrepareToGrid(searchModel, reportItems, () =>
+            var model = await new BestCustomersReportListModel().PrepareToGridAsync(searchModel, reportItems, () =>
             {
-                return reportItems.Select(item =>
+                return reportItems.ToAsyncEnumerable().SelectAwait(async item =>
                {
-                    //fill in model values from the entity
-                    var bestCustomersReportModel = new BestCustomersReportModel
+                   //fill in model values from the entity
+                   var bestCustomersReportModel = new BestCustomersReportModel
                    {
                        CustomerId = item.CustomerId,
-                       OrderTotal = _priceFormatter.FormatPriceAsync(item.OrderTotal, true, false).Result,
+
+                       OrderTotal = await _priceFormatter.FormatPriceAsync(item.OrderTotal, true, false),
                        OrderCount = item.OrderCount
                    };
 
-                    //fill in additional values (not existing in the entity)
-                    var customer = _customerService.GetCustomerByIdAsync(item.CustomerId).Result;
+                   //fill in additional values (not existing in the entity)
+                   var customer = await _customerService.GetCustomerByIdAsync(item.CustomerId);
                    if (customer != null)
                    {
-                       bestCustomersReportModel.CustomerName = _customerService.IsRegisteredAsync(customer).Result ? customer.Email :
-                           _localizationService.GetResourceAsync("Admin.Customers.Guest").Result;
+                       bestCustomersReportModel.CustomerName = (await _customerService.IsRegisteredAsync(customer))
+                            ? customer.Email
+                            : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
                    }
 
                    return bestCustomersReportModel;
@@ -592,7 +596,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-                
+
         /// <summary>
         /// Prepare paged registered customers report list model
         /// </summary>
