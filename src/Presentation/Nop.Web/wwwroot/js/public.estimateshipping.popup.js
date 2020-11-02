@@ -124,9 +124,9 @@
           $.each(options, function (i, option) {
             // try select the shipping option with the same provider and address
             if (option.Selected ||
-                 (selectedShippingOption &&
-                  selectedShippingOption.provider === option.Name &&
-                  self.addressesAreEqual(selectedShippingOption.address, address))) {
+              (selectedShippingOption &&
+                selectedShippingOption.provider === option.Name &&
+                self.addressesAreEqual(selectedShippingOption.address, address))) {
               activeOption = {
                 provider: option.Name,
                 price: option.Price,
@@ -152,6 +152,8 @@
             this.selectShippingOption(activeOption);
 
           this.setActiveShippingOption(activeOption);
+        } else {
+          this.clearShippingOptions();
         }
       } else {
         this.params.displayErrors = true;

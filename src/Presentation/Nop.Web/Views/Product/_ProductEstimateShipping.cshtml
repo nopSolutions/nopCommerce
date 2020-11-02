@@ -27,6 +27,7 @@
                 countryEl: '#@Html.IdFor(model => model.CountryId)',
                 stateProvinceEl: '#@Html.IdFor(model => model.StateProvinceId)',
                 zipPostalCodeEl: '#@Html.IdFor(model => model.ZipPostalCode)',
+                requestDelay: @Model.RequestDelay,
                 localizedData: {
                     noShippingOptionsMessage: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")',
                     countryErrorMessage: '@T("Shipping.EstimateShipping.Country.Required")',
