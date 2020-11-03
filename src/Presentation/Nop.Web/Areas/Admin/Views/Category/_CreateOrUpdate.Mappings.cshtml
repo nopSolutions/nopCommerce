@@ -48,16 +48,16 @@
 							});
 
 							@if (Model.AvailableCustomerRoles.Count == 0)
-				{
-					<text>
-						rolesIdsInput.setOptions({
-							enable: false,
-							placeholder: 'No customer roles available'
-						});
-						rolesIdsInput._placeholder();
-						rolesIdsInput._enable();
-					</text>
-				}
+							{
+								<text>
+								rolesIdsInput.setOptions({
+									enable: false,
+									placeholder: 'No customer roles available'
+								});
+								rolesIdsInput._placeholder();
+								rolesIdsInput._enable();
+								</text>
+							}
 						});
                     </script>
                 </div>
@@ -85,16 +85,16 @@
 							});
 
 							@if (Model.AvailableStores.Count == 0)
-						{
-							<text>
+							{
+								<text>
 								storesIdsInput.setOptions({
 									enable: false,
 									placeholder: 'No stores available'
 								});
 								storesIdsInput._placeholder();
 								storesIdsInput._enable();
-							</text>
-						}
+								</text>
+							}
 						});
                     </script>
                 </div>

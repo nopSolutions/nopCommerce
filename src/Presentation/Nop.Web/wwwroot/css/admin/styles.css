@@ -1077,7 +1077,7 @@ div.dataTables_wrapper {
   }
 
     .content-header > h1 > small .fa-arrow-circle-left {
-      font-size: 14px;
+      font-size: 18px;
       margin-right: 1px;
     }
 
@@ -1166,8 +1166,7 @@ div.dataTables_wrapper {
   }
 
   .form-group .callout {
-    padding: 8px 15px;
-    margin-left: -20px !important;
+    padding: 5px 15px;
   }
 
   .form-group .attributes label {
@@ -1481,7 +1480,7 @@ span.grid-report-item {
   }
 
   .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
-    padding-left: 30px;
+    padding-left: 23px;
     height: 100%;
     position: static;
     padding-bottom: 5px;
@@ -1527,7 +1526,7 @@ span.grid-report-item {
 
   .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
     position: static;
-    padding-left: 30px;
+    padding-left: 23px;
     padding-bottom: 5px;
     height: 100%;
   }

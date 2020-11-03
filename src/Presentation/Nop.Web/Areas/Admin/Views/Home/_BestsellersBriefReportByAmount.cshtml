@@ -37,7 +37,6 @@
         });
     </script>
     <div class="card-body">
-
         @await Html.PartialAsync("Table", new DataTablesModel
         {
            Name = "bestsellers-byamount-grid",
@@ -65,7 +64,7 @@
                     new ColumnProperty(nameof(BestsellerModel.ProductId))
                     {
                         Title = T("Admin.Common.View").Text,
-                        Width = "50",
+                        Width = "80",
                         ClassName = NopColumnClassDefaults.Button,
                         Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
                     }
