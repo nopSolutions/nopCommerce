@@ -101,9 +101,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get parameters to filter emails
             var startDateValue = !searchModel.StartDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.StartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync());
             var endDateValue = !searchModel.EndDate.HasValue ? null
-                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.EndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1);
             var returnRequestStatus = searchModel.ReturnRequestStatusId == -1 ? null : (ReturnRequestStatus?)searchModel.ReturnRequestStatusId;
 
             //get return requests
@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
                     //convert dates to the user time
-                    returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
+                    returnRequestModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     returnRequestModel.CustomerInfo = (await _customerService.IsRegisteredAsync(customer))
@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var customer = await _customerService.GetCustomerByIdAsync(returnRequest.CustomerId);
 
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
             model.CustomerInfo = await _customerService.IsRegisteredAsync(customer)
                 ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");

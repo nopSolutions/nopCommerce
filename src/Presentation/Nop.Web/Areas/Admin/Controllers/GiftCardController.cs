@@ -180,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.PurchasedWithOrderId = order?.Id;
             model.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard), true, false);
             model.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId)).CurrencyCode;
             model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 

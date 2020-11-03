@@ -64,9 +64,9 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        public virtual DateTime ConvertToUserTime(DateTime dt)
+        public virtual async Task<DateTime> ConvertToUserTimeAsync(DateTime dt)
         {
-            return ConvertToUserTime(dt, dt.Kind);
+            return await ConvertToUserTimeAsync(dt, dt.Kind);
         }
 
         /// <summary>
@@ -75,13 +75,13 @@ namespace Nop.Services.Helpers
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        public virtual DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind)
+        public virtual async Task<DateTime> ConvertToUserTimeAsync(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
             if (sourceDateTimeKind == DateTimeKind.Local && TimeZoneInfo.Local.IsInvalidTime(dt))
                 return dt;
 
-            var currentUserTimeZoneInfo = CurrentTimeZone;
+            var currentUserTimeZoneInfo = await GetCurrentTimeZoneAsync();
             return TimeZoneInfo.ConvertTime(dt, currentUserTimeZoneInfo);
         }
 
@@ -91,9 +91,9 @@ namespace Nop.Services.Helpers
         /// <param name="dt">The date and time to convert.</param>
         /// <param name="sourceTimeZone">The time zone of dateTime.</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        public virtual DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone)
+        public virtual async Task<DateTime> ConvertToUserTimeAsync(DateTime dt, TimeZoneInfo sourceTimeZone)
         {
-            var currentUserTimeZoneInfo = CurrentTimeZone;
+            var currentUserTimeZoneInfo = await GetCurrentTimeZoneAsync();
             return ConvertToUserTime(dt, sourceTimeZone, currentUserTimeZoneInfo);
         }
 
@@ -184,6 +184,15 @@ namespace Nop.Services.Helpers
         }
 
         /// <summary>
+        /// Gets the current user time zone
+        /// </summary>
+        /// <returns>Current user time zone</returns>
+        public virtual async Task<TimeZoneInfo> GetCurrentTimeZoneAsync()
+        {
+           return await GetCustomerTimeZoneAsync(await _workContext.GetCurrentCustomerAsync());
+        }
+
+        /// <summary>
         /// Gets or sets a default store time zone
         /// </summary>
         public virtual TimeZoneInfo DefaultStoreTimeZone
@@ -214,28 +223,6 @@ namespace Nop.Services.Helpers
 
                 _dateTimeSettings.DefaultStoreTimeZoneId = defaultTimeZoneId;
                 _settingService.SaveSettingAsync(_dateTimeSettings).Wait();
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the current user time zone
-        /// </summary>
-        public virtual TimeZoneInfo CurrentTimeZone
-        {
-            get => GetCustomerTimeZoneAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
-            set
-            {
-                if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
-                    return;
-
-                var timeZoneId = string.Empty;
-                if (value != null)
-                {
-                    timeZoneId = value.Id;
-                }
-
-                _genericAttributeService.SaveAttributeAsync(_workContext.GetCurrentCustomerAsync().Result,
-                    NopCustomerDefaults.TimeZoneIdAttribute, timeZoneId).Wait();
             }
         }
 

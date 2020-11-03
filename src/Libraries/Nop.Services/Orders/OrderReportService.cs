@@ -366,8 +366,8 @@ namespace Nop.Services.Orders
             };
             var orderStatuses = new List<int> { (int)os };
 
-            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
 
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);

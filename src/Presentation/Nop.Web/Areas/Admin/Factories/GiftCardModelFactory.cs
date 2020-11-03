@@ -143,7 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var giftCardModel = giftCard.ToModel<GiftCardModel>();
 
                     //convert dates to the user time
-                    giftCardModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+                    giftCardModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     var giftAmount = await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard);
@@ -176,7 +176,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.PurchasedWithOrderId = order?.Id;
                 model.RemainingAmountStr = await _priceFormatter.FormatPriceAsync(await _giftCardService.GetGiftCardRemainingAmountAsync(giftCard), true, false);
                 model.AmountStr = await _priceFormatter.FormatPriceAsync(giftCard.Amount, true, false);
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
+                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(giftCard.CreatedOnUtc, DateTimeKind.Utc);
                 model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
                 //prepare nested search model
@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();
 
                     //convert dates to the user time
-                    giftCardUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    giftCardUsageHistoryModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;

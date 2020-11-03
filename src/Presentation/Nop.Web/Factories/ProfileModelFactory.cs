@@ -163,7 +163,7 @@ namespace Nop.Web.Factories
             if (_customerSettings.ShowCustomersJoinDate)
             {
                 joinDateEnabled = true;
-                joinDate = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
+                joinDate = (await _dateTimeHelper.ConvertToUserTimeAsync(customer.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
             }
 
             //birth date
@@ -230,7 +230,7 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    posted = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
+                    posted = (await _dateTimeHelper.ConvertToUserTimeAsync(forumPost.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
                 }
 
                 var topic = await _forumService.GetTopicByIdAsync(forumPost.TopicId);

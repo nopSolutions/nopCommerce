@@ -84,19 +84,19 @@ namespace Nop.Web.Areas.Admin.Factories
             var campaigns = (await _campaignService.GetAllCampaignsAsync(searchModel.StoreId)).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CampaignListModel().PrepareToGrid(searchModel, campaigns, () =>
+            var model = await new CampaignListModel().PrepareToGridAsync(searchModel, campaigns, () =>
             {
-                return campaigns.Select(campaign =>
+                return campaigns.ToAsyncEnumerable().SelectAwait(async campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel<CampaignModel>();
 
                     //convert dates to the user time
-                    campaignModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(campaign.CreatedOnUtc, DateTimeKind.Utc);
+                    campaignModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.CreatedOnUtc, DateTimeKind.Utc);
                     if (campaign.DontSendBeforeDateUtc.HasValue)
                     {
-                        campaignModel.DontSendBeforeDate = _dateTimeHelper
-                            .ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+                        campaignModel.DontSendBeforeDate = await _dateTimeHelper
+                            .ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     }
 
                     return campaignModel;
@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 model ??= campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
-                    model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+                    model.DontSendBeforeDate = await _dateTimeHelper.ConvertToUserTimeAsync(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }
 
             model.AllowedTokens = string.Join(", ", await _messageTokenProvider.GetListOfCampaignAllowedTokensAsync());

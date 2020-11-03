@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var forumGroupModel = forumGroup.ToModel<ForumGroupModel>();
 
                     //convert dates to the user time
-                    forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(forumGroup.CreatedOnUtc, DateTimeKind.Utc);
+                    forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTimeAsync(forumGroup.CreatedOnUtc, DateTimeKind.Utc).Result;
 
                     return forumGroupModel;
                 });
@@ -142,15 +142,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var forums = (await _forumService.GetAllForumsByGroupIdAsync(forumGroup.Id)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ForumListModel().PrepareToGrid(searchModel, forums, () =>
+            var model = await new ForumListModel().PrepareToGridAsync(searchModel, forums, () =>
             {
-                return forums.Select(forum =>
+                return forums.ToAsyncEnumerable().SelectAwait(async forum =>
                 {
                     //fill in model values from the entity
                     var forumModel = forum.ToModel<ForumModel>();
 
                     //convert dates to the user time
-                    forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(forum.CreatedOnUtc, DateTimeKind.Utc);
+                    forumModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(forum.CreatedOnUtc, DateTimeKind.Utc);
 
                     return forumModel;
                 });

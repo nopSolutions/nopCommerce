@@ -58,10 +58,10 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             //prepare filter parameters
             var createdFromValue = searchModel.CreatedFrom.HasValue
-                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedFrom.Value, _dateTimeHelper.CurrentTimeZone)
+                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedFrom.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync())
                 : null;
             var createdToValue = searchModel.CreatedTo.HasValue
-                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1)
+                ? (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedTo.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1)
                 : null;
 
             //get tax transaction log
@@ -69,15 +69,15 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new TaxTransactionLogListModel().PrepareToGrid(searchModel, taxtransactionLog, () =>
+            var model = await new TaxTransactionLogListModel().PrepareToGridAsync(searchModel, taxtransactionLog, () =>
             {
-                return taxtransactionLog.Select(logItem => new TaxTransactionLogModel
+                return taxtransactionLog.ToAsyncEnumerable().SelectAwait(async logItem => new TaxTransactionLogModel
                 {
                     Id = logItem.Id,
                     StatusCode = logItem.StatusCode,
                     Url = logItem.Url,
                     CustomerId = logItem.CustomerId,
-                    CreatedDate = _dateTimeHelper.ConvertToUserTime(logItem.CreatedDateUtc, DateTimeKind.Utc)
+                    CreatedDate = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedDateUtc, DateTimeKind.Utc)
                 });
             });
 
@@ -115,7 +115,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 ResponseMessage = HtmlHelper.FormatText(logItem.ResponseMessage, false, true, false, false, false, false),
                 CustomerId = logItem.CustomerId,
                 CustomerEmail = (await _customerService.GetCustomerByIdAsync(logItem.CustomerId))?.Email,
-                CreatedDate = _dateTimeHelper.ConvertToUserTime(logItem.CreatedDateUtc, DateTimeKind.Utc)
+                CreatedDate = await _dateTimeHelper.ConvertToUserTimeAsync(logItem.CreatedDateUtc, DateTimeKind.Utc)
             };
 
             return View("~/Plugins/Tax.Avalara/Views/Log/View.cshtml", model);

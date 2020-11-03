@@ -145,7 +145,7 @@ namespace Nop.Web.Factories
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel
                 {
                     Id = order.Id,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                    CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatusEnum = order.OrderStatus,
                     OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
                     PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus),
@@ -168,9 +168,9 @@ namespace Nop.Web.Factories
                 var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel
                 {
                     Id = recurringPayment.Id,
-                    StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
+                    StartDate = (await _dateTimeHelper.ConvertToUserTimeAsync(recurringPayment.StartDateUtc, DateTimeKind.Utc)).ToString(),
                     CycleInfo = $"{recurringPayment.CycleLength} {await _localizationService.GetLocalizedEnumAsync(recurringPayment.CyclePeriod)}",
-                    NextPayment = await _orderProcessingService.GetNextPaymentDateAsync(recurringPayment) is DateTime nextPaymentDate ? _dateTimeHelper.ConvertToUserTime(nextPaymentDate, DateTimeKind.Utc).ToString() : "",
+                    NextPayment = await _orderProcessingService.GetNextPaymentDateAsync(recurringPayment) is DateTime nextPaymentDate ? (await _dateTimeHelper.ConvertToUserTimeAsync(nextPaymentDate, DateTimeKind.Utc)).ToString() : "",
                     TotalCycles = recurringPayment.TotalCycles,
                     CyclesRemaining = await _orderProcessingService.GetCyclesRemainingAsync(recurringPayment),
                     InitialOrderId = order.Id,
@@ -197,7 +197,7 @@ namespace Nop.Web.Factories
             var model = new OrderDetailsModel
             {
                 Id = order.Id,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc),
                 OrderStatus = await _localizationService.GetLocalizedEnumAsync(order.OrderStatus),
                 IsReOrderAllowed = _orderSettings.IsReOrderAllowed,
                 IsReturnRequestAllowed = await _orderProcessingService.IsReturnRequestAllowedAsync(order),
@@ -244,9 +244,9 @@ namespace Nop.Web.Factories
                         TrackingNumber = shipment.TrackingNumber,
                     };
                     if (shipment.ShippedDateUtc.HasValue)
-                        shipmentModel.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+                        shipmentModel.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
                     if (shipment.DeliveryDateUtc.HasValue)
-                        shipmentModel.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
+                        shipmentModel.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
                     model.Shipments.Add(shipmentModel);
                 }
             }
@@ -403,7 +403,7 @@ namespace Nop.Web.Factories
                     Id = orderNote.Id,
                     HasDownload = orderNote.DownloadId > 0,
                     Note = _orderService.FormatOrderNoteText(orderNote),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
+                    CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
 
@@ -490,9 +490,9 @@ namespace Nop.Web.Factories
                 Id = shipment.Id
             };
             if (shipment.ShippedDateUtc.HasValue)
-                model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
+                model.ShippedDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
-                model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
+                model.DeliveryDate = await _dateTimeHelper.ConvertToUserTimeAsync(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
 
             //tracking number and shipment information
             if (!string.IsNullOrEmpty(shipment.TrackingNumber))
@@ -577,9 +577,9 @@ namespace Nop.Web.Factories
             //prepare model
             var model = new CustomerRewardPointsModel
             {
-                RewardPoints = rewardPoints.Select(historyEntry =>
+                RewardPoints = await rewardPoints.ToAsyncEnumerable().SelectAwait(async historyEntry =>
                 {
-                    var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    var activatingDate = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                     return new CustomerRewardPointsModel.RewardPointsHistoryModel
                     {
                         Points = historyEntry.Points,
@@ -588,9 +588,9 @@ namespace Nop.Web.Factories
                         Message = historyEntry.Message,
                         CreatedOn = activatingDate,
                         EndDate = !historyEntry.EndDateUtc.HasValue ? null :
-                            (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc)
+                            (DateTime?)(await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.EndDateUtc.Value, DateTimeKind.Utc))
                     };
-                }).ToList(),
+                }).ToListAsync(),
 
                 PagerModel = new PagerModel
                 {

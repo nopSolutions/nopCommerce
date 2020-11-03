@@ -740,7 +740,7 @@ namespace Nop.Web.Factories
                 if (model.PreOrderAvailabilityStartDateTimeUtc.HasValue && _catalogSettings.DisplayDatePreOrderAvailability)
                 {
                     model.PreOrderAvailabilityStartDateTimeUserTime =
-                        _dateTimeHelper.ConvertToUserTime(model.PreOrderAvailabilityStartDateTimeUtc.Value).ToString("D");
+                        (await _dateTimeHelper.ConvertToUserTimeAsync(model.PreOrderAvailabilityStartDateTimeUtc.Value)).ToString("D");
                 }
             }
             //rental
@@ -1496,7 +1496,7 @@ namespace Nop.Web.Factories
                         HelpfulYesTotal = pr.HelpfulYesTotal,
                         HelpfulNoTotal = pr.HelpfulNoTotal,
                     },
-                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
+                    WrittenOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(pr.CreatedOnUtc, DateTimeKind.Utc)).ToString("g"),
                 };
 
                 if (_customerSettings.AllowCustomersToUploadAvatars)
@@ -1599,7 +1599,7 @@ namespace Nop.Web.Factories
                     Rating = review.Rating,
                     ReviewText = review.ReviewText,
                     ReplyText = review.ReplyText,
-                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(review.CreatedOnUtc, DateTimeKind.Utc).ToString("g")
+                    WrittenOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(review.CreatedOnUtc, DateTimeKind.Utc)).ToString("g")
                 };
 
                 if (_catalogSettings.ProductReviewsMustBeApproved)

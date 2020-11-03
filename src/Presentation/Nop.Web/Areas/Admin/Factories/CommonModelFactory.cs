@@ -670,7 +670,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">System info model</param>
         /// <returns>System info model</returns>
-        public virtual Task<SystemInfoModel> PrepareSystemInfoModelAsync(SystemInfoModel model)
+        public virtual async Task<SystemInfoModel> PrepareSystemInfoModelAsync(SystemInfoModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -679,7 +679,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
-            model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            model.CurrentUserTime = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
             model.HttpHost = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
 
             //ensure no exception is thrown
@@ -740,7 +740,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.AzureBlobStorageEnabled = _appSettings.AzureBlobConfig.Enabled;
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>

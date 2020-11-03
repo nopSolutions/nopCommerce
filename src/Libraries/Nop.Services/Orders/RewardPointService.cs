@@ -91,7 +91,7 @@ namespace Nop.Services.Orders
                     StoreId = historyEntry.StoreId,
                     Points = -historyEntry.ValidPoints.Value,
                     Message = string.Format(await _localizationService.GetResourceAsync("RewardPoints.Expired"),
-                        _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
+                        await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
                     CreatedOnUtc = historyEntry.EndDateUtc.Value
                 });
 
