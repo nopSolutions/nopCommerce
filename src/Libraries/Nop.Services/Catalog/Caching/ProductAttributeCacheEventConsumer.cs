@@ -9,7 +9,7 @@ namespace Nop.Services.Catalog.Caching
     public partial class ProductAttributeCacheEventConsumer : CacheEventConsumer<ProductAttribute>
     {
         /// <summary>
-        /// entity
+        /// Clear cache data
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
