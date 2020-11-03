@@ -1858,7 +1858,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
 
                 LogEditOrder(order.Id);
-
+                
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
 
