@@ -113,7 +113,7 @@ namespace Nop.Web.Controllers
             var newsItems = await _newsService.GetAllNewsAsync(languageId, (await _storeContext.GetCurrentStoreAsync()).Id);
             foreach (var n in newsItems)
             {
-                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.CurrentRequestProtocol);
+                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, await _webHelper.GetCurrentRequestProtocolAsync());
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;

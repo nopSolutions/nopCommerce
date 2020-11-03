@@ -320,7 +320,7 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.CurrentRequestProtocol);
+                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, await _webHelper.GetCurrentRequestProtocolAsync());
                 var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
                 var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);

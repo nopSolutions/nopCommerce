@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Boards");
 
             var topics = await _forumService.GetActiveTopicsAsync(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.CurrentRequestProtocol);
+            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, await _webHelper.GetCurrentRequestProtocolAsync());
 
             var feedTitle = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedDescription");
@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.CurrentRequestProtocol);
+                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, await _webHelper.GetCurrentRequestProtocolAsync());
                 var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
                 var topics = await _forumService.GetAllTopicsAsync(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.CurrentRequestProtocol);
+                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, await _webHelper.GetCurrentRequestProtocolAsync());
 
                 var feedTitle = await _localizationService.GetResourceAsync("Forum.ForumFeedTitle");
                 var feedDescription = await _localizationService.GetResourceAsync("Forum.ForumFeedDescription");
@@ -183,7 +183,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.CurrentRequestProtocol);
+                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, await _webHelper.GetCurrentRequestProtocolAsync());
                     var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));

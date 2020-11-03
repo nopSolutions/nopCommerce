@@ -157,7 +157,7 @@
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {
-                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, webHelper.CurrentRequestProtocol);
+                                                var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName }, await webHelper.GetCurrentRequestProtocolAsync());
                                                 editCartItemUrl = await webHelper.ModifyQueryStringAsync(editCartItemUrl, "updatecartitemid", item.Id.ToString());
                                                 <div class="edit-item">
                                                     <a href="@editCartItemUrl">@T("Common.Edit")</a>
@@ -257,7 +257,7 @@
         }
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
-            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, webHelper.CurrentRequestProtocol);
+            var wishlistUrl = Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, await webHelper.GetCurrentRequestProtocolAsync());
             <div class="share-info">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
                 <a href="@wishlistUrl" class="share-link">@wishlistUrl</a>

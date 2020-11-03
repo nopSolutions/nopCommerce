@@ -99,7 +99,7 @@ namespace Nop.Core
         /// <summary>
         /// Gets current HTTP request protocol
         /// </summary>
-        string CurrentRequestProtocol { get; }
+        Task<string> GetCurrentRequestProtocolAsync();
 
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.

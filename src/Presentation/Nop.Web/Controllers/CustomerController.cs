@@ -1021,7 +1021,7 @@ namespace Nop.Web.Controllers
                                 await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
 
                                 var redirectUrl = Url.RouteUrl("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.CurrentRequestProtocol);
+                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, await _webHelper.GetCurrentRequestProtocolAsync());
                                 return Redirect(redirectUrl);
                             }
                         default:

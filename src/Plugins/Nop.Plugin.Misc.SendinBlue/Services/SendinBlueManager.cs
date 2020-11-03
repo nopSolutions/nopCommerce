@@ -143,7 +143,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                     //get notification URL
                     var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                    var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.ImportContactsRoute, null, _webHelper.CurrentRequestProtocol);
+                    var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.ImportContactsRoute, null, await _webHelper.GetCurrentRequestProtocolAsync());
 
                     var name = string.Empty;
 
@@ -677,7 +677,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                 //or create new one
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.UnsubscribeContactRoute, null, _webHelper.CurrentRequestProtocol);
+                var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.UnsubscribeContactRoute, null, await _webHelper.GetCurrentRequestProtocolAsync());
                 var webhook = new CreateWebhook(notificationUrl, "Unsubscribe event webhook",
                     new List<CreateWebhook.EventsEnum> { CreateWebhook.EventsEnum.Unsubscribed }, CreateWebhook.TypeEnum.Transactional);
                 var result = client.CreateWebhook(webhook);

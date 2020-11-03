@@ -89,7 +89,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             return urlHelper.Action("Configure", "DiscountRulesCustomerRoles",
-                new { discountId = discountId, discountRequirementId = discountRequirementId }, _webHelper.CurrentRequestProtocol);
+                new { discountId = discountId, discountRequirementId = discountRequirementId }, _webHelper.GetCurrentRequestProtocolAsync().Result);
         }
 
         /// <summary>

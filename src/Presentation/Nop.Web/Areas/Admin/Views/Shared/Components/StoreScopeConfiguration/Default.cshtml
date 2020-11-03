@@ -4,16 +4,16 @@
 
 @{
     var returnUrl = webHelper.GetRawUrlAsync(Context.Request);
-    var stores = Model.Stores.Select(store => new SelectListItem
+    var stores = await Model.Stores.ToAsyncEnumerable().SelectAwait(async store => new SelectListItem
     {
         Text = store.Name,
-        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id, returnUrl }, webHelper.CurrentRequestProtocol),
+        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id, returnUrl }, await webHelper.GetCurrentRequestProtocolAsync()),
         Selected = store.Id.Equals(Model.StoreId)
-    }).ToList();
+    }).ToListAsync();
     stores.Insert(0, new SelectListItem
     {
         Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
-        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0, returnUrl }, webHelper.CurrentRequestProtocol),
+        Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0, returnUrl }, await webHelper.GetCurrentRequestProtocolAsync()),
         Selected = 0.Equals(Model.StoreId)
     });
 }

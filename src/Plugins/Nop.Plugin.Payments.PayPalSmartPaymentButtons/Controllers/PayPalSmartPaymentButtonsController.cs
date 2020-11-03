@@ -150,7 +150,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             //ensure that webhook created, display warning in case of fail
             if (!string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
             {
-                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, _webHelper.CurrentRequestProtocol);
+                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, await _webHelper.GetCurrentRequestProtocolAsync());
                 var (webhook, webhookError) = await _serviceManager.CreateWebHookAsync(settings, webhookUrl);
                 settings.WebhookId = webhook?.Id;
                 if (string.IsNullOrEmpty(settings.WebhookId))

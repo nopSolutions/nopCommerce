@@ -180,7 +180,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     var (cartTotal, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false, false);
 
                     //get products data by shopping cart items
-                    var itemsData = cart.Where(item => item.ProductId != 0).Select(item =>
+                    var itemsData = await cart.Where(item => item.ProductId != 0).ToAsyncEnumerable().SelectAwait(async item =>
                     {
                         var product = _productService.GetProductByIdAsync(item.ProductId).Result;
 
@@ -207,12 +207,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                                 res = all == "," ? res : all + ", " + res;
                                 return res;
                             }),
-                            url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.CurrentRequestProtocol),
+                            url = urlHelper.RouteUrl("Product", new { SeName = seName }, await _webHelper.GetCurrentRequestProtocolAsync()),
                             image = _pictureService.GetPictureUrlAsync(picture).Result.url,
                             quantity = item.Quantity,
                             price = _shoppingCartService.GetSubTotalAsync(item, true).Result.subTotal
                         };
-                    }).ToArray();
+                    }).ToArrayAsync();
 
                     //prepare cart data
                     var cartData = new
@@ -224,7 +224,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         tax = cartTax,
                         discount = cartDiscount,
                         revenue = cartTotal ?? decimal.Zero,
-                        url = urlHelper.RouteUrl("ShoppingCart", null, _webHelper.CurrentRequestProtocol),
+                        url = urlHelper.RouteUrl("ShoppingCart", null, await _webHelper.GetCurrentRequestProtocolAsync()),
                         currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
                         //gift_wrapping = string.Empty, //currently we can't get this value
                         items = itemsData
@@ -291,7 +291,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
                 //get products data by order items
-                var itemsData = (await _orderService.GetOrderItemsAsync(order.Id)).Select(item =>
+                var itemsData = await (await _orderService.GetOrderItemsAsync(order.Id)).ToAsyncEnumerable().SelectAwait(async item =>
                 {
                     var product = _productService.GetProductByIdAsync(item.ProductId).Result;
 
@@ -318,12 +318,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             res = all == "," ? res : all + ", " + res;
                             return res;
                         }),
-                        url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.CurrentRequestProtocol),
+                        url = urlHelper.RouteUrl("Product", new { SeName = seName }, await _webHelper.GetCurrentRequestProtocolAsync()),
                         image = _pictureService.GetPictureUrlAsync(picture).Result.url,
                         quantity = item.Quantity,
                         price = item.PriceInclTax,
                     };
-                }).ToArray();
+                }).ToArrayAsync();
 
                 var shippingAddress = await _addressService.GetAddressByIdAsync(order.ShippingAddressId ?? 0);
                 var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
@@ -368,7 +368,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     tax = order.OrderTax,
                     discount = order.OrderDiscount,
                     revenue = order.OrderTotal,
-                    url = urlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, _webHelper.CurrentRequestProtocol),
+                    url = urlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, await _webHelper.GetCurrentRequestProtocolAsync()),
                     currency = order.CustomerCurrencyCode,
                     //gift_wrapping = string.Empty, //currently we can't get this value
                     items = itemsData,
