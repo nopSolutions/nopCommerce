@@ -446,40 +446,32 @@ namespace Nop.Services.Catalog
         /// <returns>List of featured products</returns>
         public virtual IList<Product> GetCategoryFeaturedProducts(int categoryId, int storeId = 0)
         {
-            List<Product> featuredProducts = new List<Product>();
+            IList<Product> featuredProducts = new List<Product>();
 
             if (categoryId == 0)
                 return featuredProducts;
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, storeId);
+            var customerRoleIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, customerRoleIds, storeId);
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
+
                 var query = from p in _productRepository.Table
                             join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
-                            where !p.Deleted && p.Published && p.VisibleIndividually &&
+                            where !p.Deleted && p.VisibleIndividually &&
                                 pc.IsFeaturedProduct && categoryId == pc.CategoryId
                             select p;
 
-                if (!_catalogSettings.IgnoreStoreLimitations || _storeMappingService.IsEntityMappingExists<Product>(storeId))
-                {
-                    query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
-                }
+                query = FilterHiddenEntries(query, storeId, customerRoleIds);
 
                 featuredProducts = query.ToList();
 
-                return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
+                return featuredProducts.Select(p => p.Id).ToList();
             });
 
-            if (featuredProducts.Count > 0)
-                return featuredProducts.Where(p => _aclService.Authorize(p)).ToList();
-
-            var authorizedIds = featuredProductIds.Where(fp => _aclService.Authorize(new Product { Id = fp.Id, SubjectToAcl = fp.SubjectToAcl }))
-                    .Select(fp => fp.Id)
-                    .ToList();
-
-            if (authorizedIds.Count > 0)
-                return _productRepository.GetByIds(authorizedIds, cache => default);
+            if (featuredProducts.Count == 0 && featuredProductIds.Count > 0)
+                featuredProducts =_productRepository.GetByIds(featuredProductIds, cache => default);
 
             return featuredProducts;
         }
@@ -492,40 +484,32 @@ namespace Nop.Services.Catalog
         /// <returns>List of featured products</returns>
         public virtual IList<Product> GetManufacturerFeaturedProducts(int manufacturerId, int storeId = 0)
         {
-            List<Product> featuredProducts = new List<Product>();
+            IList<Product> featuredProducts = new List<Product>();
 
             if (manufacturerId == 0)
                 return featuredProducts;
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, storeId);
+            var customerRoleIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, customerRoleIds, storeId);
 
             var featuredProductIds = _staticCacheManager.Get(cacheKey, () =>
             {
+
                 var query = from p in _productRepository.Table
                             join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
-                            where !p.Deleted && p.Published && p.VisibleIndividually &&
+                            where !p.Deleted && p.VisibleIndividually &&
                                 pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
                             select p;
 
-                if (!_catalogSettings.IgnoreStoreLimitations || _storeMappingService.IsEntityMappingExists<Product>(storeId))
-                {
-                    query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
-                }
+                query = FilterHiddenEntries(query, storeId, customerRoleIds);
 
                 featuredProducts = query.ToList();
 
-                return featuredProducts.Select(p => (p.Id, p.SubjectToAcl));
+                return featuredProducts.Select(p => p.Id).ToList();
             });
 
-            if (featuredProducts.Count > 0)
-                return featuredProducts.Where(p => _aclService.Authorize(p)).ToList();
-
-            var authorizedIds = featuredProductIds.Where(fp => _aclService.Authorize(new Product { Id = fp.Id, SubjectToAcl = fp.SubjectToAcl }))
-                    .Select(fp => fp.Id)
-                    .ToList();
-
-            if (authorizedIds.Count > 0)
-                return _productRepository.GetByIds(authorizedIds, cache => default);
+            if (featuredProducts.Count == 0 && featuredProductIds.Count > 0)
+                featuredProducts =_productRepository.GetByIds(featuredProductIds, cache => default);
 
             return featuredProducts;
         }
@@ -794,8 +778,8 @@ namespace Nop.Services.Catalog
                     productsByKeywords = productsByKeywords.Union(
                         from pptm in _productTagMappingRepository.Table
                         join lp in _localizedPropertyRepository.Table on pptm.ProductTagId equals lp.EntityId
-                        where lp.LocaleKeyGroup == nameof(Core.Domain.Catalog.ProductTag) &&
-                              lp.LocaleKey == nameof(Core.Domain.Catalog.ProductTag.Name) &&
+                        where lp.LocaleKeyGroup == nameof(ProductTag) &&
+                              lp.LocaleKey == nameof(ProductTag.Name) &&
                               lp.LocaleValue.Contains(keywords)
                         select lp.EntityId
                     );
@@ -803,17 +787,17 @@ namespace Nop.Services.Catalog
 
                 productsByKeywords = productsByKeywords.Union(
                             from lp in _localizedPropertyRepository.Table
-                            let checkName = lp.LocaleKey == nameof(Core.Domain.Catalog.Product.Name) &&
+                            let checkName = lp.LocaleKey == nameof(Product.Name) &&
                                             lp.LocaleValue.Contains(keywords)
                             let checkShortDesc = searchDescriptions &&
-                                            lp.LocaleKey == nameof(Core.Domain.Catalog.Product.ShortDescription) &&
+                                            lp.LocaleKey == nameof(Product.ShortDescription) &&
                                             lp.LocaleValue.Contains(keywords)
                             let checkProductTags = searchProductTags &&
                                             lp.LocaleKeyGroup == nameof(ProductTag) &&
-                                            lp.LocaleKey == nameof(Core.Domain.Catalog.ProductTag.Name) &&
+                                            lp.LocaleKey == nameof(ProductTag.Name) &&
                                             lp.LocaleValue.Contains(keywords)
                             where
-                                (lp.LocaleKeyGroup == nameof(Core.Domain.Catalog.Product) && lp.LanguageId == languageId) && (checkName || checkShortDesc) ||
+                                (lp.LocaleKeyGroup == nameof(Product) && lp.LanguageId == languageId) && (checkName || checkShortDesc) ||
                                 checkProductTags
 
                             select lp.EntityId
@@ -837,7 +821,7 @@ namespace Nop.Services.Catalog
             {
                 productsQuery = from p in productsQuery
                                 join pmm in _productManufacturerRepository.Table on p.Id equals pmm.ProductId
-                                where pmm.Id == manufacturerId &&
+                                where pmm.ManufacturerId == manufacturerId &&
                                     (!excludeFeaturedProducts || !pmm.IsFeaturedProduct)
                                 select p;
             }

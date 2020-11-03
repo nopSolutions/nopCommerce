@@ -205,9 +205,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <remarks>
         /// {0} : category id
-        /// {1} : current store ID
+        /// {1} : customer role Ids
+        /// {2} : current store ID
         /// </remarks>
-        public static CacheKey CategoryFeaturedProductsIdsKey => new CacheKey("Nop.product.featured.bycategory.{0}-{1}", CategoryFeaturedProductsIdsPrefix, FeaturedProductIdsPrefix);
+        public static CacheKey CategoryFeaturedProductsIdsKey => new CacheKey("Nop.product.featured.bycategory.{0}-{1}-{2}", CategoryFeaturedProductsIdsPrefix, FeaturedProductIdsPrefix);
         public static string CategoryFeaturedProductsIdsPrefix => "Nop.product.featured.bycategory.{0}";
 
         /// <summary>
@@ -215,11 +216,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <remarks>
         /// {0} : manufacturer id
-        /// {1} : current store ID
+        /// {1} : customer role Ids
+        /// {2} : current store ID
         /// </remarks>
-        public static CacheKey ManufacturerFeaturedProductIdsKey => new CacheKey("Nop.product.featured.bymanufacturer.{0}-{1}", ManufacturerFeaturedProductIdsPrefix, FeaturedProductIdsPrefix);
+        public static CacheKey ManufacturerFeaturedProductIdsKey => new CacheKey("Nop.product.featured.bymanufacturer.{0}-{1}-{2}", ManufacturerFeaturedProductIdsPrefix, FeaturedProductIdsPrefix);
         public static string ManufacturerFeaturedProductIdsPrefix => "Nop.product.featured.bymanufacturer.{0}";
-        
+
         public static string FeaturedProductIdsPrefix => "Nop.product.featured.";
 
         /// <summary>
