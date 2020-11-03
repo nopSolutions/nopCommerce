@@ -352,6 +352,7 @@ namespace Nop.Web.Factories
 
             var model = new HeaderLinksModel
             {
+                RegistrationType = _customerSettings.UserRegistrationType,
                 IsAuthenticated = _customerService.IsRegistered(customer),
                 CustomerName = _customerService.IsRegistered(customer) ? _customerService.FormatUsername(customer) : string.Empty,
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
