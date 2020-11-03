@@ -185,13 +185,12 @@ namespace Nop.Services.Catalog
             {
                 if (!showHidden)
                     query = FilterHiddenEntries(query, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                else if (overridePublished.HasValue)
+                    query = query.Where(c => c.Published == overridePublished.Value);
 
                 if (!string.IsNullOrWhiteSpace(categoryName))
                     query = query.Where(c => c.Name.Contains(categoryName));
                 query = query.Where(c => !c.Deleted);
-
-                if (overridePublished.HasValue)
-                    query = query.Where(c => c.Published == overridePublished.Value);
 
                 return query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             });

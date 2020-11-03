@@ -579,7 +579,7 @@ namespace Nop.Services.Catalog
                 query = FilterHiddenEntries(query, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
                 query = from p in query
-                        where p.VisibleIndividually && p.MarkAsNew && !p.Deleted && p.Published &&
+                        where p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
                         Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
                         select p;
 
@@ -750,6 +750,8 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
                 productsQuery = FilterHiddenEntries(productsQuery, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+            else if (overridePublished.HasValue)
+                productsQuery = productsQuery.Where(p => p.Published == overridePublished.Value);
 
             productsQuery = from p in productsQuery
                             where !p.Deleted &&
@@ -766,19 +768,6 @@ namespace Nop.Services.Catalog
                                 (priceMin == null || p.Price >= priceMin) &&
                                 (priceMax == null || p.Price <= priceMax)
                             select p;
-
-            if (!overridePublished.HasValue && !showHidden)
-            {
-                productsQuery = from p in productsQuery
-                                where p.Published
-                                select p;
-            }
-            else if (overridePublished.HasValue)
-            {
-                productsQuery = from p in productsQuery
-                                where p.Published == overridePublished
-                                select p;
-            }
 
             if (!string.IsNullOrEmpty(keywords))
             {
@@ -1021,7 +1010,7 @@ namespace Nop.Services.Catalog
 
             //whether to load published products only
             if (loadPublishedOnly.HasValue)
-                query = loadPublishedOnly.Value ? query.Where(product => product.Published) : query.Where(product => !product.Published);
+                query = query.Where(product => product.Published == loadPublishedOnly.Value);
 
             query = query.OrderBy(product => product.MinStockQuantity).ThenBy(product => product.DisplayOrder).ThenBy(product => product.Id);
 
