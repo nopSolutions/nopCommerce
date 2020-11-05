@@ -129,7 +129,7 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            return await _topicRepository.GetAllAsync(query =>
+            return await _topicRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(t => t.Published);
@@ -143,7 +143,7 @@ namespace Nop.Services.Topics
                     if (!ignorAcl && !_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIdsAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
+                        var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
                         query = from c in query
                             join acl in _aclRepository.Table
                                 on new {c1 = c.Id, c2 = nameof(Topic)}

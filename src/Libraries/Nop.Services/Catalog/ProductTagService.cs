@@ -138,7 +138,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual async Task<IList<ProductTag>> GetAllProductTagsAsync(string tagName = null)
         {
-            var allProductTags = await _productTagRepository.GetAllAsync(getCacheKey: cache => default);
+            var allProductTags = await _productTagRepository.GetAllAsync(query => query, getCacheKey: cache => default);
 
             if (!string.IsNullOrEmpty(tagName)) 
                 allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();

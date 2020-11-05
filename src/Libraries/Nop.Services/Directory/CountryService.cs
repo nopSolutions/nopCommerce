@@ -71,7 +71,7 @@ namespace Nop.Services.Directory
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
-                var countries = await _countryRepository.GetAllAsync(query =>
+                var countries = await _countryRepository.GetAllAsync(async query =>
                 {
                     if (!showHidden)
                         query = query.Where(c => c.Published);
@@ -79,7 +79,7 @@ namespace Nop.Services.Directory
                     if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                     {
                         //Store mapping
-                        var currentStoreId = _storeContext.GetCurrentStoreAsync().Result.Id;
+                        var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
                         query = from c in query
                             join sc in _storeMappingRepository.Table
                                 on new {c1 = c.Id, c2 = nameof(Country)} equals new

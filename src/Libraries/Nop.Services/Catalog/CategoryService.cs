@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<IPagedList<Category>> GetAllCategoriesAsync(string categoryName, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, bool? overridePublished = null)
         {
-            var unsortedCategories = await _categoryRepository.GetAllAsync(query =>
+            var unsortedCategories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(c => c.Published);
@@ -175,7 +175,7 @@ namespace Nop.Services.Catalog
                     if (!showHidden && !_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIdsAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
+                        var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
                         query = from c in query
                             join acl in _aclRepository.Table
                                 on new {c1 = c.Id, c2 = nameof(Category)} equals new
@@ -223,7 +223,7 @@ namespace Nop.Services.Catalog
         public virtual async Task<IList<Category>> GetAllCategoriesByParentCategoryIdAsync(int parentCategoryId,
             bool showHidden = false)
         {
-            var categories = await _categoryRepository.GetAllAsync(query =>
+            var categories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(c => c.Published);
@@ -236,7 +236,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIdsAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
+                        var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
                         query = from c in query
                             join acl in _aclRepository.Table
                                 on new {c1 = c.Id, c2 = nameof(Category)}
@@ -250,7 +250,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreStoreLimitations)
                     {
                         //Store mapping
-                        var currentStoreId = _storeContext.GetCurrentStoreAsync().Result.Id;
+                        var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
                         query = from c in query
                             join sm in _storeMappingRepository.Table
                                 on new {c1 = c.Id, c2 = nameof(Category)}
