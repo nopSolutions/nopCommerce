@@ -112,7 +112,7 @@ namespace Nop.Services.Customers
         /// <returns>Number of registered customers</returns>
         public virtual async Task<int> GetRegisteredCustomersReportAsync(int days)
         {
-            var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+            var date = (await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).AddDays(-days);
 
             var registeredCustomerRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)

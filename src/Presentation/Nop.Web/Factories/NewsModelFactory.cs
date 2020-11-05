@@ -95,7 +95,7 @@ namespace Nop.Web.Factories
                 CustomerName = await _customerService.FormatUsernameAsync(customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !await _customerService.IsGuestAsync(customer),
             };
 
@@ -133,7 +133,7 @@ namespace Nop.Web.Factories
             model.Short = newsItem.Short;
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
 
             //number of news comments

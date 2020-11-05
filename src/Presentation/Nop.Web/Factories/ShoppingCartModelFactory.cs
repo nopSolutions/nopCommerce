@@ -1357,7 +1357,7 @@ namespace Nop.Web.Factories
                         if (option.TransitDays.HasValue)
                         {
                             var currentCulture = CultureInfo.GetCultureInfo((await _workContext.GetWorkingLanguageAsync()).LanguageCulture);
-                            var customerDateTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+                            var customerDateTime = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
                             deliveryDateFormat = customerDateTime.AddDays(option.TransitDays.Value).ToString("d", currentCulture);
                         }
 

@@ -1340,8 +1340,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var result = new List<object>();
 
-            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            var timeZone = _dateTimeHelper.CurrentTimeZone;
+            var nowDt = await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now);
+            var timeZone = await _dateTimeHelper.GetCurrentTimeZoneAsync();
             var searchCustomerRoleIds = new[] { (await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.RegisteredRoleName)).Id };
 
             var culture = new CultureInfo((await _workContext.GetWorkingLanguageAsync()).LanguageCulture);

@@ -123,9 +123,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //convert dates to the user time
                     if (poll.StartDateUtc.HasValue)
-                        pollModel.StartDateUtc = _dateTimeHelper.ConvertToUserTime(poll.StartDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.StartDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(poll.StartDateUtc.Value, DateTimeKind.Utc);
                     if (poll.EndDateUtc.HasValue)
-                        pollModel.EndDateUtc = _dateTimeHelper.ConvertToUserTime(poll.EndDateUtc.Value, DateTimeKind.Utc);
+                        pollModel.EndDateUtc = await _dateTimeHelper.ConvertToUserTimeAsync(poll.EndDateUtc.Value, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     pollModel.LanguageName = (await _languageService.GetLanguageByIdAsync(poll.LanguageId))?.Name;

@@ -190,7 +190,7 @@ namespace Nop.Web.Factories
                         ReturnReason = returnRequest.ReasonForReturn,
                         Comments = returnRequest.CustomerComments,
                         UploadedFileGuid = download?.DownloadGuid ?? Guid.Empty,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
+                        CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     };
                     model.Items.Add(itemModel);
                 }

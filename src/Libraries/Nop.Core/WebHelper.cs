@@ -435,7 +435,10 @@ namespace Nop.Core
         /// <summary>
         /// Gets current HTTP request protocol
         /// </summary>
-        public virtual string CurrentRequestProtocol => IsCurrentConnectionSecuredAsync().Result ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        public virtual async Task<string> GetCurrentRequestProtocolAsync()
+        {
+            return await IsCurrentConnectionSecuredAsync() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        }
 
         /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.

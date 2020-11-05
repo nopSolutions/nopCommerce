@@ -397,7 +397,7 @@ namespace Nop.Services.Common
 
             foreach (var orderNote in orderNotes)
             {
-                cellOrderNote = GetPdfCell(_dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc), font);
+                cellOrderNote = GetPdfCell(await _dateTimeHelper.ConvertToUserTimeAsync(orderNote.CreatedOnUtc, DateTimeKind.Utc), font);
                 cellOrderNote.HorizontalAlignment = Element.ALIGN_LEFT;
                 notesTable.AddCell(cellOrderNote);
 
@@ -1156,7 +1156,7 @@ namespace Nop.Services.Common
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.Phrase.Add(new Phrase(anchor));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
-            cellHeader.Phrase.Add(GetParagraphAsync("PDFInvoice.OrderDate", lang, font, _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D", new CultureInfo(lang.LanguageCulture))));
+            cellHeader.Phrase.Add(GetParagraphAsync("PDFInvoice.OrderDate", lang, font, (await _dateTimeHelper.ConvertToUserTimeAsync(order.CreatedOnUtc, DateTimeKind.Utc)).ToString("D", new CultureInfo(lang.LanguageCulture))));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
             cellHeader.HorizontalAlignment = Element.ALIGN_LEFT;

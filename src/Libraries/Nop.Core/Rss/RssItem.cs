@@ -86,11 +86,6 @@ namespace Nop.Core.Rss
         public XElement Content { get; }
 
         /// <summary>
-        /// Get content text
-        /// </summary>
-        public string ContentText => XmlHelper.XmlDecodeAsync(Content?.Value ?? string.Empty).Result;
-
-        /// <summary>
         /// Link
         /// </summary>
         public XElement Link { get; }

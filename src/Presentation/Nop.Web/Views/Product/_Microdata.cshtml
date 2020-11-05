@@ -31,7 +31,7 @@
         </div>
     }    
     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-        <meta itemprop="url" content="@Url.RouteUrl("Product", new { SeName = Model.SeName }, webHelper.CurrentRequestProtocol).ToLowerInvariant()"/>
+        <meta itemprop="url" content="@Url.RouteUrl("Product", new { SeName = Model.SeName }, await webHelper.GetCurrentRequestProtocolAsync()).ToLowerInvariant()"/>
         <meta itemprop="price" content="@Model.ProductPrice.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"/>
         <meta itemprop="priceCurrency" content="@Model.ProductPrice.CurrencyCode"/>
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>

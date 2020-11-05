@@ -310,7 +310,7 @@
                     <b>nopCommerce version @NopVersion.FULL_VERSION</b>
                 </div>
                 <div class="text-center">
-                    @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)
+                    @(await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", currentCulture)
                 </div>
             </div>
         </div>

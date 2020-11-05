@@ -421,7 +421,7 @@ namespace Nop.Web.Factories
                 }
                 else
                     forumPostModel.PostCreatedOnStr =
-                        _dateTimeHelper.ConvertToUserTime(post.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
+                        (await _dateTimeHelper.ConvertToUserTimeAsync(post.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
                 //avatar
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
@@ -889,7 +889,7 @@ namespace Nop.Web.Factories
                 model.PostCreatedOnStr = string.Format(await _localizationService.GetResourceAsync("Common.RelativeDateTime.Past"), postCreatedAgo);
             }
             else
-                model.PostCreatedOnStr = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
+                model.PostCreatedOnStr = (await _dateTimeHelper.ConvertToUserTimeAsync(forumPost.CreatedOnUtc, DateTimeKind.Utc)).ToString("f");
 
             return model;
         }

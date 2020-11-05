@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var newsItem = new NopCommerceNewsDetailsModel
                     {
                         Title = item.TitleText,
-                        Summary = item.ContentText,
+                        Summary = await XmlHelper.XmlDecodeAsync(item.Content?.Value ?? string.Empty),
                         Url = item.Url.OriginalString,
                         PublishDate = item.PublishDate
                     };

@@ -210,9 +210,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter discounts
             var discountType = searchModel.SearchDiscountTypeId > 0 ? (DiscountType?)searchModel.SearchDiscountTypeId : null;
             var startDateUtc = searchModel.SearchStartDate.HasValue ?
-                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone) : null;
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchStartDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()) : null;
             var endDateUtc = searchModel.SearchEndDate.HasValue ?
-                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1) : null;
+                (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.SearchEndDate.Value, await _dateTimeHelper.GetCurrentTimeZoneAsync()).AddDays(1) : null;
 
             //get discounts
             var discounts = (await _discountService.GetAllDiscountsAsync(showHidden: true,
@@ -393,7 +393,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
 
                     //convert dates to the user time
-                    discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    discountUsageHistoryModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     var order = await _orderService.GetOrderByIdAsync(historyEntry.OrderId);

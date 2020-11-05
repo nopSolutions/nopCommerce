@@ -391,7 +391,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();
 
                     //convert dates to the user time
-                    vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(note.CreatedOnUtc, DateTimeKind.Utc);
+                    vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTimeAsync(note.CreatedOnUtc, DateTimeKind.Utc).Result;
 
                     //fill in additional values (not existing in the entity)
                     vendorNoteModel.Note = _vendorService.FormatVendorNoteText(note);

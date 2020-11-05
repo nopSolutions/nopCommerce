@@ -60,7 +60,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             private async Task RedirectRequestAsync(AuthorizationFilterContext context, bool withWww)
             {
                 //get scheme depending on securing connection
-                var urlScheme = $"{_webHelper.CurrentRequestProtocol}{Uri.SchemeDelimiter}";
+                var urlScheme = $"{await _webHelper.GetCurrentRequestProtocolAsync()}{Uri.SchemeDelimiter}";
 
                 //compose start of URL with WWW
                 var urlWith3W = $"{urlScheme}www.";

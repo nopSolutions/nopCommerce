@@ -65,9 +65,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var scheduleTasks = (await _scheduleTaskService.GetAllTasksAsync(true)).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ScheduleTaskListModel().PrepareToGrid(searchModel, scheduleTasks, () =>
+            var model = await new ScheduleTaskListModel().PrepareToGridAsync(searchModel, scheduleTasks, () =>
             {
-                return scheduleTasks.Select(scheduleTask =>
+                return scheduleTasks.ToAsyncEnumerable().SelectAwait(async scheduleTask =>
                 {
                     //fill in model values from the entity
                     var scheduleTaskModel = scheduleTask.ToModel<ScheduleTaskModel>();
@@ -75,20 +75,20 @@ namespace Nop.Web.Areas.Admin.Factories
                     //convert dates to the user time
                     if (scheduleTask.LastStartUtc.HasValue)
                     {
-                        scheduleTaskModel.LastStartUtc = _dateTimeHelper
-                            .ConvertToUserTime(scheduleTask.LastStartUtc.Value, DateTimeKind.Utc).ToString("G");
+                        scheduleTaskModel.LastStartUtc = (await _dateTimeHelper
+                            .ConvertToUserTimeAsync(scheduleTask.LastStartUtc.Value, DateTimeKind.Utc)).ToString("G");
                     }
 
                     if (scheduleTask.LastEndUtc.HasValue)
                     {
-                        scheduleTaskModel.LastEndUtc = _dateTimeHelper
-                            .ConvertToUserTime(scheduleTask.LastEndUtc.Value, DateTimeKind.Utc).ToString("G");
+                        scheduleTaskModel.LastEndUtc = (await _dateTimeHelper
+                            .ConvertToUserTimeAsync(scheduleTask.LastEndUtc.Value, DateTimeKind.Utc)).ToString("G");
                     }
 
                     if (scheduleTask.LastSuccessUtc.HasValue)
                     {
-                        scheduleTaskModel.LastSuccessUtc = _dateTimeHelper
-                            .ConvertToUserTime(scheduleTask.LastSuccessUtc.Value, DateTimeKind.Utc).ToString("G");
+                        scheduleTaskModel.LastSuccessUtc = (await _dateTimeHelper
+                            .ConvertToUserTimeAsync(scheduleTask.LastSuccessUtc.Value, DateTimeKind.Utc)).ToString("G");
                     }
 
                     return scheduleTaskModel;

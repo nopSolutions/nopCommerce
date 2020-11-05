@@ -235,7 +235,7 @@ namespace Nop.Web.Factories
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !await _customerService.IsGuestAsync(toCustomer),
                 Subject = pm.Subject,
                 Message = _forumService.FormatPrivateMessageText(pm),
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
+                CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(pm.CreatedOnUtc, DateTimeKind.Utc),
                 IsRead = pm.IsRead,
             };
 

@@ -29,7 +29,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        DateTime ConvertToUserTime(DateTime dt);
+        Task<DateTime> ConvertToUserTimeAsync(DateTime dt);
 
         /// <summary>
         /// Converts the date and time to current user date and time
@@ -37,15 +37,16 @@ namespace Nop.Services.Helpers
         /// <param name="dt">The date and time (represents local system time or UTC time) to convert.</param>
         /// <param name="sourceDateTimeKind">The source datetimekind</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind);
+        Task<DateTime> ConvertToUserTimeAsync(DateTime dt, DateTimeKind sourceDateTimeKind);
 
+        //TODO: may be deleted
         /// <summary>
         /// Converts the date and time to current user date and time
         /// </summary>
         /// <param name="dt">The date and time to convert.</param>
         /// <param name="sourceTimeZone">The time zone of dateTime.</param>
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
-        DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone);
+        Task<DateTime> ConvertToUserTimeAsync(DateTime dt, TimeZoneInfo sourceTimeZone);
 
         /// <summary>
         /// Converts the date and time to current user date and time
@@ -87,13 +88,19 @@ namespace Nop.Services.Helpers
         Task<TimeZoneInfo> GetCustomerTimeZoneAsync(Customer customer);
 
         /// <summary>
-        /// Gets or sets a default store time zone
+        /// Gets the current user time zone
         /// </summary>
-        TimeZoneInfo DefaultStoreTimeZone { get; set; }
+        /// <returns>Current user time zone</returns>
+        Task<TimeZoneInfo> GetCurrentTimeZoneAsync();
 
         /// <summary>
-        /// Gets or sets the current user time zone
+        /// Gets or sets a default store time zone
         /// </summary>
-        TimeZoneInfo CurrentTimeZone { get; set; }
+        TimeZoneInfo DefaultStoreTimeZone 
+        { 
+            get;
+            //TODO: may be deleted
+            set;
+        }
     }
 }

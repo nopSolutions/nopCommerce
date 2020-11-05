@@ -126,13 +126,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     //convert dates to the user time
                     if ((await _orderProcessingService.GetNextPaymentDateAsync(recurringPayment)) is DateTime nextPaymentDate)
                     {
-                        recurringPaymentModel.NextPaymentDate = _dateTimeHelper
-                            .ConvertToUserTime(nextPaymentDate, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
+                        recurringPaymentModel.NextPaymentDate = (await _dateTimeHelper
+                            .ConvertToUserTimeAsync(nextPaymentDate, DateTimeKind.Utc)).ToString(CultureInfo.InvariantCulture);
                         recurringPaymentModel.CyclesRemaining = await _orderProcessingService.GetCyclesRemainingAsync(recurringPayment);
                     }
 
-                    recurringPaymentModel.StartDate = _dateTimeHelper
-                        .ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
+                    recurringPaymentModel.StartDate = (await _dateTimeHelper
+                        .ConvertToUserTimeAsync(recurringPayment.StartDateUtc, DateTimeKind.Utc)).ToString(CultureInfo.InvariantCulture);
 
                     //fill in additional values (not existing in the entity)
                     recurringPaymentModel.CustomerId = customer.Id;
@@ -173,10 +173,10 @@ namespace Nop.Web.Areas.Admin.Factories
             //convert dates to the user time
             if (await _orderProcessingService.GetNextPaymentDateAsync(recurringPayment) is DateTime nextPaymentDate)
             {
-                model.NextPaymentDate = _dateTimeHelper.ConvertToUserTime(nextPaymentDate, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
+                model.NextPaymentDate = (await _dateTimeHelper.ConvertToUserTimeAsync(nextPaymentDate, DateTimeKind.Utc)).ToString(CultureInfo.InvariantCulture);
                 model.CyclesRemaining = await _orderProcessingService.GetCyclesRemainingAsync(recurringPayment);
             }
-            model.StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(CultureInfo.InvariantCulture);
+            model.StartDate = (await _dateTimeHelper.ConvertToUserTimeAsync(recurringPayment.StartDateUtc, DateTimeKind.Utc)).ToString(CultureInfo.InvariantCulture);
 
             model.CustomerId = customer.Id;
             model.InitialOrderId = order.Id;
@@ -222,7 +222,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();
 
                     //convert dates to the user time
-                    historyModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    historyModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     var order = await _orderService.GetOrderByIdAsync(historyEntry.OrderId);

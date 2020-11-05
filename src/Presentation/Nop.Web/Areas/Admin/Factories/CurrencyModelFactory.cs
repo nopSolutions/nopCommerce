@@ -179,7 +179,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= currency.ToModel<CurrencyModel>();
 
                 //convert dates to the user time
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
+                model.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(currency.CreatedOnUtc, DateTimeKind.Utc);
 
                 //define localized model configuration action
                 localizedModelConfiguration = async (locale, languageId) =>
