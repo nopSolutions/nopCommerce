@@ -18,7 +18,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
@@ -68,7 +67,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var appSettings = new AppSettings();
             configuration.Bind(appSettings);
             services.AddSingleton(appSettings);
-            AppSettingsHelper.SaveAppSettingsAsync(appSettings);
+            AppSettingsHelper.SaveAppSettingsAsync(appSettings).Wait();
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
