@@ -76,7 +76,6 @@ namespace Nop.Services.Directory
                         query = query.Where(c => c.Published);
 
                     //Store mapping
-                    //TODO: Are we need apply store mapping when showHidden is false?
                     var storeId = _storeContext.CurrentStore.Id;
 
                     if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Country>(storeId))
