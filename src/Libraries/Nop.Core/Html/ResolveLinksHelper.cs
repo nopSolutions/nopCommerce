@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -18,7 +18,7 @@ namespace Nop.Core.Html
         /// The regular expression used to parse links.
         /// </summary>
         private static readonly Regex _regex = new Regex("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        
+
         #endregion
 
         #region Utilities
@@ -34,7 +34,7 @@ namespace Nop.Core.Html
             // Remove the protocol
             var startIndex = url.IndexOf("://", StringComparison.InvariantCultureIgnoreCase);
             if (startIndex > -1)
-                url = url.Substring(startIndex + 3);
+                url = url[(startIndex + 3)..];                
 
             if (url.Length <= max)
                 return url;
@@ -54,7 +54,7 @@ namespace Nop.Core.Html
             // Remove URL parameters
             var queryIndex = url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
             if (queryIndex > -1)
-                url = url.Substring(0, queryIndex);
+                url = url[0..queryIndex];
 
             if (url.Length <= max)
                 return url;
@@ -62,7 +62,7 @@ namespace Nop.Core.Html
             // Remove URL fragment
             var fragmentIndex = url.IndexOf("#", StringComparison.InvariantCultureIgnoreCase);
             if (fragmentIndex > -1)
-                url = url.Substring(0, fragmentIndex);
+                url = url[0..fragmentIndex];
 
             if (url.Length <= max)
                 return url;
@@ -71,13 +71,13 @@ namespace Nop.Core.Html
             firstIndex = url.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase) + 1;
             lastIndex = url.LastIndexOf(".", StringComparison.InvariantCultureIgnoreCase);
 
-            if (lastIndex - firstIndex <= 10) 
+            if (lastIndex - firstIndex <= 10)
                 return url;
 
-            var page = url.Substring(firstIndex, lastIndex - firstIndex);
+            var page = url[firstIndex..lastIndex];
             var length = url.Length - max + 3;
             if (page.Length > length)
-                url = url.Replace(page, "..." + page.Substring(length));
+                url = url.Replace(page, "..." + page[length..]);
 
             return url;
         }

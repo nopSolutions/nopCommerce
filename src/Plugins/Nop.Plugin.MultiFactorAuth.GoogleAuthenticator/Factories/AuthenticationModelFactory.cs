@@ -35,7 +35,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var secretkey = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
+            var secretkey = Guid.NewGuid().ToString().Replace("-", "")[0..10];
             var setupInfo = _googleAuthenticatorService.GenerateSetupCode(secretkey);
 
             model.SecretKey = secretkey;

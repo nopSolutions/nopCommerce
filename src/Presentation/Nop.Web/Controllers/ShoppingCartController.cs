@@ -1409,7 +1409,7 @@ namespace Nop.Web.Controllers
             var discountId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
-                    discountId = Convert.ToInt32(formValue.Substring("removediscount-".Length));
+                    discountId = Convert.ToInt32(formValue["removediscount-".Length..]);
             var discount = _discountService.GetDiscountById(discountId);
             if (discount != null)
                 _customerService.RemoveDiscountCouponCode(_workContext.CurrentCustomer, discount.CouponCode);
@@ -1430,7 +1430,7 @@ namespace Nop.Web.Controllers
             var giftCardId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
-                    giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
+                    giftCardId = Convert.ToInt32(formValue["removegiftcard-".Length..]);
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
                 _customerService.RemoveGiftCardCouponCode(_workContext.CurrentCustomer, gc.GiftCardCouponCode);

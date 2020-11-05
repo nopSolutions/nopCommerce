@@ -196,7 +196,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 // delete the .deps file
                 if (assemblyFile.EndsWith(".dll"))
                 {
-                    _fileProvider.DeleteFile(assemblyFile.Substring(0, assemblyFile.Length - 4) + ".deps.json");
+                    _fileProvider.DeleteFile(assemblyFile[0..^4] + ".deps.json");
                 }
 
                 return assembly;
