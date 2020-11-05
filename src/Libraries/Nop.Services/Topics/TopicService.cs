@@ -60,7 +60,6 @@ namespace Nop.Services.Topics
         /// <param name="storeId">A store identifier</param>
         /// <param name="customerRoleIds">Identifiers of customer's roles</param>
         /// <returns>Filtered query</returns>
-        /// TODO: Make generic method for all entities
         protected virtual IQueryable<TEntity> FilterHiddenEntries<TEntity>(IQueryable<TEntity> query, int storeId, int[] customerRoleIds)
             where TEntity : Topic
         {
