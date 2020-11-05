@@ -597,25 +597,26 @@ namespace Nop.Web.Factories
                 _webHelper.IsCurrentConnectionSecuredAsync());
 
             var model = await _staticCacheManager.GetAsync(categoriesCacheKey, async () =>
-                (await _categoryService.GetAllCategoriesDisplayedOnHomepageAsync())
-                    .Select(category =>
+                await (await _categoryService.GetAllCategoriesDisplayedOnHomepageAsync())
+                .ToAsyncEnumerable()
+                    .SelectAwait(async category =>
                     {
                         var catModel = new CategoryModel
                         {
                             Id = category.Id,
-                            Name = _localizationService.GetLocalizedAsync(category, x => x.Name).Result,
-                            Description = _localizationService.GetLocalizedAsync(category, x => x.Description).Result,
-                            MetaKeywords = _localizationService.GetLocalizedAsync(category, x => x.MetaKeywords).Result,
-                            MetaDescription = _localizationService.GetLocalizedAsync(category, x => x.MetaDescription).Result,
-                            MetaTitle = _localizationService.GetLocalizedAsync(category, x => x.MetaTitle).Result,
-                            SeName = _urlRecordService.GetSeNameAsync(category).Result,
+                            Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
+                            Description = await _localizationService.GetLocalizedAsync(category, x => x.Description),
+                            MetaKeywords = await _localizationService.GetLocalizedAsync(category, x => x.MetaKeywords),
+                            MetaDescription = await _localizationService.GetLocalizedAsync(category, x => x.MetaDescription),
+                            MetaTitle = await _localizationService.GetLocalizedAsync(category, x => x.MetaTitle),
+                            SeName = await _urlRecordService.GetSeNameAsync(category),
                         };
 
                         //prepare picture model
                         var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, 
-                            category, pictureSize, true, _workContext.GetWorkingLanguageAsync().Result,
-                            _webHelper.IsCurrentConnectionSecuredAsync(), _storeContext.GetCurrentStoreAsync().Result);
-                        catModel.PictureModel = _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
+                            category, pictureSize, true, await _workContext.GetWorkingLanguageAsync(),
+                            await _webHelper.IsCurrentConnectionSecuredAsync(), await _storeContext.GetCurrentStoreAsync());
+                        catModel.PictureModel = await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
                         {
                             var picture = await _pictureService.GetPictureByIdAsync(category.PictureId);
                             string fullSizeImageUrl, imageUrl;
@@ -636,10 +637,10 @@ namespace Nop.Web.Factories
                                         catModel.Name)
                             };
                             return pictureModel;
-                        }).Result;
+                        });
 
                         return catModel;
-                    }).ToList());
+                    }).ToListAsync());
 
             return model;
         }

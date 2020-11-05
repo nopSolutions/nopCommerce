@@ -384,21 +384,21 @@ namespace Nop.Web.Models.Catalog
                 var cacheKey = staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, await workContext.GetWorkingLanguageAsync());
 
                 var allOptions = await specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(filterableSpecificationAttributeOptionIds);
-                var allFilters = await staticCacheManager.GetAsync(cacheKey, () => Task.FromResult(allOptions.Select(sao =>
+                var allFilters = await staticCacheManager.GetAsync(cacheKey, async () => await allOptions.ToAsyncEnumerable().SelectAwait(async sao =>
                 {
-                    var specAttribute = specificationAttributeService.GetSpecificationAttributeByIdAsync(sao.SpecificationAttributeId).Result;
+                    var specAttribute = await specificationAttributeService.GetSpecificationAttributeByIdAsync(sao.SpecificationAttributeId);
 
                     return new SpecificationAttributeOptionFilter
                     {
                         SpecificationAttributeId = specAttribute.Id,
-                        SpecificationAttributeName = localizationService.GetLocalizedAsync(specAttribute, x => x.Name, workContext.GetWorkingLanguageAsync().Result.Id).Result,
+                        SpecificationAttributeName = await localizationService.GetLocalizedAsync(specAttribute, x => x.Name, (await workContext.GetWorkingLanguageAsync()).Id),
                         SpecificationAttributeDisplayOrder = specAttribute.DisplayOrder,
                         SpecificationAttributeOptionId = sao.Id,
-                        SpecificationAttributeOptionName = localizationService.GetLocalizedAsync(sao, x => x.Name, workContext.GetWorkingLanguageAsync().Result.Id).Result,
+                        SpecificationAttributeOptionName = await localizationService.GetLocalizedAsync(sao, x => x.Name, (await workContext.GetWorkingLanguageAsync()).Id),
                         SpecificationAttributeOptionColorRgb = sao.ColorSquaresRgb,
                         SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
                     };
-                }).ToList()));
+                }).ToListAsync());
 
                 if (!allFilters.Any())
                     return;

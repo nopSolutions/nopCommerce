@@ -774,8 +774,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (configurationId == 0)
                 return null;
 
-            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), () =>
-                _facebookPixelConfigurationRepository.GetByIdAsync(configurationId));
+            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(FacebookPixelDefaults.ConfigurationCacheKey, configurationId), async () =>
+                await _facebookPixelConfigurationRepository.GetByIdAsync(configurationId));
         }
 
         /// <summary>

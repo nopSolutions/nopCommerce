@@ -93,9 +93,10 @@ namespace Nop.Services.Localization
 
                 //store mapping
                 if (storeId > 0)
-                    allLanguages = allLanguages
-                        .Where(l => _storeMappingService.AuthorizeAsync(l, storeId).Result)
-                        .ToList();
+                    allLanguages = await allLanguages
+                        .ToAsyncEnumerable()
+                        .WhereAwait(async l => await _storeMappingService.AuthorizeAsync(l, storeId))
+                        .ToListAsync();
 
                 return allLanguages;
             });

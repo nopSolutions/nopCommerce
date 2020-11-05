@@ -102,18 +102,18 @@ namespace Nop.Services.Topics
                 if (!showHidden)
                     query = query.Where(c => c.Published);
                 query = query.OrderBy(t => t.Id);
-                var topics = await query.ToAsyncEnumerable().ToListAsync();
+                var topics = query.ToAsyncEnumerable();
                 if (storeId > 0)
                 {
                     //filter by store
-                    topics = topics.Where(x => _storeMappingService.AuthorizeAsync(x, storeId).Result).ToList();
+                    topics = topics.WhereAwait(async x => await _storeMappingService.AuthorizeAsync(x, storeId));
                 }
 
                 if (!showHidden)
                     //ACL (access control list)
-                    topics = topics.Where(x => _aclService.AuthorizeAsync(x).Result).ToList();
+                    topics = topics.WhereAwait(async x => await _aclService.AuthorizeAsync(x));
 
-                return topics.FirstOrDefault();
+                return await topics.FirstOrDefaultAsync();
             });
 
             return topic;

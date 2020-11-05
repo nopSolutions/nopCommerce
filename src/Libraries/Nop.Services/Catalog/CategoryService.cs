@@ -136,7 +136,7 @@ namespace Nop.Services.Catalog
                 await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
                 showHidden);
 
-            var categories = await _staticCacheManager.GetAsync(key, async () => (await GetAllCategoriesAsync(string.Empty, storeId, showHidden: showHidden)).ToList());
+            var categories = await _staticCacheManager.GetAsync(key, async () => await GetAllCategoriesAsync(string.Empty, storeId, showHidden: showHidden));
 
             return categories;
         }
@@ -294,11 +294,11 @@ namespace Nop.Services.Catalog
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesHomepageWithoutHiddenCacheKey,
                 await _storeContext.GetCurrentStoreAsync(), _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()));
 
-            var result = await _staticCacheManager.GetAsync(cacheKey, () =>
+            var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                return Task.FromResult(categories
-                    .Where(c => _aclService.AuthorizeAsync(c).Result && _storeMappingService.AuthorizeAsync(c).Result)
-                    .ToList());
+                return await categories.ToAsyncEnumerable()
+                    .WhereAwait(async c => await _aclService.AuthorizeAsync(c) && await _storeMappingService.AuthorizeAsync(c))
+                    .ToListAsync();
             });
 
             return result;
@@ -331,7 +331,10 @@ namespace Nop.Services.Catalog
                 if (!discount.AppliedToSubCategories)
                     return ids;
 
-                ids.AddRange(ids.SelectMany(categoryId => GetChildCategoryIdsAsync(categoryId, _storeContext.GetCurrentStoreAsync().Result.Id).Result).ToList());
+                ids.AddRange(await ids.ToAsyncEnumerable().SelectManyAwait(async categoryId =>
+                        (await GetChildCategoryIdsAsync(categoryId, (await _storeContext.GetCurrentStoreAsync()).Id))
+                        .ToAsyncEnumerable())
+                    .ToListAsync());
 
                 return ids.Distinct().ToList();
             });
@@ -365,7 +368,7 @@ namespace Nop.Services.Catalog
                     .Select(c => c.Id)
                     .ToList();
                 categoriesIds.AddRange(categories);
-                categoriesIds.AddRange(categories.SelectMany(cId => GetChildCategoryIdsAsync(cId, storeId, showHidden).Result));
+                categoriesIds.AddRange(await categories.ToAsyncEnumerable().SelectManyAwait(async cId => (await GetChildCategoryIdsAsync(cId, storeId, showHidden)).ToAsyncEnumerable()).ToListAsync());
 
                 return categoriesIds;
             });

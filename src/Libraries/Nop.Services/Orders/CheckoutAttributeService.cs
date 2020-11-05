@@ -76,22 +76,22 @@ namespace Nop.Services.Orders
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
-                var checkoutAttributes = await _checkoutAttributeRepository.GetAllAsync(query =>
+                var checkoutAttributes = (await _checkoutAttributeRepository.GetAllAsync(query =>
                 {
                     return from ca in query
                         orderby ca.DisplayOrder, ca.Id
                         select ca;
-                });
+                })).ToAsyncEnumerable();
 
                 if (storeId > 0)
                     //store mapping
-                    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.AuthorizeAsync(ca, storeId).Result).ToList();
+                    checkoutAttributes = checkoutAttributes.WhereAwait(async ca => await _storeMappingService.AuthorizeAsync(ca, storeId));
 
                 if (excludeShippableAttributes)
                     //remove attributes which require shippable products
-                    checkoutAttributes = checkoutAttributes.Where(x => !x.ShippableProductRequired).ToList();
+                    checkoutAttributes = checkoutAttributes.Where(x => !x.ShippableProductRequired);
 
-                return checkoutAttributes;
+                return await checkoutAttributes.ToListAsync();
             });
         }
 

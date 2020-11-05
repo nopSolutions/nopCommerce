@@ -759,11 +759,11 @@ namespace Nop.Services.Catalog
 
             //ACL mapping
             if (!showHidden) 
-                products = products.Where(x => _aclService.AuthorizeAsync(x).Result).ToList();
+                products = await products.ToAsyncEnumerable().WhereAwait(async x => await _aclService.AuthorizeAsync(x)).ToListAsync();
 
             //Store mapping
             if (!showHidden && storeId > 0) 
-                products = products.Where(x => _storeMappingService.AuthorizeAsync(x, storeId).Result).ToList();
+                products = await products.ToAsyncEnumerable().WhereAwait(async x => await _storeMappingService.AuthorizeAsync(x, storeId)).ToListAsync();
 
             return products;
         }
@@ -2138,7 +2138,7 @@ namespace Nop.Services.Catalog
 
             var prh = await _productReviewHelpfulnessRepository.Table
                 .ToAsyncEnumerable()
-                .SingleOrDefaultAsync(h => h.ProductReviewId == productReview.Id && h.CustomerId == _workContext.GetCurrentCustomerAsync().Result.Id);
+                .SingleOrDefaultAwaitAsync(async h => h.ProductReviewId == productReview.Id && h.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id);
 
             if (prh is null)
             {

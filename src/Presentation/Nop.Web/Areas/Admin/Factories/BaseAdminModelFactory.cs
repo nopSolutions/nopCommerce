@@ -153,11 +153,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var listItems = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 var categories = await _categoryService.GetAllCategoriesAsync(showHidden: showHidden);
-                return categories.Select(c => new SelectListItem
+                return await categories.ToAsyncEnumerable().SelectAwait(async c => new SelectListItem
                 {
-                    Text = _categoryService.GetFormattedBreadCrumbAsync(c, categories).Result,
+                    Text = await _categoryService.GetFormattedBreadCrumbAsync(c, categories),
                     Value = c.Id.ToString()
-                });
+                }).ToListAsync();
             });
 
             var result = new List<SelectListItem>();
