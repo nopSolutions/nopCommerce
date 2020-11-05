@@ -764,7 +764,7 @@ namespace Nop.Web.Controllers
                 await _eventPublisher.PublishAsync(new CustomerLoggedOutEvent(await _workContext.GetCurrentCustomerAsync()));
 
                 //Save a new record
-                await _workContext.SetCustomerAsync(await _customerService.InsertGuestCustomerAsync());
+                await _workContext.SetCurrentCustomerAsync(await _customerService.InsertGuestCustomerAsync());
             }
             var customer = await _workContext.GetCurrentCustomerAsync();
             customer.RegisteredInStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;

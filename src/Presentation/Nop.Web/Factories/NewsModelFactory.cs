@@ -138,7 +138,7 @@ namespace Nop.Web.Factories
 
             //number of news comments
             var storeId = _newsSettings.ShowNewsCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
-            
+
             model.NumberOfComments = await _newsService.GetNewsCommentsCountAsync(newsItem, storeId, true);
 
             if (prepareComments)
@@ -167,17 +167,19 @@ namespace Nop.Web.Factories
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, await _workContext.GetWorkingLanguageAsync(), await _storeContext.GetCurrentStoreAsync());
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var newsItems = await _newsService.GetAllNewsAsync((await _workContext.GetWorkingLanguageAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id, 0, _newsSettings.MainPageNewsCount);
+                var language = await _workContext.GetWorkingLanguageAsync();
+                var store = await _storeContext.GetCurrentStoreAsync();
+                var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, 0, _newsSettings.MainPageNewsCount);
+
                 return new HomepageNewsItemsModel
                 {
-                    WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id,
-                    NewsItems = newsItems
-                        .Select(x =>
-                        {
-                            var newsModel = new NewsItemModel();
-                            PrepareNewsItemModelAsync(newsModel, x, false).Wait();
-                            return newsModel;
-                        }).ToList()
+                    WorkingLanguageId = language.Id,
+                    NewsItems = await newsItems.ToAsyncEnumerable().SelectAwait(async newsItem =>
+                    {
+                        var newsModel = new NewsItemModel();
+                        await PrepareNewsItemModelAsync(newsModel, newsItem, false);
+                        return newsModel;
+                    }).ToListAsync()
                 };
             });
 
@@ -198,27 +200,26 @@ namespace Nop.Web.Factories
         /// <returns>News item list model</returns>
         public virtual async Task<NewsItemListModel> PrepareNewsItemListModelAsync(NewsPagingFilteringModel command)
         {
-            var model = new NewsItemListModel
-            {
-                WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id
-            };
-
             if (command.PageSize <= 0)
                 command.PageSize = _newsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0)
                 command.PageNumber = 1;
 
-            var newsItems = await _newsService.GetAllNewsAsync((await _workContext.GetWorkingLanguageAsync()).Id, (await _storeContext.GetCurrentStoreAsync()).Id,
-                command.PageNumber - 1, command.PageSize);
-            model.PagingFilteringContext.LoadPagedList(newsItems);
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var newsItems = await _newsService.GetAllNewsAsync(language.Id, store.Id, command.PageNumber - 1, command.PageSize);
 
-            model.NewsItems = newsItems
-                .Select(x =>
+            var model = new NewsItemListModel
+            {
+                WorkingLanguageId = language.Id,
+                NewsItems = await newsItems.ToAsyncEnumerable().SelectAwait(async newsItem =>
                 {
                     var newsModel = new NewsItemModel();
-                    PrepareNewsItemModelAsync(newsModel, x, false).Wait();
+                    await PrepareNewsItemModelAsync(newsModel, newsItem, false);
                     return newsModel;
-                }).ToList();
+                }).ToListAsync()
+            };
+            model.PagingFilteringContext.LoadPagedList(newsItems);
 
             return model;
         }

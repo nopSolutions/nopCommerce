@@ -138,13 +138,13 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? (await _storeContext.GetCurrentStoreAsync()).Id : 0;
-            
+
             model.NumberOfComments = await _blogService.GetBlogCommentsCountAsync(blogPost, storeId, true);
 
             if (prepareComments)
-            {                
+            {
                 var blogComments = await _blogService.GetAllCommentsAsync(
-                    blogPostId: blogPost.Id, 
+                    blogPostId: blogPost.Id,
                     approved: true,
                     storeId: storeId);
 
@@ -166,45 +166,32 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new BlogPostListModel
-            {
-                PagingFilteringContext =
-                {
-                    Tag = command.Tag,
-                    Month = command.Month
-                },
-                WorkingLanguageId = (await _workContext.GetWorkingLanguageAsync()).Id
-            };
-
-            if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageSize <= 0)
+                command.PageSize = _blogSettings.PostsPageSize;
+            if (command.PageNumber <= 0)
+                command.PageNumber = 1;
 
             var dateFrom = command.GetFromMonth();
             var dateTo = command.GetToMonth();
 
-            IPagedList<BlogPost> blogPosts;
-            if (string.IsNullOrEmpty(command.Tag))
-            {
-                blogPosts = await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                    (await _workContext.GetWorkingLanguageAsync()).Id,
-                    dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
-            }
-            else
-            {
-                blogPosts = await _blogService.GetAllBlogPostsByTagAsync((await _storeContext.GetCurrentStoreAsync()).Id,
-                    (await _workContext.GetWorkingLanguageAsync()).Id,
-                    command.Tag, command.PageNumber - 1, command.PageSize);
-            }
-            model.PagingFilteringContext.LoadPagedList(blogPosts);
+            var language = await _workContext.GetWorkingLanguageAsync();
+            var store = await _storeContext.GetCurrentStoreAsync();
+            var blogPosts = string.IsNullOrEmpty(command.Tag)
+                ? await _blogService.GetAllBlogPostsAsync(store.Id, language.Id, dateFrom, dateTo, command.PageNumber - 1, command.PageSize)
+                : await _blogService.GetAllBlogPostsByTagAsync(store.Id, language.Id, command.Tag, command.PageNumber - 1, command.PageSize);
 
-            model.BlogPosts = blogPosts
-                .Select(x =>
+            var model = new BlogPostListModel
+            {
+                PagingFilteringContext = { Tag = command.Tag, Month = command.Month },
+                WorkingLanguageId = language.Id,
+                BlogPosts = await blogPosts.ToAsyncEnumerable().SelectAwait(async blogPost =>
                 {
                     var blogPostModel = new BlogPostModel();
-                    PrepareBlogPostModelAsync(blogPostModel, x, false).Wait();
+                    await PrepareBlogPostModelAsync(blogPostModel, blogPost, false);
                     return blogPostModel;
-                })
-                .ToList();
+                }).ToListAsync()
+            };
+            model.PagingFilteringContext.LoadPagedList(blogPosts);
 
             return model;
         }

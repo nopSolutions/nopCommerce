@@ -315,8 +315,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="discount">Discount</param>
         /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
         /// <returns>List of discount requirement rule models</returns>
-        public virtual Task<IList<DiscountRequirementRuleModel>> PrepareDiscountRequirementRuleModelsAsync(ICollection<DiscountRequirement> requirements,
-            Discount discount, RequirementGroupInteractionType groupInteractionType)
+        public virtual async Task<IList<DiscountRequirementRuleModel>> PrepareDiscountRequirementRuleModelsAsync
+            (ICollection<DiscountRequirement> requirements, Discount discount, RequirementGroupInteractionType groupInteractionType)
         {
             if (requirements == null)
                 throw new ArgumentNullException(nameof(requirements));
@@ -326,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var lastRequirement = requirements.LastOrDefault();
 
-            return Task.FromResult<IList<DiscountRequirementRuleModel>>(requirements.Select(requirement =>
+            return await requirements.ToAsyncEnumerable().SelectAwait(async requirement =>
             {
                 //set common properties
                 var requirementModel = new DiscountRequirementRuleModel
@@ -345,10 +345,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
-                    var childRequirements = _discountService.GetDiscountRequirementsByParentAsync(requirement).Result;
+                    var childRequirements = await _discountService.GetDiscountRequirementsByParentAsync(requirement);
 
-                    requirementModel
-                        .ChildRequirements = PrepareDiscountRequirementRuleModelsAsync(childRequirements, discount, interactionType).Result;
+                    requirementModel.ChildRequirements = await PrepareDiscountRequirementRuleModelsAsync(childRequirements, discount, interactionType);
 
                     return requirementModel;
                 }
@@ -363,7 +362,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     .ConfigurationUrl = requirementRule.GetConfigurationUrl(discount.Id, requirement.Id);
 
                 return requirementModel;
-            }).ToList());
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -490,7 +489,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get products
             var (products, _) = await _productService.SearchProductsAsync(false, showHidden: true,
-
                 categoryIds: new List<int> { searchModel.SearchCategoryId },
                 manufacturerId: searchModel.SearchManufacturerId,
                 storeId: searchModel.SearchStoreId,
@@ -505,7 +503,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 return products.ToAsyncEnumerable().SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
-
                     productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
 
                     return productModel;

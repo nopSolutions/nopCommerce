@@ -178,13 +178,13 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         /// <param name="sender">Sender</param>
         /// <param name="args">Event args</param>
-        private void OnCallCompleted(object sender, EventArgs args)
+        private async void OnCallCompleted(object sender, EventArgs args)
         {
             if (!(args is AvaTaxCallEventArgs avaTaxCallEventArgs))
                 return;
 
             //log request results
-            _taxTransactionLogService.InsertTaxTransactionLogAsync(new TaxTransactionLog
+            await _taxTransactionLogService.InsertTaxTransactionLogAsync(new TaxTransactionLog
             {
                 StatusCode = (int)avaTaxCallEventArgs.Code,
                 Url = avaTaxCallEventArgs.RequestUri.ToString(),
@@ -192,7 +192,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 ResponseMessage = avaTaxCallEventArgs.ResponseString,
                 CustomerId = _workContext.GetCurrentCustomerAsync().Result.Id,
                 CreatedDateUtc = DateTime.UtcNow
-            }).Wait();
+            });
         }
 
         /// <summary>

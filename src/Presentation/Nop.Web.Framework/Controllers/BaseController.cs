@@ -235,7 +235,7 @@ namespace Nop.Web.Framework.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
             //return Challenge();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrlAsync(Request) });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrlAsync(Request).Result });
         }
 
         /// <summary>
