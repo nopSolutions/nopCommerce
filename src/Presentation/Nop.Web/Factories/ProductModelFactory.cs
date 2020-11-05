@@ -1232,14 +1232,23 @@ namespace Nop.Web.Factories
                 model.PageShareCode = shareCode;
             }
 
-            //back in stock subscriptions
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                product.BackorderMode == BackorderMode.NoBackorders &&
-                product.AllowBackInStockSubscriptions &&
-                _productService.GetTotalStockQuantity(product) <= 0)
+            switch (product.ManageInventoryMethod)
             {
-                //out of stock
-                model.DisplayBackInStockSubscription = true;
+                case ManageInventoryMethod.ManageStock:
+                    model.InStock = product.BackorderMode != BackorderMode.NoBackorders
+                        || _productService.GetTotalStockQuantity(product) > 0;
+
+                    model.DisplayBackInStockSubscription = !model.InStock 
+                        && product.AllowBackInStockSubscriptions;
+
+                    break;
+
+                case ManageInventoryMethod.ManageStockByAttributes:
+                    model.InStock = _productAttributeService
+                        .GetAllProductAttributeCombinations(product.Id)
+                        ?.Any(c => c.StockQuantity > 0 || c.AllowOutOfStockOrders) ?? false;
+
+                    break;
             }
 
             //breadcrumb
