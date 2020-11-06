@@ -479,36 +479,25 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns> Product category mapping collection</returns>
+        /// <returns>Product category mapping collection</returns>
         public virtual IList<ProductCategory> GetProductCategoriesByProductId(int productId, int storeId,
             bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
-                productId, showHidden, _workContext.CurrentCustomer, storeId);
+            return _productCategoryRepository.GetAll(query => 
+            {
+                if (!showHidden)
+                {
+                    var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table, _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
+                }
 
-            var query = from pc in _productCategoryRepository.Table
-                        join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                        where pc.ProductId == productId &&
-                              !c.Deleted &&
-                              (showHidden || c.Published)
-                        orderby pc.DisplayOrder, pc.Id
-                        select pc;
-
-            if (showHidden)
-                return _staticCacheManager.Get(key, query.ToList);
-
-            var categoryIds = GetCategoriesByIds(query.Select(pc => pc.CategoryId).ToArray())
-                .Where(category => _aclService.Authorize(category) && _storeMappingService.Authorize(category, storeId))
-                .Select(c => c.Id).ToArray();
-
-            query = from pc in query
-                    where categoryIds.Contains(pc.CategoryId)
-                    select pc;
-
-            return _staticCacheManager.Get(key, query.ToList);
+                return query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+                
+            }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
+                productId, showHidden, _workContext.CurrentCustomer, storeId));
         }
 
         /// <summary>
