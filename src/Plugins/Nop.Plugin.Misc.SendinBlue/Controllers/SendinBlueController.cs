@@ -303,8 +303,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         [Area(AreaNames.Admin)]
         public async Task<string> GetSynchronizationInfo()
         {
-            //TODO: GetAsync
-            var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), () => Task.FromResult(string.Empty));
+            var res = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(SendinBlueDefaults.SyncKeyCache), () => string.Empty);
             await _staticCacheManager.RemoveAsync(SendinBlueDefaults.SyncKeyCache);
 
             return res;

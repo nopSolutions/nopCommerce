@@ -388,8 +388,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
 
-                    //TODO: GetAsync
-                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
 
                     if (shouldRebuild)
                     {
@@ -619,8 +618,7 @@ namespace Nop.Web.Framework.UI
                         CacheTime = _appSettings.CacheConfig.BundledFilesCacheTime
                     };
 
-                    //TODO: GetAsync
-                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => Task.FromResult(true)).Result;
+                    var shouldRebuild = _staticCacheManager.GetAsync(_staticCacheManager.PrepareKey(cacheKey), () => true).Result;
 
                     if (shouldRebuild)
                     {
