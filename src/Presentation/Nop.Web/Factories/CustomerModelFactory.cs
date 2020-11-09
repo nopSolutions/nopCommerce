@@ -991,12 +991,15 @@ namespace Nop.Web.Factories
             var multiFactorAuthenticationProvider = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, _storeContext.CurrentStore.Id)
                     .Where(provider => provider.PluginDescriptor.SystemName == sysName).FirstOrDefault();
 
-            providerModel.Name = _localizationService.GetLocalizedFriendlyName(multiFactorAuthenticationProvider, _workContext.WorkingLanguage.Id);
-            providerModel.SystemName = sysName;
-            providerModel.Description = multiFactorAuthenticationProvider.Description;
-            providerModel.LogoUrl = _multiFactorAuthenticationPluginManager.GetPluginLogoUrl(multiFactorAuthenticationProvider);
-            providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName(): multiFactorAuthenticationProvider.GetPublicViewComponentName();
-            providerModel.Selected = sysName == selectedProvider;
+            if (multiFactorAuthenticationProvider != null)
+            {
+                providerModel.Name = _localizationService.GetLocalizedFriendlyName(multiFactorAuthenticationProvider, _workContext.WorkingLanguage.Id);
+                providerModel.SystemName = sysName;
+                providerModel.Description = multiFactorAuthenticationProvider.Description;
+                providerModel.LogoUrl = _multiFactorAuthenticationPluginManager.GetPluginLogoUrl(multiFactorAuthenticationProvider);
+                providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName() : multiFactorAuthenticationProvider.GetPublicViewComponentName();
+                providerModel.Selected = sysName == selectedProvider;
+            }
 
             return providerModel;
         }
