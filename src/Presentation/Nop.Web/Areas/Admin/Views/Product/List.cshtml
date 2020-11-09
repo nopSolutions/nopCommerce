@@ -205,13 +205,13 @@
                       <div class="card card-default">
                           <div class="card-body">
                               @await Html.PartialAsync("Table", new DataTablesModel
-                              {
-                                  Name = "products-grid",
-                                  UrlRead = new DataUrl("ProductList", "Product", null),
-                                  SearchButtonId = "search-products",
-                                  Length = Model.PageSize,
-                                  LengthMenu = Model.AvailablePageSizes,
-                                  Filters = new List<FilterParameter>
+                         {
+                             Name = "products-grid",
+                             UrlRead = new DataUrl("ProductList", "Product", null),
+                             SearchButtonId = "search-products",
+                             Length = Model.PageSize,
+                             LengthMenu = Model.AvailablePageSizes,
+                             Filters = new List<FilterParameter>
                                   {
                                       new FilterParameter(nameof(Model.SearchProductName)),
                                       new FilterParameter(nameof(Model.SearchCategoryId)),
@@ -223,7 +223,7 @@
                                       new FilterParameter(nameof(Model.SearchProductTypeId)),
                                       new FilterParameter(nameof(Model.SearchPublishedId))
                                   },
-                                  ColumnCollection = new List<ColumnProperty>
+                             ColumnCollection = new List<ColumnProperty>
                                   {
                                       new ColumnProperty(nameof(ProductModel.Id))
                                       {
@@ -250,35 +250,28 @@
                                       new ColumnProperty(nameof(ProductModel.Price))
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.Price").Text,
-                                          Width = "150",
                                           Render = new RenderCustom("renderColumnPrice")
                                       },
                                       new ColumnProperty(nameof(ProductModel.StockQuantityStr))
                                       {
-                                          Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
-                                          Width = "100"
-                                      },
-                                      new ColumnProperty(nameof(ProductModel.ProductTypeName))
-                                      {
-                                          Title = T("Admin.Catalog.Products.Fields.ProductType").Text,
-                                          Width = "100"
-                                      },
+                                          Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text
+                                      },                                      
                                       new ColumnProperty(nameof(ProductModel.Published))
                                       {
                                           Title = T("Admin.Catalog.Products.Fields.Published").Text,
-                                          Width = "100",
+                                          Width = "80",
                                           ClassName = NopColumnClassDefaults.CenterAll,
                                           Render = new RenderBoolean()
                                       },
                                       new ColumnProperty(nameof(ProductModel.Id))
                                       {
                                           Title = T("Admin.Common.Edit").Text,
-                                          Width = "100",
+                                          Width = "80",
                                           ClassName =  NopColumnClassDefaults.Button,
                                           Render = new RenderButtonEdit(new DataUrl("Edit"))
                                       }
                                   }
-                              })
+                         })
 
                               <script>
                             function renderColumnPrice(data, type, row, meta) {

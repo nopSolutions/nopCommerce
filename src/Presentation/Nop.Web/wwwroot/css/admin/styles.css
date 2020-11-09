@@ -1,5 +1,5 @@
 ﻿/* COMMON */
-.content {
+.content, .content-wrapper > .content {
   padding: 0 10px 55px 10px;
 }
 
@@ -116,6 +116,10 @@ ul.common-list {
 .fa.false-icon {
   color: #D22D2D;
   font-size: 20px;
+}
+
+.small-box.bg-yellow, .bg-yellow, .bg-yellow > a {
+  color: white !important;
 }
 
 .new-item-notification {
@@ -1815,6 +1819,7 @@ span.grid-report-item {
 .content-header .pull-right > .btn, .content-header .pull-right > .btn-group {
   float: left;
   margin-left: 3px;
+  position: inherit;
 }
 
 
@@ -1870,6 +1875,14 @@ div.dataTables_wrapper > div.row.margin-t-5 > div.col-lg-1.col-xs-12 > div > div
     border-top: 1px solid #f3f3f3;
     border-right: 1px solid #e3e3e3;
   }
+
+.table-striped tbody tr.odd {
+  background-color: white;
+}
+
+tr.even, div.dataTables_scrollHead > div > table > thead > tr {
+  background-color: #f4f4f4;
+}
 
 .dataTables_scrollBody .dataTables_wrapper {
   width: 95%;
