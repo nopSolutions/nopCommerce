@@ -1,8 +1,6 @@
 ﻿@model MeasureSearchModel
 
-<div class="card card-default">
-    <div class="card-body">
-
+<div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "measuredimension-grid",
@@ -17,21 +15,18 @@
                 new ColumnProperty(nameof(MeasureDimensionModel.Name))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name").Text,
-                    Width = "300",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(MeasureDimensionModel.SystemKeyword))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword").Text,
-                    Width = "200",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(MeasureDimensionModel.Ratio))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio").Text,
-                    Width = "200",
                     Editable = true,
                     EditType = EditType.Number
                 },
@@ -52,7 +47,6 @@
                 new ColumnProperty(nameof(MeasureDimensionModel.Id))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text,
-                    Width = "150",
                     ClassName =  NopColumnClassDefaults.CenterAll,
                     Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text)
                     {
@@ -198,5 +192,4 @@
             </script>
         </div>
     </div>
-</div>
 <nop-alert asp-alert-id="markAsPrimaryDimensionAlert" asp-alert-message="@T("Admin.Configuration.Shipping.Measures.Dimensions.MarkAsPrimaryDimension.Alert.FailedToUpdate")" />

@@ -1,7 +1,6 @@
 ﻿@model MeasureSearchModel
 
-<div class="card card-default">
-    <div class="card-body">
+<div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "measureweight-grid",
@@ -16,21 +15,18 @@
                 new ColumnProperty(nameof(MeasureWeightModel.Name))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Name").Text,
-                    Width = "300",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(MeasureWeightModel.SystemKeyword))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword").Text,
-                    Width = "200",
                     Editable = true,
                     EditType = EditType.String
                 },
                 new ColumnProperty(nameof(MeasureWeightModel.Ratio))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio").Text,
-                    Width = "200",
                     Editable = true,
                     EditType = EditType.Number
                 },
@@ -51,7 +47,6 @@
                 new ColumnProperty(nameof(MeasureWeightModel.Id))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text,
-                    Width = "150",
                     ClassName =  NopColumnClassDefaults.CenterAll,
                     Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
                     {
@@ -196,5 +191,4 @@
             </script>
         </div>
     </div>
-</div>
 <nop-alert asp-alert-id="markAsPrimaryWeightAlert" asp-alert-message="@T(" Admin.Configuration.Shipping.Measures.Weights.MarkAsPrimaryWeight.Alert.FailedToUpdate")" />

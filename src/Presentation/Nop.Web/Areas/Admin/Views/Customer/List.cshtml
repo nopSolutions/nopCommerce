@@ -289,7 +289,7 @@
                                 {
                                     gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Username))
                                     {
-                                        Title = T("Admin.Customers.Customers.Fields.Username").Text                                        
+                                        Title = T("Admin.Customers.Customers.Fields.Username").Text
                                     });
                                 }
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.FullName))
@@ -298,7 +298,8 @@
                                 });
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CustomerRoleNames))
                                 {
-                                    Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text                     
+                                    Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text,
+                                    Width = "100"
                                 });
                                 if (Model.CompanyEnabled)
                                 {
@@ -327,16 +328,6 @@
                                     Width = "70",
                                     ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean()
-                                });
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
-                                {
-                                    Title = T("Admin.Customers.Customers.Fields.CreatedOn").Text,                          
-                                    Render = new RenderDate()
-                                });
-                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.LastActivityDate))
-                                {
-                                    Title = T("Admin.Customers.Customers.Fields.LastActivityDate").Text,
-                                    Render = new RenderDate()
                                 });
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
                                 {

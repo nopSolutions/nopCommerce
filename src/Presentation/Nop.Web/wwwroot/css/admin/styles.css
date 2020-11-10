@@ -1548,7 +1548,7 @@ span.grid-report-item {
 
   .parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
     position: absolute;
-    height: 36px;
+    height: 46px;
     content: "";
     margin-left: -10px;
     margin-top: -18px;
