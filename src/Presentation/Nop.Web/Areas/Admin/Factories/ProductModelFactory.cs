@@ -159,15 +159,15 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
-        protected virtual string GetSpecificationAttributeName(SpecificationAttribute specificationAttribute)
+        protected virtual async Task<string> GetSpecificationAttributeNameAsync(SpecificationAttribute specificationAttribute)
         {
             var name = specificationAttribute.Name;
 
             if (specificationAttribute.SpecificationAttributeGroupId.HasValue)
             {
-                var group = _specificationAttributeService.GetSpecificationAttributeGroupByIdAsync(specificationAttribute.SpecificationAttributeGroupId.Value).Result;
+                var group = await _specificationAttributeService.GetSpecificationAttributeGroupByIdAsync(specificationAttribute.SpecificationAttributeGroupId.Value);
                 if (group != null)
-                    name = string.Format(_localizationService.GetResourceAsync("Admin.Catalog.Products.SpecificationAttributes.NameFormat").Result, group.Name, name);
+                    name = string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.SpecificationAttributes.NameFormat"), group.Name, name);
             }
 
             return name;
@@ -777,8 +777,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductTags = string.Join(", ", (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id)).Select(tag => tag.Name));
                 model.ProductAttributesExist = (await _productAttributeService.GetAllProductAttributesAsync()).Any();
 
-                model.CanCreateCombinations = (await _productAttributeService
-                    .GetProductAttributeMappingsByProductIdAsync(product.Id)).Any(pam => _productAttributeService.GetProductAttributeValuesAsync(pam.Id).Result.Any());
+                model.CanCreateCombinations = await (await _productAttributeService
+                    .GetProductAttributeMappingsByProductIdAsync(product.Id)).ToAsyncEnumerable().AnyAwaitAsync(async pam => (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any());
 
                 if (!excludeProperties)
                 {
@@ -804,15 +804,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareProductAttributeCombinationSearchModel(model.ProductAttributeCombinationSearchModel, product);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalizedAsync(product, entity => entity.Name, languageId, false, false).Result;
-                    locale.FullDescription = _localizationService.GetLocalizedAsync(product, entity => entity.FullDescription, languageId, false, false).Result;
-                    locale.ShortDescription = _localizationService.GetLocalizedAsync(product, entity => entity.ShortDescription, languageId, false, false).Result;
-                    locale.MetaKeywords = _localizationService.GetLocalizedAsync(product, entity => entity.MetaKeywords, languageId, false, false).Result;
-                    locale.MetaDescription = _localizationService.GetLocalizedAsync(product, entity => entity.MetaDescription, languageId, false, false).Result;
-                    locale.MetaTitle = _localizationService.GetLocalizedAsync(product, entity => entity.MetaTitle, languageId, false, false).Result;
-                    locale.SeName = _urlRecordService.GetSeNameAsync(product, languageId, false, false).Result;
+                    locale.Name = await _localizationService.GetLocalizedAsync(product, entity => entity.Name, languageId, false, false);
+                    locale.FullDescription = await _localizationService.GetLocalizedAsync(product, entity => entity.FullDescription, languageId, false, false);
+                    locale.ShortDescription = await _localizationService.GetLocalizedAsync(product, entity => entity.ShortDescription, languageId, false, false);
+                    locale.MetaKeywords = await _localizationService.GetLocalizedAsync(product, entity => entity.MetaKeywords, languageId, false, false);
+                    locale.MetaDescription = await _localizationService.GetLocalizedAsync(product, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaTitle = await _localizationService.GetLocalizedAsync(product, entity => entity.MetaTitle, languageId, false, false);
+                    locale.SeName = await _urlRecordService.GetSeNameAsync(product, languageId, false, false);
                 };
             }
 
@@ -1430,7 +1430,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     productSpecificationAttributeModel.AttributeTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeType);
 
                     productSpecificationAttributeModel.AttributeId = specAttribute.Id;
-                    productSpecificationAttributeModel.AttributeName = GetSpecificationAttributeName(specAttribute);
+                    productSpecificationAttributeModel.AttributeName = await GetSpecificationAttributeNameAsync(specAttribute);
 
                     switch (attribute.AttributeType)
                     {
@@ -1469,14 +1469,14 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return new AddSpecificationAttributeModel
                 {
-                    AvailableAttributes = (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
-                        .Select(attributeWithOption =>
+                    AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
+                        .ToAsyncEnumerable()
+                        .SelectAwait(async attributeWithOption =>
                         {
-                            var attributeName = GetSpecificationAttributeName(attributeWithOption);
+                            var attributeName = await GetSpecificationAttributeNameAsync(attributeWithOption);
 
                             return new SelectListItem(attributeName, attributeWithOption.Id.ToString());
-                        })
-                        .ToList(),
+                        }).ToListAsync(),
                     ProductId = productId,
                     Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync<AddSpecificationAttributeLocalizedModel>()
                 };
@@ -1502,14 +1502,15 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeTypeName = await _localizationService.GetLocalizedEnumAsync(attribute.AttributeType);
             model.AttributeName = specAttribute.Name;
 
-            model.AvailableAttributes = (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
-                .Select(attributeWithOption =>
+            model.AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
+                .ToAsyncEnumerable()
+                .SelectAwait(async attributeWithOption =>
                 {
-                    var attributeName = GetSpecificationAttributeName(attributeWithOption);
+                    var attributeName = await GetSpecificationAttributeNameAsync(attributeWithOption);
 
                     return new SelectListItem(attributeName, attributeWithOption.Id.ToString());
                 })
-                .ToList();
+                .ToListAsync();
 
             model.AvailableOptions = (await _specificationAttributeService
                 .GetSpecificationAttributeOptionsBySpecificationAttributeAsync(model.AttributeId))
@@ -1534,27 +1535,26 @@ namespace Nop.Web.Areas.Admin.Factories
                 default:
                     throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
             }
-
-            void localizedModelConfiguration(AddSpecificationAttributeLocalizedModel locale, int languageId)
-            {
-                switch (attribute.AttributeType)
+            
+            model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync(
+                async (AddSpecificationAttributeLocalizedModel locale, int languageId) =>
                 {
-                    case SpecificationAttributeType.CustomHtmlText:
-                        locale.ValueRaw = _localizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false).Result;
-                        break;
-                    case SpecificationAttributeType.CustomText:
-                        locale.Value = _localizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false).Result;
-                        break;
-                    case SpecificationAttributeType.Option:
-                        break;
-                    case SpecificationAttributeType.Hyperlink:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync((Action<AddSpecificationAttributeLocalizedModel, int>)localizedModelConfiguration);
+                    switch (attribute.AttributeType)
+                    {
+                        case SpecificationAttributeType.CustomHtmlText:
+                            locale.ValueRaw = await _localizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false);
+                            break;
+                        case SpecificationAttributeType.CustomText:
+                            locale.Value = await _localizationService.GetLocalizedAsync(attribute, entity => entity.CustomValue, languageId, false, false);
+                            break;
+                        case SpecificationAttributeType.Option:
+                            break;
+                        case SpecificationAttributeType.Hyperlink:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                });
 
             return model;
         }
@@ -1586,8 +1586,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product tags
-            var productTags = (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
-                .OrderByDescending(tag => _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true).Result).ToList()
+            var productTags = (await (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
+                .ToAsyncEnumerable()
+                .OrderByDescendingAwait(async tag => await _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true)).ToListAsync())
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -1630,9 +1631,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductCount = await _productTagService.GetProductCountAsync(productTag.Id, storeId: 0, showHidden: true);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalizedAsync(productTag, entity => entity.Name, languageId, false, false).Result;
+                    locale.Name = await _localizationService.GetLocalizedAsync(productTag, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -1916,10 +1917,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 await PrepareProductAttributeConditionModelAsync(model.ConditionModel, productAttributeMapping);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.TextPrompt = _localizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.TextPrompt, languageId, false, false).Result;
-                    locale.DefaultValue = _localizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.DefaultValue, languageId, false, false).Result;
+                    locale.TextPrompt = await _localizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = await _localizationService.GetLocalizedAsync(productAttributeMapping, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //prepare nested search model
@@ -2045,9 +2046,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.AssociatedProductName = (await _productService.GetProductByIdAsync(productAttributeValue.AssociatedProductId))?.Name;
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false).Result;
+                    locale.Name = await _localizationService.GetLocalizedAsync(productAttributeValue, entity => entity.Name, languageId, false, false);
                 };
             }
 
@@ -2065,14 +2066,14 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare picture models
             var productPictures = await _productService.GetProductPicturesByProductIdAsync(productAttributeMapping.ProductId);
-            model.ProductPictureModels = productPictures.Select(productPicture => new ProductPictureModel
+            model.ProductPictureModels = await productPictures.ToAsyncEnumerable().SelectAwait(async productPicture => new ProductPictureModel
             {
                 Id = productPicture.Id,
                 ProductId = productPicture.ProductId,
                 PictureId = productPicture.PictureId,
-                PictureUrl = _pictureService.GetPictureUrlAsync(productPicture.PictureId).Result,
+                PictureUrl = await _pictureService.GetPictureUrlAsync(productPicture.PictureId),
                 DisplayOrder = productPicture.DisplayOrder
-            }).ToList();
+            }).ToListAsync();
 
             return model;
         }
@@ -2249,14 +2250,14 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare picture models
             var productPictures = await _productService.GetProductPicturesByProductIdAsync(product.Id);
-            model.ProductPictureModels = productPictures.Select(productPicture => new ProductPictureModel
+            model.ProductPictureModels = await productPictures.ToAsyncEnumerable().SelectAwait(async productPicture => new ProductPictureModel
             {
                 Id = productPicture.Id,
                 ProductId = productPicture.ProductId,
                 PictureId = productPicture.PictureId,
-                PictureUrl = _pictureService.GetPictureUrlAsync(productPicture.PictureId).Result,
+                PictureUrl = await _pictureService.GetPictureUrlAsync(productPicture.PictureId),
                 DisplayOrder = productPicture.DisplayOrder
-            }).ToList();
+            }).ToListAsync();
 
             //prepare product attribute mappings (exclude non-combinable attributes)
             var attributes = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))

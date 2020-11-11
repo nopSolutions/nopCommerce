@@ -41,9 +41,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return new List<string> { PublicWidgetZones.HeadHtmlTag };
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeadHtmlTag });
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return _webHelper.GetStoreLocationAsync().Result + "Admin/WidgetsGoogleAnalytics/Configure";
+            return _webHelper.GetStoreLocation() + "Admin/WidgetsGoogleAnalytics/Configure";
         }
 
         /// <summary>

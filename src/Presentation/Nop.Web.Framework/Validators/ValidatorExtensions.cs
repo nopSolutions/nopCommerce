@@ -77,16 +77,16 @@ namespace Nop.Web.Framework.Validators
             regExp += customerSettings.PasswordRequireNonAlphanumeric ? "(?=.*?[#?!@$%^&*-])" : "";
             regExp += $".{{{customerSettings.PasswordMinLength},}}$";
 
-            var message = string.Format(localizationService.GetResourceAsync("Validation.Password.Rule").Result,
-                string.Format(localizationService.GetResourceAsync("Validation.Password.LengthValidation").Result, customerSettings.PasswordMinLength),
-                customerSettings.PasswordRequireUppercase ? localizationService.GetResourceAsync("Validation.Password.RequireUppercase").Result : "",
-                customerSettings.PasswordRequireLowercase ? localizationService.GetResourceAsync("Validation.Password.RequireLowercase").Result : "",
-                customerSettings.PasswordRequireDigit ? localizationService.GetResourceAsync("Validation.Password.RequireDigit").Result : "",
-                customerSettings.PasswordRequireNonAlphanumeric ? localizationService.GetResourceAsync("Validation.Password.RequireNonAlphanumeric").Result : "");
+            ;
 
             var options = ruleBuilder
-                .NotEmpty().WithMessage(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty").Result)
-                .Matches(regExp).WithMessage(message);
+                .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"))
+                .Matches(regExp).WithMessageAwait(async () => string.Format(await localizationService.GetResourceAsync("Validation.Password.Rule"),
+                string.Format(await localizationService.GetResourceAsync("Validation.Password.LengthValidation"), customerSettings.PasswordMinLength),
+                customerSettings.PasswordRequireUppercase ? await localizationService.GetResourceAsync("Validation.Password.RequireUppercase") : "",
+                customerSettings.PasswordRequireLowercase ? await localizationService.GetResourceAsync("Validation.Password.RequireLowercase") : "",
+                customerSettings.PasswordRequireDigit ? await localizationService.GetResourceAsync("Validation.Password.RequireDigit") : "",
+                customerSettings.PasswordRequireNonAlphanumeric ? await localizationService.GetResourceAsync("Validation.Password.RequireNonAlphanumeric") : ""));
 
             return options;
         }

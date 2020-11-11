@@ -132,21 +132,23 @@ namespace Nop.Web.Factories
             model.CustomOrderNumber = order.CustomOrderNumber;
 
             //return reasons
-            model.AvailableReturnReasons = (await _returnRequestService.GetAllReturnRequestReasonsAsync())
-                .Select(rrr => new SubmitReturnRequestModel.ReturnRequestReasonModel
+            model.AvailableReturnReasons = await (await _returnRequestService.GetAllReturnRequestReasonsAsync())
+                .ToAsyncEnumerable()
+                .SelectAwait(async rrr => new SubmitReturnRequestModel.ReturnRequestReasonModel
                 {
                     Id = rrr.Id,
-                    Name = _localizationService.GetLocalizedAsync(rrr, x => x.Name).Result
-                }).ToList();
+                    Name = await _localizationService.GetLocalizedAsync(rrr, x => x.Name)
+                }).ToListAsync();
 
             //return actions
-            model.AvailableReturnActions = (await _returnRequestService.GetAllReturnRequestActionsAsync())
-                .Select(rra => new SubmitReturnRequestModel.ReturnRequestActionModel
+            model.AvailableReturnActions = await (await _returnRequestService.GetAllReturnRequestActionsAsync())
+                .ToAsyncEnumerable()
+                .SelectAwait(async rra => new SubmitReturnRequestModel.ReturnRequestActionModel
                 {
                     Id = rra.Id,
-                    Name = _localizationService.GetLocalizedAsync(rra, x => x.Name).Result
+                    Name = await _localizationService.GetLocalizedAsync(rra, x => x.Name)
                 })
-                .ToList();
+                .ToListAsync();
 
             //returnable products
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);

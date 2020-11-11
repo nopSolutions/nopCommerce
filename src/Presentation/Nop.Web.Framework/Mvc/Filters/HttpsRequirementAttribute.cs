@@ -67,21 +67,21 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 var store = await _storeContext.GetCurrentStoreAsync();
 
                 //whether current connection is secured
-                var currentConnectionSecured = await _webHelper.IsCurrentConnectionSecuredAsync();
+                var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
 
                 //page should be secured, so redirect (permanent) to HTTPS version of page
                 if (store.SslEnabled && !currentConnectionSecured)
-                    context.Result = new RedirectResult(await _webHelper.GetThisPageUrlAsync(true, true), true);
+                    context.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), true);
 
                 //page shouldn't be secured, so redirect (permanent) to HTTP version of page
                 if (!store.SslEnabled && currentConnectionSecured)
-                    context.Result = new RedirectResult(await _webHelper.GetThisPageUrlAsync(true, false), true);
+                    context.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, false), true);
             }
 
             #endregion

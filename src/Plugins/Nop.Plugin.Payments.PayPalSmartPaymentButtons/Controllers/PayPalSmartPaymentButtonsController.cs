@@ -103,7 +103,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             }
 
             //prepare available payment types
-            model.PaymentTypes = PaymentType.Capture.ToSelectList(false)
+            model.PaymentTypes = (await PaymentType.Capture.ToSelectList(false))
                 .Select(item => new SelectListItem(item.Text, item.Value))
                 .ToList();
 
@@ -150,7 +150,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             //ensure that webhook created, display warning in case of fail
             if (!string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
             {
-                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, await _webHelper.GetCurrentRequestProtocolAsync());
+                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, _webHelper.GetCurrentRequestProtocol());
                 var (webhook, webhookError) = await _serviceManager.CreateWebHookAsync(settings, webhookUrl);
                 settings.WebhookId = webhook?.Id;
                 if (string.IsNullOrEmpty(settings.WebhookId))

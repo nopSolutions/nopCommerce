@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(CheckoutAttributeSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModelAsync(searchModel);
@@ -382,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ValueList(CheckoutAttributeValueSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a checkout attribute with the specified id
             var checkoutAttribute = await _checkoutAttributeService.GetCheckoutAttributeByIdAsync(searchModel.CheckoutAttributeId)

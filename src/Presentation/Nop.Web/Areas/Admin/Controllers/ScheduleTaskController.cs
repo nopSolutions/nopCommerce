@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(ScheduleTaskSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _scheduleTaskModelFactory.PrepareScheduleTaskListModelAsync(searchModel);
@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("List");

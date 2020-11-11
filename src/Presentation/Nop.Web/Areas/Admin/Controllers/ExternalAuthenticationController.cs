@@ -62,10 +62,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Methods(ExternalAuthenticationMethodSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModel(searchModel);
+            var model = _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var method = _authenticationPluginManager.LoadPluginBySystemName(model.SystemName);
+            var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_authenticationPluginManager.IsPluginActive(method))
             {
                 if (!model.IsActive)

@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Methods(PaymentMethodSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _paymentModelFactory.PreparePaymentMethodListModelAsync(searchModel);
@@ -97,7 +97,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var pm = _paymentPluginManager.LoadPluginBySystemName(model.SystemName);
+            var pm = await _paymentPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_paymentPluginManager.IsPluginActive(pm))
             {
                 if (!model.IsActive)
@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var paymentMethods = _paymentPluginManager.LoadAllPlugins();
+            var paymentMethods = await _paymentPluginManager.LoadAllPluginsAsync();
             var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
 
             foreach (var pm in paymentMethods)
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                 }
 
-                _paymentPluginManager.SaveRestrictedCountries(pm, newCountryIds);
+                await _paymentPluginManager.SaveRestrictedCountriesAsync(pm, newCountryIds);
             }
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Payment.MethodRestrictions.Updated"));

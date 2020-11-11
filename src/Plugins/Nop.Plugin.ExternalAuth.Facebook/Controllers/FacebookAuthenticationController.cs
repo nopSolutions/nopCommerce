@@ -107,8 +107,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
         public async Task<IActionResult> Login(string returnUrl)
         {
-            var methodIsAvailable = _authenticationPluginManager
-                .IsPluginActive(FacebookAuthenticationDefaults.SystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+            var methodIsAvailable = await _authenticationPluginManager
+                .IsPluginActiveAsync(FacebookAuthenticationDefaults.SystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
             if (!methodIsAvailable)
                 throw new NopException("Facebook authentication module cannot be loaded");
 

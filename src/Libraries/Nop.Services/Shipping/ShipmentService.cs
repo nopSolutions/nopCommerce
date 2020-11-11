@@ -368,14 +368,14 @@ namespace Nop.Services.Shipping
 
             if (!order.PickupInStore)
             {
-                var shippingRateComputationMethod = _shippingPluginManager
-                    .LoadPluginBySystemName(order.ShippingRateComputationMethodSystemName);
+                var shippingRateComputationMethod = await _shippingPluginManager
+                    .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
 
                 return shippingRateComputationMethod?.ShipmentTracker;
             }
 
-            var pickupPointProvider = _pickupPluginManager
-                .LoadPluginBySystemName(order.ShippingRateComputationMethodSystemName);
+            var pickupPointProvider = await _pickupPluginManager
+                .LoadPluginBySystemNameAsync(order.ShippingRateComputationMethodSystemName);
             return pickupPointProvider?.ShipmentTracker;
         }
 

@@ -15,7 +15,7 @@
         var rootNode = siteMap.RootNode;
 
         //plugins
-        var adminMenuPlugins = adminMenuPluginManager.LoadAllPlugins(await workContext.GetCurrentCustomerAsync());
+        var adminMenuPlugins = await adminMenuPluginManager.LoadAllPluginsAsync(await workContext.GetCurrentCustomerAsync());
         foreach (var adminMenuPlugin in adminMenuPlugins)
         {
             adminMenuPlugin.ManageSiteMap(rootNode);

@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(BlogPostSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _blogModelFactory.PrepareBlogPostListModelAsync(searchModel);
@@ -278,7 +278,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Comments(BlogCommentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _blogModelFactory.PrepareBlogCommentListModelAsync(searchModel, searchModel.BlogPostId);

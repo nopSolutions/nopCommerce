@@ -11,8 +11,8 @@ namespace Nop.Web.Areas.Admin.Validators.Templates
     {
         public ProductTemplateValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.System.Templates.Product.Name.Required").Result);
-            RuleFor(x => x.ViewPath).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.System.Templates.Product.ViewPath.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.System.Templates.Product.Name.Required"));
+            RuleFor(x => x.ViewPath).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.System.Templates.Product.ViewPath.Required"));
 
             SetDatabaseValidationRules<ProductTemplate>(dataProvider);
         }

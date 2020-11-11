@@ -182,16 +182,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     //get products data by shopping cart items
                     var itemsData = await cart.Where(item => item.ProductId != 0).ToAsyncEnumerable().SelectAwait(async item =>
                     {
-                        var product = _productService.GetProductByIdAsync(item.ProductId).Result;
+                        var product = await _productService.GetProductByIdAsync(item.ProductId);
 
                         //try to get product attribute combination
-                        var combination = _productAttributeParser.FindProductAttributeCombinationAsync(product, item.AttributesXml).Result;
+                        var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, item.AttributesXml);
 
                         //get default product picture
-                        var picture = _pictureService.GetProductPictureAsync(product, item.AttributesXml).Result;
+                        var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
 
                         //get product SEO slug name
-                        var seName = _urlRecordService.GetSeNameAsync(product).Result;
+                        var seName = await _urlRecordService.GetSeNameAsync(product);
 
                         //create product data
                         return new
@@ -201,16 +201,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             variant_id = combination?.Id ?? product.Id,
                             variant_name = combination?.Sku ?? product.Name,
                             sku = combination?.Sku ?? product.Sku,
-                            category = _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId).Result.Aggregate(",", (all, pc) =>
+                            category = await (await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).ToAsyncEnumerable().AggregateAwaitAsync(",", async (all, pc) =>
                             {
-                                var res = _categoryService.GetCategoryByIdAsync(pc.CategoryId).Result.Name;
+                                var res = (await _categoryService.GetCategoryByIdAsync(pc.CategoryId)).Name;
                                 res = all == "," ? res : all + ", " + res;
                                 return res;
                             }),
-                            url = urlHelper.RouteUrl("Product", new { SeName = seName }, await _webHelper.GetCurrentRequestProtocolAsync()),
-                            image = _pictureService.GetPictureUrlAsync(picture).Result.url,
+                            url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                            image = (await _pictureService.GetPictureUrlAsync(picture)).url,
                             quantity = item.Quantity,
-                            price = _shoppingCartService.GetSubTotalAsync(item, true).Result.subTotal
+                            price = (await _shoppingCartService.GetSubTotalAsync(item, true)).subTotal
                         };
                     }).ToArrayAsync();
 
@@ -224,7 +224,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         tax = cartTax,
                         discount = cartDiscount,
                         revenue = cartTotal ?? decimal.Zero,
-                        url = urlHelper.RouteUrl("ShoppingCart", null, await _webHelper.GetCurrentRequestProtocolAsync()),
+                        url = urlHelper.RouteUrl("ShoppingCart", null, _webHelper.GetCurrentRequestProtocol()),
                         currency = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode,
                         //gift_wrapping = string.Empty, //currently we can't get this value
                         items = itemsData
@@ -293,16 +293,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //get products data by order items
                 var itemsData = await (await _orderService.GetOrderItemsAsync(order.Id)).ToAsyncEnumerable().SelectAwait(async item =>
                 {
-                    var product = _productService.GetProductByIdAsync(item.ProductId).Result;
+                    var product = await _productService.GetProductByIdAsync(item.ProductId);
 
                     //try to get product attribute combination
-                    var combination = _productAttributeParser.FindProductAttributeCombinationAsync(product, item.AttributesXml).Result;
+                    var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, item.AttributesXml);
 
                     //get default product picture
-                    var picture = _pictureService.GetProductPictureAsync(product, item.AttributesXml).Result;
+                    var picture = await _pictureService.GetProductPictureAsync(product, item.AttributesXml);
 
                     //get product SEO slug name
-                    var seName = _urlRecordService.GetSeNameAsync(product).Result;
+                    var seName = await _urlRecordService.GetSeNameAsync(product);
 
                     //create product data
                     return new
@@ -312,14 +312,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         variant_id = combination?.Id ?? product.Id,
                         variant_name = combination?.Sku ?? product.Name,
                         sku = combination?.Sku ?? product.Sku,
-                        category = _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId).Result.Aggregate(",", (all, pc) =>
+                        category = await (await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).ToAsyncEnumerable().AggregateAwaitAsync(",", async (all, pc) =>
                         {
-                            var res = _categoryService.GetCategoryByIdAsync(pc.CategoryId).Result.Name;
+                            var res = (await _categoryService.GetCategoryByIdAsync(pc.CategoryId)).Name;
                             res = all == "," ? res : all + ", " + res;
                             return res;
                         }),
-                        url = urlHelper.RouteUrl("Product", new { SeName = seName }, await _webHelper.GetCurrentRequestProtocolAsync()),
-                        image = _pictureService.GetPictureUrlAsync(picture).Result.url,
+                        url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
+                        image = (await _pictureService.GetPictureUrlAsync(picture)).url,
                         quantity = item.Quantity,
                         price = item.PriceInclTax,
                     };
@@ -368,7 +368,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     tax = order.OrderTax,
                     discount = order.OrderDiscount,
                     revenue = order.OrderTotal,
-                    url = urlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, await _webHelper.GetCurrentRequestProtocolAsync()),
+                    url = urlHelper.RouteUrl("OrderDetails", new { orderId = order.Id }, _webHelper.GetCurrentRequestProtocol()),
                     currency = order.CustomerCurrencyCode,
                     //gift_wrapping = string.Empty, //currently we can't get this value
                     items = itemsData,

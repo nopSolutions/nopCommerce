@@ -87,15 +87,15 @@ namespace Nop.Web.Areas.Admin.Factories
             var forumGroups = (await _forumService.GetAllForumGroupsAsync()).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ForumGroupListModel().PrepareToGrid(searchModel, forumGroups, () =>
+            var model = await new ForumGroupListModel().PrepareToGridAsync(searchModel, forumGroups, () =>
             {
-                return forumGroups.Select(forumGroup =>
+                return forumGroups.ToAsyncEnumerable().SelectAwait(async forumGroup =>
                 {
                     //fill in model values from the entity
                     var forumGroupModel = forumGroup.ToModel<ForumGroupModel>();
 
                     //convert dates to the user time
-                    forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTimeAsync(forumGroup.CreatedOnUtc, DateTimeKind.Utc).Result;
+                    forumGroupModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(forumGroup.CreatedOnUtc, DateTimeKind.Utc);
 
                     return forumGroupModel;
                 });

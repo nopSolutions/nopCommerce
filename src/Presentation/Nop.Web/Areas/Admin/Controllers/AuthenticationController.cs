@@ -73,10 +73,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ExternalMethods(ExternalAuthenticationMethodSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModel(searchModel);
+            var model = _externalAuthenticationMethodModelFactory.PrepareExternalAuthenticationMethodListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var method = _authenticationPluginManager.LoadPluginBySystemName(model.SystemName);
+            var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_authenticationPluginManager.IsPluginActive(method))
             {
                 if (!model.IsActive)
@@ -139,10 +139,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> MultiFactorMethods(MultiFactorAuthenticationMethodSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
-            var model = _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModel(searchModel);
+            var model = _multiFactorAuthenticationMethodModelFactory.PrepareMultiFactorAuthenticationMethodListModelAsync(searchModel);
 
             return Json(model);
         }
@@ -153,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMultifactorAuthenticationMethods))
                 return AccessDeniedView();
 
-            var method = _multiFactorAuthenticationPluginManager.LoadPluginBySystemName(model.SystemName);
+            var method = await _multiFactorAuthenticationPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_multiFactorAuthenticationPluginManager.IsPluginActive(method))
             {
                 if (!model.IsActive)

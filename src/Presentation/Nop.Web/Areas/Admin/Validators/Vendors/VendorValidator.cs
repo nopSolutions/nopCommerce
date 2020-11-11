@@ -12,20 +12,20 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
     {
         public VendorValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Vendors.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.Name.Required"));
 
-            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Vendors.Fields.Email.Required").Result);
-            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResourceAsync("Admin.Common.WrongEmail").Result);
-            RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResourceAsync("Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems").Result);
+            RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.Email.Required"));
+            RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
+            RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
             RuleFor(x => x.PageSize).Must((x, context) =>
             {
                 if (!x.AllowCustomersToSelectPageSize && x.PageSize <= 0)
                     return false;
 
                 return true;
-            }).WithMessage(localizationService.GetResourceAsync("Admin.Vendors.Fields.PageSize.Positive").Result);
+            }).WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.Fields.PageSize.Positive"));
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
-                .WithMessage(string.Format(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation").Result, NopSeoDefaults.SearchEngineNameLength));
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength);
 
             SetDatabaseValidationRules<Vendor>(dataProvider);
         }

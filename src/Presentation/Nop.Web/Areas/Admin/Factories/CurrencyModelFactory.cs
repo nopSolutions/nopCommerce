@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
 
             //prepare available exchange rate providers
-            var availableExchangeRateProviders = _exchangeRatePluginManager.LoadAllPlugins();
+            var availableExchangeRateProviders = await _exchangeRatePluginManager.LoadAllPluginsAsync();
 
             model.ExchangeRateProviders = availableExchangeRateProviders.Select(provider => new SelectListItem
             {

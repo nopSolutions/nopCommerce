@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(VendorAttributeSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _vendorAttributeModelFactory.PrepareVendorAttributeListModelAsync(searchModel);
@@ -231,7 +231,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ValueList(VendorAttributeValueSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a vendor attribute with the specified id
             var vendorAttribute = await _vendorAttributeService.GetVendorAttributeByIdAsync(searchModel.VendorAttributeId)

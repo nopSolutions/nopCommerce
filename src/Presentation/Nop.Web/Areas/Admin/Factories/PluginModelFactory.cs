@@ -189,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var author = string.IsNullOrEmpty(searchModel.SearchAuthor) ? null : searchModel.SearchAuthor;
 
             //filter visible plugins
-            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author)
+            var plugins = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author))
                 .Where(p => p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList()
                 .ToPagedList(searchModel);
@@ -390,7 +390,7 @@ namespace Nop.Web.Areas.Admin.Factories
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
                 //get installed plugins
-                return _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.InstalledOnly, await _workContext.GetCurrentCustomerAsync())
+                return (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.InstalledOnly, await _workContext.GetCurrentCustomerAsync()))
                     .Where(plugin => plugin.ShowInPluginsList)
                     .Select(plugin => new AdminNavigationPluginModel
                     {

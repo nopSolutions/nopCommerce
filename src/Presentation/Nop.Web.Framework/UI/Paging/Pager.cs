@@ -358,7 +358,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>HTML control</returns>
 	    public override string ToString()
         {
-            return GenerateHtmlString().Result;
+            return GenerateHtmlStringAsync().Result;
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <returns>Result</returns>
 	    public virtual async Task<bool> IsEmpty()
         {
-            return string.IsNullOrEmpty(await GenerateHtmlString());
+            return string.IsNullOrEmpty(await GenerateHtmlStringAsync());
         }
 
         #endregion
@@ -378,7 +378,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// Generate HTML control
         /// </summary>
         /// <returns>HTML control</returns>
-        protected virtual async Task<string> GenerateHtmlString()
+        protected virtual async Task<string> GenerateHtmlStringAsync()
         {
             if (_model.TotalItems == 0)
                 return null;
@@ -415,8 +415,8 @@ namespace Nop.Web.Framework.UI.Paging
                 if (_showIndividualPages)
                 {
                     //individual pages
-                    var firstIndividualPageIndex = await GetFirstIndividualPageIndex();
-                    var lastIndividualPageIndex = await GetLastIndividualPageIndex();
+                    var firstIndividualPageIndex = GetFirstIndividualPageIndex();
+                    var lastIndividualPageIndex = GetLastIndividualPageIndex();
                     for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
                     {
                         if (_model.PageIndex == i)
@@ -452,34 +452,34 @@ namespace Nop.Web.Framework.UI.Paging
         /// Get first individual page index
         /// </summary>
         /// <returns>Page index</returns>
-        protected virtual Task<int> GetFirstIndividualPageIndex()
+        protected virtual int GetFirstIndividualPageIndex()
         {
             if ((_model.TotalPages < _individualPagesDisplayedCount) || ((_model.PageIndex - (_individualPagesDisplayedCount / 2)) < 0))
-                return Task.FromResult(0);
+                return 0;
 
             if ((_model.PageIndex + (_individualPagesDisplayedCount / 2)) >= _model.TotalPages)
-                return Task.FromResult(_model.TotalPages - _individualPagesDisplayedCount);
+                return _model.TotalPages - _individualPagesDisplayedCount;
 
-            return Task.FromResult(_model.PageIndex - (_individualPagesDisplayedCount / 2));
+            return _model.PageIndex - (_individualPagesDisplayedCount / 2);
         }
 
         /// <summary>
         /// Get last individual page index
         /// </summary>
         /// <returns>Page index</returns>
-        protected virtual Task<int> GetLastIndividualPageIndex()
+        protected virtual int GetLastIndividualPageIndex()
         {
             var num = _individualPagesDisplayedCount / 2;
             if ((_individualPagesDisplayedCount % 2) == 0)
                 num--;
 
             if ((_model.TotalPages < _individualPagesDisplayedCount) || ((_model.PageIndex + num) >= _model.TotalPages))
-                return Task.FromResult(_model.TotalPages - 1);
+                return _model.TotalPages - 1;
 
             if ((_model.PageIndex - (_individualPagesDisplayedCount / 2)) < 0)
-                return Task.FromResult(_individualPagesDisplayedCount - 1);
+                return _individualPagesDisplayedCount - 1;
 
-            return Task.FromResult(_model.PageIndex + num);
+            return _model.PageIndex + num;
         }
 
         /// <summary>
@@ -497,7 +497,7 @@ namespace Nop.Web.Framework.UI.Paging
 
             var aBuilder = new TagBuilder("a");
             aBuilder.InnerHtml.AppendHtml(text);
-            aBuilder.MergeAttribute("href", await CreateDefaultUrl(pageNumber));
+            aBuilder.MergeAttribute("href", CreateDefaultUrl(pageNumber));
 
             liBuilder.InnerHtml.AppendHtml(aBuilder);
             return await liBuilder.RenderHtmlContent();
@@ -508,7 +508,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// </summary>
         /// <param name="pageNumber">Page number</param>
         /// <returns>URL</returns>
-        protected virtual async Task<string> CreateDefaultUrl(int pageNumber)
+        protected virtual string CreateDefaultUrl(int pageNumber)
         {
             var routeValues = new RouteValueDictionary();
 
@@ -546,13 +546,13 @@ namespace Nop.Web.Framework.UI.Paging
             }
 
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            var url = await webHelper.GetThisPageUrlAsync(false);
+            var url = webHelper.GetThisPageUrl(false);
             foreach (var routeValue in routeValues) 
-                url = await webHelper.ModifyQueryStringAsync(url, routeValue.Key, routeValue.Value?.ToString());
+                url = webHelper.ModifyQueryString(url, routeValue.Key, routeValue.Value?.ToString());
 
             if (_renderEmptyParameters && parametersWithEmptyValues.Any())
                 foreach (var key in parametersWithEmptyValues) 
-                    url = await webHelper.ModifyQueryStringAsync(url, key);
+                    url = webHelper.ModifyQueryString(url, key);
 
             return url;
         }

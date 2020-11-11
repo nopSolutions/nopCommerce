@@ -245,7 +245,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/FixedOrByCountryStateZip/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/FixedOrByCountryStateZip/Configure";
         }
 
         /// <summary>
@@ -291,9 +291,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             await _settingService.DeleteSettingAsync<FixedOrByCountryStateZipTaxSettings>();
 
             //fixed rates
-            var fixedRates = (await _taxCategoryService.GetAllTaxCategoriesAsync())
-                .Select(taxCategory => _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)).Result)
-                .Where(setting => setting != null).ToList();
+            var fixedRates = await (await _taxCategoryService.GetAllTaxCategoriesAsync())
+                .ToAsyncEnumerable()
+                .SelectAwait(async taxCategory => await _settingService.GetSettingAsync(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
+                .Where(setting => setting != null).ToListAsync();
             await _settingService.DeleteSettingsAsync(fixedRates);
 
             //locales

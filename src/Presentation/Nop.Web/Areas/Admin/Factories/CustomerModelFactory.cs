@@ -203,7 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
-                var method = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                var method = await _authenticationPluginManager.LoadPluginBySystemNameAsync(record.ProviderSystemName);
                 if (method == null)
                     continue;
 
@@ -746,9 +746,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //prepare model newsletter subscriptions
                     if (!string.IsNullOrEmpty(customer.Email))
                     {
-                        model.SelectedNewsletterSubscriptionStoreIds = (await _storeService.GetAllStoresAsync())
-                            .Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id).Result != null)
-                            .Select(store => store.Id).ToList();
+                        model.SelectedNewsletterSubscriptionStoreIds = await (await _storeService.GetAllStoresAsync())
+                            .ToAsyncEnumerable()
+                            .WhereAwait(async store => await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id) != null)
+                            .Select(store => store.Id).ToListAsync();
                     }
                 }
                 //prepare reward points model

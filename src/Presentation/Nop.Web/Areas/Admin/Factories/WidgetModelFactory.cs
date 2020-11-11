@@ -57,13 +57,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Widget search model</param>
         /// <returns>Widget list model</returns>
-        public virtual Task<WidgetListModel> PrepareWidgetListModelAsync(WidgetSearchModel searchModel)
+        public virtual async Task<WidgetListModel> PrepareWidgetListModelAsync(WidgetSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get widgets
-            var widgets = _widgetPluginManager.LoadAllPlugins()
+            var widgets = (await _widgetPluginManager.LoadAllPluginsAsync())
                 .Where(widget => !widget.HideInWidgetList).ToList()
                 .ToPagedList(searchModel);
 
@@ -83,7 +83,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public virtual async Task<IList<RenderWidgetModel>> PrepareRenderWidgetModelsAsync(string widgetZone, object additionalData = null)
         {
             //get active widgets by widget zone
-            var widgets = _widgetPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), widgetZone: widgetZone);
+            var widgets = await _widgetPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), widgetZone: widgetZone);
 
             //prepare models
             var models = widgets.Select(widget => new RenderWidgetModel

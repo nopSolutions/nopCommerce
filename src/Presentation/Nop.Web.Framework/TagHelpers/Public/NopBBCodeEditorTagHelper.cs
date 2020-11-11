@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
         /// </summary>
         /// <param name="context">Contains information associated with the current HTML tag</param>
         /// <param name="output">A stateful HTML element used to generate an HTML tag</param>
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
@@ -70,7 +70,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "bb-code-editor-wrapper");
 
-            var storeLocation = await _webHelper.GetStoreLocationAsync();
+            var storeLocation = _webHelper.GetStoreLocation();
 
             var bbEditorWebRoot = $"{storeLocation}js/";
 
@@ -83,6 +83,8 @@ namespace Nop.Web.Framework.TagHelpers.Public
 
             output.Content.AppendHtml(script1);
             output.Content.AppendHtml(script2);
+
+            return Task.CompletedTask;
         }
 
         #endregion

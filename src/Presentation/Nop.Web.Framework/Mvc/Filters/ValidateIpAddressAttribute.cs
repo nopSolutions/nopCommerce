@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
-            private async Task ValidateIpAddressAsync(ActionExecutingContext context)
+            private async Task ValidateIpAddress(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //get action and controller names
@@ -92,7 +92,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //whether current IP is allowed
-                var currentIp = await _webHelper.GetCurrentIpAddressAsync();
+                var currentIp = _webHelper.GetCurrentIpAddress();
 
                 if (ipAddresses.Any(ip => ip.Equals(currentIp, StringComparison.InvariantCultureIgnoreCase)))
                     return;
@@ -113,7 +113,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <returns>A task that on completion indicates the filter has executed</returns>
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                await ValidateIpAddressAsync(context);
+                await ValidateIpAddress(context);
                 if (context.Result == null)
                     await next();
             }

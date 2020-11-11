@@ -77,7 +77,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
         protected async Task<string> GetPictureUrlAsync(int pictureId)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
-                pictureId, await _webHelper.IsCurrentConnectionSecuredAsync() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
+                pictureId, _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {

@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(LanguageSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _languageModelFactory.PrepareLanguageListModelAsync(searchModel);
@@ -297,7 +297,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Resources(LocaleResourceSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a language with the specified id
             var language = await _languageService.GetLanguageByIdAsync(searchModel.LanguageId);
@@ -417,7 +417,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -451,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = language.Id });
             }
         }

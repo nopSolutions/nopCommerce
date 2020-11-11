@@ -148,7 +148,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         public async Task<IActionResult> FixedShippingRateList(ConfigurationModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var shippingMethods = (await _shippingService.GetAllShippingMethodsAsync()).ToPagedList(searchModel);
 
@@ -191,7 +191,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         public async Task<IActionResult> RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
             var records = await _shippingByWeightService.FindRecordsAsync(

@@ -304,11 +304,11 @@ namespace Nop.Web.Controllers
             var feed = new RssFeed(
                 $"{await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)}: New products",
                 "Information about products",
-                new Uri(await _webHelper.GetStoreLocationAsync()),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
-                return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
 
@@ -320,7 +320,7 @@ namespace Nop.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, await _webHelper.GetCurrentRequestProtocolAsync());
+                var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
                 var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
                 var productDescription = await _localizationService.GetLocalizedAsync(product, x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
@@ -335,7 +335,7 @@ namespace Nop.Web.Controllers
 
             }
             feed.Items = items;
-            return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         #endregion
@@ -657,12 +657,11 @@ namespace Nop.Web.Controllers
                 IncludeFullDescriptionInCompareProducts = _catalogSettings.IncludeFullDescriptionInCompareProducts,
             };
 
-            var products = await _compareProductsService.GetComparedProductsAsync();
-
+            var products = await (await _compareProductsService.GetComparedProductsAsync()).ToAsyncEnumerable()
             //ACL and store mapping
-            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
             //prepare model
             (await _productModelFactory.PrepareProductOverviewModelsAsync(products, prepareSpecificationAttributes: true))

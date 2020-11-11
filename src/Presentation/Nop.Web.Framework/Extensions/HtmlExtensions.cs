@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.Extensions
             tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields{cssClassWithSpace}\">");
 
             //render input contains selected tab name
-            var tabNameToSelect = await GetSelectedTabNameAsync(helper, name);
+            var tabNameToSelect = GetSelectedTabName(helper, name);
             var selectedTabInput = new TagBuilder("input");
             selectedTabInput.Attributes.Add("type", "hidden");
             selectedTabInput.Attributes.Add("id", $"selected-tab-name-{name}");
@@ -136,7 +136,7 @@ namespace Nop.Web.Framework.Extensions
         /// </summary>
         /// <param name="helper">HtmlHelper</param>
         /// <returns>Name</returns>
-        public static Task<string> GetSelectedPanelName(this IHtmlHelper helper)
+        public static string GetSelectedPanelName(this IHtmlHelper helper)
         {
             //keep this method synchronized with
             //"SaveSelectedPanelName" method of \Area\Admin\Controllers\BaseAdminController.cs
@@ -149,7 +149,7 @@ namespace Nop.Web.Framework.Extensions
             if (helper.ViewContext.TempData.ContainsKey(dataKey))
                 panelName = helper.ViewContext.TempData[dataKey].ToString();
 
-            return Task.FromResult(panelName);
+            return panelName;
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="helper">HtmlHelper</param>
         /// <param name="dataKeyPrefix">Key prefix. Pass null to ignore</param>
         /// <returns>Name</returns>
-        public static Task<string> GetSelectedTabNameAsync(this IHtmlHelper helper, string dataKeyPrefix = null)
+        public static string GetSelectedTabName(this IHtmlHelper helper, string dataKeyPrefix = null)
         {
             //keep this method synchronized with
             //"SaveSelectedTab" method of \Area\Admin\Controllers\BaseAdminController.cs
@@ -173,7 +173,7 @@ namespace Nop.Web.Framework.Extensions
             if (helper.ViewContext.TempData.ContainsKey(dataKey))
                 tabName = helper.ViewContext.TempData[dataKey].ToString();
 
-            return Task.FromResult(tabName);
+            return tabName;
         }
 
         /// <summary>

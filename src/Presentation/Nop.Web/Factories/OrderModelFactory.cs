@@ -266,8 +266,8 @@ namespace Nop.Web.Factories
 
             //payment method
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(order.PaymentMethodSystemName, customer, order.StoreId);
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, order.StoreId);
             model.PaymentMethod = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, languageId) : order.PaymentMethodSystemName;
             model.PaymentMethodStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
             model.CanRePostProcessPayment = await _paymentService.CanRePostProcessPaymentAsync(order);
@@ -421,7 +421,7 @@ namespace Nop.Web.Factories
                 {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
-                    Sku = _productService.FormatSku(product, orderItem.AttributesXml),
+                    Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
                     VendorName = (await _vendorService.GetVendorByIdAsync(product.VendorId))?.Name ?? string.Empty,
                     ProductId = product.Id,
                     ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
@@ -534,7 +534,7 @@ namespace Nop.Web.Factories
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel
                 {
                     Id = shipmentItem.Id,
-                    Sku = _productService.FormatSku(product, orderItem.AttributesXml),
+                    Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml),
                     ProductId = product.Id,
                     ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                     ProductSeName = await _urlRecordService.GetSeNameAsync(product),
@@ -584,7 +584,7 @@ namespace Nop.Web.Factories
                     {
                         Points = historyEntry.Points,
                         PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString()
-                            : string.Format(_localizationService.GetResourceAsync("RewardPoints.ActivatedLater").Result, activatingDate),
+                            : string.Format(await _localizationService.GetResourceAsync("RewardPoints.ActivatedLater"), activatingDate),
                         Message = historyEntry.Message,
                         CreatedOn = activatingDate,
                         EndDate = !historyEntry.EndDateUtc.HasValue ? null :

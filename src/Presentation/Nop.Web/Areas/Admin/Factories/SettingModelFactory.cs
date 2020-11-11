@@ -429,7 +429,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 PageTitleSeparator = seoSettings.PageTitleSeparator,
                 PageTitleSeoAdjustment = (int)seoSettings.PageTitleSeoAdjustment,
-                PageTitleSeoAdjustmentValues = seoSettings.PageTitleSeoAdjustment.ToSelectList(),
+                PageTitleSeoAdjustmentValues = await seoSettings.PageTitleSeoAdjustment.ToSelectList(),
                 DefaultTitle = seoSettings.DefaultTitle,
                 DefaultMetaKeywords = seoSettings.DefaultMetaKeywords,
                 DefaultMetaDescription = seoSettings.DefaultMetaDescription,
@@ -437,7 +437,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 ConvertNonWesternChars = seoSettings.ConvertNonWesternChars,
                 CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled,
                 WwwRequirement = (int)seoSettings.WwwRequirement,
-                WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList(),
+                WwwRequirementValues = await seoSettings.WwwRequirement.ToSelectList(),
 
                 TwitterMetaTags = seoSettings.TwitterMetaTags,
                 OpenGraphMetaTags = seoSettings.OpenGraphMetaTags,
@@ -503,7 +503,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             var model = captchaSettings.ToSettingsModel<CaptchaSettingsModel>();
 
-            model.CaptchaTypeValues = captchaSettings.CaptchaType.ToSelectList();
+            model.CaptchaTypeValues = await captchaSettings.CaptchaType.ToSelectList();
 
             if (storeId <= 0)
                 return model;
@@ -604,7 +604,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.Supported = await _fulltextService.IsFullTextSupportedAsync();
-            model.SearchModeValues = commonSettings.FullTextMode.ToSelectList();
+            model.SearchModeValues = await commonSettings.FullTextMode.ToSelectList();
 
             return model;
         }
@@ -845,7 +845,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
+            model.ForumEditorValues = await forumSettings.ForumEditor.ToSelectList();
 
             if (storeId <= 0)
                 return model;
@@ -971,8 +971,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in model values from the entity
             var model = taxSettings.ToSettingsModel<TaxSettingsModel>();
-            model.TaxBasedOnValues = taxSettings.TaxBasedOn.ToSelectList();
-            model.TaxDisplayTypeValues = taxSettings.TaxDisplayType.ToSelectList();
+            model.TaxBasedOnValues = await taxSettings.TaxBasedOn.ToSelectList();
+            model.TaxDisplayTypeValues = await taxSettings.TaxDisplayType.ToSelectList();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
@@ -1219,7 +1219,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
-            model.OrderIdent = _dataProvider.GetTableIdent<Order>();
+            model.OrderIdent = await _dataProvider.GetTableIdentAsync<Order>();
 
             //fill in overridden values
             if (storeId > 0)
@@ -1316,7 +1316,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
+            model.PicturesStoredIntoDatabase = await _pictureService.IsStoreInDbAsync();
 
             if (storeId <= 0)
                 return model;

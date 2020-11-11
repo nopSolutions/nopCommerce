@@ -10,7 +10,7 @@
     Html.AddScriptParts("~/lib_npm/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
-    var language = TinyMceHelper.GetTinyMceLanguage();
+    var language = await TinyMceHelper.GetTinyMceLanguageAsync();
 
     var allowRoxyFileman = await permissionService.AuthorizeAsync(StandardPermissionProvider.HtmlEditorManagePictures);
 

@@ -190,7 +190,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 catch (Exception exc)
                 {
-                    _notificationService.ErrorNotification(exc);
+                    await _notificationService.ErrorNotificationAsync(exc);
                 }
             }
 
@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> BackupFiles(BackupFileSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _commonModelFactory.PrepareBackupFileListModelAsync(searchModel);
@@ -223,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             //prepare model
@@ -246,7 +246,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return View(model);
@@ -284,7 +284,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             //prepare model
@@ -374,7 +374,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //restart application
-            await _webHelper.RestartAppDomainAsync();
+            _webHelper.RestartAppDomain();
 
             return new EmptyResult();
         }
@@ -394,7 +394,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> SeNames(UrlRecordSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _commonModelFactory.PrepareUrlRecordListModelAsync(searchModel);
@@ -418,7 +418,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> PopularSearchTermsReport(PopularSearchTermSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _commonModelFactory.PreparePopularSearchTermListModelAsync(searchModel);

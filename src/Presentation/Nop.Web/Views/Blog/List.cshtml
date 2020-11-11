@@ -83,7 +83,7 @@
             }
         </div>
         @{
-            var pager = (await Html.Pager(Model.PagingFilteringContext)).QueryParam("pagenumber");
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
         }
         @if (!(await pager.IsEmpty()))
         {

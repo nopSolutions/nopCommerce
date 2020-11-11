@@ -238,14 +238,14 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns></returns>
-        protected virtual async Task<string> GetImagesPathUrlAsync(string storeLocation = null)
+        protected virtual string GetImagesPathUrl(string storeLocation = null)
         {
             var pathBase = _httpContextAccessor.HttpContext.Request.PathBase.Value ?? string.Empty;
 
             var imagesPathUrl = _mediaSettings.UseAbsoluteImagePath ? storeLocation : $"{pathBase}/";
 
             imagesPathUrl = string.IsNullOrEmpty(imagesPathUrl)
-                ? await _webHelper.GetStoreLocationAsync()
+                ? _webHelper.GetStoreLocation()
                 : imagesPathUrl;
 
             imagesPathUrl += "images/";
@@ -261,7 +261,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            var url = GetImagesPathUrlAsync(storeLocation).Result + "thumbs/";
+            var url = GetImagesPathUrl(storeLocation) + "thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
@@ -312,9 +312,9 @@ namespace Nop.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected virtual bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
+        protected virtual Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
-            return _fileProvider.FileExists(thumbFilePath);
+            return Task.FromResult(_fileProvider.FileExists(thumbFilePath));
         }
 
         /// <summary>
@@ -447,7 +447,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary</returns>
         public virtual async Task<byte[]> LoadPictureBinaryAsync(Picture picture)
         {
-            return await LoadPictureBinaryAsync(picture, StoreInDb);
+            return await LoadPictureBinaryAsync(picture, await IsStoreInDbAsync());
         }
 
         /// <summary>
@@ -484,7 +484,7 @@ namespace Nop.Services.Media
 
             if (targetSize == 0)
             {
-                var url = GetImagesPathUrlAsync(storeLocation) + defaultImageFileName;
+                var url = GetImagesPathUrl(storeLocation) + defaultImageFileName;
 
                 return url;
             }
@@ -493,7 +493,7 @@ namespace Nop.Services.Media
                 var fileExtension = _fileProvider.GetFileExtension(filePath);
                 var thumbFileName = $"{_fileProvider.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
                     using var image = Image.Load<Rgba32>(filePath, out var imageFormat);
                     image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
@@ -586,7 +586,7 @@ namespace Nop.Services.Media
 
             var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
-            if (GeneratedThumbExists(thumbFilePath, thumbFileName))
+            if (await GeneratedThumbExists(thumbFilePath, thumbFileName))
                 return (GetThumbUrl(thumbFileName, storeLocation), picture);
 
             //the named semaphore helps to avoid creating the same files in different threads,
@@ -598,7 +598,7 @@ namespace Nop.Services.Media
                 try
                 {
                     //check, if the file was created, while we were waiting for the release of the mutex.
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    if (!await GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
                         pictureBinary ??= await LoadPictureBinaryAsync(picture);
 
@@ -677,7 +677,7 @@ namespace Nop.Services.Media
             DeletePictureThumbs(picture);
 
             //delete from file system
-            if (!StoreInDb)
+            if (!await IsStoreInDbAsync())
                 DeletePictureOnFileSystem(picture);
 
             //delete from database
@@ -760,9 +760,9 @@ namespace Nop.Services.Media
                 IsNew = isNew
             };
             await _pictureRepository.InsertAsync(picture);
-            await UpdatePictureBinaryAsync(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
+            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : Array.Empty<byte>());
 
-            if (!StoreInDb)
+            if (!await IsStoreInDbAsync())
                 await SavePictureInFileAsync(picture.Id, pictureBinary, mimeType);
 
             return picture;
@@ -891,9 +891,9 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             await _pictureRepository.UpdateAsync(picture);
-            await UpdatePictureBinaryAsync(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
+            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? pictureBinary : Array.Empty<byte>());
 
-            if (!StoreInDb)
+            if (!await IsStoreInDbAsync())
                 await SavePictureInFileAsync(picture.Id, pictureBinary, mimeType);
             
             return picture;
@@ -918,9 +918,9 @@ namespace Nop.Services.Media
             picture.SeoFilename = seoFilename;
 
             await _pictureRepository.UpdateAsync(picture);
-            await UpdatePictureBinaryAsync(picture, StoreInDb ? (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData : Array.Empty<byte>());
+            await UpdatePictureBinaryAsync(picture, await IsStoreInDbAsync() ? (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData : Array.Empty<byte>());
 
-            if (!StoreInDb)
+            if (!await IsStoreInDbAsync())
                 await SavePictureInFileAsync(picture.Id, (await GetPictureBinaryByPictureIdAsync(picture.Id)).BinaryData, picture.MimeType);
             
             return picture;
@@ -999,7 +999,7 @@ namespace Nop.Services.Media
             if (!picturesIds.Any())
                 return new Dictionary<int, string>();
 
-            var hashes = _dataProvider.GetTable<PictureBinary>()
+            var hashes = (await _dataProvider.GetTableAsync<PictureBinary>())
                     .Where(p => picturesIds.Contains(p.PictureId))
                     .Select(x => new
                     {
@@ -1028,9 +1028,10 @@ namespace Nop.Services.Media
                 return combinationPicture;
 
             //then, let's see whether we have attribute values with pictures
-            var attributePicture = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
-                .Select(attributeValue => GetPictureByIdAsync(attributeValue?.PictureId ?? 0).Result)
-                .FirstOrDefault(picture => picture != null);
+            var attributePicture = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
+                .ToAsyncEnumerable()
+                .SelectAwait(async attributeValue => await GetPictureByIdAsync(attributeValue?.PictureId ?? 0))
+                .FirstOrDefaultAsync(picture => picture != null);
             if (attributePicture != null)
                 return attributePicture;
 
@@ -1047,24 +1048,26 @@ namespace Nop.Services.Media
             return parentGroupedProductPicture;
         }
 
-        #endregion
-
-        #region Properties
+        /// <summary>
+        /// Gets a value indicating whether the images should be stored in data base.
+        /// </summary>
+        public virtual async Task<bool> IsStoreInDbAsync()
+        {
+            return await _settingService.GetSettingByKeyAsync("Media.Images.StoreInDB", true);
+        }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the images should be stored in data base.
+        /// Sets a value indicating whether the images should be stored in data base
         /// </summary>
-        public virtual bool StoreInDb
+        /// <param name="isStoreInDb">A value indicating whether the images should be stored in data base</param>
+        public virtual async Task SetIsStoreInDbAsync(bool isStoreInDb)
         {
-            get => _settingService.GetSettingByKeyAsync("Media.Images.StoreInDB", true).Result;
-            set
-            {
                 //check whether it's a new value
-                if (StoreInDb == value)
+                if (await IsStoreInDbAsync() == isStoreInDb)
                     return;
 
                 //save the new setting value
-                _settingService.SetSettingAsync("Media.Images.StoreInDB", value).Wait();
+                await _settingService.SetSettingAsync("Media.Images.StoreInDB", isStoreInDb);
 
                 var pageIndex = 0;
                 const int pageSize = 400;
@@ -1072,7 +1075,7 @@ namespace Nop.Services.Media
                 {
                     while (true)
                     {
-                        var pictures = GetPicturesAsync(pageIndex: pageIndex, pageSize: pageSize).Result;
+                        var pictures = await GetPicturesAsync(pageIndex: pageIndex, pageSize: pageSize);
                         pageIndex++;
 
                         //all pictures converted?
@@ -1084,7 +1087,7 @@ namespace Nop.Services.Media
                             if (!string.IsNullOrEmpty(picture.VirtualPath))
                                 continue;
 
-                            var pictureBinary = LoadPictureBinaryAsync(picture, !value).Result;
+                            var pictureBinary = await LoadPictureBinaryAsync(picture, !isStoreInDb);
 
                             //we used the code below before. but it's too slow
                             //let's do it manually (uncommented code) - copy some logic from "UpdatePicture" method
@@ -1096,26 +1099,25 @@ namespace Nop.Services.Media
                                           picture.SeoFilename,
                                           true,
                                           false);*/
-                            if (value)
+                            if (isStoreInDb)
                                 //delete from file system. now it's in the database
                                 DeletePictureOnFileSystem(picture);
                             else
                                 //now on file system
-                                SavePictureInFileAsync(picture.Id, pictureBinary, picture.MimeType).Wait();
+                                await SavePictureInFileAsync(picture.Id, pictureBinary, picture.MimeType);
                             //update appropriate properties
-                            UpdatePictureBinaryAsync(picture, value ? pictureBinary : Array.Empty<byte>()).Wait();
+                            await UpdatePictureBinaryAsync(picture, isStoreInDb ? pictureBinary : Array.Empty<byte>());
                             picture.IsNew = true;
                         }
 
                         //save all at once
-                        _pictureRepository.UpdateAsync(pictures, false);
+                        await _pictureRepository.UpdateAsync(pictures, false);
                     }
                 }
                 catch
                 {
                     // ignored
                 }
-            }
         }
 
         #endregion

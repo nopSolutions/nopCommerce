@@ -116,7 +116,7 @@ namespace Nop.Services.Messages
 
                 //filter by the store
                 if (storeId.HasValue && storeId.Value > 0)
-                    templates = templates.Where(messageTemplate => _storeMappingService.AuthorizeAsync(messageTemplate, storeId.Value).Result).ToList();
+                    templates = await templates.ToAsyncEnumerable().WhereAwait(async messageTemplate => await _storeMappingService.AuthorizeAsync(messageTemplate, storeId.Value)).ToListAsync();
 
                 return templates;
             });

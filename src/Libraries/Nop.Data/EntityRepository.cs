@@ -61,6 +61,23 @@ namespace Nop.Data
             return await _staticCacheManager.GetAsync(cacheKey, getAllAsync);
         }
 
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
+        /// <param name="getAllAsync">Function to select entries</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <returns>Entity entries</returns>
+        protected virtual async Task<IList<TEntity>> GetEntities(Func<Task<IList<TEntity>>> getAllAsync, Func<IStaticCacheManager, Task<CacheKey>> getCacheKey)
+        {
+            if (getCacheKey == null)
+                return await getAllAsync();
+
+            //caching
+            var cacheKey = await getCacheKey(_staticCacheManager)
+                           ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.AllCacheKey);
+            return await _staticCacheManager.GetAsync(cacheKey, getAllAsync);
+        }
+
         #endregion
 
         #region Methods
@@ -78,7 +95,7 @@ namespace Nop.Data
 
             async Task<TEntity> getEntityAsync()
             {
-                return await Entities.FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
+                return await (await GetEntitiesAsync()).FirstOrDefaultAsync(entity => entity.Id == Convert.ToInt32(id));
             }
 
             if (getCacheKey == null)
@@ -106,7 +123,7 @@ namespace Nop.Data
             {
                 var query = Table;
                 if (typeof(TEntity).GetInterface(nameof(ISoftDeletedEntity)) != null)
-                    query = Entities.OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
+                    query = (await GetEntitiesAsync()).OfType<ISoftDeletedEntity>().Where(entry => !entry.Deleted).OfType<TEntity>();
 
                 //get entries
                 var entries = await query.Where(entry => ids.Contains(entry.Id)).ToListAsync();
@@ -149,7 +166,7 @@ namespace Nop.Data
 
             return await GetEntities(getAllAsync, getCacheKey);
         }
-
+        
         /// <summary>
         /// Get all entity entries
         /// </summary>
@@ -159,6 +176,25 @@ namespace Nop.Data
         public virtual async Task<IList<TEntity>> GetAllAsync(
             Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
             Func<IStaticCacheManager, CacheKey> getCacheKey = null)
+        {
+            async Task<IList<TEntity>> getAllAsync()
+            {
+                var query = func != null ? await func(Table) : Table;
+                return await query.ToListAsync();
+            }
+
+            return await GetEntities(getAllAsync, getCacheKey);
+        }
+
+        /// <summary>
+        /// Get all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="getCacheKey">Function to get a cache key; pass null to don't cache; return null from this function to use the default key</param>
+        /// <returns>Entity entries</returns>
+        public virtual async Task<IList<TEntity>> GetAllAsync(
+            Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
+            Func<IStaticCacheManager, Task<CacheKey>> getCacheKey = null)
         {
             async Task<IList<TEntity>> getAllAsync()
             {
@@ -181,6 +217,22 @@ namespace Nop.Data
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = func != null ? func(Table) : Table;
+
+            return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
+        }
+
+        /// <summary>
+        /// Get paged list of all entity entries
+        /// </summary>
+        /// <param name="func">Function to select entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
+        /// <returns>Paged list of entity entries</returns>
+        public virtual async Task<IPagedList<TEntity>> GetAllPagedAsync(Func<IQueryable<TEntity>, Task<IQueryable<TEntity>>> func = null,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
+        {
+            var query = func != null ? await func(Table) : Table;
 
             return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
         }
@@ -232,7 +284,7 @@ namespace Nop.Data
         /// <returns>Copy of the passed entity</returns>
         public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity)
         {
-            return await _dataProvider.GetTable<TEntity>().ToAsyncEnumerable()
+            return await (await _dataProvider.GetTableAsync<TEntity>()).ToAsyncEnumerable()
                 .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
@@ -358,7 +410,7 @@ namespace Nop.Data
         /// <param name="resetIdentity">Performs reset identity column</param>
         public virtual async Task TruncateAsync(bool resetIdentity = false)
         {
-            await _dataProvider.GetTable<TEntity>().TruncateAsync(resetIdentity);
+            await (await _dataProvider.GetTableAsync<TEntity>()).TruncateAsync(resetIdentity);
         }
 
         #endregion
@@ -368,12 +420,15 @@ namespace Nop.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IQueryable<TEntity> Table => Entities;
+        public virtual IQueryable<TEntity> Table => GetEntitiesAsync().Result;
 
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual ITable<TEntity> Entities => _entities ??= _dataProvider.GetTable<TEntity>();
+        protected virtual async Task<ITable<TEntity>> GetEntitiesAsync()
+        {
+            return _entities ??= await _dataProvider.GetTableAsync<TEntity>();
+        }
 
         #endregion
     }

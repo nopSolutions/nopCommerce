@@ -171,9 +171,9 @@ namespace Nop.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected override bool GeneratedThumbExists(string thumbFilePath, string thumbFileName)
+        protected override async Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
         {
-            return GeneratedThumbExistsAsync(thumbFilePath, thumbFileName).Result;
+            return await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName);
         }
 
         /// <summary>

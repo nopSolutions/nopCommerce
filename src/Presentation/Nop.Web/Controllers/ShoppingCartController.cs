@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException(nameof(form));
 
             var attributesXml = string.Empty;
-            var excludeShippableAttributes = !_shoppingCartService.ShoppingCartRequiresShipping(cart);
+            var excludeShippableAttributes = !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
             var checkoutAttributes = await _checkoutAttributeService.GetAllCheckoutAttributesAsync((await _storeContext.GetCurrentStoreAsync()).Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
@@ -298,7 +298,7 @@ namespace Nop.Web.Controllers
             {
                 var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), updatecartitem.ShoppingCartType, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-                var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
+                var otherCartItemWithSameParameters = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(
                     cart, updatecartitem.ShoppingCartType, product, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate);
                 if (otherCartItemWithSameParameters != null &&
@@ -572,9 +572,9 @@ namespace Nop.Web.Controllers
             }
 
             //creating XML for "read-only checkboxes" attributes
-            var attXml = productAttributes.Aggregate(string.Empty, (attributesXml, attribute) =>
+            var attXml = await productAttributes.ToAsyncEnumerable().AggregateAwaitAsync(string.Empty, async (attributesXml, attribute) =>
             {
-                var attributeValues = _productAttributeService.GetProductAttributeValuesAsync(attribute.Id).Result;
+                var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                 foreach (var selectedAttributeId in attributeValues
                     .Where(v => v.IsPreSelected)
                     .Select(v => v.Id)
@@ -590,7 +590,7 @@ namespace Nop.Web.Controllers
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), cartType, (await _storeContext.GetCurrentStoreAsync()).Id);
-            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
+            var shoppingCartItem = await _shoppingCartService.FindShoppingCartItemInTheCartAsync(cart, cartType, product);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = await _shoppingCartService
@@ -801,9 +801,9 @@ namespace Nop.Web.Controllers
             }
 
             //sku, mpn, gtin
-            var sku = _productService.FormatSku(product, attributeXml);
-            var mpn = _productService.FormatMpn(product, attributeXml);
-            var gtin = _productService.FormatGtin(product, attributeXml);
+            var sku = await _productService.FormatSkuAsync(product, attributeXml);
+            var mpn = await _productService.FormatMpnAsync(product, attributeXml);
+            var gtin = await _productService.FormatGtinAsync(product, attributeXml);
 
             // calculating weight adjustment
             var attributeValues = await _productAttributeParser.ParseProductAttributeValuesAsync(attributeXml);
@@ -884,7 +884,7 @@ namespace Nop.Web.Controllers
                 if (pictureId > 0)
                 {
                     var productAttributePictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributePictureModelKey,
-                        pictureId, _webHelper.IsCurrentConnectionSecuredAsync(), await _storeContext.GetCurrentStoreAsync());
+                        pictureId, _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
                     var pictureModel = await _staticCacheManager.GetAsync(productAttributePictureCacheKey, async () =>
                     {
                         var picture = await _pictureService.GetPictureByIdAsync(pictureId);
@@ -907,10 +907,11 @@ namespace Nop.Web.Controllers
             var isFreeShipping = product.IsFreeShipping;
             if (isFreeShipping && !string.IsNullOrEmpty(attributeXml))
             {
-                isFreeShipping = (await _productAttributeParser.ParseProductAttributeValuesAsync(attributeXml))
+                isFreeShipping = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributeXml))
                     .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                    .Select(attributeValue => _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result)
-                    .All(associatedProduct => associatedProduct == null || !associatedProduct.IsShipEnabled || associatedProduct.IsFreeShipping);
+                    .ToAsyncEnumerable()
+                    .SelectAwait(async attributeValue => await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))
+                    .AllAsync(associatedProduct => associatedProduct == null || !associatedProduct.IsShipEnabled || associatedProduct.IsFreeShipping);
             }
 
             return Json(new
@@ -945,7 +946,7 @@ namespace Nop.Web.Controllers
             //conditions
             var enabledAttributeIds = new List<int>();
             var disabledAttributeIds = new List<int>();
-            var excludeShippableAttributes = !_shoppingCartService.ShoppingCartRequiresShipping(cart);
+            var excludeShippableAttributes = !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
             var attributes = await _checkoutAttributeService.GetAllCheckoutAttributesAsync((await _storeContext.GetCurrentStoreAsync()).Id, excludeShippableAttributes);
             foreach (var attribute in attributes)
             {
@@ -1176,22 +1177,23 @@ namespace Nop.Web.Controllers
 
             //order cart items
             //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
-            var orderedCart = itemsWithNewQuantity
-                .OrderByDescending(cartItem =>
+            var orderedCart = await itemsWithNewQuantity
+                .ToAsyncEnumerable()
+                .OrderByDescendingAwait(async cartItem =>
                     (cartItem.NewQuantity < cartItem.Item.Quantity &&
                      (cartItem.Product?.RequireOtherProducts ?? false)) ||
-                    (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && _shoppingCartService
-                         .GetProductsRequiringProduct(cart, cartItem.Product).Any()))
-                .ToList();
+                    (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && await _shoppingCartService
+                         .GetProductsRequiringProduct(cart, cartItem.Product).AnyAsync()))
+                .ToListAsync();
 
             //try to update cart items with new quantities and get warnings
-            var warnings = orderedCart.Select(cartItem => new
+            var warnings = await orderedCart.ToAsyncEnumerable().SelectAwait(async cartItem => new
             {
                 ItemId = cartItem.Item.Id,
-                Warnings = _shoppingCartService.UpdateShoppingCartItemAsync(_workContext.GetCurrentCustomerAsync().Result,
+                Warnings = await _shoppingCartService.UpdateShoppingCartItemAsync(await _workContext.GetCurrentCustomerAsync(),
                     cartItem.Item.Id, cartItem.Item.AttributesXml, cartItem.Item.CustomerEnteredPrice,
-                    cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true).Result
-            }).ToList();
+                    cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true)
+            }).ToListAsync();
 
             //updated cart
             cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -1291,9 +1293,9 @@ namespace Nop.Web.Controllers
                 if (discounts.Any())
                 {
                     var userErrors = new List<string>();
-                    var anyValidDiscount = discounts.Any(discount =>
+                    var anyValidDiscount = await discounts.ToAsyncEnumerable().AnyAwaitAsync(async discount =>
                     {
-                        var validationResult = _discountService.ValidateDiscountAsync(discount, _workContext.GetCurrentCustomerAsync().Result, new[] { discountcouponcode }).Result;
+                        var validationResult = await _discountService.ValidateDiscountAsync(discount, await _workContext.GetCurrentCustomerAsync(), new[] { discountcouponcode });
                         userErrors.AddRange(validationResult.Errors);
 
                         return validationResult.IsValid;

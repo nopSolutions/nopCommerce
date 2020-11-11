@@ -35,7 +35,7 @@ namespace Nop.Web.Extensions
             if (model.ShowTotalSummary && (model.TotalPages > 0))
             {
                 links.Append("<li class=\"total-summary\">");
-                links.Append(string.Format(model.CurrentPageText, model.PageIndex + 1, model.TotalPages, model.TotalRecords));
+                links.Append(string.Format(await model.GetCurrentPageTextAsync(), model.PageIndex + 1, model.TotalPages, model.TotalRecords));
                 links.Append("</li>");
             }
 
@@ -51,7 +51,7 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"first-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.FirstButtonText,
+                            var link = html.RouteLink(await model.GetFirstButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.FirstPageTitle") });
@@ -59,7 +59,7 @@ namespace Nop.Web.Extensions
                         }
                         else
                         {
-                            var link = html.ActionLink(model.FirstButtonText,
+                            var link = html.ActionLink(await model.GetFirstButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.FirstPageTitle") });
@@ -79,7 +79,7 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"previous-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.PreviousButtonText,
+                            var link = html.RouteLink(await model.GetPreviousButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.PreviousPageTitle") });
@@ -87,7 +87,7 @@ namespace Nop.Web.Extensions
                         }
                         else
                         {
-                            var link = html.ActionLink(model.PreviousButtonText,
+                            var link = html.ActionLink(await model.GetPreviousButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.PreviousPageTitle") });
@@ -142,7 +142,7 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"next-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.NextButtonText,
+                            var link = html.RouteLink(await model.GetNextButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.NextPageTitle") });
@@ -150,7 +150,7 @@ namespace Nop.Web.Extensions
                         }
                         else
                         {
-                            var link = html.ActionLink(model.NextButtonText,
+                            var link = html.ActionLink(await model.GetNextButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.NextPageTitle") });
@@ -170,7 +170,7 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"last-page\">");
                         if (model.UseRouteLinks)
                         {
-                            var link = html.RouteLink(model.LastButtonText,
+                            var link = html.RouteLink(await model.GetLastButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.LastPageTitle") });
@@ -178,7 +178,7 @@ namespace Nop.Web.Extensions
                         }
                         else
                         {
-                            var link = html.ActionLink(model.LastButtonText,
+                            var link = html.ActionLink(await model.GetLastButtonTextAsync(),
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.LastPageTitle") });
@@ -203,9 +203,9 @@ namespace Nop.Web.Extensions
         /// <param name="model">Pager model</param>
         /// <returns>Pager</returns>
         /// <remarks>We have two pagers: The first one can have custom routes. The second one just adds query string parameter</remarks>
-        public static Task<Pager> Pager(this IHtmlHelper helper, IPageableModel model)
+        public static Pager Pager(this IHtmlHelper helper, IPageableModel model)
         {
-            return Task.FromResult(new Pager(model, helper.ViewContext));
+            return new Pager(model, helper.ViewContext);
         }
 
         /// <summary>

@@ -832,7 +832,7 @@ namespace Nop.Services.Common
                 //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = _productService.FormatSku(product, orderItem.AttributesXml);
+                    var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
                     cellProductItem = GetPdfCell(sku ?? string.Empty, font);
                     cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cellProductItem);
@@ -1096,7 +1096,7 @@ namespace Nop.Services.Common
             if (vendorId == 0)
             {
                 //payment method
-                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
+                var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
                 var paymentMethodStr = paymentMethod != null
                     ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, lang.Id)
                     : order.PaymentMethodSystemName;
@@ -1474,7 +1474,7 @@ namespace Nop.Services.Common
                     productsTable.AddCell(productAttribTable);
 
                     //SKU
-                    var sku = _productService.FormatSku(product, orderItem.AttributesXml);
+                    var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
                     cell = GetPdfCell(sku ?? string.Empty, font);
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);

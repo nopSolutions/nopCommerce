@@ -14,12 +14,12 @@ namespace Nop.Web.Areas.Admin.Validators.Topics
         {
             RuleFor(x => x.SeName)
                 .Length(0, NopSeoDefaults.ForumTopicLength)
-                .WithMessage(string.Format(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation").Result, NopSeoDefaults.ForumTopicLength));
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.ForumTopicLength);
 
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .When(x => x.IsPasswordProtected)
-                .WithMessage(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty").Result);
+                .WithMessageAwait(localizationService.GetResourceAsync("Validation.Password.IsNotEmpty"));
 
             SetDatabaseValidationRules<Topic>(dataProvider);
         }

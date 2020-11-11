@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Weights(MeasureWeightSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _measureModelFactory.PrepareMeasureWeightListModelAsync(searchModel);
@@ -165,7 +165,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Dimensions(MeasureDimensionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _measureModelFactory.PrepareMeasureDimensionListModelAsync(searchModel);

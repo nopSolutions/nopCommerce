@@ -344,7 +344,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>SKU</returns>
-        string FormatSku(Product product, string attributesXml = null);
+        Task<string> FormatSkuAsync(Product product, string attributesXml = null);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -353,7 +353,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Manufacturer part number</returns>
-        string FormatMpn(Product product, string attributesXml = null);
+        Task<string> FormatMpnAsync(Product product, string attributesXml = null);
 
         //TODO: migrate to an extension method
         /// <summary>
@@ -362,7 +362,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>GTIN</returns>
-        string FormatGtin(Product product, string attributesXml = null);
+        Task<string> FormatGtinAsync(Product product, string attributesXml = null);
 
         //TODO: migrate to an extension method
         /// <summary>

@@ -211,7 +211,7 @@ namespace Nop.Web.Factories
 
             var model = new List<ShoppingCartModel.CheckoutAttributeModel>();
 
-            var excludeShippableAttributes = !_shoppingCartService.ShoppingCartRequiresShipping(cart);
+            var excludeShippableAttributes = !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
             var checkoutAttributes =
                 await _checkoutAttributeService.GetAllCheckoutAttributesAsync((await _storeContext.GetCurrentStoreAsync()).Id,
                     excludeShippableAttributes);
@@ -286,7 +286,7 @@ namespace Nop.Web.Factories
                             //select new values
                             var selectedValues =
                                 _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
-                            foreach (var attributeValue in selectedValues.SelectMany(x => x.values))
+                            foreach (var attributeValue in await selectedValues.SelectMany(x => x.values).ToListAsync())
                             foreach (var item in attributeModel.Values)
                                 if (attributeValue.Id == item.Id)
                                     item.IsPreSelected = true;
@@ -376,7 +376,7 @@ namespace Nop.Web.Factories
             var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
             {
                 Id = sci.Id,
-                Sku = _productService.FormatSku(product, sci.AttributesXml),
+                Sku = await _productService.FormatSkuAsync(product, sci.AttributesXml),
                 VendorName = _vendorSettings.ShowVendorOnOrderDetailsPage ? (await _vendorService.GetVendorByProductIdAsync(product.Id))?.Name : string.Empty,
                 ProductId = sci.ProductId,
                 ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
@@ -398,7 +398,7 @@ namespace Nop.Web.Factories
 
             //disable removal?
             //1. do other items require this one?
-            cartItemModel.DisableRemoval = _shoppingCartService.GetProductsRequiringProduct(cart, product).Any();
+            cartItemModel.DisableRemoval = await _shoppingCartService.GetProductsRequiringProduct(cart, product).AnyAsync();
 
             //allowed quantities
             var allowedQuantities = _productService.ParseAllowedQuantities(product);
@@ -513,7 +513,7 @@ namespace Nop.Web.Factories
             var cartItemModel = new WishlistModel.ShoppingCartItemModel
             {
                 Id = sci.Id,
-                Sku = _productService.FormatSku(product, sci.AttributesXml),
+                Sku = await _productService.FormatSkuAsync(product, sci.AttributesXml),
                 ProductId = product.Id,
                 ProductName = await _localizationService.GetLocalizedAsync(product, x => x.Name),
                 ProductSeName = await _urlRecordService.GetSeNameAsync(product),
@@ -656,7 +656,7 @@ namespace Nop.Web.Factories
             }
 
             //shipping info
-            if (_shoppingCartService.ShoppingCartRequiresShipping(cart))
+            if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             {
                 model.IsShippable = true;
 
@@ -698,8 +698,8 @@ namespace Nop.Web.Factories
 
             //payment info
             var selectedPaymentMethodSystemName = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.SelectedPaymentMethodAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(selectedPaymentMethodSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(selectedPaymentMethodSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
             model.PaymentMethod = paymentMethod != null
                 ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id)
                 : string.Empty;
@@ -729,15 +729,16 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel
             {
-                Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart)
+                Enabled = cart.Any() && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart)
             };
             if (model.Enabled)
             {
                 var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(await _workContext.GetCurrentCustomerAsync());
                 if (shippingAddress == null) {
-                    shippingAddress = (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+                    shippingAddress = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+                        .ToAsyncEnumerable()
                     //enabled for the current store
-                    .FirstOrDefault(a => a.CountryId == null || _storeMappingService.AuthorizeAsync(_countryService.GetCountryByAddressAsync(a).Result).Result);
+                    .FirstOrDefaultAwaitAsync(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)));
                 }
 
                 //countries
@@ -804,7 +805,7 @@ namespace Nop.Web.Factories
         public virtual async Task<PictureModel> PrepareCartItemPictureModelAsync(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
             var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
-                , sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecuredAsync(), await _storeContext.GetCurrentStoreAsync());
+                , sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
             
             var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
             {
@@ -873,8 +874,9 @@ namespace Nop.Web.Factories
             var discountCouponCodes = await _customerService.ParseAppliedDiscountCouponCodesAsync(await _workContext.GetCurrentCustomerAsync());
             foreach (var couponCode in discountCouponCodes)
             {
-                var discount = (await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
-                    .FirstOrDefault(d => d.RequiresCouponCode && _discountService.ValidateDiscountAsync(d, _workContext.GetCurrentCustomerAsync().Result).Result.IsValid);
+                var discount = await (await _discountService.GetAllDiscountsAsync(couponCode: couponCode))
+                    .ToAsyncEnumerable()
+                    .FirstOrDefaultAwaitAsync(async d => d.RequiresCouponCode && (await _discountService.ValidateDiscountAsync(d, await _workContext.GetCurrentCustomerAsync())).IsValid);
 
                 if (discount != null)
                 {
@@ -905,9 +907,10 @@ namespace Nop.Web.Factories
 
             //payment methods
             //all payment methods (do not filter by country here as it could be not specified yet)
-            var paymentMethods = _paymentPluginManager
-                .LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id)
-                .Where(pm => !pm.HidePaymentMethodAsync(cart).Result).ToList();
+            var paymentMethods = await (await _paymentPluginManager
+                .LoadActivePluginsAsyncAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .ToAsyncEnumerable()
+                .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart)).ToListAsync();
             //payment methods displayed during checkout (not with "Button" type)
             var nonButtonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType != PaymentMethodType.Button)
@@ -1013,7 +1016,7 @@ namespace Nop.Web.Factories
                     var subtotal = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(subtotalBase, await _workContext.GetWorkingCurrencyAsync());
                     model.SubTotal = await _priceFormatter.FormatPriceAsync(subtotal, false, await _workContext.GetWorkingCurrencyAsync(), (await _workContext.GetWorkingLanguageAsync()).Id, subTotalIncludingTax);
 
-                    var requiresShipping = _shoppingCartService.ShoppingCartRequiresShipping(cart);
+                    var requiresShipping = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
                     //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
                     //1. "terms of service" are enabled
                     //2. min order sub-total is OK
@@ -1123,7 +1126,7 @@ namespace Nop.Web.Factories
                 }
 
                 //shipping info
-                model.RequiresShipping = _shoppingCartService.ShoppingCartRequiresShipping(cart);
+                model.RequiresShipping = await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart);
                 if (model.RequiresShipping)
                 {
                     var shoppingCartShippingBase = await _orderTotalCalculationService.GetShoppingCartShippingTotalAsync(cart);
@@ -1266,7 +1269,7 @@ namespace Nop.Web.Factories
         {
             var model = new EstimateShippingResultModel();
 
-            if (_shoppingCartService.ShoppingCartRequiresShipping(cart))
+            if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
             {
                 var address = new Address
                 {

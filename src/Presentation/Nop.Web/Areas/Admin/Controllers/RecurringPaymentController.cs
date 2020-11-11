@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(RecurringPaymentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentListModelAsync(searchModel);
@@ -146,7 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> HistoryList(RecurringPaymentHistorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a recurring payment with the specified id
             var payment = await _orderService.GetRecurringPaymentByIdAsync(searchModel.RecurringPaymentId)
@@ -188,7 +188,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
 
                 //prepare model
                 var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentModelAsync(null, payment);
@@ -233,7 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
 
                 //prepare model
                 var model = await _recurringPaymentModelFactory.PrepareRecurringPaymentModelAsync(null, payment);

@@ -29,13 +29,13 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var products = await _productService.GetAllProductsDisplayedOnHomepageAsync();
+            var products = await (await _productService.GetAllProductsDisplayedOnHomepageAsync()).ToAsyncEnumerable()
             //ACL and store mapping
-            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
-
-            products = products.Where(p => p.VisibleIndividually).ToList();
+            .Where(p => _productService.ProductIsAvailable(p))
+            //visible individually
+            .Where(p => p.VisibleIndividually).ToListAsync();
 
             if (!products.Any())
                 return Content("");

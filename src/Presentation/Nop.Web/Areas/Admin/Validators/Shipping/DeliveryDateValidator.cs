@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Shipping
     {
         public DeliveryDateValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Required"));
 
             SetDatabaseValidationRules<DeliveryDate>(dataProvider);
         }

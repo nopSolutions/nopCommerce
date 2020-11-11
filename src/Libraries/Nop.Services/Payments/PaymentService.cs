@@ -75,8 +75,8 @@ namespace Nop.Services.Payments
             }
 
             var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             return await paymentMethod.ProcessPaymentAsync(processPaymentRequest);
@@ -93,8 +93,8 @@ namespace Nop.Services.Payments
                 return;
 
             var customer = await _customerService.GetCustomerByIdAsync(postProcessPaymentRequest.Order.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName, customer, postProcessPaymentRequest.Order.StoreId)
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(postProcessPaymentRequest.Order.PaymentMethodSystemName, customer, postProcessPaymentRequest.Order.StoreId)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             await paymentMethod.PostProcessPaymentAsync(postProcessPaymentRequest);
@@ -114,7 +114,7 @@ namespace Nop.Services.Payments
                 return false;
 
             var customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName, customer, order.StoreId);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName, customer, order.StoreId);
             if (paymentMethod == null)
                 return false; //Payment method couldn't be loaded (for example, was uninstalled)
 
@@ -145,7 +145,7 @@ namespace Nop.Services.Payments
                 return decimal.Zero;
 
             var customer = await _customerService.GetCustomerByIdAsync(cart.FirstOrDefault()?.CustomerId ?? 0);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName, customer, cart.FirstOrDefault()?.StoreId ?? 0);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName, customer, cart.FirstOrDefault()?.StoreId ?? 0);
             if (paymentMethod == null)
                 return decimal.Zero;
 
@@ -167,9 +167,9 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether capture is supported</returns>
-        public virtual bool SupportCapture(string paymentMethodSystemName)
+        public virtual async Task<bool> SupportCaptureAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportCapture;
@@ -182,7 +182,7 @@ namespace Nop.Services.Payments
         /// <returns>Capture payment result</returns>
         public virtual async Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(capturePaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(capturePaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             return await paymentMethod.CaptureAsync(capturePaymentRequest);
@@ -193,9 +193,9 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether partial refund is supported</returns>
-        public virtual bool SupportPartiallyRefund(string paymentMethodSystemName)
+        public virtual async Task<bool> SupportPartiallyRefundAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportPartiallyRefund;
@@ -206,9 +206,9 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether refund is supported</returns>
-        public virtual bool SupportRefund(string paymentMethodSystemName)
+        public virtual async Task<bool> SupportRefundAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportRefund;
@@ -221,7 +221,7 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         public virtual async Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(refundPaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(refundPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             return await paymentMethod.RefundAsync(refundPaymentRequest);
@@ -232,9 +232,9 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A value indicating whether void is supported</returns>
-        public virtual bool SupportVoid(string paymentMethodSystemName)
+        public virtual async Task<bool> SupportVoidAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportVoid;
@@ -247,7 +247,7 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         public virtual async Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(voidPaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(voidPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             return await paymentMethod.VoidAsync(voidPaymentRequest);
@@ -258,9 +258,9 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>A recurring payment type of payment method</returns>
-        public virtual RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName)
+        public virtual async Task<RecurringPaymentType> GetRecurringPaymentTypeAsync(string paymentMethodSystemName)
         {
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RecurringPaymentType.NotSupported;
             
@@ -284,8 +284,8 @@ namespace Nop.Services.Payments
             }
 
             var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
-            var paymentMethod = _paymentPluginManager
-                .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+            var paymentMethod = await _paymentPluginManager
+                .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             return await paymentMethod.ProcessRecurringPaymentAsync(processPaymentRequest);
@@ -301,7 +301,7 @@ namespace Nop.Services.Payments
             if (cancelPaymentRequest.Order.OrderTotal == decimal.Zero)
                 return new CancelRecurringPaymentResult();
 
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(cancelPaymentRequest.Order.PaymentMethodSystemName)
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(cancelPaymentRequest.Order.PaymentMethodSystemName)
                 ?? throw new NopException("Payment method couldn't be loaded");
 
             return await paymentMethod.CancelRecurringPaymentAsync(cancelPaymentRequest);

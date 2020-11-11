@@ -74,16 +74,16 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - hide; false - display.</returns>
-        public Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
+        public async Task<bool> HidePaymentMethodAsync(IList<ShoppingCartItem> cart)
         {
             //you can put any logic here
             //for example, hide this payment method if all products in the cart are downloadable
             //or hide this payment method if current customer is from certain country
 
-            if (_checkMoneyOrderPaymentSettings.ShippableProductRequired && !_shoppingCartService.ShoppingCartRequiresShipping(cart))
-                return Task.FromResult(true);
+            if (_checkMoneyOrderPaymentSettings.ShippableProductRequired && !await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
+                return true;
 
-            return Task.FromResult(false);
+            return false;
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/PaymentCheckMoneyOrder/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentCheckMoneyOrder/Configure";
         }
 
         /// <summary>
@@ -241,6 +241,18 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             await base.UninstallAsync();
         }
 
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        /// <remarks>
+        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+        /// </remarks>
+        public async Task<string> GetPaymentMethodDescriptionAsync()
+        {
+            return await _localizationService.GetResourceAsync("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
+        }
+
         #endregion
 
         #region Properties
@@ -279,15 +291,6 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
         public bool SkipPaymentInfo => false;
-
-        /// <summary>
-        /// Gets a payment method description that will be displayed on checkout pages in the public store
-        /// </summary>
-        /// <remarks>
-        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-        /// </remarks>
-        public string PaymentMethodDescription => _localizationService.GetResourceAsync("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription").Result;
 
         #endregion
     }

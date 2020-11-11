@@ -24,7 +24,7 @@ namespace Nop.Core.Caching
         #region Fields
 
         private bool _disposed;
-        private readonly IDatabase _db;
+        private IDatabase _db;
         private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly PerRequestCache _perRequestCache;
 
@@ -41,9 +41,7 @@ namespace Nop.Core.Caching
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
-
-            _db = _connectionWrapper.GetDatabaseAsync(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Cache).Result;
-
+            
             _perRequestCache = new PerRequestCache(httpContextAccessor);
         }
 
@@ -64,7 +62,7 @@ namespace Nop.Core.Caching
             //we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
             //server.FlushDatabase();
 
-            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
+            var keys = server.Keys((await GetDatabase()).Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
             //we should always persist the data protection key list
             keys = keys.Where(key => !key.ToString().Equals(NopDataProtectionDefaults.RedisDataProtectionKey,
@@ -88,7 +86,7 @@ namespace Nop.Core.Caching
                 return _perRequestCache.Get(key.Key, () => default(T));
 
             //get serialized item from cache
-            var serializedItem = await _db.StringGetAsync(key.Key);
+            var serializedItem = await (await GetDatabase()).StringGetAsync(key.Key);
             if (!serializedItem.HasValue)
                 return default;
 
@@ -121,7 +119,7 @@ namespace Nop.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            await _db.StringSetAsync(key, serializedItem, expiresIn);
+            await (await GetDatabase()).StringSetAsync(key, serializedItem, expiresIn);
         }
 
         /// <summary>
@@ -148,6 +146,16 @@ namespace Nop.Core.Caching
                 //or rethrow the exception
                 throw;
             }
+        }
+
+        private async Task<IDatabase> GetDatabase()
+        {
+            if (_db != null)
+                return _db;
+
+            _db = await _connectionWrapper.GetDatabaseAsync(_appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Cache);
+
+            return _db;
         }
 
         #endregion
@@ -217,7 +225,7 @@ namespace Nop.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            await TryPerformActionAsync(() => _db.StringSetAsync(key.Key, serializedItem, expiresIn));
+            await TryPerformActionAsync(async () => await (await GetDatabase()).StringSetAsync(key.Key, serializedItem, expiresIn));
             _perRequestCache.Set(key.Key, data);
         }
 
@@ -234,7 +242,7 @@ namespace Nop.Core.Caching
             if (_perRequestCache.IsSet(key.Key))
                 return true;
 
-            var (flag, rez) = await TryPerformActionAsync(() => _db.KeyExistsAsync(key.Key));
+            var (flag, rez) = await TryPerformActionAsync(async () => await (await GetDatabase()).KeyExistsAsync(key.Key));
 
             return flag && rez;
         }
@@ -253,7 +261,7 @@ namespace Nop.Core.Caching
                 return;
 
             //remove item from caches
-            await TryPerformActionAsync(async () => await _db.KeyDeleteAsync(cacheKey.Key));
+            await TryPerformActionAsync(async () => await (await GetDatabase()).KeyDeleteAsync(cacheKey.Key));
             _perRequestCache.Remove(cacheKey.Key);
         }
 
@@ -272,7 +280,7 @@ namespace Nop.Core.Caching
             {
                 var keys = await GetKeysAsync(endPoint, prefix);
 
-                await TryPerformActionAsync(() => _db.KeyDeleteAsync(keys.ToArray()));
+                await TryPerformActionAsync(async () => await (await GetDatabase()).KeyDeleteAsync(keys.ToArray()));
             }
         }
 
@@ -290,7 +298,7 @@ namespace Nop.Core.Caching
                 foreach (var redisKey in keys)
                     _perRequestCache.Remove(redisKey.ToString());
 
-                await TryPerformActionAsync(() => _db.KeyDeleteAsync(keys.ToArray()));
+                await TryPerformActionAsync(async () => await (await GetDatabase()).KeyDeleteAsync(keys.ToArray()));
             }
         }
 

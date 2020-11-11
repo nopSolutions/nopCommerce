@@ -57,16 +57,16 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">Authorization filter context</param>
             /// <param name="withWww">Whether URL must start with WWW</param>
-            private async Task RedirectRequestAsync(AuthorizationFilterContext context, bool withWww)
+            private void RedirectRequest(AuthorizationFilterContext context, bool withWww)
             {
                 //get scheme depending on securing connection
-                var urlScheme = $"{await _webHelper.GetCurrentRequestProtocolAsync()}{Uri.SchemeDelimiter}";
+                var urlScheme = $"{_webHelper.GetCurrentRequestProtocol()}{Uri.SchemeDelimiter}";
 
                 //compose start of URL with WWW
                 var urlWith3W = $"{urlScheme}www.";
 
                 //get requested URL
-                var currentUrl = await _webHelper.GetThisPageUrlAsync(true);
+                var currentUrl = _webHelper.GetThisPageUrl(true);
 
                 //whether requested URL starts with WWW
                 var urlStartsWith3W = currentUrl.StartsWith(urlWith3W, StringComparison.OrdinalIgnoreCase);
@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">Authorization filter context</param>
             /// <returns>A task that on completion indicates the filter has executed</returns>
-            private async Task CheckWwwRequirementAsync(AuthorizationFilterContext context)
+            private async Task CheckWwwRequirement(AuthorizationFilterContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -94,23 +94,23 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //ignore this rule for localhost
-                if (await _webHelper.IsLocalRequestAsync(context.HttpContext.Request))
+                if (_webHelper.IsLocalRequest(context.HttpContext.Request))
                     return;
 
                 switch (_seoSettings.WwwRequirement)
                 {
                     case WwwRequirement.WithWww:
                         //redirect to URL with starting WWW
-                        await RedirectRequestAsync(context, true);
+                        RedirectRequest(context, true);
                         break;
 
                     case WwwRequirement.WithoutWww:
                         //redirect to URL without starting WWW
-                        await RedirectRequestAsync(context, false);
+                        RedirectRequest(context, false);
                         break;
 
                     case WwwRequirement.NoMatter:
@@ -132,7 +132,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">Authorization filter context</param>
             public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
-                await CheckWwwRequirementAsync(context);
+                await CheckWwwRequirement(context);
             }
 
             #endregion

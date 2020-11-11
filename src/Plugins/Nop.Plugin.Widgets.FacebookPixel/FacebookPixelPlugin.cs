@@ -64,10 +64,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public async Task<IList<string>> GetWidgetZonesAsync()
         {
             var widgetZones = new List<string> { PublicWidgetZones.HeadHtmlTag };
-            widgetZones.AddRange(_facebookPixelService.GetCustomEventsWidgetZonesAsync().Result);
+            widgetZones.AddRange(await _facebookPixelService.GetCustomEventsWidgetZonesAsync());
+            
             return widgetZones;
         }
 

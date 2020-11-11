@@ -23,7 +23,7 @@ namespace Nop.Services.Plugins
         public RedisPluginsInfo(AppSettings appSettings, INopFileProvider fileProvider, IRedisConnectionWrapper connectionWrapper)
             : base(fileProvider)
         {
-            _db = connectionWrapper.GetDatabaseAsync(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Plugin).Result;
+            _db = connectionWrapper.GetDatabase(appSettings.RedisConfig.DatabaseId ?? (int)RedisDatabaseNumber.Plugin);
         }
 
         #endregion
@@ -37,6 +37,15 @@ namespace Nop.Services.Plugins
         {
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
             await _db.StringSetAsync(nameof(RedisPluginsInfo), text);
+        }
+
+        /// <summary>
+        /// Save plugins info to the redis
+        /// </summary>
+        public override  void Save()
+        {
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            _db.StringSet(nameof(RedisPluginsInfo), text);
         }
 
         /// <summary>

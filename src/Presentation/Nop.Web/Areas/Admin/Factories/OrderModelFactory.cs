@@ -277,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 //fill in additional values (not existing in the entity)
-                orderItemModel.Sku = _productService.FormatSku(product, orderItem.AttributesXml);
+                orderItemModel.Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
                 orderItemModel.VendorName = (await _vendorService.GetVendorByIdAsync(product.VendorId))?.Name;
 
                 //picture
@@ -547,19 +547,19 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SubscriptionTransactionId = order.SubscriptionTransactionId;
 
             //payment method info
-            var pm = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
+            var pm = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
             model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
             model.PaymentStatus = await _localizationService.GetLocalizedEnumAsync(order.PaymentStatus);
 
             //payment method buttons
             model.CanCancelOrder = _orderProcessingService.CanCancelOrder(order);
-            model.CanCapture = _orderProcessingService.CanCapture(order);
+            model.CanCapture = await _orderProcessingService.CanCaptureAsync(order);
             model.CanMarkOrderAsPaid = _orderProcessingService.CanMarkOrderAsPaid(order);
-            model.CanRefund = _orderProcessingService.CanRefund(order);
+            model.CanRefund = await _orderProcessingService.CanRefundAsync(order);
             model.CanRefundOffline = _orderProcessingService.CanRefundOffline(order);
-            model.CanPartiallyRefund = _orderProcessingService.CanPartiallyRefund(order, decimal.Zero);
+            model.CanPartiallyRefund = await _orderProcessingService.CanPartiallyRefundAsync(order, decimal.Zero);
             model.CanPartiallyRefundOffline = _orderProcessingService.CanPartiallyRefundOffline(order, decimal.Zero);
-            model.CanVoid = _orderProcessingService.CanVoid(order);
+            model.CanVoid = await _orderProcessingService.CanVoidAsync(order);
             model.CanVoidOffline = _orderProcessingService.CanVoidOffline(order);
 
             model.PrimaryStoreCurrencyCode = (await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId))?.CurrencyCode;
@@ -721,7 +721,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderItemId = orderItem.Id;
             model.ProductId = orderItem.ProductId;
             model.ProductName = product.Name;
-            model.Sku = _productService.FormatSku(product, orderItem.AttributesXml);
+            model.Sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
             model.AttributeInfo = orderItem.AttributeDescription;
             model.ShipSeparately = product.ShipSeparately;
             model.QuantityOrdered = orderItem.Quantity;
@@ -905,7 +905,7 @@ namespace Nop.Web.Areas.Admin.Factories
             await _baseAdminModelFactory.PrepareWarehousesAsync(searchModel.AvailableWarehouses);
 
             //prepare available payment methods
-            searchModel.AvailablePaymentMethods = _paymentPluginManager.LoadAllPlugins().Select(method =>
+            searchModel.AvailablePaymentMethods = (await _paymentPluginManager.LoadAllPluginsAsync()).Select(method =>
                 new SelectListItem { Text = method.PluginDescriptor.FriendlyName, Value = method.PluginDescriptor.SystemName }).ToList();
             searchModel.AvailablePaymentMethods.Insert(0, new SelectListItem { Text = await _localizationService.GetResourceAsync("Admin.Common.All"), Value = string.Empty });
 

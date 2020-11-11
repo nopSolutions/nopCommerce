@@ -97,17 +97,17 @@ namespace Nop.Web.Framework
         /// Get nop customer cookie
         /// </summary>
         /// <returns>String value of cookie</returns>
-        protected virtual Task<string> GetCustomerCookieAsync()
+        protected virtual string GetCustomerCookie()
         {
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.CustomerCookie}";
-            return Task.FromResult(_httpContextAccessor.HttpContext?.Request?.Cookies[cookieName]);
+            return _httpContextAccessor.HttpContext?.Request?.Cookies[cookieName];
         }
 
         /// <summary>
         /// Set nop customer cookie
         /// </summary>
         /// <param name="customerGuid">Guid of the customer</param>
-        protected virtual async Task SetCustomerCookieAsync(Guid customerGuid)
+        protected virtual void SetCustomerCookie(Guid customerGuid)
         {
             if (_httpContextAccessor.HttpContext?.Response?.HasStarted ?? true)
                 return;
@@ -129,7 +129,7 @@ namespace Nop.Web.Framework
             {
                 HttpOnly = true,
                 Expires = cookieExpiresDate,
-                Secure = await _webHelper.IsCurrentConnectionSecuredAsync()
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
             _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, customerGuid.ToString(), options);
         }
@@ -252,7 +252,7 @@ namespace Nop.Web.Framework
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
                 {
                     //get guest customer
-                    var customerCookie = await GetCustomerCookieAsync();
+                    var customerCookie = GetCustomerCookie();
                     if (Guid.TryParse(customerCookie, out var customerGuid))
                     {
                         //get customer from cookie (should not be registered)
@@ -272,7 +272,7 @@ namespace Nop.Web.Framework
             if (!customer.Deleted && customer.Active && !customer.RequireReLogin)
             {
                 //set customer cookie
-                await SetCustomerCookieAsync(customer.CustomerGuid);
+                SetCustomerCookie(customer.CustomerGuid);
 
                 //cache the found customer
                 _cachedCustomer = customer;

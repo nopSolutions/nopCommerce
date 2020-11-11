@@ -96,7 +96,7 @@ namespace Nop.Services.Plugins
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
         /// <param name="customer">Customer</param>
         /// <returns>Result of check</returns>
-        protected virtual bool FilterByCustomer(PluginDescriptor pluginDescriptor, Customer customer)
+        protected virtual async Task<bool> FilterByCustomerAsync(PluginDescriptor pluginDescriptor, Customer customer)
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException(nameof(pluginDescriptor));
@@ -107,7 +107,7 @@ namespace Nop.Services.Plugins
             if (_catalogSettings.IgnoreAcl)
                 return true;
 
-            return pluginDescriptor.LimitedToCustomerRoles.Intersect(_customerService.GetCustomerRoleIdsAsync(customer).Result).Any();
+            return pluginDescriptor.LimitedToCustomerRoles.Intersect(await _customerService.GetCustomerRoleIdsAsync(customer)).Any();
         }
 
         /// <summary>
@@ -210,20 +210,20 @@ namespace Nop.Services.Plugins
         /// <param name="author">Filter by plugin author; pass null to load all records</param>
         /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
-        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+        public virtual async Task<IList<PluginDescriptor>> GetPluginDescriptorsAsync<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin
         {
             var pluginDescriptors = _pluginsInfo.PluginDescriptors;
 
             //filter plugins
-            pluginDescriptors = pluginDescriptors.Where(descriptor =>
+            pluginDescriptors = await pluginDescriptors.ToAsyncEnumerable().WhereAwait(async descriptor =>
                 FilterByLoadMode(descriptor, loadMode) &&
-                FilterByCustomer(descriptor, customer) &&
+                await FilterByCustomerAsync(descriptor, customer) &&
                 FilterByStore(descriptor, storeId) &&
                 FilterByPluginGroup(descriptor, group) &&
                 FilterByDependsOn(descriptor, dependsOnSystemName) &&
                 FilterByPluginFriendlyName(descriptor, friendlyName) &&
-                FilterByPluginAuthor(descriptor, author)).ToList();
+                FilterByPluginAuthor(descriptor, author)).ToListAsync();
 
             //filter by the passed type
             if (typeof(TPlugin) != typeof(IPlugin))
@@ -246,11 +246,11 @@ namespace Nop.Services.Plugins
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>>Plugin descriptor</returns>
-        public virtual PluginDescriptor GetPluginDescriptorBySystemName<TPlugin>(string systemName,
+        public virtual async Task<PluginDescriptor> GetPluginDescriptorBySystemNameAsync<TPlugin>(string systemName,
             LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
+            Customer customer = null, int storeId = 0, string @group = null) where TPlugin : class, IPlugin
         {
-            return GetPluginDescriptors<TPlugin>(loadMode, customer, storeId, group)
+            return (await GetPluginDescriptorsAsync<TPlugin>(loadMode, customer, storeId, group))
                 .FirstOrDefault(descriptor => descriptor.SystemName.Equals(systemName));
         }
 
@@ -263,11 +263,12 @@ namespace Nop.Services.Plugins
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
-        public virtual IEnumerable<TPlugin> GetPlugins<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin
+        public virtual async Task<IList<TPlugin>> GetPluginsAsync<TPlugin>(
+            LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string @group = null) where TPlugin : class, IPlugin
         {
-            return GetPluginDescriptors<TPlugin>(loadMode, customer, storeId, group)
-                .Select(descriptor => descriptor.Instance<TPlugin>());
+            return (await GetPluginDescriptorsAsync<TPlugin>(loadMode, customer, storeId, group))
+                .Select(descriptor => descriptor.Instance<TPlugin>()).ToList();
         }
 
         /// <summary>
@@ -292,7 +293,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor</param>
         /// <returns>Logo URL</returns>
-        public virtual async Task<string> GetPluginLogoUrlAsync(PluginDescriptor pluginDescriptor)
+        public virtual Task<string> GetPluginLogoUrlAsync(PluginDescriptor pluginDescriptor)
         {
             var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
             if (string.IsNullOrEmpty(pluginDirectory))
@@ -304,11 +305,11 @@ namespace Nop.Services.Plugins
             if (string.IsNullOrWhiteSpace(logoExtension))
                 return null;
 
-            var storeLocation = await _webHelper.GetStoreLocationAsync();
+            var storeLocation = _webHelper.GetStoreLocation();
             var logoUrl = $"{storeLocation}{NopPluginDefaults.PathName}/" +
                 $"{_fileProvider.GetDirectoryNameOnly(pluginDirectory)}/{NopPluginDefaults.LogoFileName}.{logoExtension}";
 
-            return logoUrl;
+            return Task.FromResult(logoUrl);
         }
 
         /// <summary>
@@ -328,7 +329,7 @@ namespace Nop.Services.Plugins
 
             if (checkDependencies)
             {
-                var descriptor = GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.NotInstalledOnly);
+                var descriptor = await GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.NotInstalledOnly);
 
                 if (descriptor.DependsOn?.Any() ?? false)
                 {
@@ -363,8 +364,8 @@ namespace Nop.Services.Plugins
             if (_pluginsInfo.PluginNamesToUninstall.Contains(systemName))
                 return;
 
-            var dependentPlugins = GetPluginDescriptors<IPlugin>(dependsOnSystemName: systemName).ToList();
-            var descriptor = GetPluginDescriptorBySystemName<IPlugin>(systemName);
+            var dependentPlugins = await GetPluginDescriptorsAsync<IPlugin>(dependsOnSystemName: systemName);
+            var descriptor = await GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName);
 
             if (dependentPlugins.Any())
             {
@@ -429,7 +430,7 @@ namespace Nop.Services.Plugins
             _pluginsInfo.PluginNamesToDelete.Clear();
             _pluginsInfo.PluginNamesToInstall.Clear();
             _pluginsInfo.PluginNamesToUninstall.Clear();
-            _pluginsInfo.SaveAsync().Wait();
+            _pluginsInfo.Save();
 
             //display all plugins on the plugin list page
             _pluginsInfo.PluginDescriptors.ToList().ForEach(pluginDescriptor => pluginDescriptor.ShowInPluginsList = true);

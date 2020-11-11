@@ -90,8 +90,8 @@ namespace Nop.Services.Discounts
                 else
                 {
                     //or try to get validation result for the requirement
-                    var requirementRulePlugin = _discountPluginManager
-                        .LoadPluginBySystemName(requirement.DiscountRequirementRuleSystemName, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+                    var requirementRulePlugin = await _discountPluginManager
+                        .LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
                     if (requirementRulePlugin == null)
                         continue;
 

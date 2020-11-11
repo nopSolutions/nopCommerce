@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(PollSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _pollModelFactory.PreparePollListModelAsync(searchModel);
@@ -226,7 +226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> PollAnswers(PollAnswerSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a poll with the specified id
             var poll = await _pollService.GetPollByIdAsync(searchModel.PollId)

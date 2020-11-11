@@ -143,7 +143,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                     //get notification URL
                     var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                    var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.ImportContactsRoute, null, await _webHelper.GetCurrentRequestProtocolAsync());
+                    var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.ImportContactsRoute, null, _webHelper.GetCurrentRequestProtocol());
 
                     var name = string.Empty;
 
@@ -201,7 +201,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         $"{SendinBlueDefaults.CountyServiceAttribute};" +
                         $"{SendinBlueDefaults.StateServiceAttribute};" +
                         $"{SendinBlueDefaults.FaxServiceAttribute}";
-                    var csv = subscriptions.Aggregate(title, (all, subscription) =>
+                    var csv = await subscriptions.ToAsyncEnumerable().AggregateAwaitAsync(title, async (all, subscription) =>
                     {
                         var firstName = string.Empty;
                         var lastName = string.Empty;
@@ -219,14 +219,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         var state = string.Empty;
                         var fax = string.Empty;
 
-                        var customer = _customerService.GetCustomerByEmailAsync(subscription.Email).Result;
+                        var customer = await _customerService.GetCustomerByEmailAsync(subscription.Email);
                         if (customer != null)
                         {
-                            firstName = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute).Result;
-                            lastName = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute).Result;
-                            phone = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute).Result;
-                            var countryId = _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute).Result;
-                            var country = _countryService.GetCountryByIdAsync(countryId).Result;
+                            firstName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FirstNameAttribute);
+                            lastName = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.LastNameAttribute);
+                            phone = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PhoneAttribute);
+                            var countryId = await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                            var country = await _countryService.GetCountryByIdAsync(countryId);
                             countryName = country?.Name;
                             var countryIsoCode = country?.NumericIsoCode ?? 0;
                             if (countryIsoCode > 0 && !string.IsNullOrEmpty(phone))
@@ -236,16 +236,16 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                                     ?.DialCodes?.FirstOrDefault()?.Replace(" ", string.Empty) ?? string.Empty;
                                 sms = phone.Replace($"+{phoneCode}", string.Empty);
                             }
-                            gender = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute).Result;
-                            dateOfBirth = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DateOfBirthAttribute).Result;
-                            company = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute).Result;
-                            address1 = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute).Result;
-                            address2 = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute).Result;
-                            zipCode = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute).Result;
-                            city = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute).Result;
-                            county = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute).Result;
-                            state = _stateProvinceService.GetStateProvinceByIdAsync(_genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute).Result).Result?.Name;
-                            fax = _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute).Result;
+                            gender = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.GenderAttribute);
+                            dateOfBirth = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.DateOfBirthAttribute);
+                            company = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CompanyAttribute);
+                            address1 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddressAttribute);
+                            address2 = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.StreetAddress2Attribute);
+                            zipCode = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
+                            city = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CityAttribute);
+                            county = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.CountyAttribute);
+                            state = (await _stateProvinceService.GetStateProvinceByIdAsync(await _genericAttributeService.GetAttributeAsync<int>(customer, NopCustomerDefaults.StateProvinceIdAttribute)))?.Name;
+                            fax = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.FaxAttribute);
                         }
                         return $"{all}\n" +
                             $"{subscription.Email};" +
@@ -277,7 +277,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     };
 
                     //start import
-                    client.ImportContacts(requestContactImport);
+                    await client.ImportContactsAsync(requestContactImport);
                 }
             }
             catch (Exception exception)
@@ -677,7 +677,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                 //or create new one
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-                var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.UnsubscribeContactRoute, null, await _webHelper.GetCurrentRequestProtocolAsync());
+                var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.UnsubscribeContactRoute, null, _webHelper.GetCurrentRequestProtocol());
                 var webhook = new CreateWebhook(notificationUrl, "Unsubscribe event webhook",
                     new List<CreateWebhook.EventsEnum> { CreateWebhook.EventsEnum.Unsubscribed }, CreateWebhook.TypeEnum.Transactional);
                 var result = client.CreateWebhook(webhook);

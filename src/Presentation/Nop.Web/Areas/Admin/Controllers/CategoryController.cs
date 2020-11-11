@@ -218,7 +218,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(CategorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _categoryModelFactory.PrepareCategoryListModelAsync(searchModel);
@@ -434,7 +434,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (selectedIds != null)
             {
-                await _categoryService.DeleteCategoriesAsync((await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).Where(p => _workContext.GetCurrentVendorAsync().Result == null).ToList());
+                await _categoryService.DeleteCategoriesAsync(await (await _categoryService.GetCategoriesByIdsAsync(selectedIds.ToArray())).ToAsyncEnumerable().WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null).ToListAsync());
             }
 
             return Json(new { Result = true });
@@ -457,7 +457,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -476,7 +476,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -509,7 +509,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -522,7 +522,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductList(CategoryProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a category with the specified id
             var category = await _categoryService.GetCategoryByIdAsync(searchModel.CategoryId)
@@ -579,7 +579,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductAddPopupList(AddProductToCategorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _categoryModelFactory.PrepareAddProductToCategoryListModelAsync(searchModel);

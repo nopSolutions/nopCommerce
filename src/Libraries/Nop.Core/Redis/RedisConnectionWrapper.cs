@@ -50,6 +50,17 @@ namespace Nop.Core.Redis
         }
 
         /// <summary>
+        /// Gets all endpoints defined on the server
+        /// </summary>
+        /// <returns>Array of endpoints</returns>
+        protected EndPoint[] GetEndPoints()
+        {
+            var connection = GetConnection();
+
+            return connection.GetEndPoints();
+        }
+
+        /// <summary>
         /// Get connection to Redis servers
         /// </summary>
         /// <returns></returns>
@@ -68,6 +79,24 @@ namespace Nop.Core.Redis
         }
 
         /// <summary>
+        /// Get connection to Redis servers
+        /// </summary>
+        /// <returns></returns>
+        protected ConnectionMultiplexer GetConnection()
+        {
+            if (_connection != null && _connection.IsConnected)
+                return _connection;
+
+            //Connection disconnected. Disposing connection...
+            _connection?.Dispose();
+
+            //Creating new instance of Redis Connection
+            _connection = ConnectionMultiplexer.Connect(_connectionString.Value);
+
+            return _connection;
+        }
+
+        /// <summary>
         /// Create instance of RedLock factory
         /// </summary>
         /// <returns>RedLock factory</returns>
@@ -75,7 +104,7 @@ namespace Nop.Core.Redis
         {
             //get RedLock endpoints
             var configurationOptions = ConfigurationOptions.Parse(_connectionString.Value);
-            var redLockEndPoints = GetEndPointsAsync().Result.Select(endPoint => new RedLockEndPoint
+            var redLockEndPoints = GetEndPoints().Select(endPoint => new RedLockEndPoint
             {
                 EndPoint = endPoint,
                 Password = configurationOptions.Password,
@@ -102,6 +131,18 @@ namespace Nop.Core.Redis
         public async Task<IDatabase> GetDatabaseAsync(int db)
         {
             var connection = await GetConnectionAsync();
+
+            return connection.GetDatabase(db);
+        }
+
+        /// <summary>
+        /// Obtain an interactive connection to a database inside Redis
+        /// </summary>
+        /// <param name="db">Database number</param>
+        /// <returns>Redis cache database</returns>
+        public IDatabase GetDatabase(int db)
+        {
+            var connection = GetConnection();
 
             return connection.GetDatabase(db);
         }

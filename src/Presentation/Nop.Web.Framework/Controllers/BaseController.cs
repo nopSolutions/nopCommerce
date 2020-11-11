@@ -235,17 +235,18 @@ namespace Nop.Web.Framework.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
             //return Challenge();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrlAsync(Request).Result });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(Request) });
         }
 
         /// <summary>
         /// Access denied JSON data for DataTables
         /// </summary>
         /// <returns>Access denied JSON data</returns>
-        protected JsonResult AccessDeniedDataTablesJson()
+        protected async Task<JsonResult> AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorJson(localizationService.GetResourceAsync("Admin.AccessDenied.Description").Result);
+
+            return ErrorJson(await localizationService.GetResourceAsync("Admin.AccessDenied.Description"));
         }
 
         #endregion

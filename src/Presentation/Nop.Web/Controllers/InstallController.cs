@@ -44,9 +44,9 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult Index()
+        public virtual async Task<IActionResult> Index()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             var model = new InstallModel
@@ -87,7 +87,7 @@ namespace Nop.Web.Controllers
         [IgnoreAntiforgeryToken]
         public virtual async Task<IActionResult> Index(InstallModel model)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             //prepare language list
@@ -169,7 +169,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //check whether database exists
-                    if (!dataProvider.DatabaseExists())
+                    if (!await dataProvider.DatabaseExistsAsync())
                         throw new Exception(_locService.GetResource("DatabaseNotExists"));
                 }
 
@@ -193,7 +193,7 @@ namespace Nop.Web.Controllers
                         .Split(',', StringSplitOptions.RemoveEmptyEntries).Select(pluginName => pluginName.Trim()).ToList();
                 }
 
-                var plugins = pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+                var plugins = (await pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                     .Where(pluginDescriptor => !pluginsIgnoredDuringInstallation.Contains(pluginDescriptor.SystemName))
                     .OrderBy(pluginDescriptor => pluginDescriptor.Group).ThenBy(pluginDescriptor => pluginDescriptor.DisplayOrder)
                     .ToList();
@@ -219,7 +219,10 @@ namespace Nop.Web.Controllers
                     var client = EngineContext.Current.Resolve<NopHttpClient>();
                     await client.InstallationCompletedAsync(model.AdminEmail, languageCode);
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
 
                 return View(new InstallModel { RestartUrl = Url.RouteUrl("Homepage") });
 
@@ -241,9 +244,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult ChangeLanguage(string language)
+        public virtual async Task<IActionResult> ChangeLanguage(string language)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             _locService.SaveCurrentLanguage(language);
@@ -254,9 +257,9 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult RestartInstall()
+        public virtual async Task<IActionResult> RestartInstall()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             return View("Index", new InstallModel { RestartUrl = Url.Action("Index", "Install") });
@@ -264,11 +267,11 @@ namespace Nop.Web.Controllers
 
         public virtual async Task<IActionResult> RestartApplication()
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 return RedirectToRoute("Homepage");
 
             //restart application
-            await EngineContext.Current.Resolve<IWebHelper>().RestartAppDomainAsync();
+            EngineContext.Current.Resolve<IWebHelper>().RestartAppDomain();
 
             return new EmptyResult();
         }

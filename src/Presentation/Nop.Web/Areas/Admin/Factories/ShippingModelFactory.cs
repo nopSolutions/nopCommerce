@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get shipping providers
-            var shippingProviders = _shippingPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var shippingProviders = (await _shippingPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new ShippingProviderListModel().PrepareToGridAsync(searchModel, shippingProviders, () =>
@@ -209,7 +209,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get pickup point providers
-            var pickupPointProviders = _pickupPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var pickupPointProviders = (await _pickupPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new PickupPointProviderListModel().PrepareToGridAsync(searchModel, pickupPointProviders, () =>
@@ -505,13 +505,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-            model.AvailableCountries = countries.Select(country =>
+            model.AvailableCountries = await countries.ToAsyncEnumerable().SelectAwait(async country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id).Result?.Count ?? 0;
+                countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
 
                 return countryModel;
-            }).ToList();
+            }).ToListAsync();
 
             foreach (var shippingMethod in await _shippingService.GetAllShippingMethodsAsync())
             {

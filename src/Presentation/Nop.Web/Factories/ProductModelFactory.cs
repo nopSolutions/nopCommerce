@@ -503,7 +503,7 @@ namespace Nop.Web.Factories
 
             //prepare picture model
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDefaultPictureModelKey, 
-                product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecuredAsync(),
+                product, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
                 await _storeContext.GetCurrentStoreAsync());
 
             var defaultPictureModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
@@ -584,17 +584,18 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model =
+            var model = await 
                 (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id))
+                .ToAsyncEnumerable()
                     //filter by store
-                    .Where(x => _productTagService.GetProductCountAsync(x.Id, _storeContext.GetCurrentStoreAsync().Result.Id).Result > 0)
-                    .Select(x => new ProductTagModel
+                    .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
+                    .SelectAwait(async x => new ProductTagModel
                     {
                         Id = x.Id,
-                        Name = _localizationService.GetLocalizedAsync(x, y => y.Name).Result,
-                        SeName = _urlRecordService.GetSeNameAsync(x).Result,
-                        ProductCount = _productTagService.GetProductCountAsync(x.Id, _storeContext.GetCurrentStoreAsync().Result.Id).Result
-                    }).ToList();
+                        Name = await _localizationService.GetLocalizedAsync(x, y => y.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(x),
+                        ProductCount = await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id)
+                    }).ToListAsync();
 
             return model;
         }
@@ -849,7 +850,7 @@ namespace Nop.Web.Factories
                         {
                             var productAttributeImageSquarePictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductAttributeImageSquarePictureModelKey
                                 , attributeValue.ImageSquaresPictureId,
-                                    _webHelper.IsCurrentConnectionSecuredAsync(),
+                                    _webHelper.IsCurrentConnectionSecured(),
                                     await _storeContext.GetCurrentStoreAsync());
                             valueModel.ImageSquaresPictureModel = await _staticCacheManager.GetAsync(productAttributeImageSquarePictureCacheKey, async () =>
                             {
@@ -990,21 +991,22 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = (await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
-                   .Select(tierPrice =>
+            var model = await (await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
+                .ToAsyncEnumerable()
+                   .SelectAwait(async tierPrice =>
                 {
-                    var priceBase = _taxService.GetProductPriceAsync(product, _priceCalculationService.GetFinalPriceAsync(product,
-                        _workContext.GetCurrentCustomerAsync().Result, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
-                        tierPrice.Quantity).Result.Item1).Result.price;
+                    var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
+                        await _workContext.GetCurrentCustomerAsync(), decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
+                        tierPrice.Quantity)).Item1)).price;
 
-                       var price = _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceBase, _workContext.GetWorkingCurrencyAsync().Result).Result;
+                       var price = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(priceBase, await _workContext.GetWorkingCurrencyAsync());
 
                        return new ProductDetailsModel.TierPriceModel
                        {
                            Quantity = tierPrice.Quantity,
-                           Price = _priceFormatter.FormatPriceAsync(price, false, false).Result
+                           Price = await _priceFormatter.FormatPriceAsync(price, false, false)
                        };
-                   }).ToList();
+                   }).ToListAsync();
 
             return model;
         }
@@ -1019,19 +1021,20 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id))
-                .Select(pm =>
+            var model = await (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id))
+                .ToAsyncEnumerable()
+                .SelectAwait(async pm =>
                 {
-                    var manufacturer = _manufacturerService.GetManufacturerByIdAsync(pm.ManufacturerId).Result;
+                    var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(pm.ManufacturerId);
                     var modelMan = new ManufacturerBriefInfoModel
                     {
                         Id = manufacturer.Id,
-                        Name = _localizationService.GetLocalizedAsync(manufacturer, x => x.Name).Result,
-                        SeName = _urlRecordService.GetSeNameAsync(manufacturer).Result
+                        Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
+                        SeName = await _urlRecordService.GetSeNameAsync(manufacturer)
                     };
 
                     return modelMan;
-                }).ToList();
+                }).ToListAsync();
 
             return model;
         }
@@ -1055,7 +1058,7 @@ namespace Nop.Web.Factories
             //prepare picture models
             var productPicturesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ProductDetailsPicturesModelKey
                 , product, defaultPictureSize, isAssociatedProduct, 
-                await _workContext.GetWorkingLanguageAsync(), await _webHelper.IsCurrentConnectionSecuredAsync(), await _storeContext.GetCurrentStoreAsync());
+                await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
             var cachedPictures = await _staticCacheManager.GetAsync(productPicturesCacheKey, async () =>
             {
                 var productName = await _localizationService.GetLocalizedAsync(product, x => x.Name);
@@ -1290,7 +1293,7 @@ namespace Nop.Web.Factories
             if (_catalogSettings.ShowShareButton && !string.IsNullOrEmpty(_catalogSettings.PageShareCode))
             {
                 var shareCode = _catalogSettings.PageShareCode;
-                if (await _webHelper.IsCurrentConnectionSecuredAsync())
+                if (_webHelper.IsCurrentConnectionSecured())
                 {
                     //need to change the add this link to be https linked when the page is, so that the page doesn't ask about mixed mode when viewed in https...
                     shareCode = shareCode.Replace("http://", "https://");

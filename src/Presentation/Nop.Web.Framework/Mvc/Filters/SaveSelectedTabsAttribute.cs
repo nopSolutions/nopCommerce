@@ -79,7 +79,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
-            private async Task SaveSelectedTabAsync(ActionExecutingContext context)
+            private async Task SaveSelectedTab(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -92,10 +92,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //ignore AJAX requests
-                if (await _webHelper.IsAjaxRequestAsync(context.HttpContext.Request))
+                if (_webHelper.IsAjaxRequest(context.HttpContext.Request))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //check whether this filter has been overridden for the Action
@@ -128,7 +128,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await next();
-                await SaveSelectedTabAsync(context);
+                await SaveSelectedTab(context);
             }
 
             #endregion

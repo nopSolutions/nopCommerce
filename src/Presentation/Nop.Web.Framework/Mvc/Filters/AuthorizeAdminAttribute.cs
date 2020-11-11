@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //there is AdminAuthorizeFilter, so check access

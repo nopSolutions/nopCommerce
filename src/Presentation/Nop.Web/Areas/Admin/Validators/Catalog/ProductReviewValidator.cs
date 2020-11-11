@@ -12,12 +12,12 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
     {
         public ProductReviewValidator(ILocalizationService localizationService, INopDataProvider dataProvider, IWorkContext workContext)
         {
-            var isLoggedInAsVendor = workContext.GetCurrentVendorAsync().Result != null;
+            var isLoggedInAsVendor = workContext.GetCurrentVendorAsync() != null;
             //vendor can edit "Reply text" only
             if (!isLoggedInAsVendor)
             {
-                RuleFor(x => x.Title).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Fields.Title.Required").Result);
-                RuleFor(x => x.ReviewText).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Fields.ReviewText.Required").Result);
+                RuleFor(x => x.Title).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Fields.Title.Required"));
+                RuleFor(x => x.ReviewText).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.ProductReviews.Fields.ReviewText.Required"));
             }
 
             SetDatabaseValidationRules<ProductReview>(dataProvider);

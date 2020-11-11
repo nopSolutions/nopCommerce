@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(ReturnRequestSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _returnRequestModelFactory.PrepareReturnRequestListModelAsync(searchModel);
@@ -232,7 +232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ReturnRequestReasonList(ReturnRequestReasonSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _returnRequestModelFactory.PrepareReturnRequestReasonListModelAsync(searchModel);
@@ -366,7 +366,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ReturnRequestActionList(ReturnRequestActionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _returnRequestModelFactory.PrepareReturnRequestActionListModelAsync(searchModel);

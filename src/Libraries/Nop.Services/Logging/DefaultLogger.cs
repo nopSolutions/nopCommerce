@@ -179,10 +179,10 @@ namespace Nop.Services.Logging
                 LogLevel = logLevel,
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
-                IpAddress = await _webHelper.GetCurrentIpAddressAsync(),
+                IpAddress = _webHelper.GetCurrentIpAddress(),
                 CustomerId = customer?.Id,
-                PageUrl = await _webHelper.GetThisPageUrlAsync(true),
-                ReferrerUrl = await _webHelper.GetUrlReferrerAsync(),
+                PageUrl = _webHelper.GetThisPageUrl(true),
+                ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
             };
 

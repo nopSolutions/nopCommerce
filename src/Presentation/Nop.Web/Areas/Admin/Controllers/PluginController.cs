@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ListSelect(PluginSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _pluginModelFactory.PreparePluginListModelAsync(searchModel);
@@ -145,14 +145,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new List<string>());
 
             //prepare models
-            var models = (await _pluginModelFactory.PrepareAdminNavigationPluginModelsAsync()).Select(model => new
+            var models = await (await _pluginModelFactory.PrepareAdminNavigationPluginModelsAsync()).ToAsyncEnumerable().SelectAwait(async model => new
             {
                 title = model.FriendlyName,
                 link = model.ConfigurationUrl,
-                parent = _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Local").Result,
+                parent = await _localizationService.GetResourceAsync("Admin.Configuration.Plugins.Local"),
                 grandParent = string.Empty,
                 rate = -50 //negative rate is set to move plugins to the end of list
-            }).ToList();
+            }).ToListAsync();
 
             return Json(models);
         }
@@ -199,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("List");
@@ -220,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("install-plugin-link-".Length);
 
-                var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
+                var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -235,7 +235,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("List");
@@ -256,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("uninstall-plugin-link-".Length);
 
-                var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
+                var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -271,7 +271,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("List");
@@ -292,7 +292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (formValue.StartsWith("delete-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("delete-plugin-link-".Length);
 
-                var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
+                var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
 
                 //check whether plugin is not installed
                 if (pluginDescriptor.Installed)
@@ -304,7 +304,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("List");
@@ -366,7 +366,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a plugin with the specified system name
-            var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
+            var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 return RedirectToAction("List");
 
@@ -383,7 +383,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a plugin with the specified system name
-            var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(model.SystemName, LoadPluginsMode.All);
+            var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(model.SystemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 return RedirectToAction("List");
 
@@ -573,7 +573,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OfficialFeedSelect(OfficialFeedPluginSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _pluginModelFactory.PrepareOfficialFeedPluginListModelAsync(searchModel);

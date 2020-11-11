@@ -55,6 +55,7 @@ namespace Nop.Core
             return sw.ToString();
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Encodes an attribute
         /// </summary>
@@ -86,13 +87,13 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">Attribute</param>
         /// <returns>Decoded attribute</returns>
-        public static Task<string> XmlDecodeAsync(string str)
+        public static string XmlDecode(string str)
         {
             var sb = new StringBuilder(str);
             
             var rez = sb.Replace("&quot;", "\"").Replace("&apos;", "'").Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&").ToString();
 
-            return Task.FromResult(rez);
+            return rez;
         }
 
         /// <summary>
@@ -110,18 +111,19 @@ namespace Nop.Core
             return sb.ToString();
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Deserializes a datetime
         /// </summary>
         /// <param name="dateTime">Datetime</param>
         /// <returns>Deserialized datetime</returns>
-        public static Task<DateTime> DeserializeDateTimeAsync(string dateTime)
+        public static DateTime DeserializeDateTime(string dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
             using var sr = new StringReader(dateTime);
             var test = xmlS.Deserialize(sr);
 
-            return Task.FromResult((DateTime)test);
+            return (DateTime)test;
         }
 
         #endregion

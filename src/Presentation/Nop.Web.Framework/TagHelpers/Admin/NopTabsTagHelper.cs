@@ -125,7 +125,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 selectedTabInput.Attributes.Add("type", "hidden");
                 selectedTabInput.Attributes.Add("id", "selected-tab-name");
                 selectedTabInput.Attributes.Add("name", "selected-tab-name");
-                selectedTabInput.Attributes.Add("value", await _htmlHelper.GetSelectedTabNameAsync());
+                selectedTabInput.Attributes.Add("value", _htmlHelper.GetSelectedTabName());
                 output.PreContent.SetHtmlContent(await selectedTabInput.RenderHtmlContent());
 
                 //render tabs script
@@ -239,7 +239,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 : string.Empty;
 
             if (string.IsNullOrEmpty(tabNameToSelect))
-                tabNameToSelect = await _htmlHelper.GetSelectedTabNameAsync();
+                tabNameToSelect = _htmlHelper.GetSelectedTabName();
 
             if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
                 tabNameToSelect = Name;

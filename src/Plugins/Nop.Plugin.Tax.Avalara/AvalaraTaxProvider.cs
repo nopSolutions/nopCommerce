@@ -127,16 +127,16 @@ namespace Nop.Plugin.Tax.Avalara
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return new List<string>
+            return Task.FromResult<IList<string>>(new List<string>
             {
                 AdminWidgetZones.CustomerDetailsBlock,
                 AdminWidgetZones.CustomerRoleDetailsTop,
                 AdminWidgetZones.ProductListButtons,
                 PublicWidgetZones.CheckoutConfirmTop,
                 PublicWidgetZones.OpCheckoutConfirmTop
-            };
+            });
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Nop.Plugin.Tax.Avalara
             await _avalaraTaxManager.DeleteAttributesAsync();
 
             //settings            
-            _taxSettings.ActiveTaxProviderSystemName = _taxPluginManager.LoadAllPlugins()
+            _taxSettings.ActiveTaxProviderSystemName = (await _taxPluginManager.LoadAllPluginsAsync())
                 .FirstOrDefault(taxProvider => !taxProvider.PluginDescriptor.SystemName.Equals(AvalaraTaxDefaults.SystemName))
                 ?.PluginDescriptor.SystemName;
             await _settingService.SaveSettingAsync(_taxSettings);

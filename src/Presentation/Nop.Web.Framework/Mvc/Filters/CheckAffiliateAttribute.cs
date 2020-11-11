@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (request?.Query == null || !request.Query.Any())
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //try to find by ID

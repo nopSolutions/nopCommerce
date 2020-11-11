@@ -258,7 +258,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model ??= discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
-                var discountRules = _discountPluginManager.LoadAllPlugins();
+                var discountRules = await _discountPluginManager.LoadAllPluginsAsync();
                 foreach (var discountRule in discountRules)
                 {
                     model.AvailableDiscountRequirementRules.Add(new SelectListItem
@@ -297,7 +297,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //get URL of discount with coupon code
             if (model.RequiresCouponCode && !string.IsNullOrEmpty(model.CouponCode))
             {
-                model.DiscountUrl = QueryHelpers.AddQueryString((await _webHelper.GetStoreLocationAsync()).TrimEnd('/'),
+                model.DiscountUrl = QueryHelpers.AddQueryString((_webHelper.GetStoreLocation()).TrimEnd('/'),
                     NopDiscountDefaults.DiscountCouponQueryParameter, model.CouponCode);
             }
 
@@ -340,7 +340,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
-                requirementModel.AvailableInteractionTypes = interactionType.ToSelectList();
+                requirementModel.AvailableInteractionTypes = await interactionType.ToSelectList();
 
                 if (requirement.IsGroup)
                 {
@@ -353,7 +353,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 }
 
                 //or try to get name and configuration URL for the requirement
-                var requirementRule = _discountPluginManager.LoadPluginBySystemName(requirement.DiscountRequirementRuleSystemName);
+                var requirementRule = await _discountPluginManager.LoadPluginBySystemNameAsync(requirement.DiscountRequirementRuleSystemName);
                 if (requirementRule == null)
                     return null;
 

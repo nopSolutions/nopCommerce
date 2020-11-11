@@ -134,7 +134,7 @@ namespace Nop.Services.Catalog
                                     if (htmlEncode)
                                         fileName = WebUtility.HtmlEncode(fileName);
 
-                                    var attributeText = allowHyperlinks ? $"<a href=\"{await _webHelper.GetStoreLocationAsync(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
+                                    var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
                                         : fileName;
 
                                     //encode (if required)

@@ -103,21 +103,21 @@ namespace Nop.Web.Controllers
             var feed = new RssFeed(
                 $"{await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)}: News",
                 "News",
-                new Uri(await _webHelper.GetStoreLocationAsync()),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
-                return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
             var newsItems = await _newsService.GetAllNewsAsync(languageId, (await _storeContext.GetCurrentStoreAsync()).Id);
             foreach (var n in newsItems)
             {
-                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, await _webHelper.GetCurrentRequestProtocolAsync());
+                var newsUrl = Url.RouteUrl("NewsItem", new { SeName = await _urlRecordService.GetSeNameAsync(n, n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         public virtual async Task<IActionResult> NewsItem(int newsItemId)

@@ -15,7 +15,7 @@
 
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, await webHelper.GetCurrentRequestProtocolAsync()).ToLowerInvariant();
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, webHelper.GetCurrentRequestProtocol()).ToLowerInvariant();
         Html.AddCanonicalUrlParts(manufacturerUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
@@ -77,7 +77,7 @@
             </div>
         }
         @{
-            var pager = (await Html.Pager(Model.PagingFilteringContext)).QueryParam("pagenumber");
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
         }
         @if (!(await pager.IsEmpty()))
         {

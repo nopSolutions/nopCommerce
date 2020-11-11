@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqToDB;
@@ -23,14 +22,6 @@ namespace Nop.Data
         /// <param name="collation">Collation</param>
         /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         void CreateDatabase(string collation, int triesToConnect = 10);
-
-        //TODO: may be deleted from interface
-        /// <summary>
-        /// Creates a connection to a database
-        /// </summary>
-        /// <param name="connectionString">Connection string</param>
-        /// <returns>Connection to a database</returns>
-        IDbConnection CreateDbConnection(string connectionString);
 
         /// <summary>
         /// Initialize database
@@ -106,6 +97,14 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
+        Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity;
+        
+        /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
         ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
@@ -113,7 +112,13 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        int? GetTableIdent<TEntity>() where TEntity : BaseEntity;
+        Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        Task<bool> DatabaseExistsAsync();
 
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists

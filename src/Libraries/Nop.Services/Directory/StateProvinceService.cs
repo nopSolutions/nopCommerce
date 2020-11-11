@@ -110,10 +110,10 @@ namespace Nop.Services.Directory
 
                 if (languageId > 0)
                     //we should sort states by localized names when they have the same display order
-                    stateProvinces = stateProvinces
+                    stateProvinces = await stateProvinces.ToAsyncEnumerable()
                         .OrderBy(c => c.DisplayOrder)
-                        .ThenBy(c => _localizationService.GetLocalizedAsync(c, x => x.Name, languageId).Result)
-                        .ToList();
+                        .ThenByAwait(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
+                        .ToListAsync();
 
                 return stateProvinces;
             });

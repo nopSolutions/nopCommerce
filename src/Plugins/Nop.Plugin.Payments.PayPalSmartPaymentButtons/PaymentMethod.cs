@@ -288,7 +288,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// <summary>
         /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
         public string GetPublicViewComponentName()
         {
             return Defaults.PAYMENT_INFO_VIEW_COMPONENT_NAME;
@@ -298,9 +297,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return new List<string>
+            return Task.FromResult<IList<string>>(new List<string>
             {
                 PublicWidgetZones.CheckoutPaymentInfoTop,
                 PublicWidgetZones.OpcContentBefore,
@@ -310,7 +309,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
                 PublicWidgetZones.OrderSummaryContentAfter,
                 PublicWidgetZones.HeaderLinksBefore,
                 PublicWidgetZones.Footer
-            };
+            });
         }
 
         /// <summary>
@@ -431,6 +430,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             await base.UninstallAsync();
         }
 
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public async Task<string> GetPaymentMethodDescriptionAsync()
+        {
+            return await _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription");
+        }
+
         #endregion
 
         #region Properies
@@ -469,12 +476,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
         public bool SkipPaymentInfo => false;
-
-        /// <summary>
-        /// Gets a payment method description that will be displayed on checkout pages in the public store
-        /// </summary>
-        public string PaymentMethodDescription => _localizationService.GetResourceAsync("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription").Result;
-
+        
         /// <summary>
         /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
         /// </summary>

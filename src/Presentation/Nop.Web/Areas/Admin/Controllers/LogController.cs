@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> LogList(LogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _logModelFactory.PrepareLogListModelAsync(searchModel);

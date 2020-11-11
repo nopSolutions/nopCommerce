@@ -69,7 +69,7 @@ namespace Nop.Services.Tasks
 
                     //send post data
                     var data = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>(nameof(taskType), taskType) });
-                    client.PostAsync(_scheduleTaskUrl, data).Wait();
+                    await client.PostAsync(_scheduleTaskUrl, data);
                 }
                 catch (Exception ex)
                 {

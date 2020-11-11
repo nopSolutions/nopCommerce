@@ -96,12 +96,12 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
-        public virtual IEnumerable<(CheckoutAttribute attribute, IEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml)
+        public virtual async IAsyncEnumerable<(CheckoutAttribute attribute, IAsyncEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml)
         {
             if (string.IsNullOrEmpty(attributesXml))
                 yield break;
 
-            var attributes = ParseCheckoutAttributesAsync(attributesXml).Result;
+            var attributes = await ParseCheckoutAttributesAsync(attributesXml);
 
             foreach (var attribute in attributes)
             {
@@ -113,7 +113,7 @@ namespace Nop.Services.Orders
                 yield return (attribute, getValues(valuesStr));
             }
 
-            IEnumerable<CheckoutAttributeValue> getValues(IList<string> valuesStr)
+            async IAsyncEnumerable<CheckoutAttributeValue> getValues(IList<string> valuesStr)
             {
                 foreach (var valueStr in valuesStr)
                 {
@@ -123,7 +123,7 @@ namespace Nop.Services.Orders
                     if (!int.TryParse(valueStr, out var id))
                         continue;
 
-                    var value = _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(id).Result;
+                    var value = await _checkoutAttributeService.GetCheckoutAttributeValueByIdAsync(id);
                     if (value != null)
                         yield return value;
                 }
@@ -259,7 +259,7 @@ namespace Nop.Services.Orders
 
             //removing "shippable" checkout attributes if there's no any shippable products in the cart
             var shoppingCartService = EngineContext.Current.Resolve<IShoppingCartService>();
-            if (shoppingCartService.ShoppingCartRequiresShipping(cart))
+            if (await shoppingCartService.ShoppingCartRequiresShippingAsync(cart))
                 return result;
 
             //find attribute IDs to remove

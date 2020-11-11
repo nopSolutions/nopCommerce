@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CategoryTemplates(CategoryTemplateSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _templateModelFactory.PrepareCategoryTemplateListModelAsync(searchModel);
@@ -131,7 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ManufacturerTemplates(ManufacturerTemplateSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _templateModelFactory.PrepareManufacturerTemplateListModelAsync(searchModel);
@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductTemplates(ProductTemplateSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _templateModelFactory.PrepareProductTemplateListModelAsync(searchModel);
@@ -263,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> TopicTemplates(TopicTemplateSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _templateModelFactory.PrepareTopicTemplateListModelAsync(searchModel);

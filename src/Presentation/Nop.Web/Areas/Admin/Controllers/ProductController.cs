@@ -747,7 +747,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductList(ProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareProductListModelAsync(searchModel);
@@ -1100,7 +1100,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (selectedIds != null)
             {
-                await _productService.DeleteProductsAsync((await _productService.GetProductsByIdsAsync(selectedIds.ToArray())).Where(p => _workContext.GetCurrentVendorAsync().Result == null || p.VendorId == _workContext.GetCurrentVendorAsync().Result.Id).ToList());
+                await _productService.DeleteProductsAsync(await (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
+                    .ToAsyncEnumerable()
+                    .WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null || p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync());
             }
 
             return Json(new { Result = true });
@@ -1214,7 +1216,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> RequiredProductAddPopupList(AddRequiredProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareAddRequiredProductListModelAsync(searchModel);
@@ -1230,7 +1232,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> RelatedProductList(RelatedProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1310,7 +1312,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> RelatedProductAddPopupList(AddRelatedProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareAddRelatedProductListModelAsync(searchModel);
@@ -1360,7 +1362,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CrossSellProductList(CrossSellProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1414,7 +1416,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CrossSellProductAddPopupList(AddCrossSellProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareAddCrossSellProductListModelAsync(searchModel);
@@ -1463,7 +1465,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AssociatedProductList(AssociatedProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1534,7 +1536,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AssociatedProductAddPopupList(AddAssociatedProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareAddAssociatedProductListModelAsync(searchModel);
@@ -1642,7 +1644,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductPictureList(ProductPictureSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1806,7 +1808,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductSpecAttrList(ProductSpecificationAttributeSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -1920,7 +1922,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                _notificationService.ErrorNotification(ex);
+                await _notificationService.ErrorNotificationAsync(ex);
 
                 //select an appropriate panel
                 SaveSelectedPanelName("product-specification-attributes");
@@ -1978,7 +1980,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductTags(ProductTagSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareProductTagListModelAsync(searchModel);
@@ -2073,7 +2075,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> PurchasedWithOrders(ProductOrderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -2144,7 +2146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2195,7 +2197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2218,7 +2220,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                products = products.Where(p => p.VendorId == _workContext.GetCurrentVendorAsync().Result.Id).ToList();
+                products = await products.ToAsyncEnumerable().WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
             }
 
             try
@@ -2228,7 +2230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2279,7 +2281,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
 
                 return RedirectToAction("List");
             }
@@ -2303,7 +2305,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                products = products.Where(p => p.VendorId == _workContext.GetCurrentVendorAsync().Result.Id).ToList();
+                products = await products.ToAsyncEnumerable().WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
             }
 
             try
@@ -2314,7 +2316,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -2348,7 +2350,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 
                 return RedirectToAction("List");
             }
@@ -2362,7 +2364,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> TierPriceList(TierPriceSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -2528,7 +2530,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductAttributeMappingList(ProductAttributeMappingSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -2753,7 +2755,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductAttributeValueList(ProductAttributeValueSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product attribute mapping with the specified id
             var productAttributeMapping = await _productAttributeService.GetProductAttributeMappingByIdAsync(searchModel.ProductAttributeMappingId)
@@ -2997,7 +2999,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AssociateProductToAttributeValuePopupList(AssociateProductToAttributeValueSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productModelFactory.PrepareAssociateProductToAttributeValueListModelAsync(searchModel);
@@ -3067,7 +3069,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductAttributeCombinationList(ProductAttributeCombinationSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a product with the specified id
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
@@ -3218,11 +3220,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var allowedAttributeIds = form.Keys.Where(key => key.Contains("attribute_value_"))
                 .Select(key => int.TryParse(form[key], out var id) ? id : 0).Where(id => id > 0).ToList();
 
-            var requiredAttributeNames = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
+            var requiredAttributeNames = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
                 .Where(pam => pam.IsRequired)
                 .Where(pam => !pam.IsNonCombinable())
-                .Where(pam => !_productAttributeService.GetProductAttributeValuesAsync(pam.Id).Result.Any(v => allowedAttributeIds.Any(id => id == v.Id)))
-                .Select(pam => _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId).Result.Name).ToList();
+                .ToAsyncEnumerable()
+                .WhereAwait(async pam => !(await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
+                .SelectAwait(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
 
             if (requiredAttributeNames.Any())
             {
@@ -3388,7 +3391,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> StockQuantityHistory(StockQuantityHistorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
                 ?? throw new ArgumentException("No product found with the specified id");

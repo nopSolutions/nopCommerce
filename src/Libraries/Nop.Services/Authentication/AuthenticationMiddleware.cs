@@ -66,7 +66,7 @@ namespace Nop.Services.Authentication
                 }
                 catch (Exception ex)
                 {
-                    if (!DataSettingsManager.DatabaseIsInstalled)
+                    if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                         continue;
 
                     var externalAuthenticationSettings =

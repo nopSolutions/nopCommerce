@@ -119,7 +119,7 @@ namespace Nop.Web.Infrastructure.Installation
             {
                 Expires = DateTime.Now.AddHours(24),
                 HttpOnly = true,
-                Secure = _webHelper.IsCurrentConnectionSecuredAsync().Result
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
             httpContext.Response.Cookies.Delete(cookieName);

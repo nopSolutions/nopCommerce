@@ -113,7 +113,7 @@ namespace Nop.Services.Tax
             //get country by IP address
             if (country == null)
             {
-                var ipAddress = await _webHelper.GetCurrentIpAddressAsync();
+                var ipAddress = _webHelper.GetCurrentIpAddress();
                 var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
                 country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(countryIsoCode);
             }
@@ -281,7 +281,7 @@ namespace Nop.Services.Tax
             var taxRate = decimal.Zero;
 
             //active tax provider
-            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (activeTaxProvider == null)
                 return (taxRate, true);
 
@@ -751,7 +751,7 @@ namespace Nop.Services.Tax
         public virtual async Task<TaxTotalResult> GetTaxTotalAsync(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
             var customer = await _customerService.GetShoppingCartCustomerAsync(cart);
-            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var activeTaxProvider = await _taxPluginManager.LoadPrimaryPluginAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (activeTaxProvider == null)
                 return null;
 

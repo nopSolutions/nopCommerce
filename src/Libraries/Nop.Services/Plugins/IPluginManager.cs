@@ -16,7 +16,7 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>List of plugins</returns>
-        IList<TPlugin> LoadAllPlugins(Customer customer = null, int storeId = 0);
+        Task<IList<TPlugin>> LoadAllPluginsAsync(Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load plugin by system name
@@ -25,7 +25,7 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Plugin</returns>
-        TPlugin LoadPluginBySystemName(string systemName, Customer customer = null, int storeId = 0);
+        Task<TPlugin> LoadPluginBySystemNameAsync(string systemName, Customer customer = null, int storeId = 0);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -35,7 +35,7 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Plugin</returns>
-        TPlugin LoadPrimaryPlugin(string systemName, Customer customer = null, int storeId = 0);
+        Task<TPlugin> LoadPrimaryPlugin(string systemName, Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load active plugins
@@ -44,7 +44,7 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>List of active plugins</returns>
-        IList<TPlugin> LoadActivePlugins(List<string> systemNames, Customer customer = null, int storeId = 0);
+        Task<IList<TPlugin>> LoadActivePluginsAsync(List<string> systemNames, Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Check whether the passed plugin is active

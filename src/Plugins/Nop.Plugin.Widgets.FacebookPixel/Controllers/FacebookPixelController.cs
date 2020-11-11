@@ -117,7 +117,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         public virtual async Task<IActionResult> List(FacebookPixelSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var configurations = await _facebookPixelService.GetPagedConfigurationsAsync(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
             var model = await new FacebookPixelListModel().PrepareToGridAsync(searchModel, configurations, () =>
@@ -264,7 +264,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         public virtual async Task<IActionResult> CustomEventList(CustomEventSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var configuration = await _facebookPixelService.GetConfigurationByIdAsync(searchModel.ConfigurationId)
                 ?? throw new ArgumentException("No configuration found with the specified id", nameof(searchModel.ConfigurationId));

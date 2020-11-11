@@ -41,8 +41,8 @@ namespace Nop.Web.Factories
         /// <returns>List of the external authentication method model</returns>
         public virtual async Task<List<ExternalAuthenticationMethodModel>> PrepareExternalMethodsModelAsync()
         {
-            return _authenticationPluginManager
-                .LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id)
+            return (await _authenticationPluginManager
+                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
                 .Select(authenticationMethod => new ExternalAuthenticationMethodModel
                 {
                     ViewComponentName = authenticationMethod.GetPublicViewComponentName()

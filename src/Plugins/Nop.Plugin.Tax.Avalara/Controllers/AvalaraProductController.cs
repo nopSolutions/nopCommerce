@@ -44,7 +44,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         public async Task<IActionResult> ExportProducts(string selectedIds)
         {
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return RedirectToAction("List", "Product");
 
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))

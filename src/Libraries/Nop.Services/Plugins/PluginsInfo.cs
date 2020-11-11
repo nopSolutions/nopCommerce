@@ -112,6 +112,17 @@ namespace Nop.Services.Plugins
         }
 
         /// <summary>
+        /// Save plugins info to the file
+        /// </summary>
+        public virtual void Save()
+        {
+            //save the file
+            var filePath = _fileProvider.MapPath(NopPluginDefaults.PluginsInfoFilePath);
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+        }
+
+        /// <summary>
         /// Get plugins info
         /// </summary>
         /// <returns>True if data are loaded, otherwise False</returns>

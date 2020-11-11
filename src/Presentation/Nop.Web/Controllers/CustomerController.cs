@@ -210,7 +210,7 @@ namespace Nop.Web.Controllers
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
-            var multiFactorAuthenticationProviders = _multiFactorAuthenticationPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id).ToList();
+            var multiFactorAuthenticationProviders = await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
             foreach (var provider in multiFactorAuthenticationProviders)
             {
                 var controlId = $"provider_{provider.PluginDescriptor.SystemName}";
@@ -494,7 +494,7 @@ namespace Nop.Web.Controllers
         /// <returns>User verification page for Multi-factor authentication. Served by an authentication provider.</returns>
         public virtual async Task<IActionResult> MultiFactorVerification()
         {
-            if (!_multiFactorAuthenticationPluginManager.HasActivePlugins())
+            if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
                 return RedirectToRoute("Login");
 
             var customerMultiFactorAuthenticationInfo = HttpContext.Session.Get<CustomerMultiFactorAuthenticationInfo>(NopCustomerDefaults.CustomerMultiFactorAuthenticationInfo);
@@ -1021,7 +1021,7 @@ namespace Nop.Web.Controllers
                                 await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
 
                                 var redirectUrl = Url.RouteUrl("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, await _webHelper.GetCurrentRequestProtocolAsync());
+                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.GetCurrentRequestProtocol());
                                 return Redirect(redirectUrl);
                             }
                         default:
@@ -1858,7 +1858,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual async Task<IActionResult> MultiFactorAuthentication()
         {
-            if (!_multiFactorAuthenticationPluginManager.HasActivePlugins())
+            if (!await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
             {
                 return RedirectToRoute("CustomerInfo");
             }

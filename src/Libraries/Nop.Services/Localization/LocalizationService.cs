@@ -124,7 +124,7 @@ namespace Nop.Services.Localization
             return result;
         }
 
-        private static Task<Dictionary<string, KeyValuePair<int, string>>> ResourceValuesToDictionaryAsync(IEnumerable<LocaleStringResource> locales)
+        private static Dictionary<string, KeyValuePair<int, string>> ResourceValuesToDictionary(IEnumerable<LocaleStringResource> locales)
         {
             //format: <name, <id, value>>
             var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
@@ -135,7 +135,7 @@ namespace Nop.Services.Localization
                     dictionary.Add(resourceName, new KeyValuePair<int, string>(locale.Id, locale.ResourceValue));
             }
 
-            return Task.FromResult(dictionary);
+            return dictionary;
         }
 
         #endregion
@@ -230,7 +230,7 @@ namespace Nop.Services.Localization
             //get all locale string resources by language identifier
             if (!loadPublicLocales.HasValue || await _staticCacheManager.IsSetAsync(key))
             {
-                var rez = await _staticCacheManager.GetAsync(key, async () =>
+                var rez = await _staticCacheManager.GetAsync(key, () =>
                 {
                     //we use no tracking here for performance optimization
                     //anyway records are loaded only for read-only operations
@@ -239,7 +239,7 @@ namespace Nop.Services.Localization
                                 where l.LanguageId == languageId
                                 select l;
 
-                    return await ResourceValuesToDictionaryAsync(query);
+                    return ResourceValuesToDictionary(query);
                 });
 
                 //remove separated resource 
@@ -255,7 +255,7 @@ namespace Nop.Services.Localization
                 : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
                 languageId);
 
-            return await _staticCacheManager.GetAsync(key, async () =>
+            return await _staticCacheManager.GetAsync(key, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -264,7 +264,8 @@ namespace Nop.Services.Localization
                             where l.LanguageId == languageId
                             select l;
                 query = loadPublicLocales.Value ? query.Where(r => !r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix)) : query.Where(r => r.ResourceName.StartsWith(NopLocalizationDefaults.AdminLocaleStringResourcesPrefix));
-                return await ResourceValuesToDictionaryAsync(query);
+                
+                return ResourceValuesToDictionary(query);
             });
         }
 

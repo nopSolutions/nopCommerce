@@ -116,7 +116,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         public async Task<IActionResult> FixedRatesList(ConfigurationModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var categories = (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToPagedList(searchModel);
 
@@ -154,7 +154,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         public async Task<IActionResult> RatesByCountryStateZipList(ConfigurationModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var records = await _taxRateService.GetAllTaxRatesAsync(searchModel.Page - 1, searchModel.PageSize);
 

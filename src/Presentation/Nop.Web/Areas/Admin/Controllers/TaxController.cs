@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Providers(TaxProviderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _taxModelFactory.PrepareTaxProviderListModelAsync(searchModel);
@@ -85,7 +85,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 return RedirectToAction("Providers");
 
-            var taxProvider = _taxPluginManager.LoadPluginBySystemName(systemName);
+            var taxProvider = await _taxPluginManager.LoadPluginBySystemNameAsync(systemName);
             if (taxProvider == null)
                 return RedirectToAction("Providers");
 
@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> Categories(TaxCategorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _taxModelFactory.PrepareTaxCategoryListModelAsync(searchModel);

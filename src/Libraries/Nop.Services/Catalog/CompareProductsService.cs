@@ -70,7 +70,7 @@ namespace Nop.Services.Catalog
         /// Add cookie value for the compared products
         /// </summary>
         /// <param name="comparedProductIds">Collection of compared products identifiers</param>
-        protected virtual async Task AddCompareProductsCookieAsync(IEnumerable<int> comparedProductIds)
+        protected virtual void AddCompareProductsCookie(IEnumerable<int> comparedProductIds)
         {
             //delete current cookie if exists
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.ComparedProductsCookie}";
@@ -85,7 +85,7 @@ namespace Nop.Services.Catalog
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
                 HttpOnly = true,
-                Secure =  await _webHelper.IsCurrentConnectionSecuredAsync()
+                Secure =  _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie
@@ -127,33 +127,35 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual async Task RemoveProductFromCompareListAsync(int productId)
+        public virtual Task RemoveProductFromCompareListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
-                return;
+                return Task.CompletedTask;
 
             //get list of compared product identifiers
             var comparedProductIds = GetComparedProductIds();
 
             //whether product identifier to remove exists
             if (!comparedProductIds.Contains(productId))
-                return;
+                return Task.CompletedTask;
 
             //it exists, so remove it from list
             comparedProductIds.Remove(productId);
 
             //set cookie
-            await AddCompareProductsCookieAsync(comparedProductIds);
+            AddCompareProductsCookie(comparedProductIds);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual async Task AddProductToCompareListAsync(int productId)
+        public virtual Task AddProductToCompareListAsync(int productId)
         {
             if (_httpContextAccessor.HttpContext?.Response == null)
-                return;
+                return Task.CompletedTask;
 
             //get list of compared product identifiers
             var comparedProductIds = GetComparedProductIds();
@@ -166,7 +168,9 @@ namespace Nop.Services.Catalog
             comparedProductIds = comparedProductIds.Take(_catalogSettings.CompareProductsNumber).ToList();
 
             //set cookie
-            await AddCompareProductsCookieAsync(comparedProductIds);
+            AddCompareProductsCookie(comparedProductIds);
+
+            return Task.CompletedTask;
         }
 
         #endregion

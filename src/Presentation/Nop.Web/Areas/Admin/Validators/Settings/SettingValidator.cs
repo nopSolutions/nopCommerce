@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Settings
     {
         public SettingValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Settings.AllSettings.Fields.Name.Required"));
 
             SetDatabaseValidationRules<Setting>(dataProvider);
         }

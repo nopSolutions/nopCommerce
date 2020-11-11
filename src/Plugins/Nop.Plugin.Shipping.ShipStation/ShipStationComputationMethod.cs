@@ -110,7 +110,7 @@ namespace Nop.Plugin.Shipping.ShipStation
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/ShipStation/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/ShipStation/Configure";
         }
 
         /// <summary>

@@ -753,8 +753,8 @@ namespace Nop.Services.Catalog
                 return null;
 
             var combinations = await _productAttributeService.GetAllProductAttributeCombinationsAsync(product.Id);
-            return combinations.FirstOrDefault(x =>
-                AreProductAttributesEqualAsync(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes).Result);
+            return await combinations.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async x =>
+                await AreProductAttributesEqualAsync(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
 
         /// <summary>

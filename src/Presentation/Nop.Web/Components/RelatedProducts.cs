@@ -33,13 +33,13 @@ namespace Nop.Web.Components
             var productIds = (await _productService.GetRelatedProductsByProductId1Async(productId)).Select(x => x.ProductId2).ToArray();
 
             //load products
-            var products = await _productService.GetProductsByIdsAsync(productIds);
+            var products = await (await _productService.GetProductsByIdsAsync(productIds)).ToAsyncEnumerable()
             //ACL and store mapping
-            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p))
             //visible individually
-            products = products.Where(p => p.VisibleIndividually).ToList();
+            .Where(p => p.VisibleIndividually).ToListAsync();
 
             if (!products.Any())
                 return Content(string.Empty);

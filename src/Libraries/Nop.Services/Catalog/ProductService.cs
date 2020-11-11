@@ -144,25 +144,22 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="sku">SKU</param>
-        /// <param name="manufacturerPartNumber">Manufacturer part number</param>
-        /// <param name="gtin">GTIN</param>
-        protected virtual void GetSkuMpnGtin(Product product, string attributesXml,
-            out string sku, out string manufacturerPartNumber, out string gtin)
+        /// <returns>SKU, Manufacturer part number, GTIN</returns>
+        protected virtual async Task<(string sku, string manufacturerPartNumber, string gtin)> GetSkuMpnGtin(Product product, string attributesXml)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            sku = null;
-            manufacturerPartNumber = null;
-            gtin = null;
+            string sku = null;
+            string manufacturerPartNumber = null;
+            string gtin = null;
 
             if (!string.IsNullOrEmpty(attributesXml) &&
                 product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 //manage stock by attribute combinations
                 //let's find appropriate record
-                var combination = _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml).Result;
+                var combination = await _productAttributeParser.FindProductAttributeCombinationAsync(product, attributesXml);
                 if (combination != null)
                 {
                     sku = combination.Sku;
@@ -177,6 +174,8 @@ namespace Nop.Services.Catalog
                 manufacturerPartNumber = product.ManufacturerPartNumber;
             if (string.IsNullOrEmpty(gtin))
                 gtin = product.Gtin;
+
+            return (sku, manufacturerPartNumber, gtin);
         }
 
         /// <summary>
@@ -1164,12 +1163,12 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>SKU</returns>
-        public virtual string FormatSku(Product product, string attributesXml = null)
+        public virtual async Task<string> FormatSkuAsync(Product product, string attributesXml = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            GetSkuMpnGtin(product, attributesXml, out var sku, out var _, out var _);
+            var(sku, _, _) = await GetSkuMpnGtin(product, attributesXml);
 
             return sku;
         }
@@ -1180,12 +1179,12 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Manufacturer part number</returns>
-        public virtual string FormatMpn(Product product, string attributesXml = null)
+        public virtual async Task<string> FormatMpnAsync(Product product, string attributesXml = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            GetSkuMpnGtin(product, attributesXml, out var _, out var manufacturerPartNumber, out var _);
+            var (_, manufacturerPartNumber, _) = await GetSkuMpnGtin(product, attributesXml);
 
             return manufacturerPartNumber;
         }
@@ -1196,12 +1195,12 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>GTIN</returns>
-        public virtual string FormatGtin(Product product, string attributesXml = null)
+        public virtual async Task<string> FormatGtinAsync(Product product, string attributesXml = null)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            GetSkuMpnGtin(product, attributesXml, out var _, out var _, out var gtin);
+            var(_, _, gtin) = await GetSkuMpnGtin(product, attributesXml);
 
             return gtin;
         }

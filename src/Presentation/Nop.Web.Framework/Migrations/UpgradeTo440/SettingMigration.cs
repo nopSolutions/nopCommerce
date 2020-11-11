@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
         /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             //do not use DI, because it produces exception on the installation process

@@ -230,7 +230,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Payment info holder</returns>
         public Task<ProcessPaymentRequest> GetPaymentInfoAsync(IFormCollection form)
         {
-            return Task.FromResult<ProcessPaymentRequest>(new ProcessPaymentRequest
+            return Task.FromResult(new ProcessPaymentRequest
             {
                 CreditCardType = form["CreditCardType"],
                 CreditCardName = form["CardholderName"],
@@ -246,7 +246,7 @@ namespace Nop.Plugin.Payments.Manual
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/PaymentManual/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentManual/Configure";
         }
 
         /// <summary>
@@ -300,6 +300,18 @@ namespace Nop.Plugin.Payments.Manual
             await base.UninstallAsync();
         }
 
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        /// <remarks>
+        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+        /// </remarks>
+        public async Task<string> GetPaymentMethodDescriptionAsync()
+        {
+            return await _localizationService.GetResourceAsync("Plugins.Payments.Manual.PaymentMethodDescription");
+        }
+
         #endregion
 
         #region Properties
@@ -338,15 +350,6 @@ namespace Nop.Plugin.Payments.Manual
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
         public bool SkipPaymentInfo => false;
-
-        /// <summary>
-        /// Gets a payment method description that will be displayed on checkout pages in the public store
-        /// </summary>
-        /// <remarks>
-        /// return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-        /// for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-        /// </remarks>
-        public string PaymentMethodDescription => _localizationService.GetResourceAsync("Plugins.Payments.Manual.PaymentMethodDescription").Result;
 
         #endregion
     }

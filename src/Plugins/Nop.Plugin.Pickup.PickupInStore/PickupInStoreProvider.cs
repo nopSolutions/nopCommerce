@@ -109,7 +109,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/PickupInStore/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/PickupInStore/Configure";
         }
 
         /// <summary>

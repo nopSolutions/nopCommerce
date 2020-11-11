@@ -337,12 +337,14 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         public async Task<IActionResult> PDTHandler()
         {
-            var tx = await _webHelper.QueryStringAsync<string>("tx");
+            var tx = _webHelper.QueryString<string>("tx");
 
-            if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
+            if (!(await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (processor.GetPdtDetails(tx, out var values, out var response))
+            var (result, values, response) = await processor.GetPdtDetailsAsync(tx);
+
+            if (result)
             {
                 values.TryGetValue("custom", out var orderNumber);
                 var orderNumberGuid = Guid.Empty;
@@ -447,7 +449,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             else
             {
                 if (!values.TryGetValue("custom", out var orderNumber))
-                    orderNumber = await _webHelper.QueryStringAsync<string>("cm");
+                    orderNumber = _webHelper.QueryString<string>("cm");
 
                 var orderNumberGuid = Guid.Empty;
 
@@ -489,10 +491,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             var strRequest = Encoding.ASCII.GetString(parameters);
 
-            if (!(_paymentPluginManager.LoadPluginBySystemName("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
+            if (!(await _paymentPluginManager.LoadPluginBySystemNameAsync("Payments.PayPalStandard") is PayPalStandardPaymentProcessor processor) || !_paymentPluginManager.IsPluginActive(processor))
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (!processor.VerifyIpn(strRequest, out var values))
+            var (result, values) = await processor.VerifyIpnAsync(strRequest);
+
+            if (!result)
             {
                 await _logger.ErrorAsync("PayPal IPN failed.", new NopException(strRequest));
 

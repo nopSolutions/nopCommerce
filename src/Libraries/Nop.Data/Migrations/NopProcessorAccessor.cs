@@ -29,7 +29,7 @@ namespace Nop.Data.Migrations
         /// <param name="processors">Collection of migration processors</param>
         protected virtual void ConfigureProcessor(IList<IMigrationProcessor> processors)
         {
-            var dataSettings = DataSettingsManager.LoadSettingsAsync().Result;
+            var dataSettings = DataSettingsManager.LoadSettings();
 
             if (processors.Count == 0)
                 throw new ProcessorFactoryNotFoundException("No migration processor registered.");

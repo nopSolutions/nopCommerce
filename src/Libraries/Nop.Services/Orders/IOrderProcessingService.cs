@@ -114,7 +114,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether capture from admin panel is allowed</returns>
-        bool CanCapture(Order order);
+        Task<bool> CanCaptureAsync(Order order);
 
         /// <summary>
         /// Capture an order (from admin panel)
@@ -141,7 +141,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        bool CanRefund(Order order);
+        Task<bool> CanRefundAsync(Order order);
 
         /// <summary>
         /// Refunds an order (from admin panel)
@@ -169,7 +169,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        bool CanPartiallyRefund(Order order, decimal amountToRefund);
+        Task<bool> CanPartiallyRefundAsync(Order order, decimal amountToRefund);
 
         /// <summary>
         /// Partially refunds an order (from admin panel)
@@ -199,7 +199,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether Task from admin panel is allowed</returns>
-        bool CanVoid(Order order);
+        Task<bool> CanVoidAsync(Order order);
 
         /// <summary>
         /// Voids order (from admin panel)

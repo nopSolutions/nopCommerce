@@ -265,8 +265,8 @@ namespace Nop.Services.Catalog
                 }
 
                 return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
-            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
-                parentCategoryId, showHidden, _workContext.GetCurrentCustomerAsync().Result, _storeContext.GetCurrentStoreAsync().Result));
+            }, async cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
+                parentCategoryId, showHidden, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync()));
 
             return categories;
         }
@@ -601,9 +601,10 @@ namespace Nop.Services.Catalog
             if (showHidden)
                 return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
 
-            var categoryIds = (await GetCategoriesByIdsAsync(query.Select(pc => pc.CategoryId).ToArray()))
-                .Where(category => _aclService.AuthorizeAsync(category).Result && _storeMappingService.AuthorizeAsync(category, storeId).Result)
-                .Select(c => c.Id).ToArray();
+            var categoryIds = await (await GetCategoriesByIdsAsync(query.Select(pc => pc.CategoryId).ToArray()))
+                .ToAsyncEnumerable()
+                .WhereAwait(async category => await _aclService.AuthorizeAsync(category) && await _storeMappingService.AuthorizeAsync(category, storeId))
+                .Select(c => c.Id).ToArrayAsync();
 
             query = from pc in query
                     where categoryIds.Contains(pc.CategoryId)

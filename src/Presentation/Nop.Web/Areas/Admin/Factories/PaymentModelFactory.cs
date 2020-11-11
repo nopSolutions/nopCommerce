@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get payment methods
-            var paymentMethods = _paymentPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var paymentMethods = (await _paymentPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = await new PaymentMethodListModel().PrepareToGridAsync(searchModel, paymentMethods, () =>
@@ -122,22 +122,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-            model.AvailableCountries = countries.Select(country =>
+            model.AvailableCountries = await countries.ToAsyncEnumerable().SelectAwait(async country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id).Result?.Count ?? 0;
+                countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;
 
                 return countryModel;
-            }).ToList();
+            }).ToListAsync();
 
-            foreach (var method in _paymentPluginManager.LoadAllPlugins())
+            foreach (var method in await _paymentPluginManager.LoadAllPluginsAsync())
             {
                 var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
                 paymentMethodModel.RecurringPaymentType = await _localizationService.GetLocalizedEnumAsync(method.RecurringPaymentType);
 
                 model.AvailablePaymentMethods.Add(paymentMethodModel);
 
-                var restrictedCountries = _paymentPluginManager.GetRestrictedCountryIds(method);
+                var restrictedCountries = await _paymentPluginManager.GetRestrictedCountryIdsAsync(method);
                 foreach (var country in countries)
                 {
                     if (!model.Restricted.ContainsKey(method.PluginDescriptor.SystemName))

@@ -19,7 +19,7 @@
 @using Nop.Web.Framework.UI
 
 @{
-    var returnUrl = await webHelper.GetRawUrlAsync(Context.Request);
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
 
     //Kendo UI
     var kendoVersion = "2020.1.406";
@@ -326,7 +326,7 @@
         </script>
         @{
             //scroll to a selected panel (if specified)
-            var selectedPanelName = await Html.GetSelectedPanelName();
+            var selectedPanelName = Html.GetSelectedPanelName();
             if (!String.IsNullOrEmpty(selectedPanelName))
             {
                 <script>

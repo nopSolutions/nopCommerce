@@ -15,6 +15,11 @@ namespace Nop.Services.Plugins
         Task SaveAsync();
 
         /// <summary>
+        /// Save plugins info to the file
+        /// </summary>
+        void Save();
+
+        /// <summary>
         /// Get plugins info
         /// </summary>
         /// <returns>True if data are loaded, otherwise False</returns>

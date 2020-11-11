@@ -29,6 +29,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
+using Nop.Services.Tasks;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
@@ -67,11 +68,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var appSettings = new AppSettings();
             configuration.Bind(appSettings);
             services.AddSingleton(appSettings);
-            AppSettingsHelper.SaveAppSettingsAsync(appSettings).Wait();
+            AppSettingsHelper.SaveAppSettings(appSettings);
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            mvcCoreBuilder.PartManager.InitializePluginsAsync(appSettings).Wait();
+            mvcCoreBuilder.PartManager.InitializePlugins(appSettings);
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
@@ -124,7 +125,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AntiforgeryCookie}";
 
                 //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
+                options.Cookie.SecurePolicy = DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -141,7 +142,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
 
                 //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
+                options.Cookie.SecurePolicy = DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -152,7 +153,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddThemes(this IServiceCollection services)
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             //themes support
@@ -233,7 +234,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
+                options.Cookie.SecurePolicy = DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
@@ -246,7 +247,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
+                options.Cookie.SecurePolicy = DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
@@ -286,7 +287,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.TempDataCookie}";
 
                     //whether to allow the use of cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
+                    options.Cookie.SecurePolicy = DataSettingsManager.IsDatabaseInstalled() && EngineContext.Current.Resolve<IStoreContext>().GetCurrentStoreAsync().Result.SslEnabled
                         ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
                 });
             }
@@ -339,7 +340,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopMiniProfiler(this IServiceCollection services)
         {
             //whether database is already installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             var appSettings = services.BuildServiceProvider().GetRequiredService<AppSettings>();
@@ -363,7 +364,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void AddNopWebMarkupMin(this IServiceCollection services)
         {
             //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             services

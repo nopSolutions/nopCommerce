@@ -287,14 +287,14 @@ namespace Nop.Services.Installation
 
         protected virtual async Task InstallStoresAsync()
         {
-            var storeUrl = await _webHelper.GetStoreLocationAsync();
+            var storeUrl = _webHelper.GetStoreLocation();
             var stores = new List<Store>
             {
                 new Store
                 {
                     Name = "Your store name",
                     Url = storeUrl,
-                    SslEnabled = await _webHelper.IsCurrentConnectionSecuredAsync(),
+                    SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                     //should we set some default company info?

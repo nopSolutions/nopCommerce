@@ -174,7 +174,7 @@ namespace Nop.Services.ExportImport
             return ExportedAttributeType.NotSpecified;
         }
 
-        private static void SetOutLineForSpecificationAttributeRow(object cellValue, ExcelWorksheet worksheet, int endRow)
+        private static async Task SetOutLineForSpecificationAttributeRowAsync(object cellValue, ExcelWorksheet worksheet, int endRow)
         {
             var attributeType = (cellValue ?? string.Empty).ToString();
 
@@ -184,7 +184,7 @@ namespace Nop.Services.ExportImport
             }
             else
             {
-                if (SpecificationAttributeType.Option.ToSelectList(useLocalization: false)
+                if ((await SpecificationAttributeType.Option.ToSelectList(useLocalization: false))
                     .Any(p => p.Text.Equals(attributeType, StringComparison.InvariantCultureIgnoreCase)))
                     worksheet.Row(endRow).OutlineLevel = 1;
                 else if (int.TryParse(attributeType, out var attributeTypeId) && Enum.IsDefined(typeof(SpecificationAttributeType), attributeTypeId))
@@ -412,7 +412,7 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        protected virtual async Task<(string seName, bool isParentCategoryExists)> UpdateCategoryByXlsxAsync(Category category, PropertyManager<Category> manager, Dictionary<string, Category> allCategories, bool isNew)
+        protected virtual async Task<(string seName, bool isParentCategoryExists)> UpdateCategoryByXlsxAsync(Category category, PropertyManager<Category> manager, Dictionary<string, ValueTask<Category>> allCategories, bool isNew)
         {
             var seName = string.Empty;
             var isParentCategoryExists = true;
@@ -443,7 +443,7 @@ namespace Nop.Services.ExportImport
                     case "ParentCategoryId":
                         if (!isParentCategorySet)
                         {
-                            var parentCategory = allCategories.Values.FirstOrDefault(c => c.Id == property.IntValue);
+                            var parentCategory = await await allCategories.Values.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async c => (await c).Id == property.IntValue);
                             isParentCategorySet = parentCategory != null;
 
                             isParentCategoryExists = isParentCategorySet || property.IntValue == 0;
@@ -460,9 +460,9 @@ namespace Nop.Services.ExportImport
                             {
                                 var parentCategory = allCategories.ContainsKey(categoryName)
                                     //try find category by full name with all parent category names
-                                    ? allCategories[categoryName]
+                                    ? await allCategories[categoryName]
                                     //try find category by name
-                                    : allCategories.Values.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.InvariantCulture));
+                                    : await await allCategories.Values.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async c => (await c).Name.Equals(categoryName, StringComparison.InvariantCulture));
 
                                 if (parentCategory != null)
                                 {
@@ -516,12 +516,12 @@ namespace Nop.Services.ExportImport
             return (seName, isParentCategoryExists);
         }
 
-        protected virtual async Task<(Category category, bool isNew, string curentCategoryBreadCrumb)> GetCategoryFromXlsxAsync(PropertyManager<Category> manager, ExcelWorksheet worksheet, int iRow, Dictionary<string, Category> allCategories)
+        protected virtual async Task<(Category category, bool isNew, string curentCategoryBreadCrumb)> GetCategoryFromXlsxAsync(PropertyManager<Category> manager, ExcelWorksheet worksheet, int iRow, Dictionary<string, ValueTask<Category>> allCategories)
         {
             manager.ReadFromXlsx(worksheet, iRow);
 
             //try get category from database by ID
-            var category = allCategories.Values.FirstOrDefault(c => c.Id == manager.GetProperty("Id")?.IntValue);
+            var category = await await allCategories.Values.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async c => (await c).Id == manager.GetProperty("Id")?.IntValue);
 
             if (_catalogSettings.ExportImportCategoriesUsingCategoryName && category == null)
             {
@@ -530,9 +530,9 @@ namespace Nop.Services.ExportImport
                 {
                     category = allCategories.ContainsKey(categoryName)
                         //try find category by full name with all parent category names
-                        ? allCategories[categoryName]
+                        ? await allCategories[categoryName]
                         //try find category by name
-                        : allCategories.Values.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.InvariantCulture));
+                        : await await allCategories.Values.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async c => (await c).Name.Equals(categoryName, StringComparison.InvariantCulture));
                 }
             }
 
@@ -558,7 +558,7 @@ namespace Nop.Services.ExportImport
             return (category, isNew, curentCategoryBreadCrumb);
         }
 
-        protected virtual async Task SaveCategoryAsync(bool isNew, Category category, Dictionary<string, Category> allCategories, string curentCategoryBreadCrumb, bool setSeName, string seName)
+        protected virtual async Task SaveCategoryAsync(bool isNew, Category category, Dictionary<string, ValueTask<Category>> allCategories, string curentCategoryBreadCrumb, bool setSeName, string seName)
         {
             if (isNew)
                 await _categoryService.InsertCategoryAsync(category);
@@ -567,7 +567,7 @@ namespace Nop.Services.ExportImport
 
             var categoryBreadCrumb = await _categoryService.GetFormattedBreadCrumbAsync(category);
             if (!allCategories.ContainsKey(categoryBreadCrumb))
-                allCategories.Add(categoryBreadCrumb, category);
+                allCategories.Add(categoryBreadCrumb, new ValueTask<Category>(category));
             if (!string.IsNullOrEmpty(curentCategoryBreadCrumb) && allCategories.ContainsKey(curentCategoryBreadCrumb) &&
                 categoryBreadCrumb != curentCategoryBreadCrumb)
                 allCategories.Remove(curentCategoryBreadCrumb);
@@ -781,7 +781,7 @@ namespace Nop.Services.ExportImport
             try
             {
                 var client = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                var fileData = client.GetByteArrayAsync(urlString).Result;
+                var fileData = await client.GetByteArrayAsync(urlString);
                 await using (var fs = new FileStream(filePath, FileMode.OpenOrCreate)) 
                     fs.Write(fileData, 0, fileData.Length);
 
@@ -863,27 +863,27 @@ namespace Nop.Services.ExportImport
 
             if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
             {
-                productAttributeManager.SetSelectList("AttributeControlType", AttributeControlType.TextBox.ToSelectList(useLocalization: false));
-                productAttributeManager.SetSelectList("AttributeValueType", AttributeValueType.Simple.ToSelectList(useLocalization: false));
+                productAttributeManager.SetSelectList("AttributeControlType", await AttributeControlType.TextBox.ToSelectList(useLocalization: false));
+                productAttributeManager.SetSelectList("AttributeValueType", await AttributeValueType.Simple.ToSelectList(useLocalization: false));
 
-                specificationAttributeManager.SetSelectList("AttributeType", SpecificationAttributeType.Option.ToSelectList(useLocalization: false));
+                specificationAttributeManager.SetSelectList("AttributeType", await SpecificationAttributeType.Option.ToSelectList(useLocalization: false));
                 specificationAttributeManager.SetSelectList("SpecificationAttribute", (await _specificationAttributeService
                     .GetSpecificationAttributesAsync())
                     .Select(sa => sa as BaseEntity)
                     .ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty));
 
-                manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList(useLocalization: false));
-                manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList(useLocalization: false));
+                manager.SetSelectList("ProductType", await ProductType.SimpleProduct.ToSelectList(useLocalization: false));
+                manager.SetSelectList("GiftCardType", await GiftCardType.Virtual.ToSelectList(useLocalization: false));
                 manager.SetSelectList("DownloadActivationType",
-                    DownloadActivationType.Manually.ToSelectList(useLocalization: false));
+                    await DownloadActivationType.Manually.ToSelectList(useLocalization: false));
                 manager.SetSelectList("ManageInventoryMethod",
-                    ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false));
+                    await ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false));
                 manager.SetSelectList("LowStockActivity",
-                    LowStockActivity.Nothing.ToSelectList(useLocalization: false));
-                manager.SetSelectList("BackorderMode", BackorderMode.NoBackorders.ToSelectList(useLocalization: false));
+                    await LowStockActivity.Nothing.ToSelectList(useLocalization: false));
+                manager.SetSelectList("BackorderMode", await BackorderMode.NoBackorders.ToSelectList(useLocalization: false));
                 manager.SetSelectList("RecurringCyclePeriod",
-                    RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false));
-                manager.SetSelectList("RentalPricePeriod", RentalPricePeriod.Days.ToSelectList(useLocalization: false));
+                    await RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false));
+                manager.SetSelectList("RentalPricePeriod", await RentalPricePeriod.Days.ToSelectList(useLocalization: false));
 
                 manager.SetSelectList("Vendor",
                     (await _vendorService.GetAllVendorsAsync(showHidden: true)).Select(v => v as BaseEntity)
@@ -935,7 +935,7 @@ namespace Nop.Services.ExportImport
                 {
                     var cellValue = worksheet.Cells[endRow, attributeIdCellNum].Value;
                     await SetOutLineForProductAttributeRowAsync(cellValue, worksheet, endRow);
-                    SetOutLineForSpecificationAttributeRow(cellValue, worksheet, endRow);
+                    await SetOutLineForSpecificationAttributeRowAsync(cellValue, worksheet, endRow);
                 }
 
                 if (worksheet.Row(endRow).OutlineLevel != 0)
@@ -1200,8 +1200,8 @@ namespace Nop.Services.ExportImport
             {
                 var allCategoryList = await _categoryService.GetAllCategoriesAsync(showHidden: true);
 
-                allCategories = allCategoryList
-                    .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
+                allCategories = await allCategoryList.ToAsyncEnumerable()
+                    .ToDictionaryAwaitAsync(async c => await CategoryKey.CreateCategoryKeyAsync(c, _categoryService, allCategoryList, _storeMappingService), c => new ValueTask<Category>(c));
             }
             catch (ArgumentException)
             {
@@ -1620,9 +1620,10 @@ namespace Nop.Services.ExportImport
                     //category mappings
                     var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsCategoryIds[product.Id];
 
-                    var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    var importedCategories = await categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToAsyncEnumerable()
                         .Select(categoryName => new CategoryKey(categoryName))
-                        .Select(categoryKey =>
+                        .SelectAwait(async categoryKey =>
                         {
                             var rez = allCategories.ContainsKey(categoryKey) ? allCategories[categoryKey].Id : allCategories.Values.FirstOrDefault(c => c.Name == categoryKey.Key)?.Id;
 
@@ -1631,10 +1632,10 @@ namespace Nop.Services.ExportImport
 
                             if (!rez.HasValue)
                                 //database doesn't contain the imported category
-                                throw new ArgumentException(string.Format(_localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainCategory").Result, categoryKey.Key));
+                                throw new ArgumentException(string.Format(await _localizationService.GetResourceAsync("Admin.Catalog.Products.Import.DatabaseNotContainCategory"), categoryKey.Key));
 
                             return rez.Value;
-                        }).ToList();
+                        }).ToListAsync();
 
                     foreach (var categoryId in importedCategories)
                     {
@@ -1652,8 +1653,9 @@ namespace Nop.Services.ExportImport
                     }
 
                     //delete product categories
-                    var deletedProductCategories = categories.Where(categoryId => !importedCategories.Contains(categoryId))
-                        .Select(categoryId => _categoryService.GetProductCategoriesByProductIdAsync(product.Id).Result.First(pc => pc.CategoryId == categoryId));
+                    var deletedProductCategories = await categories.Where(categoryId => !importedCategories.Contains(categoryId))
+                        .ToAsyncEnumerable()
+                        .SelectAwait(async categoryId => (await _categoryService.GetProductCategoriesByProductIdAsync(product.Id)).First(pc => pc.CategoryId == categoryId)).ToListAsync();
 
                     foreach (var deletedProductCategory in deletedProductCategories) 
                         await _categoryService.DeleteProductCategoryAsync(deletedProductCategory);
@@ -1684,8 +1686,9 @@ namespace Nop.Services.ExportImport
                     }
 
                     //delete product manufacturers
-                    var deletedProductsManufacturers = manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
-                        .Select(manufacturerId => _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id).Result.First(pc => pc.ManufacturerId == manufacturerId));
+                    var deletedProductsManufacturers = await manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
+                        .ToAsyncEnumerable()
+                        .SelectAwait(async manufacturerId => (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id)).First(pc => pc.ManufacturerId == manufacturerId)).ToListAsync();
                     foreach (var deletedProductManufacturer in deletedProductsManufacturers) 
                         await _manufacturerService.DeleteProductManufacturerAsync(deletedProductManufacturer);
                 }
@@ -1738,7 +1741,7 @@ namespace Nop.Services.ExportImport
                 //_productService.UpdateHasDiscountsApplied(product);
             }
 
-            if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb)
+            if (_mediaSettings.ImportProductImagesUsingHash && await _pictureService.IsStoreInDbAsync())
                 await ImportProductImagesUsingHashAsync(productPictureMetadata, allProductsBySku);
             else
                 await ImportProductImagesUsingServicesAsync(productPictureMetadata);
@@ -2038,10 +2041,11 @@ namespace Nop.Services.ExportImport
             var setSeName = properties.Any(p => p.PropertyName == "SeName");
 
             //performance optimization, load all categories in one SQL request
-            var allCategories = (await _categoryService
+            var allCategories = await (await _categoryService
                 .GetAllCategoriesAsync(showHidden: true))
-                .GroupBy(c => _categoryService.GetFormattedBreadCrumbAsync(c).Result)
-                .ToDictionary(c => c.Key, c => c.First());
+                .ToAsyncEnumerable()
+                .GroupByAwait(async c => await _categoryService.GetFormattedBreadCrumbAsync(c))
+                .ToDictionaryAsync(c => c.Key, c => c.FirstAsync());
 
             var saveNextTime = new List<int>();
 
@@ -2138,11 +2142,12 @@ namespace Nop.Services.ExportImport
 
         public class CategoryKey
         {
-            public CategoryKey(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
+            public static async Task<CategoryKey> CreateCategoryKeyAsync(Category category, ICategoryService categoryService, IList<Category> allCategories, IStoreMappingService storeMappingService)
             {
-                Key = categoryService.GetFormattedBreadCrumbAsync(category, allCategories).Result;
-                StoresIds = category.LimitedToStores ? storeMappingService.GetStoresIdsWithAccessAsync(category).Result.ToList() : new List<int>();
-                Category = category;
+                var categoryKey = new CategoryKey(await categoryService.GetFormattedBreadCrumbAsync(category, allCategories), category.LimitedToStores ? (await storeMappingService.GetStoresIdsWithAccessAsync(category)).ToList() : new List<int>());
+                categoryKey.Category = category;
+
+                return categoryKey;
             }
 
             public CategoryKey(string key, List<int> storesIds = null)
@@ -2153,7 +2158,7 @@ namespace Nop.Services.ExportImport
 
             public List<int> StoresIds { get; }
 
-            public Category Category { get; }
+            public Category Category { get; private set; }
 
             public string Key { get; }
 

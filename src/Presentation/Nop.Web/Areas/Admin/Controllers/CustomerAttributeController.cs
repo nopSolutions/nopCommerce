@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(CustomerAttributeSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _customerAttributeModelFactory.PrepareCustomerAttributeListModelAsync(searchModel);
@@ -228,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ValueList(CustomerAttributeValueSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer attribute with the specified id
             var customerAttribute = await _customerAttributeService.GetCustomerAttributeByIdAsync(searchModel.CustomerAttributeId)

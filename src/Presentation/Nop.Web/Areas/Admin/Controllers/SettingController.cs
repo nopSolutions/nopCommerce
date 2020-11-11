@@ -694,7 +694,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> SortOptionsList(SortOptionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _settingModelFactory.PrepareSortOptionListModelAsync(searchModel);
@@ -998,7 +998,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             await _roxyFilemanService.FlushAllImagesOnDiskAsync();
 
-            _pictureService.StoreInDb = !_pictureService.StoreInDb;
+            await _pictureService.SetIsStoreInDbAsync(!await _pictureService.IsStoreInDbAsync());
 
             //use "Resolve" to load the correct service
             //we do it because the IRoxyFilemanService service is registered for
@@ -1155,7 +1155,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> GdprConsentList(GdprConsentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _settingModelFactory.PrepareGdprConsentListModelAsync(searchModel);
@@ -1658,7 +1658,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("GeneralCommon");
@@ -1699,7 +1699,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("GeneralCommon");
@@ -1718,7 +1718,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("GeneralCommon");
@@ -1781,7 +1781,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             return RedirectToAction("GeneralCommon");
@@ -1802,7 +1802,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AllSettings(SettingSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _settingModelFactory.PrepareSettingListModelAsync(searchModel);

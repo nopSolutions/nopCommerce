@@ -169,7 +169,7 @@ namespace Nop.Services.Customers
             }
 
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
-            var methodIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(selectedProvider, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
+            var methodIsActive = await _multiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (methodIsActive)
                 return CustomerLoginResults.MultiFactorAuthenticationRequired;
             if (!string.IsNullOrEmpty(selectedProvider)) 

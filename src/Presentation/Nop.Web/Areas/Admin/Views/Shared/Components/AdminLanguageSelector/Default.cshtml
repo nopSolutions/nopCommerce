@@ -6,11 +6,11 @@
 {
     <div style="padding: 7px 12px 0 12px;">
         @{
-            var returnUrl = await webHelper.GetRawUrlAsync(Context.Request);
+            var returnUrl = webHelper.GetRawUrl(Context.Request);
             var languages = await Model.AvailableLanguages.ToAsyncEnumerable().SelectAwait(async lang => new SelectListItem
             {
                 Text = lang.Name,
-                Value = Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin, returnUrl }, await webHelper.GetCurrentRequestProtocolAsync()),
+                Value = Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin, returnUrl }, webHelper.GetCurrentRequestProtocol()),
                 Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
             }).ToListAsync();
 

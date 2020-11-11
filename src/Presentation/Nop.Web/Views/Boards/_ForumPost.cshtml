@@ -2,7 +2,7 @@
 @using Nop.Core
 @inject IWebHelper webHelper;
 @{
-    var thisPageUrl = webHelper.GetThisPageUrlAsync(true);
+    var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
 <div class="topic-post" id="@Html.Encode($"post{Model.Id}")">
     <div class="post-info">

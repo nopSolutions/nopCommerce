@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(ProductReviewSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _productReviewModelFactory.PrepareProductReviewListModelAsync(searchModel);
@@ -313,7 +313,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
             var productReview = await _productService.GetProductReviewByIdAsync(searchModel.ProductReviewId)
                 ?? throw new ArgumentException("No product review found with the specified id");
 

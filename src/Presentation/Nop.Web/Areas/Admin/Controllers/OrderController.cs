@@ -134,50 +134,50 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual bool HasAccessToOrder(Order order)
+        protected virtual async ValueTask<bool> HasAccessToOrderAsync(Order order)
         {
-            return order != null && HasAccessToOrder(order.Id);
+            return order != null && await HasAccessToOrderAsync(order.Id);
         }
 
-        protected virtual bool HasAccessToOrder(int orderId)
+        protected virtual async Task<bool> HasAccessToOrderAsync(int orderId)
         {
             if (orderId == 0)
                 return false;
 
-            if (_workContext.GetCurrentVendorAsync().Result == null)
+            if (await _workContext.GetCurrentVendorAsync() == null)
                 //not a vendor; has access
                 return true;
 
-            var vendorId = _workContext.GetCurrentVendorAsync().Result.Id;
-            var hasVendorProducts = _orderService.GetOrderItemsAsync(orderId, vendorId: vendorId).Result.Any();
+            var vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
+            var hasVendorProducts = (await _orderService.GetOrderItemsAsync(orderId, vendorId: vendorId)).Any();
 
             return hasVendorProducts;
         }
         
-        protected virtual bool HasAccessToProduct(OrderItem orderItem)
+        protected virtual async ValueTask<bool> HasAccessToProductAsync(OrderItem orderItem)
         {
             if (orderItem == null || orderItem.ProductId == 0)
                 return false;
 
-            if (_workContext.GetCurrentVendorAsync().Result == null)
+            if (await _workContext.GetCurrentVendorAsync() == null)
                 //not a vendor; has access
                 return true;
 
-            var vendorId = _workContext.GetCurrentVendorAsync().Result.Id;
+            var vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
-            return  _productService.GetProductByIdAsync(orderItem.ProductId).Result?.VendorId == vendorId;
+            return  (await _productService.GetProductByIdAsync(orderItem.ProductId))?.VendorId == vendorId;
         }
         
-        protected virtual bool HasAccessToShipment(Shipment shipment)
+        protected virtual async ValueTask<bool> HasAccessToShipmentAsync(Shipment shipment)
         {
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            if (_workContext.GetCurrentVendorAsync().Result == null)
+            if (await _workContext.GetCurrentVendorAsync() == null)
                 //not a vendor; has access
                 return true;
 
-            return HasAccessToOrder(shipment.OrderId);
+            return await HasAccessToOrderAsync(shipment.OrderId);
         }
 
         protected virtual async Task LogEditOrderAsync(int orderId)
@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OrderList(OrderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _orderModelFactory.PrepareOrderListModelAsync(searchModel);
@@ -229,7 +229,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ReportAggregates(OrderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _orderModelFactory.PrepareOrderAggregatorModelAsync(searchModel);
@@ -318,7 +318,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -336,7 +336,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange((await _orderService.GetOrdersByIdsAsync(ids)).Where(HasAccessToOrder));
+                orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids))
+                    .ToAsyncEnumerable().WhereAwait(HasAccessToOrderAsync).ToListAsync());
             }
 
             try
@@ -346,7 +347,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -416,7 +417,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -434,7 +435,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange((await _orderService.GetOrdersByIdsAsync(ids)).Where(HasAccessToOrder));
+                orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).ToAsyncEnumerable().WhereAwait(HasAccessToOrderAsync).ToListAsync());
             }
 
             try
@@ -444,7 +445,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -486,7 +487,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -525,7 +526,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -561,7 +562,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -600,7 +601,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -636,7 +637,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -675,7 +676,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -711,7 +712,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 var model = await _orderModelFactory.PrepareOrderModelAsync(null, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -794,7 +795,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 model = await _orderModelFactory.PrepareOrderModelAsync(model, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -841,7 +842,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //prepare model
                 model = await _orderModelFactory.PrepareOrderModelAsync(model, order);
 
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return View(model);
             }
         }
@@ -861,7 +862,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToOrder(order))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
                 return RedirectToAction("List");
 
             //prepare model
@@ -993,7 +994,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1018,7 +1019,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorId = 0;
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                orders = orders.Where(HasAccessToOrder).ToList();
+                orders = await orders.ToAsyncEnumerable().WhereAwait(HasAccessToOrderAsync).ToListAsync();
                 vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
             }
 
@@ -1035,7 +1036,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1425,7 +1426,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToProduct(orderItem))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToProductAsync(orderItem))
                 return RedirectToAction("List");
 
             orderItem.DownloadCount = 0;
@@ -1463,7 +1464,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToProduct(orderItem))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToProductAsync(orderItem))
                 return RedirectToAction("List");
 
             orderItem.IsDownloadActivated = !orderItem.IsDownloadActivated;
@@ -1500,7 +1501,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentException("Product is not downloadable");
 
             //ensure a vendor has access only to his products 
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToProduct(orderItem))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToProductAsync(orderItem))
                 return RedirectToAction("List");
 
             //prepare model
@@ -1525,7 +1526,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToProduct(orderItem))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToProductAsync(orderItem))
                 return RedirectToAction("List");
 
             //attach license
@@ -1560,7 +1561,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToProduct(orderItem))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToProductAsync(orderItem))
                 return RedirectToAction("List");
 
             //attach license
@@ -1600,7 +1601,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AddProductToOrder(AddProductToOrderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = await _orderService.GetOrderByIdAsync(searchModel.OrderId)
@@ -1889,7 +1890,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ShipmentListSelect(ShipmentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _orderModelFactory.PrepareShipmentListModelAsync(searchModel);
@@ -1901,14 +1902,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ShipmentsByOrder(OrderShipmentSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = await _orderService.GetOrderByIdAsync(searchModel.OrderId)
                 ?? throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToOrder(order))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
                 return Content(string.Empty);
 
             //prepare model
@@ -1921,14 +1922,14 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ShipmentsItemsByShipmentId(ShipmentItemSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a shipment with the specified id
             var shipment = await _shipmentService.GetShipmentByIdAsync(searchModel.ShipmentId)
                 ?? throw new ArgumentException("No shipment found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return Content(string.Empty);
 
             //try to get an order with the specified id
@@ -1936,7 +1937,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToOrder(order))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
                 return Content(string.Empty);
 
             //prepare model
@@ -1957,7 +1958,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToOrder(order))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
                 return RedirectToAction("List");
 
             //prepare model
@@ -1979,14 +1980,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToOrder(order))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToOrderAsync(order))
                 return RedirectToAction("List");
 
             var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isShipEnabled: true);
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                orderItems = orderItems.Where(HasAccessToProduct).ToList();
+                orderItems = await orderItems.ToAsyncEnumerable().WhereAwait(HasAccessToProductAsync).ToListAsync();
             }
 
             var shipment = new Shipment
@@ -2114,7 +2115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             //prepare model
@@ -2135,7 +2136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
             
             foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
@@ -2182,7 +2183,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             shipment.TrackingNumber = model.TrackingNumber;
@@ -2204,7 +2205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             shipment.AdminComment = model.AdminComment;
@@ -2226,7 +2227,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             try
@@ -2238,7 +2239,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2256,7 +2257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             try
@@ -2273,7 +2274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2291,7 +2292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             try
@@ -2303,7 +2304,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2321,7 +2322,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             try
@@ -2338,7 +2339,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             catch (Exception exc)
             {
                 //error
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
@@ -2354,7 +2355,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (await _workContext.GetCurrentVendorAsync() != null && !HasAccessToShipment(shipment))
+            if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
 
             var shipments = new List<Shipment>
@@ -2422,7 +2423,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("ShipmentList");
             }
         }
@@ -2445,7 +2446,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                shipments = shipments.Where(HasAccessToShipment).ToList();
+                shipments = await shipments.ToAsyncEnumerable().WhereAwait(HasAccessToShipmentAsync).ToListAsync();
             }
 
             try
@@ -2461,7 +2462,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("ShipmentList");
             }
         }
@@ -2480,7 +2481,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                shipments = shipments.Where(HasAccessToShipment).ToList();
+                shipments = await shipments.ToAsyncEnumerable().WhereAwait(HasAccessToShipmentAsync).ToListAsync();
             }
 
             foreach (var shipment in shipments)
@@ -2512,7 +2513,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                shipments = shipments.Where(HasAccessToShipment).ToList();
+                shipments = await shipments.ToAsyncEnumerable().WhereAwait(HasAccessToShipmentAsync).ToListAsync();
             }
 
             foreach (var shipment in shipments)
@@ -2538,7 +2539,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OrderNotesSelect(OrderNoteSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = await _orderService.GetOrderByIdAsync(searchModel.OrderId)
@@ -2623,7 +2624,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> BestsellersBriefReportByQuantityList(BestsellerBriefSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _orderModelFactory.PrepareBestsellerBriefListModelAsync(searchModel);
@@ -2635,7 +2636,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> BestsellersBriefReportByAmountList(BestsellerBriefSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _orderModelFactory.PrepareBestsellerBriefListModelAsync(searchModel);
@@ -2647,7 +2648,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OrderAverageReportList(OrderAverageReportSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //a vendor doesn't have access to this report
             if (await _workContext.GetCurrentVendorAsync() != null)
@@ -2663,7 +2664,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OrderIncompleteReportList(OrderIncompleteReportSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //a vendor doesn't have access to this report
             if (await _workContext.GetCurrentVendorAsync() != null)

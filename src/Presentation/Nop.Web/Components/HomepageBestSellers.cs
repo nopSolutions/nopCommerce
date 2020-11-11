@@ -57,11 +57,11 @@ namespace Nop.Web.Components
                     .ToList();
 
             //load products
-            var products = await _productService.GetProductsByIdsAsync(report.Select(x => x.ProductId).ToArray());
+            var products = await (await _productService.GetProductsByIdsAsync(report.Select(x => x.ProductId).ToArray())).ToAsyncEnumerable()
             //ACL and store mapping
-            products = products.Where(p => _aclService.AuthorizeAsync(p).Result && _storeMappingService.AuthorizeAsync(p).Result).ToList();
+            .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates
-            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+            .Where(p => _productService.ProductIsAvailable(p)).ToListAsync();
 
             if (!products.Any())
                 return Content("");

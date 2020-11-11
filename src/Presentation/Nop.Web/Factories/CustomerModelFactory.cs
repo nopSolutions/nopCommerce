@@ -422,13 +422,13 @@ namespace Nop.Web.Factories
 
             //external authentication
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
-            model.NumberOfExternalAuthenticationProviders = _authenticationPluginManager
-                .LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id)
+            model.NumberOfExternalAuthenticationProviders = (await _authenticationPluginManager
+                .LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
                 .Count;
             foreach (var record in await _externalAuthenticationService.GetCustomerExternalAuthenticationRecordsAsync(customer))
             {
-                var authMethod = _authenticationPluginManager
-                    .LoadPluginBySystemName(record.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+                var authMethod = await _authenticationPluginManager
+                    .LoadPluginBySystemNameAsync(record.ProviderSystemName, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
@@ -809,7 +809,7 @@ namespace Nop.Web.Factories
                 });
             }
 
-            if (_multiFactorAuthenticationPluginManager.HasActivePlugins())
+            if (await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
             {
                 model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
                 {
@@ -831,10 +831,11 @@ namespace Nop.Web.Factories
         /// <returns>Customer address list model</returns>
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
-            var addresses = (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+            var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
+                .ToAsyncEnumerable()
                 //enabled for the current store
-                .Where(a => a.CountryId == null || _storeMappingService.AuthorizeAsync(_countryService.GetCountryByAddressAsync(a).Result).Result)
-                .ToList();
+                .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
+                .ToListAsync();
 
             var model = new CustomerAddressListModel();
             foreach (var address in addresses)
@@ -972,7 +973,7 @@ namespace Nop.Web.Factories
             model.IsEnabled = !string.IsNullOrEmpty(
                 await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
             
-            var multiFactorAuthenticationProviders = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, (await _storeContext.GetCurrentStoreAsync()).Id).ToList();            
+            var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
@@ -995,12 +996,12 @@ namespace Nop.Web.Factories
             var customer = await _workContext.GetCurrentCustomerAsync();
             var selectedProvider = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
 
-            var multiFactorAuthenticationProvider = _multiFactorAuthenticationPluginManager.LoadActivePlugins(customer, (await _storeContext.GetCurrentStoreAsync()).Id)
+            var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
             providerModel.Name = await _localizationService.GetLocalizedFriendlyNameAsync(multiFactorAuthenticationProvider, (await _workContext.GetWorkingLanguageAsync()).Id);
             providerModel.SystemName = sysName;
-            providerModel.Description = multiFactorAuthenticationProvider.Description;
+            providerModel.Description = await multiFactorAuthenticationProvider.GetDescriptionAsync();
             providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
             providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName(): multiFactorAuthenticationProvider.GetPublicViewComponentName();
             providerModel.Selected = sysName == selectedProvider;

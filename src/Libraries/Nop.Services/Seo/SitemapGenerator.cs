@@ -9,6 +9,7 @@ using System.Xml;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.CodeAnalysis.CSharp;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -169,9 +170,9 @@ namespace Nop.Services.Seo
         /// Get HTTP protocol
         /// </summary>
         /// <returns>Protocol name as string</returns>
-        protected virtual string GetHttpProtocol()
+        protected virtual async Task<string> GetHttpProtocol()
         {
-            return (_storeContext.GetCurrentStoreAsync().Result).SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+            return (await _storeContext.GetCurrentStoreAsync()).SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
 
         /// <summary>
@@ -234,7 +235,7 @@ namespace Nop.Services.Seo
 
             //custom URLs
             if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
-                sitemapUrls.AddRange(await GetCustomUrlsAsync());
+                sitemapUrls.AddRange(GetCustomUrls());
 
             return sitemapUrls;
         }
@@ -245,10 +246,11 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetNewsItemUrlsAsync()
         {
-            return (await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .Select(news => GetLocalizedSitemapUrlAsync("NewsItem",
+            return await (await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                .ToAsyncEnumerable()
+                .SelectAwait(async news => await GetLocalizedSitemapUrlAsync("NewsItem",
                     lang => new { SeName = _urlRecordService.GetSeNameAsync(news, news.LanguageId, ensureTwoPublishedLanguages: false).Result },
-                    news.CreatedOnUtc).Result);
+                    news.CreatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -257,8 +259,9 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetCategoryUrlsAsync()
         {
-            return (await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .Select(category => GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParams(category), category.UpdatedOnUtc).Result);
+            return await (await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                .ToAsyncEnumerable()
+                .SelectAwait(async category => await GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParams(category), category.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -267,8 +270,9 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrlsAsync()
         {
-            return (await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .Select(manufacturer => GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParams(manufacturer), manufacturer.UpdatedOnUtc).Result);
+            return await (await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
+                .ToAsyncEnumerable()
+                .SelectAwait(async manufacturer => await GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParams(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -277,9 +281,10 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetProductUrlsAsync()
         {
-            return (await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
+            return await (await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn))
-                    .Select(product => GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParams(product), product.UpdatedOnUtc).Result);
+                .ToAsyncEnumerable()
+                    .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParams(product), product.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -288,8 +293,9 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetProductTagUrlsAsync()
         {
-            return (await _productTagService.GetAllProductTagsAsync())
-                .Select(productTag => GetLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParams(productTag)).Result);
+            return await (await _productTagService.GetAllProductTagsAsync())
+                .ToAsyncEnumerable()
+                .SelectAwait(async productTag => await GetLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParams(productTag))).ToListAsync();
         }
 
         /// <summary>
@@ -298,8 +304,9 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrlsAsync()
         {
-            return (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).Where(t => t.IncludeInSitemap)
-                .Select(topic => GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParams(topic)).Result);
+            return await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).Where(t => t.IncludeInSitemap)
+                .ToAsyncEnumerable()
+                .SelectAwait(async topic => await GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParams(topic))).ToListAsync();
         }
 
         /// <summary>
@@ -308,20 +315,21 @@ namespace Nop.Services.Seo
         /// <returns>Sitemap URLs</returns>
         protected virtual async Task<IEnumerable<SitemapUrl>> GetBlogPostUrlsAsync()
         {
-            return (await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
+            return await (await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
                 .Where(p => p.IncludeInSitemap)
-                .Select(post => GetLocalizedSitemapUrlAsync("BlogPost",
+                .ToAsyncEnumerable()
+                .SelectAwait(async post => await GetLocalizedSitemapUrlAsync("BlogPost",
                     lang => new { SeName = _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false).Result },
-                    post.CreatedOnUtc).Result);
+                    post.CreatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
         /// Get custom URLs for the sitemap
         /// </summary>
         /// <returns>Sitemap URLs</returns>
-        protected virtual async Task<IEnumerable<SitemapUrl>> GetCustomUrlsAsync()
+        protected virtual IEnumerable<SitemapUrl> GetCustomUrls()
         {
-            var storeLocation = await _webHelper.GetStoreLocationAsync();
+            var storeLocation = _webHelper.GetStoreLocation();
 
             return _sitemapXmlSettings.SitemapCustomUrls.Select(customUrl =>
                 new SitemapUrl(string.Concat(storeLocation, customUrl), new List<string>(), UpdateFrequency.Weekly, DateTime.UtcNow));
@@ -354,7 +362,7 @@ namespace Nop.Services.Seo
             var urlHelper = GetUrlHelper();
 
             //url for current language
-            var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), GetHttpProtocol());
+            var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), await GetHttpProtocol());
 
             var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
             var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
@@ -366,10 +374,10 @@ namespace Nop.Services.Seo
 
             var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
             //return list of localized urls
-            var localizedUrls = languages
-                .Select(lang =>
+            var localizedUrls = await languages.ToAsyncEnumerable()
+                .SelectAwait(async lang =>
                 {
-                    var currentUrl = urlHelper.RouteUrl(routeName, routeParams?.Invoke(lang.Id), GetHttpProtocol());
+                    var currentUrl = urlHelper.RouteUrl(routeName, routeParams?.Invoke(lang.Id), await GetHttpProtocol());
 
                     if (string.IsNullOrEmpty(currentUrl))
                         return null;
@@ -386,7 +394,7 @@ namespace Nop.Services.Seo
                     return new Uri(new Uri(scheme), localizedPath).ToString();
                 })
                 .Where(value => !string.IsNullOrEmpty(value))
-                .ToList();
+                .ToListAsync();
 
             return new SitemapUrl(url, localizedUrls, updateFreq, updatedOn);
         }
@@ -414,7 +422,7 @@ namespace Nop.Services.Seo
             //write URLs of all available sitemaps
             for (var id = 1; id <= sitemapNumber; id++)
             {
-                var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, GetHttpProtocol());
+                var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, await GetHttpProtocol());
                 var location = await XmlHelper.XmlEncodeAsync(url);
 
                 writer.WriteStartElement("sitemap");

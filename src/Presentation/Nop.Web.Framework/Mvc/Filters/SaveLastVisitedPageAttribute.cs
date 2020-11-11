@@ -81,7 +81,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //check whether we store last visited page URL
@@ -89,7 +89,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get current page
-                var pageUrl = await _webHelper.GetThisPageUrlAsync(true);
+                var pageUrl = _webHelper.GetThisPageUrl(true);
 
                 if (string.IsNullOrEmpty(pageUrl))
                     return;

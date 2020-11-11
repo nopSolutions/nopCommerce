@@ -40,9 +40,14 @@ namespace Nop.Data
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
         }
 
+        protected async Task<MySqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
+        {
+            return new MySqlConnectionStringBuilder(await GetCurrentConnectionStringAsync());
+        }
+
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            return new MySqlConnectionStringBuilder(CurrentConnectionString);
+            return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
 
         /// <summary>
@@ -91,9 +96,9 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected override DataConnection CreateDataConnection()
+        protected override async Task<DataConnection> CreateDataConnection()
         {
-            var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            var dataContext = await CreateDataConnection(LinqToDbDataProvider);
 
             ConfigureDataContext(dataContext);
 
@@ -107,7 +112,7 @@ namespace Nop.Data
         public async Task ExecuteSqlScriptAsync(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             foreach (var command in sqlCommands)
                 await currentConnection.ExecuteAsync(command);
         }
@@ -184,15 +189,35 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool DatabaseExists()
+        public async Task<bool> DatabaseExistsAsync()
         {
             try
             {
-                using (var connection = CreateDbConnection())
+                using (var connection = await CreateDbConnectionAsync())
                 {
                     //just try to connect
                     connection.Open();
                 }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        public bool DatabaseExists()
+        {
+            try
+            {
+                using var connection = CreateDbConnection();
+                //just try to connect
+                connection.Open();
 
                 return true;
             }
@@ -220,15 +245,15 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual int? GetTableIdent<T>() where T : BaseEntity
+        public virtual async Task<int?> GetTableIdentAsync<T>() where T : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var tableName = currentConnection.GetTable<T>().TableName;
             var databaseName = currentConnection.Connection.Database;
 
             //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
             //with DataContext we could be used KeepConnectionAlive option
-            using var dbConnection = (DbConnection)CreateDbConnection();
+            using var dbConnection = (DbConnection)(await CreateDbConnectionAsync());
 
             dbConnection.StateChange += (sender, e) =>
             {
@@ -265,11 +290,11 @@ namespace Nop.Data
         /// <param name="ident">Identity value</param>
         public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
-            var currentIdent = GetTableIdent<TEntity>();
+            var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var tableName = currentConnection.GetTable<TEntity>().TableName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
@@ -297,7 +322,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
             if (tables.Count > 0) 

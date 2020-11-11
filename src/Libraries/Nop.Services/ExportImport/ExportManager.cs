@@ -405,7 +405,7 @@ namespace Nop.Services.ExportImport
                    (await _storeService.GetAllStoresAsync()).Count == 1;
         }
 
-        private PropertyManager<ExportProductAttribute> GetProductAttributeManager()
+        private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManager()
         {
             var attributeProperties = new[]
             {
@@ -415,14 +415,14 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
                 new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
                 {
-                    DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
+                    DropDownElements = await AttributeControlType.TextBox.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder", p => p.AttributeDisplayOrder),
                 new PropertyByName<ExportProductAttribute>("ProductAttributeValueId", p => p.Id),
                 new PropertyByName<ExportProductAttribute>("ValueName", p => p.Name),
                 new PropertyByName<ExportProductAttribute>("AttributeValueType", p => p.AttributeValueTypeId)
                 {
-                    DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
+                    DropDownElements = await AttributeValueType.Simple.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<ExportProductAttribute>("AssociatedProductId", p => p.AssociatedProductId),
                 new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
@@ -447,7 +447,7 @@ namespace Nop.Services.ExportImport
             {
                 new PropertyByName<ExportSpecificationAttribute>("AttributeType", p => p.AttributeTypeId)
                 {
-                    DropDownElements = SpecificationAttributeType.Option.ToSelectList(useLocalization: false)
+                    DropDownElements = await SpecificationAttributeType.Option.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<ExportSpecificationAttribute>("SpecificationAttribute", p => p.SpecificationAttributeId)
                 {
@@ -465,7 +465,7 @@ namespace Nop.Services.ExportImport
 
         private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
-            var productAttributeManager = GetProductAttributeManager();
+            var productAttributeManager = await GetProductAttributeManager();
             var specificationAttributeManager = await GetSpecificationAttributeManagerAsync();
 
             await using var stream = new MemoryStream();
@@ -509,12 +509,12 @@ namespace Nop.Services.ExportImport
 
         private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
-            var attributes = (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
-                .SelectMany(pam =>
+            var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id)).ToAsyncEnumerable()
+                .SelectManyAwait(async pam =>
                 {
-                    var productAttribute = _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId).Result;
+                    var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
 
-                    if (_productAttributeService.GetProductAttributeValuesAsync(pam.Id).Result is IList<ProductAttributeValue> values)
+                    if (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id) is IList<ProductAttributeValue> values)
                     {
                         return values.Select(pav =>
                             new ExportProductAttribute
@@ -540,10 +540,10 @@ namespace Nop.Services.ExportImport
                                 IsPreSelected = pav.IsPreSelected,
                                 DisplayOrder = pav.DisplayOrder,
                                 PictureId = pav.PictureId
-                            });
+                            }).ToAsyncEnumerable();
                     }
 
-                    return new List<ExportProductAttribute>
+                    return (new List<ExportProductAttribute>
                     {
                         new ExportProductAttribute
                         {
@@ -553,8 +553,8 @@ namespace Nop.Services.ExportImport
                             AttributeIsRequired = pam.IsRequired,
                             AttributeControlTypeId = pam.AttributeControlTypeId
                         }
-                    };
-                }).ToList();
+                    }).ToAsyncEnumerable();
+                }).ToListAsync();
 
             //attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(
             //    pam => new ExportProductAttribute
@@ -587,9 +587,9 @@ namespace Nop.Services.ExportImport
 
         private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
-            var attributes = (await _specificationAttributeService
-                .GetProductSpecificationAttributesAsync(item.Id)).Select(
-                psa => new ExportSpecificationAttribute
+            var attributes = await (await _specificationAttributeService
+                .GetProductSpecificationAttributesAsync(item.Id)).ToAsyncEnumerable().SelectAwait(
+                async psa => new ExportSpecificationAttribute
                 {
                     AttributeTypeId = psa.AttributeTypeId,
                     CustomValue = psa.CustomValue,
@@ -597,8 +597,8 @@ namespace Nop.Services.ExportImport
                     ShowOnProductPage = psa.ShowOnProductPage,
                     DisplayOrder = psa.DisplayOrder,
                     SpecificationAttributeOptionId = psa.SpecificationAttributeOptionId,
-                    SpecificationAttributeId = _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId).Result.SpecificationAttributeId
-                }).ToList();
+                    SpecificationAttributeId = (await _specificationAttributeService.GetSpecificationAttributeOptionByIdAsync(psa.SpecificationAttributeOptionId)).SpecificationAttributeId
+                }).ToListAsync();
 
             if (!attributes.Any())
                 return row;
@@ -1210,7 +1210,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("ProductId", p => p.Id),
                 new PropertyByName<Product>("ProductType", p => p.ProductTypeId, await IgnoreExportProductPropertyAsync(p => p.ProductType))
                 {
-                    DropDownElements = ProductType.SimpleProduct.ToSelectList(useLocalization: false)
+                    DropDownElements = await ProductType.SimpleProduct.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId, await IgnoreExportProductPropertyAsync(p => p.ProductType)),
                 new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually, await IgnoreExportProductPropertyAsync(p => p.VisibleIndividually)),
@@ -1243,7 +1243,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("IsGiftCard", p => p.IsGiftCard, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard)),
                 new PropertyByName<Product>("GiftCardType", p => p.GiftCardTypeId, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard))
                 {
-                    DropDownElements = GiftCardType.Virtual.ToSelectList(useLocalization: false)
+                    DropDownElements = await GiftCardType.Virtual.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount, await IgnoreExportProductPropertyAsync(p => p.IsGiftCard)),
                 new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts, await IgnoreExportProductPropertyAsync(p => p.RequireOtherProductsAddedToCart)),
@@ -1255,7 +1255,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("DownloadActivationType", p => p.DownloadActivationTypeId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct))
                 {
-                    DropDownElements = DownloadActivationType.Manually.ToSelectList(useLocalization: false)
+                    DropDownElements = await DownloadActivationType.Manually.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
                 new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId, await IgnoreExportProductPropertyAsync(p => p.DownloadableProduct)),
@@ -1265,7 +1265,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
                 new PropertyByName<Product>("RecurringCyclePeriod", p => p.RecurringCyclePeriodId, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct))
                 {
-                    DropDownElements = RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false),
+                    DropDownElements = await RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles, await IgnoreExportProductPropertyAsync(p => p.RecurringProduct)),
@@ -1273,7 +1273,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength, await IgnoreExportProductPropertyAsync(p => p.IsRental)),
                 new PropertyByName<Product>("RentalPricePeriod", p => p.RentalPricePeriodId, await IgnoreExportProductPropertyAsync(p => p.IsRental))
                 {
-                    DropDownElements = RentalPricePeriod.Days.ToSelectList(useLocalization: false),
+                    DropDownElements = await RentalPricePeriod.Days.ToSelectList(useLocalization: false),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
@@ -1294,7 +1294,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, await IgnoreExportProductPropertyAsync(p => p.TelecommunicationsBroadcastingElectronicServices)),
                 new PropertyByName<Product>("ManageInventoryMethod", p => p.ManageInventoryMethodId)
                 {
-                    DropDownElements = ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false)
+                    DropDownElements = await ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("ProductAvailabilityRange", p => p.ProductAvailabilityRangeId, await IgnoreExportProductPropertyAsync(p => p.ProductAvailabilityRange))
                 {
@@ -1309,12 +1309,12 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumStockQuantity)),
                 new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, await IgnoreExportProductPropertyAsync(p => p.LowStockActivity))
                 {
-                    DropDownElements = LowStockActivity.Nothing.ToSelectList(useLocalization: false)
+                    DropDownElements = await LowStockActivity.Nothing.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("NotifyAdminForQuantityBelow", p => p.NotifyAdminForQuantityBelow, await IgnoreExportProductPropertyAsync(p => p.NotifyAdminForQuantityBelow)),
                 new PropertyByName<Product>("BackorderMode", p => p.BackorderModeId, await IgnoreExportProductPropertyAsync(p => p.Backorders))
                 {
-                    DropDownElements = BackorderMode.NoBackorders.ToSelectList(useLocalization: false)
+                    DropDownElements = await BackorderMode.NoBackorders.ToSelectList(useLocalization: false)
                 },
                 new PropertyByName<Product>("AllowBackInStockSubscriptions", p => p.AllowBackInStockSubscriptions, await IgnoreExportProductPropertyAsync(p => p.AllowBackInStockSubscriptions)),
                 new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity, await IgnoreExportProductPropertyAsync(p => p.MinimumCartQuantity)),

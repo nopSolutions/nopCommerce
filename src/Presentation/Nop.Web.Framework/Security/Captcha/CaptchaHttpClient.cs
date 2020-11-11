@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.Security.Captcha
             var url = string.Format(NopSecurityDefaults.RecaptchaValidationPath,
                 _captchaSettings.ReCaptchaPrivateKey,
                 responseValue,
-                _webHelper.GetCurrentIpAddressAsync());
+                _webHelper.GetCurrentIpAddress());
 
             //get response
             var response = await _httpClient.GetStringAsync(url);

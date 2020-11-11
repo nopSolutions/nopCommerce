@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
     {
         public VendorAttributeValueValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Vendors.VendorAttributes.Values.Fields.Name.Required").Result);
+            RuleFor(x => x.Name).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Vendors.VendorAttributes.Values.Fields.Name.Required"));
 
             SetDatabaseValidationRules<VendorAttributeValue>(dataProvider);
         }

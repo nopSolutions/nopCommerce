@@ -260,14 +260,14 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 var pictureService = context.Resolve<IPictureService>();
 
-                return EngineContext.Current.ResolveUnregistered(pictureService.StoreInDb
+                return EngineContext.Current.ResolveUnregistered(pictureService.IsStoreInDbAsync().Result
                     ? typeof(DatabaseRoxyFilemanService)
                     : typeof(FileRoxyFilemanService));
 
             }).As<IRoxyFilemanService>().InstancePerLifetimeScope();
 
             //installation service
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
 
             //event consumers
@@ -329,7 +329,7 @@ namespace Nop.Web.Framework.Infrastructure
                     }
                     catch
                     {
-                        if (!DataSettingsManager.DatabaseIsInstalled)
+                        if (!DataSettingsManager.IsDatabaseInstalled())
                             store = null;
                         else
                             throw;
@@ -349,7 +349,7 @@ namespace Nop.Web.Framework.Infrastructure
                     }
                     catch
                     {
-                        if (DataSettingsManager.DatabaseIsInstalled)
+                        if (DataSettingsManager.IsDatabaseInstalled())
                             throw;
                     }
 

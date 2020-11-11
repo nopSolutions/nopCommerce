@@ -189,13 +189,13 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             {
                 //shipping rate calculation by fixed rate
                 var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-                response.ShippingOptions = (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId)).Select(shippingMethod => new ShippingOption
+                response.ShippingOptions = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId)).ToAsyncEnumerable().SelectAwait(async shippingMethod => new ShippingOption
                 {
-                    Name = _localizationService.GetLocalizedAsync(shippingMethod, x => x.Name).Result,
-                    Description = _localizationService.GetLocalizedAsync(shippingMethod, x => x.Description).Result,
-                    Rate = GetRateAsync(shippingMethod.Id).Result,
-                    TransitDays = GetTransitDaysAsync(shippingMethod.Id).Result
-                }).ToList();
+                    Name = await _localizationService.GetLocalizedAsync(shippingMethod, x => x.Name),
+                    Description = await _localizationService.GetLocalizedAsync(shippingMethod, x => x.Description),
+                    Rate = await GetRateAsync(shippingMethod.Id),
+                    TransitDays = await GetTransitDaysAsync(shippingMethod.Id)
+                }).ToListAsync();
             }
 
             return response;
@@ -216,8 +216,9 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                 return null;
 
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
-            var rates = (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId))
-                .Select(shippingMethod => GetRateAsync(shippingMethod.Id).Result).Distinct().ToList();
+            var rates = await (await _shippingService.GetAllShippingMethodsAsync(restrictByCountryId))
+                .ToAsyncEnumerable()
+                .SelectAwait(async shippingMethod => await GetRateAsync(shippingMethod.Id)).Distinct().ToListAsync();
 
             //return default rate if all of them equal
             if (rates.Count == 1)
@@ -231,7 +232,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/FixedByWeightByTotal/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/FixedByWeightByTotal/Configure";
         }
 
         /// <summary>
@@ -298,10 +299,11 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             await _settingService.DeleteSettingAsync<FixedByWeightByTotalSettings>();
 
             //fixed rates
-            var fixedRates = (await _shippingService.GetAllShippingMethodsAsync())
-                .Select(shippingMethod => _settingService.GetSettingAsync(
-                    string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)).Result)
-                .Where(setting => setting != null).ToList();
+            var fixedRates = await (await _shippingService.GetAllShippingMethodsAsync())
+                .ToAsyncEnumerable()
+                .SelectAwait(async shippingMethod => await _settingService.GetSettingAsync(
+                    string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)))
+                .Where(setting => setting != null).ToListAsync();
             await _settingService.DeleteSettingsAsync(fixedRates);
 
             //locales

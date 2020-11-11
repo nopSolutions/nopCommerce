@@ -84,25 +84,25 @@ namespace Nop.Web.Areas.Admin.Factories
             model.SelectedAttributeId = selectedAttribute?.Id ?? 0;
 
             //get selected checkout attribute values identifiers
-            var selectedValuesIds = _checkoutAttributeParser
-                .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id));
+            var selectedValuesIds = await _checkoutAttributeParser
+                .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id)).ToListAsync();
 
             //get available condition checkout attributes (ignore this attribute and non-combinable attributes)
             var availableConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync())
                 .Where(attribute => attribute.Id != checkoutAttribute.Id && attribute.CanBeUsedAsCondition());
 
-            model.ConditionAttributes = availableConditionAttributes.Select(attribute => new AttributeConditionModel
+            model.ConditionAttributes = await availableConditionAttributes.ToAsyncEnumerable().SelectAwait(async attribute => new AttributeConditionModel
             {
                 Id = attribute.Id,
                 Name = attribute.Name,
                 AttributeControlType = attribute.AttributeControlType,
-                Values = _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id).Result.Select(value => new SelectListItem
+                Values = (await _checkoutAttributeService.GetCheckoutAttributeValuesAsync(attribute.Id)).Select(value => new SelectListItem
                 {
                     Text = value.Name,
                     Value = value.Id.ToString(),
                     Selected = selectedAttribute?.Id == attribute.Id && selectedValuesIds.Contains(value.Id)
                 }).ToList()
-            }).ToList();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -200,11 +200,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareCheckoutAttributeValueSearchModel(model.CheckoutAttributeValueSearchModel, checkoutAttribute);
 
                 //define localized model configuration action
-                localizedModelConfiguration = (locale, languageId) =>
+                localizedModelConfiguration = async (locale, languageId) =>
                 {
-                    locale.Name = _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.Name, languageId, false, false).Result;
-                    locale.TextPrompt = _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false).Result;
-                    locale.DefaultValue = _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false).Result;
+                    locale.Name = await _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.Name, languageId, false, false);
+                    locale.TextPrompt = await _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = await _localizationService.GetLocalizedAsync(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //whether to fill in some of properties

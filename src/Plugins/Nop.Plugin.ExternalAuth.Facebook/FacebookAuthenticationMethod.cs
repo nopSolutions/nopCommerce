@@ -41,7 +41,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/FacebookAuthentication/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/FacebookAuthentication/Configure";
         }
 
         /// <summary>

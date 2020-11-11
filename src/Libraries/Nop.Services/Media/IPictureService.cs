@@ -180,7 +180,13 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
-        bool StoreInDb { get; set; }
+        Task<bool> IsStoreInDbAsync();
+
+        /// <summary>
+        /// Sets a value indicating whether the images should be stored in data base
+        /// </summary>
+        /// <param name="isStoreInDb">A value indicating whether the images should be stored in data base</param>
+        Task SetIsStoreInDbAsync(bool isStoreInDb);
 
         /// <summary>
         /// Get pictures hashes

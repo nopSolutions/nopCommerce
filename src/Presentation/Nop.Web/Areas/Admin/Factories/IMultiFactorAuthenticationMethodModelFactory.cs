@@ -1,4 +1,5 @@
-﻿using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
+﻿using System.Threading.Tasks;
+using Nop.Web.Areas.Admin.Models.MultiFactorAuthentication;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -20,7 +21,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Multi-factor authentication method search model</param>
         /// <returns>Multi-factor authentication method list model</returns>
-        MultiFactorAuthenticationMethodListModel PrepareMultiFactorAuthenticationMethodListModel(
+        Task<MultiFactorAuthenticationMethodListModel> PrepareMultiFactorAuthenticationMethodListModelAsync(
             MultiFactorAuthenticationMethodSearchModel searchModel);
     }
 }

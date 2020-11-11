@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(WidgetSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _widgetModelFactory.PrepareWidgetListModelAsync(searchModel);
@@ -80,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widget = _widgetPluginManager.LoadPluginBySystemName(model.SystemName);
+            var widget = await _widgetPluginManager.LoadPluginBySystemNameAsync(model.SystemName);
             if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
             {
                 if (!model.IsActive)

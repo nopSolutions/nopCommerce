@@ -120,7 +120,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            return await _manufacturerRepository.GetAllPagedAsync(query =>
+            return await _manufacturerRepository.GetAllPagedAsync(async query =>
             {
                 if (!showHidden)
                     query = query.Where(m => m.Published);
@@ -139,7 +139,7 @@ namespace Nop.Services.Catalog
                 if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
-                    var allowedCustomerRolesIds = _customerService.GetCustomerRoleIdsAsync(_workContext.GetCurrentCustomerAsync().Result).Result;
+                    var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
                     query = from m in query
                         join acl in _aclRepository.Table
                             on new {c1 = m.Id, c2 = nameof(Manufacturer)} equals new

@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //whether SEO friendly URLs are enabled
@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //check whether current page URL is already localized URL
-                var pageUrl = await _webHelper.GetRawUrlAsync(context.HttpContext.Request);
+                var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 var result = await pageUrl.IsLocalizedUrlAsync(context.HttpContext.Request.PathBase, true);
                 if (result.IsLocalized)
                     return;

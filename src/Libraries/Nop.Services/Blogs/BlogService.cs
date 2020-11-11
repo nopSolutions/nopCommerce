@@ -218,16 +218,17 @@ namespace Nop.Services.Blogs
         /// <param name="dateFrom">Date from</param>
         /// <param name="dateTo">Date to</param>
         /// <returns>Filtered posts</returns>
-        public virtual Task<IList<BlogPost>> GetPostsByDateAsync(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
+        public virtual async Task<IList<BlogPost>> GetPostsByDateAsync(IList<BlogPost> blogPosts, DateTime dateFrom, DateTime dateTo)
         {
             if (blogPosts == null)
                 throw new ArgumentNullException(nameof(blogPosts));
 
-            var rez = blogPosts
+            var rez = await blogPosts
                 .Where(p => dateFrom.Date <= (p.StartDateUtc ?? p.CreatedOnUtc) && (p.StartDateUtc ?? p.CreatedOnUtc).Date <= dateTo)
-                .ToList();
+                .ToAsyncEnumerable()
+                .ToListAsync();
 
-            return Task.FromResult((IList<BlogPost>)rez);
+            return rez;
         }
 
         /// <summary>
@@ -235,19 +236,21 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Tags</returns>
-        public virtual Task<IList<string>> ParseTagsAsync(BlogPost blogPost) 
+        public virtual async Task<IList<string>> ParseTagsAsync(BlogPost blogPost) 
         {
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
 
             if (blogPost.Tags == null)
-                return Task.FromResult((IList<string>)new List<string>());
+                return new List<string>();
 
-            var tags = blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            var tags = await blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(tag => tag.Trim())
-                .Where(tag => !string.IsNullOrEmpty(tag)).ToList();
+                .Where(tag => !string.IsNullOrEmpty(tag))
+                .ToAsyncEnumerable()
+                .ToListAsync();
 
-            return Task.FromResult((IList<string>)tags);
+            return tags;
         }
 
         /// <summary>

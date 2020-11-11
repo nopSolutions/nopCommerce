@@ -458,7 +458,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             //set packages details
             request.Shipment.Package = _upsSettings.PackingType switch
             {
-                PackingType.PackByOneItemPerPackage => GetPackagesForOneItemPerPackage(shippingOptionRequest).ToArray(),
+                PackingType.PackByOneItemPerPackage => (await GetPackagesForOneItemPerPackageAsync(shippingOptionRequest)).ToArray(),
                 PackingType.PackByVolume => (await GetPackagesByCubicRootAsync(shippingOptionRequest)).ToArray(),
                 _ => (await GetPackagesByDimensionsAsync(shippingOptionRequest)).ToArray()
             };
@@ -526,13 +526,13 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="shippingOptionRequest">shipping option request</param>
         /// <returns>Packages</returns>
-        private IEnumerable<UPSRate.PackageType> GetPackagesForOneItemPerPackage(GetShippingOptionRequest shippingOptionRequest)
+        private async Task<IEnumerable<UPSRate.PackageType>> GetPackagesForOneItemPerPackageAsync(GetShippingOptionRequest shippingOptionRequest)
         {
-            return shippingOptionRequest.Items.SelectMany(packageItem =>
+            return await shippingOptionRequest.Items.ToAsyncEnumerable().SelectManyAwait(async packageItem =>
             {
                 //get dimensions and weight of the single item
-                var (width, length, height) = GetDimensionsForSingleItemAsync(packageItem.ShoppingCartItem, packageItem.Product).Result;
-                var weight = GetWeightForSingleItemAsync(packageItem.ShoppingCartItem, shippingOptionRequest.Customer, packageItem.Product).Result;
+                var (width, length, height) = await GetDimensionsForSingleItemAsync(packageItem.ShoppingCartItem, packageItem.Product);
+                var weight = await GetWeightForSingleItemAsync(packageItem.ShoppingCartItem, shippingOptionRequest.Customer, packageItem.Product);
 
                 var insuranceAmount = 0;
                 if (_upsSettings.InsurePackage)
@@ -542,10 +542,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 }
 
                 //create packages according to item quantity
-                var package = CreatePackageAsync(width, length, height, weight, insuranceAmount).Result;
+                var package = await CreatePackageAsync(width, length, height, weight, insuranceAmount);
 
-                return Enumerable.Repeat(package, packageItem.GetQuantity());
-            });
+                return Enumerable.Repeat(package, packageItem.GetQuantity()).ToAsyncEnumerable();
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -645,10 +645,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var dimension = 0;
 
                 //get total volume of the package
-                var totalVolume = shippingOptionRequest.Items.Sum(item =>
+                var totalVolume = await shippingOptionRequest.Items.ToAsyncEnumerable().SumAwaitAsync(async item =>
                 {
                     //get dimensions and weight of the single item
-                    var (itemWidth, itemLength, itemHeight) = GetDimensionsForSingleItemAsync(item.ShoppingCartItem, item.Product).Result;
+                    var (itemWidth, itemLength, itemHeight) = await GetDimensionsForSingleItemAsync(item.ShoppingCartItem, item.Product);
                     return item.GetQuantity() * itemWidth * itemLength * itemHeight;
                 });
                 if (totalVolume > decimal.Zero)
@@ -791,10 +791,10 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var request = await CreateRateRequestAsync(shippingOptionRequest, saturdayDelivery);
 
                 //get rate response
-                var rateResponse = GetRatesAsync(request).Result;
+                var rateResponse = await GetRatesAsync(request);
 
                 //prepare shipping options
-                return (PrepareShippingOptions(rateResponse).Select(shippingOption =>
+                return ((await PrepareShippingOptionsAsync(rateResponse)).Select(shippingOption =>
                 {
                     //correct option name
                     if (!shippingOption.Name.ToLower().StartsWith("ups"))
@@ -823,7 +823,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="rateResponse">Rate response</param>
         /// <returns>Shipping options</returns>
-        private IEnumerable<ShippingOption> PrepareShippingOptions(UPSRate.RateResponse rateResponse)
+        private async Task<IEnumerable<ShippingOption>> PrepareShippingOptionsAsync(UPSRate.RateResponse rateResponse)
         {
             var shippingOptions = new List<ShippingOption>();
 
@@ -833,7 +833,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             //prepare offered delivery services
             var servicesCodes = _upsSettings.CarrierServicesOffered.Split(':', StringSplitOptions.RemoveEmptyEntries)
                 .Select(idValue => idValue.Trim('[', ']')).ToList();
-            var allServices = DeliveryService.Standard.ToSelectList(false).Select(item =>
+            var allServices = (await DeliveryService.Standard.ToSelectList(false)).Select(item =>
             {
                 var serviceCode = GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new { Name = $"UPS {item.Text?.TrimStart('_')}", Code = serviceCode, Offered = servicesCodes.Contains(serviceCode) };
@@ -907,10 +907,20 @@ namespace Nop.Plugin.Shipping.UPS.Services
 
                 //get tracking info
                 var response = await TrackAsync(request);
-                return response.Shipment?
+
+                if (response.Shipment == null)
+                    return null;
+
+                return await response.Shipment
                     .SelectMany(shipment => shipment.Package?
-                        .SelectMany(package => package.Activity?
-                            .Select(activity => PrepareShipmentStatusEventAsync(activity).Result)));
+                        .SelectMany(package => package?.Activity)).Where(activity => activity != null).ToAsyncEnumerable()
+                    .SelectAwait(async activity => await PrepareShipmentStatusEventAsync(activity)).ToListAsync();
+
+                //TODO: test end delete
+                //return response.Shipment?
+                //    .SelectMany(shipment => shipment.Package?
+                //        .SelectMany(package => package.Activity?
+                //            .Select(activity => PrepareShipmentStatusEventAsync(activity).Result)));
             }
             catch (Exception exception)
             {

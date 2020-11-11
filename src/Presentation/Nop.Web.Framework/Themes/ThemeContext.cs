@@ -65,10 +65,10 @@ namespace Nop.Web.Framework.Themes
 
             //whether customers are allowed to select a theme
             if (_storeInformationSettings.AllowCustomerToSelectTheme &&
-                _workContext.GetCurrentCustomerAsync().Result != null)
+                await _workContext.GetCurrentCustomerAsync() != null)
             {
-                themeName = _genericAttributeService.GetAttributeAsync<string>(_workContext.GetCurrentCustomerAsync().Result,
-                    NopCustomerDefaults.WorkingThemeNameAttribute, (await _storeContext.GetCurrentStoreAsync()).Id).Result;
+                themeName = await _genericAttributeService.GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(),
+                    NopCustomerDefaults.WorkingThemeNameAttribute, (await _storeContext.GetCurrentStoreAsync()).Id);
             }
 
             //if not, try to get default store theme
@@ -79,7 +79,7 @@ namespace Nop.Web.Framework.Themes
             if (!await _themeProvider.ThemeExistsAsync(themeName))
             {
                 //if it does not exist, try to get the first one
-                themeName = _themeProvider.GetThemesAsync().Result.FirstOrDefault()?.SystemName
+                themeName = (await _themeProvider.GetThemesAsync()).FirstOrDefault()?.SystemName
                             ?? throw new Exception("No theme could be loaded");
             }
 
@@ -96,11 +96,11 @@ namespace Nop.Web.Framework.Themes
         {
             //whether customers are allowed to select a theme
             if (!_storeInformationSettings.AllowCustomerToSelectTheme ||
-                _workContext.GetCurrentCustomerAsync().Result == null)
+                await _workContext.GetCurrentCustomerAsync() == null)
                 return;
 
             //save selected by customer theme system name
-            await _genericAttributeService.SaveAttributeAsync(_workContext.GetCurrentCustomerAsync().Result,
+            await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.WorkingThemeNameAttribute, workingThemeName,
                 (await _storeContext.GetCurrentStoreAsync()).Id);
 

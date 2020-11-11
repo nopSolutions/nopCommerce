@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
         /// Add cookie value for the recently viewed products
         /// </summary>
         /// <param name="recentlyViewedProductIds">Collection of the recently viewed products identifiers</param>
-        protected virtual async Task AddRecentlyViewedProductsCookieAsync(IEnumerable<int> recentlyViewedProductIds)
+        protected virtual Task AddRecentlyViewedProductsCookieAsync(IEnumerable<int> recentlyViewedProductIds)
         {
             //delete current cookie if exists
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.RecentlyViewedProductsCookie}";
@@ -95,11 +95,13 @@ namespace Nop.Services.Catalog
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
                 HttpOnly = true,
-                Secure = await _webHelper.IsCurrentConnectionSecuredAsync()
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie
             _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, productIdsCookie, cookieOptions);
+
+            return Task.CompletedTask;
         }
 
         #endregion

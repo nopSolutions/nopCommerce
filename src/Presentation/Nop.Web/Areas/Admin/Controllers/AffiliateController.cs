@@ -74,7 +74,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(AffiliateSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _affiliateModelFactory.PrepareAffiliateListModelAsync(searchModel);
@@ -234,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AffiliatedOrderListGrid(AffiliatedOrderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)
@@ -250,7 +250,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
             var affiliate = await _affiliateService.GetAffiliateByIdAsync(searchModel.AffliateId)

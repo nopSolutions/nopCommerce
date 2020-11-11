@@ -151,7 +151,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-                    var sku = _productService.FormatSku(product, item.AttributesXml);
+                    var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
 
                     if (string.IsNullOrEmpty(sku))
                         sku = product.Id.ToString();

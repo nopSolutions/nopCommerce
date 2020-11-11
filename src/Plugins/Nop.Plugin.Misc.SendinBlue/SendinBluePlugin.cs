@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tasks;
@@ -65,9 +66,9 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
-        public IList<string> GetWidgetZones()
+        public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return new List<string> { PublicWidgetZones.HeadHtmlTag };
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeadHtmlTag });
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/SendinBlue/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/SendinBlue/Configure";
         }
 
         /// <summary>

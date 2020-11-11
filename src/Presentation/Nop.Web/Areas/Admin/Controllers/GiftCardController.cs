@@ -100,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> GiftCardList(GiftCardSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _giftCardModelFactory.PrepareGiftCardListModelAsync(searchModel);
@@ -260,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
             }
 
             //prepare model
@@ -295,7 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> UsageHistoryList(GiftCardUsageHistorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a gift card with the specified id
             var giftCard = await _giftCardService.GetGiftCardByIdAsync(searchModel.GiftCardId)

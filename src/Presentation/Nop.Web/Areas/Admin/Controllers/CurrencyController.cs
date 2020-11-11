@@ -125,7 +125,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception e)
             {
-                _notificationService.ErrorNotification(e);
+                await _notificationService.ErrorNotificationAsync(e);
             }
 
             return View(model);
@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ListGrid(CurrencySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _currencyModelFactory.PrepareCurrencyListModelAsync(searchModel);
@@ -359,7 +359,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = currency.Id });
             }
         }

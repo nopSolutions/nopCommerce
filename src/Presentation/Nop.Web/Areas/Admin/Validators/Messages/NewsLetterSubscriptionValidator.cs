@@ -11,8 +11,8 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
     {
         public NewsLetterSubscriptionValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
-            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required").Result);
-            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResourceAsync("Admin.Common.WrongEmail").Result);
+            RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"));
+            RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"));
 
             SetDatabaseValidationRules<NewsLetterSubscription>(dataProvider);
         }

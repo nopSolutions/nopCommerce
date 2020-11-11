@@ -18,6 +18,13 @@ namespace Nop.Core.Redis
         Task<IDatabase> GetDatabaseAsync(int db);
 
         /// <summary>
+        /// Obtain an interactive connection to a database inside Redis
+        /// </summary>
+        /// <param name="db">Database number</param>
+        /// <returns>Redis cache database</returns>
+        IDatabase GetDatabase(int db);
+
+        /// <summary>
         /// Obtain a configuration API for an individual server
         /// </summary>
         /// <param name="endPoint">The network endpoint</param>

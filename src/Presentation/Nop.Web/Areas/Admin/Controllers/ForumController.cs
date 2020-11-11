@@ -66,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ForumGroupList(ForumGroupSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _forumModelFactory.PrepareForumGroupListModelAsync(searchModel);
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ForumList(ForumSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageForums))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a forum group with the specified id
             var forumGroup = await _forumService.GetForumGroupByIdAsync(searchModel.ForumGroupId)

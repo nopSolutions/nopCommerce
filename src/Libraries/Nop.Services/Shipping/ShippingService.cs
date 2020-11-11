@@ -127,8 +127,8 @@ namespace Nop.Services.Shipping
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct);
 
             //whether to ship associated products
-            return associatedAttributeValues.Any(attributeValue =>
-                _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result?.IsShipEnabled ?? false);
+            return await associatedAttributeValues.ToAsyncEnumerable().AnyAwaitAsync(async attributeValue =>
+                (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
         }
 
         #endregion
@@ -409,7 +409,7 @@ namespace Nop.Services.Shipping
             if (string.IsNullOrEmpty(checkoutAttributesXml))
                 return totalWeight;
             var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
-            foreach (var attributeValue in attributeValues.SelectMany(x => x.values))
+            foreach (var attributeValue in await attributeValues.SelectMany(x => x.values).ToListAsync())
                 totalWeight += attributeValue.WeightAdjustment;
 
             return totalWeight;
@@ -485,7 +485,7 @@ namespace Nop.Services.Shipping
                     ? item.Product.Height : decimal.Zero);
 
                 //get total volume of the shipped items
-                var totalVolume = packageItems.Sum(packageItem =>
+                var totalVolume = await packageItems.ToAsyncEnumerable().SumAwaitAsync(async packageItem =>
                 {
                     //product volume
                     var productVolume = !packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
@@ -494,10 +494,10 @@ namespace Nop.Services.Shipping
                     //associated products volume
                     if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
                     {
-                        productVolume += _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml).Result
-                            .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).Sum(attributeValue =>
+                        productVolume += await (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
+                            .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).ToAsyncEnumerable().SumAwaitAsync(async attributeValue =>
                             {
-                                var associatedProduct = _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result;
+                                var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
                                 if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
                                     return 0;
 
@@ -635,9 +635,10 @@ namespace Nop.Services.Shipping
 
                 if (product == null || !product.IsShipEnabled)
                 {
-                    var associatedProducts = (await _productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml))
+                    var associatedProducts = await (await _productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml))
                         .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                        .Select(attributeValue => _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result);
+                        .ToAsyncEnumerable()
+                        .SelectAwait(async attributeValue => await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId)).ToListAsync();
                     product = associatedProducts.FirstOrDefault(associatedProduct => associatedProduct != null && associatedProduct.IsShipEnabled);
                 }
 
@@ -778,8 +779,8 @@ namespace Nop.Services.Shipping
             var (shippingOptionRequests, shippingFromMultipleLocations) = await CreateShippingOptionRequestsAsync(cart, shippingAddress, storeId);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
-            var shippingRateComputationMethods = _shippingPluginManager
-                .LoadActivePlugins(customer, storeId, allowedShippingRateComputationMethodSystemName);
+            var shippingRateComputationMethods = await _shippingPluginManager
+                .LoadActivePluginsAsync(customer, storeId, allowedShippingRateComputationMethodSystemName);
             if (!shippingRateComputationMethods.Any())
                 return result;
 
@@ -873,7 +874,7 @@ namespace Nop.Services.Shipping
         {
             var result = new GetPickupPointsResponse();
 
-            var pickupPointsProviders = _pickupPluginManager.LoadActivePlugins(customer, storeId, providerSystemName);
+            var pickupPointsProviders = await _pickupPluginManager.LoadActivePluginsAsync(customer, storeId, providerSystemName);
             if (!pickupPointsProviders.Any())
                 return result;
 
@@ -918,9 +919,10 @@ namespace Nop.Services.Shipping
                 return false;
 
             //or whether associated products of the shopping cart item require shipping
-            return (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            return await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .Any(attributeValue => _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result?.IsShipEnabled ?? false);
+                .ToAsyncEnumerable()
+                .AnyAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
         }
 
         /// <summary>
@@ -942,9 +944,10 @@ namespace Nop.Services.Shipping
                 return true;
 
             //and whether associated products of the shopping cart item is free shipping
-            return (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            return await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .All(attributeValue => _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result?.IsFreeShipping ?? true);
+                .ToAsyncEnumerable()
+                .AllAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsFreeShipping ?? true);
         }
 
         /// <summary>
@@ -965,9 +968,10 @@ namespace Nop.Services.Shipping
                 return additionalShippingCharge;
 
             //and sum with associated products additional shipping charges
-            additionalShippingCharge += (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
+            additionalShippingCharge += await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .Sum(attributeValue => _productService.GetProductByIdAsync(attributeValue.AssociatedProductId).Result?.AdditionalShippingCharge ?? decimal.Zero);
+                .ToAsyncEnumerable()
+                .SumAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
 
             return additionalShippingCharge;
         }

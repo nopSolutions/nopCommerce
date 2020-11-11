@@ -110,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> SpecificationAttributeGroupList(SpecificationAttributeGroupSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             var model = await _specificationAttributeModelFactory.PrepareSpecificationAttributeGroupListModelAsync(searchModel);
 
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> SpecificationAttributeList(SpecificationAttributeSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             SpecificationAttributeGroup group = null;
 
@@ -384,7 +384,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OptionList(SpecificationAttributeOptionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a specification attribute with the specified id
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(searchModel.SpecificationAttributeId)
@@ -554,7 +554,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> UsedByProducts(SpecificationAttributeProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a specification attribute with the specified id
             var specificationAttribute = await _specificationAttributeService.GetSpecificationAttributeByIdAsync(searchModel.SpecificationAttributeId)

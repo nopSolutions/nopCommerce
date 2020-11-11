@@ -40,14 +40,14 @@ namespace Nop.Web.Framework.Globalization
         /// <param name="workContext">Work context</param>
         protected async Task SetWorkingCultureAsync(IWebHelper webHelper, IWorkContext workContext)
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                 return;
 
-            if (await webHelper.IsStaticResourceAsync())
+            if (webHelper.IsStaticResource())
                 return;
 
-            var adminAreaUrl = $"{await webHelper.GetStoreLocationAsync()}admin";
-            if ((await webHelper.GetThisPageUrlAsync(false)).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
+            var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";
+            if (webHelper.GetThisPageUrl(false).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 //set work context to admin mode
                 workContext.IsAdmin = true;

@@ -149,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CountryList(CountrySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _countryModelFactory.PrepareCountryListModelAsync(searchModel);
@@ -289,7 +289,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = country.Id });
             }
         }
@@ -340,7 +340,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> States(StateProvinceSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a country with the specified id
             var country = await _countryService.GetCountryByIdAsync(searchModel.CountryId)
@@ -581,7 +581,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }

@@ -77,9 +77,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             return text;
         }
 
-        private bool IsPluginEnabled()
+        private async Task<bool> IsPluginEnabledAsync()
         {
-            return _widgetPluginManager.IsPluginActive("Widgets.GoogleAnalytics");
+            return await _widgetPluginManager.IsPluginActiveAsync("Widgets.GoogleAnalytics");
         }
 
         private async Task ProcessOrderEventAsync(Order order, bool add)
@@ -94,7 +94,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 {
                     AccountCode = googleAnalyticsSettings.GoogleId,
                     Culture = "en-US",
-                    HostName = new Uri(await _webHelper.GetThisPageUrlAsync(false)).Host,
+                    HostName = new Uri(_webHelper.GetThisPageUrl(false)).Host,
                     PageTitle = add ? "AddTransaction" : "CancelTransaction"
                 };
 
@@ -130,7 +130,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     if (!add)
                         qty = -qty;
 
-                    var sku = _productService.FormatSku(product, item.AttributesXml);
+                    var sku = await _productService.FormatSkuAsync(product, item.AttributesXml);
                     if (string.IsNullOrEmpty(sku))
                         sku = product.Id.ToString();
 
@@ -159,7 +159,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         public async Task HandleEventAsync(EntityDeletedEvent<Order> eventMessage)
         {
             //ensure the plugin is installed and active
-            if (!IsPluginEnabled())
+            if (!await IsPluginEnabledAsync())
                 return;
 
             var order = eventMessage.Entity;
@@ -196,7 +196,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         public async Task HandleEventAsync(OrderCancelledEvent eventMessage)
         {
             //ensure the plugin is installed and active
-            if (!IsPluginEnabled())
+            if (!await IsPluginEnabledAsync())
                 return;
 
             var order = eventMessage.Order;
@@ -224,7 +224,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         public async Task HandleEventAsync(OrderPaidEvent eventMessage)
         {
             //ensure the plugin is installed and active
-            if (!IsPluginEnabled())
+            if (!await IsPluginEnabledAsync())
                 return;
 
             var order = eventMessage.Order;

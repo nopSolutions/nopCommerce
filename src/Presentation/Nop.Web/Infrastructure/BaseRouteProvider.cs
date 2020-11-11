@@ -11,7 +11,7 @@ namespace Nop.Web.Infrastructure
     {
         protected string GetRouterPattern(IEndpointRouteBuilder endpointRouteBuilder, string seoCode = "")
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
                 var localizationSettings = endpointRouteBuilder.ServiceProvider.GetRequiredService<LocalizationSettings>();
                 if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)

@@ -122,22 +122,22 @@ namespace Nop.Web.Controllers
             var feed = new RssFeed(
                 $"{await _localizationService.GetLocalizedAsync(await _storeContext.GetCurrentStoreAsync(), x => x.Name)}: Blog",
                 "Blog",
-                new Uri(await _webHelper.GetStoreLocationAsync()),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
-                return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
             var blogPosts = await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, await _webHelper.GetCurrentRequestProtocolAsync());
+                var blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = await _urlRecordService.GetSeNameAsync(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.GetCurrentRequestProtocol());
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl),
                     $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:blog:post:{blogPost.Id}", blogPost.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         public virtual async Task<IActionResult> BlogPost(int blogPostId)

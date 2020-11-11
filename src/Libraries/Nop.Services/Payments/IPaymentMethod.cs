@@ -102,6 +102,11 @@ namespace Nop.Services.Payments
         /// <returns>View component name</returns>
         string GetPublicViewComponentName();
 
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        Task<string> GetPaymentMethodDescriptionAsync();
+
         #endregion
 
         #region Properties
@@ -140,11 +145,6 @@ namespace Nop.Services.Payments
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
         bool SkipPaymentInfo { get; }
-
-        /// <summary>
-        /// Gets a payment method description that will be displayed on checkout pages in the public store
-        /// </summary>
-        string PaymentMethodDescription { get; }
 
         #endregion
     }

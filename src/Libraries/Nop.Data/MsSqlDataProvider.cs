@@ -70,6 +70,13 @@ namespace Nop.Data
             return new SqlConnectionStringBuilder(connectionString);
         }
 
+        protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
+        {
+            var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
+
+            return new SqlConnectionStringBuilder(connectionString);
+        }
+
         /// <summary>
         /// Execute commands from the SQL script
         /// </summary>
@@ -78,7 +85,7 @@ namespace Nop.Data
         {
             var sqlCommands = GetCommandsFromScript(sql);
 
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             foreach (var command in sqlCommands)
                 await currentConnection.ExecuteAsync(command);
         }
@@ -110,7 +117,7 @@ namespace Nop.Data
             if (DatabaseExists())
                 return;
 
-            var builder = GetConnectionStringBuilderAsync().Result;
+            var builder = GetConnectionStringBuilder();
 
             //gets database name
             var databaseName = builder.InitialCatalog;
@@ -154,15 +161,35 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool DatabaseExists()
+        public async Task<bool> DatabaseExistsAsync()
         {
             try
             {
-                using (var connection = new SqlConnection(GetConnectionStringBuilderAsync().Result.ConnectionString))
+                using (var connection = new SqlConnection((await GetConnectionStringBuilderAsync()).ConnectionString))
                 {
                     //just try to connect
                     connection.Open();
                 }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        public bool DatabaseExists()
+        {
+            try
+            {
+                using var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString);
+                //just try to connect
+                connection.Open();
 
                 return true;
             }
@@ -204,9 +231,9 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="T">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual int? GetTableIdent<T>() where T : BaseEntity
+        public virtual async Task<int?> GetTableIdentAsync<T>() where T : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var tableName = currentConnection.GetTable<T>().TableName;
 
             var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
@@ -222,8 +249,8 @@ namespace Nop.Data
         /// <param name="ident">Identity value</param>
         public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
-            await using var currentConnection = CreateDataConnection();
-            var currentIdent = GetTableIdent<TEntity>();
+            using var currentConnection = await CreateDataConnection();
+            var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
@@ -237,7 +264,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task BackupDatabaseAsync(string fileName)
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
             await currentConnection.ExecuteAsync(commandText);
         }
@@ -248,7 +275,7 @@ namespace Nop.Data
         /// <param name="backupFileName">The name of the backup file</param>
         public virtual async Task RestoreDatabaseAsync(string backupFileName)
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var commandText = string.Format(
                 "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
                 "ALTER DATABASE [{0}] SET OFFLINE WITH ROLLBACK IMMEDIATE\n" +
@@ -274,7 +301,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnection();
             var commandText = $@"
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR

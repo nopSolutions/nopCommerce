@@ -92,15 +92,16 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 .Select(idValue => idValue.Trim('[', ']')).ToList();
 
             //prepare available options
-            model.AvailableCustomerClassifications = CustomerClassification.DailyRates.ToSelectList(false)
+            model.AvailableCustomerClassifications = (await CustomerClassification.DailyRates.ToSelectList(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
-            model.AvailablePickupTypes = PickupType.DailyPickup.ToSelectList(false)
+            model.AvailablePickupTypes = (await PickupType.DailyPickup.ToSelectList(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
-            model.AvailablePackagingTypes = PackagingType.CustomerSuppliedPackage.ToSelectList(false)
+            model.AvailablePackagingTypes = (await PackagingType.CustomerSuppliedPackage.ToSelectList(false))
                 .Select(item => new SelectListItem(item.Text?.TrimStart('_'), item.Value)).ToList();
-            model.AvaliablePackingTypes = PackingType.PackByDimensions.ToSelectList(false)
+            model.AvaliablePackingTypes = (await PackingType.PackByDimensions.ToSelectList(false))
                 .Select(item => new SelectListItem(item.Text, item.Value)).ToList();
-            model.AvailableCarrierServices = DeliveryService.Standard.ToSelectList(false).Select(item =>
+            model.AvailableCarrierServices = (await DeliveryService.Standard.ToSelectList(false))
+                .Select(item =>
             {
                 var serviceCode = _upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new SelectListItem($"UPS {item.Text?.TrimStart('_')}", serviceCode, servicesCodes.Contains(serviceCode));

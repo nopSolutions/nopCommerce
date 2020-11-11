@@ -96,62 +96,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Gets PDT details
-        /// </summary>
-        /// <param name="tx">TX</param>
-        /// <param name="values">Values</param>
-        /// <param name="response">Response</param>
-        /// <returns>Result</returns>
-        public bool GetPdtDetails(string tx, out Dictionary<string, string> values, out string response)
-        {
-            response = WebUtility.UrlDecode(_payPalStandardHttpClient.GetPdtDetailsAsync(tx).Result);
-
-            values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            bool firstLine = true, success = false;
-            foreach (var l in response.Split('\n'))
-            {
-                var line = l.Trim();
-                if (firstLine)
-                {
-                    success = line.Equals("SUCCESS", StringComparison.OrdinalIgnoreCase);
-                    firstLine = false;
-                }
-                else
-                {
-                    var equalPox = line.IndexOf('=');
-                    if (equalPox >= 0)
-                        values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
-                }
-            }
-
-            return success;
-        }
-
-        /// <summary>
-        /// Verifies IPN
-        /// </summary>
-        /// <param name="formString">Form string</param>
-        /// <param name="values">Values</param>
-        /// <returns>Result</returns>
-        public bool VerifyIpn(string formString, out Dictionary<string, string> values)
-        {
-            var response = WebUtility.UrlDecode(_payPalStandardHttpClient.VerifyIpnAsync(formString).Result);
-            var success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
-
-            values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var l in formString.Split('&'))
-            {
-                var line = l.Trim();
-                var equalPox = line.IndexOf('=');
-                if (equalPox >= 0)
-                    values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
-            }
-
-            return success;
-        }
-
+        
         /// <summary>
         /// Create common query parameters for the request
         /// </summary>
@@ -160,7 +105,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         private async Task<IDictionary<string, string>> CreateQueryParametersAsync(PostProcessPaymentRequest postProcessPaymentRequest)
         {
             //get store location
-            var storeLocation = await _webHelper.GetStoreLocationAsync();
+            var storeLocation = _webHelper.GetStoreLocation();
 
             //choosing correct order address
             var orderAddress = await _addressService.GetAddressByIdAsync(
@@ -241,9 +186,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var checkoutAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
             var customer = await _customerService.GetCustomerByIdAsync(postProcessPaymentRequest.Order.CustomerId);
 
-            foreach (var (attribute, values) in checkoutAttributeValues)
+            await foreach (var (attribute, values) in checkoutAttributeValues)
             {
-                foreach (var attributeValue in values)
+                await foreach (var attributeValue in values)
                 {
                     var (attributePrice, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, customer);
                     var roundedAttributePrice = Math.Round(attributePrice, 2);
@@ -335,6 +280,59 @@ namespace Nop.Plugin.Payments.PayPalStandard
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Verifies IPN
+        /// </summary>
+        /// <param name="formString">Form string</param>
+        /// <returns>Result, Values</returns>
+        public async Task<(bool result, Dictionary<string, string> values)> VerifyIpnAsync(string formString)
+        {
+            var response = WebUtility.UrlDecode(await _payPalStandardHttpClient.VerifyIpnAsync(formString));
+            var success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
+
+            var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var l in formString.Split('&'))
+            {
+                var line = l.Trim();
+                var equalPox = line.IndexOf('=');
+                if (equalPox >= 0)
+                    values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
+            }
+
+            return (success, values);
+        }
+
+        /// <summary>
+        /// Gets PDT details
+        /// </summary>
+        /// <param name="tx">TX</param>
+        /// <returns>Result, Values, Response</returns>
+        public async Task<(bool result, Dictionary<string, string> values, string response)> GetPdtDetailsAsync(string tx)
+        {
+            var response = WebUtility.UrlDecode(await _payPalStandardHttpClient.GetPdtDetailsAsync(tx));
+
+            var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            bool firstLine = true, success = false;
+            foreach (var l in response.Split('\n'))
+            {
+                var line = l.Trim();
+                if (firstLine)
+                {
+                    success = line.Equals("SUCCESS", StringComparison.OrdinalIgnoreCase);
+                    firstLine = false;
+                }
+                else
+                {
+                    var equalPox = line.IndexOf('=');
+                    if (equalPox >= 0)
+                        values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
+                }
+            }
+
+            return (success, values, response);
+        }
+
 
         /// <summary>
         /// Process a payment
@@ -507,7 +505,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// </summary>
         public override string GetConfigurationPageUrl()
         {
-            return $"{_webHelper.GetStoreLocationAsync().Result}Admin/PaymentPayPalStandard/Configure";
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentPayPalStandard/Configure";
         }
 
         /// <summary>
@@ -584,6 +582,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
             await base.UninstallAsync();
         }
 
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public async Task<string> GetPaymentMethodDescriptionAsync()
+        {
+            return await _localizationService.GetResourceAsync("Plugins.Payments.PayPalStandard.PaymentMethodDescription");
+        }
+
         #endregion
 
         #region Properties
@@ -622,11 +628,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
         public bool SkipPaymentInfo => false;
-
-        /// <summary>
-        /// Gets a payment method description that will be displayed on checkout pages in the public store
-        /// </summary>
-        public string PaymentMethodDescription => _localizationService.GetResourceAsync("Plugins.Payments.PayPalStandard.PaymentMethodDescription").Result;
 
         #endregion
     }

@@ -132,7 +132,7 @@ namespace Nop.Services.Logging
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,
-                IpAddress = await _webHelper.GetCurrentIpAddressAsync()
+                IpAddress = _webHelper.GetCurrentIpAddress()
             };
             await _activityLogRepository.InsertAsync(logItem);
 

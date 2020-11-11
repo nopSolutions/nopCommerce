@@ -13,15 +13,15 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
         public CurrencyValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Name.Required").Result)
-                .Length(1, 50).WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Name.Range").Result);
+                .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Name.Required"))
+                .Length(1, 50).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Name.Range"));
             RuleFor(x => x.CurrencyCode)
-                .NotEmpty().WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CurrencyCode.Required").Result)
-                .Length(1, 5).WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CurrencyCode.Range").Result);
+                .NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CurrencyCode.Required"))
+                .Length(1, 5).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CurrencyCode.Range"));
             RuleFor(x => x.Rate)
-                .GreaterThan(0).WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Rate.Range").Result);
+                .GreaterThan(0).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.Rate.Range"));
             RuleFor(x => x.CustomFormatting)
-                .Length(0, 50).WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CustomFormatting.Validation").Result);
+                .Length(0, 50).WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.CustomFormatting.Validation"));
             RuleFor(x => x.DisplayLocale)
                 .Must(x =>
                 {
@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
                         return false;
                     }
                 })
-                .WithMessage(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.DisplayLocale.Validation").Result);
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Configuration.Currencies.Fields.DisplayLocale.Validation"));
 
             SetDatabaseValidationRules<Currency>(dataProvider);
         }

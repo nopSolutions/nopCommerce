@@ -182,8 +182,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.InitialOrderId = order.Id;
             model.CustomerEmail = await _customerService.IsRegisteredAsync(customer)
                 ? customer.Email : await _localizationService.GetResourceAsync("Admin.Customers.Guest");
-            model.PaymentType = await _localizationService.GetLocalizedEnumAsync(_paymentService
-                .GetRecurringPaymentType(order.PaymentMethodSystemName));
+            model.PaymentType = await _localizationService.GetLocalizedEnumAsync(await _paymentService
+                .GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName));
 
             model.CanCancelRecurringPayment = await _orderProcessingService.CanCancelRecurringPaymentAsync(await _workContext.GetCurrentCustomerAsync(), recurringPayment);
 

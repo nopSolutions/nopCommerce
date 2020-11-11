@@ -22,7 +22,7 @@ namespace Nop.Services.Common
             IWebHelper webHelper)
         {
             //configure client
-            client.BaseAddress = new Uri(webHelper.GetStoreLocationAsync().Result);
+            client.BaseAddress = new Uri(webHelper.GetStoreLocation());
 
             _httpClient = client;
         }

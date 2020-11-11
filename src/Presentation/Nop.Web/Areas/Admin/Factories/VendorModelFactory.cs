@@ -382,16 +382,16 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorNotes = await _vendorService.GetVendorNotesByVendorAsync(vendor.Id, searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorNoteListModel().PrepareToGrid(searchModel, vendorNotes, () =>
+            var model = await new VendorNoteListModel().PrepareToGridAsync(searchModel, vendorNotes, () =>
             {
                 //fill in model values from the entity
-                return vendorNotes.Select(note =>
+                return vendorNotes.ToAsyncEnumerable().SelectAwait(async note =>
                 {
                     //fill in model values from the entity        
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();
 
                     //convert dates to the user time
-                    vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTimeAsync(note.CreatedOnUtc, DateTimeKind.Utc).Result;
+                    vendorNoteModel.CreatedOn = await _dateTimeHelper.ConvertToUserTimeAsync(note.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     vendorNoteModel.Note = _vendorService.FormatVendorNoteText(note);

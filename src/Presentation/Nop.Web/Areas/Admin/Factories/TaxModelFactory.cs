@@ -72,13 +72,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Tax provider search model</param>
         /// <returns>Tax provider list model</returns>
-        public virtual Task<TaxProviderListModel> PrepareTaxProviderListModelAsync(TaxProviderSearchModel searchModel)
+        public virtual async Task<TaxProviderListModel> PrepareTaxProviderListModelAsync(TaxProviderSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = _taxPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var taxProviders = (await _taxPluginManager.LoadAllPluginsAsync()).ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TaxProviderListModel().PrepareToGrid(searchModel, taxProviders, () =>
@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             });
 
-            return Task.FromResult(model);
+            return model;
         }
 
         /// <summary>

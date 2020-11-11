@@ -285,7 +285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CustomerList(CustomerSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _customerModelFactory.PrepareCustomerListModelAsync(searchModel);
@@ -1091,7 +1091,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> RewardPointsHistorySelect(CustomerRewardPointsSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -1146,7 +1146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> AddressesSelect(CustomerAddressSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -1317,7 +1317,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> OrderList(CustomerOrderSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -1425,7 +1425,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> GetCartList(CustomerShoppingCartSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -1445,7 +1445,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ListActivityLog(CustomerActivityLogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -1465,7 +1465,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> BackInStockSubscriptionList(CustomerBackInStockSubscriptionSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = await _customerService.GetCustomerByIdAsync(searchModel.CustomerId)
@@ -1496,7 +1496,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> GdprLogList(GdprLogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _customerModelFactory.PrepareGdprLogListModelAsync(searchModel);
@@ -1574,7 +1574,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
         }
@@ -1607,7 +1607,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1635,7 +1635,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1665,7 +1665,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }
@@ -1693,7 +1693,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                _notificationService.ErrorNotification(exc);
+                await _notificationService.ErrorNotificationAsync(exc);
                 return RedirectToAction("List");
             }
         }

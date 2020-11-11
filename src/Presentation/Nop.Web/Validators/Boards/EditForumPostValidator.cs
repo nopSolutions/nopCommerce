@@ -9,7 +9,7 @@ namespace Nop.Web.Validators.Boards
     {
         public EditForumPostValidator(ILocalizationService localizationService)
         {            
-            RuleFor(x => x.Text).NotEmpty().WithMessage(localizationService.GetResourceAsync("Forum.TextCannotBeEmpty").Result);
+            RuleFor(x => x.Text).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("Forum.TextCannotBeEmpty"));
         }
     }
 }

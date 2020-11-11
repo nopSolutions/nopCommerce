@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> List(DiscountSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _discountModelFactory.PrepareDiscountListModelAsync(searchModel);
@@ -257,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
-            var discountRequirementRule = _discountPluginManager.LoadPluginBySystemName(systemName)
+            var discountRequirementRule = await _discountPluginManager.LoadPluginBySystemNameAsync(systemName)
                 ?? throw new ArgumentException("Discount requirement rule could not be loaded");
 
             var discount = await _discountService.GetDiscountByIdAsync(discountId)
@@ -411,7 +411,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductList(DiscountProductSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -461,7 +461,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ProductAddPopupList(AddProductToDiscountSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _discountModelFactory.PrepareAddProductToDiscountListModelAsync(searchModel);
@@ -506,7 +506,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CategoryList(DiscountCategorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -555,7 +555,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> CategoryAddPopupList(AddCategoryToDiscountSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _discountModelFactory.PrepareAddCategoryToDiscountListModelAsync(searchModel);
@@ -599,7 +599,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ManufacturerList(DiscountManufacturerSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)
@@ -648,7 +648,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> ManufacturerAddPopupList(AddManufacturerToDiscountSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _discountModelFactory.PrepareAddManufacturerToDiscountListModelAsync(searchModel);
@@ -692,7 +692,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual async Task<IActionResult> UsageHistoryList(DiscountUsageHistorySearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //try to get a discount with the specified id
             var discount = await _discountService.GetDiscountByIdAsync(searchModel.DiscountId)

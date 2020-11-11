@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //get action and controller names

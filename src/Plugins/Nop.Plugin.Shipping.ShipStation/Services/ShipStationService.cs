@@ -279,19 +279,19 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         
         protected virtual async Task<IList<Service>> GetServicesAsync()
         {
-            var services = (await GetCarriersAsync()).SelectMany(carrier =>
+            var services = await (await GetCarriersAsync()).ToAsyncEnumerable().SelectManyAwait(async carrier =>
             {
                 var cacheKey = _staticCacheManager.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
-                var data = _staticCacheManager.GetAsync(cacheKey, async () => await SendGetRequestAsync(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code))).Result;
+                var data = await _staticCacheManager.GetAsync(cacheKey, async () => await SendGetRequestAsync(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
                 
                 if (!data.Any())
-                    _staticCacheManager.RemoveAsync(cacheKey);
+                    await _staticCacheManager.RemoveAsync(cacheKey);
 
                 var serviceList = JsonConvert.DeserializeObject<List<Service>>(data);
                 
-                return serviceList;
-            });
+                return serviceList.ToAsyncEnumerable();
+            }).ToListAsync();
 
             return services.ToList();
         }
@@ -412,8 +412,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             var serviceFilter = services.Select(s => s.Code).Distinct().ToList();
             var carriers = (await GetCarriersAsync()).Where(c => carrierFilter.Contains(c.Code));
 
-            return carriers.SelectMany(carrier =>
-                GetRatesAsync(shippingOptionRequest, carrier.Code).Result.Where(r => serviceFilter.Contains(r.ServiceCode))).ToList();
+            return await carriers.ToAsyncEnumerable().SelectManyAwait(async carrier =>
+                (await GetRatesAsync(shippingOptionRequest, carrier.Code)).Where(r => serviceFilter.Contains(r.ServiceCode)).ToAsyncEnumerable()).ToListAsync();
         }
         
         /// <summary>

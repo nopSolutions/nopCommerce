@@ -276,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available order statuses
-            var availableStatusItems = OrderStatus.Pending.ToSelectList(false);
+            var availableStatusItems = await OrderStatus.Pending.ToSelectList(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
@@ -298,7 +298,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available payment statuses
-            var availableStatusItems = PaymentStatus.Pending.ToSelectList(false);
+            var availableStatusItems = await PaymentStatus.Pending.ToSelectList(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
@@ -320,7 +320,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available shipping statuses
-            var availableStatusItems = ShippingStatus.NotYetShipped.ToSelectList(false);
+            var availableStatusItems = await ShippingStatus.NotYetShipped.ToSelectList(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
@@ -573,7 +573,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available product types
-            var availableProductTypeItems = ProductType.SimpleProduct.ToSelectList(false);
+            var availableProductTypeItems = await ProductType.SimpleProduct.ToSelectList(false);
             foreach (var productTypeItem in availableProductTypeItems)
             {
                 items.Add(productTypeItem);
@@ -639,7 +639,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available shopping cart types
-            var availableShoppingCartTypeItems = ShoppingCartType.ShoppingCart.ToSelectList(false);
+            var availableShoppingCartTypeItems = await ShoppingCartType.ShoppingCart.ToSelectList(false);
             foreach (var shoppingCartTypeItem in availableShoppingCartTypeItems)
             {
                 items.Add(shoppingCartTypeItem);
@@ -661,7 +661,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available tax display types
-            var availableTaxDisplayTypeItems = TaxDisplayType.ExcludingTax.ToSelectList(false);
+            var availableTaxDisplayTypeItems = await TaxDisplayType.ExcludingTax.ToSelectList(false);
             foreach (var taxDisplayTypeItem in availableTaxDisplayTypeItems)
             {
                 items.Add(taxDisplayTypeItem);
@@ -705,7 +705,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available discount types
-            var availableDiscountTypeItems = DiscountType.AssignedToOrderTotal.ToSelectList(false);
+            var availableDiscountTypeItems = await DiscountType.AssignedToOrderTotal.ToSelectList(false);
             foreach (var discountTypeItem in availableDiscountTypeItems)
             {
                 items.Add(discountTypeItem);
@@ -727,7 +727,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available log levels
-            var availableLogLevelItems = LogLevel.Debug.ToSelectList(false);
+            var availableLogLevelItems = await LogLevel.Debug.ToSelectList(false);
             foreach (var logLevelItem in availableLogLevelItems)
             {
                 items.Add(logLevelItem);
@@ -772,7 +772,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available load plugin modes
-            var availableLoadPluginModeItems = LoadPluginsMode.All.ToSelectList(false);
+            var availableLoadPluginModeItems = await LoadPluginsMode.All.ToSelectList(false);
             foreach (var loadPluginModeItem in availableLoadPluginModeItems)
             {
                 items.Add(loadPluginModeItem);
@@ -794,12 +794,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available plugin groups
-            var availablePluginGroups = _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+            var availablePluginGroups = (await _pluginService.GetPluginDescriptorsAsync<IPlugin>(LoadPluginsMode.All))
                 .Select(plugin => plugin.Group).Distinct().OrderBy(groupName => groupName).ToList();
-            foreach (var group in availablePluginGroups)
-            {
-                items.Add(new SelectListItem { Value = group, Text = group });
-            }
+            foreach (var group in availablePluginGroups) 
+                items.Add(new SelectListItem { Value = @group, Text = @group });
 
             //insert special item for the default value
             await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText);
@@ -818,7 +816,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available return request statuses
-            var availableStatusItems = ReturnRequestStatus.Pending.ToSelectList(false);
+            var availableStatusItems = await ReturnRequestStatus.Pending.ToSelectList(false);
             foreach (var statusItem in availableStatusItems)
             {
                 items.Add(statusItem);
@@ -951,7 +949,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available request types
-            var gdprRequestTypeItems = GdprRequestType.ConsentAgree.ToSelectList(false);
+            var gdprRequestTypeItems = await GdprRequestType.ConsentAgree.ToSelectList(false);
             foreach (var gdprRequestTypeItem in gdprRequestTypeItems)
             {
                 items.Add(gdprRequestTypeItem);

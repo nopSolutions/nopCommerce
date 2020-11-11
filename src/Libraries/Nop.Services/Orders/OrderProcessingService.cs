@@ -506,7 +506,7 @@ namespace Nop.Services.Orders
             details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
 
             //shipping info
-            if (_shoppingCartService.ShoppingCartRequiresShipping(details.Cart))
+            if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(details.Cart))
             {
                 var pickupPoint = await _genericAttributeService.GetAttributeAsync<PickupPoint>(details.Customer,
                     NopCustomerDefaults.SelectedPickupPointAttribute, processPaymentRequest.StoreId);
@@ -762,7 +762,7 @@ namespace Nop.Services.Orders
                 CustomerId = details.Customer.Id,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
-                CustomerIp = await _webHelper.GetCurrentIpAddressAsync(),
+                CustomerIp = _webHelper.GetCurrentIpAddress(),
                 OrderSubtotalInclTax = details.OrderSubTotalInclTax,
                 OrderSubtotalExclTax = details.OrderSubTotalExclTax,
                 OrderSubTotalDiscountInclTax = details.OrderSubTotalDiscountInclTax,
@@ -1241,7 +1241,7 @@ namespace Nop.Services.Orders
             };
             await _orderService.InsertRecurringPaymentAsync(rp);
 
-            switch (_paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName))
+            switch (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName))
             {
                 case RecurringPaymentType.NotSupported:
                     //not supported
@@ -1386,8 +1386,8 @@ namespace Nop.Services.Orders
             if (await IsPaymentWorkflowRequiredAsync(details.Cart))
             {
                 var customer = await _customerService.GetCustomerByIdAsync(processPaymentRequest.CustomerId);
-                var paymentMethod = _paymentPluginManager
-                    .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
+                var paymentMethod = await _paymentPluginManager
+                    .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                     ?? throw new NopException("Payment method couldn't be loaded");
 
                 //ensure that payment method is active
@@ -1397,7 +1397,7 @@ namespace Nop.Services.Orders
                 if (details.IsRecurringShoppingCart)
                 {
                     //recurring cart
-                    switch (_paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName))
+                    switch (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName))
                     {
                         case RecurringPaymentType.NotSupported:
                             throw new NopException("Recurring payments are not supported by selected payment method");
@@ -1827,8 +1827,8 @@ namespace Nop.Services.Orders
                 var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
                 if (!skipPaymentWorkflow)
                 {
-                    var paymentMethod = _paymentPluginManager
-                        .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, initialOrder.StoreId)
+                    var paymentMethod = await _paymentPluginManager
+                        .LoadPluginBySystemNameAsync(processPaymentRequest.PaymentMethodSystemName, customer, initialOrder.StoreId)
                         ?? throw new NopException("Payment method couldn't be loaded");
 
                     if (!_paymentPluginManager.IsPluginActive(paymentMethod))
@@ -1853,7 +1853,7 @@ namespace Nop.Services.Orders
                     }
 
                     //payment type
-                    processPaymentResult = (_paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName)) switch
+                    processPaymentResult = (await _paymentService.GetRecurringPaymentTypeAsync(processPaymentRequest.PaymentMethodSystemName)) switch
                     {
                         RecurringPaymentType.NotSupported => throw new NopException("Recurring payments are not supported by selected payment method"),
                         RecurringPaymentType.Manual => await _paymentService.ProcessRecurringPaymentAsync(processPaymentRequest),
@@ -2105,7 +2105,7 @@ namespace Nop.Services.Orders
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            if (!recurringPayment.LastPaymentFailed || _paymentService.GetRecurringPaymentType(order.PaymentMethodSystemName) != RecurringPaymentType.Manual)
+            if (!recurringPayment.LastPaymentFailed || await _paymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName) != RecurringPaymentType.Manual)
                 return false;
 
             if (orderCustomer == null || (!await _customerService.IsAdminAsync(customer) && orderCustomer.Id != customer.Id))
@@ -2335,7 +2335,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether capture from admin panel is allowed</returns>
-        public virtual bool CanCapture(Order order)
+        public virtual async Task<bool> CanCaptureAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -2345,7 +2345,7 @@ namespace Nop.Services.Orders
                 return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
-                _paymentService.SupportCapture(order.PaymentMethodSystemName))
+                await _paymentService.SupportCaptureAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2361,7 +2361,7 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            if (!CanCapture(order))
+            if (!await CanCaptureAsync(order))
                 throw new NopException("Cannot do capture for order.");
 
             var request = new CapturePaymentRequest();
@@ -2472,7 +2472,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        public virtual bool CanRefund(Order order)
+        public virtual async Task<bool> CanRefundAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -2489,7 +2489,7 @@ namespace Nop.Services.Orders
             //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Paid &&
-                _paymentService.SupportRefund(order.PaymentMethodSystemName))
+                await _paymentService.SupportRefundAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2505,7 +2505,7 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            if (!CanRefund(order))
+            if (!await CanRefundAsync(order))
                 throw new NopException("Cannot do refund for order.");
 
             var request = new RefundPaymentRequest();
@@ -2649,7 +2649,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="amountToRefund">Amount to refund</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
-        public virtual bool CanPartiallyRefund(Order order, decimal amountToRefund)
+        public virtual async Task<bool> CanPartiallyRefundAsync(Order order, decimal amountToRefund)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -2670,7 +2670,7 @@ namespace Nop.Services.Orders
 
             if ((order.PaymentStatus == PaymentStatus.Paid ||
                 order.PaymentStatus == PaymentStatus.PartiallyRefunded) &&
-                _paymentService.SupportPartiallyRefund(order.PaymentMethodSystemName))
+                await _paymentService.SupportPartiallyRefundAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2687,7 +2687,7 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            if (!CanPartiallyRefund(order, amountToRefund))
+            if (!await CanPartiallyRefundAsync(order, amountToRefund))
                 throw new NopException("Cannot do partial refund for order.");
 
             var request = new RefundPaymentRequest();
@@ -2836,7 +2836,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether async Task from admin panel is allowed</returns>
-        public virtual bool CanVoid(Order order)
+        public virtual async Task<bool> CanVoidAsync(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
@@ -2849,7 +2849,7 @@ namespace Nop.Services.Orders
             //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
-                _paymentService.SupportVoid(order.PaymentMethodSystemName))
+                await _paymentService.SupportVoidAsync(order.PaymentMethodSystemName))
                 return true;
 
             return false;
@@ -2865,7 +2865,7 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            if (!CanVoid(order))
+            if (!await CanVoidAsync(order))
                 throw new NopException("Cannot do async Task for order.");
 
             var request = new VoidPaymentRequest();

@@ -90,9 +90,9 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected virtual DataConnection CreateDataConnection()
+        protected virtual async Task<DataConnection> CreateDataConnection()
         {
-            return CreateDataConnection(LinqToDbDataProvider);
+            return await CreateDataConnection(LinqToDbDataProvider);
         }
 
         /// <summary>
@@ -100,34 +100,46 @@ namespace Nop.Data
         /// </summary>
         /// <param name="dataProvider">Data provider</param>
         /// <returns>Database connection</returns>
-        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
+        protected virtual async Task<DataConnection> CreateDataConnection(IDataProvider dataProvider)
         {
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
 
-            var dataContext = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+            var dataContext = new DataConnection(dataProvider, await CreateDbConnectionAsync(), GetMappingSchema())
             {
-                CommandTimeout = DataSettingsManager.SQLCommandTimeout
+                CommandTimeout = await DataSettingsManager.GetSqlCommandTimeoutAsync()
             };
 
             return dataContext;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Creates a connection to a database
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public virtual IDbConnection CreateDbConnection(string connectionString = null)
+        protected virtual async Task<IDbConnection> CreateDbConnectionAsync(string connectionString = null)
         {
-            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : await GetCurrentConnectionStringAsync());
 
             return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
         }
+
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        protected virtual IDbConnection CreateDbConnection(string connectionString = null)
+        {
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
+
+            return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Returns mapped entity descriptor.
@@ -145,9 +157,21 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
+        public virtual async Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
+        {
+            return new DataContext(LinqToDbDataProvider, await GetCurrentConnectionStringAsync()) { MappingSchema = GetMappingSchema() }
+                .GetTable<TEntity>();
+        }
+
+        /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
         public virtual ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = GetMappingSchema() }
+            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString()) { MappingSchema = GetMappingSchema() }
                 .GetTable<TEntity>();
         }
 
@@ -159,7 +183,7 @@ namespace Nop.Data
         /// <returns>Inserted entity</returns>
         public async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
         }
@@ -172,7 +196,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             await dataContext.UpdateAsync(entity);
         }
 
@@ -184,7 +208,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             await dataContext.DeleteAsync(entity);
         }
 
@@ -195,7 +219,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             if (entities.All(entity => entity.Id == 0))
                 foreach (var entity in entities)
                     await dataContext.DeleteAsync(entity);
@@ -212,7 +236,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             await dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .DeleteAsync();
@@ -225,7 +249,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            await using var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            using var dataContext = await CreateDataConnection(LinqToDbDataProvider);
             dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
@@ -237,7 +261,7 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public async Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters)
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
             var affectedRecords = await command.ExecuteAsync();
 
@@ -256,7 +280,7 @@ namespace Nop.Data
         /// <returns>Resulting value</returns>
         public async Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
 
             var result = await command.ExecuteProcAsync<T>();
@@ -274,7 +298,7 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         public async Task<int> ExecuteStoredProcedureAsync(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
 
             var affectedRecords = await command.ExecuteProcAsync();
@@ -293,7 +317,7 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         public async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            await using var dataContext = CreateDataConnection();
+            await using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
             UpdateOutputParameters(dataContext, parameters);
@@ -309,7 +333,7 @@ namespace Nop.Data
         /// <returns>Collection of values of specified type</returns>
         public async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
-            await using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
 
@@ -331,7 +355,18 @@ namespace Nop.Data
         /// <summary>
         /// Database connection string
         /// </summary>
-        protected string CurrentConnectionString => DataSettingsManager.LoadSettingsAsync().Result.ConnectionString;
+        protected async Task<string> GetCurrentConnectionStringAsync()
+        {
+            return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
+        }
+
+        /// <summary>
+        /// Database connection string
+        /// </summary>
+        protected string GetCurrentConnectionString()
+        {
+            return DataSettingsManager.LoadSettings().ConnectionString;
+        }
 
         /// <summary>
         /// Name of database provider

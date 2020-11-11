@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Boards");
 
             var topics = await _forumService.GetActiveTopicsAsync(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, await _webHelper.GetCurrentRequestProtocolAsync());
+            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.GetCurrentRequestProtocol());
 
             var feedTitle = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = await _localizationService.GetResourceAsync("Forum.ActiveDiscussionsFeedDescription");
@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, await _webHelper.GetCurrentRequestProtocolAsync());
+                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
                 var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
@@ -117,7 +117,7 @@ namespace Nop.Web.Controllers
             }
             feed.Items = items;
 
-            return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
         public virtual async Task<IActionResult> ForumGroup(int id)
@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
                 var topics = await _forumService.GetAllTopicsAsync(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, await _webHelper.GetCurrentRequestProtocolAsync());
+                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.GetCurrentRequestProtocol());
 
                 var feedTitle = await _localizationService.GetResourceAsync("Forum.ForumFeedTitle");
                 var feedDescription = await _localizationService.GetResourceAsync("Forum.ForumFeedDescription");
@@ -183,7 +183,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, await _webHelper.GetCurrentRequestProtocolAsync());
+                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = await _forumService.GetTopicSeNameAsync(topic) }, _webHelper.GetCurrentRequestProtocol());
                     var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{(await _storeContext.GetCurrentStoreAsync()).Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -191,10 +191,10 @@ namespace Nop.Web.Controllers
 
                 feed.Items = items;
 
-                return new RssActionResult(feed, await _webHelper.GetThisPageUrlAsync(false));
+                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
             }
 
-            return new RssActionResult(new RssFeed(new Uri(await _webHelper.GetStoreLocationAsync())), await _webHelper.GetThisPageUrlAsync(false));
+            return new RssActionResult(new RssFeed(new Uri(_webHelper.GetStoreLocation())), _webHelper.GetThisPageUrl(false));
         }
 
         [HttpPost]
@@ -422,7 +422,7 @@ namespace Nop.Web.Controllers
                         text = text.Substring(0, maxPostLength);
 
                     var topicType = ForumTopicType.Normal;
-                    var ipAddress = await _webHelper.GetCurrentIpAddressAsync();
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
                     var nowUtc = DateTime.UtcNow;
 
                     if (await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -551,7 +551,7 @@ namespace Nop.Web.Controllers
                         text = text.Substring(0, maxPostLength);
 
                     var topicType = ForumTopicType.Normal;
-                    var ipAddress = await _webHelper.GetCurrentIpAddressAsync();
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
                     var nowUtc = DateTime.UtcNow;
 
                     if (await _forumService.IsCustomerAllowedToSetTopicPriorityAsync(await _workContext.GetCurrentCustomerAsync()))
@@ -715,7 +715,7 @@ namespace Nop.Web.Controllers
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                         text = text.Substring(0, maxPostLength);
 
-                    var ipAddress = await _webHelper.GetCurrentIpAddressAsync();
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
 
                     var nowUtc = DateTime.UtcNow;
 

@@ -42,7 +42,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData)
         {
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return Content(string.Empty);
 
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))

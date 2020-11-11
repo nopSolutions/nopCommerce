@@ -10,14 +10,14 @@ namespace Nop.Web.Validators.Common
     {
         public ContactUsValidator(ILocalizationService localizationService, CommonSettings commonSettings)
         {
-            RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactUs.Email.Required").Result);
-            RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResourceAsync("Common.WrongEmail").Result);
-            RuleFor(x => x.FullName).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactUs.FullName.Required").Result);
+            RuleFor(x => x.Email).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactUs.Email.Required"));
+            RuleFor(x => x.Email).EmailAddress().WithMessageAwait(localizationService.GetResourceAsync("Common.WrongEmail"));
+            RuleFor(x => x.FullName).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactUs.FullName.Required"));
             if (commonSettings.SubjectFieldOnContactUsForm)
             {
-                RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactUs.Subject.Required").Result);
+                RuleFor(x => x.Subject).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactUs.Subject.Required"));
             }
-            RuleFor(x => x.Enquiry).NotEmpty().WithMessage(localizationService.GetResourceAsync("ContactUs.Enquiry.Required").Result);
+            RuleFor(x => x.Enquiry).NotEmpty().WithMessageAwait(localizationService.GetResourceAsync("ContactUs.Enquiry.Required"));
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //check whether we store IP addresses
@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //get current IP address
-                var currentIpAddress = await _webHelper.GetCurrentIpAddressAsync();
+                var currentIpAddress = _webHelper.GetCurrentIpAddress();
 
                 if (string.IsNullOrEmpty(currentIpAddress))
                     return;

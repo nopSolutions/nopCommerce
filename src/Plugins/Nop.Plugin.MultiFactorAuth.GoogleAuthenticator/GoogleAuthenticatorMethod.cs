@@ -133,16 +133,21 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator
             await base.UninstallAsync();
         }
 
+        /// <summary>
+        /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
+        /// </summary>
+        public async Task<string> GetDescriptionAsync()
+        {
+            return await _localizationService
+                .GetResourceAsync(
+                    "Plugins.MultiFactorAuth.GoogleAuthenticator.MultiFactorAuthenticationMethodDescription");
+        }
+
         #endregion
 
         #region Properies
 
         public MultiFactorAuthenticationType Type => MultiFactorAuthenticationType.ApplicationVerification;
-
-        /// <summary>
-        /// Gets a multi-factor authentication method description that will be displayed on customer info pages in the public store
-        /// </summary>
-        public string Description => _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.MultiFactorAuthenticationMethodDescription").Result;
 
         #endregion
     }

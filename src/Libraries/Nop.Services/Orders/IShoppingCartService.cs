@@ -44,7 +44,7 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart </param>
         /// <param name="product">Product</param>
         /// <returns>Result</returns>
-        IEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product);
+        IAsyncEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product);
 
         //TODO: may be deleted from interface
         /// <summary>
@@ -219,7 +219,7 @@ namespace Nop.Services.Orders
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <returns>Found shopping cart item</returns>
-        ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
+        Task<ShoppingCartItem> FindShoppingCartItemInTheCartAsync(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             Product product,
             string attributesXml = "",
@@ -278,7 +278,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <returns>True if the shopping cart requires shipping; otherwise, false.</returns>
-        bool ShoppingCartRequiresShipping(IList<ShoppingCartItem> shoppingCart);
+        Task<bool> ShoppingCartRequiresShippingAsync(IList<ShoppingCartItem> shoppingCart);
 
         /// <summary>
         /// Gets a value indicating whether shopping cart is recurring

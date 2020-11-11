@@ -156,7 +156,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        private TResult HandleCheckoutRequest<TRequest, TResult>(PayPalSmartPaymentButtonsSettings settings, TRequest request)
+        private async Task<TResult> HandleCheckoutRequestAsync<TRequest, TResult>(PayPalSmartPaymentButtonsSettings settings, TRequest request)
             where TRequest : HttpRequest where TResult : class
         {
             //prepare common request params
@@ -169,14 +169,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 ? new SandboxEnvironment(settings.ClientId, settings.SecretKey) as PayPalEnvironment
                 : new LiveEnvironment(settings.ClientId, settings.SecretKey) as PayPalEnvironment;
             var client = new PayPalHttpClient(environment);
-            var response = client.Execute(request)
+            var response = await client.Execute(request)
                 ?? throw new NopException("No response from the service.");
 
             //return the results if necessary
             if (typeof(TResult) == typeof(object))
                 return default;
 
-            var result = response.Result?.Result<TResult>()
+            var result = response.Result<TResult>()
                 ?? throw new NopException("No response from the service.");
 
             return result;
@@ -190,7 +190,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <param name="settings">Plugin settings</param>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        private TResult HandleCoreRequest<TRequest, TResult>(PayPalSmartPaymentButtonsSettings settings, TRequest request)
+        private async Task<TResult> HandleCoreRequestAsync<TRequest, TResult>(PayPalSmartPaymentButtonsSettings settings, TRequest request)
             where TRequest : BraintreeHttp.HttpRequest where TResult : class
         {
             //prepare common request params
@@ -203,14 +203,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 ? new PayPal.Core.SandboxEnvironment(settings.ClientId, settings.SecretKey) as PayPal.Core.PayPalEnvironment
                 : new PayPal.Core.LiveEnvironment(settings.ClientId, settings.SecretKey) as PayPal.Core.PayPalEnvironment;
             var client = new PayPal.Core.PayPalHttpClient(environment);
-            var response = client.Execute(request)
+            var response = await client.Execute(request)
                 ?? throw new NopException("No response from the service.");
 
             //return the results if necessary
             if (typeof(TResult) == typeof(object))
                 return default;
 
-            var result = response.Result?.Result<TResult>()
+            var result = response.Result<TResult>()
                 ?? throw new NopException("No response from the service.");
 
             return result;
@@ -350,12 +350,12 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
 
                 //set order items
                 var itemTotal = decimal.Zero;
-                purchaseUnit.Items = shoppingCart.Select(item =>
+                purchaseUnit.Items = await shoppingCart.ToAsyncEnumerable().SelectAwait(async item =>
                 {
-                    var product = _productService.GetProductByIdAsync(item.ProductId).Result;
+                    var product = await _productService.GetProductByIdAsync(item.ProductId);
 
-                    var itemPrice = Math.Round(_taxService.GetProductPriceAsync(product,
-                        _shoppingCartService.GetUnitPriceAsync(item, true).Result.unitPrice, false, _workContext.GetCurrentCustomerAsync().Result).Result.price, 2);
+                    var itemPrice = Math.Round((await _taxService.GetProductPriceAsync(product,
+                       (await _shoppingCartService.GetUnitPriceAsync(item, true)).unitPrice, false, await _workContext.GetCurrentCustomerAsync())).price, 2);
                     itemTotal += itemPrice * item.Quantity;
                     return new Item
                     {
@@ -367,15 +367,15 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                             .ToString().ToUpper(),
                         UnitAmount = new PayPalCheckoutSdk.Orders.Money { CurrencyCode = currency, Value = itemPrice.ToString("0.00", CultureInfo.InvariantCulture) }
                     };
-                }).ToList();
+                }).ToListAsync();
 
                 //add checkout attributes as order items
                 var checkoutAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(await _genericAttributeService
                     .GetAttributeAsync<string>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CheckoutAttributes, (await _storeContext.GetCurrentStoreAsync()).Id));
 
-                foreach (var (attribute, values) in checkoutAttributeValues)
+                await foreach (var (attribute, values) in checkoutAttributeValues)
                 {
-                    foreach (var attributeValue in values)
+                    await foreach (var attributeValue in values)
                     {
                         var (attributePrice, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, await _workContext.GetCurrentCustomerAsync());
                         var roundedAttributePrice = Math.Round(attributePrice, 2);
@@ -410,7 +410,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 orderDetails.PurchaseUnits = new List<PurchaseUnitRequest> { purchaseUnit };
 
                 var orderRequest = new OrdersCreateRequest().RequestBody(orderDetails);
-                return HandleCheckoutRequest<OrdersCreateRequest, Order>(settings, orderRequest);
+                return await HandleCheckoutRequestAsync<OrdersCreateRequest, Order>(settings, orderRequest);
             });
         }
 
@@ -422,11 +422,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <returns>Authorized order; error message if exists</returns>
         public async Task<(Order Order, string ErrorMessage)> AuthorizeAsync(PayPalSmartPaymentButtonsSettings settings, string orderId)
         {
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var request = new OrdersAuthorizeRequest(orderId).RequestBody(new AuthorizeRequest());
 
-                return Task.FromResult(HandleCheckoutRequest<OrdersAuthorizeRequest, Order>(settings, request));
+                return await HandleCheckoutRequestAsync<OrdersAuthorizeRequest, Order>(settings, request);
             });
         }
 
@@ -438,11 +438,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <returns>Captured order; error message if exists</returns>
         public async Task<(Order Order, string ErrorMessage)> CaptureAsync(PayPalSmartPaymentButtonsSettings settings, string orderId)
         {
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var request = new OrdersCaptureRequest(orderId).RequestBody(new OrderActionRequest());
 
-                return Task.FromResult(HandleCheckoutRequest<OrdersCaptureRequest, Order>(settings, request));
+                return await HandleCheckoutRequestAsync<OrdersCaptureRequest, Order>(settings, request);
             });
         }
 
@@ -455,11 +455,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         public async Task<(PayPalCheckoutSdk.Payments.Capture Capture, string ErrorMessage)> CaptureAuthorizationAsync
             (PayPalSmartPaymentButtonsSettings settings, string authorizationId)
         {
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var request = new AuthorizationsCaptureRequest(authorizationId).RequestBody(new CaptureRequest());
 
-                return Task.FromResult(HandleCheckoutRequest<AuthorizationsCaptureRequest, PayPalCheckoutSdk.Payments.Capture>(settings, request));
+                return await HandleCheckoutRequestAsync<AuthorizationsCaptureRequest, PayPalCheckoutSdk.Payments.Capture>(settings, request);
             });
         }
 
@@ -471,11 +471,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <returns>Voided order; Error message if exists</returns>
         public async Task<(object Order, string ErrorMessage)> VoidAsync(PayPalSmartPaymentButtonsSettings settings, string authorizationId)
         {
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var request = new AuthorizationsVoidRequest(authorizationId);
 
-                return Task.FromResult(HandleCheckoutRequest<AuthorizationsVoidRequest, object>(settings, request));
+                return await HandleCheckoutRequestAsync<AuthorizationsVoidRequest, object>(settings, request);
             });
         }
 
@@ -490,14 +490,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         public async Task<(PayPalCheckoutSdk.Payments.Refund refund, string errorMessage)> RefundAsync
             (PayPalSmartPaymentButtonsSettings settings, string captureId, string currency, decimal? amount = null)
         {
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var refundRequest = new RefundRequest();
                 if (amount.HasValue)
                     refundRequest.Amount = new PayPalCheckoutSdk.Payments.Money { CurrencyCode = currency, Value = amount.Value.ToString("0.00", CultureInfo.InvariantCulture) };
                 var request = new CapturesRefundRequest(captureId).RequestBody(refundRequest);
                 
-                return Task.FromResult(HandleCheckoutRequest<CapturesRefundRequest, PayPalCheckoutSdk.Payments.Refund>(settings, request));
+                return await HandleCheckoutRequestAsync<CapturesRefundRequest, PayPalCheckoutSdk.Payments.Refund>(settings, request);
             });
         }
 
@@ -509,14 +509,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         public async Task<(AccessToken AccessToken, string ErrorMessage)> GetAccessTokenAsync(PayPalSmartPaymentButtonsSettings settings)
         {
             //try to get access token
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 var environment = settings.UseSandbox
                     ? new SandboxEnvironment(settings.ClientId, settings.SecretKey) as PayPalEnvironment
                     : new LiveEnvironment(settings.ClientId, settings.SecretKey) as PayPalEnvironment;
                 var request = new AccessTokenRequest(environment);
 
-                return Task.FromResult(HandleCheckoutRequest<AccessTokenRequest, AccessToken>(settings, request));
+                return await HandleCheckoutRequestAsync<AccessTokenRequest, AccessToken>(settings, request);
             });
         }
 
@@ -528,19 +528,19 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         /// <returns>Webhook; error message if exists</returns>
         public async Task<(Webhook webhook, string errorMessage)> CreateWebHookAsync(PayPalSmartPaymentButtonsSettings settings, string url)
         {
-            return await HandleFunctionAsync(settings, () =>
+            return await HandleFunctionAsync(settings, async () =>
             {
                 //check whether webhook already exists
-                var webhooks = HandleCoreRequest<WebhookListRequest, WebhookList>(settings, new WebhookListRequest());
+                var webhooks = await HandleCoreRequestAsync<WebhookListRequest, WebhookList>(settings, new WebhookListRequest());
                 if (!string.IsNullOrEmpty(settings.WebhookId))
                 {
                     var webhookById = webhooks?.Webhooks?.FirstOrDefault(webhook => webhook.Id.Equals(settings.WebhookId));
                     if (webhookById != null)
-                        return Task.FromResult(webhookById);
+                        return webhookById;
                 }
                 var webhookByUrl = webhooks?.Webhooks?.FirstOrDefault(webhook => webhook.Url.Equals(url, StringComparison.InvariantCultureIgnoreCase));
                 if (webhookByUrl != null)
-                    return Task.FromResult(webhookByUrl);
+                    return webhookByUrl;
 
                 //or try to create the new one if doesn't exist
                 var request = new WebhookCreateRequest().RequestBody(new Webhook
@@ -549,7 +549,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                     Url = url
                 });
 
-                return Task.FromResult(HandleCoreRequest<WebhookCreateRequest, Webhook>(settings, request));
+                return await HandleCoreRequestAsync<WebhookCreateRequest, Webhook>(settings, request);
             });
         }
 
@@ -563,7 +563,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
             {
                 var request = new WebhookDeleteRequest(settings.WebhookId);
 
-                return Task.FromResult(HandleCoreRequest<WebhookDeleteRequest, object>(settings, request));
+                return Task.FromResult(HandleCoreRequestAsync<WebhookDeleteRequest, object>(settings, request));
             });
         }
 
@@ -596,7 +596,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                         WebhookId = settings.WebhookId,
                         WebhookEvent = webhookEvent
                     });
-                    var result = HandleCoreRequest<WebhookVerifySignatureRequest<TResource>, VerifyWebhookSignatureResponse>(settings, verifyRequest);
+                    var result = HandleCoreRequestAsync<WebhookVerifySignatureRequest<TResource>, VerifyWebhookSignatureResponse>(settings, verifyRequest);
 
                     // This would be hard to always get it to success, as the result is dependent on time of webhook sent.
                     // As long as we get a 200 response, we should be fine.

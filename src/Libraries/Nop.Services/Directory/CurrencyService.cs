@@ -95,9 +95,9 @@ namespace Nop.Services.Directory
 
             //store mapping
             if (storeId > 0)
-                currencies = currencies
-                    .Where(c => _storeMappingService.AuthorizeAsync(c, storeId).Result)
-                    .ToList();
+                currencies = await currencies.ToAsyncEnumerable()
+                    .WhereAwait(async c => await _storeMappingService.AuthorizeAsync(c, storeId))
+                    .ToListAsync();
 
             return currencies;
         }
@@ -131,7 +131,7 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rates</returns>
         public virtual async Task<IList<ExchangeRate>> GetCurrencyLiveRatesAsync(string currencyCode = null)
         {
-            var exchangeRateProvider = _exchangeRatePluginManager.LoadPrimaryPlugin()
+            var exchangeRateProvider = await _exchangeRatePluginManager.LoadPrimaryPluginAsync()
                 ?? throw new Exception("Active exchange rate provider cannot be loaded");
 
             currencyCode ??= (await GetCurrencyByIdAsync(_currencySettings.PrimaryExchangeRateCurrencyId))?.CurrencyCode

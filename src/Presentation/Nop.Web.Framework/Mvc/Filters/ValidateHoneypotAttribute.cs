@@ -69,7 +69,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsManager.DatabaseIsInstalled)
+                if (!await DataSettingsManager.IsDatabaseInstalledAsync())
                     return;
 
                 //whether honeypot is enabled
@@ -86,7 +86,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     await _logger.WarningAsync("A bot detected. Honeypot.");
 
                     //and redirect to the original page
-                    var page = await _webHelper.GetThisPageUrlAsync(true);
+                    var page = _webHelper.GetThisPageUrl(true);
                     context.Result = new RedirectResult(page);
                 }
             }

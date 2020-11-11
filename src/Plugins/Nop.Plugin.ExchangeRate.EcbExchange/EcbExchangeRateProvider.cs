@@ -64,7 +64,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             try
             {
                 var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
-                var stream = httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml").Result;
+                var stream = await httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
 
                 //load XML document
                 var document = new XmlDocument();

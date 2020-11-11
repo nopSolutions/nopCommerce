@@ -104,7 +104,7 @@
                             <span asp-validation-for="@Model.AddRewardPoints.ActivationDelay"></span>
                         </div>
                         <div class="col-md-3">
-                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
+                            <nop-select asp-for="@Model.AddRewardPoints.ActivationDelayPeriodId" asp-items="@await (((RewardPointsActivatingDelayPeriod) Model.AddRewardPoints.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
                             <span asp-validation-for="@Model.AddRewardPoints.ActivationDelayPeriodId"></span>
                         </div>
                     </div>

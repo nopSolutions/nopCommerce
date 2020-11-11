@@ -35,7 +35,7 @@ namespace Nop.Data
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
                 // set accessor for the connection string
-                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettingsAsync().Result)
+                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopConventionSet>()
                 .ConfigureRunner(rb =>

@@ -83,7 +83,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public async Task<IActionResult> List(StorePickupPointSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare model
             var model = await _storePickupPointModelFactory.PrepareStorePickupPointListModelAsync(searchModel);

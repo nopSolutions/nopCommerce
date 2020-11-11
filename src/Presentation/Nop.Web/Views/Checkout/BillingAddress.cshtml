@@ -10,7 +10,7 @@
     //scripts
     Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.billingaddress.js");
 
-    var storeLocation = webHelper.GetStoreLocationAsync();
+    var storeLocation = webHelper.GetStoreLocation();
 
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);

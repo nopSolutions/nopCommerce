@@ -171,12 +171,12 @@ namespace Nop.Services.Topics
                 }
 
                 return query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
-            }, cache =>
+            }, async cache =>
             {
                 return ignorAcl
                     ? cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu)
                     : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu,
-                        _customerService.GetCustomerRoleIdsAsync(_workContext.GetCurrentCustomerAsync().Result));
+                        await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()));
             });
         }
 

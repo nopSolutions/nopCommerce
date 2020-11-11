@@ -69,7 +69,7 @@ namespace Nop.Web.Controllers
             // use Request.RawUrl, for instance to parse out what was invoked
             // this regex will extract anything between a "/" and a ".aspx"
             var regex = new Regex(@"(?<=/).+(?=\.aspx)", RegexOptions.Compiled);
-            var rawUrl = await _webHelper.GetRawUrlAsync(HttpContext.Request);
+            var rawUrl = _webHelper.GetRawUrl(HttpContext.Request);
             var aspxfileName = regex.Match(rawUrl).Value.ToLowerInvariant();
 
             switch (aspxfileName)
@@ -77,35 +77,35 @@ namespace Nop.Web.Controllers
                 //URL without rewriting
                 case "product":
                     {
-                        return await RedirectProduct(await _webHelper.QueryStringAsync<string>("productid"), false);
+                        return await RedirectProduct(_webHelper.QueryString<string>("productid"), false);
                     }
                 case "category":
                     {
-                        return await RedirectCategory(await _webHelper.QueryStringAsync<string>("categoryid"), false);
+                        return await RedirectCategory(_webHelper.QueryString<string>("categoryid"), false);
                     }
                 case "manufacturer":
                     {
-                        return await RedirectManufacturer(await _webHelper.QueryStringAsync<string>("manufacturerid"), false);
+                        return await RedirectManufacturer(_webHelper.QueryString<string>("manufacturerid"), false);
                     }
                 case "producttag":
                     {
-                        return await RedirectProductTag(await _webHelper.QueryStringAsync<string>("tagid"), false);
+                        return await RedirectProductTag(_webHelper.QueryString<string>("tagid"), false);
                     }
                 case "news":
                     {
-                        return await RedirectNewsItem(await _webHelper.QueryStringAsync<string>("newsid"), false);
+                        return await RedirectNewsItem(_webHelper.QueryString<string>("newsid"), false);
                     }
                 case "blog":
                     {
-                        return await RedirectBlogPost(await _webHelper.QueryStringAsync<string>("blogpostid"), false);
+                        return await RedirectBlogPost(_webHelper.QueryString<string>("blogpostid"), false);
                     }
                 case "topic":
                     {
-                        return await RedirectTopic(await _webHelper.QueryStringAsync<string>("topicid"), false);
+                        return await RedirectTopic(_webHelper.QueryString<string>("topicid"), false);
                     }
                 case "profile":
                     {
-                        return await RedirectUserProfile(await _webHelper.QueryStringAsync<string>("UserId"));
+                        return await RedirectUserProfile(_webHelper.QueryString<string>("UserId"));
                     }
                 case "compareproducts":
                     {

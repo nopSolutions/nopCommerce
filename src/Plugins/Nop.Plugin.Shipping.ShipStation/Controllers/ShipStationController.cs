@@ -54,12 +54,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
                 ApiSecret = shipStationSettings.ApiSecret,
                 PackingPackageVolume = shipStationSettings.PackingPackageVolume,
                 PackingType = Convert.ToInt32(shipStationSettings.PackingType),
-                PackingTypeValues = shipStationSettings.PackingType.ToSelectList(),
+                PackingTypeValues = await shipStationSettings.PackingType.ToSelectList(),
                 PassDimensions = shipStationSettings.PassDimensions,
                 ActiveStoreScopeConfiguration = storeScope,
                 UserName = shipStationSettings.UserName,
                 Password = shipStationSettings.Password,
-                WebhookURL = $"{await _webHelper.GetStoreLocationAsync()}Plugins/ShipStation/Webhook"
+                WebhookURL = $"{_webHelper.GetStoreLocation()}Plugins/ShipStation/Webhook"
             };
 
             if (storeScope <= 0)
@@ -118,8 +118,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
 
         public async Task<IActionResult> Webhook()
         {
-            var userName = await _webHelper.QueryStringAsync<string>("SS-UserName");
-            var password = await _webHelper.QueryStringAsync<string>("SS-Password");
+            var userName = _webHelper.QueryString<string>("SS-UserName");
+            var password = _webHelper.QueryString<string>("SS-Password");
 
             //load settings for a chosen store scope
             var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
@@ -128,15 +128,15 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             if (!userName.Equals(shipStationSettings.UserName) || !password.Equals(shipStationSettings.Password))
                 return Content(string.Empty);
 
-            var action = await _webHelper.QueryStringAsync<string>("action") ?? string.Empty;
+            var action = _webHelper.QueryString<string>("action") ?? string.Empty;
 
             if (Request.Method == WebRequestMethods.Http.Post &&
                 action.Equals("shipnotify", StringComparison.InvariantCultureIgnoreCase))
             {
-                var orderNumber = await _webHelper.QueryStringAsync<string>("order_number");
-                var carrier = await _webHelper.QueryStringAsync<string>("carrier");
-                var service = await _webHelper.QueryStringAsync<string>("service");
-                var trackingNumber = await _webHelper.QueryStringAsync<string>("tracking_number");
+                var orderNumber = _webHelper.QueryString<string>("order_number");
+                var carrier = _webHelper.QueryString<string>("carrier");
+                var service = _webHelper.QueryString<string>("service");
+                var trackingNumber = _webHelper.QueryString<string>("tracking_number");
 
                 await _shipStationService.CreateOrUpdateShippingAsync(orderNumber, carrier, service, trackingNumber);
 
@@ -147,9 +147,9 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             if (!action.Equals("export", StringComparison.InvariantCultureIgnoreCase))
                 return Content(string.Empty);
 
-            var startDateParam = await _webHelper.QueryStringAsync<string>("start_date");
-            var endDateParam = await _webHelper.QueryStringAsync<string>("end_date");
-            var pageIndex = await _webHelper.QueryStringAsync<int>("page");
+            var startDateParam = _webHelper.QueryString<string>("start_date");
+            var endDateParam = _webHelper.QueryString<string>("end_date");
+            var pageIndex = _webHelper.QueryString<int>("page");
 
             if (pageIndex > 0)
                 pageIndex -= 1;

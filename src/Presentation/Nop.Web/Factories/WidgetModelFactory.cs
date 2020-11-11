@@ -63,7 +63,7 @@ namespace Nop.Web.Factories
                 roles, await _storeContext.GetCurrentStoreAsync(), widgetZone, await _themeContext.GetWorkingThemeNameAsync());
 
             var cachedModels = await _staticCacheManager.GetAsync(cacheKey, async () =>
-                _widgetPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id, widgetZone)
+                (await _widgetPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id, widgetZone))
                 .Select(widget => new RenderWidgetModel
                 {
                     WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),

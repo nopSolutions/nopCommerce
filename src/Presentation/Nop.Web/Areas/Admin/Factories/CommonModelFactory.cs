@@ -199,8 +199,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //check whether current store URL matches the store configured URL
             var currentStoreUrl = (await _storeContext.GetCurrentStoreAsync()).Url;
             if (!string.IsNullOrEmpty(currentStoreUrl) &&
-                (currentStoreUrl.Equals(await _webHelper.GetStoreLocationAsync(false), StringComparison.InvariantCultureIgnoreCase) ||
-                currentStoreUrl.Equals(await _webHelper.GetStoreLocationAsync(true), StringComparison.InvariantCultureIgnoreCase)))
+                (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase) ||
+                currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)))
             {
                 models.Add(new SystemWarningModel
                 {
@@ -214,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 Level = SystemWarningLevel.Fail,
                 Text = string.Format(await _localizationService.GetResourceAsync("Admin.System.Warnings.URL.NoMatch"),
-                    currentStoreUrl, await _webHelper.GetStoreLocationAsync(false))
+                    currentStoreUrl, _webHelper.GetStoreLocation(false))
             });
         }
 
@@ -404,7 +404,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(models));
 
             //check whether payment methods activated
-            if (_paymentPluginManager.LoadAllPlugins().Any())
+            if ((await _paymentPluginManager.LoadAllPluginsAsync()).Any())
             {
                 models.Add(new SystemWarningModel
                 {
@@ -444,10 +444,10 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var assembly in _pluginService.GetAssemblyCollisions())
             {
                 //get plugin references message
-                var message = assembly.Collisions
-                    .Select(item => string.Format(_localizationService
-                        .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly").Result, item.PluginName, item.AssemblyName))
-                    .Aggregate("", (curent, all) => all + ", " + curent).TrimEnd(',', ' ');
+                var message = (await assembly.Collisions.ToAsyncEnumerable()
+                    .SelectAwait(async item => string.Format(await _localizationService
+                        .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
+                    .AggregateAsync("", (curent, all) => all + ", " + curent)).TrimEnd(',', ' ');
 
                 models.Add(new SystemWarningModel
                 {
@@ -578,7 +578,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Backup file search model</param>
         /// <returns>Backup file search model</returns>
-        protected virtual BackupFileSearchModel PrepareBackupFileSearchModelAsync(BackupFileSearchModel searchModel)
+        protected virtual BackupFileSearchModel PrepareBackupFileSearchModel(BackupFileSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -595,7 +595,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="models">List of system warning models</param>
         protected virtual async Task PreparePluginsEnabledWarningModelAsync(List<SystemWarningModel> models)
         {
-            var plugins = _pluginService.GetPlugins<IPlugin>();
+            var plugins = await _pluginService.GetPluginsAsync<IPlugin>();
 
             var notEnabled = new List<string>();
             var notEnabledSystemNames = new List<string>();
@@ -844,7 +844,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BackupSupported = _dataProvider.BackupSupported;
 
             //prepare nested search model
-            PrepareBackupFileSearchModelAsync(model.BackupFileSearchModel);
+            PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 
             return Task.FromResult(model);
         }
@@ -854,7 +854,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="searchModel">Backup file search model</param>
         /// <returns>Backup file list model</returns>
-        public virtual async Task<BackupFileListModel> PrepareBackupFileListModelAsync(BackupFileSearchModel searchModel)
+        public virtual Task<BackupFileListModel> PrepareBackupFileListModelAsync(BackupFileSearchModel searchModel)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -863,20 +863,20 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = await new BackupFileListModel().PrepareToGridAsync(searchModel, backupFiles, () =>
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, () =>
             {
-                return backupFiles.ToAsyncEnumerable().SelectAwait(async file => new BackupFileModel
+                return backupFiles.Select(file => new BackupFileModel
                 {
                     Name = _fileProvider.GetFileName(file),
 
                     //fill in additional values (not existing in the entity)
                     Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
 
-                    Link = $"{(await _webHelper.GetStoreLocationAsync(false))}db_backups/{_fileProvider.GetFileName(file)}"
+                    Link = $"{(_webHelper.GetStoreLocation(false))}db_backups/{_fileProvider.GetFileName(file)}"
                 });
             });
 
-            return model;
+            return Task.FromResult(model);
         }
 
         /// <summary>

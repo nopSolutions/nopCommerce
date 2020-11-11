@@ -13,16 +13,16 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name.Required").Result);
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name.Required"));
 
             RuleFor(x => x.Quantity)
                 .GreaterThanOrEqualTo(1)
-                .WithMessage(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1").Result)
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1"))
                 .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct && !x.CustomerEntersQty);
 
             RuleFor(x => x.AssociatedProductId)
                 .GreaterThanOrEqualTo(1)
-                .WithMessage(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose").Result)
+                .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose"))
                 .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct);
 
             SetDatabaseValidationRules<ProductAttributeValue>(dataProvider);

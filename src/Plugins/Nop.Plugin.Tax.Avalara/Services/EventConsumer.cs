@@ -88,7 +88,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
@@ -115,7 +115,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
             //ensure that Avalara tax provider is active
             var customer = await _customerService.GetCustomerByIdAsync(eventMessage.Order.CustomerId);
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName, customer, eventMessage.Order.StoreId))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName, customer, eventMessage.Order.StoreId))
                 return;
 
             //create tax transaction
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
             //refund tax transaction
@@ -149,7 +149,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
             //async Task tax transaction
@@ -166,7 +166,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
             //async Task tax transaction
@@ -183,7 +183,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            if (!await _taxPluginManager.IsPluginActiveAsync(AvalaraTaxDefaults.SystemName))
                 return;
 
             //delete tax transaction

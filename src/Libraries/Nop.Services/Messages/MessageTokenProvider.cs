@@ -531,7 +531,7 @@ namespace Nop.Services.Messages
                 //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = _productService.FormatSku(product, orderItem.AttributesXml);
+                    var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
                     if (!string.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
@@ -849,7 +849,7 @@ namespace Nop.Services.Messages
                 //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = _productService.FormatSku(product, orderItem.AttributesXml);
+                    var sku = await _productService.FormatSkuAsync(product, orderItem.AttributesXml);
                     if (!string.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
@@ -982,7 +982,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingCountry", await _countryService.GetCountryByAddressAsync(await orderAddress(order)) is Country orderCountry ? await _localizationService.GetLocalizedAsync(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", await _addressAttributeFormatter.FormatAttributesAsync((await orderAddress(order))?.CustomAttributes ?? string.Empty), true));
 
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
+            var paymentMethod = await _paymentPluginManager.LoadPluginBySystemNameAsync(order.PaymentMethodSystemName);
             var paymentMethodName = paymentMethod != null ? await _localizationService.GetLocalizedFriendlyNameAsync(paymentMethod, (await _workContext.GetWorkingLanguageAsync()).Id) : order.PaymentMethodSystemName;
             tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
             tokens.Add(new Token("Order.VatNumber", order.VatNumber));
@@ -1099,7 +1099,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("RecurringPayment.CancelAfterFailedPayment",
                 recurringPayment.LastPaymentFailed && _paymentSettings.CancelRecurringPaymentsAfterFailedPayment));
             if (await _orderService.GetOrderByIdAsync(recurringPayment.InitialOrderId) is Order order)
-                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentType(order.PaymentMethodSystemName).ToString()));
+                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentTypeAsync(order.PaymentMethodSystemName).ToString()));
 
             //event notification
             await _eventPublisher.EntityTokensAddedAsync(recurringPayment, tokens);
@@ -1324,7 +1324,7 @@ namespace Nop.Services.Messages
                 renderPrices: false);
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
-            tokens.Add(new Token("AttributeCombination.SKU", _productService.FormatSku(await _productService.GetProductByIdAsync(combination.ProductId), combination.AttributesXml)));
+            tokens.Add(new Token("AttributeCombination.SKU", _productService.FormatSkuAsync(await _productService.GetProductByIdAsync(combination.ProductId), combination.AttributesXml)));
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity));
 
             //event notification

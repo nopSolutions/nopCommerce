@@ -387,7 +387,7 @@ namespace Nop.Services.Orders
             var updatedOrder = updateOrderParameters.UpdatedOrder;
             var customer = await _customerService.GetCustomerByIdAsync(updatedOrder.CustomerId);
 
-            if (_shoppingCartService.ShoppingCartRequiresShipping(restoredCart))
+            if (await _shoppingCartService.ShoppingCartRequiresShippingAsync(restoredCart))
             {
                 if (!await IsFreeShippingAsync(restoredCart, _shippingSettings.FreeShippingOverXIncludingTax ? subTotalInclTax : subTotalExclTax))
                 {
@@ -460,7 +460,7 @@ namespace Nop.Services.Orders
                         if (updateOrderParameters.PickupPoint == null)
                         {
                             //or try to get the cheapest shipping option for the shipping to the customer address 
-                            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins();
+                            var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync();
                             if (shippingRateComputationMethods.Any())
                             {
                                 var customerShippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
@@ -489,7 +489,7 @@ namespace Nop.Services.Orders
                     }
 
                     //additional shipping charge
-                    shippingTotal += GetShoppingCartAdditionalShippingCharge(restoredCart);
+                    shippingTotal += await GetShoppingCartAdditionalShippingCharge(restoredCart);
 
                     //shipping discounts
                     var (shippingDiscount, shippingTotalDiscounts) = await GetShippingDiscountAsync(customer, shippingTotal);
@@ -779,9 +779,9 @@ namespace Nop.Services.Orders
                 var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (attributeValues != null)
                 {
-                    foreach (var (attribute, values) in attributeValues)
+                    await foreach (var (attribute, values) in attributeValues)
                     {
-                        foreach (var attributeValue in values)
+                        await foreach (var attributeValue in values)
                         {
                             var (caExclTax, taxRate) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, false, customer);
                             var (caInclTax, _) = await _taxService.GetCheckoutAttributePriceAsync(attribute, attributeValue, true, customer);
@@ -902,9 +902,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Additional shipping charge</returns>
-        public virtual decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
+        public virtual async Task<decimal> GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
         {
-            return cart.Sum(shoppingCartItem => _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem).Result);
+            return await cart.ToAsyncEnumerable().SumAwaitAsync(async shoppingCartItem => await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem));
         }
 
         /// <summary>
@@ -922,7 +922,7 @@ namespace Nop.Services.Orders
                 return true;
 
             //check whether all shopping cart items and their associated products marked as free shipping
-            if (cart.All(shoppingCartItem => _shippingService.IsFreeShippingAsync(shoppingCartItem).Result))
+            if (await cart.ToAsyncEnumerable().AllAwaitAsync(async shoppingCartItem => await _shippingService.IsFreeShippingAsync(shoppingCartItem)))
                 return true;
 
             //free shipping over $X
@@ -966,7 +966,7 @@ namespace Nop.Services.Orders
 
             if (!(applyToPickupInStore && _shippingSettings.AllowPickupInStore && pickupPoint != null && _shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore))
             {
-                adjustedRate += GetShoppingCartAdditionalShippingCharge(cart);
+                adjustedRate += await GetShoppingCartAdditionalShippingCharge(cart);
             }
 
             //discount
@@ -1026,7 +1026,7 @@ namespace Nop.Services.Orders
                 if (customer != null)
                     shippingAddress = await _customerService.GetCustomerShippingAddressAsync(customer);
 
-                var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
+                var shippingRateComputationMethods = await _shippingPluginManager.LoadActivePluginsAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickupInStore)
                     throw new NopException("Shipping rate computation method could not be loaded");
 

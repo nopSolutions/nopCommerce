@@ -54,7 +54,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         public virtual async Task<IActionResult> LogList(TaxTransactionLogSearchModel searchModel)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedDataTablesJson();
+                return await AccessDeniedDataTablesJson();
 
             //prepare filter parameters
             var createdFromValue = searchModel.CreatedFrom.HasValue
