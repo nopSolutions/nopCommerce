@@ -407,13 +407,13 @@ namespace Nop.Web.Controllers
                     var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
                     if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
                     {
-                        subject = subject.Substring(0, maxSubjectLength);
+                        subject = subject[0..maxSubjectLength];
                     }
 
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
-                        text = text.Substring(0, maxPostLength);
+                        text = text[0..maxPostLength];
 
                     var topicType = ForumTopicType.Normal;
                     var ipAddress = _webHelper.GetCurrentIpAddress();
@@ -534,13 +534,13 @@ namespace Nop.Web.Controllers
                     var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
                     if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
                     {
-                        subject = subject.Substring(0, maxSubjectLength);
+                        subject = subject[0..maxSubjectLength];
                     }
 
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
-                        text = text.Substring(0, maxPostLength);
+                        text = text[0..maxPostLength];
 
                     var topicType = ForumTopicType.Normal;
                     var ipAddress = _webHelper.GetCurrentIpAddress();
@@ -704,7 +704,7 @@ namespace Nop.Web.Controllers
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
-                        text = text.Substring(0, maxPostLength);
+                        text = text[0..maxPostLength];
 
                     var ipAddress = _webHelper.GetCurrentIpAddress();
 
@@ -826,7 +826,7 @@ namespace Nop.Web.Controllers
                     var maxPostLength = _forumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                     {
-                        text = text.Substring(0, maxPostLength);
+                        text = text[0..maxPostLength];
                     }
 
                     forumPost.UpdatedOnUtc = nowUtc;

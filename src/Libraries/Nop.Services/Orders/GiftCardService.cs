@@ -185,7 +185,7 @@ namespace Nop.Services.Orders
             var length = 13;
             var result = Guid.NewGuid().ToString();
             if (result.Length > length)
-                result = result.Substring(0, length);
+                result = result[0..length];
             return result;
         }
 

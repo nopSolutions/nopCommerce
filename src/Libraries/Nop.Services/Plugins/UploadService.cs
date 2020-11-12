@@ -233,7 +233,7 @@ namespace Nop.Services.Plugins
                     foreach (var entry in entries)
                     {
                         //get name of the file
-                        var fileName = entry.FullName.Substring(itemPath.Length);
+                        var fileName = entry.FullName[itemPath.Length..];
                         if (string.IsNullOrEmpty(fileName))
                             continue;
                         

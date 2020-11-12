@@ -222,7 +222,7 @@ namespace Nop.Services.Media
                 var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
                 if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
                 {
-                    var subDirectoryName = fileNameWithoutExtension.Substring(0, NopMediaDefaults.MultipleThumbDirectoriesLength);
+                    var subDirectoryName = fileNameWithoutExtension[0..NopMediaDefaults.MultipleThumbDirectoriesLength];
                     thumbsDirectoryPath = _fileProvider.GetAbsolutePath(NopMediaDefaults.ImageThumbsPath, subDirectoryName);
                     _fileProvider.CreateDirectory(thumbsDirectoryPath);
                 }
@@ -268,7 +268,7 @@ namespace Nop.Services.Media
                 var fileNameWithoutExtension = _fileProvider.GetFileNameWithoutExtension(thumbFileName);
                 if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > NopMediaDefaults.MultipleThumbDirectoriesLength)
                 {
-                    var subDirectoryName = fileNameWithoutExtension.Substring(0, NopMediaDefaults.MultipleThumbDirectoriesLength);
+                    var subDirectoryName = fileNameWithoutExtension[0..NopMediaDefaults.MultipleThumbDirectoriesLength];
                     url = url + subDirectoryName + "/";
                 }
             }

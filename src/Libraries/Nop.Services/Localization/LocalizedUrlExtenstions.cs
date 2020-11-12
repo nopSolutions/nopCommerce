@@ -74,7 +74,7 @@ namespace Nop.Services.Localization
 
             //get result URL
             url = url.TrimStart('/');
-            var result = url.Contains('/') ? url.Substring(url.IndexOf('/')) : string.Empty;
+            var result = url.Contains('/') ? url[(url.IndexOf('/'))..] : string.Empty;
 
             //and add back application path to raw URL
             if (isRawPath)

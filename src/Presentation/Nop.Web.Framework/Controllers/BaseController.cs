@@ -302,7 +302,7 @@ namespace Nop.Web.Framework.Controllers
 
             foreach (var key in Request.Form.Keys)
                 if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
-                    SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
+                    SaveSelectedTabName(null, key, key["selected-tab-name-".Length..], persistForTheNextRequest);
         }
 
         /// <summary>

@@ -1324,7 +1324,7 @@ namespace Nop.Services.Forums
             if (index <= 0) 
                 return subject;
 
-            subject = subject.Substring(0, index);
+            subject = subject[0..index];
             subject += "...";
 
             return subject;
@@ -1460,7 +1460,7 @@ namespace Nop.Services.Forums
             // Trim SE name to avoid URLs that are too long
             var maxLength = NopSeoDefaults.ForumTopicLength;
             if (seName.Length > maxLength)
-                seName = seName.Substring(0, maxLength);
+                seName = seName[0..maxLength];
 
             return seName;
         }

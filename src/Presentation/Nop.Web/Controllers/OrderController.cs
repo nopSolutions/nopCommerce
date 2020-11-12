@@ -86,7 +86,7 @@ namespace Nop.Web.Controllers
             var recurringPaymentId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
-                    recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
+                    recurringPaymentId = Convert.ToInt32(formValue["cancelRecurringPayment".Length..]);
 
             var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
             if (recurringPayment == null)
@@ -119,7 +119,7 @@ namespace Nop.Web.Controllers
             //get recurring payment identifier
             var recurringPaymentId = 0;
             if (!form.Keys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
-                int.TryParse(formValue.Substring(formValue.IndexOf('_') + 1), out recurringPaymentId)))
+                int.TryParse(formValue[(formValue.IndexOf('_') + 1)..], out recurringPaymentId)))
             {
                 return RedirectToRoute("CustomerOrders");
             }

@@ -1235,7 +1235,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderItemId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnSaveOrderItem".Length));
+                    orderItemId = Convert.ToInt32(formValue["btnSaveOrderItem".Length..]);
 
             var orderItem = _orderService.GetOrderItemById(orderItemId)
                 ?? throw new ArgumentException("No order item found with the specified id");
@@ -1343,7 +1343,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderItemId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnDeleteOrderItem".Length));
+                    orderItemId = Convert.ToInt32(formValue["btnDeleteOrderItem".Length..]);
 
             var orderItem = _orderService.GetOrderItemById(orderItemId)
                 ?? throw new ArgumentException("No order item found with the specified id");
@@ -1418,7 +1418,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderItemId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
+                    orderItemId = Convert.ToInt32(formValue["btnResetDownloadCount".Length..]);
 
             var orderItem = _orderService.GetOrderItemById(orderItemId)
                 ?? throw new ArgumentException("No order item found with the specified id");
@@ -1456,7 +1456,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderItemId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
+                    orderItemId = Convert.ToInt32(formValue["btnPvActivateDownload".Length..]);
 
             var orderItem = _orderService.GetOrderItemById(orderItemId)
                 ?? throw new ArgumentException("No order item found with the specified id");

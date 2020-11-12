@@ -318,7 +318,7 @@ namespace Nop.Services.Payments
             if (creditCardNumber.Length <= 4)
                 return creditCardNumber;
 
-            var last4 = creditCardNumber.Substring(creditCardNumber.Length - 4, 4);
+            var last4 = creditCardNumber[(creditCardNumber.Length - 4)..creditCardNumber.Length];
             var maskedChars = string.Empty;
             for (var i = 0; i < creditCardNumber.Length - 4; i++)
             {

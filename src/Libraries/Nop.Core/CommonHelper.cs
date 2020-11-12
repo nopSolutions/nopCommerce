@@ -122,7 +122,7 @@ namespace Nop.Core
 
             var pLen = postfix?.Length ?? 0;
 
-            var result = str.Substring(0, maxLength - pLen);
+            var result = str[0..(maxLength - pLen)];
             if (!string.IsNullOrEmpty(postfix))
             {
                 result += postfix;

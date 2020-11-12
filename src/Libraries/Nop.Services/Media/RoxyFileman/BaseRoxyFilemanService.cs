@@ -287,10 +287,10 @@ namespace Nop.Services.Media.RoxyFileman
                 return result;
 
             if (json.StartsWith("{"))
-                json = json.Substring(1, json.Length - 2);
+                json = json[1..^1];
 
             json = json.Trim();
-            json = json.Substring(1, json.Length - 2);
+            json = json[1..^1];
 
             var lines = Regex.Split(json, "\"\\s*,\\s*\"");
             foreach (var line in lines)

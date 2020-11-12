@@ -228,13 +228,13 @@ namespace Nop.Web.Controllers
                     var subject = model.Subject;
                     if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
                     {
-                        subject = subject.Substring(0, _forumSettings.PMSubjectMaxLength);
+                        subject = subject[0.._forumSettings.PMSubjectMaxLength];
                     }
 
                     var text = model.Message;
                     if (_forumSettings.PMTextMaxLength > 0 && text.Length > _forumSettings.PMTextMaxLength)
                     {
-                        text = text.Substring(0, _forumSettings.PMTextMaxLength);
+                        text = text[0.._forumSettings.PMTextMaxLength];
                     }
 
                     var nowUtc = DateTime.UtcNow;

@@ -122,7 +122,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 {
                     var equalPox = line.IndexOf('=');
                     if (equalPox >= 0)
-                        values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
+                        values.Add(line[0..equalPox], line[(equalPox + 1)..]);
                 }
             }
 
@@ -146,7 +146,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 var line = l.Trim();
                 var equalPox = line.IndexOf('=');
                 if (equalPox >= 0)
-                    values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
+                    values.Add(line[0..equalPox], line[(equalPox + 1)..]);
             }
 
             return success;

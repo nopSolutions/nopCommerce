@@ -215,9 +215,9 @@ namespace Nop.Web.Controllers
                 //installation completed notification
                 try
                 {
-                    var languageCode = _locService.GetCurrentLanguage().Code?.Substring(0, 2);
+                    var languageCode = _locService.GetCurrentLanguage().Code;
                     var client = EngineContext.Current.Resolve<NopHttpClient>();
-                    await client.InstallationCompletedAsync(model.AdminEmail, languageCode);
+                    await client.InstallationCompletedAsync(model.AdminEmail, languageCode[0..2]);
                 }
                 catch { }
 
