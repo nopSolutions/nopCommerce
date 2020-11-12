@@ -967,22 +967,22 @@ namespace Nop.Services.Catalog
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var combinations = from pac in _productAttributeCombinationRepository.Table
-                join p in _productRepository.Table on pac.ProductId equals p.Id
-                where
-                    //filter by combinations with stock quantity less than the minimum
-                    pac.StockQuantity < pac.NotifyAdminForQuantityBelow &&
-                    //filter by products with tracking inventory by attributes
-                    p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                    //ignore deleted products
-                    !p.Deleted &&
-                    //ignore grouped products
-                    p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                    //filter by vendor
-                    (vendorId ?? 0) == 0 || p.VendorId == vendorId &&
-                    //whether to load published products only
-                    loadPublishedOnly == null || p.Published == loadPublishedOnly
-                orderby pac.ProductId, pac.Id
-                select pac;
+                               join p in _productRepository.Table on pac.ProductId equals p.Id
+                               where
+                                   //filter by combinations with stock quantity less than the minimum
+                                   pac.StockQuantity < pac.NotifyAdminForQuantityBelow &&
+                                   //filter by products with tracking inventory by attributes
+                                   p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                                   //ignore deleted products
+                                   !p.Deleted &&
+                                   //ignore grouped products
+                                   p.ProductTypeId != (int)ProductType.GroupedProduct &&
+                                   //filter by vendor
+                                   ((vendorId ?? 0) == 0 || p.VendorId == vendorId) &&
+                                   //whether to load published products only
+                                   (loadPublishedOnly == null || p.Published == loadPublishedOnly)
+                               orderby pac.ProductId, pac.Id
+                               select pac;
 
             return new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount);
         }
