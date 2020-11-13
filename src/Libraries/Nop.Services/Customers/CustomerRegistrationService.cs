@@ -403,8 +403,13 @@ namespace Nop.Services.Customers
         /// <returns>Result of an authentication</returns>
         public virtual IActionResult SignInCustomer(Customer customer, string returnUrl, bool isPersist = false)
         {
-            //migrate shopping cart
-            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+            if (_workContext.CurrentCustomer.Id != customer.Id)
+            {
+                //migrate shopping cart
+                _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+
+                _workContext.CurrentCustomer = customer;
+            }
 
             //sign in new customer
             _authenticationService.SignIn(customer, isPersist);
@@ -415,7 +420,6 @@ namespace Nop.Services.Customers
             //activity log
             _customerActivityService.InsertActivity(customer, "PublicStore.Login",
                 _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
-
 
             //redirect to the return URL if it's specified
             if (!string.IsNullOrEmpty(returnUrl))

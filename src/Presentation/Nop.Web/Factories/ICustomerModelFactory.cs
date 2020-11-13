@@ -28,7 +28,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>Customer info model</returns>
-        CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+        CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "");
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nop.Web.Factories
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
         /// <returns>Customer register model</returns>
-        RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties, 
+        RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false);
 
         /// <summary>
@@ -57,17 +57,12 @@ namespace Nop.Web.Factories
         PasswordRecoveryModel PreparePasswordRecoveryModel(PasswordRecoveryModel model);
 
         /// <summary>
-        /// Prepare the password recovery confirm model
-        /// </summary>
-        /// <returns>Password recovery confirm model</returns>
-        PasswordRecoveryConfirmModel PreparePasswordRecoveryConfirmModel();
-
-        /// <summary>
         /// Prepare the register result model
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
+        /// <param name="returnUrl">URL to redirect</param>
         /// <returns>Register result model</returns>
-        RegisterResultModel PrepareRegisterResultModel(int resultId);
+        RegisterResultModel PrepareRegisterResultModel(int resultId, string returnUrl);
 
         /// <summary>
         /// Prepare the customer navigation model

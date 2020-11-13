@@ -3496,6 +3496,8 @@ label, label + * {
 .registration-result-page .button-1,
 .login-page .button-1,
 .password-recovery-page .button-1,
+.email-revalidation-page .button-1,
+.account-activation-page .button-1,
 .account-page .button-1,
 .return-request-page .button-1 {
   min-width: 140px;
@@ -3516,6 +3518,10 @@ label, label + * {
 .login-page .button-1:focus,
 .password-recovery-page .button-1:hover,
 .password-recovery-page .button-1:focus,
+.email-revalidation-page .button-1:hover,
+.email-revalidation-page .button-1:focus,
+.account-activation-page .button-1:hover,
+.account-activation-page .button-1:focus,
 .account-page .button-1:hover,
 .account-page .button-1:focus,
 .return-request-page .button-1:hover,

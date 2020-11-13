@@ -86,7 +86,6 @@ namespace Nop.Web.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
@@ -134,7 +133,6 @@ namespace Nop.Web.Controllers
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             ITaxService taxService,
-            IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
@@ -178,7 +176,6 @@ namespace Nop.Web.Controllers
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _taxService = taxService;
-            _webHelper = webHelper;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
@@ -512,7 +509,7 @@ namespace Nop.Web.Controllers
             model = _customerModelFactory.PrepareMultiFactorAuthenticationProviderModel(model, selectedProvider, true);
 
             return View(model);
-        }        
+        }
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -633,29 +630,26 @@ namespace Nop.Web.Controllers
         public virtual IActionResult PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = _customerService.GetCustomerByEmail(email);
-            if (customer == null)
-                customer = _customerService.GetCustomerByGuid(guid);
+            var customer = _customerService.GetCustomerByEmail(email)
+                ?? _customerService.GetCustomerByGuid(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
+            var model = new PasswordRecoveryConfirmModel { ReturnUrl = Url.RouteUrl("Homepage") };
             if (string.IsNullOrEmpty(_genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
-                return base.View(new PasswordRecoveryConfirmModel
-                {
-                    DisablePasswordChanging = true,
-                    Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged")
-                });
+                model.DisablePasswordChanging = true;
+                model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged");
+                return View(model);
             }
-
-            var model = _customerModelFactory.PreparePasswordRecoveryConfirmModel();
 
             //validate token
             if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
+                return View(model);
             }
 
             //validate token expiration date
@@ -663,6 +657,7 @@ namespace Nop.Web.Controllers
             {
                 model.DisablePasswordChanging = true;
                 model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
+                return View(model);
             }
 
             return View(model);
@@ -677,12 +672,13 @@ namespace Nop.Web.Controllers
         public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = _customerService.GetCustomerByEmail(email);
-            if (customer == null)
-                customer = _customerService.GetCustomerByGuid(guid);
+            var customer = _customerService.GetCustomerByEmail(email)
+                ?? _customerService.GetCustomerByGuid(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
+
+            model.ReturnUrl = Url.RouteUrl("Homepage");
 
             //validate token
             if (!_customerService.IsPasswordRecoveryTokenValid(customer, token))
@@ -700,26 +696,24 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var response = _customerRegistrationService
+                .ChangePassword(new ChangePasswordRequest(customer.Email, false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
+            if (!response.Success)
             {
-                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(customer.Email,
-                    false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
-                if (response.Success)
-                {
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
-
-                    model.DisablePasswordChanging = true;
-                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
-                }
-                else
-                {
-                    model.Result = response.Errors.FirstOrDefault();
-                }
-
+                model.Result = string.Join(';', response.Errors);
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
+
+            //authenticate customer after changing password
+            _customerRegistrationService.SignInCustomer(customer, null, true);
+
+            model.DisablePasswordChanging = true;
+            model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
             return View(model);
         }
 
@@ -729,11 +723,11 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult Register()
+        public virtual IActionResult Register(string returnUrl)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
             var model = new RegisterModel();
             model = _customerModelFactory.PrepareRegisterModel(model, false, setDefaultValues: true);
@@ -750,7 +744,7 @@ namespace Nop.Web.Controllers
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
             if (_customerService.IsRegistered(_workContext.CurrentCustomer))
             {
@@ -938,10 +932,6 @@ namespace Nop.Web.Controllers
                     //save customer attributes
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
-                    //login customer now
-                    if (isApproved)
-                        _authenticationService.SignIn(customer, true);
-
                     //insert default address (if possible)
                     var defaultAddress = new Address
                     {
@@ -995,36 +985,28 @@ namespace Nop.Web.Controllers
                     switch (_customerSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
-                            {
-                                //email validation message
-                                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                                _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
+                            //email validation message
+                            _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
+                            _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                //result
-                                return RedirectToRoute("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.EmailValidation });
-                            }
+                            //result
+                            return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
+
                         case UserRegistrationType.AdminApproval:
-                            {
-                                return RedirectToRoute("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.AdminApproval });
-                            }
+                            return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
+
                         case UserRegistrationType.Standard:
-                            {
-                                //send customer welcome message
-                                _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+                            //send customer welcome message
+                            _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                //raise event       
-                                _eventPublisher.Publish(new CustomerActivatedEvent(customer));
+                            //raise event       
+                            _eventPublisher.Publish(new CustomerActivatedEvent(customer));
 
-                                var redirectUrl = Url.RouteUrl("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.CurrentRequestProtocol);
-                                return Redirect(redirectUrl);
-                            }
+                            returnUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
+                            return _customerRegistrationService.SignInCustomer(customer, returnUrl, true);
+
                         default:
-                            {
-                                return RedirectToRoute("Homepage");
-                            }
+                            return RedirectToRoute("Homepage");
                     }
                 }
 
@@ -1040,22 +1022,13 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult RegisterResult(int resultId)
-        {
-            var model = _customerModelFactory.PrepareRegisterResultModel(resultId);
-            return View(model);
-        }
-
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
-        [HttpPost]
-        [IgnoreAntiforgeryToken]
-        public virtual IActionResult RegisterResult(string returnUrl)
+        public virtual IActionResult RegisterResult(int resultId, string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                return RedirectToRoute("Homepage");
+                returnUrl = Url.RouteUrl("Homepage");
 
-            return Redirect(returnUrl);
+            var model = _customerModelFactory.PrepareRegisterResultModel(resultId, returnUrl);
+            return View(model);
         }
 
         [HttpPost]
@@ -1097,20 +1070,19 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AccountActivation(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = _customerService.GetCustomerByEmail(email);
-            if (customer == null)
-                customer = _customerService.GetCustomerByGuid(guid);
+            var customer = _customerService.GetCustomerByEmail(email)
+                ?? _customerService.GetCustomerByGuid(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
+            var model = new AccountActivationModel { ReturnUrl = Url.RouteUrl("Homepage") };
             var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
-                return
-                    View(new AccountActivationModel
-                    {
-                        Result = _localizationService.GetResource("Account.AccountActivation.AlreadyActivated")
-                    });
+            {
+                model.Result = _localizationService.GetResource("Account.AccountActivation.AlreadyActivated");
+                return View(model);
+            }
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("Homepage");
@@ -1119,16 +1091,17 @@ namespace Nop.Web.Controllers
             customer.Active = true;
             _customerService.UpdateCustomer(customer);
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, "");
+
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
             //raise event       
             _eventPublisher.Publish(new CustomerActivatedEvent(customer));
 
-            var model = new AccountActivationModel
-            {
-                Result = _localizationService.GetResource("Account.AccountActivation.Activated")
-            };
+            //authenticate customer after activation
+            _customerRegistrationService.SignInCustomer(customer, null, true);
+
+            model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
             return View(model);
         }
 
@@ -1357,19 +1330,19 @@ namespace Nop.Web.Controllers
         public virtual IActionResult EmailRevalidation(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = _customerService.GetCustomerByEmail(email);
-            if (customer == null)
-                customer = _customerService.GetCustomerByGuid(guid);
+            var customer = _customerService.GetCustomerByEmail(email)
+                ?? _customerService.GetCustomerByGuid(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
+            var model = new EmailRevalidationModel { ReturnUrl = Url.RouteUrl("Homepage") };
             var cToken = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
-                return View(new EmailRevalidationModel
-                {
-                    Result = _localizationService.GetResource("Account.EmailRevalidation.AlreadyChanged")
-                });
+            {
+                model.Result = _localizationService.GetResource("Account.EmailRevalidation.AlreadyChanged");
+                return View(model);
+            }
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("Homepage");
@@ -1387,25 +1360,18 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                return View(new EmailRevalidationModel
-                {
-                    Result = _localizationService.GetResource(exc.Message)
-                });
+                model.Result = _localizationService.GetResource(exc.Message);
+                return View(model);
             }
+
             customer.EmailToRevalidate = null;
             _customerService.UpdateCustomer(customer);
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute, "");
 
-            //re-authenticate (if usernames are disabled)
-            if (!_customerSettings.UsernamesEnabled)
-            {
-                _authenticationService.SignIn(customer, true);
-            }
+            //authenticate customer after changing email
+            _customerRegistrationService.SignInCustomer(customer, null, true);
 
-            var model = new EmailRevalidationModel()
-            {
-                Result = _localizationService.GetResource("Account.EmailRevalidation.Changed")
-            };
+            model.Result = _localizationService.GetResource("Account.EmailRevalidation.Changed");
             return View(model);
         }
 
