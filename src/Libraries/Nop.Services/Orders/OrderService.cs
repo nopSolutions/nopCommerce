@@ -29,6 +29,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
@@ -45,6 +46,7 @@ namespace Nop.Services.Orders
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
+            IProductAttributeParser productAttributeParser,
             IRepository<Product> productRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
@@ -57,6 +59,7 @@ namespace Nop.Services.Orders
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _orderNoteRepository = orderNoteRepository;
+            _productAttributeParser = productAttributeParser;
             _productRepository = productRepository;
             _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
             _recurringPaymentRepository = recurringPaymentRepository;
@@ -416,6 +419,100 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Orders items
+
+        /// <summary>
+        /// Determine if the order item is the same as the one being compared
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="unitPriceInclTax">Unit price including tax</param>
+        /// <param name="unitPriceExclTax">Unit price excluding tax</param>
+        /// <param name="priceInclTax">Price including tax</param>
+        /// <param name="priceExclTax">Price excluding tax</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <returns>Order item is equal</returns>
+        protected virtual bool OrderItemIsEqual(OrderItem orderItem,
+            Product product,
+            string attributesXml,
+            decimal unitPriceInclTax,
+            decimal unitPriceExclTax,
+            decimal priceInclTax,
+            decimal priceExclTax,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate)
+        {
+            if (orderItem.ProductId != product.Id)
+                return false;
+
+            //attributes
+            var attributesEqual = _productAttributeParser.AreProductAttributesEqual(orderItem.AttributesXml, attributesXml, false, false);
+            if (!attributesEqual)
+                return false;
+            
+            //price
+            var pricesEqual = orderItem.UnitPriceInclTax == unitPriceInclTax &
+                              orderItem.UnitPriceExclTax == unitPriceExclTax &
+                              orderItem.PriceInclTax == priceInclTax &
+                              orderItem.PriceExclTax == priceExclTax;
+            if (!pricesEqual)
+                return false;
+
+            //gift cards
+            if (product.IsGiftCard)
+            {
+                _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
+
+                _productAttributeParser.GetGiftCardAttribute(orderItem.AttributesXml, out var giftCardRecipientName2, out var _, out var giftCardSenderName2, out var _, out var _);
+
+                var giftCardsAreEqual = giftCardRecipientName1.Equals(giftCardRecipientName2, StringComparison.InvariantCultureIgnoreCase)
+                    && giftCardSenderName1.Equals(giftCardSenderName2, StringComparison.InvariantCultureIgnoreCase);
+                if (!giftCardsAreEqual)
+                    return false;
+            }
+
+            if (!product.IsRental) 
+                return true;
+
+            //rental products
+            var rentalInfoEqual = orderItem.RentalStartDateUtc == rentalStartDate && orderItem.RentalEndDateUtc == rentalEndDate;
+            
+            return rentalInfoEqual;
+        }
+        
+        /// <summary>
+        /// Finds a matching order item in the order
+        /// </summary>
+        /// <param name="order">order</param>
+        /// <param name="product">Product</param>
+        /// <param name="unitPriceInclTax">Unit price including tax</param>
+        /// <param name="unitPriceExclTax">Unit price excluding tax</param>
+        /// <param name="priceInclTax">Price including tax</param>
+        /// <param name="priceExclTax">Price excluding tax</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <returns>Found order item</returns>
+        public virtual OrderItem FindOrderItemInOrder(Order order,
+            Product product,
+            decimal unitPriceInclTax,
+            decimal unitPriceExclTax,
+            decimal priceInclTax,
+            decimal priceExclTax,
+            string attributesXml = "",
+            DateTime? rentalStartDate = null,
+            DateTime? rentalEndDate = null)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            var items = GetOrderItems(order.Id);
+            return items.FirstOrDefault(ord => OrderItemIsEqual(ord, product, attributesXml,unitPriceInclTax,unitPriceExclTax,priceInclTax,priceExclTax, rentalStartDate, rentalEndDate));
+        }
 
         /// <summary>
         /// Gets an order item

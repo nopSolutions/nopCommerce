@@ -1713,8 +1713,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate
                 };
-
-                _orderService.InsertOrderItem(orderItem);                
+                
+                //check for existing order item
+                var existingOrderItem =
+                    _orderService.FindOrderItemInOrder(order, product, unitPriceInclTax, unitPriceExclTax, priceInclTax, priceExclTax, attributesXml);
+                if (existingOrderItem != null)
+                {
+                    //update quantity for existing item
+                    existingOrderItem.Quantity += quantity;
+                    orderItem.Id = existingOrderItem.Id;
+                    _orderService.UpdateOrderItem(existingOrderItem);
+                }
+                else
+                {
+                    //add new item
+                    _orderService.InsertOrderItem(orderItem);
+                }
 
                 //adjust inventory
                 _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml,
