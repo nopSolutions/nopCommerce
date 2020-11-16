@@ -2335,7 +2335,7 @@ namespace Nop.Services.Orders
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            if (order.PaymentStatus == PaymentStatus.Pending)
+            if (order.PaymentStatus == PaymentStatus.Pending || order.PaymentStatus == PaymentStatus.Errored)
                 return true;
 
             return false;
