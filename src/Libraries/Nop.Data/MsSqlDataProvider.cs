@@ -125,7 +125,7 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations();
+            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
         }
 
         /// <summary>
