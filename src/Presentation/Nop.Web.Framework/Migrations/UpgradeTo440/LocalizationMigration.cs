@@ -272,6 +272,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Plugins.ApplyChanges"] = "Restart application to apply changes",
                 ["Admin.Configuration.Plugins.ApplyChanges.Progress"] = "Applying changes on plugins...",
                 ["Products.EstimateShipping.NoSelectedShippingOption"] = "Please select the address you want to ship to",
+                ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication"] = "Force multi-factor authentication",
+                ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for all users (at least one MFA provider must be active).",
+                ["Account.MultiFactorAuthentication.Warning.ForceActivation"] = "Enforce multi-factor authentication for all users is enabled.",
+                ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning"] = "There are currently no active authentication providers. To use this setting, you must activate one of the multi-factor authentication providers.",
             });
 
             // rename locales
