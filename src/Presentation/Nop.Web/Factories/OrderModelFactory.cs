@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -229,8 +230,12 @@ namespace Nop.Web.Factories
                         Address1 = pickupAddress.Address1,
                         City = pickupAddress.City,
                         County = pickupAddress.County,
-                        StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(pickupAddress)?.Name ?? string.Empty,
-                        CountryName = _countryService.GetCountryByAddress(pickupAddress)?.Name ?? string.Empty,
+                        StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(pickupAddress) is StateProvince stateProvince
+                            ? _localizationService.GetLocalized(stateProvince, entity => entity.Name)
+                            : string.Empty,
+                        CountryName = _countryService.GetCountryByAddress(pickupAddress) is Country country
+                            ? _localizationService.GetLocalized(country, entity => entity.Name)
+                            : string.Empty,
                         ZipPostalCode = pickupAddress.ZipPostalCode
                     };
                 }
