@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,7 +30,7 @@ namespace Nop.Core.Html
             var m = Regex.Matches(text, "<.*?>", RegexOptions.IgnoreCase);
             for (var i = m.Count - 1; i >= 0; i--)
             {
-                var tag = text.Substring(m[i].Index + 1, m[i].Length - 1).Trim().ToLower();
+                var tag = text[(m[i].Index + 1)..(m[i].Index + m[i].Length)].Trim().ToLower();
 
                 if (!IsValidTag(tag, allowedTags))
                 {
@@ -44,19 +44,25 @@ namespace Nop.Core.Html
         private static bool IsValidTag(string tag, string tags)
         {
             var allowedTags = tags.Split(',');
-            if (tag.IndexOf("javascript", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
-            if (tag.IndexOf("vbscript", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
-            if (tag.IndexOf("onclick", StringComparison.InvariantCultureIgnoreCase) >= 0) return false;
+            if (tag.IndexOf("javascript", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                return false;
+            if (tag.IndexOf("vbscript", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                return false;
+            if (tag.IndexOf("onclick", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                return false;
 
             var endchars = new[] { ' ', '>', '/', '\t' };
 
             var pos = tag.IndexOfAny(endchars, 1);
-            if (pos > 0) tag = tag.Substring(0, pos);
-            if (tag[0] == '/') tag = tag.Substring(1);
+            if (pos > 0)
+                tag = tag[0..pos];
+            if (tag[0] == '/')
+                tag = tag[1..^0];
 
             foreach (var aTag in allowedTags)
             {
-                if (tag == aTag) return true;
+                if (tag == aTag)
+                    return true;
             }
 
             return false;
@@ -78,7 +84,7 @@ namespace Nop.Core.Html
         /// <param name="addNoFollowTag">A value indicating whether to add "noFollow" tag</param>
         /// <returns>Formatted text</returns>
         public static string FormatText(string text, bool stripTags,
-            bool convertPlainTextToHtml, bool allowHtml, 
+            bool convertPlainTextToHtml, bool allowHtml,
             bool allowBBCode, bool resolveLinks, bool addNoFollowTag)
         {
             if (string.IsNullOrEmpty(text))
@@ -92,7 +98,7 @@ namespace Nop.Core.Html
                 }
 
                 text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
-                
+
                 if (convertPlainTextToHtml)
                 {
                     text = ConvertPlainTextToHtml(text);
@@ -120,7 +126,7 @@ namespace Nop.Core.Html
 
             return text;
         }
-        
+
         /// <summary>
         /// Strips tags
         /// </summary>
@@ -183,7 +189,7 @@ namespace Nop.Core.Html
         {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
-            
+
             if (decode)
                 text = WebUtility.HtmlDecode(text);
 

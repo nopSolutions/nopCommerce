@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Data.Extensions;
-using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
@@ -17,20 +14,14 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IDbContext _dbContext;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
 
         #endregion
 
         #region Ctor
 
-        public QueuedEmailService(IDbContext dbContext,
-            IEventPublisher eventPublisher,
-            IRepository<QueuedEmail> queuedEmailRepository)
+        public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository)
         {
-            _dbContext = dbContext;
-            _eventPublisher = eventPublisher;
             _queuedEmailRepository = queuedEmailRepository;
         }
 
@@ -44,13 +35,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>        
         public virtual void InsertQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             _queuedEmailRepository.Insert(queuedEmail);
-
-            //event notification
-            _eventPublisher.EntityInserted(queuedEmail);
         }
 
         /// <summary>
@@ -59,13 +44,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>
         public virtual void UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             _queuedEmailRepository.Update(queuedEmail);
-
-            //event notification
-            _eventPublisher.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
@@ -74,13 +53,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmail">Queued email</param>
         public virtual void DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
-            if (queuedEmail == null)
-                throw new ArgumentNullException(nameof(queuedEmail));
-
             _queuedEmailRepository.Delete(queuedEmail);
-
-            //event notification
-            _eventPublisher.EntityDeleted(queuedEmail);
         }
 
         /// <summary>
@@ -89,16 +62,7 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmails">Queued emails</param>
         public virtual void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
         {
-            if (queuedEmails == null)
-                throw new ArgumentNullException(nameof(queuedEmails));
-
             _queuedEmailRepository.Delete(queuedEmails);
-
-            //event notification
-            foreach (var queuedEmail in queuedEmails)
-            {
-                _eventPublisher.EntityDeleted(queuedEmail);
-            }
         }
 
         /// <summary>
@@ -108,10 +72,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email</returns>
         public virtual QueuedEmail GetQueuedEmailById(int queuedEmailId)
         {
-            if (queuedEmailId == 0)
-                return null;
-
-            return _queuedEmailRepository.GetById(queuedEmailId);
+            return _queuedEmailRepository.GetById(queuedEmailId, cache => default);
         }
 
         /// <summary>
@@ -121,23 +82,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued emails</returns>
         public virtual IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds)
         {
-            if (queuedEmailIds == null || queuedEmailIds.Length == 0)
-                return new List<QueuedEmail>();
-
-            var query = from qe in _queuedEmailRepository.Table
-                        where queuedEmailIds.Contains(qe.Id)
-                        select qe;
-            var queuedEmails = query.ToList();
-            //sort by passed identifiers
-            var sortedQueuedEmails = new List<QueuedEmail>();
-            foreach (var id in queuedEmailIds)
-            {
-                var queuedEmail = queuedEmails.Find(x => x.Id == id);
-                if (queuedEmail != null)
-                    sortedQueuedEmails.Add(queuedEmail);
-            }
-
-            return sortedQueuedEmails;
+            return _queuedEmailRepository.GetByIds(queuedEmailIds);
         }
 
         /// <summary>
@@ -191,17 +136,36 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Deletes already sent emails
+        /// </summary>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <returns>Number of deleted emails</returns>
+        public virtual int DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc)
+        {
+            var query = _queuedEmailRepository.Table;
+
+            // only sent emails
+            query = query.Where(qe => qe.SentOnUtc.HasValue);
+
+            if (createdFromUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
+
+            var emails = query.ToArray();
+
+            DeleteQueuedEmails(emails);
+
+            return emails.Length;
+        }
+
+        /// <summary>
         /// Delete all queued emails
         /// </summary>
         public virtual void DeleteAllEmails()
         {
-            //do all databases support "Truncate command"?
-            var queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
-            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
-
-            //var queuedEmails = _queuedEmailRepository.Table.ToList();
-            //foreach (var qe in queuedEmails)
-            //    _queuedEmailRepository.Delete(qe);
+            _queuedEmailRepository.Truncate();
         }
 
         #endregion

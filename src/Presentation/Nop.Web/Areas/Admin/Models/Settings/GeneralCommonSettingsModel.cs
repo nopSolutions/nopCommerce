@@ -18,7 +18,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             CaptchaSettings = new CaptchaSettingsModel();
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
-            FullTextSettings = new FullTextSettingsModel();
             DisplayDefaultMenuItemSettings = new DisplayDefaultMenuItemSettingsModel();
             DisplayDefaultFooterItemSettings = new DisplayDefaultFooterItemSettingsModel();
             AdminAreaSettings = new AdminAreaSettingsModel();
@@ -44,8 +43,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public PdfSettingsModel PdfSettings { get; set; }
 
         public LocalizationSettingsModel LocalizationSettings { get; set; }
-
-        public FullTextSettingsModel FullTextSettings { get; set; }
 
         public DisplayDefaultMenuItemSettingsModel DisplayDefaultMenuItemSettings { get; set; }
 

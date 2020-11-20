@@ -1,10 +1,14 @@
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Events;
+using Nop.Services.Authentication;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
-using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -20,13 +24,19 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IEncryptionService _encryptionService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly INotificationService _notificationService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -37,26 +47,38 @@ namespace Nop.Services.Customers
         #region Ctor
 
         public CustomerRegistrationService(CustomerSettings customerSettings,
+            IAuthenticationService authenticationService,
+            ICustomerActivityService customerActivityService,
             ICustomerService customerService,
             IEncryptionService encryptionService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
+            INotificationService notificationService,
             IRewardPointService rewardPointService,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             RewardPointsSettings rewardPointsSettings)
         {
             _customerSettings = customerSettings;
+            _authenticationService = authenticationService;
+            _customerActivityService = customerActivityService;
             _customerService = customerService;
             _encryptionService = encryptionService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
             _rewardPointService = rewardPointService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
             _storeService = storeService;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
@@ -121,7 +143,7 @@ namespace Nop.Services.Customers
             if (!customer.Active)
                 return CustomerLoginResults.NotActive;
             //only registered can login
-            if (!customer.IsRegistered())
+            if (!_customerService.IsRegistered(customer))
                 return CustomerLoginResults.NotRegistered;
             //check whether a customer is locked out
             if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
@@ -143,6 +165,15 @@ namespace Nop.Services.Customers
                 _customerService.UpdateCustomer(customer);
 
                 return CustomerLoginResults.WrongPassword;
+            }
+
+            var selectedProvider = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute);
+            var methodIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(selectedProvider, customer, _storeContext.CurrentStore.Id);
+            if (methodIsActive)
+                return CustomerLoginResults.MultiFactorAuthenticationRequired;
+            else if (!string.IsNullOrEmpty(selectedProvider))
+            {
+                _notificationService.WarningNotification(_localizationService.GetResource("MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"));
             }
 
             //update login details
@@ -181,7 +212,7 @@ namespace Nop.Services.Customers
                 return result;
             }
 
-            if (request.Customer.IsRegistered())
+            if (_customerService.IsRegistered(request.Customer))
             {
                 result.AddError("Current customer is already registered");
                 return result;
@@ -230,7 +261,7 @@ namespace Nop.Services.Customers
 
             var customerPassword = new CustomerPassword
             {
-                Customer = request.Customer,
+                CustomerId = request.Customer.Id,
                 PasswordFormat = request.PasswordFormat,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -243,7 +274,7 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.EncryptText(request.Password);
                     break;
                 case PasswordFormat.Hashed:
-                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
+                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
                     customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     break;
@@ -257,15 +288,14 @@ namespace Nop.Services.Customers
             var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
-            //request.Customer.CustomerRoles.Add(registeredRole);
-            request.Customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = registeredRole });
-            //remove from 'Guests' role
-            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.GuestsRoleName);
-            if (guestRole != null)
+
+            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
+
+            //remove from 'Guests' role            
+            if (_customerService.IsGuest(request.Customer))
             {
-                //request.Customer.CustomerRoles.Remove(guestRole);
-                request.Customer.RemoveCustomerRoleMapping(
-                    request.Customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == guestRole.Id));
+                var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+                _customerService.RemoveCustomerRoleMapping(request.Customer, guestRole);
             }
 
             //add reward points for customer registration (if enabled)
@@ -311,7 +341,7 @@ namespace Nop.Services.Customers
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.EmailNotFound"));
                 return result;
             }
-          
+
             //request isn't valid
             if (request.ValidateRequest && !PasswordsMatch(_customerService.GetCurrentPassword(customer.Id), request.OldPassword))
             {
@@ -336,7 +366,7 @@ namespace Nop.Services.Customers
             //at this point request is valid
             var customerPassword = new CustomerPassword
             {
-                Customer = customer,
+                CustomerId = customer.Id,
                 PasswordFormat = request.NewPasswordFormat,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -349,7 +379,7 @@ namespace Nop.Services.Customers
                     customerPassword.Password = _encryptionService.EncryptText(request.NewPassword);
                     break;
                 case PasswordFormat.Hashed:
-                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServiceDefaults.PasswordSaltKeySize);
+                    var saltKey = _encryptionService.CreateSaltKey(NopCustomerServicesDefaults.PasswordSaltKeySize);
                     customerPassword.PasswordSalt = saltKey;
                     customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey,
                         request.HashedPasswordFormat ?? _customerSettings.HashedPasswordFormat);
@@ -362,6 +392,40 @@ namespace Nop.Services.Customers
             _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));
 
             return result;
+        }
+
+        /// <summary>
+        /// Login passed user
+        /// </summary>
+        /// <param name="customer">User to login</param>
+        /// <param name="returnUrl">URL to which the user will return after authentication</param>
+        /// <param name="isPersist">Is remember me</param>
+        /// <returns>Result of an authentication</returns>
+        public virtual IActionResult SignInCustomer(Customer customer, string returnUrl, bool isPersist = false)
+        {
+            if (_workContext.CurrentCustomer.Id != customer.Id)
+            {
+                //migrate shopping cart
+                _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+
+                _workContext.CurrentCustomer = customer;
+            }
+
+            //sign in new customer
+            _authenticationService.SignIn(customer, isPersist);
+
+            //raise event       
+            _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
+
+            //activity log
+            _customerActivityService.InsertActivity(customer, "PublicStore.Login",
+                _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+
+            //redirect to the return URL if it's specified
+            if (!string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult(returnUrl);
+
+            return new RedirectToRouteResult("Homepage", null);
         }
 
         /// <summary>
@@ -405,16 +469,16 @@ namespace Nop.Services.Customers
             {
                 customer.Email = newEmail;
                 _customerService.UpdateCustomer(customer);
-                
-                if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase)) 
+
+                if (string.IsNullOrEmpty(oldEmail) || oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
                 //update newsletter subscription (if required)
                 foreach (var store in _storeService.GetAllStores())
                 {
                     var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
-                    
-                    if (subscriptionOld == null) 
+
+                    if (subscriptionOld == null)
                         continue;
 
                     subscriptionOld.Email = newEmail;
@@ -438,7 +502,7 @@ namespace Nop.Services.Customers
 
             newUsername = newUsername.Trim();
 
-            if (newUsername.Length > NopCustomerServiceDefaults.CustomerUsernameLength)
+            if (newUsername.Length > NopCustomerServicesDefaults.CustomerUsernameLength)
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameTooLong"));
 
             var user2 = _customerService.GetCustomerByUsername(newUsername);

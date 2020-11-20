@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         <p>
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
         </p>
@@ -62,11 +62,11 @@
     
         <script>
             function renderColumnEdit(data, type, row, meta) {
-                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")' + data + '?btnId=btnRefresh&formId=productattribute-form\', 800, 550, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")' + data + '?btnId=btnRefresh&formId=productattribute-form\', 800, 750, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
             }
         </script>
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new { productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 550, true); return false;" class="btn btn-primary">
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
         </button>
@@ -86,7 +86,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
     </div>
 }

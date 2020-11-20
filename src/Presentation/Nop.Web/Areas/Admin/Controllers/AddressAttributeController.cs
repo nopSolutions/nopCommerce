@@ -92,8 +92,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select an appropriate panel
-            SaveSelectedPanelName("customersettings-addressformfields");
+            //select an appropriate card
+            SaveSelectedCardName("customersettings-addressformfields");
 
             //we just redirect a user to the address settings page
             return RedirectToAction("CustomerUser", "Setting");

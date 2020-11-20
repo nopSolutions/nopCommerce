@@ -1,24 +1,24 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Tests;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Areas.Admin.Validators.Vendors;
-using Nop.Web.MVC.Tests.Public.Validators;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
 {
     [TestFixture]
-    public class VendorValidatorTests : BaseValidatorTests
+    public class VendorValidatorTests : BaseNopTest
     {
         private VendorValidator _validator;
 
-        [SetUp]
-        public new void Setup()
+        [OneTimeSetUp]
+        public void Setup()
         {
-            _validator = new VendorValidator(_localizationService, null);
+            _validator = GetService<VendorValidator>();
         }
 
         [Test]
-        public void Should_have_error_when_pageSizeOptions_has_duplicate_items()
+        public void ShouldHaveErrorWhenPageSizeOptionsHasDuplicateItems()
         {
             var model = new VendorModel
             {
@@ -28,7 +28,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
         }
 
         [Test]
-        public void Should_not_have_error_when_pageSizeOptions_has_not_duplicate_items()
+        public void ShouldNotHaveErrorWhenPageSizeOptionsHasNotDuplicateItems()
         {
             var model = new VendorModel
             {
@@ -38,14 +38,14 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
         }
 
         [Test]
-        public void Should_not_have_error_when_pageSizeOptions_is_null_or_empty()
+        public void ShouldNotHaveErrorWhenPageSizeOptionsIsNullOrEmpty()
         {
             var model = new VendorModel
             {
                 PageSizeOptions = null
             };
             _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
-            model.PageSizeOptions = "";
+            model.PageSizeOptions = string.Empty;
             _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
         }
     }

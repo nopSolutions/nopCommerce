@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -12,8 +14,8 @@ using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Messages;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -44,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
@@ -67,6 +70,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             IPictureService pictureService,
             IProductService productService,
+            IStaticCacheManager staticCacheManager,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
@@ -86,6 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _permissionService = permissionService;
             _pictureService = pictureService;
             _productService = productService;
+            _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
             _urlRecordService = urlRecordService;
@@ -141,6 +146,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveCategoryAcl(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _categoryService.UpdateCategory(category);
 
             var existingAclRecords = _aclService.GetAclRecords(category);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -165,6 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();
+            _categoryService.UpdateCategory(category);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
             var allStores = _storeService.GetAllStores();
@@ -258,8 +265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        //category.AppliedDiscounts.Add(discount);
-                        category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                        _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                 }
 
                 _categoryService.UpdateCategory(category);
@@ -323,6 +329,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 var prevPictureId = category.PictureId;
 
+                //if parent category changes, we need to clear cache for previous parent category
+                if (category.ParentCategoryId != model.ParentCategoryId)
+                {
+                    _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefix, category.ParentCategoryId);
+                    _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.CategoriesChildIdsPrefix, category.ParentCategoryId);
+                }
+
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.UpdateCategory(category);
@@ -341,15 +354,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                            category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
+                            _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                            category.DiscountCategoryMappings
-                                .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is DiscountCategoryMapping mapping)
+                            _categoryService.DeleteDiscountCategoryMapping(mapping);
                     }
                 }
 
@@ -413,6 +425,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                _categoryService.DeleteCategories(_categoryService.GetCategoriesByIds(selectedIds.ToArray()).Where(p => _workContext.CurrentVendor == null).ToList());
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
 
         #region Export / Import
@@ -443,7 +469,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var bytes = _exportManager
-                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false).ToList());
+                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).ToList());
 
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }

@@ -9,7 +9,7 @@ namespace Nop.Core.Domain
     {
         /// <summary>
         /// Gets or sets a value indicating whether "powered by nopCommerce" text should be displayed.
-        /// Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx
+        /// Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key
         /// </summary>
         public bool HidePoweredByNopCommerce { get; set; }
 
@@ -32,16 +32,6 @@ namespace Nop.Core.Domain
         /// Gets or sets a value indicating whether customers are allowed to select a theme
         /// </summary>
         public bool AllowCustomerToSelectTheme { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
-        /// </summary>
-        public bool DisplayMiniProfilerInPublicStore { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether mini profiler should be displayed only for users with access to the admin area
-        /// </summary>
-        public bool DisplayMiniProfilerForAdminOnly { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether we should display warnings about the new EU cookie law

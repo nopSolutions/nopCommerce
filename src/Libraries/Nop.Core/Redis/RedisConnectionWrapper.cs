@@ -16,20 +16,21 @@ namespace Nop.Core.Redis
     {
         #region Fields
 
-        private readonly NopConfig _config;
-
+        private bool _disposed = false;
         private readonly object _lock = new object();
-        private volatile ConnectionMultiplexer _connection;
         private readonly Lazy<string> _connectionString;
+        private volatile ConnectionMultiplexer _connection;
         private volatile RedLockFactory _redisLockFactory;
+
+        private readonly AppSettings _appSettings;
 
         #endregion
 
         #region Ctor
 
-        public RedisConnectionWrapper(NopConfig config)
+        public RedisConnectionWrapper(AppSettings appSettings)
         {
-            _config = config;
+            _appSettings = appSettings;
             _connectionString = new Lazy<string>(GetConnectionString);
             _redisLockFactory = CreateRedisLockFactory();
         }
@@ -44,7 +45,7 @@ namespace Nop.Core.Redis
         /// <returns></returns>
         protected string GetConnectionString()
         {
-            return _config.RedisConnectionString;
+            return _appSettings.RedisConfig.ConnectionString;
         }
 
         /// <summary>
@@ -53,11 +54,13 @@ namespace Nop.Core.Redis
         /// <returns></returns>
         protected ConnectionMultiplexer GetConnection()
         {
-            if (_connection != null && _connection.IsConnected) return _connection;
+            if (_connection != null && _connection.IsConnected)
+                return _connection;
 
             lock (_lock)
             {
-                if (_connection != null && _connection.IsConnected) return _connection;
+                if (_connection != null && _connection.IsConnected)
+                    return _connection;
 
                 //Connection disconnected. Disposing connection...
                 _connection?.Dispose();
@@ -149,17 +152,15 @@ namespace Nop.Core.Redis
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             //use RedLock library
-            using (var redisLock = _redisLockFactory.CreateLock(resource, expirationTime))
-            {
-                //ensure that lock is acquired
-                if (!redisLock.IsAcquired)
-                    return false;
+            using var redisLock = _redisLockFactory.CreateLock(resource, expirationTime);
+            //ensure that lock is acquired
+            if (!redisLock.IsAcquired)
+                return false;
 
-                //perform action
-                action();
+            //perform action
+            action();
 
-                return true;
-            }
+            return true;
         }
 
         /// <summary>
@@ -167,11 +168,25 @@ namespace Nop.Core.Redis
         /// </summary>
         public void Dispose()
         {
-            //dispose ConnectionMultiplexer
-            _connection?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            //dispose RedLock factory
-            _redisLockFactory?.Dispose();
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                //dispose ConnectionMultiplexer
+                _connection?.Dispose();
+
+                //dispose RedLock factory
+                _redisLockFactory?.Dispose();
+            }
+            _disposed = true;
         }
 
         #endregion

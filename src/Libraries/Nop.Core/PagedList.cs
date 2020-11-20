@@ -9,7 +9,7 @@ namespace Nop.Core
     /// </summary>
     /// <typeparam name="T">T</typeparam>
     [Serializable]
-    public class PagedList<T> : List<T>, IPagedList<T> 
+    public class PagedList<T> : List<T>, IPagedList<T>
     {
         /// <summary>
         /// Ctor
@@ -31,6 +31,7 @@ namespace Nop.Core
             PageIndex = pageIndex;
             if (getOnlyTotalCount)
                 return;
+
             AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 

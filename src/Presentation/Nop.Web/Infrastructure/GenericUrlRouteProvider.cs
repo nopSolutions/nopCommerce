@@ -1,55 +1,61 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routing;
-using Nop.Web.Framework.Seo;
 
 namespace Nop.Web.Infrastructure
 {
     /// <summary>
     /// Represents provider that provided generic routes
     /// </summary>
-    public partial class GenericUrlRouteProvider : IRouteProvider
+    public partial class GenericUrlRouteProvider : BaseRouteProvider, IRouteProvider
     {
         #region Methods
 
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
+            var pattern = GetRouterPattern(endpointRouteBuilder, seoCode: "{SeName}");
+
+            endpointRouteBuilder.MapDynamicControllerRoute<SlugRouteTransformer>(pattern);
+
             //and default one
-            routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
+            endpointRouteBuilder.MapControllerRoute(
+                name: "Default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             //generic URLs
-            routeBuilder.MapGenericPathRoute("GenericUrl", "{GenericSeName}",
+            endpointRouteBuilder.MapControllerRoute(
+                name: "GenericUrl",
+                pattern: "{GenericSeName}",
                 new { controller = "Common", action = "GenericUrl" });
 
             //define this routes to use in UI views (in case if you want to customize some of them later)
-            routeBuilder.MapLocalizedRoute("Product", "{SeName}", 
+            endpointRouteBuilder.MapControllerRoute("Product", pattern,
                 new { controller = "Product", action = "ProductDetails" });
 
-            routeBuilder.MapLocalizedRoute("Category", "{SeName}", 
+            endpointRouteBuilder.MapControllerRoute("Category", pattern,
                 new { controller = "Catalog", action = "Category" });
 
-            routeBuilder.MapLocalizedRoute("Manufacturer", "{SeName}", 
+            endpointRouteBuilder.MapControllerRoute("Manufacturer", pattern,
                 new { controller = "Catalog", action = "Manufacturer" });
 
-            routeBuilder.MapLocalizedRoute("Vendor", "{SeName}", 
+            endpointRouteBuilder.MapControllerRoute("Vendor", pattern,
                 new { controller = "Catalog", action = "Vendor" });
-            
-            routeBuilder.MapLocalizedRoute("NewsItem", "{SeName}", 
+
+            endpointRouteBuilder.MapControllerRoute("NewsItem", pattern,
                 new { controller = "News", action = "NewsItem" });
 
-            routeBuilder.MapLocalizedRoute("BlogPost", "{SeName}", 
+            endpointRouteBuilder.MapControllerRoute("BlogPost", pattern,
                 new { controller = "Blog", action = "BlogPost" });
 
-            routeBuilder.MapLocalizedRoute("Topic", "{SeName}", 
+            endpointRouteBuilder.MapControllerRoute("Topic", pattern,
                 new { controller = "Topic", action = "TopicDetails" });
 
             //product tags
-            routeBuilder.MapLocalizedRoute("ProductsByTag", "{SeName}",
+            endpointRouteBuilder.MapControllerRoute("ProductsByTag", pattern,
                 new { controller = "Catalog", action = "ProductsByTag" });
         }
 
@@ -60,11 +66,10 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Gets a priority of route provider
         /// </summary>
-        public int Priority
-        {
-            //it should be the last route. we do not set it to -int.MaxValue so it could be overridden (if required)
-            get { return -1000000; }
-        }
+        /// <remarks>
+        /// it should be the last route. we do not set it to -int.MaxValue so it could be overridden (if required)
+        /// </remarks>
+        public int Priority => -1000000;
 
         #endregion
     }

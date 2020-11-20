@@ -14,7 +14,7 @@ namespace Nop.Services.Catalog
         /// Delete the review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        void DeleteReiewType(ReviewType reviewType);
+        void DeleteReviewType(ReviewType reviewType);
 
         /// <summary>
         /// Get all review types
@@ -51,6 +51,12 @@ namespace Nop.Services.Catalog
         /// <param name="productReviewId">The product review identifier</param>
         /// <returns>Product review and review type mapping collection</returns>
         IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(int productReviewId);
+
+        /// <summary>
+        /// Inserts a product review and review type mapping
+        /// </summary>
+        /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        void InsertProductReviewReviewTypeMappings(ProductReviewReviewTypeMapping productReviewReviewType);
 
         #endregion
     }

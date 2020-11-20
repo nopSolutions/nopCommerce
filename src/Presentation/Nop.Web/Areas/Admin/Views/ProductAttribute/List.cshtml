@@ -2,29 +2,35 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.ProductAttributes").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Product attributes");
 }
 
-<nop-antiforgery-token />
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.ProductAttributes")
     </h1>
     <div class="pull-right">
-        <a asp-action="Create" class="btn bg-blue">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeListButtons })
+        <button type="button" id="delete-selected" class="btn btn-danger">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
-<div class="content">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
+<section class="content">
+    <div class="container-fluid">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
                 <p>
                     @T("Admin.Catalog.Attributes.ProductAttributes.Description")
                 </p>
@@ -36,10 +42,16 @@
                     LengthMenu = Model.AvailablePageSizes,
                     ColumnCollection = new List<ColumnProperty>
                     {
+                         new ColumnProperty(nameof(ProductAttributeModel.Id))
+                        {
+                            IsMasterCheckBox = true,
+                            Render = new RenderCheckBox("checkbox_productattributes"),
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Width = "50"
+                        },
                         new ColumnProperty(nameof(ProductAttributeModel.Name))
                         {
-                            Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text,
-                            Width = "400"
+                            Title = T("Admin.Catalog.Attributes.ProductAttributes.Fields.Name").Text
                         },
                         new ColumnProperty(nameof(ProductAttributeModel.Id))
                         {
@@ -50,7 +62,35 @@
                         }
                     }
                 })
+
+                <script>
+                    $(document).ready(function () {
+                        $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                            var postData = {
+                                selectedIds: selectedIds
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@(Url.Action("DeleteSelected", "ProductAttribute"))",
+                                data: postData,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#deleteSelectedFailed-info').text(errorThrown);
+                                    $('#deleteSelectedFailed').click();
+                                },
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#products-grid');
+                                }
+                            });
+                            $('#delete-selected-action-confirmation').modal('toggle');
+                            return false;
+                        });
+                    });
+                </script>
+                <nop-alert asp-alert-id="deleteSelectedFailed" />
             </div>
         </div>
     </div>
 </div>
+</section>

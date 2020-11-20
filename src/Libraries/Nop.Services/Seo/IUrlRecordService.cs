@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Seo;
 
@@ -55,22 +55,15 @@ namespace Nop.Services.Seo
         UrlRecord GetBySlug(string slug);
 
         /// <summary>
-        /// Find URL record (cached version).
-        /// This method works absolutely the same way as "GetBySlug" one but caches the results.
-        /// Hence, it's used only for performance optimization in public store
-        /// </summary>
-        /// <param name="slug">Slug</param>
-        /// <returns>Found URL record</returns>
-        UrlRecordService.UrlRecordForCaching GetBySlugCached(string slug);
-
-        /// <summary>
         /// Gets all URL records
         /// </summary>
         /// <param name="slug">Slug</param>
+        /// <param name="languageId">Language ID; "null" to load records with any language; "0" to load records with standard language only; otherwise to load records with specify language ID only</param>
+        /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Find slug

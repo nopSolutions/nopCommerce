@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Messages

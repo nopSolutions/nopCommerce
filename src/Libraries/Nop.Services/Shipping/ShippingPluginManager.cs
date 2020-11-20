@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Shipping
@@ -20,8 +21,9 @@ namespace Nop.Services.Shipping
 
         #region Ctor
 
-        public ShippingPluginManager(IPluginService pluginService,
-            ShippingSettings shippingSettings) : base(pluginService)
+        public ShippingPluginManager(ICustomerService customerService,
+            IPluginService pluginService,
+            ShippingSettings shippingSettings) : base(customerService, pluginService)
         {
             _shippingSettings = shippingSettings;
         }

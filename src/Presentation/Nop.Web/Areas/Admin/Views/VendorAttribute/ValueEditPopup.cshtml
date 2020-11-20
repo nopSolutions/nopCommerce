@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Vendors.VendorAttributes.Values.EditValueDetails").Text;
+    ViewBag.PageTitle = T("Admin.Vendors.VendorAttributes.Values.EditValueDetails").Text;
 }
 
 <form asp-controller="VendorAttribute" asp-action="ValueEditPopup"
@@ -15,7 +15,7 @@
             @T("Admin.Vendors.VendorAttributes.Values.EditValueDetails")
         </h1>
         <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
+            <button type="submit" name="save" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>

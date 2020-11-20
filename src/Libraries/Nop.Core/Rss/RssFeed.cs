@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -90,7 +89,7 @@ namespace Nop.Core.Rss
         {
             try
             {
-                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default(CancellationToken));
+                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default);
 
                 var channel = document.Root?.Element(NopRssDefaults.Channel);
 
@@ -111,7 +110,6 @@ namespace Nop.Core.Rss
                 }
 
                 return feed;
-
             }
             catch
             {

@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Topics;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Topics
 {
@@ -14,17 +12,14 @@ namespace Nop.Services.Topics
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
 
         #endregion
 
         #region Ctor
 
-        public TopicTemplateService(IEventPublisher eventPublisher,
-            IRepository<TopicTemplate> topicTemplateRepository)
+        public TopicTemplateService(IRepository<TopicTemplate> topicTemplateRepository)
         {
-            _eventPublisher = eventPublisher;
             _topicTemplateRepository = topicTemplateRepository;
         }
 
@@ -38,13 +33,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplate">Topic template</param>
         public virtual void DeleteTopicTemplate(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
             _topicTemplateRepository.Delete(topicTemplate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(topicTemplate);
         }
 
         /// <summary>
@@ -53,11 +42,13 @@ namespace Nop.Services.Topics
         /// <returns>Topic templates</returns>
         public virtual IList<TopicTemplate> GetAllTopicTemplates()
         {
-            var query = from pt in _topicTemplateRepository.Table
-                        orderby pt.DisplayOrder, pt.Id
-                        select pt;
+            var templates = _topicTemplateRepository.GetAll(query=>
+            {
+                return from pt in query
+                    orderby pt.DisplayOrder, pt.Id
+                    select pt;
+            }, cache => default);
 
-            var templates = query.ToList();
             return templates;
         }
 
@@ -68,10 +59,7 @@ namespace Nop.Services.Topics
         /// <returns>Topic template</returns>
         public virtual TopicTemplate GetTopicTemplateById(int topicTemplateId)
         {
-            if (topicTemplateId == 0)
-                return null;
-
-            return _topicTemplateRepository.GetById(topicTemplateId);
+            return _topicTemplateRepository.GetById(topicTemplateId, cache => default);
         }
 
         /// <summary>
@@ -80,13 +68,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplate">Topic template</param>
         public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
             _topicTemplateRepository.Insert(topicTemplate);
-
-            //event notification
-            _eventPublisher.EntityInserted(topicTemplate);
         }
 
         /// <summary>
@@ -95,13 +77,7 @@ namespace Nop.Services.Topics
         /// <param name="topicTemplate">Topic template</param>
         public virtual void UpdateTopicTemplate(TopicTemplate topicTemplate)
         {
-            if (topicTemplate == null)
-                throw new ArgumentNullException(nameof(topicTemplate));
-
             _topicTemplateRepository.Update(topicTemplate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(topicTemplate);
         }
 
         #endregion

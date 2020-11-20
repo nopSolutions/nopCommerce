@@ -1,12 +1,30 @@
 ﻿@model DataTablesModel
+@using System.Globalization
 @using System.Net;
 
+@functions
+{
+    string GetUrl(DataUrl dataUrl)
+    {
+        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
+            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
+            : !string.IsNullOrEmpty(dataUrl.Url)
+            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
+            : string.Empty;
+    }
+
+    string ReplaceName(string str)
+    {
+        return str.Replace("-", "_");
+    }
+}
+
 @{
-    //the locale which MomentJS should use - the default is en (English).
-    var locale = "en";
+    //the locale which MomentJS should use
+    var locale = CultureInfo.CurrentCulture.Name;
 
     //Model name for js function names
-    var model_name = Model.Name.Replace("-", "_");
+    var model_name = ReplaceName(Model.Name);
 
     //dom
     var buttonsPanel = "";
@@ -30,18 +48,9 @@
     {
         dom = Model.Dom;
     }
-}
 
-@functions
-{
-    string GetUrl(DataUrl dataUrl)
-    {
-        return !string.IsNullOrEmpty(dataUrl?.ActionName) && !string.IsNullOrEmpty(dataUrl.ControllerName)
-            ? Url.Action(dataUrl.ActionName, dataUrl.ControllerName, dataUrl.RouteValues)
-            : !string.IsNullOrEmpty(dataUrl.Url)
-            ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
-            : string.Empty;
-    }
+    //check using MasterCheckBox
+    var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
 }
 
 @if (!string.IsNullOrEmpty(Model.HeaderCallback))
@@ -80,6 +89,8 @@
 }
 else
 {
+    
+
     <text>
     ajax:
     {
@@ -87,6 +98,14 @@ else
         type: "@WebRequestMethods.Http.Post",
         dataType: "json",
         dataSrc: "Data",
+        beforeSend: function() {
+        @if (isMasterCheckBoxUsed)
+        {
+            <text>
+            clearMasterCheckbox('@Model.Name');
+            </text>
+        }
+        },
         data: function(data) {
             @if (Model.Filters != null)
             {
@@ -133,6 +152,13 @@ else
                         }
                         continue;
                     }
+                    if (filter.Type == typeof(DateTime?))
+                    {
+                        <text>
+                        data.@filter.Name = $('#@filter.Name').val();
+                        </text>
+                        continue;
+                    }
                 }
             }
             addAntiForgeryToken(data);
@@ -167,7 +193,18 @@ ordering: @Model.Ordering.ToString().ToLower(),
             name: 'refresh',
             text: '<i class="fa fa-refresh" style="padding-left: 5px"></i>',
             action: function () {
-                updateTable('#@Model.Name');
+                @if (Model.ServerSide)
+                {
+                    <text>
+                    updateTable('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    updateTableSrc('#@Model.Name', @isMasterCheckBoxUsed.ToString().ToLower());
+                    </text>
+                }
             }
         }],
     </text>
@@ -190,7 +227,7 @@ columns: [
                 if (!string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                 {
                     <text>
-                    title: '<div class="checkbox"><label><input id="mastercheckbox" type="checkbox" />@JavaScriptEncoder.Default.Encode(column.Title)</label></div>',
+                    title: '<div class="checkbox"><label><input class="mastercheckbox" type="checkbox" />@JavaScriptEncoder.Default.Encode(column.Title)</label></div>',
                     </text>
                 }
                 else
@@ -198,7 +235,7 @@ columns: [
                     if (string.IsNullOrEmpty(column.Title) && column.IsMasterCheckBox)
                     {
                         <text>
-                        title: '<input id="mastercheckbox" type="checkbox"/>',
+                        title: '<input class="mastercheckbox" type="checkbox"/>',
                         </text>
                     }
                 }
@@ -229,7 +266,9 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: $.fn.dataTable.render.text(),
+                render: function (data, type, row, meta) {                    
+                    return escapeHtml(data)
+                },
                 </text>
             }
             @switch (column.Render)
@@ -277,21 +316,21 @@ columns: [
                             }
                             return '<a href="#" class="@button.ClassName" id="buttonEdit_@(model_name)'+ modData + '" onclick="editData_@(model_name)($(this).parent().parent(), \'' + origData + '\');return false;"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>' +
                             '<a href="#" class="@button.ClassName" id="buttonConfirm_@(model_name)'+ modData + '" style="display:none" onclick="confirmEditData_@(model_name)($(this).parent().parent(), \'' + origData + '\', \'@column.Data\');return false;"><i class="fa fa-check"></i>@T("Admin.Common.Update")</a>' +
-                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
+                            '<a href="#" class="@button.ClassName" id="buttonCancel_@(model_name)'+ modData + '" style="display:none" onclick="cancelEditData_@(model_name)(\'' + row + '\', \'' + origData + '\');updateTableWidth(\'' + '#@Model.Name' + '\');return false;"><i class="fa fa-ban"></i>@T("Admin.Common.Cancel")</a>';
                         },                         
                     </text>
                     break;
                 case RenderButtonEdit buttonEdit:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>';
+                        return '<a class="@buttonEdit.ClassName" href="@GetUrl(buttonEdit.Url)' + data + '"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
                     },
                     </text>
                     break;
                 case RenderButtonView buttonView:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>';
+                        return '<a class="@buttonView.ClassName" href="@GetUrl(buttonView.Url)' + data + '"><i class="fa fa-eye"></i>@T("Admin.Common.View").Text</a>';
                     },
                     </text>
                     break;
@@ -314,18 +353,23 @@ columns: [
                     }
                     break;
                 case RenderPicture picture:
+                    var widthAttr = string.Empty;
                     <text>
                     render: function (data, type, row, meta) {
+                        @if (picture.Width > 0)
+                        {
+                            widthAttr = "width=" + picture.Width;
+                        }
                         @if (!string.IsNullOrEmpty(picture.Src))
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)@(picture.Src)"/>';
+                            return '<img src="@(picture.SrcPrefix)@(picture.Src)" @(widthAttr) />';
                             </text>
                         }
                         else
                         {
                             <text>
-                            return '<img src="@(picture.SrcPrefix)' + data + '"/>';
+                            return '<img src="@(picture.SrcPrefix)' + data + '" @(widthAttr) />';
                             </text>
                         }
                     },
@@ -334,16 +378,16 @@ columns: [
                 case RenderCheckBox checkBox:
                     <text>
                     render: function (data, type, row, meta) {
-                        return (data === 'true')
-                            ? '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" checked="checked" />'
-                            : '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" />';
+                        return (data === true)
+                            ? '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" checked="checked" />'
+                            : '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
                     },
                     </text>
                     break;
                 case RenderBoolean renderBoolean:
                     <text>
                     render: function (data, type, row) {
-                        return (data == true)
+                        return data
                             ? '<i class="fa fa-check true-icon" nop-value="true"></i>'
                             : '<i class="fa fa-close false-icon" nop-value="false"></i>';
                     },
@@ -369,5 +413,4 @@ columns: [
         @if (i != Model.ColumnCollection.Count - 1) {<text>,</text>}
         </text>
     }
-]
-           
+]           

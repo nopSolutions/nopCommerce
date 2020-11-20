@@ -2,12 +2,10 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Tax.Categories").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Tax.Categories").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Tax categories");
 }
-
-<nop-antiforgery-token />
 
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -15,12 +13,13 @@
         </h1>
     </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
+        <div class="cards-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxCategoryListButtons })
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "tax-categories-grid",
@@ -63,12 +62,12 @@
                         }
                     })
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card card-default">
+                        <div class="card-header">
                             @T("Admin.Common.AddNewRecord")
                         </div>
-                        <div class="panel-body">
-                            <div class="form-group">
+                        <div class="card-body">
+                            <div class="form-group row">
                                 <div class="col-md-3">
                                     <nop-label asp-for="@Model.AddTaxCategory.Name" />
                                 </div>
@@ -77,7 +76,7 @@
                                     <span asp-validation-for="@Model.AddTaxCategory.Name"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <div class="col-md-3">
                                     <nop-label asp-for="@Model.AddTaxCategory.DisplayOrder" />
                                 </div>
@@ -86,8 +85,8 @@
                                     <span asp-validation-for="@Model.AddTaxCategory.DisplayOrder"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-9 col-md-offset-3">
+                            <div class="form-group row">
+                                <div class="col-md-9 offset-md-3">
                                     <button type="button" id="addTaxCategory" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
                                 </div>
                             </div>
@@ -114,7 +113,7 @@
                             
                                                 //clear input value
                                                 $("#@Html.IdFor(model => model.AddTaxCategory.Name)").val('');
-                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").val('');
+                                                $("#@Html.IdFor(model => model.AddTaxCategory.DisplayOrder)").data("kendoNumericTextBox").value(0); 
                                             } else {
                                                 //display errors if returned
                                                 display_nop_error(data);
@@ -133,3 +132,4 @@
         </div>
     </div>
 </div>
+</section>

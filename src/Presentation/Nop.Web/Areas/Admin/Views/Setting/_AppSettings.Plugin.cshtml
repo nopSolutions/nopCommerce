@@ -1,0 +1,40 @@
+@model AppSettingsModel
+
+<div class="card-body">
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PluginConfigModel.ClearPluginShadowDirectoryOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PluginConfigModel.ClearPluginShadowDirectoryOnStartup" />
+            <span asp-validation-for="PluginConfigModel.ClearPluginShadowDirectoryOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PluginConfigModel.CopyLockedPluginAssembilesToSubdirectoriesOnStartup" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PluginConfigModel.CopyLockedPluginAssembilesToSubdirectoriesOnStartup" />
+            <span asp-validation-for="PluginConfigModel.CopyLockedPluginAssembilesToSubdirectoriesOnStartup"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PluginConfigModel.UseUnsafeLoadAssembly" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PluginConfigModel.UseUnsafeLoadAssembly" />
+            <span asp-validation-for="PluginConfigModel.UseUnsafeLoadAssembly"></span>
+        </div>
+    </div>
+    <div class="form-group row advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PluginConfigModel.UsePluginsShadowCopy" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PluginConfigModel.UsePluginsShadowCopy" />
+            <span asp-validation-for="PluginConfigModel.UsePluginsShadowCopy"></span>
+        </div>
+    </div>
+</div>

@@ -28,13 +28,13 @@ namespace Nop.Services.Tests.Shipping
             response.ShippingOptions.Add(new ShippingOption
                 {
                     Name = "Shipping option 1",
-                    Description = "",
+                    Description = string.Empty,
                     Rate = GetRate()
                 }); 
             response.ShippingOptions.Add(new ShippingOption
                 {
                     Name = "Shipping option 2",
-                    Description = "",
+                    Description = string.Empty,
                     Rate = GetRate()
                 });
 
@@ -55,26 +55,16 @@ namespace Nop.Services.Tests.Shipping
         }
 
         #region Properties
-
-
+        
         /// <summary>
         /// Gets a shipping rate computation method type
         /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType
-        {
-            get
-            {
-                return ShippingRateComputationMethodType.Offline;
-            }
-        }
+        public ShippingRateComputationMethodType ShippingRateComputationMethodType => ShippingRateComputationMethodType.Offline;
 
         /// <summary>
         /// Gets a shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker
-        {
-            get { return null; }
-        }
+        public IShipmentTracker ShipmentTracker => null;
         #endregion
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
@@ -20,8 +21,9 @@ namespace Nop.Services.Cms
 
         #region Ctor
 
-        public WidgetPluginManager(WidgetSettings widgetSettings,
-            IPluginService pluginService) : base(pluginService)
+        public WidgetPluginManager(ICustomerService customerService,
+            IPluginService pluginService,
+            WidgetSettings widgetSettings) : base(customerService, pluginService)
         {
             _widgetSettings = widgetSettings;
         }
@@ -43,10 +45,8 @@ namespace Nop.Services.Cms
 
             //filter by widget zone
             if (!string.IsNullOrEmpty(widgetZone))
-            {
                 widgets = widgets.Where(widget =>
                     widget.GetWidgetZones().Contains(widgetZone, StringComparer.InvariantCultureIgnoreCase)).ToList();
-            }
 
             return widgets;
         }
@@ -71,6 +71,7 @@ namespace Nop.Services.Cms
         public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
         {
             var widget = LoadPluginBySystemName(systemName, customer, storeId);
+
             return IsPluginActive(widget);
         }
 

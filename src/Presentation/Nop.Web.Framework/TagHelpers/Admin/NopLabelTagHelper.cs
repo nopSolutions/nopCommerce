@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             }
 
             //generate label
-            var tagBuilder = Generator.GenerateLabel(ViewContext, For.ModelExplorer, For.Name, null, new { @class = "control-label" });
+            var tagBuilder = Generator.GenerateLabel(ViewContext, For.ModelExplorer, For.Name, null, new { @class = "col-form-label" });
             if (tagBuilder != null)
             {
                 //create a label wrapper

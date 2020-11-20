@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -22,12 +21,14 @@ namespace Nop.Web.Framework.Controllers
     /// <summary>
     /// Base controller
     /// </summary>
+    [HttpsRequirement]
     [PublishModelEvents]
     [SignOutFromExternalAuthentication]
     [ValidatePassword]
     [SaveIpAddress]
     [SaveLastActivity]
     [SaveLastVisitedPage]
+    [ForceMultiFactorAuthentication]
     public abstract class BaseController : Controller
     {
         #region Rendering
@@ -43,7 +44,6 @@ namespace Nop.Web.Framework.Controllers
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
             //we customized it to allow running from controllers
 
-            //TODO add support for parameters (pass ViewComponent as input parameter)
             if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
@@ -59,37 +59,33 @@ namespace Nop.Web.Framework.Controllers
             if (viewData == null)
             {
                 throw new NotImplementedException();
-                //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
             var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
-                //TODO tempData = _tempDataDictionaryFactory.GetTempData(context.HttpContext);
             }
 
-            using (var writer = new StringWriter())
-            {
-                var viewContext = new ViewContext(
-                    context,
-                    NullView.Instance,
-                    viewData,
-                    tempData,
-                    writer,
-                    new HtmlHelperOptions());
+            using var writer = new StringWriter();
+            var viewContext = new ViewContext(
+                context,
+                NullView.Instance,
+                viewData,
+                tempData,
+                writer,
+                new HtmlHelperOptions());
 
-                // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
-                var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
-                (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
+            // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
+            var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
+            (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-                var result = viewComponentResult.ViewComponentType == null ? 
-                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
-                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
+            var result = viewComponentResult.ViewComponentType == null ? 
+                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
+                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 
-                result.Result.WriteTo(writer, HtmlEncoder.Default);
-                return writer.ToString();
-            }
+            result.Result.WriteTo(writer, HtmlEncoder.Default);
+            return writer.ToString();
         }
 
         /// <summary>
@@ -151,14 +147,12 @@ namespace Nop.Web.Framework.Controllers
                 if (viewResult.View == null)
                     throw new ArgumentNullException($"{viewName} view was not found");
             }
-            using (var stringWriter = new StringWriter())
-            {
-                var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
+            using var stringWriter = new StringWriter();
+            var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
 
-                var t = viewResult.View.RenderAsync(viewContext);
-                t.Wait();
-                return stringWriter.GetStringBuilder().ToString();
-            }
+            var t = viewResult.View.RenderAsync(viewContext);
+            t.Wait();
+            return stringWriter.GetStringBuilder().ToString();
         }
 
         #endregion
@@ -268,28 +262,28 @@ namespace Nop.Web.Framework.Controllers
 
         #endregion
 
-        #region Panels and tabs
+        #region Cards and tabs
 
         /// <summary>
-        /// Save selected panel name
+        /// Save selected card name
         /// </summary>
-        /// <param name="panelName">Panel name to save</param>
+        /// <param name="cardName">Card name to save</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
-        public virtual void SaveSelectedPanelName(string tabName, bool persistForTheNextRequest = true)
+        public virtual void SaveSelectedCardName(string cardName, bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedPanelName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
-            if (string.IsNullOrEmpty(tabName))
-                throw new ArgumentNullException(nameof(tabName));
+            //"GetSelectedCardName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(cardName))
+                throw new ArgumentNullException(nameof(cardName));
 
-            const string dataKey = "nop.selected-panel-name";
+            const string dataKey = "nop.selected-card-name";
             if (persistForTheNextRequest)
             {
-                TempData[dataKey] = tabName;
+                TempData[dataKey] = cardName;
             }
             else
             {
-                ViewData[dataKey] = tabName;
+                ViewData[dataKey] = cardName;
             }
         }
 
@@ -309,7 +303,7 @@ namespace Nop.Web.Framework.Controllers
 
             foreach (var key in Request.Form.Keys)
                 if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
-                    SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
+                    SaveSelectedTabName(null, key, key["selected-tab-name-".Length..], persistForTheNextRequest);
         }
 
         /// <summary>
@@ -356,6 +350,9 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="T">Model type</typeparam>
         /// <param name="model">The model to serialize.</param>
         /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        /// <remarks>
+        /// See also https://datatables.net/manual/server-side#Returned-data
+        /// </remarks>
         public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
         {
             return Json(new
@@ -363,10 +360,6 @@ namespace Nop.Web.Framework.Controllers
                 draw = model.Draw,
                 recordsTotal = model.RecordsTotal,
                 recordsFiltered = model.RecordsFiltered,
-                data = model.Data,
-
-                //TODO: remove after moving to DataTables grids
-                Total = model.Total,
                 Data = model.Data
             });
         }

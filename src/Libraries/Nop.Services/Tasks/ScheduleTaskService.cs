@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Tasks;
+using Nop.Data;
 
 namespace Nop.Services.Tasks
 {
@@ -34,10 +34,7 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task</param>
         public virtual void DeleteTask(ScheduleTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            _taskRepository.Delete(task);
+            _taskRepository.Delete(task, false);
         }
 
         /// <summary>
@@ -47,10 +44,7 @@ namespace Nop.Services.Tasks
         /// <returns>Task</returns>
         public virtual ScheduleTask GetTaskById(int taskId)
         {
-            if (taskId == 0)
-                return null;
-
-            return _taskRepository.GetById(taskId);
+            return _taskRepository.GetById(taskId, cache => default);
         }
 
         /// <summary>
@@ -78,15 +72,16 @@ namespace Nop.Services.Tasks
         /// <returns>Tasks</returns>
         public virtual IList<ScheduleTask> GetAllTasks(bool showHidden = false)
         {
-            var query = _taskRepository.Table;
-            if (!showHidden)
+            var tasks = _taskRepository.GetAll(query =>
             {
-                query = query.Where(t => t.Enabled);
-            }
+                if (!showHidden) 
+                    query = query.Where(t => t.Enabled);
 
-            query = query.OrderByDescending(t => t.Seconds);
+                query = query.OrderByDescending(t => t.Seconds);
 
-            var tasks = query.ToList();
+                return query;
+            });
+
             return tasks;
         }
 
@@ -99,7 +94,7 @@ namespace Nop.Services.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            _taskRepository.Insert(task);
+            _taskRepository.Insert(task, false);
         }
 
         /// <summary>
@@ -108,10 +103,7 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task</param>
         public virtual void UpdateTask(ScheduleTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-
-            _taskRepository.Update(task);
+            _taskRepository.Update(task, false);
         }
 
         #endregion

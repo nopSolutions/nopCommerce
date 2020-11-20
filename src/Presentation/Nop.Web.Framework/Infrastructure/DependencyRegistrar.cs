@@ -6,11 +6,11 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
+using Nop.Core.Domain.Stores;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Redis;
@@ -18,6 +18,7 @@ using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -70,8 +71,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        /// <param name="appSettings">App settings</param>
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, AppSettings appSettings)
         {
             //file provider
             builder.RegisterType<NopFileProvider>().As<INopFileProvider>().InstancePerLifetimeScope();
@@ -83,23 +84,18 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
-            builder.RegisterType<EfDataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
-            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
-            builder.Register(context => new NopObjectContext(context.Resolve<DbContextOptions<NopObjectContext>>()))
-                .As<IDbContext>().InstancePerLifetimeScope();
+            builder.RegisterType<DataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
+            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<INopDataProvider>().InstancePerDependency();
 
             //repositories
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
-            //cache manager
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
-
             //redis connection wrapper
-            if (config.RedisEnabled)
+            if (appSettings.RedisConfig.Enabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>()
                     .As<ILocker>()
@@ -108,7 +104,7 @@ namespace Nop.Web.Framework.Infrastructure
             }
 
             //static cache manager
-            if (config.RedisEnabled && config.UseRedisForCaching)
+            if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.UseCaching)
             {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
@@ -155,7 +151,6 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<VendorAttributeService>().As<IVendorAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerLifetimeScope();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerLifetimeScope();
-            builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerLifetimeScope();
             builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeFormatter>().As<ICustomerAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeParser>().As<ICustomerAttributeParser>().InstancePerLifetimeScope();
@@ -230,6 +225,8 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+            //slug route transformer
+            builder.RegisterType<SlugRouteTransformer>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<ReviewTypeService>().As<IReviewTypeService>().SingleInstance();
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
@@ -237,6 +234,7 @@ namespace Nop.Web.Framework.Infrastructure
             //plugin managers
             builder.RegisterGeneric(typeof(PluginManager<>)).As(typeof(IPluginManager<>)).InstancePerLifetimeScope();
             builder.RegisterType<AuthenticationPluginManager>().As<IAuthenticationPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterType<MultiFactorAuthenticationPluginManager>().As<IMultiFactorAuthenticationPluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetPluginManager>().As<IWidgetPluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<ExchangeRatePluginManager>().As<IExchangeRatePluginManager>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountPluginManager>().As<IDiscountPluginManager>().InstancePerLifetimeScope();
@@ -251,7 +249,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterSource(new SettingsSource());
 
             //picture service
-            if (config.AzureBlobStorageEnabled)
+            if (appSettings.AzureBlobConfig.Enabled)
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
                 builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
@@ -269,12 +267,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             //installation service
             if (!DataSettingsManager.DatabaseIsInstalled)
-            {
-                if (config.UseFastInstallationService)
-                    builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-                else
-                    builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-            }
+                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
@@ -312,7 +305,7 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="registrations">Registrations</param>
         /// <returns>Registrations</returns>
         public IEnumerable<IComponentRegistration> RegistrationsFor(Service service,
-            Func<Service, IEnumerable<IComponentRegistration>> registrations)
+            Func<Service, IEnumerable<ServiceRegistration>> registrations)
         {
             var ts = service as TypedService;
             if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))
@@ -327,14 +320,39 @@ namespace Nop.Web.Framework.Infrastructure
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
                 {
-                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    Store store;
+
+                    try
+                    {
+                        store = c.Resolve<IStoreContext>().CurrentStore;
+                    }
+                    catch
+                    {
+                        if (!DataSettingsManager.DatabaseIsInstalled)
+                            store = null;
+                        else
+                            throw;
+                    }
+
+                    var currentStoreId = store?.Id ?? 0;
+
                     //uncomment the code below if you want load settings per store only when you have two stores installed.
                     //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
                     //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
 
                     //although it's better to connect to your database and execute the following SQL:
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
-                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                    try
+                    {
+                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                    }
+                    catch
+                    {
+                        if (DataSettingsManager.DatabaseIsInstalled)
+                            throw;
+                    }
+
+                    return default;
                 })
                 .InstancePerLifetimeScope()
                 .CreateRegistration();

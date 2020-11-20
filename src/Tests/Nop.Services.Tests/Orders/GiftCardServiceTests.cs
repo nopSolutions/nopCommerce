@@ -1,107 +1,79 @@
-﻿using Nop.Core.Domain.Orders;
+﻿﻿using FluentAssertions;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Orders;
-using Nop.Tests;
 using NUnit.Framework;
 
-namespace Nop.Services.Tests.Orders
+ namespace Nop.Services.Tests.Orders
 {
     [TestFixture]
     public class GiftCardServiceTests : ServiceTest
     {
         private IGiftCardService _giftCardService;
+        private GiftCard _giftCard1;
+        private GiftCard _giftCard2;
 
-        [SetUp]
-        public new void SetUp()
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            _giftCardService = new GiftCardService(null, null, null, null);
+            _giftCardService = GetService<IGiftCardService>();
+
+            _giftCard1 = new GiftCard {Amount = 100, IsGiftCardActivated = true};
+            _giftCard2 = new GiftCard { Amount = 100 };
+
+            _giftCardService.InsertGiftCard(_giftCard1);
+            _giftCardService.InsertGiftCard(_giftCard2);
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            _giftCardService.DeleteGiftCard(_giftCard1);
+            _giftCardService.DeleteGiftCard(_giftCard2);
         }
 
         [Test]
-        public void Can_validate_giftCard()
+        public void CanValidateGiftCard()
         {
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 30});
 
-            var gc = new GiftCard
-            {
-                Amount = 100,
-                IsGiftCardActivated = true
-            };
-            gc.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 30
-                    }
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 20});
 
-                );
-            gc.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 20
-                    }
-
-                );
-            gc.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 5
-                    }
-
-                );
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 5});
 
             //valid
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(true);
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeTrue();
 
             //mark as not active
-            gc.IsGiftCardActivated = false;
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(false);
+            _giftCard1.IsGiftCardActivated = false;
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeFalse();
 
             //again active
-            gc.IsGiftCardActivated = true;
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(true);
+            _giftCard1.IsGiftCardActivated = true;
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeTrue();
 
             //add usage history record
-            gc.GiftCardUsageHistory.Add(new GiftCardUsageHistory
-            {
-                UsedValue = 1000
-            });
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(false);
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard1.Id, UsedWithOrderId = 1, UsedValue = 1000});
+
+            _giftCardService.IsGiftCardValid(_giftCard1).Should().BeFalse();
         }
 
         [Test]
-        public void Can_calculate_giftCard_remainingAmount()
+        public void CanCalculateGiftCardRemainingAmount()
         {
-            var gc = new GiftCard
-            {
-                Amount = 100
-            };
-            gc.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 30
-                    }
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 30});
 
-                );
-            gc.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 20
-                    }
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 20});
 
-                );
-            gc.GiftCardUsageHistory.Add
-                (
-                    new GiftCardUsageHistory
-                    {
-                        UsedValue = 5
-                    }
+            _giftCardService.InsertGiftCardUsageHistory(
+                new GiftCardUsageHistory {GiftCardId = _giftCard2.Id, UsedWithOrderId = 1, UsedValue = 5});
 
-                );
-
-            _giftCardService.GetGiftCardRemainingAmount(gc).ShouldEqual(45);
+            _giftCardService.GetGiftCardRemainingAmount(_giftCard2).Should().Be(45);
         }
     }
 }

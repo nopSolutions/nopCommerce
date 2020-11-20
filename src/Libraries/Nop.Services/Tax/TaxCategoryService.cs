@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Tax
 {
@@ -15,20 +12,14 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 
         #region Ctor
 
-        public TaxCategoryService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
-            IRepository<TaxCategory> taxCategoryRepository)
+        public TaxCategoryService(IRepository<TaxCategory> taxCategoryRepository)
         {
-            _cacheManager = cacheManager;
-            _eventPublisher = eventPublisher;
             _taxCategoryRepository = taxCategoryRepository;
         }
 
@@ -42,15 +33,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategory">Tax category</param>
         public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
             _taxCategoryRepository.Delete(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(taxCategory);
         }
 
         /// <summary>
@@ -59,14 +42,14 @@ namespace Nop.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
-            return _cacheManager.Get(NopTaxDefaults.TaxCategoriesAllCacheKey, () =>
+            var taxCategories = _taxCategoryRepository.GetAll(query=>
             {
-                var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder, tc.Id
-                            select tc;
-                var taxCategories = query.ToList();
-                return taxCategories;
-            });
+                return from tc in query
+                    orderby tc.DisplayOrder, tc.Id
+                    select tc;
+            }, cache => default);
+
+            return taxCategories;
         }
 
         /// <summary>
@@ -76,11 +59,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax category</returns>
         public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
         {
-            if (taxCategoryId == 0)
-                return null;
-
-            var key = string.Format(NopTaxDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
-            return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
+            return _taxCategoryRepository.GetById(taxCategoryId, cache => default);
         }
 
         /// <summary>
@@ -89,15 +68,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategory">Tax category</param>
         public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
             _taxCategoryRepository.Insert(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(taxCategory);
         }
 
         /// <summary>
@@ -106,15 +77,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategory">Tax category</param>
         public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
-            if (taxCategory == null)
-                throw new ArgumentNullException(nameof(taxCategory));
-
             _taxCategoryRepository.Update(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(taxCategory);
         }
 
         #endregion

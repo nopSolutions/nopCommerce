@@ -52,7 +52,7 @@ namespace Nop.Services.Localization
         /// <returns>Result</returns>
         public static string RemoveApplicationPathFromRawUrl(this string rawUrl, PathString pathBase)
         {
-            new PathString(rawUrl).StartsWithSegments(pathBase, out PathString result);
+            new PathString(rawUrl).StartsWithSegments(pathBase, out var result);
             return WebUtility.UrlDecode(result);
         }
 
@@ -74,7 +74,7 @@ namespace Nop.Services.Localization
 
             //get result URL
             url = url.TrimStart('/');
-            var result = url.Contains('/') ? url.Substring(url.IndexOf('/')) : string.Empty;
+            var result = url.Contains('/') ? url[(url.IndexOf('/'))..] : string.Empty;
 
             //and add back application path to raw URL
             if (isRawPath)

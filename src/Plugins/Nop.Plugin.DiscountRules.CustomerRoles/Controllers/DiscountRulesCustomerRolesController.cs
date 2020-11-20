@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.CustomerRoles.Models;
@@ -17,6 +19,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class DiscountRulesCustomerRolesController : BasePluginController
     {
         #region Fields
@@ -59,7 +62,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             //check whether the discount requirement exists
-            if (discountRequirementId.HasValue && !discount.DiscountRequirements.Any(requirement => requirement.Id == discountRequirementId.Value))
+            if (discountRequirementId.HasValue && _discountService.GetDiscountRequirementById(discountRequirementId.Value) is null)
                 return Content("Failed to load requirement.");
 
             //try to get previously saved restricted customer role identifier
@@ -91,37 +94,50 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]
-        [AdminAntiForgery]
-        public IActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
+        [HttpPost]        
+        public IActionResult Configure(RequirementModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
 
-            //load the discount
-            var discount = _discountService.GetDiscountById(discountId);
-            if (discount == null)
-                throw new ArgumentException("Discount could not be loaded");
-
-            //get the discount requirement
-            var discountRequirement = discountRequirementId.HasValue 
-                ? discount.DiscountRequirements.FirstOrDefault(requirement => requirement.Id == discountRequirementId.Value) : null;
-
-            //the discount requirement does not exist, so create a new one
-            if (discountRequirement == null)
+            if (ModelState.IsValid)
             {
-                discountRequirement = new DiscountRequirement
+                //load the discount
+                var discount = _discountService.GetDiscountById(model.DiscountId);
+                if (discount == null)
+                    return NotFound(new { Errors = new[] { "Discount could not be loaded" } });
+
+                //get the discount requirement
+                var discountRequirement = _discountService.GetDiscountRequirementById(model.RequirementId);
+
+                //the discount requirement does not exist, so create a new one
+                if (discountRequirement == null)
                 {
-                    DiscountRequirementRuleSystemName = DiscountRequirementDefaults.SystemName
-                };
-                discount.DiscountRequirements.Add(discountRequirement);
-                _discountService.UpdateDiscount(discount);
+                    discountRequirement = new DiscountRequirement
+                    {
+                        DiscountId = discount.Id,
+                        DiscountRequirementRuleSystemName = DiscountRequirementDefaults.SystemName
+                    };
+
+                    _discountService.InsertDiscountRequirement(discountRequirement);
+                }
+
+                //save restricted customer role identifier
+                _settingService.SetSetting(string.Format(DiscountRequirementDefaults.SettingsKey, discountRequirement.Id), model.CustomerRoleId);
+
+                return Ok(new { NewRequirementId = discountRequirement.Id });
             }
 
-            //save restricted customer role identifier
-            _settingService.SetSetting(string.Format(DiscountRequirementDefaults.SettingsKey, discountRequirement.Id), customerRoleId);
+            return BadRequest(new { Errors = GetErrorsFromModelState(ModelState) });
+        }
 
-            return Json(new { Result = true, NewRequirementId = discountRequirement.Id });
+        #endregion
+
+        #region Utilities
+
+        private IEnumerable<string> GetErrorsFromModelState(ModelStateDictionary modelState)
+        {
+            return ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
         }
 
         #endregion

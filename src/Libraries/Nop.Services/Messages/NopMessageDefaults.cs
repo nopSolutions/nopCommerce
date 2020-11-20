@@ -1,4 +1,7 @@
-﻿namespace Nop.Services.Messages
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Messages;
+
+namespace Nop.Services.Messages
 {
     /// <summary>
     /// Represents default values related to messages services
@@ -6,12 +9,19 @@
     public static partial class NopMessageDefaults
     {
         /// <summary>
+        /// Gets a key for notifications list from TempDataDictionary
+        /// </summary>
+        public static string NotificationListKey => "NotificationList";
+
+        #region Caching defaults
+
+        /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
         /// {0} : store ID
         /// </remarks>
-        public static string MessageTemplatesAllCacheKey => "Nop.messagetemplate.all-{0}";
+        public static CacheKey MessageTemplatesAllCacheKey => new CacheKey("Nop.messagetemplate.all.{0}", NopEntityCacheDefaults<MessageTemplate>.AllPrefix);
 
         /// <summary>
         /// Gets a key for caching
@@ -20,16 +30,16 @@
         /// {0} : template name
         /// {1} : store ID
         /// </remarks>
-        public static string MessageTemplatesByNameCacheKey => "Nop.messagetemplate.name-{0}-{1}";
+        public static CacheKey MessageTemplatesByNameCacheKey => new CacheKey("Nop.messagetemplate.byname.{0}-{1}", MessageTemplatesByNamePrefix);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string MessageTemplatesPrefixCacheKey => "Nop.messagetemplate.";
+        /// <remarks>
+        /// {0} : template name
+        /// </remarks>
+        public static string MessageTemplatesByNamePrefix => "Nop.messagetemplate.byname.{0}";
 
-        /// <summary>
-        /// Gets a key for notifications list from TempDataDictionary
-        /// </summary>
-        public static string NotificationListKey => "NotificationList";
+        #endregion
     }
 }

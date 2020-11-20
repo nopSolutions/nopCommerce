@@ -1,0 +1,268 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Multiview calendar
+.k-calendar-range {
+    width: auto;
+    text-align: left;
+    line-height: @multiviewcalendar-line-height;
+
+
+    // Header
+    .k-calendar-header {
+        padding: @multiviewcalendar-header-padding-y @multiviewcalendar-header-padding-x;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .k-button {
+            white-space: nowrap;
+            .k-button.k-flat();
+        }
+    }
+
+
+    // Navigation
+    .k-calendar-nav {
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+
+    // Tables
+    .k-calendar-view {
+        height: auto;
+        width: auto;
+        min-height: (7 * @multiviewcalendar-cell-size );
+        text-align: center;
+        white-space: nowrap;
+
+        .k-animation-container-sm & {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    &.k-week-number .k-calendar-view {
+        width: auto;
+    }
+    .k-content {
+        padding: 0 @multiviewcalendar-content-padding-x @multiviewcalendar-content-padding-y;
+        width: auto;
+        height: auto;
+        text-align: center;
+        display: inline-table;
+        vertical-align: top;
+        float: none;
+
+        // reset colors
+        color: inherit;
+        background-color: transparent;
+
+        th,
+        td {
+            padding: 0;
+            border-width: 0;
+            color: inherit;
+            background-color: transparent;
+            background-image: none;
+            text-align: inherit;
+            vertical-align: middle;
+        }
+        th {
+            padding: .5em 0;
+            font-size: @multiviewcalendar-header-cell-font-size;
+            line-height: 1.5;
+            text-transform: uppercase;
+            opacity: .5;
+        }
+        td {
+            border-radius: @multiviewcalendar-cell-border-radius;
+        }
+
+        td.k-alt {
+            opacity: .5;
+        }
+        .k-link {
+            padding: @multiviewcalendar-cell-padding-y @multiviewcalendar-cell-padding-x;
+            min-height: 0;
+            box-sizing: border-box;
+            border-radius: @multiviewcalendar-cell-border-radius;
+            line-height: inherit;
+        }
+
+
+        // Month / meta header
+        .k-meta-header,
+        .k-month-header {
+            margin: 0 @multiviewcalendar-content-padding-x;
+            padding: .5em @button-padding-x;
+            font-size: @multiviewcalendar-header-cell-font-size;
+            line-height: 1.5;
+            text-transform: uppercase;
+            text-align: left;
+            opacity: .5;
+        }
+
+
+        // Range
+        td.k-range-start {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        td.k-range-mid {
+            border-radius: 0;
+        }
+        td.k-range-end {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        td.k-range-split-start,
+        td.k-range-split-end {
+            position: relative;
+
+            &::after {
+                content: "";
+                width: 5px;
+                display: block;
+                position: absolute;
+                top: 1px;
+                bottom: 1px;
+            }
+        }
+        td.k-range-split-start::after {
+            right: auto;
+            left: -5px;
+        }
+        td.k-range-split-end::after {
+            right: -5px;
+            left: auto;
+        }
+
+
+        // Reset weekend
+        td.k-weekend {
+            background-color: transparent;
+        }
+    }
+
+
+    // Reset states
+    .k-state-selected {
+        color: inherit;
+        background: transparent;
+        border-color: transparent;
+    }
+    .k-state-focused,
+    .k-state-focused.k-state-selected {
+        box-shadow: none;
+    }
+    td.k-state-disabled {
+        opacity: .5;
+
+        .k-link {
+            color: inherit;
+        }
+    }
+
+
+    // Footer
+    .k-footer {
+        .k-nav-today {
+            padding: @multiviewcalendar-header-padding-y @multiviewcalendar-header-padding-x;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+    }
+}
+
+
+// DateRangePicker
+
+.k-widget.k-daterangepicker {
+    border: 0;
+    box-shadow: none;
+}
+
+
+// Monthview
+.k-calendar-monthview {
+    .k-content {
+        .k-link {
+            width: @multiviewcalendar-cell-size;
+        }
+        tbody tr {
+            height: @multiviewcalendar-cell-size;
+        }
+    }
+}
+
+
+// Yearview
+.k-calendar-yearview {
+    .k-content {
+        margin: 0 -1px;
+
+        .k-link {
+            width: @calendar-meta-cell-size;
+            height: @calendar-meta-cell-size;
+            line-height: 3.25;
+        }
+    }
+}
+
+
+// Decadeview
+.k-calendar-decadeview {
+    .k-content {
+        margin: 0 -1px;
+
+        .k-link {
+            width: @calendar-meta-cell-size;
+            height: @calendar-meta-cell-size;
+            line-height: 3.25;
+        }
+    }
+}
+
+
+// Centuryview
+.k-calendar-centuryview {
+    .k-content {
+        margin: 0 -1px;
+
+        .k-link {
+            padding: @multiviewcalendar-centuryview-cell-padding-y @multiviewcalendar-centuryview-cell-padding-x;
+            width: @calendar-meta-cell-size;
+            height: @calendar-meta-cell-size;
+            text-align: left;
+            line-height: 1.625;
+            white-space: normal;
+        }
+    }
+}
+
+
+
+
+// RTL
+.k-rtl .k-calendar-range {
+    text-align: right;
+
+
+    .k-calendar-nav {
+        float: left;
+    }
+}

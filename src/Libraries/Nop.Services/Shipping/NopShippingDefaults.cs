@@ -1,11 +1,14 @@
-﻿namespace Nop.Services.Shipping
+﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Shipping;
+
+namespace Nop.Services.Shipping
 {
     /// <summary>
     /// Represents default values related to shipping services
     /// </summary>
     public static partial class NopShippingDefaults
     {
-        #region Shipping methods
+        #region Caching defaults
 
         /// <summary>
         /// Gets a key for caching
@@ -13,29 +16,7 @@
         /// <remarks>
         /// {0} : country identifier
         /// </remarks>
-        public static string ShippingMethodsAllCacheKey => "Nop.shippingmethod.all-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ShippingMethodsPrefixCacheKey => "Nop.shippingmethod.";
-
-        #endregion
-
-        #region Warehouses
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : warehouse ID
-        /// </remarks>
-        public static string WarehousesByIdCacheKey => "Nop.warehouse.id-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string WarehousesPrefixCacheKey => "Nop.warehouse.";
+        public static CacheKey ShippingMethodsAllCacheKey => new CacheKey("Nop.shippingmethod.all.{0}", NopEntityCacheDefaults<ShippingMethod>.AllPrefix);
 
         #endregion
     }

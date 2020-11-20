@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
 
 namespace Nop.Plugin.Tax.Avalara.Services
@@ -68,9 +68,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>Log item</returns>
         public virtual TaxTransactionLog GetTaxTransactionLogById(int logItemId)
         {
-            if (logItemId == 0)
-                return null;
-
             return _taxTransactionLogRepository.GetById(logItemId);
         }
 
@@ -83,7 +80,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Insert(logItem);
+            _taxTransactionLogRepository.Insert(logItem, false);
         }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (logItem == null)
                 throw new ArgumentNullException(nameof(logItem));
 
-            _taxTransactionLogRepository.Update(logItem);
+            _taxTransactionLogRepository.Update(logItem, false);
         }
 
         /// <summary>
@@ -104,10 +101,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="logItem">Log item</param>
         public virtual void DeleteTaxTransactionLog(TaxTransactionLog logItem)
         {
-            if (logItem == null)
-                throw new ArgumentNullException(nameof(logItem));
-
-            _taxTransactionLogRepository.Delete(logItem);
+            _taxTransactionLogRepository.Delete(logItem, false);
         }
 
         /// <summary>
@@ -116,8 +110,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="ids">Log items identifiers</param>
         public virtual void DeleteTaxTransactionLog(int[] ids)
         {
-            var log = _taxTransactionLogRepository.Table.Where(logItem => ids.Contains(logItem.Id));
-            _taxTransactionLogRepository.Delete(log);
+            _taxTransactionLogRepository.Delete(logItem => ids.Contains(logItem.Id));
         }
 
         #endregion

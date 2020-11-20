@@ -95,6 +95,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ProductReviewsMustBeApproved { get; set; }
         public bool ProductReviewsMustBeApproved_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.OneReviewPerProductFromCustomer")]
+        public bool OneReviewPerProductFromCustomer { get; set; }
+        public bool OneReviewPerProductFromCustomer_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToReviewProduct")]
         public bool AllowAnonymousUsersToReviewProduct { get; set; }
         public bool AllowAnonymousUsersToReviewProduct_OverrideForStore { get; set; }
@@ -178,6 +182,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled")]
         public bool ProductSearchAutoCompleteEnabled { get; set; }
         public bool ProductSearchAutoCompleteEnabled_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchEnabled")]
+        public bool ProductSearchEnabled { get; set; }
+        public bool ProductSearchEnabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts")]
         public int ProductSearchAutoCompleteNumberOfProducts { get; set; }

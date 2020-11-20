@@ -1,4 +1,5 @@
 ﻿using Nop.Core;
+using Nop.Core.Caching;
 
 namespace Nop.Plugin.Misc.SendinBlue
 {
@@ -25,7 +26,7 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// <summary>
         /// Gets a user agent used to request SendinBlue services
         /// </summary>
-        public static string UserAgent => $"nopCommerce-{NopVersion.CurrentVersion}";
+        public static string UserAgent => $"nopCommerce-{NopVersion.CURRENT_VERSION}";
 
         /// <summary>
         /// Gets a URL to edit message template on SendinBlue account
@@ -310,7 +311,7 @@ namespace Nop.Plugin.Misc.SendinBlue
         /// <summary>
         /// Gets a key of cache synchronization
         /// </summary>
-        public static string SyncKeyCache => "PLUGINS_MISC_SENDINBLUE_SYNCINFO";
+        public static CacheKey SyncKeyCache => new CacheKey("PLUGINS_MISC_SENDINBLUE_SYNCINFO");
 
         /// <summary>
         /// Gets a key of notification message

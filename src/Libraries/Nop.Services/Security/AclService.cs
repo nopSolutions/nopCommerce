@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
-using Nop.Data.Extensions;
-using Nop.Services.Events;
+using Nop.Data;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Security
 {
@@ -20,9 +20,9 @@ namespace Nop.Services.Security
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly ICustomerService _customerService;
         private readonly IRepository<AclRecord> _aclRecordRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -30,15 +30,15 @@ namespace Nop.Services.Security
         #region Ctor
 
         public AclService(CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
+            ICustomerService customerService,
             IRepository<AclRecord> aclRecordRepository,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
-            _eventPublisher = eventPublisher;
+            _customerService = customerService;
             _aclRecordRepository = aclRecordRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
         }
 
@@ -47,21 +47,28 @@ namespace Nop.Services.Security
         #region Methods
 
         /// <summary>
+        /// Get an expression predicate to apply the ACL
+        /// </summary>
+        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <typeparam name="TEntity">Type of entity with supported the ACL</typeparam>
+        /// <returns>Lambda expression</returns>
+        public virtual Expression<Func<TEntity, bool>> ApplyAcl<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported
+        {
+            return (subjectEntity) => (from acl in _aclRecordRepository.Table
+                                       where !subjectEntity.SubjectToAcl ||
+                                           (acl.EntityId == subjectEntity.Id &&
+                                               acl.EntityName == typeof(TEntity).Name &&
+                                               customerRoleIds.Contains(acl.CustomerRoleId))
+                                       select acl.EntityId).Any();
+        }
+
+        /// <summary>
         /// Deletes an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
         public virtual void DeleteAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             _aclRecordRepository.Delete(aclRecord);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityDeleted(aclRecord);
         }
 
         /// <summary>
@@ -71,10 +78,7 @@ namespace Nop.Services.Security
         /// <returns>ACL record</returns>
         public virtual AclRecord GetAclRecordById(int aclRecordId)
         {
-            if (aclRecordId == 0)
-                return null;
-
-            return _aclRecordRepository.GetById(aclRecordId);
+            return _aclRecordRepository.GetById(aclRecordId, cache => default);
         }
 
         /// <summary>
@@ -89,7 +93,7 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
             var query = from ur in _aclRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -105,16 +109,7 @@ namespace Nop.Services.Security
         /// <param name="aclRecord">ACL record</param>
         public virtual void InsertAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             _aclRecordRepository.Insert(aclRecord);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityInserted(aclRecord);
         }
 
         /// <summary>
@@ -132,7 +127,7 @@ namespace Nop.Services.Security
                 throw new ArgumentOutOfRangeException(nameof(customerRoleId));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
             var aclRecord = new AclRecord
             {
@@ -145,21 +140,34 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
+        /// Get a value indicating whether any ACL records exist for entity type are related to customer roles
+        /// </summary>
+        /// <param name="customerRoleIds">Customer's role identifiers</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>True if exist; otherwise false</returns>
+        public virtual bool IsEntityAclMappingExist<T>(int[] customerRoleIds) where T : BaseEntity, IAclSupported
+        {
+            if (!customerRoleIds.Any())
+                return false;
+
+            var entityName = typeof(T).Name;
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName, customerRoleIds);
+
+            var query = from acl in _aclRecordRepository.Table
+                        where acl.EntityName == entityName &&
+                              customerRoleIds.Contains(acl.CustomerRoleId)
+                        select acl;
+
+            return _staticCacheManager.Get(key, query.Any);
+        }
+
+        /// <summary>
         /// Updates the ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
         public virtual void UpdateAclRecord(AclRecord aclRecord)
         {
-            if (aclRecord == null)
-                throw new ArgumentNullException(nameof(aclRecord));
-
             _aclRecordRepository.Update(aclRecord);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
-
-            //event notification
-            _eventPublisher.EntityUpdated(aclRecord);
         }
 
         /// <summary>
@@ -174,17 +182,16 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
-            var key = string.Format(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from ur in _aclRecordRepository.Table
-                            where ur.EntityId == entityId &&
-                            ur.EntityName == entityName
-                            select ur.CustomerRoleId;
-                return query.ToArray();
-            });
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.AclRecordCacheKey, entityId, entityName);
+
+            var query = from ur in _aclRecordRepository.Table
+                        where ur.EntityId == entityId &&
+                              ur.EntityName == entityName
+                        select ur.CustomerRoleId;
+
+            return _staticCacheManager.Get(key, query.ToArray);
         }
 
         /// <summary>
@@ -219,7 +226,7 @@ namespace Nop.Services.Security
             if (!entity.SubjectToAcl)
                 return true;
 
-            foreach (var role1 in customer.CustomerRoles.Where(cr => cr.Active))
+            foreach (var role1 in _customerService.GetCustomerRoles(customer))
                 foreach (var role2Id in GetCustomerRoleIdsWithAccess(entity))
                     if (role1.Id == role2Id)
                         //yes, we have such permission

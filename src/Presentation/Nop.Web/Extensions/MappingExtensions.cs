@@ -50,8 +50,8 @@ namespace Nop.Web.Extensions
             destination.LastName = model.LastName;
             destination.Email = model.Email;
             destination.Company = model.Company;
-            destination.CountryId = model.CountryId;
-            destination.StateProvinceId = model.StateProvinceId;
+            destination.CountryId = model.CountryId == 0 ? null : model.CountryId;
+            destination.StateProvinceId = model.StateProvinceId == 0 ? null : model.StateProvinceId;
             destination.County = model.County;
             destination.City = model.City;
             destination.Address1 = model.Address1;

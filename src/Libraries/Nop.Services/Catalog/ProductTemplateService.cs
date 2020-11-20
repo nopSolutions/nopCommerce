@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Catalog
 {
@@ -14,17 +12,14 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
 
         #endregion
 
         #region Ctor
 
-        public ProductTemplateService(IEventPublisher eventPublisher,
-            IRepository<ProductTemplate> productTemplateRepository)
+        public ProductTemplateService(IRepository<ProductTemplate> productTemplateRepository)
         {
-            _eventPublisher = eventPublisher;
             _productTemplateRepository = productTemplateRepository;
         }
 
@@ -38,13 +33,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTemplate">Product template</param>
         public virtual void DeleteProductTemplate(ProductTemplate productTemplate)
         {
-            if (productTemplate == null)
-                throw new ArgumentNullException(nameof(productTemplate));
-
             _productTemplateRepository.Delete(productTemplate);
-
-            //event notification
-            _eventPublisher.EntityDeleted(productTemplate);
         }
 
         /// <summary>
@@ -53,11 +42,13 @@ namespace Nop.Services.Catalog
         /// <returns>Product templates</returns>
         public virtual IList<ProductTemplate> GetAllProductTemplates()
         {
-            var query = from pt in _productTemplateRepository.Table
-                        orderby pt.DisplayOrder, pt.Id
-                        select pt;
-
-            var templates = query.ToList();
+            var templates = _productTemplateRepository.GetAll(query =>
+            {
+                return from pt in query
+                    orderby pt.DisplayOrder, pt.Id
+                    select pt;
+            }, cache => default);
+            
             return templates;
         }
 
@@ -68,10 +59,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product template</returns>
         public virtual ProductTemplate GetProductTemplateById(int productTemplateId)
         {
-            if (productTemplateId == 0)
-                return null;
-
-            return _productTemplateRepository.GetById(productTemplateId);
+            return _productTemplateRepository.GetById(productTemplateId, cache => default);
         }
 
         /// <summary>
@@ -80,13 +68,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTemplate">Product template</param>
         public virtual void InsertProductTemplate(ProductTemplate productTemplate)
         {
-            if (productTemplate == null)
-                throw new ArgumentNullException(nameof(productTemplate));
-
             _productTemplateRepository.Insert(productTemplate);
-
-            //event notification
-            _eventPublisher.EntityInserted(productTemplate);
         }
 
         /// <summary>
@@ -95,13 +77,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTemplate">Product template</param>
         public virtual void UpdateProductTemplate(ProductTemplate productTemplate)
         {
-            if (productTemplate == null)
-                throw new ArgumentNullException(nameof(productTemplate));
-
             _productTemplateRepository.Update(productTemplate);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productTemplate);
         }
 
         #endregion

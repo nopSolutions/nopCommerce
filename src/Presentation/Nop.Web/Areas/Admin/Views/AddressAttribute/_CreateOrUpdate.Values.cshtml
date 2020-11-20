@@ -1,11 +1,9 @@
 @model AddressAttributeModel
 
-<div class="panel-group">
+<div class="cards-group">
     @if (Model.Id > 0)
     {
-        /*TODO display the following warning if values are not supported by selected attribute control type - 'Values are not required for this attribute control type' */
-        
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "addressattributevalues-grid",
@@ -49,14 +47,14 @@
             }
         })
      </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 400, true); return false;" class="btn btn-primary">
                 @T("Admin.Address.AddressAttributes.Values.AddNew")
             </button>
             <input type="submit" id="btnRefresh" style="display: none" />
             <script>
                 function renderColumnEdit(data, type, row, meta) {
-                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
+                    return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=addressattribute-form\', 800, 800, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</button>';
                 }
 
                 $(document).ready(function () {
@@ -73,7 +71,7 @@
     }
     else
     {
-        <div class="panel-body">
+        <div class="card-body">
             @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
         </div>
     }

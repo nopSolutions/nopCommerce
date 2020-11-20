@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Media;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -26,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AsyncUpload()
         {
             //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
@@ -34,13 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = "No file uploaded"
-                });
-            }
+                return Json(new { success = false, message = "No file uploaded" });
 
             const string qqFileNameParameter = "qqfilename";
 
@@ -52,11 +45,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
+
+            if (picture == null)
+                return Json(new { success = false, message = "Wrong file format" });
+
             return Json(new
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, 100)
+                imageUrl = _pictureService.GetPictureUrl(ref picture, 100)
             });
         }
 

@@ -8,7 +8,9 @@ using Nop.Services.Vendors;
 
 namespace Nop.Web.Controllers
 {
-    public partial class BackwardCompatibility2XController : BasePublicController
+    //do not inherit it from BasePublicController. otherwise a lot of extra action filters will be called
+    //they can create guest account(s), etc
+    public partial class BackwardCompatibility2XController : Controller
     {
         #region Fields
 

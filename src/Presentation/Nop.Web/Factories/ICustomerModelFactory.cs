@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Factories
@@ -27,7 +28,7 @@ namespace Nop.Web.Factories
         /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <returns>Customer info model</returns>
-        CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
+        CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "");
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Nop.Web.Factories
         /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
         /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
         /// <returns>Customer register model</returns>
-        RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties, 
+        RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties,
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false);
 
         /// <summary>
@@ -51,21 +52,17 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare the password recovery model
         /// </summary>
+        /// <param name="model">Password recovery model</param>
         /// <returns>Password recovery model</returns>
-        PasswordRecoveryModel PreparePasswordRecoveryModel();
-
-        /// <summary>
-        /// Prepare the password recovery confirm model
-        /// </summary>
-        /// <returns>Password recovery confirm model</returns>
-        PasswordRecoveryConfirmModel PreparePasswordRecoveryConfirmModel();
+        PasswordRecoveryModel PreparePasswordRecoveryModel(PasswordRecoveryModel model);
 
         /// <summary>
         /// Prepare the register result model
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
+        /// <param name="returnUrl">URL to redirect</param>
         /// <returns>Register result model</returns>
-        RegisterResultModel PrepareRegisterResultModel(int resultId);
+        RegisterResultModel PrepareRegisterResultModel(int resultId, string returnUrl);
 
         /// <summary>
         /// Prepare the customer navigation model
@@ -118,5 +115,21 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>check gift card balance model</returns>
         CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel();
+
+        /// <summary>
+        /// Prepare the multi-factor authentication model
+        /// </summary>
+        /// <param name="model">Multi-factor authentication model</param>
+        /// <returns>Multi-factor authentication model</returns>
+        MultiFactorAuthenticationModel PrepareMultiFactorAuthenticationModel(MultiFactorAuthenticationModel model);
+
+        /// <summary>
+        /// Prepare the multi-factor provider model
+        /// </summary>
+        /// <param name="providerModel">Multi-factor provider model</param>
+        /// <param name="sysName">Multi-factor provider system name</param>
+        /// <param name="isLogin">Is login page</param>
+        /// <returns>Multi-factor authentication model</returns>
+        MultiFactorAuthenticationProviderModel PrepareMultiFactorAuthenticationProviderModel(MultiFactorAuthenticationProviderModel providerModel, string sysName, bool isLogin = false);
     }
 }

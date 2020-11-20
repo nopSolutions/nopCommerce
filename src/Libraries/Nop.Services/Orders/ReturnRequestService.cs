@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Orders
 {
@@ -15,7 +14,6 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
@@ -24,12 +22,10 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
-        public ReturnRequestService(IEventPublisher eventPublisher,
-            IRepository<ReturnRequest> returnRequestRepository,
+        public ReturnRequestService(IRepository<ReturnRequest> returnRequestRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository)
         {
-            _eventPublisher = eventPublisher;
             _returnRequestRepository = returnRequestRepository;
             _returnRequestActionRepository = returnRequestActionRepository;
             _returnRequestReasonRepository = returnRequestReasonRepository;
@@ -45,13 +41,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequest">Return request</param>
         public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
         {
-            if (returnRequest == null)
-                throw new ArgumentNullException(nameof(returnRequest));
-
             _returnRequestRepository.Delete(returnRequest);
-
-            //event notification
-            _eventPublisher.EntityDeleted(returnRequest);
         }
 
         /// <summary>
@@ -61,9 +51,6 @@ namespace Nop.Services.Orders
         /// <returns>Return request</returns>
         public virtual ReturnRequest GetReturnRequestById(int returnRequestId)
         {
-            if (returnRequestId == 0)
-                return null;
-
             return _returnRequestRepository.GetById(returnRequestId);
         }
 
@@ -81,7 +68,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="getOnlyTotalCount">A value in indicating whether you want to load only total number of records. Set to "true" if you don't want to load data from database</param>
         /// <returns>Return requests</returns>
-        public IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
+        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
@@ -110,6 +97,7 @@ namespace Nop.Services.Orders
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
 
             var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize, getOnlyTotalCount);
+
             return returnRequests;
         }
 
@@ -119,13 +107,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestAction">Return request action</param>
         public virtual void DeleteReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
-            if (returnRequestAction == null)
-                throw new ArgumentNullException(nameof(returnRequestAction));
-
             _returnRequestActionRepository.Delete(returnRequestAction);
-
-            //event notification
-            _eventPublisher.EntityDeleted(returnRequestAction);
         }
 
         /// <summary>
@@ -134,10 +116,12 @@ namespace Nop.Services.Orders
         /// <returns>Return request actions</returns>
         public virtual IList<ReturnRequestAction> GetAllReturnRequestActions()
         {
-            var query = from rra in _returnRequestActionRepository.Table
-                        orderby rra.DisplayOrder, rra.Id
-                        select rra;
-            return query.ToList();
+            return _returnRequestActionRepository.GetAll(query =>
+            {
+                return from rra in query
+                    orderby rra.DisplayOrder, rra.Id
+                    select rra;
+            }, cache => default);
         }
 
         /// <summary>
@@ -147,10 +131,16 @@ namespace Nop.Services.Orders
         /// <returns>Return request action</returns>
         public virtual ReturnRequestAction GetReturnRequestActionById(int returnRequestActionId)
         {
-            if (returnRequestActionId == 0)
-                return null;
+            return _returnRequestActionRepository.GetById(returnRequestActionId, cache => default);
+        }
 
-            return _returnRequestActionRepository.GetById(returnRequestActionId);
+        /// <summary>
+        /// Inserts a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public virtual void InsertReturnRequest(ReturnRequest returnRequest)
+        {
+            _returnRequestRepository.Insert(returnRequest);
         }
 
         /// <summary>
@@ -159,28 +149,25 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestAction">Return request action</param>
         public virtual void InsertReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
-            if (returnRequestAction == null)
-                throw new ArgumentNullException(nameof(returnRequestAction));
-
             _returnRequestActionRepository.Insert(returnRequestAction);
-
-            //event notification
-            _eventPublisher.EntityInserted(returnRequestAction);
         }
 
         /// <summary>
-        /// Updates the  return request action
+        /// Updates the return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public virtual void UpdateReturnRequest(ReturnRequest returnRequest)
+        {
+            _returnRequestRepository.Update(returnRequest);
+        }
+
+        /// <summary>
+        /// Updates the return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
         public virtual void UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
-            if (returnRequestAction == null)
-                throw new ArgumentNullException(nameof(returnRequestAction));
-
             _returnRequestActionRepository.Update(returnRequestAction);
-
-            //event notification
-            _eventPublisher.EntityUpdated(returnRequestAction);
         }
 
         /// <summary>
@@ -189,13 +176,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual void DeleteReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
-            if (returnRequestReason == null)
-                throw new ArgumentNullException(nameof(returnRequestReason));
-
             _returnRequestReasonRepository.Delete(returnRequestReason);
-
-            //event notification
-            _eventPublisher.EntityDeleted(returnRequestReason);
         }
 
         /// <summary>
@@ -204,10 +185,12 @@ namespace Nop.Services.Orders
         /// <returns>Return request reasons</returns>
         public virtual IList<ReturnRequestReason> GetAllReturnRequestReasons()
         {
-            var query = from rra in _returnRequestReasonRepository.Table
-                        orderby rra.DisplayOrder, rra.Id
-                        select rra;
-            return query.ToList();
+            return _returnRequestReasonRepository.GetAll(query =>
+            {
+                return from rra in query
+                    orderby rra.DisplayOrder, rra.Id
+                    select rra;
+            }, cache => default);
         }
 
         /// <summary>
@@ -217,10 +200,7 @@ namespace Nop.Services.Orders
         /// <returns>Return request reason</returns>
         public virtual ReturnRequestReason GetReturnRequestReasonById(int returnRequestReasonId)
         {
-            if (returnRequestReasonId == 0)
-                return null;
-
-            return _returnRequestReasonRepository.GetById(returnRequestReasonId);
+            return _returnRequestReasonRepository.GetById(returnRequestReasonId, cache => default);
         }
 
         /// <summary>
@@ -229,13 +209,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual void InsertReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
-            if (returnRequestReason == null)
-                throw new ArgumentNullException(nameof(returnRequestReason));
-
             _returnRequestReasonRepository.Insert(returnRequestReason);
-
-            //event notification
-            _eventPublisher.EntityInserted(returnRequestReason);
         }
 
         /// <summary>
@@ -244,13 +218,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual void UpdateReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
-            if (returnRequestReason == null)
-                throw new ArgumentNullException(nameof(returnRequestReason));
-
             _returnRequestReasonRepository.Update(returnRequestReason);
-
-            //event notification
-            _eventPublisher.EntityUpdated(returnRequestReason);
         }
 
         #endregion

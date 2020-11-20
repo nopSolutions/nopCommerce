@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Configuration;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
-        public ConfigFileSettingService(IEventPublisher eventPublisher, IRepository<Setting> settingRepository, IStaticCacheManager cacheManager) : base(eventPublisher, settingRepository, cacheManager)
+        public ConfigFileSettingService(IRepository<Setting> settingRepository, IStaticCacheManager staticCacheManager) : base(settingRepository, staticCacheManager)
         {
         }
 
@@ -21,7 +20,7 @@ namespace Nop.Services.Tests.Configuration
             throw new InvalidOperationException("Get setting by id is not supported");
         }
 
-        public override T GetSettingByKey<T>(string key, T defaultValue = default(T),
+        public override T GetSettingByKey<T>(string key, T defaultValue = default,
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
 

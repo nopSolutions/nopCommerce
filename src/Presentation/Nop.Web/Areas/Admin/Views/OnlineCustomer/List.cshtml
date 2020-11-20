@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
+    ViewBag.PageTitle = T("Admin.Customers.OnlineCustomers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Online customers");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Customers.OnlineCustomers")
@@ -18,11 +17,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "onlinecustomers-grid",
@@ -65,3 +65,4 @@
         </div>
     </div>
 </div>
+</section>

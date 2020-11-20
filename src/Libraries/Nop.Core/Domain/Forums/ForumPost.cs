@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Forums
 {
@@ -42,15 +41,5 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets the count of votes
         /// </summary>
         public int VoteCount { get; set; }
-
-        /// <summary>
-        /// Gets the topic
-        /// </summary>
-        public virtual ForumTopic ForumTopic { get; set; }
-
-        /// <summary>
-        /// Gets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
     }
 }

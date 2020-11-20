@@ -74,6 +74,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Language language, LanguageModel model)
         {
             language.LimitedToStores = model.SelectedStoreIds.Any();
+            _languageService.UpdateLanguage(language);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(language);
             var allStores = _storeService.GetAllStores();
@@ -177,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(id, false);
+            var language = _languageService.GetLanguageById(id);
             if (language == null)
                 return RedirectToAction("List");
 
@@ -194,14 +195,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(model.Id, false);
+            var language = _languageService.GetLanguageById(model.Id);
             if (language == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published language
-                var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
+                var allLanguages = _languageService.GetAllLanguages();
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id && !model.Published)
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
@@ -242,12 +243,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(id, false);
+            var language = _languageService.GetLanguageById(id);
             if (language == null)
                 return RedirectToAction("List");
 
             //ensure we have at least one published language
-            var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
+            var allLanguages = _languageService.GetAllLanguages();
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
@@ -298,7 +299,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedDataTablesJson();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(searchModel.LanguageId, false);
+            var language = _languageService.GetLanguageById(searchModel.LanguageId);
             if (language == null)
                 return RedirectToAction("List");
 
@@ -404,7 +405,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(id, false);
+            var language = _languageService.GetLanguageById(id);
             if (language == null)
                 return RedirectToAction("List");
 
@@ -427,7 +428,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //try to get a language with the specified id
-            var language = _languageService.GetLanguageById(id, false);
+            var language = _languageService.GetLanguageById(id);
             if (language == null)
                 return RedirectToAction("List");
 
@@ -435,10 +436,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (importxmlfile != null && importxmlfile.Length > 0)
                 {
-                    using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
-                    {
-                        _localizationService.ImportResourcesFromXml(language, sr);
-                    }
+                    using var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8);
+                    _localizationService.ImportResourcesFromXml(language, sr);
                 }
                 else
                 {

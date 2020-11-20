@@ -13,7 +13,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
     [Area(AreaNames.Admin)]
     [AuthorizeAdmin]
-    [AdminAntiForgery]
+    [AutoValidateAntiforgeryToken]
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         #region Fields

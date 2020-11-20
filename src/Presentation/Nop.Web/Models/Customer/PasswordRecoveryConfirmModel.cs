@@ -10,7 +10,7 @@ namespace Nop.Web.Models.Customer
         [NoTrim]
         [NopResourceDisplayName("Account.PasswordRecovery.NewPassword")]
         public string NewPassword { get; set; }
-        
+
         [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]
@@ -18,5 +18,7 @@ namespace Nop.Web.Models.Customer
 
         public bool DisablePasswordChanging { get; set; }
         public string Result { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }

@@ -9,10 +9,11 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Services.Authentication.External;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
-using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -39,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPaymentPluginManager _paymentPluginManager;
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
+        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -65,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INotificationService notificationService,
             IPermissionService permissionService,
             IPaymentPluginManager paymentPluginManager,
@@ -77,6 +81,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
+            MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
@@ -87,6 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerActivityService = customerActivityService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _paymentPluginManager = paymentPluginManager;
@@ -99,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _webHelper = webHelper;
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
+            _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
@@ -158,10 +165,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 if (archivefile == null || archivefile.Length == 0)
-                {
-                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-                    return RedirectToAction("List");
-                }
+                    throw new NopException(_localizationService.GetResource("Admin.Common.UploadFile"));
 
                 var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
                 var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
@@ -190,8 +194,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
                 _notificationService.SuccessNotification(message);
 
-                //restart application
-                _webHelper.RestartAppDomain();
+                return View("RestartApplication", Url.Action("List", "Plugin"));
             }
             catch (Exception exc)
             {
@@ -214,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string systemName = null;
                 foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
-                        systemName = formValue.Substring("install-plugin-link-".Length);
+                        systemName = formValue["install-plugin-link-".Length..];
 
                 var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
@@ -250,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string systemName = null;
                 foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
-                        systemName = formValue.Substring("uninstall-plugin-link-".Length);
+                        systemName = formValue["uninstall-plugin-link-".Length..];
 
                 var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
@@ -286,7 +289,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string systemName = null;
                 foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("delete-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
-                        systemName = formValue.Substring("delete-plugin-link-".Length);
+                        systemName = formValue["delete-plugin-link-".Length..];
 
                 var pluginDescriptor = _pluginService.GetPluginDescriptorBySystemName<IPlugin>(systemName, LoadPluginsMode.All);
 
@@ -316,10 +319,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             _pluginService.UninstallPlugins();
             _pluginService.DeletePlugins();
 
-            //restart application
-            _webHelper.RestartAppDomain();
+            return View("RestartApplication", Url.Action("List", "Plugin"));
+        }
 
-            return RedirectToAction("List");
+        public virtual IActionResult UninstallAndDeleteUnusedPlugins(string[] names)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            foreach (var name in names) 
+                _pluginService.PreparePluginToUninstall(name);
+
+            _pluginService.UninstallPlugins();
+
+            foreach (var name in names)
+                _pluginService.PreparePluginToDelete(name);
+
+            _pluginService.DeletePlugins();
+
+            return View("RestartApplication", Url.Action("Warnings", "Common"));
         }
 
         [HttpPost, ActionName("List")]
@@ -484,6 +502,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                             //mark as enabled
                             _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
                             _settingService.SaveSetting(_externalAuthenticationSettings);
+                        }
+
+                        break;
+                    case IMultiFactorAuthenticationMethod multiFactorAuthenticationMethod:
+                        pluginIsActive = _multiFactorAuthenticationPluginManager.IsPluginActive(multiFactorAuthenticationMethod);
+                        if (pluginIsActive && !model.IsEnabled)
+                        {
+                            //mark as disabled
+                            _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(pluginDescriptor.SystemName);
+                            _settingService.SaveSetting(_multiFactorAuthenticationSettings);
+                            break;
+                        }
+
+                        if (!pluginIsActive && model.IsEnabled)
+                        {
+                            //mark as enabled
+                            _multiFactorAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(pluginDescriptor.SystemName);
+                            _settingService.SaveSetting(_multiFactorAuthenticationSettings);
                         }
 
                         break;

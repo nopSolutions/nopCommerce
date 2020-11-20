@@ -63,7 +63,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             //add store identifier in email headers
             if (emailAccount.Id == _sendinBlueSettings.EmailAccountId)
             {
-                headers = headers ?? new Dictionary<string, string>();
+                headers ??= new Dictionary<string, string>();
                 headers.Add(SendinBlueDefaults.EmailCustomHeader, _storeContext.CurrentStore.Id.ToString());
             }
 

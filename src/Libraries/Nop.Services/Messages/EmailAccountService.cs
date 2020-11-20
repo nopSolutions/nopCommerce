@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
-using Nop.Services.Events;
+using Nop.Data;
 
 namespace Nop.Services.Messages
 {
@@ -15,17 +14,14 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
 
         #endregion
 
         #region Ctor
 
-        public EmailAccountService(IEventPublisher eventPublisher,
-            IRepository<EmailAccount> emailAccountRepository)
+        public EmailAccountService(IRepository<EmailAccount> emailAccountRepository)
         {
-            _eventPublisher = eventPublisher;
             _emailAccountRepository = emailAccountRepository;
         }
 
@@ -61,9 +57,6 @@ namespace Nop.Services.Messages
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
             _emailAccountRepository.Insert(emailAccount);
-
-            //event notification
-            _eventPublisher.EntityInserted(emailAccount);
         }
 
         /// <summary>
@@ -94,9 +87,6 @@ namespace Nop.Services.Messages
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
             _emailAccountRepository.Update(emailAccount);
-
-            //event notification
-            _eventPublisher.EntityUpdated(emailAccount);
         }
 
         /// <summary>
@@ -112,9 +102,6 @@ namespace Nop.Services.Messages
                 throw new NopException("You cannot delete this email account. At least one account is required.");
 
             _emailAccountRepository.Delete(emailAccount);
-
-            //event notification
-            _eventPublisher.EntityDeleted(emailAccount);
         }
 
         /// <summary>
@@ -124,10 +111,7 @@ namespace Nop.Services.Messages
         /// <returns>Email account</returns>
         public virtual EmailAccount GetEmailAccountById(int emailAccountId)
         {
-            if (emailAccountId == 0)
-                return null;
-
-            return _emailAccountRepository.GetById(emailAccountId);
+            return _emailAccountRepository.GetById(emailAccountId, cache => default);
         }
 
         /// <summary>
@@ -136,10 +120,13 @@ namespace Nop.Services.Messages
         /// <returns>Email accounts list</returns>
         public virtual IList<EmailAccount> GetAllEmailAccounts()
         {
-            var query = from ea in _emailAccountRepository.Table
-                        orderby ea.Id
-                        select ea;
-            var emailAccounts = query.ToList();
+            var emailAccounts = _emailAccountRepository.GetAll(query =>
+            {
+                return from ea in query
+                    orderby ea.Id
+                    select ea;
+            }, cache => default);
+
             return emailAccounts;
         }
 

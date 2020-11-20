@@ -3,15 +3,15 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
-using Nop.Services.Customers;
+using Nop.Core.Domain.Customers;
+using Nop.Data;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents filter attribute that saves last customer activity date
     /// </summary>
-    public class SaveLastActivityAttribute : TypeFilterAttribute
+    public sealed class SaveLastActivityAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -21,7 +21,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         public SaveLastActivityAttribute() : base(typeof(SaveLastActivityFilter))
         {
         }
-        
+
         #endregion
 
         #region Nested filter
@@ -33,17 +33,20 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ICustomerService _customerService;
+            private readonly CustomerSettings _customerSettings;
+            private readonly IRepository<Customer> _customerRepository;
             private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public SaveLastActivityFilter(ICustomerService customerService,
+            public SaveLastActivityFilter(CustomerSettings customerSettings,
+                IRepository<Customer> customerRepository,
                 IWorkContext workContext)
             {
-                _customerService = customerService;
+                _customerSettings = customerSettings;
+                _customerRepository = customerRepository;
                 _workContext = workContext;
             }
 
@@ -71,10 +74,12 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //update last activity date
-                if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
+                if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(_customerSettings.LastActivityMinutes) < DateTime.UtcNow)
                 {
                     _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                    //update customer without event notification
+                    _customerRepository.Update(_workContext.CurrentCustomer, false);
                 }
             }
 

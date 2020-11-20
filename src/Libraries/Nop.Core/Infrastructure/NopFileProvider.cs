@@ -18,15 +18,13 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
-        /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment)
-            : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
+        /// <param name="webHostEnvironment">Hosting environment</param>
+        public NopFileProvider(IWebHostEnvironment webHostEnvironment)
+            : base(File.Exists(webHostEnvironment.ContentRootPath) ? Path.GetDirectoryName(webHostEnvironment.ContentRootPath) : webHostEnvironment.ContentRootPath)
         {
-            var path = hostingEnvironment.ContentRootPath ?? string.Empty;
-            if (File.Exists(path))
-                path = Path.GetDirectoryName(path);
-
-            BaseDirectory = path;
+            WebRootPath = File.Exists(webHostEnvironment.WebRootPath)
+                ? Path.GetDirectoryName(webHostEnvironment.WebRootPath)
+                : webHostEnvironment.WebRootPath;
         }
 
         #region Utilities
@@ -258,7 +256,11 @@ namespace Nop.Core.Infrastructure
         /// <returns>The absolute path to the directory</returns>
         public virtual string GetAbsolutePath(params string[] paths)
         {
-            var allPaths = new List<string> { Root };
+            var allPaths = new List<string>();
+
+            if(paths.Any() && !paths[0].Contains(WebRootPath, StringComparison.InvariantCulture))
+                allPaths.Add(WebRootPath);
+
             allPaths.AddRange(paths);
 
             return Combine(allPaths.ToArray());
@@ -454,9 +456,9 @@ namespace Nop.Core.Infrastructure
             if (!IsDirectory(path) && FileExists(path))
                 path = new FileInfo(path).DirectoryName;
 
-            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+            path = path?.Replace(WebRootPath, string.Empty).Replace('\\', '/').Trim('/').TrimStart('~', '/');
 
-            return $"~/{path ?? ""}";
+            return $"~/{path ?? string.Empty}";
         }
 
         /// <summary>
@@ -481,7 +483,7 @@ namespace Nop.Core.Infrastructure
             //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
             var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
 
-            return Combine(BaseDirectory ?? string.Empty, path) + pathEnd;
+            return Combine(Root ?? string.Empty, path) + pathEnd;
         }
 
         /// <summary>
@@ -491,7 +493,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>A byte array containing the contents of the file</returns>
         public virtual byte[] ReadAllBytes(string filePath)
         {
-            return File.Exists(filePath) ? File.ReadAllBytes(filePath) : new byte[0];
+            return File.Exists(filePath) ? File.ReadAllBytes(filePath) : Array.Empty<byte>();
         }
 
         /// <summary>
@@ -502,13 +504,9 @@ namespace Nop.Core.Infrastructure
         /// <returns>A string containing all lines of the file</returns>
         public virtual string ReadAllText(string path, Encoding encoding)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var streamReader = new StreamReader(fileStream, encoding))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
+            using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var streamReader = new StreamReader(fileStream, encoding);
+            return streamReader.ReadToEnd();
         }
 
         /// <summary>
@@ -546,8 +544,18 @@ namespace Nop.Core.Infrastructure
             File.WriteAllText(path, contents, encoding);
         }
 
+        /// <summary>Locate a file at the given path.</summary>
+        /// <param name="subpath">Relative path that identifies the file.</param>
+        /// <returns>The file information. Caller must check Exists property.</returns>
+        public new IFileInfo GetFileInfo(string subpath)
+        {
+            subpath = subpath.Replace(Root, string.Empty);
+
+            return base.GetFileInfo(subpath);
+        }
+
         #endregion
 
-        protected string BaseDirectory { get; }
+        protected string WebRootPath { get; }
     }
 }

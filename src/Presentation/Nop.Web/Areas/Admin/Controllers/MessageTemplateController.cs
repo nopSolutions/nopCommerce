@@ -92,6 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
             messageTemplate.LimitedToStores = model.SelectedStoreIds.Any();
+            _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(messageTemplate);
             var allStores = _storeService.GetAllStores();
@@ -291,7 +292,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var formKey in form.Keys)
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var tokenKey = formKey.Substring("token_".Length).Replace("%", string.Empty);
+                    var tokenKey = formKey["token_".Length..].Replace("%", string.Empty);
                     var stringValue = form[formKey].ToString();
 
                     //try get non-string value
