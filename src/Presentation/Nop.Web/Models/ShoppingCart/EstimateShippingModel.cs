@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Models;
 
@@ -11,6 +12,8 @@ namespace Nop.Web.Models.ShoppingCart
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
         }
+
+        public int RequestDelay { get; set; }
 
         public bool Enabled { get; set; }
 
@@ -27,12 +30,14 @@ namespace Nop.Web.Models.ShoppingCart
         public EstimateShippingResultModel()
         {
             ShippingOptions = new List<ShippingOptionModel>();
-            Warnings = new List<string>();
+            Errors = new List<string>();
         }
 
         public IList<ShippingOptionModel> ShippingOptions { get; set; }
 
-        public IList<string> Warnings { get; set; }
+        public bool Success => !Errors.Any();
+
+        public IList<string> Errors { get; set; }
 
         #region Nested Classes
 

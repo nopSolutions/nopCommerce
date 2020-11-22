@@ -58,7 +58,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IFulltextService _fulltextService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -86,7 +85,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerAttributeModelFactory customerAttributeModelFactory,
             INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
-            IFulltextService fulltextService,
             IGdprService gdprService,
             ILocalizedModelFactory localizedModelFactory,
             IGenericAttributeService genericAttributeService,
@@ -110,7 +108,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerAttributeModelFactory = customerAttributeModelFactory;
             _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
-            _fulltextService = fulltextService;
             _gdprService = gdprService;
             _localizedModelFactory = localizedModelFactory;
             _genericAttributeService = genericAttributeService;
@@ -244,9 +241,26 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerSettings = await _settingService.LoadSettingAsync<CustomerSettings>(storeId);
 
             //fill in model values from the entity
-            var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();
+            var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();            
 
             return model;
+        }
+
+        /// <summary>
+        /// Prepare multi-factor authentication settings model
+        /// </summary>
+        /// <returns>MultiFactorAuthenticationSettingsModel</returns>
+        protected virtual MultiFactorAuthenticationSettingsModel PrepareMultiFactorAuthenticationSettingsModel()
+        {
+            //load settings for a chosen store scope
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
+            var multiFactorAuthenticationSettings = _settingService.LoadSetting<MultiFactorAuthenticationSettings>(storeId);
+
+            //fill in model values from the entity
+            var model = multiFactorAuthenticationSettings.ToSettingsModel<MultiFactorAuthenticationSettingsModel>();
+
+            return model;
+
         }
 
         /// <summary>
@@ -581,30 +595,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 LoadAllLocalizedPropertiesOnStartup = localizationSettings.LoadAllLocalizedPropertiesOnStartup,
                 LoadAllUrlRecordsOnStartup = localizationSettings.LoadAllUrlRecordsOnStartup
             };
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare full-text settings model
-        /// </summary>
-        /// <returns>Full-text settings model</returns>
-        protected virtual async Task<FullTextSettingsModel> PrepareFullTextSettingsModelAsync()
-        {
-            //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeId);
-
-            //fill in model values from the entity
-            var model = new FullTextSettingsModel
-            {
-                Enabled = commonSettings.UseFullTextSearch,
-                SearchMode = (int)commonSettings.FullTextMode
-            };
-
-            //fill in additional values (not existing in the entity)
-            model.Supported = await _fulltextService.IsFullTextSupportedAsync();
-            model.SearchModeValues = await commonSettings.FullTextMode.ToSelectList();
 
             return model;
         }
@@ -1355,6 +1345,9 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare customer settings model
             model.CustomerSettings = await PrepareCustomerSettingsModelAsync();
 
+            //prepare multi-factor authentication settings model
+            model.MultiFactorAuthenticationSettings = PrepareMultiFactorAuthenticationSettingsModel();
+
             //prepare address settings model
             model.AddressSettings = await PrepareAddressSettingsModelAsync();
 
@@ -1502,9 +1495,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare PDF settings model
             model.LocalizationSettings = await PrepareLocalizationSettingsModelAsync();
-
-            //prepare full-text settings model
-            model.FullTextSettings = await PrepareFullTextSettingsModelAsync();
 
             //prepare admin area settings model
             model.AdminAreaSettings = await PrepareAdminAreaSettingsModelAsync();

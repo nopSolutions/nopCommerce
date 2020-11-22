@@ -402,8 +402,13 @@ namespace Nop.Services.Customers
         /// <returns>Result of an authentication</returns>
         public virtual async Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false)
         {
-            //migrate shopping cart
-            await _shoppingCartService.MigrateShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), customer, true);
+            if (_workContext.CurrentCustomer.Id != customer.Id)
+            {
+                //migrate shopping cart
+                await _shoppingCartService.MigrateShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), customer, true);
+
+                _workContext.CurrentCustomer = customer;
+            }
 
             //sign in new customer
             await _authenticationService.SignInAsync(customer, isPersist);
@@ -414,7 +419,6 @@ namespace Nop.Services.Customers
             //activity log
             await _customerActivityService.InsertActivityAsync(customer, "PublicStore.Login",
                 await _localizationService.GetResourceAsync("ActivityLog.PublicStore.Login"), customer);
-
 
             //redirect to the return URL if it's specified
             if (!string.IsNullOrEmpty(returnUrl))

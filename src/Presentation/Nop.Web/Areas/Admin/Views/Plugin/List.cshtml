@@ -17,15 +17,15 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Plugins.Local")
-        </h1>
+        </h1>    
         <div class="pull-right">
             @if (Model.NeedToRestart)
             {
-                <button type="submit" name="plugin-apply-changes" class="btn bg-green">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
-                <button type="submit" name="plugin-discard-changes" class="btn bg-red">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
+                <button type="submit" name="plugin-apply-changes" class="btn btn-success">@T("Admin.Configuration.Plugins.ApplyChanges")</button>
+                <button type="submit" name="plugin-discard-changes" class="btn btn-danger">@T("Admin.Configuration.Plugins.DiscardChanges")</button>
             }
 
-            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <button type="submit" name="plugin-reload-grid" class="btn btn-primary">@T("Admin.Configuration.Plugins.ReloadList")</button>
             <script>
                 $(document).ready(function() {
                     $("button[name='plugin-reload-grid']").on("click",
@@ -53,7 +53,8 @@
         </div>
     </div>
 
-    <div class="content">
+    <section class="content">
+    <div class="container-fluid">
         <div class="form-horizontal">
             <script>
                 $(document).ready(function () {
@@ -97,13 +98,13 @@
                 });
             </script>
 
-            <div class="panel-group">
-                <div class="panel panel-default panel-search">
-                    <div class="panel-body">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
                         <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                             <div class="search-text">@T("Admin.Common.Search")</div>
                             <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
                         </div>
 
                         <div class="search-body @(hideSearchBlock ? "closed" : "")">
@@ -121,8 +122,8 @@
                                 @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
                             </p>
                             <div class="row">
-                                <div class="col-md-5">
-                                    <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchFriendlyName" />
                                         </div>
@@ -130,7 +131,7 @@
                                             <nop-editor asp-for="SearchFriendlyName" />
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchGroup" />
                                         </div>
@@ -139,8 +140,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-7">
-                                    <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchLoadModeId" />
                                         </div>
@@ -149,8 +150,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-7">
-                                    <div class="form-group">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchAuthor" />
                                         </div>
@@ -161,7 +162,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-7 col-md-offset-5">
+                                <div class="text-center col-12">
                                     <button type="button" id="search-plugins-local" class="btn btn-primary btn-search">
                                         <i class="fa fa-search"></i>
                                         @T("Admin.Common.Search")
@@ -172,8 +173,8 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card card-default">
+                    <div class="card-body">
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "plugins-local-grid",
@@ -183,8 +184,7 @@
                             LengthMenu = Model.AvailablePageSizes,
                             Filters = new List<FilterParameter>
                             {
-                                new FilterParameter(nameof(Model.SearchLoadModeId)),
-                                 new FilterParameter(nameof(Model.SearchFriendlyName)),
+                                new FilterParameter(nameof(Model.SearchFriendlyName)),
                                 new FilterParameter(nameof(Model.SearchGroup)),
                                 new FilterParameter(nameof(Model.SearchAuthor))
                             },
@@ -288,8 +288,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     <h4 class="modal-title" id="plugindelete-confirmation-title">@T("Admin.Common.AreYouSure")</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>                                    
                                 </div>
                                 <div class="form-horizontal">
                                     <div class="modal-body">
@@ -297,7 +297,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                        <button type="submit" class="btn bg-red pull-right">@T("Admin.Common.Delete")</button>
+                                        <button type="submit" class="btn btn-danger pull-right">@T("Admin.Common.Delete")</button>
                                     </div>
                                 </div>
                             </div>
@@ -322,7 +322,7 @@
             </div>
         </div>
     </div>
-
+    </section>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsBlock, additionalData = Model })
 </form>
 
@@ -331,8 +331,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                
             </div>
             <form asp-controller="Plugin" asp-action="UploadPluginsAndThemes" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
@@ -351,10 +351,10 @@
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint4")</em>
                             </li>
                         </ul>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
-                                    <label class="control-label">
+                                    <label class="col-form-label">
                                         @T("Admin.Common.ZipFile")
                                     </label>
                                 </div>

@@ -21,6 +21,7 @@ namespace Nop.Services.Catalog.Caching
             await RemoveAsync(NopCatalogDefaults.ProductsHomepageCacheKey);
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity);
             await RemoveByPrefixAsync(NopEntityCacheDefaults<ShoppingCartItem>.AllPrefix);
+            await RemoveByPrefixAsync(NopCatalogDefaults.FeaturedProductIdsPrefix);
         }
     }
 }

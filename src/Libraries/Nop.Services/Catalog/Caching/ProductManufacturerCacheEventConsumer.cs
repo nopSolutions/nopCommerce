@@ -17,6 +17,7 @@ namespace Nop.Services.Catalog.Caching
         {
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductManufacturersByProductPrefix, entity.ProductId);
             await RemoveByPrefixAsync(NopCatalogDefaults.ProductPricePrefix, entity.ProductId);
+            await RemoveByPrefixAsync(NopCatalogDefaults.ManufacturerFeaturedProductIdsPrefix, entity.ManufacturerId);
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Nop.Web.Framework.Controllers
     [SaveIpAddress]
     [SaveLastActivity]
     [SaveLastVisitedPage]
+    [ForceMultiFactorAuthentication]
     public abstract class BaseController : Controller
     {
         #region Rendering
@@ -251,28 +252,28 @@ namespace Nop.Web.Framework.Controllers
 
         #endregion
 
-        #region Panels and tabs
+        #region Cards and tabs
 
         /// <summary>
-        /// Save selected panel name
+        /// Save selected card name
         /// </summary>
-        /// <param name="panelName">Panel name to save</param>
+        /// <param name="cardName">Card name to save</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
-        public virtual void SaveSelectedPanelName(string panelName, bool persistForTheNextRequest = true)
+        public virtual void SaveSelectedCardName(string cardName, bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedPanelName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
-            if (string.IsNullOrEmpty(panelName))
-                throw new ArgumentNullException(nameof(panelName));
+            //"GetSelectedCardName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(cardName))
+                throw new ArgumentNullException(nameof(cardName));
 
-            const string dataKey = "nop.selected-panel-name";
+            const string dataKey = "nop.selected-card-name";
             if (persistForTheNextRequest)
             {
-                TempData[dataKey] = panelName;
+                TempData[dataKey] = cardName;
             }
             else
             {
-                ViewData[dataKey] = panelName;
+                ViewData[dataKey] = cardName;
             }
         }
 
@@ -292,7 +293,7 @@ namespace Nop.Web.Framework.Controllers
 
             foreach (var key in Request.Form.Keys)
                 if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
-                    SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
+                    SaveSelectedTabName(null, key, key["selected-tab-name-".Length..], persistForTheNextRequest);
         }
 
         /// <summary>

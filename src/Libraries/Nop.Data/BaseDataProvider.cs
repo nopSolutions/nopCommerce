@@ -142,6 +142,19 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
+        /// Creates a new temporary storage and populate it using data from provided query
+        /// </summary>
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>IQueryable instance of temporary storage</returns>
+        public virtual ITempDataStorage<TItem> CreateTempDataStorage<TItem>(string storeKey, IQueryable<TItem> query)
+            where TItem : class
+        {
+            return new TempSqlDataStorage<TItem>(storeKey, query, CreateDataConnection);
+        }
+
+        /// <summary>
         /// Returns mapped entity descriptor.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
@@ -181,7 +194,7 @@ namespace Nop.Data
         /// <param name="entity"></param>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns>Inserted entity</returns>
-        public async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnection();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
@@ -194,7 +207,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public virtual async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnection();
             await dataContext.UpdateAsync(entity);
@@ -206,7 +219,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public virtual async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnection();
             await dataContext.DeleteAsync(entity);
@@ -217,7 +230,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        public virtual async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnection();
             if (entities.All(entity => entity.Id == 0))
@@ -234,10 +247,11 @@ namespace Nop.Data
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public async Task BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        /// <returns>Number of deleted records</returns>
+        public virtual async Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnection();
-            await dataContext.GetTable<TEntity>()
+            return await dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .DeleteAsync();
         }
@@ -247,7 +261,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using var dataContext = await CreateDataConnection(LinqToDbDataProvider);
             dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
@@ -259,7 +273,7 @@ namespace Nop.Data
         /// <param name="sqlStatement">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public async Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters)
+        public virtual async Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters)
         {
             using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
@@ -278,7 +292,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Resulting value</returns>
-        public async Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters)
+        public virtual async Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
@@ -296,7 +310,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public async Task<int> ExecuteStoredProcedureAsync(string procedureName, params DataParameter[] parameters)
+        public virtual async Task<int> ExecuteStoredProcedureAsync(string procedureName, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
@@ -315,7 +329,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
+        public virtual async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
             await using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
@@ -331,7 +345,7 @@ namespace Nop.Data
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
         /// <returns>Collection of values of specified type</returns>
-        public async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+        public virtual async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
             using var dataContext = await CreateDataConnection();
             return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();

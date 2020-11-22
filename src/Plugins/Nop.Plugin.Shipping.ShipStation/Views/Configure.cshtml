@@ -8,9 +8,9 @@
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
 <form asp-controller="ShipStation" asp-action="Configure" method="post">
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
                 
                 <h3>Setup Instructions</h3>
                 <ul>
@@ -27,7 +27,7 @@
                     <li>Save the settings using the <strong>Connect</strong> button</li>
                 </ul>
                 <hr/>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="ApiKey_OverrideForStore" asp-input="ApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="ApiKey"/>
@@ -37,7 +37,7 @@
                         <span asp-validation-for="ApiKey"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="ApiSecret_OverrideForStore" asp-input="ApiSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="ApiSecret"/>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="UserName_OverrideForStore" asp-input="UserName" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="UserName"/>
@@ -58,7 +58,7 @@
                         <span asp-validation-for="UserName"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="Password_OverrideForStore" asp-input="Password" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="Password"/>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="PassDimensions_OverrideForStore" asp-input="PassDimensions" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="PassDimensions"/>
@@ -79,7 +79,7 @@
                         <span asp-validation-for="PassDimensions"></span>
                     </div>
                 </div>
-                <div class="form-group" id="pnlPackingType">
+                <div class="form-group row" id="pnlPackingType">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="PackingType_OverrideForStore" asp-input="PackingType" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="PackingTypeValues"/>
@@ -88,7 +88,7 @@
                         <nop-select asp-for="PackingType" asp-items="Model.PackingTypeValues"/>
                     </div>
                 </div>
-                <div class="form-group" id="pnlPackingPackageVolume">
+                <div class="form-group row" id="pnlPackingPackageVolume">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="PackingPackageVolume_OverrideForStore" asp-input="PackingPackageVolume" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
                         <nop-label asp-for="PackingPackageVolume"/>
@@ -100,12 +100,12 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-3">
                         &nbsp;
                     </div>
                     <div class="col-md-9">
-                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")"/>
+                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
                     </div>
                 </div>
 

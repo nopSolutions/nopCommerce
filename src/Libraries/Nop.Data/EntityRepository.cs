@@ -385,12 +385,13 @@ namespace Nop.Data
         /// Delete entity entries by the passed predicate
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
-        public virtual async Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        /// <returns>Number of deleted records</returns>
+        public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             if (predicate == null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            await _dataProvider.BulkDeleteEntitiesAsync(predicate);
+            return await _dataProvider.BulkDeleteEntitiesAsync(predicate);
         }
         
         /// <summary>

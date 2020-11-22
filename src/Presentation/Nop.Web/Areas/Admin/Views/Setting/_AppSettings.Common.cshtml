@@ -1,7 +1,7 @@
 @model AppSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CommonConfigModel.DisplayFullErrorStack" />
         </div>
@@ -10,7 +10,7 @@
             <span asp-validation-for="CommonConfigModel.DisplayFullErrorStack"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CommonConfigModel.UserAgentStringsPath" />
         </div>
@@ -19,7 +19,7 @@
             <span asp-validation-for="CommonConfigModel.UserAgentStringsPath"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath" />
         </div>
@@ -28,7 +28,7 @@
             <span asp-validation-for="CommonConfigModel.CrawlerOnlyUserAgentStringsPath"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CommonConfigModel.UseSessionStateTempDataProvider" />
         </div>
@@ -37,7 +37,7 @@
             <span asp-validation-for="CommonConfigModel.UseSessionStateTempDataProvider"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CommonConfigModel.MiniProfilerEnabled" />
         </div>

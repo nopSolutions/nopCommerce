@@ -58,17 +58,12 @@ namespace Nop.Web.Factories
         Task<PasswordRecoveryModel> PreparePasswordRecoveryModelAsync(PasswordRecoveryModel model);
 
         /// <summary>
-        /// Prepare the password recovery confirm model
-        /// </summary>
-        /// <returns>Password recovery confirm model</returns>
-        Task<PasswordRecoveryConfirmModel> PreparePasswordRecoveryConfirmModelAsync();
-
-        /// <summary>
         /// Prepare the register result model
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
+        /// <param name="returnUrl">URL to redirect</param>
         /// <returns>Register result model</returns>
-        Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId);
+        Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId, string returnUrl);
 
         /// <summary>
         /// Prepare the customer navigation model

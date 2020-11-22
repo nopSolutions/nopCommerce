@@ -27,6 +27,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Authentication.MultiFactor;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -62,11 +63,11 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
         private readonly IEncryptionService _encryptionService;
-        private readonly IFulltextService _fulltextService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMultiFactorAuthenticationPluginManager _multiFactorAuthenticationPluginManager;
         private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
@@ -91,11 +92,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             INopDataProvider dataProvider,
             IEncryptionService encryptionService,
-            IFulltextService fulltextService,
             IGenericAttributeService genericAttributeService,
             IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
+            IMultiFactorAuthenticationPluginManager multiFactorAuthenticationPluginManager,
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IOrderService orderService,
@@ -116,11 +117,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             _customerService = customerService;
             _dataProvider = dataProvider;
             _encryptionService = encryptionService;
-            _fulltextService = fulltextService;
             _genericAttributeService = genericAttributeService;
             _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
             _localizationService = localizationService;
+            _multiFactorAuthenticationPluginManager = multiFactorAuthenticationPluginManager;
             _fileProvider = fileProvider;
             _notificationService = notificationService;
             _orderService = orderService;
@@ -1049,6 +1050,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var addressSettings = await _settingService.LoadSettingAsync<AddressSettings>(storeScope);
             var dateTimeSettings = await _settingService.LoadSettingAsync<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = await _settingService.LoadSettingAsync<ExternalAuthenticationSettings>(storeScope);
+            var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeScope);
 
             customerSettings = model.CustomerSettings.ToSettings(customerSettings);
 
@@ -1099,6 +1101,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             externalAuthenticationSettings.AllowCustomersToRemoveAssociations = model.ExternalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             await _settingService.SaveSettingAsync(externalAuthenticationSettings);
+
+            multiFactorAuthenticationSettings = model.MultiFactorAuthenticationSettings.ToSettings(multiFactorAuthenticationSettings);
+            _settingService.SaveSetting(multiFactorAuthenticationSettings);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
@@ -1492,11 +1497,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             localizationSettings.LoadAllUrlRecordsOnStartup = model.LocalizationSettings.LoadAllUrlRecordsOnStartup;
             await _settingService.SaveSettingAsync(localizationSettings);
 
-            //full-text (not overridable)
-            commonSettings = await _settingService.LoadSettingAsync<CommonSettings>();
-            commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
-            await _settingService.SaveSettingAsync(commonSettings);
-
             //display default menu item
             var displayDefaultMenuItemSettings = await _settingService.LoadSettingAsync<DisplayDefaultMenuItemSettings>(storeScope);
 
@@ -1655,47 +1655,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 await _settingService.SaveSettingAsync(securitySettings);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed"));
-            }
-            catch (Exception exc)
-            {
-                await _notificationService.ErrorNotificationAsync(exc);
-            }
-
-            return RedirectToAction("GeneralCommon");
-        }
-
-        [HttpPost, ActionName("GeneralCommon")]
-        [FormValueRequired("togglefulltext")]
-        public virtual async Task<IActionResult> ToggleFullText(GeneralCommonSettingsModel model)
-        {
-            if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var commonSettings = await _settingService.LoadSettingAsync<CommonSettings>(storeScope);
-            try
-            {
-                if (!await _fulltextService.IsFullTextSupportedAsync())
-                    throw new NopException(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported"));
-
-                if (commonSettings.UseFullTextSearch)
-                {
-                    await _fulltextService.DisableFullTextAsync();
-
-                    commonSettings.UseFullTextSearch = false;
-                    await _settingService.SaveSettingAsync(commonSettings);
-
-                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled"));
-                }
-                else
-                {
-                    await _fulltextService.EnableFullTextAsync();
-
-                    commonSettings.UseFullTextSearch = true;
-                    await _settingService.SaveSettingAsync(commonSettings);
-
-                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
-                }
             }
             catch (Exception exc)
             {
@@ -1898,6 +1857,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     Result = await _localizationService.GetResourceAsync(
                         "Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning")
+                });
+
+            return Json(new { Result = string.Empty });
+        }
+
+        //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
+        public IActionResult ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
+        {
+            //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
+            if (forceMultifactorAuthentication && !_multiFactorAuthenticationPluginManager.HasActivePlugins())
+                return Json(new
+                {
+                    Result = _localizationService.GetResource(
+                        "Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
                 });
 
             return Json(new { Result = string.Empty });

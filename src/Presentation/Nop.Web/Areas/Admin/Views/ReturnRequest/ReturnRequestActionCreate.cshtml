@@ -17,11 +17,11 @@
             </small>
         </h1>
         <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
+            <button type="submit" name="save" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            <button type="submit" name="save-continue" class="btn bg-blue">
+            <button type="submit" name="save-continue" class="btn btn-primary">
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
@@ -29,9 +29,11 @@
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
+            </div>
         </div>
-    </div>
+    </section>
 </form>

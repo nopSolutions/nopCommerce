@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "checkoutattributevalues-grid",
@@ -57,7 +57,7 @@
        })
     </div>
 
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewValue"
                 onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 500, true); return false;"
                 class="btn btn-primary">
@@ -79,7 +79,7 @@
 }           
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit")
     </div>
 }

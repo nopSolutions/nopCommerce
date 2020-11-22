@@ -130,5 +130,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether to send all the items of a product marked as "Ship Separately" separately; if false, all the items of a such product will be shipped in a single box, but separately from the other order items
         /// </summary>
         public bool ShipSeparatelyOneItemEach { get; set; }
+
+        /// <summary>
+        /// Gets or sets the request delay in the shipping calculation popup (on product page/shopping cart page) when user enter the shipping address.
+        /// </summary>
+        public int RequestDelay { get; set; }
     }
 }

@@ -25,7 +25,6 @@ namespace Nop.Services.Authentication.External
         private readonly CustomerSettings _customerSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
-        private readonly IAuthenticationService _authenticationService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
@@ -44,7 +43,6 @@ namespace Nop.Services.Authentication.External
         public ExternalAuthenticationService(CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationPluginManager authenticationPluginManager,
-            IAuthenticationService authenticationService,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
@@ -59,7 +57,6 @@ namespace Nop.Services.Authentication.External
             _customerSettings = customerSettings;
             _externalAuthenticationSettings = externalAuthenticationSettings;
             _authenticationPluginManager = authenticationPluginManager;
-            _authenticationService = authenticationService;
             _customerRegistrationService = customerRegistrationService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
@@ -171,10 +168,12 @@ namespace Nop.Services.Authentication.External
             //authenticate
             if (registrationIsApproved)
             {
-                await _authenticationService.SignInAsync(await _workContext.GetCurrentCustomerAsync(), false);
                 await _workflowMessageService.SendCustomerWelcomeMessageAsync(await _workContext.GetCurrentCustomerAsync(), (await _workContext.GetWorkingLanguageAsync()).Id);
 
-                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
+                //raise event       
+                _eventPublisher.Publish(new CustomerActivatedEvent(_workContext.CurrentCustomer));
+
+                return _customerRegistrationService.SignInCustomer(_workContext.CurrentCustomer, returnUrl, true);
             }
 
             //registration is succeeded but isn't activated
@@ -184,12 +183,12 @@ namespace Nop.Services.Authentication.External
                 await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
                 await _workflowMessageService.SendCustomerEmailValidationMessageAsync(await _workContext.GetCurrentCustomerAsync(), (await _workContext.GetWorkingLanguageAsync()).Id);
 
-                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
+                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
             }
 
             //registration is succeeded but isn't approved by admin
             if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
-                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
+                return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
 
             return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
         }

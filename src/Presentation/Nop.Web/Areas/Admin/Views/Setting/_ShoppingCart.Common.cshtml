@@ -1,7 +1,7 @@
 @model ShoppingCartSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowDiscountBox_OverrideForStore" asp-input="ShowDiscountBox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowDiscountBox" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="ShowDiscountBox"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowGiftCardBox_OverrideForStore" asp-input="ShowGiftCardBox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowGiftCardBox" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="ShowGiftCardBox"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowCartItemEditing_OverrideForStore" asp-input="AllowCartItemEditing" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowCartItemEditing" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="AllowCartItemEditing"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="MaximumShoppingCartItems_OverrideForStore" asp-input="MaximumShoppingCartItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="MaximumShoppingCartItems" />
@@ -41,7 +41,7 @@
             <span asp-validation-for="MaximumShoppingCartItems"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="CartsSharedBetweenStores_OverrideForStore" asp-input="CartsSharedBetweenStores" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="CartsSharedBetweenStores" />
@@ -51,7 +51,7 @@
             <span asp-validation-for="CartsSharedBetweenStores"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ShowProductImagesOnShoppingCart_OverrideForStore" asp-input="ShowProductImagesOnShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ShowProductImagesOnShoppingCart" />
@@ -61,7 +61,7 @@
             <span asp-validation-for="ShowProductImagesOnShoppingCart"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="DisplayCartAfterAddingProduct_OverrideForStore" asp-input="DisplayCartAfterAddingProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="DisplayCartAfterAddingProduct" />
@@ -71,7 +71,7 @@
             <span asp-validation-for="DisplayCartAfterAddingProduct"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="CrossSellsNumber_OverrideForStore" asp-input="CrossSellsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="CrossSellsNumber" />
@@ -81,7 +81,7 @@
             <span asp-validation-for="CrossSellsNumber"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row advanced-setting">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="GroupTierPricesForDistinctShoppingCartItems_OverrideForStore" asp-input="GroupTierPricesForDistinctShoppingCartItems" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
             <nop-label asp-for="GroupTierPricesForDistinctShoppingCartItems"/>

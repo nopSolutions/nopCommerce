@@ -9,9 +9,9 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Helpers;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
 {
@@ -32,7 +32,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace Nop.Services.Orders
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
-            IRepository<StoreMapping> storeMappingRepository)
+            IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
             _dateTimeHelper = dateTimeHelper;
@@ -60,7 +60,7 @@ namespace Nop.Services.Orders
             _productCategoryRepository = productCategoryRepository;
             _productManufacturerRepository = productManufacturerRepository;
             _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            _storeMappingRepository = storeMappingRepository;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -578,45 +578,51 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            //this inner query should retrieve all purchased product identifiers
-            var query_tmp = (from orderItem in _orderItemRepository.Table
-                             join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                             where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                                   (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                                   !o.Deleted
-                             select orderItem.ProductId).Distinct();
-
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
-            var query = from p in _productRepository.Table
-                        join pm in _productManufacturerRepository.Table on p.Id 
-                            equals pm.ProductId 
-                            into p_pm
-                from pm in p_pm.DefaultIfEmpty()
-                        join pc in _productCategoryRepository.Table on p.Id 
-                            equals pc.ProductId 
-                            into p_pc
-                from pc in p_pc.DefaultIfEmpty()
-                        where !query_tmp.Contains(p.Id) &&
-                              //include only simple products
-                              p.ProductTypeId == simpleProductTypeId &&
-                              !p.Deleted &&
-                              (vendorId == 0 || p.VendorId == vendorId) &&
-                              //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                              //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
-                              (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                              (categoryId == 0 || pc.CategoryId == categoryId) &&
-                              (showHidden || p.Published)
-                        select p;
+            var availableProductsQuery =
+                from oi in _orderItemRepository.Table
+                join o in _orderRepository.Table on oi.OrderId equals o.Id
+                where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                      !o.Deleted
+                select new { ProductId = oi.ProductId };
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            var query = 
+                from p in _productRepository.Table
+                join oi in availableProductsQuery on p.Id equals oi.ProductId
+                    into p_oi
+                from oi in p_oi.DefaultIfEmpty()
+                where oi == null &&
+                      p.ProductTypeId == simpleProductTypeId &&
+                      !p.Deleted &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      (showHidden || p.Published)
+                select p;
+
+            if (categoryId > 0)
             {
                 query = from p in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
-                        from sm in p_sm.DefaultIfEmpty()
-                        where !p.LimitedToStores || storeId == sm.StoreId
+                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId
+                            into p_pc
+                        from pc in p_pc.DefaultIfEmpty()
+                        where pc.CategoryId == categoryId
                         select p;
+            }
+
+            if (manufacturerId > 0)
+            {
+                query = from p in query
+                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId
+                            into p_pm
+                        from pm in p_pm.DefaultIfEmpty()
+                        where pm.ManufacturerId == manufacturerId
+                        select p;
+            }
+
+            if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
+            {
+                query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
             }
 
             query = query.OrderBy(p => p.Name);

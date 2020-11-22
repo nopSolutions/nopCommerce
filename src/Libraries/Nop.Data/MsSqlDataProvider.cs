@@ -23,46 +23,6 @@ namespace Nop.Data
     {
         #region Utils
 
-        /// <summary>
-        /// Get SQL commands from the script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
-        {
-            var commands = new List<string>();
-
-            //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
-            sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
-            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            for (var i = 0; i < batches.Length; i++)
-            {
-                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var count = 1;
-                if (i != batches.Length - 1 && batches[i + 1].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                {
-                    var match = Regex.Match(batches[i + 1], "([0-9]+)");
-                    if (match.Success)
-                        count = int.Parse(match.Value);
-                }
-
-                var builder = new StringBuilder();
-                for (var j = 0; j < count; j++)
-                {
-                    builder.Append(batches[i]);
-                    if (i == batches.Length - 1)
-                        builder.AppendLine();
-                }
-
-                commands.Add(builder.ToString());
-            }
-
-            return commands;
-        }
-
         protected virtual async Task<SqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
         {
             var connectionString = (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
@@ -77,18 +37,10 @@ namespace Nop.Data
             return new SqlConnectionStringBuilder(connectionString);
         }
 
-        /// <summary>
-        /// Execute commands from the SQL script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        protected async Task ExecuteSqlScriptAsync(string sql)
-        {
-            var sqlCommands = GetCommandsFromScript(sql);
+        #endregion
 
-            using var currentConnection = await CreateDataConnection();
-            foreach (var command in sqlCommands)
-                await currentConnection.ExecuteAsync(command);
-        }
+        #region Methods
+
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
@@ -200,30 +152,12 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Execute commands from a file with SQL script against the context database
-        /// </summary>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="filePath">Path to the file</param>
-        protected async Task ExecuteSqlScriptFromFileAsync(INopFileProvider fileProvider, string filePath)
-        {
-            filePath = fileProvider.MapPath(filePath);
-            if (!fileProvider.FileExists(filePath))
-                return;
-
-            await ExecuteSqlScriptAsync(await fileProvider.ReadAllTextAsync(filePath, Encoding.Default));
-        }
-
-        /// <summary>
         /// Initialize database
         /// </summary>
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations();
-
-            //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFileAsync(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath).Wait();
+            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
         }
 
         /// <summary>

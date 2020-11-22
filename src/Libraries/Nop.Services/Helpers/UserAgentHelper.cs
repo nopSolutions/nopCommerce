@@ -130,7 +130,7 @@ namespace Nop.Services.Helpers
                 //in 99% of cases it's enough to use the approach suggested by http://detectmobilebrowsers.com/
 
                 var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
-                var mobile = _firstMobileDeviceRegex.IsMatch(userAgent) || _secondMobileDeviceRegex.IsMatch(userAgent.Substring(0, 4));
+                var mobile = _firstMobileDeviceRegex.IsMatch(userAgent) || _secondMobileDeviceRegex.IsMatch(userAgent[0..4]);
                 return mobile;
             }
             catch

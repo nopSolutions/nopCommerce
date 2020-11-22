@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -7,8 +8,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -29,12 +28,10 @@ namespace Nop.Services.Catalog
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
-        private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<DiscountCategoryMapping> _discountCategoryMappingRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -48,12 +45,10 @@ namespace Nop.Services.Catalog
             IAclService aclService,
             ICustomerService customerService,
             ILocalizationService localizationService,
-            IRepository<AclRecord> aclRepository,
             IRepository<Category> categoryRepository,
             IRepository<DiscountCategoryMapping> discountCategoryMappingRepository,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
-            IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -63,16 +58,42 @@ namespace Nop.Services.Catalog
             _aclService = aclService;
             _customerService = customerService;
             _localizationService = localizationService;
-            _aclRepository = aclRepository;
             _categoryRepository = categoryRepository;
             _discountCategoryMappingRepository = discountCategoryMappingRepository;
             _productRepository = productRepository;
             _productCategoryRepository = productCategoryRepository;
-            _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _workContext = workContext;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Filter hidden entries according to constraints if any
+        /// </summary>
+        /// <param name="query">Query to filter</param>
+        /// <param name="storeId">A store identifier</param>
+        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <returns>Filtered query</returns>
+        protected virtual IQueryable<TEntity> FilterHiddenEntries<TEntity>(IQueryable<TEntity> query, int storeId, int[] customerRoleIds)
+            where TEntity : Category
+        {
+            //filter unpublished entries
+            query = query.Where(entry => entry.Published);
+
+            //apply store mapping constraints
+            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<TEntity>(storeId))
+                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
+
+            //apply ACL constraints
+            if (!_catalogSettings.IgnoreAcl && _aclService.IsEntityAclMappingExist<TEntity>(customerRoleIds))
+                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRoleIds));
+
+            return query;
         }
 
         #endregion
@@ -161,48 +182,13 @@ namespace Nop.Services.Catalog
             var unsortedCategories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                    query = query.Where(c => c.Published);
+                    query = FilterHiddenEntries(query, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                else if (overridePublished.HasValue)
+                    query = query.Where(c => c.Published == overridePublished.Value);
+
                 if (!string.IsNullOrWhiteSpace(categoryName))
                     query = query.Where(c => c.Name.Contains(categoryName));
                 query = query.Where(c => !c.Deleted);
-
-                if (overridePublished.HasValue)
-                    query = query.Where(c => c.Published == overridePublished.Value);
-
-                if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
-                    (!showHidden && !_catalogSettings.IgnoreAcl))
-                {
-                    if (!showHidden && !_catalogSettings.IgnoreAcl)
-                    {
-                        //ACL (access control list)
-                        var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
-                        query = from c in query
-                            join acl in _aclRepository.Table
-                                on new {c1 = c.Id, c2 = nameof(Category)} equals new
-                                {
-                                    c1 = acl.EntityId, c2 = acl.EntityName
-                                } into c_acl
-                            from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select c;
-                    }
-
-                    if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
-                    {
-                        //Store mapping
-                        query = from c in query
-                            join sm in _storeMappingRepository.Table
-                                on new {c1 = c.Id, c2 = nameof(Category)} equals new
-                                {
-                                    c1 = sm.EntityId, c2 = sm.EntityName
-                                } into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || storeId == sm.StoreId
-                            select c;
-                    }
-
-                    query = query.Distinct();
-                }
 
                 return query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             });
@@ -226,43 +212,12 @@ namespace Nop.Services.Catalog
             var categories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                    query = query.Where(c => c.Published);
-
-                query = query.Where(c => c.ParentCategoryId == parentCategoryId);
-                query = query.Where(c => !c.Deleted);
-
-                if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
-                    if (!_catalogSettings.IgnoreAcl)
-                    {
-                        //ACL (access control list)
-                        var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
-                        query = from c in query
-                            join acl in _aclRepository.Table
-                                on new {c1 = c.Id, c2 = nameof(Category)}
-                                equals new {c1 = acl.EntityId, c2 = acl.EntityName}
-                                into c_acl
-                            from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select c;
-                    }
-
-                    if (!_catalogSettings.IgnoreStoreLimitations)
-                    {
-                        //Store mapping
-                        var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
-                        query = from c in query
-                            join sm in _storeMappingRepository.Table
-                                on new {c1 = c.Id, c2 = nameof(Category)}
-                                equals new {c1 = sm.EntityId, c2 = sm.EntityName}
-                                into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || currentStoreId == sm.StoreId
-                            select c;
-                    }
-
-                    query = query.Distinct();
+                    query = FilterHiddenEntries(query,
+                        _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
                 }
+
+                query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);
 
                 return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }, async cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
@@ -281,11 +236,11 @@ namespace Nop.Services.Catalog
             var categories = await _categoryRepository.GetAllAsync(query =>
             {
                 return from c in query
-                    orderby c.DisplayOrder, c.Id
-                    where c.Published &&
-                          !c.Deleted &&
-                          c.ShowOnHomepage
-                    select c;
+                       orderby c.DisplayOrder, c.Id
+                       where c.Published &&
+                             !c.Deleted &&
+                             c.ShowOnHomepage
+                       select c;
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesHomepageCacheKey));
 
             if (showHidden)
@@ -501,66 +456,18 @@ namespace Nop.Services.Catalog
 
             var query = from pc in _productCategoryRepository.Table
                         join p in _productRepository.Table on pc.ProductId equals p.Id
-                        where pc.CategoryId == categoryId &&
-                              !p.Deleted &&
-                              (showHidden || p.Published)
+                        where pc.CategoryId == categoryId && !p.Deleted
                         orderby pc.DisplayOrder, pc.Id
                         select pc;
 
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
+            if (!showHidden)
             {
-                if (!_catalogSettings.IgnoreAcl)
-                {
-                    //ACL (access control list)
-                    var allowedCustomerRolesIds = await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync());
-                    query = from pc in query
-                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join acl in _aclRepository.Table
-                                on new
-                                {
-                                    c1 = c.Id,
-                                    c2 = nameof(Category)
-                                }
-                                equals new
-                                {
-                                    c1 = acl.EntityId,
-                                    c2 = acl.EntityName
-                                }
-                                into c_acl
-                            from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select pc;
-                }
-
-                if (!_catalogSettings.IgnoreStoreLimitations)
-                {
-                    //Store mapping
-                    var currentStoreId = (await _storeContext.GetCurrentStoreAsync()).Id;
-                    query = from pc in query
-                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join sm in _storeMappingRepository.Table
-                                on new
-                                {
-                                    c1 = c.Id,
-                                    c2 = nameof(Category)
-                                }
-                                equals new
-                                {
-                                    c1 = sm.EntityId,
-                                    c2 = sm.EntityName
-                                }
-                                into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || currentStoreId == sm.StoreId
-                            select pc;
-                }
-
-                query = query.Distinct();
+                var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table,
+                    _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                query = query.Where(pc => categoriesQuery.Any(c => c.Id == pc.CategoryId));
             }
 
-            var productCategories = await query.ToPagedListAsync(pageIndex, pageSize);
-
-            return productCategories;
+            return new PagedList<ProductCategory>(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -580,37 +487,25 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns> Product category mapping collection</returns>
+        /// <returns>Product category mapping collection</returns>
         public virtual async Task<IList<ProductCategory>> GetProductCategoriesByProductIdAsync(int productId, int storeId,
             bool showHidden = false)
         {
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
-                productId, showHidden, await _workContext.GetCurrentCustomerAsync(), storeId);
+            return _productCategoryRepository.GetAll(query => 
+            {
+                if (!showHidden)
+                {
+                    var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table, _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
+                }
 
-            var query = from pc in _productCategoryRepository.Table
-                        join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                        where pc.ProductId == productId &&
-                              !c.Deleted &&
-                              (showHidden || c.Published)
-                        orderby pc.DisplayOrder, pc.Id
-                        select pc;
-
-            if (showHidden)
-                return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
-
-            var categoryIds = await (await GetCategoriesByIdsAsync(query.Select(pc => pc.CategoryId).ToArray()))
-                .ToAsyncEnumerable()
-                .WhereAwait(async category => await _aclService.AuthorizeAsync(category) && await _storeMappingService.AuthorizeAsync(category, storeId))
-                .Select(c => c.Id).ToArrayAsync();
-
-            query = from pc in query
-                    where categoryIds.Contains(pc.CategoryId)
-                    select pc;
-
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+                return query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+                
+            }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
+                productId, showHidden, _workContext.CurrentCustomer, storeId));
         }
 
         /// <summary>

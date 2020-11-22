@@ -88,8 +88,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //select an appropriate panel
-            SaveSelectedPanelName("customersettings-customerformfields");
+            //select an appropriate card
+            SaveSelectedCardName("customersettings-customerformfields");
 
             //we just redirect a user to the customer settings page
             return RedirectToAction("CustomerUser", "Setting");

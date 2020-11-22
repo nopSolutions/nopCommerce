@@ -35,17 +35,12 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<Vendor>>,
         IConsumer<EntityUpdatedEvent<Vendor>>,
         IConsumer<EntityDeletedEvent<Vendor>>,
-        //product manufacturers
-        IConsumer<EntityInsertedEvent<ProductManufacturer>>,
-        IConsumer<EntityUpdatedEvent<ProductManufacturer>>,
-        IConsumer<EntityDeletedEvent<ProductManufacturer>>,
         //categories
         IConsumer<EntityInsertedEvent<Category>>,
         IConsumer<EntityUpdatedEvent<Category>>,
         IConsumer<EntityDeletedEvent<Category>>,
         //product categories
         IConsumer<EntityInsertedEvent<ProductCategory>>,
-        IConsumer<EntityUpdatedEvent<ProductCategory>>,
         IConsumer<EntityDeletedEvent<ProductCategory>>,
         //products
         IConsumer<EntityInsertedEvent<Product>>,
@@ -151,7 +146,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         #endregion
-        
+
         #region Setting
 
         public async Task HandleEventAsync(EntityUpdatedEvent<Setting> eventMessage)
@@ -215,25 +210,6 @@ namespace Nop.Web.Infrastructure.Cache
 
         #endregion
 
-        #region  Product manufacturers
-
-        public async Task HandleEventAsync(EntityInsertedEvent<ProductManufacturer> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.ManufacturerId));
-        }
-
-        public async Task HandleEventAsync(EntityUpdatedEvent<ProductManufacturer> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.ManufacturerId));
-        }
-
-        public async Task HandleEventAsync(EntityDeletedEvent<ProductManufacturer> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.ManufacturerId));
-        }
-
-        #endregion
-
         #region Categories
 
         public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
@@ -274,13 +250,6 @@ namespace Nop.Web.Infrastructure.Cache
                 await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
                 await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             }
-
-            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.CategoryId));
-        }
-
-        public async Task HandleEventAsync(EntityUpdatedEvent<ProductCategory> eventMessage)
-        {
-            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.CategoryId));
         }
 
         public async Task HandleEventAsync(EntityDeletedEvent<ProductCategory> eventMessage)
@@ -292,8 +261,6 @@ namespace Nop.Web.Infrastructure.Cache
                 await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
                 await _staticCacheManager.RemoveByPrefixAsync(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             }
-
-            await _staticCacheManager.RemoveByPrefixAsync(string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsPrefixCacheKeyById, eventMessage.Entity.CategoryId));
         }
 
         #endregion
@@ -561,7 +528,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         #endregion
-        
+
         #region Shopping cart items
 
         public async Task HandleEventAsync(EntityUpdatedEvent<ShoppingCartItem> eventMessage)

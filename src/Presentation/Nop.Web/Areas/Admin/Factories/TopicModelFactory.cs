@@ -105,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var topics = await _topicService.GetAllTopicsAsync(showHidden: true,
                 keywords: searchModel.SearchKeywords,
                 storeId: searchModel.SearchStoreId,
-                ignorAcl: true);
+                ignoreAcl: true);
 
             var pagedTopics = topics.ToPagedList(searchModel);
 

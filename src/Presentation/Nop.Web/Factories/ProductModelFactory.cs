@@ -1412,6 +1412,7 @@ namespace Nop.Web.Factories
                 var estimateShippingModel = await _shoppingCartModelFactory.PrepareEstimateShippingModelAsync(new[] { wrappedProduct });
 
                 model.ProductEstimateShipping.ProductId = product.Id;
+                model.ProductEstimateShipping.RequestDelay = estimateShippingModel.RequestDelay;
                 model.ProductEstimateShipping.Enabled = estimateShippingModel.Enabled;
                 model.ProductEstimateShipping.CountryId = estimateShippingModel.CountryId;
                 model.ProductEstimateShipping.StateProvinceId = estimateShippingModel.StateProvinceId;
@@ -1419,8 +1420,6 @@ namespace Nop.Web.Factories
                 model.ProductEstimateShipping.AvailableCountries = estimateShippingModel.AvailableCountries;
                 model.ProductEstimateShipping.AvailableStates = estimateShippingModel.AvailableStates;
             }
-            else
-                model.ProductEstimateShipping.Enabled = false;
 
             //associated products
             if (product.ProductType == ProductType.GroupedProduct)

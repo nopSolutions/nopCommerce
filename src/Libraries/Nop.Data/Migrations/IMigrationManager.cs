@@ -13,17 +13,15 @@ namespace Nop.Data.Migrations
         /// <summary>
         /// Executes all found (and unapplied) migrations
         /// </summary>
-        /// <param name="assembly">Assembly to find the migration;
-        /// leave null to search migration on the whole application pull</param>
+        /// <param name="assembly">Assembly to find the migration</param>
         /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
-        void ApplyUpMigrations(Assembly assembly = null, bool isUpdateProcess = false);
+        void ApplyUpMigrations(Assembly assembly, bool isUpdateProcess = false);
 
         /// <summary>
         /// Executes an Down migration
         /// </summary>
-        /// <param name="assembly">Assembly to find the migration;
-        /// leave null to search migration on the whole application pull</param>
-        void ApplyDownMigrations(Assembly assembly = null);
+        /// <param name="assembly">Assembly to find the migration</param>
+        void ApplyDownMigrations(Assembly assembly);
 
         /// <summary>
         /// Retrieves expressions into ICreateExpressionRoot

@@ -31,13 +31,16 @@ namespace Nop.Data
         #region Utils
 
         /// <summary>
-        /// Configures the data context
+        /// Creates the database connection
         /// </summary>
-        /// <param name="dataContext">Data context to configure</param>
-        private void ConfigureDataContext(IDataContext dataContext)
+        protected override DataConnection CreateDataConnection()
         {
+            var dataContext = CreateDataConnection(LinqToDbDataProvider);
+
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+
+            return dataContext;
         }
 
         protected async Task<MySqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
@@ -50,72 +53,6 @@ namespace Nop.Data
             return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
 
-        /// <summary>
-        /// Get SQL commands from the script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
-        {
-            var commands = new List<string>();
-
-            var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            if (batches.Length > 0)
-            {
-                commands.AddRange(
-                    batches
-                        .Where(b => !string.IsNullOrWhiteSpace(b))
-                        .Select(b =>
-                        {
-                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty);
-                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */");
-                            b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
-
-                            return b;
-                        }));
-            }
-
-            return commands;
-        }
-
-        /// <summary>
-        /// Execute commands from a file with SQL script against the context database
-        /// </summary>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="filePath">Path to the file</param>
-        protected async Task ExecuteSqlScriptFromFileAsync(INopFileProvider fileProvider, string filePath)
-        {
-            filePath = fileProvider.MapPath(filePath);
-            if (!fileProvider.FileExists(filePath))
-                return;
-
-            await ExecuteSqlScriptAsync(await fileProvider.ReadAllTextAsync(filePath, Encoding.Default));
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        protected override async Task<DataConnection> CreateDataConnection()
-        {
-            var dataContext = await CreateDataConnection(LinqToDbDataProvider);
-
-            ConfigureDataContext(dataContext);
-
-            return dataContext;
-        }
-
-        /// <summary>
-        /// Execute commands from the SQL script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        public async Task ExecuteSqlScriptAsync(string sql)
-        {
-            var sqlCommands = GetCommandsFromScript(sql);
-            using var currentConnection = await CreateDataConnection();
-            foreach (var command in sqlCommands)
-                await currentConnection.ExecuteAsync(command);
-        }
 
         #endregion
 
@@ -233,11 +170,7 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations();
-
-            //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFileAsync(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath).Wait();
+            migrationManager.ApplyUpMigrations(typeof(NopDbStartup).Assembly);
         }
 
         /// <summary>

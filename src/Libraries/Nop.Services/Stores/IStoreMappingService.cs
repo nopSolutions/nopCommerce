@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
 
@@ -10,6 +12,14 @@ namespace Nop.Services.Stores
     /// </summary>
     public partial interface IStoreMappingService
     {
+        /// <summary>
+        /// Get an expression predicate to apply a store mapping
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <typeparam name="TEntity">Type of entity with supported store mapping</typeparam>
+        /// <returns>Lambda expression</returns>
+        Expression<Func<TEntity, bool>> ApplyStoreMapping<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
+
         /// <summary>
         /// Deletes a store mapping record
         /// </summary>
@@ -39,6 +49,14 @@ namespace Nop.Services.Stores
         /// <param name="storeId">Store id</param>
         /// <param name="entity">Entity</param>
         Task InsertStoreMappingAsync<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
+
+        /// <summary>
+        /// Get a value indicating whether a store mapping exists for an entity type
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>True if exists; otherwise false</returns>
+        bool IsEntityMappingExists<T>(int storeId) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)

@@ -86,7 +86,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                         a = 0;
                         for (h = HostName.Length - 1; h >= 0; h--)
                         {
-                            chrCharacter = char.Parse(HostName.Substring(h, 1));
+                            chrCharacter = char.Parse(HostName[h..(h + 1)]);
                             intCharacter = chrCharacter;
                             a = (a << 6 & 268435455) + intCharacter + (intCharacter << 14);
                             c = a & 266338304;

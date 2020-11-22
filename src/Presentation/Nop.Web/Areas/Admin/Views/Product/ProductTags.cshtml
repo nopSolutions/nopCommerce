@@ -20,7 +20,7 @@
         <div class="pull-right">
             &nbsp;
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons })
-            <button type="button" id="delete-selected" class="btn bg-red">
+            <button type="button" id="delete-selected" class="btn btn-danger">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete.Selected")
             </button>
@@ -28,86 +28,87 @@
         </div>
     </div>
 
-    <div class="content">
-        <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default panel-search">
-                    <div class="panel-body">
-                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
-                            <div class="search-text">@T("Admin.Common.Search")</div>
-                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
-                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
-                        </div>
-                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchTagName" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="SearchTagName" />
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                                <div class="search-text">@T("Admin.Common.Search")</div>
+                                <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                                <div class="icon-collapse"><i class="fa fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                            </div>
+                            <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <nop-label asp-for="SearchTagName" />
+                                            </div>
+                                            <div class="col-md-8">
+                                                <nop-editor asp-for="SearchTagName" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-7 col-md-offset-5">
-                                    <button type="button" id="search-product-tags" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group row">
+                                    <div class="text-center col-12">
+                                        <button type="button" id="search-product-tags" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    @await Html.PartialAsync("Table", new DataTablesModel
-                    {
-                        Name = "product-tags-grid",
-                        UrlRead = new DataUrl("ProductTags", "Product", null),
-                        SearchButtonId = "search-product-tags",
-                        Length = Model.PageSize,
-                        LengthMenu = Model.AvailablePageSizes,
-                        Filters = new List<FilterParameter>
-                        {
-                            new FilterParameter(nameof(Model.SearchTagName))
-                        },
-                        ColumnCollection = new List<ColumnProperty>
-                        {
-                            new ColumnProperty(nameof(ProductTagModel.Id))
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
                             {
-                                IsMasterCheckBox = true,
-                                Render = new RenderCheckBox("checkbox_producttags"),
-                                ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50"
-                            },
-                            new ColumnProperty(nameof(ProductTagModel.Name))
-                            {
-                                Title = T("Admin.Catalog.ProductTags.Fields.Name").Text
-                            },
-                            new ColumnProperty(nameof(ProductTagModel.ProductCount))
-                            {
-                                Title = T("Admin.Catalog.ProductTags.Fields.ProductCount").Text,
-                                Width = "150",
-                                ClassName =  NopColumnClassDefaults.CenterAll
-                            },
-                            new ColumnProperty(nameof(ProductTagModel.Id))
-                            {
-                                Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
-                                ClassName =  NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("EditProductTag"))
-                            }
-                        }
-                    })
-
-                    <script>
-                        $(document).ready(function() {
+                                Name = "product-tags-grid",
+                                UrlRead = new DataUrl("ProductTags", "Product", null),
+                                SearchButtonId = "search-product-tags",                                
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchTagName))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(ProductTagModel.Id))
+                                    {
+                                        IsMasterCheckBox = true,
+                                        Render = new RenderCheckBox("checkbox_producttags"),
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Width = "50"
+                                    },
+                                    new ColumnProperty(nameof(ProductTagModel.Name))
+                                    {
+                                        Title = T("Admin.Catalog.ProductTags.Fields.Name").Text
+                                    },
+                                    new ColumnProperty(nameof(ProductTagModel.ProductCount))
+                                    {
+                                        Title = T("Admin.Catalog.ProductTags.Fields.ProductCount").Text,
+                                        Width = "150",
+                                        ClassName =  NopColumnClassDefaults.CenterAll
+                                    },
+                                    new ColumnProperty(nameof(ProductTagModel.Id))
+                                    {
+                                        Title = T("Admin.Common.Edit").Text,
+                                        Width = "100",
+                                        ClassName =  NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonEdit(new DataUrl("EditProductTag"))
+                                    }
+                                }
+                            })
+                            
+                            <script>
+                        $(document).ready(function() {                           
                             $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
                                 var postData = {
                                     selectedIds: selectedIds
@@ -130,10 +131,12 @@
                                 return false;
                             });
                         });
-                    </script>
-                    <nop-alert asp-alert-id="deleteSelectedFailed" />
+                            </script>
+                            <nop-alert asp-alert-id="deleteSelectedFailed" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </form>

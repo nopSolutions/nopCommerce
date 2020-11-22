@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqToDB;
@@ -22,6 +23,16 @@ namespace Nop.Data
         /// <param name="collation">Collation</param>
         /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         void CreateDatabase(string collation, int triesToConnect = 10);
+
+        /// <summary>
+        /// Creates a new temporary storage and populate it using data from provided query
+        /// </summary>
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>IQueryable instance of temporary storage</returns>
+        ITempDataStorage<TItem> CreateTempDataStorage<TItem>(string storageKey, IQueryable<TItem> query)
+            where TItem : class;
 
         /// <summary>
         /// Initialize database
@@ -64,7 +75,8 @@ namespace Nop.Data
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        Task BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
+        /// <returns>Number of deleted records</returns>
+        Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
 
         /// <summary>
         /// Performs bulk insert entities operation

@@ -218,7 +218,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string systemName = null;
                 foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
-                        systemName = formValue.Substring("install-plugin-link-".Length);
+                        systemName = formValue["install-plugin-link-".Length..];
 
                 var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
@@ -254,7 +254,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string systemName = null;
                 foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
-                        systemName = formValue.Substring("uninstall-plugin-link-".Length);
+                        systemName = formValue["uninstall-plugin-link-".Length..];
 
                 var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
@@ -290,7 +290,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string systemName = null;
                 foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("delete-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
-                        systemName = formValue.Substring("delete-plugin-link-".Length);
+                        systemName = formValue["delete-plugin-link-".Length..];
 
                 var pluginDescriptor = await _pluginService.GetPluginDescriptorBySystemNameAsync<IPlugin>(systemName, LoadPluginsMode.All);
 

@@ -737,6 +737,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore())
                 .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore());
 
+            CreateMap<MultiFactorAuthenticationSettings, MultiFactorAuthenticationSettingsModel>();
+            CreateMap<MultiFactorAuthenticationSettingsModel, MultiFactorAuthenticationSettings>()
+                .ForMember(settings => settings.ActiveAuthenticationMethodSystemNames, option => option.Ignore());
+
             CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())
                 .ForMember(model => model.ActivationDelay_OverrideForStore, options => options.Ignore())
@@ -1495,7 +1499,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.ActiveShippingRateComputationMethodSystemNames, options => options.Ignore())
                 .ForMember(settings => settings.ReturnValidOptionsIfThereAreAny, options => options.Ignore())
                 .ForMember(settings => settings.ShipSeparatelyOneItemEach, options => options.Ignore())
-                .ForMember(settings => settings.UseCubeRootMethod, options => options.Ignore());
+                .ForMember(settings => settings.UseCubeRootMethod, options => options.Ignore())
+                .ForMember(settings => settings.RequestDelay, options => options.Ignore());
         }
 
         /// <summary>

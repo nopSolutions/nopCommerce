@@ -1799,8 +1799,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("ProductSpecAttributeAddOrEdit",
                     new { productId = psa.ProductId, specificationId = psa.Id });
 
-            //select an appropriate panel
-            SaveSelectedPanelName("product-specification-attributes");
+            //select an appropriate card
+            SaveSelectedCardName("product-specification-attributes");
             return RedirectToAction("Edit", new { id = model.ProductId });
         }
 
@@ -1834,8 +1834,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var psa = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(model.SpecificationId);
             if (psa == null)
             {
-                //select an appropriate panel
-                SaveSelectedPanelName("product-specification-attributes");
+                //select an appropriate card
+                SaveSelectedCardName("product-specification-attributes");
                 _notificationService.ErrorNotification("No product specification attribute found with the specified id");
 
                 return RedirectToAction("Edit", new { id = model.ProductId });
@@ -1897,8 +1897,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     new { productId = psa.ProductId, specificationId = model.SpecificationId });
             }
 
-            //select an appropriate panel
-            SaveSelectedPanelName("product-specification-attributes");
+            //select an appropriate card
+            SaveSelectedCardName("product-specification-attributes");
 
             return RedirectToAction("Edit", new { id = psa.ProductId });
         }
@@ -1924,8 +1924,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 await _notificationService.ErrorNotificationAsync(ex);
 
-                //select an appropriate panel
-                SaveSelectedPanelName("product-specification-attributes");
+                //select an appropriate card
+                SaveSelectedCardName("product-specification-attributes");
                 return RedirectToAction("Edit", new { id = productId });
             }
         }
@@ -1940,8 +1940,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var psa = await _specificationAttributeService.GetProductSpecificationAttributeByIdAsync(model.SpecificationId);
             if (psa == null)
             {
-                //select an appropriate panel
-                SaveSelectedPanelName("product-specification-attributes");
+                //select an appropriate card
+                SaveSelectedCardName("product-specification-attributes");
                 _notificationService.ErrorNotification("No product specification attribute found with the specified id");
                 return RedirectToAction("Edit", new { id = model.ProductId });
             }
@@ -1955,8 +1955,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             await _specificationAttributeService.DeleteProductSpecificationAttributeAsync(psa);
 
-            //select an appropriate panel
-            SaveSelectedPanelName("product-specification-attributes");
+            //select an appropriate card
+            SaveSelectedCardName("product-specification-attributes");
 
             return RedirectToAction("Edit", new { id = psa.ProductId });
         }
@@ -2637,8 +2637,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
             {
-                //select an appropriate panel
-                SaveSelectedPanelName("product-product-attributes");
+                //select an appropriate card
+                SaveSelectedCardName("product-product-attributes");
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -2716,8 +2716,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!continueEditing)
             {
-                //select an appropriate panel
-                SaveSelectedPanelName("product-product-attributes");
+                //select an appropriate card
+                SaveSelectedCardName("product-product-attributes");
                 return RedirectToAction("Edit", new { id = product.Id });
             }
 
@@ -2746,8 +2746,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Catalog.Products.ProductAttributes.Attributes.Deleted"));
 
-            //select an appropriate panel
-            SaveSelectedPanelName("product-product-attributes");
+            //select an appropriate card
+            SaveSelectedCardName("product-product-attributes");
             return RedirectToAction("Edit", new { id = productAttributeMapping.ProductId });
         }
 

@@ -2,7 +2,7 @@
 
 @if (Model.Id > 0)
 {
-    <div class="panel-body">
+    <div class="card-body">
         @await Html.PartialAsync("Table", new DataTablesModel
         {
             Name = "products-grid",
@@ -34,7 +34,7 @@
             }
         })
     </div>
-    <div class="panel-footer">
+    <div class="card-footer">
         <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form" }))', 800, 800, true); return false;" class="btn btn-primary">
             @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
         </button>
@@ -53,7 +53,7 @@
 }
 else
 {
-    <div class="panel-body">
+    <div class="card-body">
         @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
     </div>
 }

@@ -122,7 +122,8 @@ namespace Nop.Data
         /// Delete entity entries by the passed predicate
         /// </summary>
         /// <param name="predicate">A function to test each element for a condition</param>
-        Task DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+        /// <returns>Number of deleted records</returns>
+        Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Loads the original copy of the entity entry

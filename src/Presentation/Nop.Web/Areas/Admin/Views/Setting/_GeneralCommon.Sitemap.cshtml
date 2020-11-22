@@ -1,8 +1,8 @@
 @model GeneralCommonSettingsModel
 
-<div class="panel-body">
+<div class="card-body">
     @(Html.Raw(string.Format(T("Admin.Configuration.Settings.GeneralCommon.Sitemap.Instructions").Text, Url.Action("AllSettings", "Setting", new { settingName = "sitemapxml" }))))
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SitemapSettings.SitemapEnabled_OverrideForStore" asp-input="SitemapSettings.SitemapEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SitemapSettings.SitemapEnabled" />
@@ -13,7 +13,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="SitemapSettings.SitemapEnabled">
-        <div class="form-group advanced-setting" id="pnlSitemapPageSize">
+        <div class="form-group row advanced-setting" id="pnlSitemapPageSize">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapPageSize_OverrideForStore" asp-input="SitemapSettings.SitemapPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapPageSize" />
@@ -23,7 +23,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapPageSize"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeCategories">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeCategories">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeCategories_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeCategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeCategories" />
@@ -33,7 +33,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeCategories"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeManufacturers">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeManufacturers">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeManufacturers_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeManufacturers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeManufacturers" />
@@ -43,7 +43,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeManufacturers"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeProducts">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeProducts">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeProducts_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeProducts" />
@@ -53,7 +53,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeProducts"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeProductTags">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeProductTags">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeProductTags_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeProductTags" />
@@ -63,7 +63,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeProductTags"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeTopics">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeTopics">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeTopics_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeTopics" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeTopics" />
@@ -73,7 +73,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeTopics"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeBlogPosts">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeBlogPosts">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeBlogPosts_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeBlogPosts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeBlogPosts" />
@@ -83,7 +83,7 @@
                 <span asp-validation-for="SitemapSettings.SitemapIncludeBlogPosts"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlSitemapIncludeNews">
+        <div class="form-group row advanced-setting" id="pnlSitemapIncludeNews">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="SitemapSettings.SitemapIncludeNews_OverrideForStore" asp-input="SitemapSettings.SitemapIncludeNews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="SitemapSettings.SitemapIncludeNews" />
