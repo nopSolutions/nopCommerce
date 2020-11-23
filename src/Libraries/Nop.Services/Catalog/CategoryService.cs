@@ -303,7 +303,7 @@ namespace Nop.Services.Catalog
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdsCacheKey,
                 parentCategoryId,
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
-                _storeContext.CurrentStore,
+                storeId,
                 showHidden);
 
             return _staticCacheManager.Get(cacheKey, () =>
@@ -490,11 +490,14 @@ namespace Nop.Services.Catalog
             {
                 if (!showHidden)
                 {
-                    var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table, _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
                 }
 
-                return query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+                return query
+                    .Where(pc => pc.ProductId == productId)
+                    .OrderBy(pc => pc.DisplayOrder)
+                    .ThenBy(pc => pc.Id);
                 
             }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
                 productId, showHidden, _workContext.CurrentCustomer, storeId));
