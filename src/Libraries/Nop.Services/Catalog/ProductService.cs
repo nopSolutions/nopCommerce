@@ -1024,9 +1024,9 @@ namespace Nop.Services.Catalog
                                    //ignore grouped products
                                    p.ProductTypeId != (int)ProductType.GroupedProduct &&
                                    //filter by vendor
-                                   (vendorId ?? 0) == 0 || p.VendorId == vendorId &&
+                                   ((vendorId ?? 0) == 0 || p.VendorId == vendorId) &&
                                    //whether to load published products only
-                                   loadPublishedOnly == null || p.Published == loadPublishedOnly
+                                   (loadPublishedOnly == null || p.Published == loadPublishedOnly)
                                orderby pac.ProductId, pac.Id
                                select pac;
 
