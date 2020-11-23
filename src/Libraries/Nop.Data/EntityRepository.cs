@@ -104,7 +104,7 @@ namespace Nop.Data
             //caching
             var cacheKey = getCacheKey(_staticCacheManager)
                 ?? _staticCacheManager.PrepareKeyForDefaultCache(NopEntityCacheDefaults<TEntity>.ByIdCacheKey, id);
-            
+
             return await _staticCacheManager.GetAsync(cacheKey, getEntityAsync);
         }
 
@@ -166,7 +166,7 @@ namespace Nop.Data
 
             return await GetEntities(getAllAsync, getCacheKey);
         }
-        
+
         /// <summary>
         /// Get all entity entries
         /// </summary>
@@ -393,7 +393,7 @@ namespace Nop.Data
 
             return await _dataProvider.BulkDeleteEntitiesAsync(predicate);
         }
-        
+
         /// <summary>
         /// Executes SQL using System.Data.CommandType.StoredProcedure command type and returns results as collection of values of specified type
         /// </summary>

@@ -611,17 +611,6 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(model));
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage;
-            
-            return Task.FromResult(model);
-        }
-
-        /// <summary>
-        /// Prepare the password recovery confirm model
-        /// </summary>
-        /// <returns>Password recovery confirm model</returns>
-        public virtual Task<PasswordRecoveryConfirmModel> PreparePasswordRecoveryConfirmModelAsync()
-        {
-            var model = new PasswordRecoveryConfirmModel();
 
             return Task.FromResult(model);
         }
@@ -630,30 +619,23 @@ namespace Nop.Web.Factories
         /// Prepare the register result model
         /// </summary>
         /// <param name="resultId">Value of UserRegistrationType enum</param>
+        /// <param name="returnUrl">URL to redirect</param>
         /// <returns>Register result model</returns>
-        public virtual async Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId)
+        public virtual async Task<RegisterResultModel> PrepareRegisterResultModelAsync(int resultId, string returnUrl)
         {
-            var resultText = "";
-            switch ((UserRegistrationType)resultId)
+            var resultText = (UserRegistrationType)resultId switch
             {
-                case UserRegistrationType.Disabled:
-                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.Disabled");
-                    break;
-                case UserRegistrationType.Standard:
-                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.Standard");
-                    break;
-                case UserRegistrationType.AdminApproval:
-                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval");
-                    break;
-                case UserRegistrationType.EmailValidation:
-                    resultText = await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation");
-                    break;
-                default:
-                    break;
-            }
+                UserRegistrationType.Disabled => await _localizationService.GetResourceAsync("Account.Register.Result.Disabled"),
+                UserRegistrationType.Standard => await _localizationService.GetResourceAsync("Account.Register.Result.Standard"),
+                UserRegistrationType.AdminApproval => await _localizationService.GetResourceAsync("Account.Register.Result.AdminApproval"),
+                UserRegistrationType.EmailValidation => await _localizationService.GetResourceAsync("Account.Register.Result.EmailValidation"),
+                _ => null
+            };
+
             var model = new RegisterResultModel
             {
-                Result = resultText
+                Result = resultText,
+                ReturnUrl = returnUrl
             };
 
             return model;
@@ -967,18 +949,18 @@ namespace Nop.Web.Factories
         /// <param name="model">Multi-factor authentication model</param>
         /// <returns>Multi-factor authentication model</returns>
         public virtual async Task<MultiFactorAuthenticationModel> PrepareMultiFactorAuthenticationModelAsync(MultiFactorAuthenticationModel model)
-        {            
+        {
             var customer = await _workContext.GetCurrentCustomerAsync();
 
             model.IsEnabled = !string.IsNullOrEmpty(
                 await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute));
-            
+
             var multiFactorAuthenticationProviders = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id)).ToList();
             foreach (var multiFactorAuthenticationProvider in multiFactorAuthenticationProviders)
             {
                 var providerModel = new MultiFactorAuthenticationProviderModel();
                 var sysName = multiFactorAuthenticationProvider.PluginDescriptor.SystemName;
-                providerModel = await PrepareMultiFactorAuthenticationProviderModelAsync(providerModel, sysName);                
+                providerModel = await PrepareMultiFactorAuthenticationProviderModelAsync(providerModel, sysName);
                 model.Providers.Add(providerModel);
             }
 
@@ -999,12 +981,15 @@ namespace Nop.Web.Factories
             var multiFactorAuthenticationProvider = (await _multiFactorAuthenticationPluginManager.LoadActivePluginsAsync(customer, (await _storeContext.GetCurrentStoreAsync()).Id))
                     .FirstOrDefault(provider => provider.PluginDescriptor.SystemName == sysName);
 
-            providerModel.Name = await _localizationService.GetLocalizedFriendlyNameAsync(multiFactorAuthenticationProvider, (await _workContext.GetWorkingLanguageAsync()).Id);
-            providerModel.SystemName = sysName;
-            providerModel.Description = await multiFactorAuthenticationProvider.GetDescriptionAsync();
-            providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
-            providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName(): multiFactorAuthenticationProvider.GetPublicViewComponentName();
-            providerModel.Selected = sysName == selectedProvider;
+            if (multiFactorAuthenticationProvider != null)
+            {
+                providerModel.Name = await _localizationService.GetLocalizedFriendlyNameAsync(multiFactorAuthenticationProvider, (await _workContext.GetWorkingLanguageAsync()).Id);
+                providerModel.SystemName = sysName;
+                providerModel.Description = await multiFactorAuthenticationProvider.GetDescriptionAsync();
+                providerModel.LogoUrl = await _multiFactorAuthenticationPluginManager.GetPluginLogoUrlAsync(multiFactorAuthenticationProvider);
+                providerModel.ViewComponentName = isLogin ? multiFactorAuthenticationProvider.GetVerificationViewComponentName() : multiFactorAuthenticationProvider.GetPublicViewComponentName();
+                providerModel.Selected = sysName == selectedProvider;
+            }
 
             return providerModel;
         }

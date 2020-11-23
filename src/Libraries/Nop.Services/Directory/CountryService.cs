@@ -77,12 +77,9 @@ namespace Nop.Services.Directory
                         query = query.Where(c => c.Published);
 
                     //Store mapping
-                    var storeId = _storeContext.CurrentStore.Id;
-
-                    if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Country>(storeId))
-                    {
+                    var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                    if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>(storeId))
                         query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
-                    }
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 });
@@ -165,8 +162,8 @@ namespace Nop.Services.Directory
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey, twoLetterIsoCode);
 
             var query = from c in _countryRepository.Table
-                where c.TwoLetterIsoCode == twoLetterIsoCode
-                select c;
+                        where c.TwoLetterIsoCode == twoLetterIsoCode
+                        select c;
 
             return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
         }
@@ -184,8 +181,8 @@ namespace Nop.Services.Directory
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey, threeLetterIsoCode);
 
             var query = from c in _countryRepository.Table
-                where c.ThreeLetterIsoCode == threeLetterIsoCode
-                select c;
+                        where c.ThreeLetterIsoCode == threeLetterIsoCode
+                        select c;
 
             return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
         }

@@ -41,7 +41,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryId">Category identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <returns>List of featured products</returns>
-        IList<Product> GetCategoryFeaturedProducts(int categoryId, int storeId = 0);
+        Task<IList<Product>> GetCategoryFeaturedProductsAsync(int categoryId, int storeId = 0);
 
         /// <summary>
         /// Gets featured products by a manufacturer identifier
@@ -49,14 +49,14 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <returns>List of featured products</returns>
-        IList<Product> GetManufacturerFeaturedProducts(int manufacturerId, int storeId = 0);
+        Task<IList<Product>> GetManufacturerFeaturedProductsAsync(int manufacturerId, int storeId = 0);
 
         /// <summary>
         /// Gets products which marked as new
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <returns>List of new products</returns>
-        IList<Product> GetProductsMarkedAsNew(int storeId = 0);
+        Task<IList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0);
 
         /// <summary>
         /// Gets product
@@ -186,8 +186,8 @@ namespace Nop.Services.Catalog
         /// true - load only "Published" products
         /// false - load only "Unpublished" products
         /// </param>
-        /// <returns>Products</returns>
-        Task<(IPagedList<Product>, IList<int>)> SearchProductsAsync(
+        /// <returns>Products; specification attribute option ids</returns>
+        Task<(IPagedList<Product> Products, IList<int> SpecificationAttributeOptionIds)> SearchProductsAsync(
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
             int pageSize = int.MaxValue,

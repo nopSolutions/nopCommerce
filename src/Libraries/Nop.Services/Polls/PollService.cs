@@ -77,9 +77,9 @@ namespace Nop.Services.Polls
                 query = query.Where(poll => poll.Published);
                 query = query.Where(poll => !poll.StartDateUtc.HasValue || poll.StartDateUtc <= utcNow);
                 query = query.Where(poll => !poll.EndDateUtc.HasValue || poll.EndDateUtc >= utcNow);
-                
+
                 //filter by store
-                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Poll>(storeId))
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Poll>(storeId))
                     query = query.Where(_storeMappingService.ApplyStoreMapping<Poll>(storeId));
             }
 
@@ -195,10 +195,13 @@ namespace Nop.Services.Polls
             if (pollId == 0 || customerId == 0)
                 return false;
 
-            var result = await (from pa in _pollAnswerRepository.Table
-                          join pvr in _pollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
-                          where pa.PollId == pollId && pvr.CustomerId == customerId
-                          select pvr).ToAsyncEnumerable().AnyAsync();
+            var result = await
+                (from pa in _pollAnswerRepository.Table
+                 join pvr in _pollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
+                 where pa.PollId == pollId && pvr.CustomerId == customerId
+                 select pvr)
+                 .ToAsyncEnumerable()
+                 .AnyAsync();
             return result;
         }
 

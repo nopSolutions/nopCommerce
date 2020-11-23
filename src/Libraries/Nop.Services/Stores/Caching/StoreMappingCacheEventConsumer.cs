@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Stores;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Stores.Caching
 {

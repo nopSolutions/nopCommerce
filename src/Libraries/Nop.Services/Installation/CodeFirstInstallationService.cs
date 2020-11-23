@@ -240,7 +240,7 @@ namespace Nop.Services.Installation
             foreach (var c in seName.ToCharArray())
             {
                 var c2 = c.ToString();
-                if (okChars.Contains(c2)) 
+                if (okChars.Contains(c2))
                     sb.Append(c2);
             }
 
@@ -4639,7 +4639,7 @@ namespace Nop.Services.Installation
 
             //first order
             var firstCustomer = await _customerRepository.Table.ToAsyncEnumerable().FirstAsync(c => c.Email == "steve_gates@nopCommerce.com");
-            
+
             var firstCustomerBillingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(firstCustomer.BillingAddressId)));
             var firstCustomerShippingAddress = await InsertInstallationDataAsync(cloneAddress(await _addressRepository.GetByIdAsync(firstCustomer.ShippingAddressId)));
 
@@ -6472,7 +6472,7 @@ namespace Nop.Services.Installation
                 PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
-            settingService.SaveSetting(new MultiFactorAuthenticationSettings
+            await settingService.SaveSettingAsync(new MultiFactorAuthenticationSettings
             {
                 ForceMultifactorAuthentication = false
             });

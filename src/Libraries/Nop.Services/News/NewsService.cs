@@ -39,7 +39,7 @@ namespace Nop.Services.News
             _newsItemRepository = newsItemRepository;
             _staticCacheManager = staticCacheManager;
             _storeMappingService = storeMappingService;
-            
+
         }
 
         #endregion
@@ -90,7 +90,7 @@ namespace Nop.Services.News
         public virtual async Task<IPagedList<NewsItem>> GetAllNewsAsync(int languageId = 0, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            var news = await _newsItemRepository.GetAllPagedAsync(query =>
+            var news = await _newsItemRepository.GetAllPagedAsync(async query =>
             {
                 if (languageId > 0)
                     query = query.Where(n => languageId == n.LanguageId);
@@ -107,10 +107,8 @@ namespace Nop.Services.News
                 }
 
                 //Store mapping 
-                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<NewsItem>(storeId))
-                {
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<NewsItem>(storeId))
                     query = query.Where(_storeMappingService.ApplyStoreMapping<NewsItem>(storeId));
-                }
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }, pageIndex, pageSize);
@@ -263,7 +261,7 @@ namespace Nop.Services.News
             if (newsComments == null)
                 throw new ArgumentNullException(nameof(newsComments));
 
-            foreach (var newsComment in newsComments) 
+            foreach (var newsComment in newsComments)
                 await DeleteNewsCommentAsync(newsComment);
         }
 

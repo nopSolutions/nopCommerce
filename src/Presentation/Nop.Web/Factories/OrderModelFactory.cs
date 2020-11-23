@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -51,6 +52,7 @@ namespace Nop.Web.Factories
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
@@ -85,6 +87,7 @@ namespace Nop.Web.Factories
             IProductService productService,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
@@ -115,6 +118,7 @@ namespace Nop.Web.Factories
             _productService = productService;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
@@ -227,7 +231,12 @@ namespace Nop.Web.Factories
                         Address1 = pickupAddress.Address1,
                         City = pickupAddress.City,
                         County = pickupAddress.County,
-                        CountryName = (await _countryService.GetCountryByAddressAsync(pickupAddress))?.Name ?? string.Empty,
+                        StateProvinceName = await _stateProvinceService.GetStateProvinceByAddressAsync(pickupAddress) is StateProvince stateProvince
+                            ? await _localizationService.GetLocalizedAsync(stateProvince, entity => entity.Name)
+                            : string.Empty,
+                        CountryName = await _countryService.GetCountryByAddressAsync(pickupAddress) is Country country
+                            ? await _localizationService.GetLocalizedAsync(country, entity => entity.Name)
+                            : string.Empty,
                         ZipPostalCode = pickupAddress.ZipPostalCode
                     };
                 }

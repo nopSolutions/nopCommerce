@@ -1,6 +1,6 @@
-﻿﻿using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Caching;
 

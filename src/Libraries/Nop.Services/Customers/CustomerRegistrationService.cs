@@ -172,7 +172,7 @@ namespace Nop.Services.Customers
             var methodIsActive = await _multiFactorAuthenticationPluginManager.IsPluginActiveAsync(selectedProvider, customer, (await _storeContext.GetCurrentStoreAsync()).Id);
             if (methodIsActive)
                 return CustomerLoginResults.MultiFactorAuthenticationRequired;
-            if (!string.IsNullOrEmpty(selectedProvider)) 
+            if (!string.IsNullOrEmpty(selectedProvider))
                 _notificationService.WarningNotification(await _localizationService.GetResourceAsync("MultiFactorAuthentication.Notification.SelectedMethodIsNotActive"));
 
             //update login details
@@ -402,12 +402,12 @@ namespace Nop.Services.Customers
         /// <returns>Result of an authentication</returns>
         public virtual async Task<IActionResult> SignInCustomerAsync(Customer customer, string returnUrl, bool isPersist = false)
         {
-            if (_workContext.CurrentCustomer.Id != customer.Id)
+            if ((await _workContext.GetCurrentCustomerAsync())?.Id != customer.Id)
             {
                 //migrate shopping cart
                 await _shoppingCartService.MigrateShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), customer, true);
 
-                _workContext.CurrentCustomer = customer;
+                await _workContext.SetCurrentCustomerAsync(customer);
             }
 
             //sign in new customer

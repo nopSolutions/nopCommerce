@@ -114,7 +114,7 @@ namespace Nop.Web.Controllers
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
-            _shoppingCartSettings = shoppingCartSettings;            
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -211,19 +211,20 @@ namespace Nop.Web.Controllers
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return Json(new { 
-                    success = false,
-                    errors = errors
+                return Json(new
+                {
+                    Success = false,
+                    Errors = errors
                 });
-            
+
             var product = await _productService.GetProductByIdAsync(model.ProductId);
             if (product == null || product.Deleted)
             {
                 errors.Add(await _localizationService.GetResourceAsync("Shipping.EstimateShippingPopUp.Product.IsNotFound"));
                 return Json(new
                 {
-                    success = false,
-                    errors = errors
+                    Success = false,
+                    Errors = errors
                 });
             }
 
@@ -251,13 +252,9 @@ namespace Nop.Web.Controllers
             wrappedProduct.RentalStartDateUtc = rentalStartDate;
             wrappedProduct.RentalEndDateUtc = rentalEndDate;
 
-            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
+            var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(new[] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
 
-            return Json(new
-            {
-                success = true,
-                result = result
-            });
+            return Json(result);
         }
 
         #endregion
@@ -286,15 +283,9 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
 
-            var products = await _productService.SearchProductsAsync(0,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                visibleIndividuallyOnly: true,
-                markedAsNewOnly: true,
-                orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.NewProductsNumber);
-
-            var model = new List<ProductOverviewModel>();
-            model.AddRange(await _productModelFactory.PrepareProductOverviewModelsAsync(products));
+            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
+            var model = (await _productModelFactory.PrepareProductOverviewModelsAsync(products)).ToList();
 
             return View(model);
         }
@@ -312,12 +303,9 @@ namespace Nop.Web.Controllers
 
             var items = new List<RssItem>();
 
-            var products = await _productService.SearchProductsAsync(0,
-                storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
-                visibleIndividuallyOnly: true,
-                markedAsNewOnly: true,
-                orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.NewProductsNumber);
+            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var products = await _productService.GetProductsMarkedAsNewAsync(storeId);
+
             foreach (var product in products)
             {
                 var productUrl = Url.RouteUrl("Product", new { SeName = await _urlRecordService.GetSeNameAsync(product) }, _webHelper.GetCurrentRequestProtocol());
@@ -379,13 +367,13 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("ProductReviews")]        
+        [HttpPost, ActionName("ProductReviews")]
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual async Task<IActionResult> ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = await _productService.GetProductByIdAsync(productId);
-            
+
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews ||
                 !await _productService.CanAddReviewAsync(product.Id, (await _storeContext.GetCurrentStoreAsync()).Id))
                 return RedirectToRoute("Homepage");
@@ -534,7 +522,7 @@ namespace Nop.Web.Controllers
             }
 
             var model = await _productModelFactory.PrepareCustomerProductReviewsModelAsync(pageNumber);
-            
+
             return View(model);
         }
 

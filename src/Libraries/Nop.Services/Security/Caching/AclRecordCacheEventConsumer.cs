@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Security;
+﻿using System.Threading.Tasks;
+using Nop.Core.Domain.Security;
 using Nop.Services.Caching;
-using System.Threading.Tasks;
 
 namespace Nop.Services.Security.Caching
 {
@@ -16,6 +16,7 @@ namespace Nop.Services.Security.Caching
         protected override async Task ClearCacheAsync(AclRecord entity)
         {
             await RemoveAsync(NopSecurityDefaults.AclRecordCacheKey, entity.EntityId, entity.EntityName);
+            await RemoveByPrefixAsync(NopSecurityDefaults.EntityAclRecordExistsPrefix, entity.EntityName);
         }
     }
 }

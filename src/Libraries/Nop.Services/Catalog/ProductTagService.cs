@@ -85,21 +85,22 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="query">Query to filter</param>
         /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
         /// <returns>Filtered query</returns>
-        protected virtual IQueryable<TEntity> FilterHiddenEntries<TEntity>(IQueryable<TEntity> query, int storeId, int[] customerRoleIds)
+        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
+            int storeId, int[] customerRolesIds)
             where TEntity : Product
         {
             //filter unpublished entries
             query = query.Where(entry => entry.Published);
 
             //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<TEntity>(storeId))
+            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
                 query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
 
             //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && _aclService.IsEntityAclMappingExist<TEntity>(customerRoleIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRoleIds));
+            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
+                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
 
             return query;
         }
@@ -112,30 +113,30 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         protected virtual async Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden)
         {
-            var customerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRolesIds, showHidden);
 
-            return _staticCacheManager.Get(key, () =>
+            return await _staticCacheManager.GetAsync(key, async () =>
             {
                 var query = _productProductTagMappingRepository.Table;
 
                 if (!showHidden)
                 {
-                    var productsQuery = FilterHiddenEntries(_productRepository.Table,
-                        storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    var productsQuery = await FilterHiddenEntriesAsync(_productRepository.Table, storeId, customerRolesIds);
                     query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
                 }
 
                 var pTagCount = from pt in _productTagRepository.Table
-                    join ptm in query on pt.Id equals ptm.ProductTagId into ptmDefaults
-                    from ptm in ptmDefaults.DefaultIfEmpty()
-                    group pt by pt.Id into ptGrouped
-                    select new
-                    {
-                        ProductTagId = ptGrouped.Key,
-                        ProductCount = ptGrouped.Count()
-                    };
+                                join ptm in query on pt.Id equals ptm.ProductTagId into ptmDefaults
+                                from ptm in ptmDefaults.DefaultIfEmpty()
+                                group pt by pt.Id into ptGrouped
+                                select new
+                                {
+                                    ProductTagId = ptGrouped.Key,
+                                    ProductCount = ptGrouped.Count()
+                                };
 
                 return pTagCount.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
@@ -163,7 +164,7 @@ namespace Nop.Services.Catalog
             if (productTags == null)
                 throw new ArgumentNullException(nameof(productTags));
 
-            foreach (var productTag in productTags) 
+            foreach (var productTag in productTags)
                 await DeleteProductTagAsync(productTag);
         }
 
@@ -192,10 +193,10 @@ namespace Nop.Services.Catalog
             var productTags = await _productTagRepository.GetAllAsync(query =>
             {
                 return from pt in query
-                    join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                    where ppt.ProductId == productId
-                    orderby pt.Id
-                    select pt;
+                       join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                       where ppt.ProductId == productId
+                       orderby pt.Id
+                       select pt;
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagsByProductCacheKey, productId));
 
             return productTags;
@@ -326,11 +327,11 @@ namespace Nop.Services.Catalog
                     break;
                 }
 
-                if (!found) 
+                if (!found)
                     productTagsToRemove.Add(existingProductTag);
             }
 
-            foreach (var productTag in productTagsToRemove) 
+            foreach (var productTag in productTagsToRemove)
                 await DeleteProductProductTagMappingAsync(product.Id, productTag.Id);
 
             foreach (var productTagName in productTags)
@@ -349,7 +350,7 @@ namespace Nop.Services.Catalog
                 else
                     productTag = productTag2;
 
-                if (!await ProductTagExistsAsync(product, productTag.Id)) 
+                if (!await ProductTagExistsAsync(product, productTag.Id))
                     await InsertProductProductTagMappingAsync(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
 
                 var seName = await _urlRecordService.ValidateSeNameAsync(productTag, string.Empty, productTag.Name, true);

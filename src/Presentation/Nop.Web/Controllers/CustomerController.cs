@@ -87,11 +87,11 @@ namespace Nop.Web.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly MediaSettings _mediaSettings;
+        private readonly MultiFactorAuthenticationSettings _multiFactorAuthenticationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -135,11 +135,11 @@ namespace Nop.Web.Controllers
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             ITaxService taxService,
-            IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             MediaSettings mediaSettings,
+            MultiFactorAuthenticationSettings multiFactorAuthenticationSettings,
             StoreInformationSettings storeInformationSettings,
             TaxSettings taxSettings)
         {
@@ -179,11 +179,11 @@ namespace Nop.Web.Controllers
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _taxService = taxService;
-            _webHelper = webHelper;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
             _localizationSettings = localizationSettings;
             _mediaSettings = mediaSettings;
+            _multiFactorAuthenticationSettings = multiFactorAuthenticationSettings;
             _storeInformationSettings = storeInformationSettings;
             _taxSettings = taxSettings;
         }
@@ -414,7 +414,7 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> Login(bool? checkoutAsGuest)
         {
             var model = await _customerModelFactory.PrepareLoginModelAsync(checkoutAsGuest);
-            
+
             return View(model);
         }
 
@@ -514,7 +514,7 @@ namespace Nop.Web.Controllers
             model = await _customerModelFactory.PrepareMultiFactorAuthenticationProviderModelAsync(model, selectedProvider, true);
 
             return View(model);
-        }        
+        }
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -625,7 +625,7 @@ namespace Nop.Web.Controllers
             }
 
             model = await _customerModelFactory.PreparePasswordRecoveryModelAsync(model);
-            
+
             return View(model);
         }
 
@@ -636,29 +636,26 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = await _customerService.GetCustomerByEmailAsync(email);
-            if (customer == null)
-                customer = await _customerService.GetCustomerByGuidAsync(guid);
+            var customer = await _customerService.GetCustomerByEmailAsync(email)
+                ?? await _customerService.GetCustomerByGuidAsync(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
+            var model = new PasswordRecoveryConfirmModel { ReturnUrl = Url.RouteUrl("Homepage") };
             if (string.IsNullOrEmpty(await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute)))
             {
-                return base.View(new PasswordRecoveryConfirmModel
-                {
-                    DisablePasswordChanging = true,
-                    Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged")
-                });
+                model.DisablePasswordChanging = true;
+                model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.PasswordAlreadyHasBeenChanged");
+                return View(model);
             }
-
-            var model = await _customerModelFactory.PreparePasswordRecoveryConfirmModelAsync();
 
             //validate token
             if (!await _customerService.IsPasswordRecoveryTokenValidAsync(customer, token))
             {
                 model.DisablePasswordChanging = true;
                 model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.WrongToken");
+                return View(model);
             }
 
             //validate token expiration date
@@ -666,6 +663,7 @@ namespace Nop.Web.Controllers
             {
                 model.DisablePasswordChanging = true;
                 model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.LinkExpired");
+                return View(model);
             }
 
             return View(model);
@@ -680,12 +678,13 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = await _customerService.GetCustomerByEmailAsync(email);
-            if (customer == null)
-                customer = await _customerService.GetCustomerByGuidAsync(guid);
+            var customer = await _customerService.GetCustomerByEmailAsync(email)
+                ?? await _customerService.GetCustomerByGuidAsync(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
+
+            model.ReturnUrl = Url.RouteUrl("Homepage");
 
             //validate token
             if (!await _customerService.IsPasswordRecoveryTokenValidAsync(customer, token))
@@ -703,26 +702,24 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var response = await _customerRegistrationService
+                .ChangePasswordAsync(new ChangePasswordRequest(customer.Email, false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
+            if (!response.Success)
             {
-                var response = await _customerRegistrationService.ChangePasswordAsync(new ChangePasswordRequest(customer.Email,
-                    false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
-                if (response.Success)
-                {
-                    await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
-
-                    model.DisablePasswordChanging = true;
-                    model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.PasswordHasBeenChanged");
-                }
-                else
-                {
-                    model.Result = response.Errors.FirstOrDefault();
-                }
-
+                model.Result = string.Join(';', response.Errors);
                 return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute, "");
+
+            //authenticate customer after changing password
+            await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
+
+            model.DisablePasswordChanging = true;
+            model.Result = await _localizationService.GetResourceAsync("Account.PasswordRecovery.PasswordHasBeenChanged");
             return View(model);
         }
 
@@ -732,11 +729,11 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> Register()
+        public virtual async Task<IActionResult> Register(string returnUrl)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
             var model = new RegisterModel();
             model = await _customerModelFactory.PrepareRegisterModelAsync(model, false, setDefaultValues: true);
@@ -753,7 +750,7 @@ namespace Nop.Web.Controllers
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled, returnUrl });
 
             if (await _customerService.IsRegisteredAsync(await _workContext.GetCurrentCustomerAsync()))
             {
@@ -941,10 +938,6 @@ namespace Nop.Web.Controllers
                     //save customer attributes
                     await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
-                    //login customer now
-                    if (isApproved)
-                        await _authenticationService.SignInAsync(customer, true);
-
                     //insert default address (if possible)
                     var defaultAddress = new Address
                     {
@@ -998,36 +991,28 @@ namespace Nop.Web.Controllers
                     switch (_customerSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
-                            {
-                                //email validation message
-                                await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
-                                await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            //email validation message
+                            await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
+                            await _workflowMessageService.SendCustomerEmailValidationMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
 
-                                //result
-                                return RedirectToRoute("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.EmailValidation });
-                            }
+                            //result
+                            return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation, returnUrl });
+
                         case UserRegistrationType.AdminApproval:
-                            {
-                                return RedirectToRoute("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.AdminApproval });
-                            }
+                            return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval, returnUrl });
+
                         case UserRegistrationType.Standard:
-                            {
-                                //send customer welcome message
-                                await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
+                            //send customer welcome message
+                            await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
 
-                                //raise event       
-                                await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
+                            //raise event       
+                            await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
 
-                                var redirectUrl = Url.RouteUrl("RegisterResult",
-                                    new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.GetCurrentRequestProtocol());
-                                return Redirect(redirectUrl);
-                            }
+                            returnUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard, returnUrl });
+                            return await _customerRegistrationService.SignInCustomerAsync(customer, returnUrl, true);
+
                         default:
-                            {
-                                return RedirectToRoute("Homepage");
-                            }
+                            return RedirectToRoute("Homepage");
                     }
                 }
 
@@ -1038,29 +1023,19 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model = await _customerModelFactory.PrepareRegisterModelAsync(model, true, customerAttributesXml);
-            
+
             return View(model);
         }
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual async Task<IActionResult> RegisterResult(int resultId)
-        {
-            var model = await _customerModelFactory.PrepareRegisterResultModelAsync(resultId);
-            
-            return View(model);
-        }
-
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
-        [HttpPost]
-        [IgnoreAntiforgeryToken]
-        public virtual IActionResult RegisterResult(string returnUrl)
+        public virtual async Task<IActionResult> RegisterResult(int resultId, string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
-                return RedirectToRoute("Homepage");
+                returnUrl = Url.RouteUrl("Homepage");
 
-            return Redirect(returnUrl);
+            var model = await _customerModelFactory.PrepareRegisterResultModelAsync(resultId, returnUrl);
+            return View(model);
         }
 
         [HttpPost]
@@ -1102,20 +1077,19 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> AccountActivation(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = await _customerService.GetCustomerByEmailAsync(email);
-            if (customer == null)
-                customer = await _customerService.GetCustomerByGuidAsync(guid);
+            var customer = await _customerService.GetCustomerByEmailAsync(email)
+                ?? await _customerService.GetCustomerByGuidAsync(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
+            var model = new AccountActivationModel { ReturnUrl = Url.RouteUrl("Homepage") };
             var cToken = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
-                return
-                    View(new AccountActivationModel
-                    {
-                        Result = await _localizationService.GetResourceAsync("Account.AccountActivation.AlreadyActivated")
-                    });
+            {
+                model.Result = await _localizationService.GetResourceAsync("Account.AccountActivation.AlreadyActivated");
+                return View(model);
+            }
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("Homepage");
@@ -1124,17 +1098,17 @@ namespace Nop.Web.Controllers
             customer.Active = true;
             await _customerService.UpdateCustomerAsync(customer);
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.AccountActivationTokenAttribute, "");
+
             //send welcome message
             await _workflowMessageService.SendCustomerWelcomeMessageAsync(customer, (await _workContext.GetWorkingLanguageAsync()).Id);
 
             //raise event       
             await _eventPublisher.PublishAsync(new CustomerActivatedEvent(customer));
 
-            var model = new AccountActivationModel
-            {
-                Result = await _localizationService.GetResourceAsync("Account.AccountActivation.Activated")
-            };
+            //authenticate customer after activation
+            await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
+            model.Result = await _localizationService.GetResourceAsync("Account.AccountActivation.Activated");
             return View(model);
         }
 
@@ -1329,7 +1303,7 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model = await _customerModelFactory.PrepareCustomerInfoModelAsync(model, customer, true, customerAttributesXml);
-            
+
             return View(model);
         }
 
@@ -1363,19 +1337,19 @@ namespace Nop.Web.Controllers
         public virtual async Task<IActionResult> EmailRevalidation(string token, string email, Guid guid)
         {
             //For backward compatibility with previous versions where email was used as a parameter in the URL
-            var customer = await _customerService.GetCustomerByEmailAsync(email);
-            if (customer == null)
-                customer = await _customerService.GetCustomerByGuidAsync(guid);
+            var customer = await _customerService.GetCustomerByEmailAsync(email)
+                ?? await _customerService.GetCustomerByGuidAsync(guid);
 
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
+            var model = new EmailRevalidationModel { ReturnUrl = Url.RouteUrl("Homepage") };
             var cToken = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute);
             if (string.IsNullOrEmpty(cToken))
-                return View(new EmailRevalidationModel
-                {
-                    Result = await _localizationService.GetResourceAsync("Account.EmailRevalidation.AlreadyChanged")
-                });
+            {
+                model.Result = await _localizationService.GetResourceAsync("Account.EmailRevalidation.AlreadyChanged");
+                return View(model);
+            }
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("Homepage");
@@ -1393,26 +1367,18 @@ namespace Nop.Web.Controllers
             }
             catch (Exception exc)
             {
-                return View(new EmailRevalidationModel
-                {
-                    Result = await _localizationService.GetResourceAsync(exc.Message)
-                });
+                model.Result = await _localizationService.GetResourceAsync(exc.Message);
+                return View(model);
             }
+
             customer.EmailToRevalidate = null;
             await _customerService.UpdateCustomerAsync(customer);
             await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute, "");
 
-            //re-authenticate (if usernames are disabled)
-            if (!_customerSettings.UsernamesEnabled)
-            {
-                await _authenticationService.SignInAsync(customer, true);
-            }
+            //authenticate customer after changing email
+            await _customerRegistrationService.SignInCustomerAsync(customer, null, true);
 
-            var model = new EmailRevalidationModel
-            {
-                Result = await _localizationService.GetResourceAsync("Account.EmailRevalidation.Changed")
-            };
-
+            model.Result = await _localizationService.GetResourceAsync("Account.EmailRevalidation.Changed");
             return View(model);
         }
 
@@ -1426,7 +1392,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             var model = await _customerModelFactory.PrepareCustomerAddressListModelAsync();
-            
+
             return View(model);
         }
 
@@ -1573,7 +1539,7 @@ namespace Nop.Web.Controllers
                 addressSettings: _addressSettings,
                 loadCountries: async () => await _countryService.GetAllCountriesAsync((await _workContext.GetWorkingLanguageAsync()).Id),
                 overrideAttributesXml: customAttributes);
-           
+
             return View(model);
         }
 
@@ -1590,7 +1556,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var model = await _customerModelFactory.PrepareCustomerDownloadableProductsModelAsync();
-            
+
             return View(model);
         }
 
@@ -1606,7 +1572,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
 
             var model = await _customerModelFactory.PrepareUserAgreementModelAsync(orderItem, product);
-            
+
             return View(model);
         }
 
@@ -1761,7 +1727,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var model = await _customerModelFactory.PrepareGdprToolsModelAsync();
-            
+
             return View(model);
         }
 
@@ -1799,7 +1765,7 @@ namespace Nop.Web.Controllers
 
             var model = await _customerModelFactory.PrepareGdprToolsModelAsync();
             model.Result = await _localizationService.GetResourceAsync("Gdpr.DeleteRequested.Success");
-            
+
             return View(model);
         }
 
@@ -1818,7 +1784,7 @@ namespace Nop.Web.Controllers
             }
 
             var model = await _customerModelFactory.PrepareCheckGiftCardBalanceModelAsync();
-           
+
             return View(model);
         }
 
@@ -1883,10 +1849,20 @@ namespace Nop.Web.Controllers
                     //save MultiFactorIsEnabledAttribute
                     if (!model.IsEnabled)
                     {
-                        await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
+                        if (!_multiFactorAuthenticationSettings.ForceMultifactorAuthentication)
+                        {
+                            await _genericAttributeService
+                                .SaveAttributeAsync(customer, NopCustomerDefaults.SelectedMultiFactorAuthenticationProviderAttribute, string.Empty);
 
-                        //raise change multi-factor authentication provider event       
-                        await _eventPublisher.PublishAsync(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+                            //raise change multi-factor authentication provider event       
+                            await _eventPublisher.PublishAsync(new CustomerChangeMultiFactorAuthenticationProviderEvent(customer));
+                        }
+                        else
+                        {
+                            model = await _customerModelFactory.PrepareMultiFactorAuthenticationModelAsync(model);
+                            model.Message = await _localizationService.GetResourceAsync("Account.MultiFactorAuthentication.Warning.ForceActivation");
+                            return View(model);
+                        }
                     }
                     else
                     {

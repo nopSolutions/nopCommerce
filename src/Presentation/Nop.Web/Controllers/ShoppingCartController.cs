@@ -1396,8 +1396,8 @@ namespace Nop.Web.Controllers
             if (errors.Count > 0)
                 return Json(new
                 {
-                    success = false,
-                    errors = errors
+                    Success = false,
+                    Errors = errors
                 });
 
             var cart = await _shoppingCartService.GetShoppingCartAsync(await _workContext.GetCurrentCustomerAsync(), ShoppingCartType.ShoppingCart, (await _storeContext.GetCurrentStoreAsync()).Id);
@@ -1406,11 +1406,7 @@ namespace Nop.Web.Controllers
 
             var result = await _shoppingCartModelFactory.PrepareEstimateShippingResultModelAsync(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode, true);
 
-            return Json(new
-            {
-                success = true,
-                result = result
-            });
+            return Json(result);
         }
 
         [HttpPost, ActionName("Cart")]
@@ -1423,7 +1419,7 @@ namespace Nop.Web.Controllers
             var discountId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
-                    discountId = Convert.ToInt32(formValue.Substring("removediscount-".Length));
+                    discountId = Convert.ToInt32(formValue["removediscount-".Length..]);
             var discount = await _discountService.GetDiscountByIdAsync(discountId);
             if (discount != null)
                 await _customerService.RemoveDiscountCouponCodeAsync(await _workContext.GetCurrentCustomerAsync(), discount.CouponCode);
@@ -1444,7 +1440,7 @@ namespace Nop.Web.Controllers
             var giftCardId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
-                    giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
+                    giftCardId = Convert.ToInt32(formValue["removegiftcard-".Length..]);
             var gc = await _giftCardService.GetGiftCardByIdAsync(giftCardId);
             if (gc != null)
                 await _customerService.RemoveGiftCardCouponCodeAsync(await _workContext.GetCurrentCustomerAsync(), gc.GiftCardCouponCode);

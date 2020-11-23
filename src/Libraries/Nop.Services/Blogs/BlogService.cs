@@ -23,7 +23,7 @@ namespace Nop.Services.Blogs
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingService _storeMappingService;
-        
+
         #endregion
 
         #region Ctor
@@ -82,16 +82,20 @@ namespace Nop.Services.Blogs
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
-            return await _blogPostRepository.GetAllPagedAsync(query =>
+            return await _blogPostRepository.GetAllPagedAsync(async query =>
             {
                 if (dateFrom.HasValue)
                     query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
+
                 if (dateTo.HasValue)
                     query = query.Where(b => dateTo.Value >= (b.StartDateUtc ?? b.CreatedOnUtc));
+
                 if (languageId > 0)
                     query = query.Where(b => languageId == b.LanguageId);
+
                 if (!string.IsNullOrEmpty(title))
                     query = query.Where(b => b.Title.Contains(title));
+
                 if (!showHidden)
                 {
                     query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
@@ -99,10 +103,8 @@ namespace Nop.Services.Blogs
                 }
 
                 //Store mapping
-                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<BlogPost>(storeId))
-                {
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<BlogPost>(storeId))
                     query = query.Where(_storeMappingService.ApplyStoreMapping<BlogPost>(storeId));
-                }
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 
@@ -228,7 +230,7 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <returns>Tags</returns>
-        public virtual async Task<IList<string>> ParseTagsAsync(BlogPost blogPost) 
+        public virtual async Task<IList<string>> ParseTagsAsync(BlogPost blogPost)
         {
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
@@ -350,7 +352,7 @@ namespace Nop.Services.Blogs
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
-            
+
             return await _staticCacheManager.GetAsync(cacheKey, async () => await query.ToAsyncEnumerable().CountAsync());
         }
 

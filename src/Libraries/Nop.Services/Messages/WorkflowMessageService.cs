@@ -2306,6 +2306,9 @@ namespace Nop.Services.Messages
             //event notification
             await _eventPublisher.MessageTokensAddedAsync(messageTemplate, tokens);
 
+            //force sending
+            messageTemplate.DelayBeforeSend = null;
+
             return await SendNotificationAsync(messageTemplate, emailAccount, languageId, tokens, sendToEmail, null);
         }
 

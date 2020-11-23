@@ -125,13 +125,12 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplatesAsync(int storeId)
         {
-            return await _messageTemplateRepository.GetAllAsync(query =>
+            return await _messageTemplateRepository.GetAllAsync(async query =>
             {
                 //store mapping
-                if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<MessageTemplate>(storeId))
-                {
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<MessageTemplate>(storeId))
                     query = query.Where(_storeMappingService.ApplyStoreMapping<MessageTemplate>(storeId));
-                }
+
                 return query.OrderBy(t => t.Name);
             }, cache => cache.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId));
         }
@@ -186,7 +185,7 @@ namespace Nop.Services.Messages
 
             //store mapping
             var selectedStoreIds = await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate);
-            foreach (var id in selectedStoreIds) 
+            foreach (var id in selectedStoreIds)
                 await _storeMappingService.InsertStoreMappingAsync(mtCopy, id);
 
             return mtCopy;

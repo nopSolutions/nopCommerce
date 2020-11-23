@@ -153,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return hasVendorProducts;
         }
-        
+
         protected virtual async ValueTask<bool> HasAccessToProductAsync(OrderItem orderItem)
         {
             if (orderItem == null || orderItem.ProductId == 0)
@@ -165,9 +165,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
 
-            return  (await _productService.GetProductByIdAsync(orderItem.ProductId))?.VendorId == vendorId;
+            return (await _productService.GetProductByIdAsync(orderItem.ProductId))?.VendorId == vendorId;
         }
-        
+
         protected virtual async ValueTask<bool> HasAccessToShipmentAsync(Shipment shipment)
         {
             if (shipment == null)
@@ -1716,7 +1716,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     RentalEndDateUtc = rentalEndDate
                 };
 
-                await _orderService.InsertOrderItemAsync(orderItem);                
+                await _orderService.InsertOrderItemAsync(orderItem);
 
                 //adjust inventory
                 await _productService.AdjustInventoryAsync(product, -orderItem.Quantity, orderItem.AttributesXml,
@@ -1861,7 +1861,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 await LogEditOrderAsync(order.Id);
 
-                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Customers.Customers.Addresses.Updated"));
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
@@ -2087,14 +2087,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     CreatedOnUtc = DateTime.UtcNow
                 });
 
-                if(model.CanShip)
+                if (model.CanShip)
                     await _orderProcessingService.ShipAsync(shipment, true);
 
-                if(model.CanShip && model.CanDeliver)
+                if (model.CanShip && model.CanDeliver)
                     await _orderProcessingService.DeliverAsync(shipment, true);
 
                 await LogEditOrderAsync(order.Id);
-                
+
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Orders.Shipments.Added"));
                 return continueEditing
                         ? RedirectToAction("ShipmentDetails", new { id = shipment.Id })
@@ -2140,7 +2140,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null && !await HasAccessToShipmentAsync(shipment))
                 return RedirectToAction("List");
-            
+
             foreach (var shipmentItem in await _shipmentService.GetShipmentItemsByShipmentIdAsync(shipment.Id))
             {
                 var orderItem = await _orderService.GetOrderItemByIdAsync(shipmentItem.OrderItemId);

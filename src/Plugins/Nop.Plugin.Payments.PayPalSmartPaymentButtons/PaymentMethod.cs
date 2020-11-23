@@ -186,7 +186,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
                 : null;
 
             //get the primary store currency
-            var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var currency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
             if (currency == null)
                 throw new NopException("Primary store currency cannot be loaded");
 

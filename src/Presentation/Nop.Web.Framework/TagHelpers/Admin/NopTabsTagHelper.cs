@@ -113,7 +113,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             tabsContentout.AddCssClass("card-body");
 
             var tabsContent = new TagBuilder("div");
-            tabsContent.AddCssClass("tab-content");            
+            tabsContent.AddCssClass("tab-content");
 
             var outputiner = new TagBuilder("div");
             outputiner.AddCssClass("card card-primary card-outline card-outline-tabs");
@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 tabsContent.InnerHtml.AppendHtml(tabItem.Content);
             }
 
-            tabsTitlediv.InnerHtml.AppendHtml(await tabsTitle.RenderHtmlContent());            
+            tabsTitlediv.InnerHtml.AppendHtml(await tabsTitle.RenderHtmlContent());
             tabsContentout.InnerHtml.AppendHtml(await tabsContent.RenderHtmlContent());
             //append data
             output.Content.AppendHtml(await tabsTitlediv.RenderHtmlContent());
@@ -153,7 +153,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     output.PostContent.SetHtmlContent(scriptTag);
                 }
             }
-            
+
             output.TagName = "div";
 
             var itemClass = "card card-primary card-outline card-outline-tabs nav-tabs-custom";
@@ -161,7 +161,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var classValue = output.Attributes.ContainsName("class")
                 ? $"{output.Attributes["class"].Value} {itemClass}"
                 : itemClass;
-                        
+
             output.Attributes.SetAttribute("class", classValue);
         }
 
@@ -274,14 +274,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             };
             //active class
             if (tabNameToSelect == Name)
-            {                
-                a.AddCssClass("nav-link active");
-            }
+                linkTag.AddCssClass("nav-link active");
             else
-            {
-                a.AddCssClass("nav-link");
-            }
-           
+                linkTag.AddCssClass("nav-link");
+
             linkTag.InnerHtml.AppendHtml(Title);
 
             //merge classes
@@ -301,12 +297,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var childContent = await output.GetChildContentAsync();
             tabContent.InnerHtml.AppendHtml(childContent.GetContent());
 
-            tabContenttop.InnerHtml.AppendHtml(tabContent.RenderHtmlContent());
+            tabContenttop.InnerHtml.AppendHtml(await tabContent.RenderHtmlContent());
+
             //active class
             if (tabNameToSelect == Name)
-            {
                 tabContent.AddCssClass("active");
-            }
 
             //add to context
             var tabContext = (List<NopTabContextItem>)context.Items[typeof(NopTabsTagHelper)];

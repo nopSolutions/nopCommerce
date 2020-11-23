@@ -620,10 +620,8 @@ namespace Nop.Services.Orders
                         select p;
             }
 
-            if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<Product>(storeId))
-            {
+            if (!showHidden && !_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Product>(storeId))
                 query = query.Where(_storeMappingService.ApplyStoreMapping<Product>(storeId));
-            }
 
             query = query.OrderBy(p => p.Name);
 

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB;
@@ -33,9 +31,9 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected override DataConnection CreateDataConnection()
+        protected override async Task<DataConnection> CreateDataConnection()
         {
-            var dataContext = CreateDataConnection(LinqToDbDataProvider);
+            var dataContext = await CreateDataConnection(LinqToDbDataProvider);
 
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
@@ -258,7 +256,7 @@ namespace Nop.Data
             using var currentConnection = await CreateDataConnection();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
-            if (tables.Count > 0) 
+            if (tables.Count > 0)
                 await currentConnection.ExecuteAsync($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
         }
 

@@ -171,9 +171,9 @@ namespace Nop.Services.Authentication.External
                 await _workflowMessageService.SendCustomerWelcomeMessageAsync(await _workContext.GetCurrentCustomerAsync(), (await _workContext.GetWorkingLanguageAsync()).Id);
 
                 //raise event       
-                _eventPublisher.Publish(new CustomerActivatedEvent(_workContext.CurrentCustomer));
+                await _eventPublisher.PublishAsync(new CustomerActivatedEvent(await _workContext.GetCurrentCustomerAsync()));
 
-                return _customerRegistrationService.SignInCustomer(_workContext.CurrentCustomer, returnUrl, true);
+                return await _customerRegistrationService.SignInCustomerAsync(await _workContext.GetCurrentCustomerAsync(), returnUrl, true);
             }
 
             //registration is succeeded but isn't activated
@@ -192,7 +192,7 @@ namespace Nop.Services.Authentication.External
 
             return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
         }
-        
+
         /// <summary>
         /// Add errors that occurred during authentication
         /// </summary>

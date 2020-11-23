@@ -14,14 +14,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
         /// <summary>Collect the UP migration expressions</summary>
         public override void Up()
         {
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             //do not use DI, because it produces exception on the installation process
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             //use localizationService to add, update and delete localization resources
-            localizationService.DeleteLocaleResources(new List<string>
+            localizationService.DeleteLocaleResourcesAsync(new List<string>
             {
                 "Account.Fields.VatNumber.Status",
                 "Account.Fields.VatNumberStatus",
@@ -124,9 +124,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 "Enums.Nop.Core.Domain.Common.FulltextSearchMode.And",
                 "Enums.Nop.Core.Domain.Common.FulltextSearchMode.ExactMatch",
                 "Enums.Nop.Core.Domain.Common.FulltextSearchMode.Or",
-            });
+            }).Wait();
 
-            localizationService.AddLocaleResource(new Dictionary<string, string>
+            localizationService.AddLocaleResourceAsync(new Dictionary<string, string>
             {
                 ["Admin.System.Warnings.PluginNotEnabled.AutoFixAndRestart"] = "Uninstall and delete all not used plugins automatically (site will be restarted)",
                 ["Admin.Configuration.AppSettings"] = "App settings",
@@ -276,10 +276,11 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for all users (at least one MFA provider must be active).",
                 ["Account.MultiFactorAuthentication.Warning.ForceActivation"] = "Enforce multi-factor authentication for all users is enabled.",
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning"] = "There are currently no active authentication providers. To use this setting, you must activate one of the multi-factor authentication providers.",
-            });
+            }).Wait();
 
             // rename locales
-            var localesToRename = new[] {
+            var localesToRename = new[]
+            {
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.Added", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.Added" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.AddNew", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.AddNew" },
                 new { Name = "Admin.Catalog.Attributes.SpecificationAttributes.BackToList", NewName = "Admin.Catalog.Attributes.SpecificationAttributes.SpecificationAttribute.BackToList" },
@@ -322,16 +323,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             };
 
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
-
-            foreach (var lang in languageService.GetAllLanguages(true))
+            var languages = languageService.GetAllLanguagesAsync(true).Result;
+            foreach (var lang in languages)
             {
                 foreach (var locale in localesToRename)
                 {
-                    var lsr = localizationService.GetLocaleStringResourceByName(locale.Name, lang.Id, false);
+                    var lsr = localizationService.GetLocaleStringResourceByNameAsync(locale.Name, lang.Id, false).Result;
                     if (lsr != null)
                     {
                         lsr.ResourceName = locale.NewName;
-                        localizationService.UpdateLocaleStringResource(lsr);
+                        localizationService.UpdateLocaleStringResourceAsync(lsr).Wait();
                     }
                 }
             }

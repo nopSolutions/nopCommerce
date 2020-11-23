@@ -241,7 +241,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var customerSettings = await _settingService.LoadSettingAsync<CustomerSettings>(storeId);
 
             //fill in model values from the entity
-            var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();            
+            var model = customerSettings.ToSettingsModel<CustomerSettingsModel>();
 
             return model;
         }
@@ -250,11 +250,11 @@ namespace Nop.Web.Areas.Admin.Factories
         /// Prepare multi-factor authentication settings model
         /// </summary>
         /// <returns>MultiFactorAuthenticationSettingsModel</returns>
-        protected virtual MultiFactorAuthenticationSettingsModel PrepareMultiFactorAuthenticationSettingsModel()
+        protected virtual async Task<MultiFactorAuthenticationSettingsModel> PrepareMultiFactorAuthenticationSettingsModelAsync()
         {
             //load settings for a chosen store scope
-            var storeId = _storeContext.ActiveStoreScopeConfiguration;
-            var multiFactorAuthenticationSettings = _settingService.LoadSetting<MultiFactorAuthenticationSettings>(storeId);
+            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+            var multiFactorAuthenticationSettings = await _settingService.LoadSettingAsync<MultiFactorAuthenticationSettings>(storeId);
 
             //fill in model values from the entity
             var model = multiFactorAuthenticationSettings.ToSettingsModel<MultiFactorAuthenticationSettingsModel>();
@@ -1346,7 +1346,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CustomerSettings = await PrepareCustomerSettingsModelAsync();
 
             //prepare multi-factor authentication settings model
-            model.MultiFactorAuthenticationSettings = PrepareMultiFactorAuthenticationSettingsModel();
+            model.MultiFactorAuthenticationSettings = await PrepareMultiFactorAuthenticationSettingsModelAsync();
 
             //prepare address settings model
             model.AddressSettings = await PrepareAddressSettingsModelAsync();

@@ -287,9 +287,9 @@ namespace Nop.Web.Factories
                             var selectedValues =
                                 _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
                             foreach (var attributeValue in await selectedValues.SelectMany(x => x.values).ToListAsync())
-                            foreach (var item in attributeModel.Values)
-                                if (attributeValue.Id == item.Id)
-                                    item.IsPreSelected = true;
+                                foreach (var item in attributeModel.Values)
+                                    if (attributeValue.Id == item.Id)
+                                        item.IsPreSelected = true;
                         }
                     }
 
@@ -729,12 +729,14 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel
             {
+                RequestDelay = _shippingSettings.RequestDelay,
                 Enabled = cart.Any() && await _shoppingCartService.ShoppingCartRequiresShippingAsync(cart)
             };
             if (model.Enabled)
             {
                 var shippingAddress = await _customerService.GetCustomerShippingAddressAsync(await _workContext.GetCurrentCustomerAsync());
-                if (shippingAddress == null) {
+                if (shippingAddress == null)
+                {
                     shippingAddress = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
                         .ToAsyncEnumerable()
                     //enabled for the current store
@@ -806,7 +808,7 @@ namespace Nop.Web.Factories
         {
             var pictureCacheKey = _staticCacheManager.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
                 , sci, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
-            
+
             var model = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
             {
                 var product = await _productService.GetProductByIdAsync(sci.ProductId);
@@ -1298,8 +1300,10 @@ namespace Nop.Web.Factories
                         }
                     }
                     else
+                    {
                         foreach (var error in getShippingOptionResponse.Errors)
-                            model.Warnings.Add(error);
+                            model.Errors.Add(error);
+                    }
                 }
 
                 var pickupPointsNumber = 0;
@@ -1325,8 +1329,10 @@ namespace Nop.Web.Factories
                         }
                     }
                     else
+                    {
                         foreach (var error in pickupPointsResponse.Errors)
-                            model.Warnings.Add(error);
+                            model.Errors.Add(error);
+                    }
                 }
 
                 ShippingOption selectedShippingOption = null;

@@ -31,7 +31,7 @@ namespace Nop.Data
         /// <param name="query">Query to get records to populate created storage with initial data</param>
         /// <typeparam name="TItem">Storage record mapping class</typeparam>
         /// <returns>IQueryable instance of temporary storage</returns>
-        ITempDataStorage<TItem> CreateTempDataStorage<TItem>(string storageKey, IQueryable<TItem> query)
+        Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
             where TItem : class;
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>Queryable source</returns>
         Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity;
-        
+
         /// <summary>
         /// Returns queryable source for specified mapping class for current connection,
         /// mapped to database table or view.

@@ -647,11 +647,11 @@ namespace Nop.Services.Customers
             }
 
             //clear checkout attributes
-            if (clearCheckoutAttributes) 
+            if (clearCheckoutAttributes)
                 await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.CheckoutAttributes, null, storeId);
 
             //clear reward points flag
-            if (clearRewardPoints) 
+            if (clearRewardPoints)
                 await _genericAttributeService.SaveAttributeAsync(customer, NopCustomerDefaults.UseRewardPointsDuringCheckoutAttribute, false, storeId);
 
             //clear selected shipping method
@@ -663,7 +663,7 @@ namespace Nop.Services.Customers
             }
 
             //clear selected payment method
-            if (clearPaymentMethod) 
+            if (clearPaymentMethod)
                 await _genericAttributeService.SaveAttributeAsync<string>(customer, NopCustomerDefaults.SelectedPaymentMethodAttribute, null, storeId);
 
             await UpdateCustomerAsync(customer);
@@ -678,7 +678,7 @@ namespace Nop.Services.Customers
         /// <returns>Number of deleted customers</returns>
         public virtual async Task<int> DeleteGuestCustomersAsync(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
-            var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+            var guestRole = await GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.GuestsRoleName);
 
             var allGuestCustomers = from guest in _customerRepository.Table
                                     join ccm in _customerCustomerRoleMappingRepository.Table on guest.Id equals ccm.CustomerId
@@ -704,20 +704,20 @@ namespace Nop.Services.Customers
                                      (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
                                  select new { CustomerId = guest.Id };
 
-            using var tmpGuests = _dataProvider.CreateTempDataStorage("tmp_guestsToDelete", guestsToDelete);
-            using var tmpAddresses = _dataProvider.CreateTempDataStorage("tmp_guestsAddressesToDelete",
+            using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
+            using var tmpAddresses = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
                 _customerAddressMappingRepository.Table
                     .Where(ca => tmpGuests.Any(c => c.CustomerId == ca.CustomerId))
                     .Select(ca => new { AddressId = ca.AddressId }));
 
             //delete guests
-            var totalRecordsDeleted = _customerRepository.Delete(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
+            var totalRecordsDeleted = await _customerRepository.DeleteAsync(c => tmpGuests.Any(tmp => tmp.CustomerId == c.Id));
 
             //delete attributes
-            _gaRepository.Delete(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
+            await _gaRepository.DeleteAsync(ga => tmpGuests.Any(c => c.CustomerId == ga.EntityId) && ga.KeyGroup == nameof(Customer));
 
             //delete m -> m addresses
-            _customerAddressRepository.Delete(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
+            await _customerAddressRepository.DeleteAsync(a => tmpAddresses.Any(tmp => tmp.AddressId == a.Id));
 
             return totalRecordsDeleted;
         }
@@ -1132,12 +1132,12 @@ namespace Nop.Services.Customers
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey, systemName);
 
             var query = from cr in _customerRoleRepository.Table
-                orderby cr.Id
-                where cr.SystemName == systemName
-                select cr;
+                        orderby cr.Id
+                        where cr.SystemName == systemName
+                        select cr;
 
             var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
- 
+
             return customerRole;
         }
 
@@ -1460,7 +1460,7 @@ namespace Nop.Services.Customers
 
             if (await _customerAddressMappingRepository.Table
                 .ToAsyncEnumerable()
-                .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id) 
+                .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
                 is CustomerAddressMapping mapping)
             {
                 if (customer.BillingAddressId == address.Id)

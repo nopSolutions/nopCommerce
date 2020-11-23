@@ -354,6 +354,7 @@ namespace Nop.Web.Factories
 
             var model = new HeaderLinksModel
             {
+                RegistrationType = _customerSettings.UserRegistrationType,
                 IsAuthenticated = await _customerService.IsRegisteredAsync(customer),
                 CustomerName = await _customerService.IsRegisteredAsync(customer) ? await _customerService.FormatUsernameAsync(customer) : string.Empty,
                 ShoppingCartEnabled = await _permissionService.AuthorizeAsync(StandardPermissionProvider.EnableShoppingCart),

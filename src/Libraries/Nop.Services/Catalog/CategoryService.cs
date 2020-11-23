@@ -77,21 +77,22 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="query">Query to filter</param>
         /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRoleIds">Identifiers of customer's roles</param>
+        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
         /// <returns>Filtered query</returns>
-        protected virtual IQueryable<TEntity> FilterHiddenEntries<TEntity>(IQueryable<TEntity> query, int storeId, int[] customerRoleIds)
+        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
+            int storeId, int[] customerRolesIds)
             where TEntity : Category
         {
             //filter unpublished entries
             query = query.Where(entry => entry.Published);
 
             //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && _storeMappingService.IsEntityMappingExists<TEntity>(storeId))
+            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
                 query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
 
             //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && _aclService.IsEntityAclMappingExist<TEntity>(customerRoleIds))
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRoleIds));
+            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
+                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
 
             return query;
         }
@@ -110,7 +111,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(discount));
 
             var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
-            
+
             await _discountCategoryMappingRepository.DeleteAsync(mappings.ToList());
         }
 
@@ -140,7 +141,7 @@ namespace Nop.Services.Catalog
             if (categories == null)
                 throw new ArgumentNullException(nameof(categories));
 
-            foreach (var category in categories) 
+            foreach (var category in categories)
                 await DeleteCategoryAsync(category);
         }
 
@@ -182,12 +183,17 @@ namespace Nop.Services.Catalog
             var unsortedCategories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                    query = FilterHiddenEntries(query, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                {
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                }
                 else if (overridePublished.HasValue)
                     query = query.Where(c => c.Published == overridePublished.Value);
 
                 if (!string.IsNullOrWhiteSpace(categoryName))
                     query = query.Where(c => c.Name.Contains(categoryName));
+
                 query = query.Where(c => !c.Deleted);
 
                 return query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
@@ -209,19 +215,19 @@ namespace Nop.Services.Catalog
         public virtual async Task<IList<Category>> GetAllCategoriesByParentCategoryIdAsync(int parentCategoryId,
             bool showHidden = false)
         {
+            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var categories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                {
-                    query = FilterHiddenEntries(query,
-                        _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
-                }
+                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
 
                 query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);
 
                 return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
-            }, async cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
-                parentCategoryId, showHidden, await _workContext.GetCurrentCustomerAsync(), await _storeContext.GetCurrentStoreAsync()));
+            }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
+                parentCategoryId, showHidden, customer, storeId));
 
             return categories;
         }
@@ -232,7 +238,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         public virtual async Task<IList<Category>> GetAllCategoriesDisplayedOnHomepageAsync(bool showHidden = false)
-        { 
+        {
             var categories = await _categoryRepository.GetAllAsync(query =>
             {
                 return from c in query
@@ -462,12 +468,14 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
             {
-                var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table,
-                    _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                var categoriesQuery = await FilterHiddenEntriesAsync(_categoryRepository.Table, storeId, customerRolesIds);
                 query = query.Where(pc => categoriesQuery.Any(c => c.Id == pc.CategoryId));
             }
 
-            return new PagedList<ProductCategory>(query, pageIndex, pageSize);
+            return await query.ToPagedListAsync(pageIndex, pageSize);
         }
 
         /// <summary>
@@ -494,18 +502,21 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            return _productCategoryRepository.GetAll(query => 
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+
+            return await _productCategoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                 {
-                    var categoriesQuery = FilterHiddenEntries(_categoryRepository.Table, _storeContext.CurrentStore.Id, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                    var categoriesQuery = await FilterHiddenEntriesAsync(_categoryRepository.Table, storeId, customerRolesIds);
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
                 }
 
                 return query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
-                
+
             }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
-                productId, showHidden, _workContext.CurrentCustomer, storeId));
+                productId, showHidden, customer, storeId));
         }
 
         /// <summary>

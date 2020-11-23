@@ -1103,7 +1103,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             await _settingService.SaveSettingAsync(externalAuthenticationSettings);
 
             multiFactorAuthenticationSettings = model.MultiFactorAuthenticationSettings.ToSettings(multiFactorAuthenticationSettings);
-            _settingService.SaveSetting(multiFactorAuthenticationSettings);
+            await _settingService.SaveSettingAsync(multiFactorAuthenticationSettings);
 
             //activity log
             await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
@@ -1853,25 +1853,29 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
             if (_appSettings.RedisConfig.Enabled && _appSettings.RedisConfig.UseCaching && loadAllLocaleRecordsOnStartup)
+            {
                 return Json(new
                 {
-                    Result = await _localizationService.GetResourceAsync(
-                        "Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning")
+                    Result = await _localizationService
+                        .GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning")
                 });
+            }
 
             return Json(new { Result = string.Empty });
         }
 
         //Action that displays a notification (warning) to the store owner about the absence of active authentication providers
-        public IActionResult ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
+        public async Task<IActionResult> ForceMultifactorAuthenticationWarning(bool forceMultifactorAuthentication)
         {
             //ForceMultifactorAuthentication is set and the store haven't active Authentication provider , so display warning
-            if (forceMultifactorAuthentication && !_multiFactorAuthenticationPluginManager.HasActivePlugins())
+            if (forceMultifactorAuthentication && !await _multiFactorAuthenticationPluginManager.HasActivePluginsAsync())
+            {
                 return Json(new
                 {
-                    Result = _localizationService.GetResource(
-                        "Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
+                    Result = await _localizationService
+                        .GetResourceAsync("Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning")
                 });
+            }
 
             return Json(new { Result = string.Empty });
         }
