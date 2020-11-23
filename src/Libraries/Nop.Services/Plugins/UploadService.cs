@@ -395,9 +395,10 @@ namespace Nop.Services.Plugins
         }
 
         /// <summary>
-        /// Upload locale pattern for ccurrent culture
+        /// Upload locale pattern for current culture
         /// </summary>
-        public virtual void UploadLocalePattern()
+        /// <param name="cultureInfo">CultureInfo</param>
+        public virtual void UploadLocalePattern(CultureInfo cultureInfo = null)
         {
             string getPath(string dirPath, string dirName)
             {
@@ -417,7 +418,7 @@ namespace Nop.Services.Plugins
                 if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
 
-                var currentCulture = CultureInfo.CurrentCulture;
+                var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
 
                 //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
                 if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) || 

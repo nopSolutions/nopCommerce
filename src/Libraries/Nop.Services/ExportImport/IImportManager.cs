@@ -24,8 +24,9 @@ namespace Nop.Services.ExportImport
         /// Import states from TXT file
         /// </summary>
         /// <param name="stream">Stream</param>
+        /// <param name="writeLog">Indicates whether to add logging</param>
         /// <returns>Number of imported states</returns>
-        int ImportStatesFromTxt(Stream stream);
+        int ImportStatesFromTxt(Stream stream, bool writeLog = true);
 
         /// <summary>
         /// Import manufacturers from XLSX file
