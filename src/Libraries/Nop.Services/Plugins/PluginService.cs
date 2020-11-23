@@ -297,13 +297,13 @@ namespace Nop.Services.Plugins
         {
             var pluginDirectory = _fileProvider.GetDirectoryName(pluginDescriptor.OriginalAssemblyFile);
             if (string.IsNullOrEmpty(pluginDirectory))
-                return null;
+                return Task.FromResult<string>(null);
 
             //check for supported extensions
             var logoExtension = NopPluginDefaults.SupportedLogoImageExtensions
                 .FirstOrDefault(ext => _fileProvider.FileExists(_fileProvider.Combine(pluginDirectory, $"{NopPluginDefaults.LogoFileName}.{ext}")));
             if (string.IsNullOrWhiteSpace(logoExtension))
-                return null;
+                return Task.FromResult<string>(null);
 
             var storeLocation = _webHelper.GetStoreLocation();
             var logoUrl = $"{storeLocation}{NopPluginDefaults.PathName}/" +

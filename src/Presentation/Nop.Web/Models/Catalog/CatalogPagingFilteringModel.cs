@@ -176,7 +176,7 @@ namespace Nop.Web.Models.Catalog
                 var range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
 
                 if (string.IsNullOrEmpty(range))
-                    return null;
+                    return Task.FromResult<PriceRange>(null);
 
                 var fromTo = range.Trim().Split(new[] { '-' });
                 if (fromTo.Length == 2)
@@ -196,7 +196,7 @@ namespace Nop.Web.Models.Catalog
                     }
                 }
 
-                return null;
+                return Task.FromResult<PriceRange>(null);
             }
 
             /// <summary>
