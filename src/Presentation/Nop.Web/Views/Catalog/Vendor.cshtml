@@ -36,7 +36,7 @@
         @if (Model.AllowCustomersToContactVendors)
         {
             <div class="contact-vendor">
-                <input type="button" value="@T("ContactVendor")" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
+                <button type="button" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')">@T("ContactVendor")</button>
             </div>
         }
         @if (Model.Products.Count > 0)

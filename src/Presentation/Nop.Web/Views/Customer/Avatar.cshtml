@@ -29,10 +29,10 @@
                 <input name="uploadedFile" type="file" />
             </div>
             <div class="buttons">
-                <input type="submit" name="upload-avatar" class="button-1 upload-avatar-button" value="@T("Common.Upload")" />
+                <button type="submit" name="upload-avatar" class="button-1 upload-avatar-button">@T("Common.Upload")</button>
                 @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                 {
-                    <input type="submit" name="remove-avatar" class="button-2 remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
+                    <button type="submit" name="remove-avatar" class="button-2 remove-avatar-button">@T("Account.Avatar.RemoveAvatar")</button>
                 }
             </div>
             <div class="info">

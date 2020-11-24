@@ -204,7 +204,7 @@
                                 @*Complete payment (for redirection payment methods)*@
                                 <li class="repost">
                                     <form asp-route="OrderDetails" method="post">
-                                        <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="button-2 re-order-button"/>
+                                        <button type="submit" name="repost-payment" class="button-2 re-order-button">@T("Order.RetryPayment")</button>
                                         <p class="hint">
                                             <em>@T("Order.RetryPayment.Hint")</em>
                                         </p>
@@ -783,11 +783,11 @@
                     <div class="actions">
                         @if (Model.IsReOrderAllowed)
                         {
-                            <input type="button" value="@T("Order.Reorder")" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })    ')" />
+                            <button type="button" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })')">@T("Order.Reorder")</button>
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {
-                            <input type="button" value="@T("Order.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })    ')" />
+                            <button type="button" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })')">@T("Order.ReturnItems")</button>
                         }
                     </div>
                 }

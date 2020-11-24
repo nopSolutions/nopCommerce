@@ -49,8 +49,8 @@
                 @T("Topic.EnterPassword")
             </div>
             <div class="enter-password-form">
-                <input name="password" type="password" id="password-@(Model.Id)"/>
-                <input type="submit" id="button-password-@Model.Id" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
+                <input name="password" type="password" id="password-@(Model.Id)" />
+                <button type="submit" id="button-password-@Model.Id" class="button-1 topic-password-button">@T("Topic.Button")</button>
             </div>
             <div class="password-error" id="password-error-@Model.Id" style="display: none;"></div>
         </form>

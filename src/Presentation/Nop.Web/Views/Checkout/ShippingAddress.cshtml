@@ -144,7 +144,7 @@
                                             }
                                         </ul>
                                         <div class="select-button">
-                                            <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new {addressid = item.Id})') " />
+                                            <button type="button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new {addressid = item.Id})')" class="button-1 select-shipping-address-button">@T("Checkout.ShipToThisAddress")</button>
                                         </div>
                                     </div>
                                 }
@@ -176,7 +176,7 @@
                 </div>
             }
             <div class="buttons">
-                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
+                <button type="submit" name="nextstep" class="button-1 new-address-next-step-button">@T("Checkout.NextButton")</button>
             </div>
 
         </form>
