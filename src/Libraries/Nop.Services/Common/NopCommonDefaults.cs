@@ -53,12 +53,12 @@ namespace Nop.Services.Common
         /// <summary>
         ///  Gets a head link for the favicon
         /// </summary>
-        public static string SingleFaviconHeadLink => "<link rel=\"shortcut icon\" href=\"\\icons\\icons_{0}\\{1}\">";
+        public static string SingleFaviconHeadLink => "<link rel=\"shortcut icon\" href=\"/icons/icons_{0}/{1}\">";
 
         /// <summary>
         /// Gets a path to the favicon and app icons
         /// </summary>
-        public static string FaviconAndAppIconsPath => "icons\\icons_{0}";
+        public static string FaviconAndAppIconsPath => "icons/icons_{0}";
 
         /// <summary>
         /// Gets a name of the old favicon icon for current store
@@ -72,7 +72,7 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets a path to the localization client-side validation 
         /// </summary>
-        public static string LocalePatternPath => "lib\\cldr-data\\main\\{0}";
+        public static string LocalePatternPath => "lib/cldr-data/main/{0}";
 
         /// <summary>
         /// Gets a name of the archive with localization of templates
