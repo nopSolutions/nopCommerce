@@ -162,10 +162,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>Script code</returns>
         private async Task<string> PrepareScriptsAsync(IList<FacebookPixelConfiguration> configurations)
         {
-            return PrepareInitScript(configurations) +
+            return await PrepareInitScriptAsync(configurations) +
                 await PrepareUserPropertiesScriptAsync(configurations) +
-                PreparePageViewScript(configurations) +
-                PrepareTrackedEventsScriptAsync(configurations);
+                await PreparePageViewScriptAsync(configurations) +
+                await PrepareTrackedEventsScriptAsync(configurations);
         }
 
         /// <summary>
@@ -211,10 +211,10 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
         /// <returns>Script code</returns>
-        private async Task<string> PrepareInitScript(IList<FacebookPixelConfiguration> configurations)
+        private async Task<string> PrepareInitScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //prepare init script
-            return await FormatScript(configurations, async configuration =>
+            return await FormatScriptAsync(configurations, async configuration =>
             {
                 var additionalParameter = configuration.PassUserProperties
                     ? $", {{uid: '{(await _workContext.GetCurrentCustomerAsync()).CustomerGuid}'}}"
@@ -262,7 +262,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             });
 
             //prepare script
-            return await FormatScript(activeConfigurations, configuration =>
+            return await FormatScriptAsync(activeConfigurations, configuration =>
                 Task.FromResult($"fbq('setUserProperties', '{configuration.PixelId}', {userObject});"));
         }
 
@@ -271,11 +271,11 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// </summary>
         /// <param name="configurations">Enabled configurations</param>
         /// <returns>Script code</returns>
-        private async Task<string> PreparePageViewScript(IList<FacebookPixelConfiguration> configurations)
+        private async Task<string> PreparePageViewScriptAsync(IList<FacebookPixelConfiguration> configurations)
         {
             //a single active configuration is enough to track PageView event
             var activeConfigurations = configurations.Where(configuration => configuration.TrackPageView).Take(1).ToList();
-            return await FormatScript(activeConfigurations, configuration =>
+            return await FormatScriptAsync(activeConfigurations, configuration =>
                 Task.FromResult($"fbq('track', '{FacebookPixelDefaults.PAGE_VIEW}');"));
         }
 
@@ -321,7 +321,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 //prepare event scripts
                 return preparedScripts + await trackedEvent.EventObjects.ToAsyncEnumerable().AggregateAwaitAsync(string.Empty, async (preparedEventScripts, eventObject) =>
                 {
-                    return preparedEventScripts + await FormatScript(activeConfigurations, configuration =>
+                    return preparedEventScripts + await FormatScriptAsync(activeConfigurations, configuration =>
                     {
                         //used for accurate event tracking with multiple Facebook Pixels
                         var actionName = configurations.Count > 1
@@ -424,7 +424,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="configurations">Enabled configurations</param>
         /// <param name="getScript">Function to get script for the passed configuration</param>
         /// <returns>Script code</returns>
-        private async Task<string> FormatScript(IList<FacebookPixelConfiguration> configurations, Func<FacebookPixelConfiguration, Task<string>> getScript)
+        private async Task<string> FormatScriptAsync(IList<FacebookPixelConfiguration> configurations, Func<FacebookPixelConfiguration, Task<string>> getScript)
         {
             if (!configurations.Any())
                 return string.Empty;
