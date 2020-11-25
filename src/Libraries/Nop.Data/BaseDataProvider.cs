@@ -331,7 +331,7 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         public virtual async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            await using var dataContext = await CreateDataConnection();
+            using var dataContext = await CreateDataConnection();
             var command = new CommandInfo(dataContext, procedureName, parameters);
             var rez = command.QueryProc<T>()?.ToList();
             UpdateOutputParameters(dataContext, parameters);

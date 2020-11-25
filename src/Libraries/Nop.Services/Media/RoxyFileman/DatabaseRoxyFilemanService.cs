@@ -140,35 +140,35 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+        protected virtual async Task<byte[]> EncodeImageAsync<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            using var stream = new MemoryStream();
+            await using var stream = new MemoryStream();
             var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
             switch (imageEncoder)
             {
                 case JpegEncoder jpegEncoder:
                     jpegEncoder.Subsample = JpegSubsample.Ratio444;
                     jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
-                    jpegEncoder.Encode(image, stream);
+                    await jpegEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 case PngEncoder pngEncoder:
                     pngEncoder.ColorType = PngColorType.RgbWithAlpha;
-                    pngEncoder.Encode(image, stream);
+                    await pngEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 case BmpEncoder bmpEncoder:
                     bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
-                    bmpEncoder.Encode(image, stream);
+                    await bmpEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 case GifEncoder gifEncoder:
-                    gifEncoder.Encode(image, stream);
+                    await gifEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 default:
-                    imageEncoder.Encode(image, stream);
+                    await imageEncoder.EncodeAsync(image, stream, default);
                     break;
             }
 
@@ -298,7 +298,7 @@ namespace Nop.Services.Media.RoxyFileman
                             Size = CalculateDimensions(size, targetSize)
                         }));
 
-                        pictureBinaryResized = EncodeImage(image, imageFormat);
+                        pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
                     }
                     else
                     {

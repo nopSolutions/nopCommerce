@@ -704,8 +704,8 @@ namespace Nop.Services.Customers
                                      (createdToUtc == null || guest.CreatedOnUtc < createdToUtc)
                                  select new { CustomerId = guest.Id };
 
-            using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
-            using var tmpAddresses = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
+            await using var tmpGuests = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsToDelete", guestsToDelete);
+            await using var tmpAddresses = await _dataProvider.CreateTempDataStorageAsync("tmp_guestsAddressesToDelete",
                 _customerAddressMappingRepository.Table
                     .Where(ca => tmpGuests.Any(c => c.CustomerId == ca.CustomerId))
                     .Select(ca => new { AddressId = ca.AddressId }));

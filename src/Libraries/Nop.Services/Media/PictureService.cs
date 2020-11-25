@@ -373,35 +373,35 @@ namespace Nop.Services.Media
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual byte[] EncodeImage<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+        protected virtual async Task<byte[]> EncodeImageAsync<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            using var stream = new MemoryStream();
+            await using var stream = new MemoryStream();
             var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
             switch (imageEncoder)
             {
                 case JpegEncoder jpegEncoder:
                     jpegEncoder.Subsample = JpegSubsample.Ratio444;
                     jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
-                    jpegEncoder.Encode(image, stream);
+                    await jpegEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 case PngEncoder pngEncoder:
                     pngEncoder.ColorType = PngColorType.RgbWithAlpha;
-                    pngEncoder.Encode(image, stream);
+                    await pngEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 case BmpEncoder bmpEncoder:
                     bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
-                    bmpEncoder.Encode(image, stream);
+                    await bmpEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 case GifEncoder gifEncoder:
-                    gifEncoder.Encode(image, stream);
+                    await gifEncoder.EncodeAsync(image, stream, default);
                     break;
 
                 default:
-                    imageEncoder.Encode(image, stream);
+                    await imageEncoder.EncodeAsync(image, stream, default);
                     break;
             }
 
@@ -501,7 +501,7 @@ namespace Nop.Services.Media
                         Mode = ResizeMode.Max,
                         Size = CalculateDimensions(image.Size(), targetSize)
                     }));
-                    var pictureBinary = EncodeImage(image, imageFormat);
+                    var pictureBinary = await EncodeImageAsync(image, imageFormat);
                     SaveThumb(thumbFilePath, thumbFileName, imageFormat.DefaultMimeType, pictureBinary);
                 }
 
@@ -616,7 +616,7 @@ namespace Nop.Services.Media
                                 Size = CalculateDimensions(image.Size(), targetSize)
                             }));
 
-                            pictureBinaryResized = EncodeImage(image, imageFormat);
+                            pictureBinaryResized = await EncodeImageAsync(image, imageFormat);
                         }
                         else
                             //create a copy of pictureBinary
@@ -749,7 +749,7 @@ namespace Nop.Services.Media
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
             if (validateBinary)
-                pictureBinary = ValidatePicture(pictureBinary, mimeType);
+                pictureBinary = await ValidatePictureAsync(pictureBinary, mimeType);
 
             var picture = new Picture
             {
@@ -874,7 +874,7 @@ namespace Nop.Services.Media
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
             if (validateBinary)
-                pictureBinary = ValidatePicture(pictureBinary, mimeType);
+                pictureBinary = await ValidatePictureAsync(pictureBinary, mimeType);
 
             var picture = await GetPictureByIdAsync(pictureId);
             if (picture == null)
@@ -973,7 +973,7 @@ namespace Nop.Services.Media
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary or throws an exception</returns>
-        public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
+        public virtual async Task<byte[]> ValidatePictureAsync(byte[] pictureBinary, string mimeType)
         {
             using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
             //resize the image in accordance with the maximum size
@@ -986,7 +986,7 @@ namespace Nop.Services.Media
                 }));
             }
 
-            return EncodeImage(image, imageFormat);
+            return await EncodeImageAsync(image, imageFormat);
         }
 
         /// <summary>

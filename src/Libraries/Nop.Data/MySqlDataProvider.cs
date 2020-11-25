@@ -184,7 +184,7 @@ namespace Nop.Data
 
             //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
             //with DataContext we could be used KeepConnectionAlive option
-            using var dbConnection = (DbConnection)(await CreateDbConnectionAsync());
+            await using var dbConnection = (DbConnection)(await CreateDbConnectionAsync());
 
             dbConnection.StateChange += (sender, e) =>
             {
@@ -206,12 +206,12 @@ namespace Nop.Data
                 }
             };
 
-            using var command = dbConnection.CreateCommand();
+            await using var command = dbConnection.CreateCommand();
             command.Connection = dbConnection;
             command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
             dbConnection.Open();
 
-            return Convert.ToInt32(command.ExecuteScalar() ?? 1);
+            return Convert.ToInt32((await command.ExecuteScalarAsync()) ?? 1);
         }
 
         /// <summary>

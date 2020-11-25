@@ -263,7 +263,7 @@ namespace Nop.Services.ExportImport
                 {
                     var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
                     //picture binary after validation (like in database)
-                    var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                    var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType);
                     if (existingBinary.SequenceEqual(validatedPictureBinary) ||
                         existingBinary.SequenceEqual(newPictureBinary))
                     {
@@ -310,7 +310,7 @@ namespace Nop.Services.ExportImport
                         {
                             var existingBinary = await _pictureService.LoadPictureBinaryAsync(existingPicture);
                             //picture binary after validation (like in database)
-                            var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                            var validatedPictureBinary = await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType);
                             if (!existingBinary.SequenceEqual(validatedPictureBinary) &&
                                 !existingBinary.SequenceEqual(newPictureBinary))
                                 continue;
@@ -372,7 +372,7 @@ namespace Nop.Services.ExportImport
                                 trimByteCount);
 
                             var newValidatedImageHash = HashHelper.CreateHash(
-                                _pictureService.ValidatePicture(newPictureBinary, mimeType), 
+                                await _pictureService.ValidatePictureAsync(newPictureBinary, mimeType), 
                                 IMAGE_HASH_ALGORITHM,
                                 trimByteCount);
 
