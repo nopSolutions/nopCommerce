@@ -9,7 +9,6 @@ using System.Xml;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.CodeAnalysis.CSharp;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -170,7 +169,7 @@ namespace Nop.Services.Seo
         /// Get HTTP protocol
         /// </summary>
         /// <returns>Protocol name as string</returns>
-        protected virtual async Task<string> GetHttpProtocol()
+        protected virtual async Task<string> GetHttpProtocolAsync()
         {
             return (await _storeContext.GetCurrentStoreAsync()).SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
@@ -249,7 +248,7 @@ namespace Nop.Services.Seo
             return await (await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
                 .ToAsyncEnumerable()
                 .SelectAwait(async news => await GetLocalizedSitemapUrlAsync("NewsItem",
-                    lang => new { SeName = _urlRecordService.GetSeNameAsync(news, news.LanguageId, ensureTwoPublishedLanguages: false).Result },
+                    async lang => new { SeName = await _urlRecordService.GetSeNameAsync(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
                     news.CreatedOnUtc)).ToListAsync();
         }
 
@@ -261,7 +260,7 @@ namespace Nop.Services.Seo
         {
             return await (await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
                 .ToAsyncEnumerable()
-                .SelectAwait(async category => await GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParams(category), category.UpdatedOnUtc)).ToListAsync();
+                .SelectAwait(async category => await GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParamsAwait(category), category.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -272,7 +271,7 @@ namespace Nop.Services.Seo
         {
             return await (await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
                 .ToAsyncEnumerable()
-                .SelectAwait(async manufacturer => await GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParams(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
+                .SelectAwait(async manufacturer => await GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParamsAwait(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -284,7 +283,7 @@ namespace Nop.Services.Seo
             return await (await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn))
                 .ToAsyncEnumerable()
-                    .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParams(product), product.UpdatedOnUtc)).ToListAsync();
+                    .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -295,7 +294,7 @@ namespace Nop.Services.Seo
         {
             return await (await _productTagService.GetAllProductTagsAsync())
                 .ToAsyncEnumerable()
-                .SelectAwait(async productTag => await GetLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParams(productTag))).ToListAsync();
+                .SelectAwait(async productTag => await GetLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParamsAwait(productTag))).ToListAsync();
         }
 
         /// <summary>
@@ -306,7 +305,7 @@ namespace Nop.Services.Seo
         {
             return await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).Where(t => t.IncludeInSitemap)
                 .ToAsyncEnumerable()
-                .SelectAwait(async topic => await GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParams(topic))).ToListAsync();
+                .SelectAwait(async topic => await GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParamsAwait(topic))).ToListAsync();
         }
 
         /// <summary>
@@ -319,7 +318,7 @@ namespace Nop.Services.Seo
                 .Where(p => p.IncludeInSitemap)
                 .ToAsyncEnumerable()
                 .SelectAwait(async post => await GetLocalizedSitemapUrlAsync("BlogPost",
-                    lang => new { SeName = _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false).Result },
+                    async lang => new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
                     post.CreatedOnUtc)).ToListAsync();
         }
 
@@ -341,28 +340,30 @@ namespace Nop.Services.Seo
         /// <typeparam name="T">Model type</typeparam>
         /// <param name="model">Model</param>
         /// <returns>Lambda for route params</returns>
-        protected virtual Func<int?, object> GetSeoRouteParams<T>(T model)
+        protected virtual Func<int?, Task<object>> GetSeoRouteParamsAwait<T>(T model)
             where T : BaseEntity, ISlugSupported
         {
-            return lang => new { SeName = _urlRecordService.GetSeNameAsync(model, lang).Result };
+            return async lang => new { SeName = await _urlRecordService.GetSeNameAsync(model, lang) };
         }
 
         /// <summary>
         /// Return localized urls
         /// </summary>
         /// <param name="routeName">Route name</param>
-        /// <param name="routeParams">Lambda for route params object</param>
+        /// <param name="getRouteParamsAwait">Lambda for route params object</param>
         /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
         /// <param name="updateFreq">How often to update url</param>
         protected virtual async Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
-            Func<int?, object> routeParams = null,
+            Func<int?, Task<object>> getRouteParamsAwait = null,
             DateTime? dateTimeUpdatedOn = null,
             UpdateFrequency updateFreq = UpdateFrequency.Weekly)
         {
             var urlHelper = GetUrlHelper();
 
             //url for current language
-            var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), await GetHttpProtocol());
+            var url = urlHelper.RouteUrl(routeName, 
+                getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null, 
+                await GetHttpProtocolAsync());
 
             var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
             var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
@@ -377,7 +378,7 @@ namespace Nop.Services.Seo
             var localizedUrls = await languages.ToAsyncEnumerable()
                 .SelectAwait(async lang =>
                 {
-                    var currentUrl = urlHelper.RouteUrl(routeName, routeParams?.Invoke(lang.Id), await GetHttpProtocol());
+                    var currentUrl = urlHelper.RouteUrl(routeName, getRouteParamsAwait?.Invoke(lang.Id), await GetHttpProtocolAsync());
 
                     if (string.IsNullOrEmpty(currentUrl))
                         return null;
@@ -422,7 +423,7 @@ namespace Nop.Services.Seo
             //write URLs of all available sitemaps
             for (var id = 1; id <= sitemapNumber; id++)
             {
-                var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, await GetHttpProtocol());
+                var url = urlHelper.RouteUrl("sitemap-indexed.xml", new { Id = id }, await GetHttpProtocolAsync());
                 var location = await XmlHelper.XmlEncodeAsync(url);
 
                 writer.WriteStartElement("sitemap");
@@ -493,7 +494,7 @@ namespace Nop.Services.Seo
                 //extract seo code
                 var altLoc = await XmlHelper.XmlEncodeAsync(alternate);
                 var altLocPath = new Uri(altLoc).PathAndQuery;
-                var( _, lang) = await altLocPath.IsLocalizedUrlAsync(_actionContextAccessor.ActionContext.HttpContext.Request.PathBase, true);
+                var (_, lang) = await altLocPath.IsLocalizedUrlAsync(_actionContextAccessor.ActionContext.HttpContext.Request.PathBase, true);
 
                 if (string.IsNullOrEmpty(lang?.UniqueSeoCode))
                     continue;
