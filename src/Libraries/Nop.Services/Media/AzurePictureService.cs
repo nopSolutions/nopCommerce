@@ -134,24 +134,15 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Delete picture thumbs
-        /// </summary>
-        /// <param name="picture">Picture</param>
-        protected override async void DeletePictureThumbs(Picture picture)
-        {
-            await DeletePictureThumbsAsync(picture);
-        }
-
-        /// <summary>
         /// Get picture (thumb) local path
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
         /// <returns>Local picture thumb path</returns>
-        protected override string GetThumbLocalPath(string thumbFileName)
+        protected override Task<string> GetThumbLocalPathAsync(string thumbFileName)
         {
             var path = _azureBlobStorageAppendContainerName ? _azureBlobStorageContainerName + "/" : string.Empty;
 
-            return $"{_azureBlobStorageEndPoint}/{path}{thumbFileName}";
+            return Task.FromResult($"{_azureBlobStorageEndPoint}/{path}{thumbFileName}");
         }
 
         /// <summary>
@@ -160,39 +151,16 @@ namespace Nop.Services.Media
         /// <param name="thumbFileName">Filename</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns>Local picture thumb path</returns>
-        protected override string GetThumbUrl(string thumbFileName, string storeLocation = null)
+        protected override async Task<string> GetThumbUrlAsync(string thumbFileName, string storeLocation = null)
         {
-            return GetThumbLocalPath(thumbFileName);
-        }
-
-        /// <summary>
-        /// Get a value indicating whether some file (thumb) already exists
-        /// </summary>
-        /// <param name="thumbFilePath">Thumb file path</param>
-        /// <param name="thumbFileName">Thumb file name</param>
-        /// <returns>Result</returns>
-        protected override async Task<bool> GeneratedThumbExists(string thumbFilePath, string thumbFileName)
-        {
-            return await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName);
-        }
-
-        /// <summary>
-        /// Save a value indicating whether some file (thumb) already exists
-        /// </summary>
-        /// <param name="thumbFilePath">Thumb file path</param>
-        /// <param name="thumbFileName">Thumb file name</param>
-        /// <param name="mimeType">MIME type</param>
-        /// <param name="binary">Picture binary</param>
-        protected override async void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
-        {
-            await SaveThumbAsync(thumbFilePath, thumbFileName, mimeType, binary);
+            return await GetThumbLocalPathAsync(thumbFileName);
         }
 
         /// <summary>
         /// Initiates an asynchronous operation to delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual async Task DeletePictureThumbsAsync(Picture picture)
+        protected override async Task DeletePictureThumbsAsync(Picture picture)
         {
             //create a string containing the Blob name prefix
             var prefix = $"{picture.Id:0000000}";
@@ -221,7 +189,7 @@ namespace Nop.Services.Media
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
         /// <returns>Result</returns>
-        protected virtual async Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
+        protected override async Task<bool> GeneratedThumbExistsAsync(string thumbFilePath, string thumbFileName)
         {
             try
             {
@@ -248,7 +216,7 @@ namespace Nop.Services.Media
         /// <param name="thumbFileName">Thumb file name</param>
         /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
-        protected virtual async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
+        protected override async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
             var blockBlob = _container.GetBlockBlobReference(thumbFileName);

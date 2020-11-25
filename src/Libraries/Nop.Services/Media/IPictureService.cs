@@ -18,7 +18,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="mimeType">Mime type</param>
         /// <returns>File extension</returns>
-        string GetFileExtensionFromMimeType(string mimeType);
+        Task<string> GetFileExtensionFromMimeTypeAsync(string mimeType);
 
         /// <summary>
         /// Gets the loaded picture binary depending on picture storage settings
@@ -69,7 +69,7 @@ namespace Nop.Services.Media
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        Task<(string url, Picture picture)> GetPictureUrlAsync(Picture picture,
+        Task<(string Url, Picture Picture)> GetPictureUrlAsync(Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,

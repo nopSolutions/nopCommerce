@@ -1382,7 +1382,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var picture = (await _pictureService.GetPictureByIdAsync(productPicture.PictureId))
                         ?? throw new Exception("Picture cannot be loaded");
 
-                    productPictureModel.PictureUrl = (await _pictureService.GetPictureUrlAsync(picture)).url;
+                    productPictureModel.PictureUrl = (await _pictureService.GetPictureUrlAsync(picture)).Url;
 
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;

@@ -54,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = (await _pictureService.GetPictureUrlAsync(picture, 100)).url
+                imageUrl = (await _pictureService.GetPictureUrlAsync(picture, 100)).Url
             });
         }
 

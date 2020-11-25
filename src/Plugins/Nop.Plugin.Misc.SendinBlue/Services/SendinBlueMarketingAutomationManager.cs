@@ -208,7 +208,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                                 return res;
                             }),
                             url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
-                            image = (await _pictureService.GetPictureUrlAsync(picture)).url,
+                            image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                             quantity = item.Quantity,
                             price = (await _shoppingCartService.GetSubTotalAsync(item, true)).subTotal
                         };
@@ -319,7 +319,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             return res;
                         }),
                         url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.GetCurrentRequestProtocol()),
-                        image = (await _pictureService.GetPictureUrlAsync(picture)).url,
+                        image = (await _pictureService.GetPictureUrlAsync(picture)).Url,
                         quantity = item.Quantity,
                         price = item.PriceInclTax,
                     };

@@ -95,7 +95,7 @@ namespace Nop.Services.Media.RoxyFileman
                 .Select(picture => _fileProvider.GetAbsolutePath(picture.VirtualPath.TrimStart('~').Split('/')))
                 .Distinct();
 
-            foreach (var directory in directoryNames) 
+            foreach (var directory in directoryNames)
                 await CreateDirectoryAsync(directory);
         }
 
@@ -128,7 +128,11 @@ namespace Nop.Services.Media.RoxyFileman
                 var destinationPathVirtualPath =
                     $"{baseDestinationPathVirtualPath.TrimEnd('/')}{picture.VirtualPath.Replace(_fileProvider.GetVirtualPath(sourcePath), "")}";
 
-                await _pictureService.InsertPictureAsync(new RoxyFilemanFormFile(picture, await _pictureService.GetPictureBinaryByPictureIdAsync(picture.Id), _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty, destinationPathVirtualPath);
+                await _pictureService.InsertPictureAsync(new RoxyFilemanFormFile(picture,
+                    await _pictureService.GetPictureBinaryByPictureIdAsync(picture.Id),
+                    await _pictureService.GetFileExtensionFromMimeTypeAsync(picture.MimeType)),
+                    string.Empty,
+                    destinationPathVirtualPath);
             }
         }
 
@@ -140,7 +144,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="imageFormat">Image format</param>
         /// <param name="quality">Quality index that will be used to encode the image</param>
         /// <returns>Image binary data</returns>
-        protected virtual async Task<byte[]> EncodeImageAsync<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null) 
+        protected virtual async Task<byte[]> EncodeImageAsync<TPixel>(Image<TPixel> image, IImageFormat imageFormat, int? quality = null)
             where TPixel : unmanaged, IPixel<TPixel>
         {
             await using var stream = new MemoryStream();
@@ -246,7 +250,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             var seoFileName = picture.SeoFilename;
 
-            var lastPart = _pictureService.GetFileExtensionFromMimeType(picture.MimeType);
+            var lastPart = await _pictureService.GetFileExtensionFromMimeTypeAsync(picture.MimeType);
 
             var thumbFileName = targetSize == 0 ? $"{seoFileName}.{lastPart}" : $"{seoFileName}_{targetSize}.{lastPart}";
 
@@ -277,7 +281,7 @@ namespace Nop.Services.Media.RoxyFileman
             //the named semaphore helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
             using var semaphore = new Semaphore(1, 1, thumbFileName);
-            
+
             semaphore.WaitOne();
 
             try
@@ -360,7 +364,7 @@ namespace Nop.Services.Media.RoxyFileman
                 };
 
                 await _pictureService.InsertPictureAsync(
-                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = await _fileProvider.ReadAllBytesAsync(filePath) },  _fileProvider.GetFileExtension(filePath)),
+                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = await _fileProvider.ReadAllBytesAsync(filePath) }, _fileProvider.GetFileExtension(filePath)),
                     string.Empty, _fileProvider.GetVirtualPath(filePath));
             }
         }
@@ -590,7 +594,7 @@ namespace Nop.Services.Media.RoxyFileman
                     if (!pictures.Any())
                         break;
 
-                    foreach (var picture in pictures) 
+                    foreach (var picture in pictures)
                         await FlushImagesAsync(picture, width, height);
 
                     if (removeOriginal)
