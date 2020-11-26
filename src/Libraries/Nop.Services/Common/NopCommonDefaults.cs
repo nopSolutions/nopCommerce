@@ -72,7 +72,7 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets a path to the localization client-side validation 
         /// </summary>
-        public static string LocalePatternPath => "lib/cldr-data/main/{0}";
+        public static string LocalePatternPath => "lib_npm/cldr-data/main/{0}";
 
         /// <summary>
         /// Gets a name of the archive with localization of templates
