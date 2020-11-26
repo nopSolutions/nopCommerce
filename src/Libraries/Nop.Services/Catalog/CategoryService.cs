@@ -158,7 +158,8 @@ namespace Nop.Services.Catalog
                 await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
                 showHidden);
 
-            var categories = await _staticCacheManager.GetAsync(key, async () => await GetAllCategoriesAsync(string.Empty, storeId, showHidden: showHidden));
+            var categories = await _staticCacheManager
+                .GetAsync(key, async () => (await GetAllCategoriesAsync(string.Empty, storeId, showHidden: showHidden)).ToList());
 
             return categories;
         }

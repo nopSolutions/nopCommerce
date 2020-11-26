@@ -353,7 +353,7 @@ namespace Nop.Services.Plugins
                     throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync()));
+                var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.GetActiveStoreScopeConfigurationAsync().Result));
 
                 CreateDirectory(storeIconsPath);
 

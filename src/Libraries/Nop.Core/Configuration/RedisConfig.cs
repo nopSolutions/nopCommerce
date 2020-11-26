@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets or sets Redis connection string. Used when Redis is enabled
         /// </summary>
-        public string ConnectionString { get; set; } = "127.0.0.1:6379,ssl=False";
+        public string ConnectionString { get; set; } = "127.0.0.1:6379,ssl=False,asyncTimeout=20000";
 
         /// <summary>
         /// Gets or sets a specific redis database; If you need to use a specific redis database, just set its number here. set NULL if should use the different database for each data type (used by default)
