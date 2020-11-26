@@ -118,6 +118,36 @@ namespace Nop.Web.Controllers
 
         #endregion
 
+        #region Utilities
+
+        private void ValidateProductReviewAvailability(Product product)
+        {
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+
+            if (!_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+                return;
+
+            var hasCompletedOrders = product.ProductType == ProductType.SimpleProduct
+                ? HasCompletedOrders(product)
+                : _productService
+                    .GetAssociatedProducts(product.Id)
+                    .Any(HasCompletedOrders);
+
+            if (!hasCompletedOrders)
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+        }
+
+        private bool HasCompletedOrders(Product product)
+        {
+            return _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                productId: product.Id,
+                osIds: new List<int> { (int)OrderStatus.Complete },
+                pageSize: 1).Any();
+        }
+
+        #endregion
+
         #region Product details page
 
         public virtual IActionResult ProductDetails(int productId, int updatecartitemid = 0)
@@ -345,19 +375,8 @@ namespace Nop.Web.Controllers
 
             var model = new ProductReviewsModel();
             model = _productModelFactory.PrepareProductReviewsModel(model, product);
-            //only registered users can leave reviews
-            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-                ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
 
-            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
-            {
-                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
-                    productId: productId,
-                    osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1).Any();
-                if (!hasCompletedOrders)
-                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
-            }
+            ValidateProductReviewAvailability(product);
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
@@ -387,20 +406,7 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
-            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-            {
-                ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
-            }
-
-            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
-            {
-                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
-                    productId: productId,
-                    osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1).Any();
-                if (!hasCompletedOrders)
-                    ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
-            }
+            ValidateProductReviewAvailability(product);
 
             if (ModelState.IsValid)
             {
