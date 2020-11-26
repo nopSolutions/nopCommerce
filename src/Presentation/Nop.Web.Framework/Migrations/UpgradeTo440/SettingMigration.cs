@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
@@ -42,6 +43,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             settingRepository.Delete(setting =>
                 setting.Name == "commonsettings.usefulltextsearch" ||
                 setting.Name == "commonsettings.fulltextmode");
+
+            var seoSettings = settingService.LoadSetting<SeoSettings>();
+            var newUrlRecord = "products";
+            if(!seoSettings.ReservedUrlRecordSlugs.Contains(newUrlRecord))
+            {
+                seoSettings.ReservedUrlRecordSlugs.Add(newUrlRecord);
+                settingService.SaveSetting(seoSettings);
+            }
         }
 
         public override void Down()
