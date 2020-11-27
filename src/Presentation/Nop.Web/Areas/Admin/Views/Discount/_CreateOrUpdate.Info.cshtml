@@ -18,22 +18,22 @@
     function toggleDiscountType() {
         var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
         if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
-            $('#discount-applied-to-categories-card').show();
+            $('#discount-applied-to-categories-card').showField();
             $('#discount-applied-to-manufacturers-card').hide();
             $('#discount-applied-to-products-card').hide();
-            $('#pnlMaximumDiscountedQuantity').show();
-            $('#pnlAppliedToSubCategories').show();
+            $('#pnlMaximumDiscountedQuantity').showField();
+            $('#pnlAppliedToSubCategories').showField();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
             $('#discount-applied-to-categories-card').hide();
-            $('#discount-applied-to-manufacturers-card').show();
+            $('#discount-applied-to-manufacturers-card').showField();
             $('#discount-applied-to-products-card').hide();
-            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlMaximumDiscountedQuantity').showField();
             $('#pnlAppliedToSubCategories').hide();
     } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
             $('#discount-applied-to-categories-card').hide();
             $('#discount-applied-to-manufacturers-card').hide();
-            $('#discount-applied-to-products-card').show();
-            $('#pnlMaximumDiscountedQuantity').show();
+            $('#discount-applied-to-products-card').showField();
+            $('#pnlMaximumDiscountedQuantity').showField();
             $('#pnlAppliedToSubCategories').hide();
     } else {
             $('#discount-applied-to-categories-card').hide();
@@ -48,7 +48,7 @@
         var selectedDiscountLimitationId = $("#@Html.IdFor(model => model.DiscountLimitationId)").val();
         if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
             //'N Times Only' or 'N Times Per Customer'
-            $('#pnlLimitationTimes').show();
+            $('#pnlLimitationTimes').showField();
     } else {
             $('#pnlLimitationTimes').hide();
     }
@@ -56,22 +56,22 @@
 
     function toggleUsePercentage() {
         if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
-            $('#pnlDiscountPercentage').show();
+            $('#pnlDiscountPercentage').showField();
             $('#pnlDiscountAmount').hide();
-            $('#pnlMaximumDiscountAmount').show();
+            $('#pnlMaximumDiscountAmount').showField();
         } else {
             $('#pnlDiscountPercentage').hide();
-            $('#pnlDiscountAmount').show();
+            $('#pnlDiscountAmount').showField();
             $('#pnlMaximumDiscountAmount').hide();
         }
     }
 
     function toggleRequiresCouponCode() {
         if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
-            $('#pnlCouponCode').show();
+            $('#pnlCouponCode').showField();
             @if (!string.IsNullOrEmpty(Model.DiscountUrl))
             {
-                <text>$('#pnlDiscountUrl').show();</text>
+                <text>$('#pnlDiscountUrl').showField();</text>
             }
             else
             {

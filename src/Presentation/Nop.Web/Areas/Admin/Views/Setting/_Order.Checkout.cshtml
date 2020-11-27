@@ -8,7 +8,7 @@
 
     function toggleOnePageCheckoutEnabled() {
         if ($('#@Html.IdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
-            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').show();
+            $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').showField();
         }
         else {
             $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();

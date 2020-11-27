@@ -41,8 +41,8 @@
 
         function toggleCompareProductsEnabled() {
             if ($('#@Html.IdFor(model => model.CompareProductsEnabled)').is(':checked')) {
-                $('#pnlIncludeShortDescriptionInCompareProducts').show();
-                $('#IncludeFullDescriptionInCompareProducts').show();
+                $('#pnlIncludeShortDescriptionInCompareProducts').showField();
+                $('#IncludeFullDescriptionInCompareProducts').showField();
             } else {
                 $('#pnlIncludeShortDescriptionInCompareProducts').hide();
                 $('#IncludeFullDescriptionInCompareProducts').hide();

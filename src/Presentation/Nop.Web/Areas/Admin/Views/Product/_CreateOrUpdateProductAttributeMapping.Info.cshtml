@@ -14,24 +14,24 @@
         var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
         //validation
         if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationMinLength').showField();
+            $('#pnlValidationMaxLength').showField();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').show();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').showField();
+            $('#pnlDefaultValue').showField();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationMinLength').showField();
+            $('#pnlValidationMaxLength').showField();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValueLocalized').show();
-            $('#pnlDefaultValue').show();
+            $('#pnlDefaultValueLocalized').showField();
+            $('#pnlDefaultValue').showField();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').show();
-            $('#pnlValidationFileAllowedExtensions').show();
+            $('#pnlValidationFileMaximumSize').showField();
+            $('#pnlValidationFileAllowedExtensions').showField();
             $('#pnlDefaultValueLocalized').hide();
             $('#pnlDefaultValue').hide();
             $("#@Html.IdFor(model => model.DefaultValue)").val('');
@@ -60,7 +60,7 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-            $('[data-card-name=product-attribute-mapping-values]').show();
+            $('[data-card-name=product-attribute-mapping-values]').showField();
         } else {
             $('[data-card-name=product-attribute-mapping-values]').hide();
         }

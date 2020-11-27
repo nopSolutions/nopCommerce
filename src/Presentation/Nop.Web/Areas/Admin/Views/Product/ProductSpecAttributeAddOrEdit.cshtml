@@ -123,14 +123,14 @@
                                                 value.hide();
                                                 value.find("input").prop("disabled", true);
                                             });
-                                            valueContainers[attrTypeId].show();
+                                            valueContainers[attrTypeId].showField();
                                             valueContainers[attrTypeId].find("input").prop("disabled", false);
 
                                             var allowFilteringSection = $('#AllowFilteringSection');
                                             var allowFilteringField = $('#@Html.IdFor(model => model.AllowFiltering)');
 
                                             if (attrTypeId == '@((int) SpecificationAttributeType.Option)') {
-                                                allowFilteringSection.show();
+                                                allowFilteringSection.showField();
                                             } else {
                                                 allowFilteringField.prop('checked', false);
                                                 allowFilteringSection.hide();

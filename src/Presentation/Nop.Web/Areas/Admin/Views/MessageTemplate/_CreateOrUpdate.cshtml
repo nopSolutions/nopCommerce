@@ -297,7 +297,7 @@
 
                 function toggleHasAttachedDownload() {
                     if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
-                        $('#pnlAttachedDownload').show();
+                        $('#pnlAttachedDownload').showField();
                     } else {
                         $('#pnlAttachedDownload').hide();
                     }
@@ -307,7 +307,7 @@
                     if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
                         $('#pnl-send-after').hide();
                     else
-                        $('#pnl-send-after').show();
+                        $('#pnl-send-after').showField();
                 }
             </script>
         </div>

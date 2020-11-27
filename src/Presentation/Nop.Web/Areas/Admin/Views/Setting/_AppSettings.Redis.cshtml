@@ -75,12 +75,12 @@
 
     function toggleRedis() {
         if ($('#@Html.IdFor(model => model.RedisConfigModel.Enabled)').is(':checked')) {
-            $('#redis-connection-string').show();
-            $('#redis-database').show();
-            $('#redis-caching').show();
-            $('#redis-data-protection').show();
-            $('#redis-plugins').show();
-            $('#redis-exception').show();
+            $('#redis-connection-string').showField();
+            $('#redis-database').showField();
+            $('#redis-caching').showField();
+            $('#redis-data-protection').showField();
+            $('#redis-plugins').showField();
+            $('#redis-exception').showField();
         } else {
             $('#redis-connection-string').hide();
             $('#redis-database').hide();

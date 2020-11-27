@@ -34,8 +34,8 @@
 
     function toggleLoadOnlyWithOrders() {
         if ($('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
-            $('#pnlOrdersCreatedFromUtc').show();
-            $('#pnlOrdersCreatedToUtc').show();
+            $('#pnlOrdersCreatedFromUtc').showField();
+            $('#pnlOrdersCreatedToUtc').showField();
         } else {
             $('#pnlOrdersCreatedFromUtc').hide();
             $('#pnlOrdersCreatedToUtc').hide();

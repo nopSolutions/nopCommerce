@@ -86,8 +86,8 @@
 
     function toggleMiniShoppingCartEnabled() {
         if ($('#@Html.IdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
-            $('#pnlMiniShoppingCartProductNumber').show();
-            $('#pnlShowProductImagesInMiniShoppingCart').show();
+            $('#pnlMiniShoppingCartProductNumber').showField();
+            $('#pnlShowProductImagesInMiniShoppingCart').showField();
         } else {
             $('#pnlMiniShoppingCartProductNumber').hide();
             $('#pnlShowProductImagesInMiniShoppingCart').hide();
@@ -96,7 +96,7 @@
 
     function toggleEmailWishlistEnabled() {
         if ($('#@Html.IdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
-            $('#pnlAllowAnonymousUsersToEmailWishlist').show();
+            $('#pnlAllowAnonymousUsersToEmailWishlist').showField();
         } else {
             $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
         }
