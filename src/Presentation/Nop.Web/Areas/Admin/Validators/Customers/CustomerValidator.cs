@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 //.WithMessage("Valid Email is required for customer to be in 'Registered' role")
                 .WithMessageAwait(localizationService.GetResourceAsync("Admin.Common.WrongEmail"))
                 //only for registered users
-                .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
 
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
@@ -36,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEqual(0)
                     .WithMessageAwait(localizationService.GetResourceAsync("Account.Fields.Country.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.CountryEnabled &&
                 customerSettings.StateProvinceEnabled &&
@@ -62,7 +62,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Company.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled)
             {
@@ -70,7 +70,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.StreetAddress.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled)
             {
@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.StreetAddress2.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled)
             {
@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.ZipPostalCode.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.CityRequired && customerSettings.CityEnabled)
             {
@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.City.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.CountyRequired && customerSettings.CountyEnabled)
             {
@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.County.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled)
             {
@@ -110,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Phone.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
             if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
             {
@@ -118,13 +118,13 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .NotEmpty()
                     .WithMessageAwait(localizationService.GetResourceAsync("Admin.Customers.Customers.Fields.Fax.Required"))
                     //only for registered users
-                    .WhenAwait(async x => await IsRegisteredCustomerRoleChecked(x, customerService));
+                    .WhenAwait(async x => await IsRegisteredCustomerRoleCheckedAsync(x, customerService));
             }
 
             SetDatabaseValidationRules<Customer>(dataProvider);
         }
 
-        private async Task<bool> IsRegisteredCustomerRoleChecked(CustomerModel model, ICustomerService customerService)
+        private async Task<bool> IsRegisteredCustomerRoleCheckedAsync(CustomerModel model, ICustomerService customerService)
         {
             var allCustomerRoles = await customerService.GetAllCustomerRolesAsync(true);
             var newCustomerRoles = new List<CustomerRole>();

@@ -182,7 +182,7 @@ namespace Nop.Services.Media
         /// Delete a picture on file system
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual async Task DeletePictureOnFileSystem(Picture picture)
+        protected virtual async Task DeletePictureOnFileSystemAsync(Picture picture)
         {
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
@@ -666,7 +666,7 @@ namespace Nop.Services.Media
 
             //delete from file system
             if (!await IsStoreInDbAsync())
-                await DeletePictureOnFileSystem(picture);
+                await DeletePictureOnFileSystemAsync(picture);
 
             //delete from database
             await _pictureRepository.DeleteAsync(picture);
@@ -1089,7 +1089,7 @@ namespace Nop.Services.Media
                                       false);*/
                         if (isStoreInDb)
                             //delete from file system. now it's in the database
-                            await DeletePictureOnFileSystem(picture);
+                            await DeletePictureOnFileSystemAsync(picture);
                         else
                             //now on file system
                             await SavePictureInFileAsync(picture.Id, pictureBinary, picture.MimeType);

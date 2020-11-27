@@ -94,7 +94,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 TestTaxResult = testTaxResult
             };
             model.IsConfigured = !string.IsNullOrEmpty(_avalaraTaxSettings.AccountId) && !string.IsNullOrEmpty(_avalaraTaxSettings.LicenseKey);
-            model.TaxOriginAddressTypes = (await TaxOriginAddressType.DefaultTaxAddress.ToSelectList(false))
+            model.TaxOriginAddressTypes = (await TaxOriginAddressType.DefaultTaxAddress.ToSelectListAsync(false))
                 .Select(type => new SelectListItem(type.Text, type.Value)).ToList();
             model.HideGeneralBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), AvalaraTaxDefaults.HideGeneralBlock);
             model.HideLogBlock = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), AvalaraTaxDefaults.HideLogBlock);

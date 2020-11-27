@@ -67,10 +67,10 @@ namespace Nop.Web.Framework.TagHelpers.Public
             {
                 case CaptchaType.CheckBoxReCaptchaV2:
                     output.Attributes.Add("class", "captcha-box");
-                    captchaHtmlContent = await _htmlHelper.GenerateCheckBoxReCaptchaV2(_captchaSettings);
+                    captchaHtmlContent = await _htmlHelper.GenerateCheckBoxReCaptchaV2Async(_captchaSettings);
                     break;
                 case CaptchaType.ReCaptchaV3:
-                    captchaHtmlContent = await _htmlHelper.GenerateReCaptchaV3(_captchaSettings);
+                    captchaHtmlContent = await _htmlHelper.GenerateReCaptchaV3Async(_captchaSettings);
                     break;
                 default:
                     throw new InvalidOperationException("Invalid captcha type.");

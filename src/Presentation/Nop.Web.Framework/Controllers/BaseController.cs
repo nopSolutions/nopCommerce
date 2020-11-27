@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="componentName">Component name</param>
         /// <param name="arguments">Arguments</param>
         /// <returns>Result</returns>
-        protected virtual async Task<string> RenderViewComponentToString(string componentName, object arguments = null)
+        protected virtual async Task<string> RenderViewComponentToStringAsync(string componentName, object arguments = null)
         {
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
             //we customized it to allow running from controllers
@@ -78,42 +78,45 @@ namespace Nop.Web.Framework.Controllers
             return writer.ToString();
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Render partial view to string
         /// </summary>
         /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToString()
+        protected virtual async Task<string> RenderPartialViewToStringAsync()
         {
-            return await RenderPartialViewToString(null, null);
+            return await RenderPartialViewToStringAsync(null, null);
+        }
+
+        //TODO: may be deleted
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="viewName">View name</param>
+        /// <returns>Result</returns>
+        protected virtual async Task<string> RenderPartialViewToStringAsync(string viewName)
+        {
+            return await RenderPartialViewToStringAsync(viewName, null);
+        }
+
+        //TODO: may be deleted
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="model">Model</param>
+        /// <returns>Result</returns>
+        protected virtual async Task<string> RenderPartialViewToStringAsync(object model)
+        {
+            return await RenderPartialViewToStringAsync(null, model);
         }
 
         /// <summary>
         /// Render partial view to string
         /// </summary>
         /// <param name="viewName">View name</param>
-        /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToString(string viewName)
-        {
-            return await RenderPartialViewToString(viewName, null);
-        }
-
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
         /// <param name="model">Model</param>
         /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToString(object model)
-        {
-            return await RenderPartialViewToString(null, model);
-        }
-
-        /// <summary>
-        /// Render partial view to string
-        /// </summary>
-        /// <param name="viewName">View name</param>
-        /// <param name="model">Model</param>
-        /// <returns>Result</returns>
-        protected virtual async Task<string> RenderPartialViewToString(string viewName, object model)
+        protected virtual async Task<string> RenderPartialViewToStringAsync(string viewName, object model)
         {
             //get Razor view engine
             var razorViewEngine = EngineContext.Current.Resolve<IRazorViewEngine>();

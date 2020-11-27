@@ -62,7 +62,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 TransactModeId = Convert.ToInt32(manualPaymentSettings.TransactMode),
                 AdditionalFee = manualPaymentSettings.AdditionalFee,
                 AdditionalFeePercentage = manualPaymentSettings.AdditionalFeePercentage,
-                TransactModeValues = await manualPaymentSettings.TransactMode.ToSelectList(),
+                TransactModeValues = await manualPaymentSettings.TransactMode.ToSelectListAsync(),
                 ActiveStoreScopeConfiguration = storeScope
             };
             if (storeScope > 0)

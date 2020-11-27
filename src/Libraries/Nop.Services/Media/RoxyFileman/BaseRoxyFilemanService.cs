@@ -165,9 +165,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// Get the absolute path to the language resources file
         /// </summary>
         /// <returns>Path</returns>
-        protected virtual string GetLanguageFile()
+        protected virtual async Task<string> GetLanguageFileAsync()
         {
-            var languageCode = GetSettingAsync("LANG");
+            var languageCode = await GetSettingAsync("LANG");
             var languageFile = $"{NopRoxyFilemanDefaults.LanguageDirectory}/{languageCode}.json";
 
             if (!_fileProvider.FileExists(GetFullPath(languageFile)))
@@ -442,7 +442,7 @@ namespace Nop.Services.Media.RoxyFileman
         public virtual async Task<string> GetLanguageResourceAsync(string key)
         {
             if (_languageResources == null)
-                _languageResources = await ParseJsonAsync(GetLanguageFile());
+                _languageResources = await ParseJsonAsync(await GetLanguageFileAsync());
 
             if (_languageResources.TryGetValue(key, out var value))
                 return value;

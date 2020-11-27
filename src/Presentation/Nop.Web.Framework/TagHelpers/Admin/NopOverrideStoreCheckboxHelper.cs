@@ -128,7 +128,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     onclick = onClick,
                     data_for_input_selector = dataInputSelector
                 };
-                var htmlOutput = await _htmlHelper.CheckBox(For.Name, null, htmlAttributes).RenderHtmlContent();
+                var htmlOutput = await _htmlHelper.CheckBox(For.Name, null, htmlAttributes).RenderHtmlContentAsync();
                 output.Content.SetHtmlContent(htmlOutput);
             }
         }

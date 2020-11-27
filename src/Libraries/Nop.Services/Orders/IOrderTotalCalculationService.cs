@@ -36,7 +36,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Additional shipping charge</returns>
-        Task<decimal> GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart);
+        Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets a value indicating whether shipping is free

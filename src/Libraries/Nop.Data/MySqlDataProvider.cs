@@ -31,9 +31,9 @@ namespace Nop.Data
         /// <summary>
         /// Creates the database connection
         /// </summary>
-        protected override async Task<DataConnection> CreateDataConnection()
+        protected override async Task<DataConnection> CreateDataConnectionAsync()
         {
-            var dataContext = await CreateDataConnection(LinqToDbDataProvider);
+            var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
 
             dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
             dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
@@ -178,7 +178,7 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual async Task<int?> GetTableIdentAsync<T>() where T : BaseEntity
         {
-            using var currentConnection = await CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var tableName = currentConnection.GetTable<T>().TableName;
             var databaseName = currentConnection.Connection.Database;
 
@@ -225,7 +225,7 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using var currentConnection = await CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var tableName = currentConnection.GetTable<TEntity>().TableName;
 
             await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
@@ -253,7 +253,7 @@ namespace Nop.Data
         /// </summary>
         public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = await CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
             if (tables.Count > 0)

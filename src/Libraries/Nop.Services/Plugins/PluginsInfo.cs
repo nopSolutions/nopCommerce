@@ -46,7 +46,7 @@ namespace Nop.Services.Plugins
                 using (var reader = new StringReader(await _fileProvider.ReadAllTextAsync(filePath, Encoding.UTF8)))
                 {
                     string pluginName;
-                    while ((pluginName = reader.ReadLine()) != null)
+                    while ((pluginName = await reader.ReadLineAsync()) != null)
                         if (!string.IsNullOrWhiteSpace(pluginName))
                             pluginSystemNames.Add(pluginName.Trim());
                 }

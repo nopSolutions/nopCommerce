@@ -254,7 +254,7 @@ namespace Nop.Services.Catalog
                 return categories;
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesHomepageWithoutHiddenCacheKey,
-                await _storeContext.GetCurrentStoreAsync(), _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()));
+                await _storeContext.GetCurrentStoreAsync(), await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()));
 
             var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {

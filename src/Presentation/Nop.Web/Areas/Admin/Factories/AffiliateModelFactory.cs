@@ -142,7 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Affiliated customer search model</param>
         /// <param name="affiliate">Affiliate</param>
         /// <returns>Affiliated customer search model</returns>
-        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModelAsync(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
+        protected virtual AffiliatedCustomerSearchModel PrepareAffiliatedCustomerSearchModel(AffiliatedCustomerSearchModel searchModel, Affiliate affiliate)
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
@@ -234,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //prepare nested search models
                 await PrepareAffiliatedOrderSearchModelAsync(model.AffiliatedOrderSearchModel, affiliate);
-                PrepareAffiliatedCustomerSearchModelAsync(model.AffiliatedCustomerSearchModel, affiliate);
+                PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
 
                 //prepare address model
                 var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);

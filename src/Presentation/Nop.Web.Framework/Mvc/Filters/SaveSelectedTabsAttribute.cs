@@ -79,7 +79,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">A context for action filters</param>
             /// <returns>A task that on completion indicates the necessary filter actions have been executed</returns>
-            private async Task SaveSelectedTab(ActionExecutingContext context)
+            private async Task SaveSelectedTabAsync(ActionExecutingContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -128,7 +128,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 await next();
-                await SaveSelectedTab(context);
+                await SaveSelectedTabAsync(context);
             }
 
             #endregion

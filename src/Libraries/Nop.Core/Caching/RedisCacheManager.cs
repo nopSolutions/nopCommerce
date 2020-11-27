@@ -62,7 +62,7 @@ namespace Nop.Core.Caching
             //we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
             //server.FlushDatabase();
 
-            var keys = server.Keys((await GetDatabase()).Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
+            var keys = server.Keys((await GetDatabaseAsync()).Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
             //we should always persist the data protection key list
             keys = keys.Where(key => !key.ToString().Equals(NopDataProtectionDefaults.RedisDataProtectionKey,
@@ -86,7 +86,7 @@ namespace Nop.Core.Caching
                 return _perRequestCache.Get(key.Key, () => default(T));
 
             //get serialized item from cache
-            var serializedItem = await (await GetDatabase()).StringGetAsync(key.Key);
+            var serializedItem = await (await GetDatabaseAsync()).StringGetAsync(key.Key);
             if (!serializedItem.HasValue)
                 return default;
 
@@ -119,7 +119,7 @@ namespace Nop.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            await (await GetDatabase()).StringSetAsync(key, serializedItem, expiresIn);
+            await (await GetDatabaseAsync()).StringSetAsync(key, serializedItem, expiresIn);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Nop.Core.Caching
             }
         }
 
-        private async Task<IDatabase> GetDatabase()
+        private async Task<IDatabase> GetDatabaseAsync()
         {
             if (_db != null)
                 return _db;
@@ -225,7 +225,7 @@ namespace Nop.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            await TryPerformActionAsync(async () => await (await GetDatabase()).StringSetAsync(key.Key, serializedItem, expiresIn));
+            await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).StringSetAsync(key.Key, serializedItem, expiresIn));
             _perRequestCache.Set(key.Key, data);
         }
 
@@ -242,7 +242,7 @@ namespace Nop.Core.Caching
             if (_perRequestCache.IsSet(key.Key))
                 return true;
 
-            var (flag, rez) = await TryPerformActionAsync(async () => await (await GetDatabase()).KeyExistsAsync(key.Key));
+            var (flag, rez) = await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyExistsAsync(key.Key));
 
             return flag && rez;
         }
@@ -261,7 +261,7 @@ namespace Nop.Core.Caching
                 return;
 
             //remove item from caches
-            await TryPerformActionAsync(async () => await (await GetDatabase()).KeyDeleteAsync(cacheKey.Key));
+            await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyDeleteAsync(cacheKey.Key));
             _perRequestCache.Remove(cacheKey.Key);
         }
 
@@ -280,7 +280,7 @@ namespace Nop.Core.Caching
             {
                 var keys = await GetKeysAsync(endPoint, prefix);
 
-                await TryPerformActionAsync(async () => await (await GetDatabase()).KeyDeleteAsync(keys.ToArray()));
+                await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyDeleteAsync(keys.ToArray()));
             }
         }
 
@@ -298,7 +298,7 @@ namespace Nop.Core.Caching
                 foreach (var redisKey in keys)
                     _perRequestCache.Remove(redisKey.ToString());
 
-                await TryPerformActionAsync(async () => await (await GetDatabase()).KeyDeleteAsync(keys.ToArray()));
+                await TryPerformActionAsync(async () => await (await GetDatabaseAsync()).KeyDeleteAsync(keys.ToArray()));
             }
         }
 

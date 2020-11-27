@@ -97,7 +97,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                     scriptTag.Attributes.Add(attribute.Name, attribute.Value.ToString());
             }
 
-            _htmlHelper.AddInlineScriptParts(Location, await scriptTag.RenderHtmlContent());
+            _htmlHelper.AddInlineScriptParts(Location, await scriptTag.RenderHtmlContentAsync());
 
             //generate nothing
             output.SuppressOutput();

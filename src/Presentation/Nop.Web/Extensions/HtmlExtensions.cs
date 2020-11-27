@@ -24,7 +24,7 @@ namespace Nop.Web.Extensions
         /// <param name="model">Pager model</param>
         /// <returns>Pager</returns>
         /// <remarks>We have two pagers: The first one can have custom routes. The second one just adds query string parameter</remarks>
-        public static async Task<IHtmlContent> Pager<TModel>(this IHtmlHelper<TModel> html, PagerModel model)
+        public static async Task<IHtmlContent> PagerAsync<TModel>(this IHtmlHelper<TModel> html, PagerModel model)
         {
             if (model.TotalRecords == 0)
                 return new HtmlString(string.Empty);
@@ -55,7 +55,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.FirstPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         else
                         {
@@ -63,7 +63,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.FirstPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         links.Append("</li>");
                     }
@@ -83,7 +83,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.PreviousPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         else
                         {
@@ -91,7 +91,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.PreviousPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         links.Append("</li>");
                     }
@@ -117,7 +117,7 @@ namespace Nop.Web.Extensions
                                     model.RouteActionName,
                                     model.RouteValues,
                                     new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), i + 1) });
-                                links.Append(await link.RenderHtmlContent());
+                                links.Append(await link.RenderHtmlContentAsync());
                             }
                             else
                             {
@@ -125,7 +125,7 @@ namespace Nop.Web.Extensions
                                     model.RouteActionName,
                                     model.RouteValues,
                                     new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), i + 1) });
-                                links.Append(await link.RenderHtmlContent());
+                                links.Append(await link.RenderHtmlContentAsync());
                             }
                             links.Append("</li>");
                         }
@@ -146,7 +146,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.NextPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         else
                         {
@@ -154,7 +154,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.NextPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         links.Append("</li>");
                     }
@@ -174,7 +174,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.LastPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         else
                         {
@@ -182,7 +182,7 @@ namespace Nop.Web.Extensions
                                 model.RouteActionName,
                                 model.RouteValues,
                                 new { title = await localizationService.GetResourceAsync("Pager.LastPageTitle") });
-                            links.Append(await link.RenderHtmlContent());
+                            links.Append(await link.RenderHtmlContentAsync());
                         }
                         links.Append("</li>");
                     }
@@ -215,7 +215,7 @@ namespace Nop.Web.Extensions
         /// <param name="html">HTML helper</param>
         /// <param name="model">Model</param>
         /// <returns>Pager</returns>
-        public static async Task<IHtmlContent> ForumTopicSmallPager<TModel>(this IHtmlHelper<TModel> html, ForumTopicRowModel model)
+        public static async Task<IHtmlContent> ForumTopicSmallPagerAsync<TModel>(this IHtmlHelper<TModel> html, ForumTopicRowModel model)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
@@ -235,7 +235,7 @@ namespace Nop.Web.Extensions
                             "TopicSlugPaged",
                             new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
                             new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) });
-                        links.Append(await link.RenderHtmlContent());
+                        links.Append(await link.RenderHtmlContentAsync());
                         if (x < totalPages)
                             links.Append(", ");
                     }
@@ -246,7 +246,7 @@ namespace Nop.Web.Extensions
                         "TopicSlugPaged",
                         new { id = forumTopicId, pageNumber = 1, slug = forumTopicSlug },
                         new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), 1) });
-                    links.Append(await link1.RenderHtmlContent());
+                    links.Append(await link1.RenderHtmlContentAsync());
 
                     links.Append(" ... ");
 
@@ -256,7 +256,7 @@ namespace Nop.Web.Extensions
                             "TopicSlugPaged",
                             new { id = forumTopicId, pageNumber = x, slug = forumTopicSlug },
                             new { title = string.Format(await localizationService.GetResourceAsync("Pager.PageLinkTitle"), x.ToString()) });
-                        links.Append(await link2.RenderHtmlContent());
+                        links.Append(await link2.RenderHtmlContentAsync());
 
                         if (x < totalPages)
                             links.Append(", ");
@@ -277,7 +277,7 @@ namespace Nop.Web.Extensions
         /// <param name="html">HTML helper</param>
         /// <param name="systemName">System name</param>
         /// <returns>Topic SEO Name</returns>
-        public static async Task<string> GetTopicSeName<TModel>(this IHtmlHelper<TModel> html, string systemName)
+        public static async Task<string> GetTopicSeNameAsync<TModel>(this IHtmlHelper<TModel> html, string systemName)
         {
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
             var store = await storeContext.GetCurrentStoreAsync();
@@ -292,6 +292,7 @@ namespace Nop.Web.Extensions
             return await urlRecordService.GetSeNameAsync(topic);
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Get topic title by system name
         /// </summary>
@@ -299,7 +300,7 @@ namespace Nop.Web.Extensions
         /// <param name="html">HTML helper</param>
         /// <param name="systemName">System name</param>
         /// <returns>Topic title</returns>
-        public static async Task<string> GetTopicTitle<TModel>(this IHtmlHelper<TModel> html, string systemName)
+        public static async Task<string> GetTopicTitleAsync<TModel>(this IHtmlHelper<TModel> html, string systemName)
         {
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
             var store = await storeContext.GetCurrentStoreAsync();

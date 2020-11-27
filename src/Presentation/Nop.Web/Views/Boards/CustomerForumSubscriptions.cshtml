@@ -77,9 +77,9 @@
                         </table>
                     </div>
                     @{
-                        var pager = await Html.Pager(Model.PagerModel);
+                        var pager = await Html.PagerAsync(Model.PagerModel);
                     }
-                    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContent()))
+                    @if (!string.IsNullOrEmpty(await pager.RenderHtmlContentAsync()))
                     {
                         <div class="pager">
                             @pager

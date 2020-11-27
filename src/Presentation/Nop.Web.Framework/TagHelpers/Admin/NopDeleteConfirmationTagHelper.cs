@@ -95,7 +95,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var modelName = _htmlHelper.ViewData.ModelMetadata.ModelType.Name.ToLower();
             if (!string.IsNullOrEmpty(Action))
                 modelName += "-" + Action;
-            var modalId = await new HtmlString(modelName + "-delete-confirmation").RenderHtmlContent();
+            var modalId = await new HtmlString(modelName + "-delete-confirmation").RenderHtmlContentAsync();
 
             var deleteConfirmationModel = new DeleteConfirmationModel
             {
@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 "$(document).ready(function () {" +
                     $"$('#{ButtonId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\")" +
                 "});");
-            var scriptTag = await script.RenderHtmlContent();
+            var scriptTag = await script.RenderHtmlContentAsync();
             output.PostContent.SetHtmlContent(scriptTag);
         }
 

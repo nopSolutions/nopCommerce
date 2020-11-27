@@ -833,7 +833,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             //prepare offered delivery services
             var servicesCodes = _upsSettings.CarrierServicesOffered.Split(':', StringSplitOptions.RemoveEmptyEntries)
                 .Select(idValue => idValue.Trim('[', ']')).ToList();
-            var allServices = (await DeliveryService.Standard.ToSelectList(false)).Select(item =>
+            var allServices = (await DeliveryService.Standard.ToSelectListAsync(false)).Select(item =>
             {
                 var serviceCode = GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new { Name = $"UPS {item.Text?.TrimStart('_')}", Code = serviceCode, Offered = servicesCodes.Contains(serviceCode) };

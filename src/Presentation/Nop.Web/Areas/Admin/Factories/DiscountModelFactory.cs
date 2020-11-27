@@ -340,7 +340,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
-                requirementModel.AvailableInteractionTypes = await interactionType.ToSelectList();
+                requirementModel.AvailableInteractionTypes = await interactionType.ToSelectListAsync();
 
                 if (requirement.IsGroup)
                 {

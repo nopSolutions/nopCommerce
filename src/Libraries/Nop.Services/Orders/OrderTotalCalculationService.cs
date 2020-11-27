@@ -489,7 +489,7 @@ namespace Nop.Services.Orders
                     }
 
                     //additional shipping charge
-                    shippingTotal += await GetShoppingCartAdditionalShippingCharge(restoredCart);
+                    shippingTotal += await GetShoppingCartAdditionalShippingChargeAsync(restoredCart);
 
                     //shipping discounts
                     var (shippingDiscount, shippingTotalDiscounts) = await GetShippingDiscountAsync(customer, shippingTotal);
@@ -902,7 +902,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Additional shipping charge</returns>
-        public virtual async Task<decimal> GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
+        public virtual async Task<decimal> GetShoppingCartAdditionalShippingChargeAsync(IList<ShoppingCartItem> cart)
         {
             return await cart.ToAsyncEnumerable().SumAwaitAsync(async shoppingCartItem => await _shippingService.GetAdditionalShippingChargeAsync(shoppingCartItem));
         }
@@ -966,7 +966,7 @@ namespace Nop.Services.Orders
 
             if (!(applyToPickupInStore && _shippingSettings.AllowPickupInStore && pickupPoint != null && _shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore))
             {
-                adjustedRate += await GetShoppingCartAdditionalShippingCharge(cart);
+                adjustedRate += await GetShoppingCartAdditionalShippingChargeAsync(cart);
             }
 
             //discount

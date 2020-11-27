@@ -206,11 +206,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                 if (isOrderCompletedPage && _googleAnalyticsSettings.EnableEcommerce && _googleAnalyticsSettings.UseJsToSendEcommerceInfo)
                 {
                     var lastOrder = await GetLastOrderAsync();
-                    script += GetEcommerceScriptAsync(lastOrder);
+                    script += await GetEcommerceScriptAsync(lastOrder);
                 }
                 else
                 {
-                    script += GetEcommerceScriptAsync(null);
+                    script += await GetEcommerceScriptAsync(null);
                 }
             }
             catch (Exception ex)

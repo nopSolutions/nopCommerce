@@ -221,9 +221,9 @@ namespace Nop.Web.Framework.TagHelpers.Shared
 
             if (bool.TryParse(WrapTags, out var wrapTags) && wrapTags)
             {
-                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + await daysList.RenderHtmlContent() + "</span>";
-                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + await monthsList.RenderHtmlContent() + "</span>";
-                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + await yearsList.RenderHtmlContent() + "</span>";
+                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + await daysList.RenderHtmlContentAsync() + "</span>";
+                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + await monthsList.RenderHtmlContentAsync() + "</span>";
+                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + await yearsList.RenderHtmlContentAsync() + "</span>";
 
                 output.Content.AppendHtml(wrapDaysList);
                 output.Content.AppendHtml(wrapMonthsList);

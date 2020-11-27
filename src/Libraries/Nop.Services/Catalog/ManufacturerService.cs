@@ -414,7 +414,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
-        public virtual ProductManufacturer FindProductManufacturerAsync(IList<ProductManufacturer> source, int productId, int manufacturerId)
+        public virtual ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId)
         {
             foreach (var productManufacturer in source)
                 if (productManufacturer.ProductId == productId && productManufacturer.ManufacturerId == manufacturerId)

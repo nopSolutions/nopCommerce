@@ -92,7 +92,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (string.IsNullOrEmpty(Action))
                 Action = _htmlHelper.ViewContext.RouteData.Values["action"].ToString();
 
-            var modalId = await new HtmlString(ButtonId + "-action-confirmation").RenderHtmlContent();
+            var modalId = await new HtmlString(ButtonId + "-action-confirmation").RenderHtmlContentAsync();
 
             var actionConfirmationModel = new ActionConfirmationModel()
             {
@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     $"$(\"#{ButtonId}\").attr(\"name\", \"\");" +
                     $"if($(\"#{ButtonId}\").attr(\"type\") == \"submit\")$(\"#{ButtonId}\").attr(\"type\", \"button\");" +
                 "});");
-            var scriptTag = await script.RenderHtmlContent();
+            var scriptTag = await script.RenderHtmlContentAsync();
             output.PostContent.SetHtmlContent(scriptTag);
         }
 

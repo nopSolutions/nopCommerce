@@ -178,7 +178,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>SKU, Manufacturer part number, GTIN</returns>
-        protected virtual async Task<(string sku, string manufacturerPartNumber, string gtin)> GetSkuMpnGtin(Product product, string attributesXml)
+        protected virtual async Task<(string sku, string manufacturerPartNumber, string gtin)> GetSkuMpnGtinAsync(Product product, string attributesXml)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1333,7 +1333,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var (sku, _, _) = await GetSkuMpnGtin(product, attributesXml);
+            var (sku, _, _) = await GetSkuMpnGtinAsync(product, attributesXml);
 
             return sku;
         }
@@ -1349,7 +1349,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var (_, manufacturerPartNumber, _) = await GetSkuMpnGtin(product, attributesXml);
+            var (_, manufacturerPartNumber, _) = await GetSkuMpnGtinAsync(product, attributesXml);
 
             return manufacturerPartNumber;
         }
@@ -1365,7 +1365,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var (_, _, gtin) = await GetSkuMpnGtin(product, attributesXml);
+            var (_, _, gtin) = await GetSkuMpnGtinAsync(product, attributesXml);
 
             return gtin;
         }

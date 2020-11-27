@@ -23,7 +23,7 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </summary>
         /// <param name="captchaSettings">Captcha settings</param>
         /// <returns>Language code</returns>
-        private static async Task<string> GetReCaptchaLanguage(CaptchaSettings captchaSettings)
+        private static async Task<string> GetReCaptchaLanguageAsync(CaptchaSettings captchaSettings)
         {
             var language = (captchaSettings.ReCaptchaDefaultLanguage ?? string.Empty).ToLower();
             if (captchaSettings.AutomaticallyChooseLanguage)
@@ -78,10 +78,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// <param name="helper">HTML helper</param>
         /// <param name="captchaSettings">Captcha settings</param>
         /// <returns>Result</returns>
-        public static async Task<IHtmlContent> GenerateCheckBoxReCaptchaV2(this IHtmlHelper helper, CaptchaSettings captchaSettings)
+        public static async Task<IHtmlContent> GenerateCheckBoxReCaptchaV2Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
         {
             //prepare language
-            var language = await GetReCaptchaLanguage(captchaSettings);
+            var language = await GetReCaptchaLanguageAsync(captchaSettings);
 
             //prepare theme
             var theme = (captchaSettings.ReCaptchaTheme ?? string.Empty).ToLower();
@@ -117,7 +117,7 @@ namespace Nop.Web.Framework.Security.Captcha
 
             var scriptLoadApiTag = GenerateLoadApiScriptTag(captchaSettings, id, "explicit", language);
 
-            return new HtmlString(await scriptCallbackTag.RenderHtmlContent() + await captchaTag.RenderHtmlContent() + await scriptLoadApiTag.RenderHtmlContent());
+            return new HtmlString(await scriptCallbackTag.RenderHtmlContentAsync() + await captchaTag.RenderHtmlContentAsync() + await scriptLoadApiTag.RenderHtmlContentAsync());
         }
 
         /// <summary>
@@ -126,10 +126,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// <param name="helper">HTML helper</param>
         /// <param name="captchaSettings">Captcha settings</param>
         /// <returns>Result</returns>
-        public static async Task<IHtmlContent> GenerateReCaptchaV3(this IHtmlHelper helper, CaptchaSettings captchaSettings)
+        public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
         {
             //prepare language
-            var language = await GetReCaptchaLanguage(captchaSettings);
+            var language = await GetReCaptchaLanguageAsync(captchaSettings);
 
             //prepare identifier
             var id = $"captcha_{CommonHelper.GenerateRandomInteger()}";
@@ -170,7 +170,7 @@ namespace Nop.Web.Framework.Security.Captcha
 
             var scriptLoadApiTag = GenerateLoadApiScriptTag(captchaSettings, id, publicKey, language);
 
-            return new HtmlString(await captchaTokenInput.RenderHtmlContent() + await scriptCallbackTag.RenderHtmlContent() + await scriptLoadApiTag.RenderHtmlContent());
+            return new HtmlString(await captchaTokenInput.RenderHtmlContentAsync() + await scriptCallbackTag.RenderHtmlContentAsync() + await scriptLoadApiTag.RenderHtmlContentAsync());
         }
 
         #endregion

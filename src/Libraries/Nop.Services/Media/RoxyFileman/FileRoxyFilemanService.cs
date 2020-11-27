@@ -79,7 +79,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected virtual async Task<List<string>> GetFilesByDirectoryAsync(string directoryPath, string type)
         {
-            if (!await IsPathAllowed(directoryPath))
+            if (!await IsPathAllowedAsync(directoryPath))
                 return new List<string>();
 
             if (type == "#")
@@ -165,7 +165,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         /// <param name="path">Path to check</param>
         /// <returns></returns>
-        protected virtual async Task<bool> IsPathAllowed(string path)
+        protected virtual async Task<bool> IsPathAllowedAsync(string path)
         {
             var absp = _fileProvider.GetAbsolutePath(path);
 
@@ -215,7 +215,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(newDirectoryPath))
                 throw new Exception(await GetLanguageResourceAsync("E_DirAlreadyExists"));
 
-            if (!await IsPathAllowed(directoryPath) || !await IsPathAllowed(newDirectoryPath))
+            if (!await IsPathAllowedAsync(directoryPath) || !await IsPathAllowedAsync(newDirectoryPath))
                 throw new Exception(await GetLanguageResourceAsync("E_CopyDirInvalidPath"));
 
             await BaseCopyDirectoryAsync(directoryPath, newDirectoryPath);
@@ -235,7 +235,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (!_fileProvider.DirectoryExists(parentDirectoryPath))
                 throw new Exception(await GetLanguageResourceAsync("E_CreateDirInvalidPath"));
 
-            if (!await IsPathAllowed(parentDirectoryPath))
+            if (!await IsPathAllowedAsync(parentDirectoryPath))
                 throw new Exception(await GetLanguageResourceAsync("E_CreateDirInvalidPath"));
 
             try
@@ -269,7 +269,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.GetDirectories(path).Length > 0 || _fileProvider.GetFiles(path).Length > 0)
                 throw new Exception(await GetLanguageResourceAsync("E_DeleteNonEmpty"));
 
-            if (!await IsPathAllowed(path))
+            if (!await IsPathAllowedAsync(path))
                 throw new Exception(await GetLanguageResourceAsync("E_DeleteDirInvalidPath"));
 
             try
@@ -295,7 +295,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (!_fileProvider.DirectoryExists(fullPath))
                 throw new Exception(await GetLanguageResourceAsync("E_CreateArchive"));
 
-            if (!await IsPathAllowed(fullPath))
+            if (!await IsPathAllowedAsync(fullPath))
                 throw new Exception(await GetLanguageResourceAsync("E_CreateArchive"));
 
             var zipName = _fileProvider.GetFileName(fullPath) + ".zip";
@@ -366,7 +366,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(destinationPath))
                 throw new Exception(await GetLanguageResourceAsync("E_DirAlreadyExists"));
 
-            if (!await IsPathAllowed(fullSourcePath) || !await IsPathAllowed(destinationPath))
+            if (!await IsPathAllowedAsync(fullSourcePath) || !await IsPathAllowedAsync(destinationPath))
                 throw new Exception(await GetLanguageResourceAsync("E_MoveDirInvalisPath"));
 
             try
@@ -390,12 +390,12 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var fullSourcePath = GetFullPath(await GetVirtualPathAsync(sourcePath));
 
-            if (!await IsPathAllowed(fullSourcePath))
+            if (!await IsPathAllowedAsync(fullSourcePath))
                 throw new Exception(await GetLanguageResourceAsync("E_RenameDirInvalidPath"));
 
             var destinationDirectory = _fileProvider.Combine(_fileProvider.GetParentDirectory(fullSourcePath), newName);
 
-            if (GetVirtualPathAsync(sourcePath) == GetRootDirectoryAsync())
+            if (await GetVirtualPathAsync(sourcePath) == await GetRootDirectoryAsync())
                 throw new Exception(await GetLanguageResourceAsync("E_CannotRenameRoot"));
 
             if (!_fileProvider.DirectoryExists(fullSourcePath))
@@ -404,7 +404,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(destinationDirectory))
                 throw new Exception(await GetLanguageResourceAsync("E_DirAlreadyExists"));
 
-            if (!await IsPathAllowed(destinationDirectory))
+            if (!await IsPathAllowedAsync(destinationDirectory))
                 throw new Exception(await GetLanguageResourceAsync("E_RenameDirInvalidPath"));
 
             try
@@ -437,7 +437,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             destinationPath = GetFullPath(await GetVirtualPathAsync(destinationPath));
 
-            if (!await IsPathAllowed(filePath) || !await IsPathAllowed(destinationPath))
+            if (!await IsPathAllowedAsync(filePath) || !await IsPathAllowedAsync(destinationPath))
                 throw new Exception(await GetLanguageResourceAsync("E_CopyFileInvalisPath"));
 
             var newFileName = GetUniqueFileName(destinationPath, _fileProvider.GetFileName(filePath));
@@ -463,7 +463,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (!_fileProvider.FileExists(path))
                 throw new Exception(await GetLanguageResourceAsync("E_DeleteFileInvalidPath"));
 
-            if (!await IsPathAllowed(path))
+            if (!await IsPathAllowedAsync(path))
                 throw new Exception(await GetLanguageResourceAsync("E_DeleteFileInvalidPath"));
 
             try
@@ -486,7 +486,7 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var filePath = GetFullPath(await GetVirtualPathAsync(path));
 
-            if (!await IsPathAllowed(path))
+            if (!await IsPathAllowedAsync(path))
                 throw new Exception(await GetLanguageResourceAsync("E_ActionDisabled"));
 
             if (_fileProvider.FileExists(filePath))
@@ -554,7 +554,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (!await CanHandleFileAsync(_fileProvider.GetFileName(destinationPath)))
                 throw new Exception(await GetLanguageResourceAsync("E_FileExtensionForbidden"));
 
-            if (!await IsPathAllowed(fullSourcePath) || !await IsPathAllowed(destinationPath))
+            if (!await IsPathAllowedAsync(fullSourcePath) || !await IsPathAllowedAsync(destinationPath))
                 throw new Exception(await GetLanguageResourceAsync("E_MoveFileInvalisPath"));
 
             try
@@ -585,7 +585,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             var destinationPath = _fileProvider.Combine(_fileProvider.GetDirectoryName(fullSourcePath), newName);
 
-            if (!await IsPathAllowed(fullSourcePath) || !await IsPathAllowed(destinationPath))
+            if (!await IsPathAllowedAsync(fullSourcePath) || !await IsPathAllowedAsync(destinationPath))
                 throw new Exception(await GetLanguageResourceAsync("E_RenameFileInvalidPath"));
 
             try
@@ -612,7 +612,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             directoryPath = GetFullPath(await GetVirtualPathAsync(directoryPath));
 
-            if (!await IsPathAllowed(directoryPath))
+            if (!await IsPathAllowedAsync(directoryPath))
                 throw new Exception(await GetLanguageResourceAsync("E_UploadNotAll"));
 
             try
@@ -629,7 +629,7 @@ namespace Nop.Services.Media.RoxyFileman
                         //In this case, it is not relevant. The input is not supplied by user.
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            formFile.CopyTo(stream);
+                            await formFile.CopyToAsync(stream);
                         }
 
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")

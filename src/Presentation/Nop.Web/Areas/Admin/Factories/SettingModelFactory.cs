@@ -443,7 +443,7 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 PageTitleSeparator = seoSettings.PageTitleSeparator,
                 PageTitleSeoAdjustment = (int)seoSettings.PageTitleSeoAdjustment,
-                PageTitleSeoAdjustmentValues = await seoSettings.PageTitleSeoAdjustment.ToSelectList(),
+                PageTitleSeoAdjustmentValues = await seoSettings.PageTitleSeoAdjustment.ToSelectListAsync(),
                 DefaultTitle = seoSettings.DefaultTitle,
                 DefaultMetaKeywords = seoSettings.DefaultMetaKeywords,
                 DefaultMetaDescription = seoSettings.DefaultMetaDescription,
@@ -451,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 ConvertNonWesternChars = seoSettings.ConvertNonWesternChars,
                 CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled,
                 WwwRequirement = (int)seoSettings.WwwRequirement,
-                WwwRequirementValues = await seoSettings.WwwRequirement.ToSelectList(),
+                WwwRequirementValues = await seoSettings.WwwRequirement.ToSelectListAsync(),
 
                 TwitterMetaTags = seoSettings.TwitterMetaTags,
                 OpenGraphMetaTags = seoSettings.OpenGraphMetaTags,
@@ -517,7 +517,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             var model = captchaSettings.ToSettingsModel<CaptchaSettingsModel>();
 
-            model.CaptchaTypeValues = await captchaSettings.CaptchaType.ToSelectList();
+            model.CaptchaTypeValues = await captchaSettings.CaptchaType.ToSelectListAsync();
 
             if (storeId <= 0)
                 return model;
@@ -835,7 +835,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
-            model.ForumEditorValues = await forumSettings.ForumEditor.ToSelectList();
+            model.ForumEditorValues = await forumSettings.ForumEditor.ToSelectListAsync();
 
             if (storeId <= 0)
                 return model;
@@ -961,8 +961,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in model values from the entity
             var model = taxSettings.ToSettingsModel<TaxSettingsModel>();
-            model.TaxBasedOnValues = await taxSettings.TaxBasedOn.ToSelectList();
-            model.TaxDisplayTypeValues = await taxSettings.TaxDisplayType.ToSelectList();
+            model.TaxBasedOnValues = await taxSettings.TaxBasedOn.ToSelectListAsync();
+            model.TaxDisplayTypeValues = await taxSettings.TaxDisplayType.ToSelectListAsync();
 
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;

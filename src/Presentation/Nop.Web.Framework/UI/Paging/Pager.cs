@@ -402,14 +402,14 @@ namespace Nop.Web.Framework.UI.Paging
                 {
                     //first page
                     if ((_model.PageIndex >= 3) && (_model.TotalPages > _individualPagesDisplayedCount))
-                        links.Append(await CreatePageLink(1, await localizationService.GetResourceAsync("Pager.First"), _firstPageCssClass));
+                        links.Append(await CreatePageLinkAsync(1, await localizationService.GetResourceAsync("Pager.First"), _firstPageCssClass));
                 }
 
                 if (_showPrevious)
                 {
                     //previous page
                     if (_model.PageIndex > 0)
-                        links.Append(await CreatePageLink(_model.PageIndex, await localizationService.GetResourceAsync("Pager.Previous"), _previousPageCssClass));
+                        links.Append(await CreatePageLinkAsync(_model.PageIndex, await localizationService.GetResourceAsync("Pager.Previous"), _previousPageCssClass));
                 }
 
                 if (_showIndividualPages)
@@ -422,7 +422,7 @@ namespace Nop.Web.Framework.UI.Paging
                         if (_model.PageIndex == i)
                             links.AppendFormat("<li class=\"" + _currentPageCssClass + "\"><span>{0}</span></li>", (i + 1));
                         else
-                            links.Append(await CreatePageLink(i + 1, (i + 1).ToString(), _individualPageCssClass));
+                            links.Append(await CreatePageLinkAsync(i + 1, (i + 1).ToString(), _individualPageCssClass));
                     }
                 }
 
@@ -430,14 +430,14 @@ namespace Nop.Web.Framework.UI.Paging
                 {
                     //next page
                     if ((_model.PageIndex + 1) < _model.TotalPages)
-                        links.Append(await CreatePageLink(_model.PageIndex + 2, await localizationService.GetResourceAsync("Pager.Next"), _nextPageCssClass));
+                        links.Append(await CreatePageLinkAsync(_model.PageIndex + 2, await localizationService.GetResourceAsync("Pager.Next"), _nextPageCssClass));
                 }
 
                 if (_showLast)
                 {
                     //last page
                     if (((_model.PageIndex + 3) < _model.TotalPages) && (_model.TotalPages > _individualPagesDisplayedCount))
-                        links.Append(await CreatePageLink(_model.TotalPages, await localizationService.GetResourceAsync("Pager.Last"), _lastPageCssClass));
+                        links.Append(await CreatePageLinkAsync(_model.TotalPages, await localizationService.GetResourceAsync("Pager.Last"), _lastPageCssClass));
                 }
             }
 
@@ -489,7 +489,7 @@ namespace Nop.Web.Framework.UI.Paging
         /// <param name="text">Text</param>
         /// <param name="cssClass">CSS class</param>
         /// <returns>Link</returns>
-		protected virtual async Task<string> CreatePageLink(int pageNumber, string text, string cssClass)
+		protected virtual async Task<string> CreatePageLinkAsync(int pageNumber, string text, string cssClass)
         {
             var liBuilder = new TagBuilder("li");
             if (!string.IsNullOrWhiteSpace(cssClass))
@@ -500,7 +500,7 @@ namespace Nop.Web.Framework.UI.Paging
             aBuilder.MergeAttribute("href", CreateDefaultUrl(pageNumber));
 
             liBuilder.InnerHtml.AppendHtml(aBuilder);
-            return await liBuilder.RenderHtmlContent();
+            return await liBuilder.RenderHtmlContentAsync();
         }
 
         /// <summary>

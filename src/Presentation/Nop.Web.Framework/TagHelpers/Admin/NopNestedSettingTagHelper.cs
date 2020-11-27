@@ -84,7 +84,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 "$(document).ready(function () {" +
                     $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
                 "});");
-            var scriptTag = await script.RenderHtmlContent();
+            var scriptTag = await script.RenderHtmlContentAsync();
             output.PreContent.SetHtmlContent(scriptTag);
         }
 

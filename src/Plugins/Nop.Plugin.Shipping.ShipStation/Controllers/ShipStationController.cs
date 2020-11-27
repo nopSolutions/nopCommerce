@@ -54,7 +54,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
                 ApiSecret = shipStationSettings.ApiSecret,
                 PackingPackageVolume = shipStationSettings.PackingPackageVolume,
                 PackingType = Convert.ToInt32(shipStationSettings.PackingType),
-                PackingTypeValues = await shipStationSettings.PackingType.ToSelectList(),
+                PackingTypeValues = await shipStationSettings.PackingType.ToSelectListAsync(),
                 PassDimensions = shipStationSettings.PassDimensions,
                 ActiveStoreScopeConfiguration = storeScope,
                 UserName = shipStationSettings.UserName,

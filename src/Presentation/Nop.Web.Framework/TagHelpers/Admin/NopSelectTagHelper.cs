@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
                     selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
                 }
-                output.Content.SetHtmlContent(await selectList.RenderHtmlContent());
+                output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
             }
         }
 

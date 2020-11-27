@@ -519,7 +519,7 @@ namespace Nop.Services.Media.RoxyFileman
             {
                 var fullPath = GetFullPath(await GetVirtualPathAsync(directoryPath));
 
-                if (!await IsPathAllowed(fullPath))
+                if (!await IsPathAllowedAsync(fullPath))
                     throw new Exception(await GetLanguageResourceAsync("E_UploadNotAll"));
 
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
@@ -535,7 +535,7 @@ namespace Nop.Services.Media.RoxyFileman
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                         {
                             await using var stream = new FileStream(destinationFile, FileMode.OpenOrCreate);
-                            formFile.CopyTo(stream);
+                            await formFile.CopyToAsync(stream);
                         }
                         else
                         {

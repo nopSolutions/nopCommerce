@@ -54,7 +54,7 @@ namespace Nop.Web.Framework.Extensions
             }
 
             if (!localizationSupported)
-                return new HtmlString(await standardTemplate(helper.ViewData.Model).RenderHtmlContent());
+                return new HtmlString(await standardTemplate(helper.ViewData.Model).RenderHtmlContentAsync());
 
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -71,7 +71,7 @@ namespace Nop.Web.Framework.Extensions
             selectedTabInput.Attributes.Add("id", $"selected-tab-name-{name}");
             selectedTabInput.Attributes.Add("name", $"selected-tab-name-{name}");
             selectedTabInput.Attributes.Add("value", tabNameToSelect);
-            tabStrip.AppendLine(await selectedTabInput.RenderHtmlContent());
+            tabStrip.AppendLine(await selectedTabInput.RenderHtmlContentAsync());
 
             tabStrip.AppendLine($"<div class=\"card card-primary card-outline card-outline-tabs\">");
             tabStrip.AppendLine($"<div class=\"card-header p-0 pt-1 border-bottom-0\">");
@@ -113,7 +113,7 @@ namespace Nop.Web.Framework.Extensions
             //default tab
             tabStrip.AppendLine("<div class=\"tab-content\" id=\"custom-content-above-tabContent\">");
             tabStrip.AppendLine(string.Format("<div class=\"tab-pane fade{0}\" id=\"{1}\" role=\"tabpanel\">", standardTabSelected ? " show active" : null, standardTabName));
-            tabStrip.AppendLine(await standardTemplate(helper.ViewData.Model).RenderHtmlContent());
+            tabStrip.AppendLine(await standardTemplate(helper.ViewData.Model).RenderHtmlContentAsync());
             tabStrip.AppendLine("</div>");
 
             for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
@@ -125,7 +125,7 @@ namespace Nop.Web.Framework.Extensions
 
                 var localizedTabName = $"{name}-{language.Id}-tab";
                 tabStrip.AppendLine(string.Format("<div class=\"tab-pane fade{0}\" id=\"{1}\" role=\"tabpanel\">", localizedTabName == tabNameToSelect ? " show active" : null, localizedTabName));
-                tabStrip.AppendLine(await localizedTemplate(i).RenderHtmlContent());
+                tabStrip.AppendLine(await localizedTemplate(i).RenderHtmlContentAsync());
                 tabStrip.AppendLine("</div>");
             }
             tabStrip.AppendLine("</div>");
@@ -139,7 +139,7 @@ namespace Nop.Web.Framework.Extensions
                 "$(document).ready(function () {" +
                     "bindBootstrapTabSelectEvent('" + name + "', 'selected-tab-name-" + name + "');" +
                 "});");
-            var scriptTag = await script.RenderHtmlContent();
+            var scriptTag = await script.RenderHtmlContentAsync();
             tabStrip.AppendLine(scriptTag);
 
             return new HtmlString(tabStrip.ToString());
@@ -232,13 +232,14 @@ namespace Nop.Web.Framework.Extensions
 
         #region Form fields
 
+        //TODO: may be deleted
         /// <summary>
         /// Generate hint control
         /// </summary>
         /// <param name="helper">HTML helper</param>
         /// <param name="value">TexHint text</param>
         /// <returns>Result</returns>
-        public static async Task<IHtmlContent> Hint(this IHtmlHelper helper, string value)
+        public static async Task<IHtmlContent> HintAsync(this IHtmlHelper helper, string value)
         {
             //create tag builder
             var builder = new TagBuilder("div");
@@ -250,7 +251,7 @@ namespace Nop.Web.Framework.Extensions
             builder.InnerHtml.AppendHtml(icon.ToString());
 
             //render tag
-            return new HtmlString(await builder.RenderHtmlContent());
+            return new HtmlString(await builder.RenderHtmlContentAsync());
         }
 
         #endregion
@@ -264,7 +265,7 @@ namespace Nop.Web.Framework.Extensions
         /// </summary>
         /// <param name="htmlContent">HTML content</param>
         /// <returns>Result</returns>
-        public static async Task<string> RenderHtmlContent(this IHtmlContent htmlContent)
+        public static async Task<string> RenderHtmlContentAsync(this IHtmlContent htmlContent)
         {
             await using var writer = new StringWriter();
             htmlContent.WriteTo(writer, HtmlEncoder.Default);

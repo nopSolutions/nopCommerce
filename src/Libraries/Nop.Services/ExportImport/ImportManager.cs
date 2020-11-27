@@ -184,7 +184,7 @@ namespace Nop.Services.ExportImport
             }
             else
             {
-                if ((await SpecificationAttributeType.Option.ToSelectList(useLocalization: false))
+                if ((await SpecificationAttributeType.Option.ToSelectListAsync(useLocalization: false))
                     .Any(p => p.Text.Equals(attributeType, StringComparison.InvariantCultureIgnoreCase)))
                     worksheet.Row(endRow).OutlineLevel = 1;
                 else if (int.TryParse(attributeType, out var attributeTypeId) && Enum.IsDefined(typeof(SpecificationAttributeType), attributeTypeId))
@@ -863,27 +863,27 @@ namespace Nop.Services.ExportImport
 
             if (_catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities)
             {
-                productAttributeManager.SetSelectList("AttributeControlType", await AttributeControlType.TextBox.ToSelectList(useLocalization: false));
-                productAttributeManager.SetSelectList("AttributeValueType", await AttributeValueType.Simple.ToSelectList(useLocalization: false));
+                productAttributeManager.SetSelectList("AttributeControlType", await AttributeControlType.TextBox.ToSelectListAsync(useLocalization: false));
+                productAttributeManager.SetSelectList("AttributeValueType", await AttributeValueType.Simple.ToSelectListAsync(useLocalization: false));
 
-                specificationAttributeManager.SetSelectList("AttributeType", await SpecificationAttributeType.Option.ToSelectList(useLocalization: false));
+                specificationAttributeManager.SetSelectList("AttributeType", await SpecificationAttributeType.Option.ToSelectListAsync(useLocalization: false));
                 specificationAttributeManager.SetSelectList("SpecificationAttribute", (await _specificationAttributeService
                     .GetSpecificationAttributesAsync())
                     .Select(sa => sa as BaseEntity)
                     .ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty));
 
-                manager.SetSelectList("ProductType", await ProductType.SimpleProduct.ToSelectList(useLocalization: false));
-                manager.SetSelectList("GiftCardType", await GiftCardType.Virtual.ToSelectList(useLocalization: false));
+                manager.SetSelectList("ProductType", await ProductType.SimpleProduct.ToSelectListAsync(useLocalization: false));
+                manager.SetSelectList("GiftCardType", await GiftCardType.Virtual.ToSelectListAsync(useLocalization: false));
                 manager.SetSelectList("DownloadActivationType",
-                    await DownloadActivationType.Manually.ToSelectList(useLocalization: false));
+                    await DownloadActivationType.Manually.ToSelectListAsync(useLocalization: false));
                 manager.SetSelectList("ManageInventoryMethod",
-                    await ManageInventoryMethod.DontManageStock.ToSelectList(useLocalization: false));
+                    await ManageInventoryMethod.DontManageStock.ToSelectListAsync(useLocalization: false));
                 manager.SetSelectList("LowStockActivity",
-                    await LowStockActivity.Nothing.ToSelectList(useLocalization: false));
-                manager.SetSelectList("BackorderMode", await BackorderMode.NoBackorders.ToSelectList(useLocalization: false));
+                    await LowStockActivity.Nothing.ToSelectListAsync(useLocalization: false));
+                manager.SetSelectList("BackorderMode", await BackorderMode.NoBackorders.ToSelectListAsync(useLocalization: false));
                 manager.SetSelectList("RecurringCyclePeriod",
-                    await RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false));
-                manager.SetSelectList("RentalPricePeriod", await RentalPricePeriod.Days.ToSelectList(useLocalization: false));
+                    await RecurringProductCyclePeriod.Days.ToSelectListAsync(useLocalization: false));
+                manager.SetSelectList("RentalPricePeriod", await RentalPricePeriod.Days.ToSelectListAsync(useLocalization: false));
 
                 manager.SetSelectList("Vendor",
                     (await _vendorService.GetAllVendorsAsync(showHidden: true)).Select(v => v as BaseEntity)
@@ -1776,7 +1776,7 @@ namespace Nop.Services.ExportImport
             using (var reader = new StreamReader(stream))
                 while (!reader.EndOfStream)
                 {
-                    var line = reader.ReadLine();
+                    var line = await reader.ReadLineAsync();
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
                     var tmp = line.Split(',');
@@ -1841,7 +1841,7 @@ namespace Nop.Services.ExportImport
             {
                 while (!reader.EndOfStream)
                 {
-                    var line = reader.ReadLine();
+                    var line = await reader.ReadLineAsync();
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
                     var tmp = line.Split(',');

@@ -56,7 +56,7 @@ namespace Nop.Services.Catalog
         /// <returns>Currency string without exchange rate</returns>
         protected virtual async Task<string> GetCurrencyStringAsync(decimal amount)
         {
-            return GetCurrencyStringAsync(amount, true, await _workContext.GetWorkingCurrencyAsync());
+            return GetCurrencyString(amount, true, await _workContext.GetWorkingCurrencyAsync());
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nop.Services.Catalog
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
         /// <returns>Currency string without exchange rate</returns>
-        protected virtual string GetCurrencyStringAsync(decimal amount,
+        protected virtual string GetCurrencyString(decimal amount,
             bool showCurrency, Currency targetCurrency)
         {
             if (targetCurrency == null)
@@ -210,7 +210,7 @@ namespace Nop.Services.Catalog
             var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
             price = await priceCalculationService.RoundPriceAsync(price, targetCurrency);
 
-            var currencyString = GetCurrencyStringAsync(price, showCurrency, targetCurrency);
+            var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (!showTax) 
                 return currencyString;
 

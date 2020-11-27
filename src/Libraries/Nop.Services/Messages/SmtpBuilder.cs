@@ -53,18 +53,18 @@ namespace Nop.Services.Messages
 
             try
             {
-                client.Connect(
+                await client.ConnectAsync(
                     emailAccount.Host,
                     emailAccount.Port,
                     emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
 
                 if (emailAccount.UseDefaultCredentials)
                 {
-                    client.Authenticate(CredentialCache.DefaultNetworkCredentials);
+                    await client.AuthenticateAsync(CredentialCache.DefaultNetworkCredentials);
                 } 
                 else if (!string.IsNullOrWhiteSpace(emailAccount.Username))
                 {
-                    client.Authenticate(new NetworkCredential(emailAccount.Username, emailAccount.Password));
+                    await client.AuthenticateAsync(new NetworkCredential(emailAccount.Username, emailAccount.Password));
                 }
 
                 return client;

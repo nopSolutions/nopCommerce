@@ -632,13 +632,13 @@ namespace Nop.Web.Factories
                     var blogPosts = (await _blogService.GetAllBlogPostsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
                         .Where(p => p.IncludeInSitemap);
 
-                    model.Items.AddRange(blogPosts.Select(post => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await blogPosts.ToAsyncEnumerable().SelectAwait(async post => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = blogPostsGroupTitle,
                         Name = post.Title,
                         Url = urlHelper.RouteUrl("BlogPost",
-                            new { SeName = _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) })
-                    }));
+                            new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) })
+                    }).ToListAsync());
                 }
 
                 //news
@@ -646,13 +646,13 @@ namespace Nop.Web.Factories
                 {
                     var newsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.News");
                     var news = await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
-                    model.Items.AddRange(news.Select(newsItem => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await news.ToAsyncEnumerable().SelectAwait(async newsItem => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = newsGroupTitle,
                         Name = newsItem.Title,
                         Url = urlHelper.RouteUrl("NewsItem",
-                            new { SeName = _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) })
-                    }));
+                            new { SeName = await _urlRecordService.GetSeNameAsync(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) })
+                    }).ToListAsync());
                 }
 
                 //categories
@@ -789,7 +789,7 @@ namespace Nop.Web.Factories
             if (_fileProvider.FileExists(robotsFilePath))
             {
                 //the robots.txt file exists
-                var robotsFileContent = _fileProvider.ReadAllTextAsync(robotsFilePath, Encoding.UTF8);
+                var robotsFileContent = await _fileProvider.ReadAllTextAsync(robotsFilePath, Encoding.UTF8);
                 sb.Append(robotsFileContent);
             }
             else

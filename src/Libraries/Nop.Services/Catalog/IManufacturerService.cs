@@ -168,7 +168,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
-        ProductManufacturer FindProductManufacturerAsync(IList<ProductManufacturer> source, int productId, int manufacturerId);
+        ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId);
 
         /// <summary>
         /// Get a discount-manufacturer mapping record

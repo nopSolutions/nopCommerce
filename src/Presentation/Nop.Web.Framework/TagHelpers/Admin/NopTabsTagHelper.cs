@@ -124,11 +124,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 tabsContent.InnerHtml.AppendHtml(tabItem.Content);
             }
 
-            tabsTitlediv.InnerHtml.AppendHtml(await tabsTitle.RenderHtmlContent());
-            tabsContentout.InnerHtml.AppendHtml(await tabsContent.RenderHtmlContent());
+            tabsTitlediv.InnerHtml.AppendHtml(await tabsTitle.RenderHtmlContentAsync());
+            tabsContentout.InnerHtml.AppendHtml(await tabsContent.RenderHtmlContentAsync());
             //append data
-            output.Content.AppendHtml(await tabsTitlediv.RenderHtmlContent());
-            output.Content.AppendHtml(await tabsContentout.RenderHtmlContent());
+            output.Content.AppendHtml(await tabsTitlediv.RenderHtmlContentAsync());
+            output.Content.AppendHtml(await tabsContentout.RenderHtmlContentAsync());
 
             bool.TryParse(RenderSelectedTabInput, out var renderSelectedTabInput);
             if (string.IsNullOrEmpty(RenderSelectedTabInput) || renderSelectedTabInput)
@@ -139,7 +139,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 selectedTabInput.Attributes.Add("id", "selected-tab-name");
                 selectedTabInput.Attributes.Add("name", "selected-tab-name");
                 selectedTabInput.Attributes.Add("value", _htmlHelper.GetSelectedTabName());
-                output.PreContent.SetHtmlContent(await selectedTabInput.RenderHtmlContent());
+                output.PreContent.SetHtmlContent(await selectedTabInput.RenderHtmlContentAsync());
 
                 //render tabs script
                 if (output.Attributes.ContainsName("id"))
@@ -149,7 +149,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                         "$(document).ready(function () {" +
                             "bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "', 'selected-tab-name');" +
                         "});");
-                    var scriptTag = await script.RenderHtmlContent();
+                    var scriptTag = await script.RenderHtmlContentAsync();
                     output.PostContent.SetHtmlContent(scriptTag);
                 }
             }
@@ -283,7 +283,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //merge classes
             if (context.AllAttributes.ContainsName("class"))
                 tabTitle.Attributes.Add("class", context.AllAttributes["class"].Value.ToString());
-            tabTitle.InnerHtml.AppendHtml(await linkTag.RenderHtmlContent());
+            tabTitle.InnerHtml.AppendHtml(await linkTag.RenderHtmlContentAsync());
 
             //tab content
             var tabContenttop = new TagBuilder("div");
@@ -297,7 +297,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var childContent = await output.GetChildContentAsync();
             tabContent.InnerHtml.AppendHtml(childContent.GetContent());
 
-            tabContenttop.InnerHtml.AppendHtml(await tabContent.RenderHtmlContent());
+            tabContenttop.InnerHtml.AppendHtml(await tabContent.RenderHtmlContentAsync());
 
             //active class
             if (tabNameToSelect == Name)
@@ -307,8 +307,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var tabContext = (List<NopTabContextItem>)context.Items[typeof(NopTabsTagHelper)];
             tabContext.Add(new NopTabContextItem
             {
-                Title = await tabTitle.RenderHtmlContent(),
-                Content = await tabContent.RenderHtmlContent(),
+                Title = await tabTitle.RenderHtmlContentAsync(),
+                Content = await tabContent.RenderHtmlContentAsync(),
                 IsDefault = isDefaultTab
             });
 

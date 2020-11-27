@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// </summary>
             /// <param name="context">Authorization filter context</param>
             /// <returns>A task that on completion indicates the filter has executed</returns>
-            private async Task CheckWwwRequirement(AuthorizationFilterContext context)
+            private async Task CheckWwwRequirementAsync(AuthorizationFilterContext context)
             {
                 if (context == null)
                     throw new ArgumentNullException(nameof(context));
@@ -132,7 +132,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">Authorization filter context</param>
             public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
             {
-                await CheckWwwRequirement(context);
+                await CheckWwwRequirementAsync(context);
             }
 
             #endregion

@@ -103,7 +103,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             }
 
             //prepare available payment types
-            model.PaymentTypes = (await PaymentType.Capture.ToSelectList(false))
+            model.PaymentTypes = (await PaymentType.Capture.ToSelectListAsync(false))
                 .Select(item => new SelectListItem(item.Text, item.Value))
                 .ToList();
 

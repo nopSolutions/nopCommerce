@@ -112,7 +112,7 @@
             <nop-label asp-for="ManageInventoryMethodId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="ManageInventoryMethodId" asp-items="@await (((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList())" />
+            <nop-select asp-for="ManageInventoryMethodId" asp-items="@await (((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectListAsync())" />
             <span asp-validation-for="ManageInventoryMethodId"></span>
         </div>
     </div>
@@ -259,7 +259,7 @@
             <nop-label asp-for="LowStockActivityId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="LowStockActivityId" asp-items="@await (((LowStockActivity)Model.LowStockActivityId).ToSelectList())" />
+            <nop-select asp-for="LowStockActivityId" asp-items="@await (((LowStockActivity)Model.LowStockActivityId).ToSelectListAsync())" />
             <span asp-validation-for="LowStockActivityId"></span>
         </div>
     </div>
@@ -277,7 +277,7 @@
             <nop-label asp-for="BackorderModeId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="BackorderModeId" asp-items="@await (((BackorderMode)Model.BackorderModeId).ToSelectList())" />
+            <nop-select asp-for="BackorderModeId" asp-items="@await (((BackorderMode)Model.BackorderModeId).ToSelectListAsync())" />
             <span asp-validation-for="BackorderModeId"></span>
         </div>
     </div>

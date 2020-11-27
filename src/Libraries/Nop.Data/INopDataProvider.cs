@@ -48,6 +48,14 @@ namespace Nop.Data
         Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
+        /// Insert a new entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Entity</returns>
+        TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
         /// Updates record in table, using values from entity parameter. 
         /// Record to update identified by match on primary key value from obj value.
         /// </summary>

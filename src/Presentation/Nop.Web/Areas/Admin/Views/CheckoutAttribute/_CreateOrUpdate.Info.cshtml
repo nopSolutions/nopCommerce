@@ -53,7 +53,7 @@
         <div class="col-md-9">
             @{
                 var attributeControlTypes = await ((AttributeControlType)Model.AttributeControlTypeId)
-                    .ToSelectList(valuesToExclude:
+                    .ToSelectListAsync(valuesToExclude:
                         //these attributes don't support some control types
                         new[] { (int)AttributeControlType.ImageSquares });
             }

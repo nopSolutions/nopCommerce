@@ -25,7 +25,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
             // new permission
             if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "AccessProfiling", true) == 0))
             {
-                var profilingPermission = _dataProvider.InsertEntityAsync(
+                var profilingPermission = _dataProvider.InsertEntity(
                     new PermissionRecord
                     {
                         Name = "Public store. Access MiniProfiler results",
@@ -39,7 +39,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
                     .GetTable<CustomerRole>()
                     .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
 
-                _dataProvider.InsertEntityAsync(
+                _dataProvider.InsertEntity(
                     new PermissionRecordCustomerRoleMapping
                     {
                         CustomerRoleId = adminRole.Id,
@@ -51,7 +51,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
             var activityLogTypeTable = _dataProvider.GetTable<ActivityLogType>();
 
             if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "AddNewSpecAttributeGroup", true) == 0))
-                _dataProvider.InsertEntityAsync(
+                _dataProvider.InsertEntity(
                     new ActivityLogType
                     {
                         SystemKeyword = "AddNewSpecAttributeGroup",
@@ -61,7 +61,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
                 );
 
             if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "EditSpecAttributeGroup", true) == 0))
-                _dataProvider.InsertEntityAsync(
+                _dataProvider.InsertEntity(
                     new ActivityLogType
                     {
                         SystemKeyword = "EditSpecAttributeGroup",
@@ -71,7 +71,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
                 );
 
             if (!activityLogTypeTable.Any(alt => string.Compare(alt.SystemKeyword, "DeleteSpecAttributeGroup", true) == 0))
-                _dataProvider.InsertEntityAsync(
+                _dataProvider.InsertEntity(
                     new ActivityLogType
                     {
                         SystemKeyword = "DeleteSpecAttributeGroup",
@@ -82,7 +82,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
             //<MFA #475>
             if (!_dataProvider.GetTable<PermissionRecord>().Any(pr => string.Compare(pr.SystemName, "ManageMultifactorAuthenticationMethods", true) == 0))
             {
-                var multiFactorAuthenticationPermission = _dataProvider.InsertEntityAsync(
+                var multiFactorAuthenticationPermission = _dataProvider.InsertEntity(
                     new PermissionRecord
                     {
                         Name = "Admin area. Manage Multi-factor Authentication Methods",
@@ -96,7 +96,7 @@ namespace Nop.Data.Migrations.UpgradeTo440
                     .GetTable<CustomerRole>()
                     .FirstOrDefault(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
 
-                _dataProvider.InsertEntityAsync(
+                _dataProvider.InsertEntity(
                     new PermissionRecordCustomerRoleMapping
                     {
                         CustomerRoleId = adminRole.Id,

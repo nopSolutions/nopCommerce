@@ -23,7 +23,7 @@ namespace Nop.Services
         /// <param name="valuesToExclude">Values to exclude</param>
         /// <param name="useLocalization">Localize</param>
         /// <returns>SelectList</returns>
-        public static async Task<SelectList> ToSelectList<TEnum>(this TEnum enumObj,
+        public static async Task<SelectList> ToSelectListAsync<TEnum>(this TEnum enumObj,
            bool markCurrentAsSelected = true, int[] valuesToExclude = null, bool useLocalization = true) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum)

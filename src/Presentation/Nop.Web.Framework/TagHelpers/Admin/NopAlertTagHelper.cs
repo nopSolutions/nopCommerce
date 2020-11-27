@@ -82,7 +82,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
-            var modalId = await new HtmlString(AlertId + "-action-alert").RenderHtmlContent();
+            var modalId = await new HtmlString(AlertId + "-action-alert").RenderHtmlContentAsync();
 
             var actionAlertModel = new ActionAlertModel()
             {
@@ -110,7 +110,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 "$(document).ready(function () {" +
                     $"$('#{AlertId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\")" +
                 "});");
-            var scriptTag = await script.RenderHtmlContent();
+            var scriptTag = await script.RenderHtmlContentAsync();
             output.PostContent.SetHtmlContent(scriptTag);
         }
 

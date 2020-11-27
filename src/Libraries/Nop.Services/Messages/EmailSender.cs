@@ -195,8 +195,8 @@ namespace Nop.Services.Messages
 
             //send email
             using var smtpClient = await _smtpBuilder.BuildAsync(emailAccount);
-            smtpClient.Send(message);
-            smtpClient.Disconnect(true);
+            await smtpClient.SendAsync(message);
+            await smtpClient.DisconnectAsync(true);
         }
 
         #endregion

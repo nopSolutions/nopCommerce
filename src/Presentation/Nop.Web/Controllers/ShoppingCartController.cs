@@ -392,7 +392,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateFlyoutCartSectionHtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? await RenderViewComponentToString("FlyoutShoppingCart")
+                            ? await RenderViewComponentToStringAsync("FlyoutShoppingCart")
                             : string.Empty;
 
                         return Json(new
@@ -485,7 +485,7 @@ namespace Nop.Web.Controllers
             await _genericAttributeService.SaveAttributeAsync(await _workContext.GetCurrentCustomerAsync(),
                 NopCustomerDefaults.SelectedShippingOptionAttribute, selectedShippingOption, (await _storeContext.GetCurrentStoreAsync()).Id);
 
-            var orderTotalsSectionHtml = await RenderViewComponentToString("OrderTotals", new { isEditable = true });
+            var orderTotalsSectionHtml = await RenderViewComponentToStringAsync("OrderTotals", new { isEditable = true });
 
             return Json(new
             {
@@ -679,7 +679,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? await RenderViewComponentToString("FlyoutShoppingCart")
+                            ? await RenderViewComponentToStringAsync("FlyoutShoppingCart")
                             : string.Empty;
 
                         return Json(new
@@ -961,8 +961,8 @@ namespace Nop.Web.Controllers
             }
 
             //update blocks
-            var ordetotalssectionhtml = await RenderViewComponentToString("OrderTotals", new { isEditable });
-            var selectedcheckoutattributesssectionhtml = await RenderViewComponentToString("SelectedCheckoutAttributes");
+            var ordetotalssectionhtml = await RenderViewComponentToStringAsync("OrderTotals", new { isEditable });
+            var selectedcheckoutattributesssectionhtml = await RenderViewComponentToStringAsync("SelectedCheckoutAttributes");
 
             return Json(new
             {

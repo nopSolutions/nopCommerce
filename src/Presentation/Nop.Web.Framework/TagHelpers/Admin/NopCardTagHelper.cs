@@ -164,7 +164,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             card.InnerHtml.AppendHtml(cardHeading);
             var childContent = await output.GetChildContentAsync();
             card.InnerHtml.AppendHtml(childContent.GetContent());
-            output.Content.AppendHtml(await card.RenderHtmlContent());
+            output.Content.AppendHtml(await card.RenderHtmlContentAsync());
         }
 
         #endregion
