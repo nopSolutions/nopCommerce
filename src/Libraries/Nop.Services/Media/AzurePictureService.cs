@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Core;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -29,7 +31,7 @@ namespace Nop.Services.Media
         private static string _azureBlobStorageConnectionString;
         private static string _azureBlobStorageContainerName;
         private static string _azureBlobStorageEndPoint;
-        private static CloudBlobContainer _container;
+        private static BlobContainerClient _container;
 
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly MediaSettings _mediaSettings;
@@ -116,21 +118,12 @@ namespace Nop.Services.Media
         /// </summary>
         protected virtual async void CreateCloudBlobContainer()
         {
-            var storageAccount = CloudStorageAccount.Parse(_azureBlobStorageConnectionString);
-            if (storageAccount == null)
+            var blobServiceClient = new BlobServiceClient(_azureBlobStorageConnectionString);
+            if (blobServiceClient == null)
                 throw new Exception("Azure connection string for Blob is not working");
 
             //should we do it for each HTTP request?
-            var blobClient = storageAccount.CreateCloudBlobClient();
-
-            //GetContainerReference doesn't need to be async since it doesn't contact the server yet
-            _container = blobClient.GetContainerReference(_azureBlobStorageContainerName);
-
-            await _container.CreateIfNotExistsAsync();
-            await _container.SetPermissionsAsync(new BlobContainerPermissions
-            {
-                PublicAccess = BlobContainerPublicAccessType.Blob
-            });
+            _container = await blobServiceClient.CreateBlobContainerAsync(_azureBlobStorageContainerName, publicAccessType: PublicAccessType.Blob);
         }
 
         /// <summary>
@@ -196,21 +189,10 @@ namespace Nop.Services.Media
         {
             //create a string containing the Blob name prefix
             var prefix = $"{picture.Id:0000000}";
-
-            BlobContinuationToken continuationToken = null;
-            do
-            {
-                //get result segment
-                //listing snapshots is only supported in flat mode, so set the useFlatBlobListing parameter to true.
-                var resultSegment = await _container.ListBlobsSegmentedAsync(prefix, true, BlobListingDetails.All, null, continuationToken, null, null);
-
-                //delete files in result segment
-                await Task.WhenAll(resultSegment.Results.Select(blobItem => ((CloudBlockBlob)blobItem).DeleteAsync()));
-
-                //get the continuation token.
-                continuationToken = resultSegment.ContinuationToken;
+            await foreach (var blobItem in _container.GetBlobsAsync(BlobTraits.All, BlobStates.All, prefix, default))
+            { 
+                await _container.DeleteBlobAsync(blobItem.Name);
             }
-            while (continuationToken != null);
 
             _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
@@ -229,10 +211,7 @@ namespace Nop.Services.Media
 
                 return await _staticCacheManager.GetAsync(key, async () =>
                 {
-                    //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
-                    var blockBlob = _container.GetBlockBlobReference(thumbFileName);
-
-                    return await blockBlob.ExistsAsync();
+                    return await _container.GetBlobClient(thumbFileName).ExistsAsync(default);
                 });
             }
             catch
@@ -250,18 +229,24 @@ namespace Nop.Services.Media
         /// <param name="binary">Picture binary</param>
         protected virtual async Task SaveThumbAsync(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
-            //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
-            var blockBlob = _container.GetBlockBlobReference(thumbFileName);
+            var blobClient = _container.GetBlobClient(thumbFileName);
+            var headers = new BlobHttpHeaders();
 
             //set mime type
             if (!string.IsNullOrEmpty(mimeType))
-                blockBlob.Properties.ContentType = mimeType;
+                headers.ContentType = mimeType;
 
             //set cache control
             if (!string.IsNullOrEmpty(_mediaSettings.AzureCacheControlHeader))
-                blockBlob.Properties.CacheControl = _mediaSettings.AzureCacheControlHeader;
+                headers.CacheControl = _mediaSettings.AzureCacheControlHeader;
 
-            await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
+            blobClient.SetHttpHeaders(headers);
+            
+            using(var ms = new MemoryStream(binary))
+            {
+                ms.Position = 0;
+                await blobClient.UploadAsync(ms);
+            }
 
             _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefix);
         }
