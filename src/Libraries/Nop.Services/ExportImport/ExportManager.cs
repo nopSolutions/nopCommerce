@@ -1747,7 +1747,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="subscriptions">Subscriptions</param>
         /// <returns>Result in TXT (string) format</returns>
-        public virtual string ExportNewsletterSubscribersToTxt(IList<NewsLetterSubscription> subscriptions)
+        public virtual async Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions)
         {
             if (subscriptions == null)
                 throw new ArgumentNullException(nameof(subscriptions));
@@ -1755,11 +1755,11 @@ namespace Nop.Services.ExportImport
             const string separator = ",";
             var sb = new StringBuilder();
 
-            sb.Append(_localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email"));
+            sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Email"));
             sb.Append(separator);
-            sb.Append(_localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Active"));
+            sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Active"));
             sb.Append(separator);
-            sb.Append(_localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Store"));
+            sb.Append(await _localizationService.GetResourceAsync("Admin.Promotions.NewsLetterSubscriptions.Fields.Store"));
             sb.Append(Environment.NewLine);
 
             foreach (var subscription in subscriptions)

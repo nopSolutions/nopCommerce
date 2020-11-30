@@ -139,7 +139,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var subscriptions = await _newsLetterSubscriptionService.GetAllNewsLetterSubscriptionsAsync(model.SearchEmail,
                 startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId);
 
-            var result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
+            var result = await _exportManager.ExportNewsletterSubscribersToTxtAsync(subscriptions);
 
             var fileName = $"newsletter_emails_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.csv";
 

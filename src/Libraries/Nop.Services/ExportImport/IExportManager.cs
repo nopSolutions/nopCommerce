@@ -82,7 +82,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="subscriptions">Subscriptions</param>
         /// <returns>Result in TXT (string) format</returns>
-        string ExportNewsletterSubscribersToTxt(IList<NewsLetterSubscription> subscriptions);
+        Task<string> ExportNewsletterSubscribersToTxtAsync(IList<NewsLetterSubscription> subscriptions);
 
         /// <summary>
         /// Export states to TXT
