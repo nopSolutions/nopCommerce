@@ -5,9 +5,9 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Web.Controllers
 {
     [WwwRequirement]
+    [CheckLanguageSeoCode]
     [CheckAccessPublicStore]
     [CheckAccessClosedStore]
-    [CheckLanguageSeoCode]
     [CheckDiscountCoupon]
     [CheckAffiliate]
     public abstract partial class BasePublicController : BaseController
