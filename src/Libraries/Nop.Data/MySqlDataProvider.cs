@@ -209,7 +209,7 @@ namespace Nop.Data
             await using var command = dbConnection.CreateCommand();
             command.Connection = dbConnection;
             command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
-            dbConnection.Open();
+            await dbConnection.OpenAsync();
 
             return Convert.ToInt32((await command.ExecuteScalarAsync()) ?? 1);
         }

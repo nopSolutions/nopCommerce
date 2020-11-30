@@ -117,7 +117,7 @@ namespace Nop.Data
                 using (var connection = new SqlConnection((await GetConnectionStringBuilderAsync()).ConnectionString))
                 {
                     //just try to connect
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 return true;
