@@ -26,7 +26,7 @@ namespace Nop.Web.Controllers
                 return NoContent();
 
             var task = new Task(scheduleTask);
-            await task.Execute();
+            await task.ExecuteAsync();
 
             return NoContent();
         }

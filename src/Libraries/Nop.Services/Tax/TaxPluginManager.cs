@@ -39,7 +39,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax provider</returns>
         public virtual async Task<ITaxProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
-            return await LoadPrimaryPlugin(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
+            return await LoadPrimaryPluginAsync(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
         }
 
         /// <summary>

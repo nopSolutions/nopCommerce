@@ -48,7 +48,7 @@ namespace Nop.Services.Tasks
 
         #region Utilities
 
-        private async System.Threading.Tasks.Task Run()
+        private async System.Threading.Tasks.Task RunAsync()
         {
             if (Seconds <= 0)
                 return;
@@ -106,7 +106,7 @@ namespace Nop.Services.Tasks
             {
                 _timer.Change(-1, -1);
 
-                Run().Wait();
+                RunAsync().Wait();
             }
             catch
             {

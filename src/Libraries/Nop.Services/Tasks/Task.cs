@@ -113,7 +113,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         /// <param name="throwException">A value indicating whether exception should be thrown if some error happens</param>
         /// <param name="ensureRunOncePerPeriod">A value indicating whether we should ensure this task is run once per run period</param>
-        public async System.Threading.Tasks.Task Execute(bool throwException = false, bool ensureRunOncePerPeriod = true)
+        public async System.Threading.Tasks.Task ExecuteAsync(bool throwException = false, bool ensureRunOncePerPeriod = true)
         {
             if (ScheduleTask == null || !Enabled)
                 return;

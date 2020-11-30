@@ -405,7 +405,7 @@ namespace Nop.Services.ExportImport
                    (await _storeService.GetAllStoresAsync()).Count == 1;
         }
 
-        private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManager()
+        private async Task<PropertyManager<ExportProductAttribute>> GetProductAttributeManagerAsync()
         {
             var attributeProperties = new[]
             {
@@ -465,7 +465,7 @@ namespace Nop.Services.ExportImport
 
         private async Task<byte[]> ExportProductsToXlsxWithAttributesAsync(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
         {
-            var productAttributeManager = await GetProductAttributeManager();
+            var productAttributeManager = await GetProductAttributeManagerAsync();
             var specificationAttributeManager = await GetSpecificationAttributeManagerAsync();
 
             await using var stream = new MemoryStream();

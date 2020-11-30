@@ -114,7 +114,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //ensure that the task is enabled
                 var task = new Task(scheduleTask) { Enabled = true };
-                await task.Execute(true, false);
+                await task.ExecuteAsync(true, false);
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.System.ScheduleTasks.RunNow.Done"));
             }

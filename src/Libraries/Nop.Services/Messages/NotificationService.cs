@@ -70,7 +70,7 @@ namespace Nop.Services.Messages
         /// Log exception
         /// </summary>
         /// <param name="exception">Exception</param>
-        protected virtual async Task LogException(Exception exception)
+        protected virtual async Task LogExceptionAsync(Exception exception)
         {
             if (exception == null)
                 return;
@@ -134,7 +134,7 @@ namespace Nop.Services.Messages
                 return;
 
             if (logException)
-                await LogException(exception);
+                await LogExceptionAsync(exception);
 
             ErrorNotification(exception.Message);
         }

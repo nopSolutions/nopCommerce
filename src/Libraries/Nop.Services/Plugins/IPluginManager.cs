@@ -35,7 +35,7 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Plugin</returns>
-        Task<TPlugin> LoadPrimaryPlugin(string systemName, Customer customer = null, int storeId = 0);
+        Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0);
 
         /// <summary>
         /// Load active plugins

@@ -39,7 +39,7 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rate provider</returns>
         public virtual async Task<IExchangeRateProvider> LoadPrimaryPluginAsync(Customer customer = null, int storeId = 0)
         {
-            return await LoadPrimaryPlugin(_currencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);
+            return await LoadPrimaryPluginAsync(_currencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);
         }
 
         /// <summary>

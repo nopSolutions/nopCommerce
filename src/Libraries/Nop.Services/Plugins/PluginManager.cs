@@ -42,7 +42,7 @@ namespace Nop.Services.Plugins
         /// <param name="storeId">Store identifier</param>
         /// <param name="systemName">Plugin system name</param>
         /// <returns>Key</returns>
-        protected virtual async Task<string> GetKey(Customer customer, int storeId, string systemName = null)
+        protected virtual async Task<string> GetKeyAsync(Customer customer, int storeId, string systemName = null)
         {
             return $"{storeId}-{(customer != null ? string.Join(',', await _customerService.GetCustomerRoleIdsAsync(customer)) : null)}-{systemName}";
         }
@@ -60,7 +60,7 @@ namespace Nop.Services.Plugins
         public virtual async Task<IList<TPlugin>> LoadAllPluginsAsync(Customer customer = null, int storeId = 0)
         {
             //get plugins and put them into the dictionary to avoid further loading
-            var key = await GetKey(customer, storeId);
+            var key = await GetKeyAsync(customer, storeId);
             if (!_plugins.ContainsKey(key))
                 _plugins.Add(key, await _pluginService.GetPluginsAsync<TPlugin>(customer: customer, storeId: storeId));
 
@@ -80,12 +80,12 @@ namespace Nop.Services.Plugins
                 return null;
 
             //try to get already loaded plugin
-            var key = await GetKey(customer, storeId, systemName);
+            var key = await GetKeyAsync(customer, storeId, systemName);
             if (_plugins.ContainsKey(key))
                 return _plugins[key].FirstOrDefault();
 
             //or get it from list of all loaded plugins or load it for the first time
-            var pluginBySystemName = _plugins.TryGetValue(await GetKey(customer, storeId), out var plugins)
+            var pluginBySystemName = _plugins.TryGetValue(await GetKeyAsync(customer, storeId), out var plugins)
                 && plugins.FirstOrDefault(plugin =>
                     plugin.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) is TPlugin loadedPlugin
                 ? loadedPlugin
@@ -103,7 +103,7 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by customer; pass null to load all plugins</param>
         /// <param name="storeId">Filter by store; pass 0 to load all plugins</param>
         /// <returns>Plugin</returns>
-        public virtual async Task<TPlugin> LoadPrimaryPlugin(string systemName, Customer customer = null, int storeId = 0)
+        public virtual async Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0)
         {
             //try to get a plugin by system name or return the first loaded one (it's necessary to have a primary active plugin)
             var plugin = await LoadPluginBySystemNameAsync(systemName, customer, storeId)
