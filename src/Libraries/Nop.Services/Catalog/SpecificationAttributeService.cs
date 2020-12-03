@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Catalog
 {
@@ -96,7 +97,7 @@ namespace Nop.Services.Catalog
 
             var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributeGroupByProductCacheKey, productId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await availableGroupsQuery.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await availableGroupsQuery.ToListAsync());
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Nop.Services.Catalog
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
 
-            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey), async () => await query.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributesWithOptionsCacheKey), async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -192,7 +193,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderBy(sa => sa.DisplayOrder).ThenBy(sa => sa.Id);
 
-            return await query.ToAsyncEnumerable().ToListAsync();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -271,7 +272,7 @@ namespace Nop.Services.Catalog
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
 
-            var specificationAttributeOptions = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributeOptionsCacheKey, specificationAttributeId), async () => await query.ToAsyncEnumerable().ToListAsync());
+            var specificationAttributeOptions = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecificationAttributeOptionsCacheKey, specificationAttributeId), async () => await query.ToListAsync());
 
             return specificationAttributeOptions;
         }
@@ -317,7 +318,6 @@ namespace Nop.Services.Catalog
             var queryFilter = attributeOptionIds.Distinct().ToArray();
             var filter = await query.Select(a => a.Id)
                 .Where(m => queryFilter.Contains(m))
-                .ToAsyncEnumerable()
                 .ToListAsync();
             return queryFilter.Except(filter).ToArray();
         }
@@ -375,7 +375,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(psa => psa.ShowOnProductPage == showOnProductPage.Value);
             query = query.OrderBy(psa => psa.DisplayOrder).ThenBy(psa => psa.Id);
 
-            var productSpecificationAttributes = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var productSpecificationAttributes = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productSpecificationAttributes;
         }
@@ -422,7 +422,7 @@ namespace Nop.Services.Catalog
             if (specificationAttributeOptionId > 0)
                 query = query.Where(psa => psa.SpecificationAttributeOptionId == specificationAttributeOptionId);
 
-            return await query.ToAsyncEnumerable().CountAsync();
+            return await query.CountAsync();
         }
 
         /// <summary>

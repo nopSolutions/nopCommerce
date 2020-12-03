@@ -184,7 +184,7 @@ namespace Nop.Web.Factories
             {
                 PagingFilteringContext = { Tag = command.Tag, Month = command.Month },
                 WorkingLanguageId = language.Id,
-                BlogPosts = await blogPosts.ToAsyncEnumerable().SelectAwait(async blogPost =>
+                BlogPosts = await blogPosts.SelectAwait(async blogPost =>
                 {
                     var blogPostModel = new BlogPostModel();
                     await PrepareBlogPostModelAsync(blogPostModel, blogPost, false);

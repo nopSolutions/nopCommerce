@@ -373,7 +373,7 @@ namespace Nop.Web.Factories
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                model.CategoryBreadcrumb = await (await _categoryService.GetCategoryBreadCrumbAsync(category)).ToAsyncEnumerable().SelectAwait(async catBr =>
+                model.CategoryBreadcrumb = await (await _categoryService.GetCategoryBreadCrumbAsync(category)).SelectAwait(async catBr =>
                     new CategoryModel
                     {
                         Id = catBr.Id,
@@ -386,7 +386,6 @@ namespace Nop.Web.Factories
 
             //subcategories
             model.SubCategories = await (await _categoryService.GetAllCategoriesByParentCategoryIdAsync(category.Id))
-                .ToAsyncEnumerable()
                 .SelectAwait(async curCategory =>
                 {
                     var subCatModel = new CategoryModel.SubCategoryModel
@@ -527,8 +526,7 @@ namespace Nop.Web.Factories
 
             //top menu topics
             var topicModel = await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id, onlyIncludedInTopMenu: true))
-                .ToAsyncEnumerable()
-                    .SelectAwait(async t => new TopMenuModel.TopicModel
+                .SelectAwait(async t => new TopMenuModel.TopicModel
                     {
                         Id = t.Id,
                         Name = await _localizationService.GetLocalizedAsync(t, x => x.Title),
@@ -570,8 +568,7 @@ namespace Nop.Web.Factories
 
             var model = await _staticCacheManager.GetAsync(categoriesCacheKey, async () =>
                 await (await _categoryService.GetAllCategoriesDisplayedOnHomepageAsync())
-                .ToAsyncEnumerable()
-                    .SelectAwait(async category =>
+                .SelectAwait(async category =>
                     {
                         var catModel = new CategoryModel
                         {
@@ -1074,14 +1071,14 @@ namespace Nop.Web.Factories
             var model = new PopularProductTagsModel();
 
             //get all tags
-            var tags = await (await _productTagService.GetAllProductTagsAsync()).ToAsyncEnumerable()
+            var tags = await (await _productTagService.GetAllProductTagsAsync())
                 //filter by current store
                 .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
                 .ToListAsync();
 
             model.TotalTags = tags.Count;
 
-            model.Tags.AddRange(await tags.ToAsyncEnumerable()
+            model.Tags.AddRange(await tags
                 //order by product count
                 .OrderByDescendingAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id))
                 .Take(_catalogSettings.NumberOfProductTags)
@@ -1148,7 +1145,7 @@ namespace Nop.Web.Factories
         {
             var model = new PopularProductTagsModel
             {
-                Tags = await (await _productTagService.GetAllProductTagsAsync()).ToAsyncEnumerable()
+                Tags = await (await _productTagService.GetAllProductTagsAsync())
                 //filter by current store
                 .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
                 //sort by name

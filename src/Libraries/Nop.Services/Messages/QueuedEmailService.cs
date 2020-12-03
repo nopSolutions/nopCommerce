@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Messages
 {
@@ -155,7 +156,7 @@ namespace Nop.Services.Messages
             if (createdToUtc.HasValue)
                 query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
 
-            var emails = await query.ToAsyncEnumerable().ToArrayAsync();
+            var emails = await query.ToArrayAsync();
 
             await DeleteQueuedEmailsAsync(emails);
 

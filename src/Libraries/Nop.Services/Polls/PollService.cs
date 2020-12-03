@@ -200,8 +200,7 @@ namespace Nop.Services.Polls
                  join pvr in _pollVotingRecordRepository.Table on pa.Id equals pvr.PollAnswerId
                  where pa.PollId == pollId && pvr.CustomerId == customerId
                  select pvr)
-                 .ToAsyncEnumerable()
-                 .AnyAsync();
+                .AnyAsync();
             return result;
         }
 

@@ -259,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new SpecificationAttributeOptionListModel().PrepareToGridAsync(searchModel, options, () =>
             {
-                return options.ToAsyncEnumerable().SelectAwait(async option =>
+                return options.SelectAwait(async option =>
                 {
                     //fill in model values from the entity
                     var optionModel = option.ToModel<SpecificationAttributeOptionModel>();

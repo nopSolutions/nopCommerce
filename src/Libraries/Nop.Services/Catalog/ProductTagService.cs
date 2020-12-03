@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -71,7 +70,6 @@ namespace Nop.Services.Catalog
         protected virtual async Task DeleteProductProductTagMappingAsync(int productId, int productTagId)
         {
             var mappingRecord = await _productProductTagMappingRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
 
             if (mappingRecord is null)
@@ -233,7 +231,7 @@ namespace Nop.Services.Catalog
                         where pt.Name == name
                         select pt;
 
-            var productTag = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var productTag = await query.FirstOrDefaultAsync();
             return productTag;
         }
 
@@ -267,7 +265,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             return await _productProductTagMappingRepository.Table
-                .ToAsyncEnumerable()
                 .AnyAsync(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
         }
 

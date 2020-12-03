@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -438,7 +437,7 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-            var customer = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var customer = await query.FirstOrDefaultAsync();
 
             return customer;
         }
@@ -457,7 +456,7 @@ namespace Nop.Services.Customers
                         orderby c.Id
                         where c.Email == email
                         select c;
-            var customer = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var customer = await query.FirstOrDefaultAsync();
 
             return customer;
         }
@@ -479,7 +478,7 @@ namespace Nop.Services.Customers
                         where c.SystemName == systemName
                         select c;
 
-            var customer = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+            var customer = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return customer;
         }
@@ -572,7 +571,7 @@ namespace Nop.Services.Customers
                         orderby c.Id
                         where c.Username == username
                         select c;
-            var customer = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var customer = await query.FirstOrDefaultAsync();
 
             return customer;
         }
@@ -1087,7 +1086,6 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(role));
 
             var mapping = await _customerCustomerRoleMappingRepository.Table
-                .ToAsyncEnumerable()
                 .SingleOrDefaultAsync(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
 
             if (mapping != null)
@@ -1136,7 +1134,7 @@ namespace Nop.Services.Customers
                         where cr.SystemName == systemName
                         select cr;
 
-            var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+            var customerRole = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return customerRole;
         }
@@ -1160,7 +1158,7 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerRoleIdsCacheKey, customer, showHidden);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToArrayAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToArrayAsync());
         }
 
         /// <summary>
@@ -1199,7 +1197,7 @@ namespace Nop.Services.Customers
                         where showHidden || cr.Active
                         select cr;
 
-            var customerRoles = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var customerRoles = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return customerRoles;
         }
@@ -1326,7 +1324,7 @@ namespace Nop.Services.Customers
             if (passwordsToReturn.HasValue)
                 query = query.OrderByDescending(password => password.CreatedOnUtc).Take(passwordsToReturn.Value);
 
-            return await query.ToAsyncEnumerable().ToListAsync();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -1459,7 +1457,6 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             if (await _customerAddressMappingRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
                 is CustomerAddressMapping mapping)
             {
@@ -1486,7 +1483,6 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(address));
 
             if (await _customerAddressMappingRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(m => m.AddressId == address.Id && m.CustomerId == customer.Id)
                 is null)
             {
@@ -1514,7 +1510,7 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressesCacheKey, customerId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -1535,7 +1531,7 @@ namespace Nop.Services.Customers
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerAddressCacheKey, customerId, addressId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().SingleAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.SingleAsync());
         }
 
         /// <summary>

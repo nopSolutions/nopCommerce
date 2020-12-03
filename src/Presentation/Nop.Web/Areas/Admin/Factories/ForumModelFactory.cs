@@ -89,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ForumGroupListModel().PrepareToGridAsync(searchModel, forumGroups, () =>
             {
-                return forumGroups.ToAsyncEnumerable().SelectAwait(async forumGroup =>
+                return forumGroups.SelectAwait(async forumGroup =>
                 {
                     //fill in model values from the entity
                     var forumGroupModel = forumGroup.ToModel<ForumGroupModel>();
@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ForumListModel().PrepareToGridAsync(searchModel, forums, () =>
             {
-                return forums.ToAsyncEnumerable().SelectAwait(async forum =>
+                return forums.SelectAwait(async forum =>
                 {
                     //fill in model values from the entity
                     var forumModel = forum.ToModel<ForumModel>();

@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new QueuedEmailListModel().PrepareToGridAsync(searchModel, queuedEmails, () =>
             {
-                return queuedEmails.ToAsyncEnumerable().SelectAwait(async queuedEmail =>
+                return queuedEmails.SelectAwait(async queuedEmail =>
                 {
                     //fill in model values from the entity
                     var queuedEmailModel = queuedEmail.ToModel<QueuedEmailModel>();

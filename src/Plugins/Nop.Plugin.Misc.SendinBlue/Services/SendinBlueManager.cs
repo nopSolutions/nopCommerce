@@ -201,7 +201,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         $"{SendinBlueDefaults.CountyServiceAttribute};" +
                         $"{SendinBlueDefaults.StateServiceAttribute};" +
                         $"{SendinBlueDefaults.FaxServiceAttribute}";
-                    var csv = await subscriptions.ToAsyncEnumerable().AggregateAwaitAsync(title, async (all, subscription) =>
+                    var csv = await subscriptions.AggregateAwaitAsync(title, async (all, subscription) =>
                     {
                         var firstName = string.Empty;
                         var lastName = string.Empty;

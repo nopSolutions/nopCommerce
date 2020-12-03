@@ -180,7 +180,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     var (cartTotal, _, _, _, _, _) = await _orderTotalCalculationService.GetShoppingCartTotalAsync(cart, false, false);
 
                     //get products data by shopping cart items
-                    var itemsData = await cart.Where(item => item.ProductId != 0).ToAsyncEnumerable().SelectAwait(async item =>
+                    var itemsData = await cart.Where(item => item.ProductId != 0).SelectAwait(async item =>
                     {
                         var product = await _productService.GetProductByIdAsync(item.ProductId);
 
@@ -201,7 +201,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             variant_id = combination?.Id ?? product.Id,
                             variant_name = combination?.Sku ?? product.Name,
                             sku = combination?.Sku ?? product.Sku,
-                            category = await (await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).ToAsyncEnumerable().AggregateAwaitAsync(",", async (all, pc) =>
+                            category = await (await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).AggregateAwaitAsync(",", async (all, pc) =>
                             {
                                 var res = (await _categoryService.GetCategoryByIdAsync(pc.CategoryId)).Name;
                                 res = all == "," ? res : all + ", " + res;
@@ -291,7 +291,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
                 //get products data by order items
-                var itemsData = await (await _orderService.GetOrderItemsAsync(order.Id)).ToAsyncEnumerable().SelectAwait(async item =>
+                var itemsData = await (await _orderService.GetOrderItemsAsync(order.Id)).SelectAwait(async item =>
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
 
@@ -312,7 +312,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         variant_id = combination?.Id ?? product.Id,
                         variant_name = combination?.Sku ?? product.Name,
                         sku = combination?.Sku ?? product.Sku,
-                        category = await (await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).ToAsyncEnumerable().AggregateAwaitAsync(",", async (all, pc) =>
+                        category = await (await _categoryService.GetProductCategoriesByProductIdAsync(item.ProductId)).AggregateAwaitAsync(",", async (all, pc) =>
                         {
                             var res = (await _categoryService.GetCategoryByIdAsync(pc.CategoryId)).Name;
                             res = all == "," ? res : all + ", " + res;

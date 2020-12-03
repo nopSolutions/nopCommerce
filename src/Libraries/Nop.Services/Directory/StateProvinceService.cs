@@ -75,7 +75,7 @@ namespace Nop.Services.Directory
             if (countryId.HasValue)
                 query = query.Where(state => state.CountryId == countryId);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Nop.Services.Directory
                             where sp.CountryId == countryId &&
                             (showHidden || sp.Published)
                             select sp;
-                var stateProvinces = await query.ToAsyncEnumerable().ToListAsync();
+                var stateProvinces = await query.ToListAsync();
 
                 if (languageId > 0)
                     //we should sort states by localized names when they have the same display order
@@ -132,7 +132,7 @@ namespace Nop.Services.Directory
                         select sp;
 
 
-            var stateProvinces = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesAllCacheKey, showHidden), async () => await query.ToAsyncEnumerable().ToListAsync());
+            var stateProvinces = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopDirectoryDefaults.StateProvincesAllCacheKey, showHidden), async () => await query.ToListAsync());
 
             return stateProvinces;
         }

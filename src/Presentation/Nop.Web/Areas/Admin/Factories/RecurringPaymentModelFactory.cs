@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new RecurringPaymentListModel().PrepareToGridAsync(searchModel, recurringPayments, () =>
             {
-                return recurringPayments.ToAsyncEnumerable().SelectAwait(async recurringPayment =>
+                return recurringPayments.SelectAwait(async recurringPayment =>
                 {
                     //fill in model values from the entity
                     var recurringPaymentModel = recurringPayment.ToModel<RecurringPaymentModel>();
@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new RecurringPaymentHistoryListModel().PrepareToGridAsync(searchModel, recurringPayments, () =>
             {
-                return recurringPayments.ToAsyncEnumerable().SelectAwait(async historyEntry =>
+                return recurringPayments.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var historyModel = historyEntry.ToModel<RecurringPaymentHistoryModel>();

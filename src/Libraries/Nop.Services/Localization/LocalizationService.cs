@@ -191,7 +191,7 @@ namespace Nop.Services.Localization
                         where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
                         select lsr;
 
-            var localeStringResource = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var localeStringResource = await query.FirstOrDefaultAsync();
 
             if (localeStringResource == null && logIfNotFound)
                 await _logger.WarningAsync($"Resource string ({resourceName}) not found. Language ID = {languageId}");
@@ -320,7 +320,7 @@ namespace Nop.Services.Localization
                           && l.LanguageId == languageId
                     select l.ResourceValue;
 
-                var lsr = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+                var lsr = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
                 if (lsr != null)
                     result = lsr;

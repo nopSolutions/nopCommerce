@@ -155,7 +155,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new ManufacturerListModel().PrepareToGridAsync(searchModel, manufacturers, () =>
             {
                 //fill in model values from the entity
-                return manufacturers.ToAsyncEnumerable().SelectAwait(async manufacturer =>
+                return manufacturers.SelectAwait(async manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
 
@@ -256,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ManufacturerProductListModel().PrepareToGridAsync(searchModel, productManufacturers, () =>
             {
-                return productManufacturers.ToAsyncEnumerable().SelectAwait(async productManufacturer =>
+                return productManufacturers.SelectAwait(async productManufacturer =>
                 {
                     //fill in model values from the entity
                     var manufacturerProductModel = productManufacturer.ToModel<ManufacturerProductModel>();
@@ -325,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddProductToManufacturerListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 

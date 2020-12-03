@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new PaymentMethodListModel().PrepareToGridAsync(searchModel, paymentMethods, () =>
             {
-                return paymentMethods.ToAsyncEnumerable().SelectAwait(async method =>
+                return paymentMethods.SelectAwait(async method =>
                 {
                     //fill in model values from the entity
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-            model.AvailableCountries = await countries.ToAsyncEnumerable().SelectAwait(async country =>
+            model.AvailableCountries = await countries.SelectAwait(async country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
                 countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;

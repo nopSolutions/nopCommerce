@@ -154,7 +154,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
             var gridModel = await new FixedRateListModel().PrepareToGridAsync(searchModel, shippingMethods, () =>
             {
-                return shippingMethods.ToAsyncEnumerable().SelectAwait(async shippingMethod => new FixedRateModel
+                return shippingMethods.SelectAwait(async shippingMethod => new FixedRateModel
                 {
                     ShippingMethodId = shippingMethod.Id,
                     ShippingMethodName = shippingMethod.Name,
@@ -209,7 +209,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 
             var gridModel = await new ShippingByWeightByTotalListModel().PrepareToGridAsync(searchModel, records, () =>
             {
-                return records.ToAsyncEnumerable().SelectAwait(async record =>
+                return records.SelectAwait(async record =>
                 {
                     var model = new ShippingByWeightByTotalModel
                     {

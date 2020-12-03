@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var activityLogCustomers = await _customerService.GetCustomersByIdsAsync(customerIds.ToArray());
             var model = await new ActivityLogListModel().PrepareToGridAsync(searchModel, activityLog, () =>
             {
-                return activityLog.ToAsyncEnumerable().SelectAwait(async logItem =>
+                return activityLog.SelectAwait(async logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();

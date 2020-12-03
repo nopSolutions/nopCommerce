@@ -76,7 +76,7 @@ namespace Nop.Services.Affiliates
                         orderby a.Id
                         where a.FriendlyUrlName == friendlyUrlName
                         select a;
-            var affiliate = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var affiliate = await query.FirstOrDefaultAsync();
 
             return affiliate;
         }

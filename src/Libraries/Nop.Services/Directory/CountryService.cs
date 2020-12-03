@@ -87,7 +87,8 @@ namespace Nop.Services.Directory
                 if (languageId > 0)
                 {
                     //we should sort countries by localized names when they have the same display order
-                    countries = await countries.ToAsyncEnumerable()
+                    countries = await countries
+                        .ToAsyncEnumerable()
                         .OrderBy(c => c.DisplayOrder)
                         .ThenByAwait(async c => await _localizationService.GetLocalizedAsync(c, x => x.Name, languageId))
                         .ToListAsync();
@@ -165,7 +166,7 @@ namespace Nop.Services.Directory
                         where c.TwoLetterIsoCode == twoLetterIsoCode
                         select c;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>
@@ -184,7 +185,7 @@ namespace Nop.Services.Directory
                         where c.ThreeLetterIsoCode == threeLetterIsoCode
                         select c;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>

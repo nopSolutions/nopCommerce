@@ -968,7 +968,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new OrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                return orders.ToAsyncEnumerable().SelectAwait(async order =>
+                return orders.SelectAwait(async order =>
                 {
                     var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
@@ -1220,7 +1220,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new AddProductToOrderListModel().PrepareToGridAsync(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 
@@ -1383,7 +1383,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new ShipmentListModel().PrepareToGridAsync(searchModel, shipments, () =>
             {
                 //fill in model values from the entity
-                return shipments.ToAsyncEnumerable().SelectAwait(async shipment =>
+                return shipments.SelectAwait(async shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1573,7 +1573,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new OrderShipmentListModel().PrepareToGridAsync(searchModel, pagedShipments, () =>
             {
                 //fill in model values from the entity
-                return pagedShipments.ToAsyncEnumerable().SelectAwait(async shipment =>
+                return pagedShipments.SelectAwait(async shipment =>
                 {
                     //fill in model values from the entity
                     var shipmentModel = shipment.ToModel<ShipmentModel>();
@@ -1625,7 +1625,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new ShipmentItemListModel().PrepareToGridAsync(searchModel, shipmentItems, () =>
             {
                 //fill in model values from the entity
-                return shipmentItems.ToAsyncEnumerable().SelectAwait(async item =>
+                return shipmentItems.SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var shipmentItemModel = new ShipmentItemModel
@@ -1684,7 +1684,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new OrderNoteListModel().PrepareToGridAsync(searchModel, orderNotes, () =>
             {
                 //fill in model values from the entity
-                return orderNotes.ToAsyncEnumerable().SelectAwait(async orderNote =>
+                return orderNotes.SelectAwait(async orderNote =>
                 {
                     //fill in model values from the entity
                     var orderNoteModel = orderNote.ToModel<OrderNoteModel>();
@@ -1740,7 +1740,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new BestsellerBriefListModel().PrepareToGridAsync(searchModel, bestsellers, () =>
             {
                 //fill in model values from the entity
-                return bestsellers.ToAsyncEnumerable().SelectAwait(async bestseller =>
+                return bestsellers.SelectAwait(async bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -1782,7 +1782,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new OrderAverageReportListModel().PrepareToGridAsync(searchModel, pagedList, () =>
             {
                 //fill in model values from the entity
-                return pagedList.ToAsyncEnumerable().SelectAwait(async reportItem => new OrderAverageReportModel
+                return pagedList.SelectAwait(async reportItem => new OrderAverageReportModel
                 {
                     OrderStatus = await _localizationService.GetLocalizedEnumAsync(reportItem.OrderStatus),
                     SumTodayOrders = await _priceFormatter.FormatPriceAsync(reportItem.SumTodayOrders, true, false),

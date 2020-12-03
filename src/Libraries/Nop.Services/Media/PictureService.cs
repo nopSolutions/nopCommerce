@@ -711,7 +711,7 @@ namespace Nop.Services.Media
             if (recordsToReturn > 0)
                 query = query.Take(recordsToReturn);
 
-            var pics = await query.ToAsyncEnumerable().ToListAsync();
+            var pics = await query.ToListAsync();
 
             return pics;
         }
@@ -922,7 +922,6 @@ namespace Nop.Services.Media
         public virtual async Task<PictureBinary> GetPictureBinaryByPictureIdAsync(int pictureId)
         {
             return await _pictureBinaryRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(pb => pb.PictureId == pictureId);
         }
 
@@ -995,7 +994,7 @@ namespace Nop.Services.Media
                         Hash = Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
                     });
 
-            return await hashes.ToAsyncEnumerable().ToDictionaryAsync(p => p.PictureId, p => p.Hash);
+            return await AsyncIQueryableExtensions.ToDictionaryAsync(hashes, p => p.PictureId, p => p.Hash);
         }
 
         /// <summary>
@@ -1017,7 +1016,6 @@ namespace Nop.Services.Media
 
             //then, let's see whether we have attribute values with pictures
             var attributePicture = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributesXml))
-                .ToAsyncEnumerable()
                 .SelectAwait(async attributeValue => await GetPictureByIdAsync(attributeValue?.PictureId ?? 0))
                 .FirstOrDefaultAsync(picture => picture != null);
             if (attributePicture != null)

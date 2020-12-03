@@ -125,8 +125,7 @@ namespace Nop.Web.Factories
 
             var cachedPolls = await (await _staticCacheManager.GetAsync(cacheKey, async () =>
                 (await _pollService.GetPollsAsync((await _storeContext.GetCurrentStoreAsync()).Id, (await _workContext.GetWorkingLanguageAsync()).Id, loadShownOnHomepageOnly: true))
-                .ToAsyncEnumerable()    
-                .SelectAwait(async poll => await PreparePollModelAsync(poll, false)).ToListAsync()));
+                   .SelectAwait(async poll => await PreparePollModelAsync(poll, false)).ToListAsync()));
 
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.
             //But first we need to clone the cached model (the updated one should not be cached)

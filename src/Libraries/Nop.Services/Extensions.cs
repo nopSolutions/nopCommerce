@@ -33,7 +33,6 @@ namespace Nop.Services
 
             var values = await Enum.GetValues(typeof(TEnum)).OfType<TEnum>().Where(enumValue =>
                     valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue)))
-                .ToAsyncEnumerable()
                 .SelectAwait(async enumValue => new
                 {
                     ID = Convert.ToInt32(enumValue),

@@ -62,7 +62,7 @@ namespace Nop.Services.Tasks
             query = query.Where(st => st.Type == type);
             query = query.OrderByDescending(t => t.Id);
 
-            var task = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var task = await query.FirstOrDefaultAsync();
 
             return task;
         }

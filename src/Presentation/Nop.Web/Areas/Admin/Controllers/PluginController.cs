@@ -145,7 +145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json(new List<string>());
 
             //prepare models
-            var models = await (await _pluginModelFactory.PrepareAdminNavigationPluginModelsAsync()).ToAsyncEnumerable().SelectAwait(async model => new
+            var models = await (await _pluginModelFactory.PrepareAdminNavigationPluginModelsAsync()).SelectAwait(async model => new
             {
                 title = model.FriendlyName,
                 link = model.ConfigurationUrl,

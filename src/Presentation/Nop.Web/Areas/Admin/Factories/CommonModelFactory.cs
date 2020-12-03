@@ -444,7 +444,7 @@ namespace Nop.Web.Areas.Admin.Factories
             foreach (var assembly in _pluginService.GetAssemblyCollisions())
             {
                 //get plugin references message
-                var message = (await assembly.Collisions.ToAsyncEnumerable()
+                var message = (await assembly.Collisions
                     .SelectAwait(async item => string.Format(await _localizationService
                         .GetResourceAsync("Admin.System.Warnings.PluginRequiredAssembly"), item.PluginName, item.AssemblyName))
                     .AggregateAsync("", (curent, all) => all + ", " + curent)).TrimEnd(',', ' ');
@@ -945,7 +945,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new UrlRecordListModel().PrepareToGridAsync(searchModel, urlRecords, () =>
             {
-                return urlRecords.ToAsyncEnumerable().SelectAwait(async urlRecord =>
+                return urlRecords.SelectAwait(async urlRecord =>
                 {
                     //fill in model values from the entity
                     var urlRecordModel = urlRecord.ToModel<UrlRecordModel>();

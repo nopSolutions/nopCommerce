@@ -223,7 +223,7 @@ namespace Nop.Services.Discounts
             return await (from d in _discountRepository.Table
                     join ad in discountMappingRepository.Table on d.Id equals ad.DiscountId
                     where ad.EntityId == entity.Id
-                    select d).ToAsyncEnumerable().ToListAsync();
+                    select d).ToListAsync();
         }
 
         /// <summary>
@@ -392,7 +392,6 @@ namespace Nop.Services.Discounts
 
             return await _discountRequirementRepository.Table
                 .Where(dr => dr.ParentId == discountRequirement.Id)
-                .ToAsyncEnumerable()
                 .ToListAsync();
         }
 

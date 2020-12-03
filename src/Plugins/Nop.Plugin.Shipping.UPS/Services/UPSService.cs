@@ -528,7 +528,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <returns>Packages</returns>
         private async Task<IEnumerable<UPSRate.PackageType>> GetPackagesForOneItemPerPackageAsync(GetShippingOptionRequest shippingOptionRequest)
         {
-            return await shippingOptionRequest.Items.ToAsyncEnumerable().SelectManyAwait(async packageItem =>
+            return await shippingOptionRequest.Items.SelectManyAwait(async packageItem =>
             {
                 //get dimensions and weight of the single item
                 var (width, length, height) = await GetDimensionsForSingleItemAsync(packageItem.ShoppingCartItem, packageItem.Product);
@@ -645,7 +645,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var dimension = 0;
 
                 //get total volume of the package
-                var totalVolume = await shippingOptionRequest.Items.ToAsyncEnumerable().SumAwaitAsync(async item =>
+                var totalVolume = await shippingOptionRequest.Items.SumAwaitAsync(async item =>
                 {
                     //get dimensions and weight of the single item
                     var (itemWidth, itemLength, itemHeight) = await GetDimensionsForSingleItemAsync(item.ShoppingCartItem, item.Product);
@@ -913,7 +913,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
 
                 return await response.Shipment
                     .SelectMany(shipment => shipment.Package?
-                        .SelectMany(package => package?.Activity)).Where(activity => activity != null).ToAsyncEnumerable()
+                        .SelectMany(package => package?.Activity)).Where(activity => activity != null)
                     .SelectAwait(async activity => await PrepareShipmentStatusEventAsync(activity)).ToListAsync();
 
                 //TODO: test end delete

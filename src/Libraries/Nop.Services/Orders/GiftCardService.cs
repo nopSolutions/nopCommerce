@@ -148,7 +148,7 @@ namespace Nop.Services.Orders
             query = query.Where(gc => gc.PurchasedWithOrderItemId.HasValue && gc.PurchasedWithOrderItemId.Value == purchasedWithOrderItemId);
             query = query.OrderBy(gc => gc.Id);
 
-            var giftCards = await query.ToAsyncEnumerable().ToListAsync();
+            var giftCards = await query.ToListAsync();
 
             return giftCards;
         }
@@ -202,7 +202,7 @@ namespace Nop.Services.Orders
             var query = _giftCardRepository.Table;
 
             var giftCardIds = giftCardUsageHistory.Select(gcuh => gcuh.GiftCardId).ToArray();
-            var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToAsyncEnumerable().ToListAsync();
+            var giftCards = await query.Where(bp => giftCardIds.Contains(bp.Id)).ToListAsync();
 
             //event notification
             foreach (var giftCard in giftCards) 
@@ -241,7 +241,6 @@ namespace Nop.Services.Orders
 
             return await _giftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.GiftCardId == giftCard.Id)
-                .ToAsyncEnumerable()
                 .ToListAsync();
         }
 
@@ -257,7 +256,6 @@ namespace Nop.Services.Orders
 
             return await _giftCardUsageHistoryRepository.Table
                 .Where(gcuh => gcuh.UsedWithOrderId == order.Id)
-                .ToAsyncEnumerable()
                 .ToListAsync();
         }
 

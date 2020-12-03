@@ -814,7 +814,6 @@ namespace Nop.Web.Factories
         public virtual async Task<CustomerAddressListModel> PrepareCustomerAddressListModelAsync()
         {
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
-                .ToAsyncEnumerable()
                 //enabled for the current store
                 .WhereAwait(async a => a.CountryId == null || await _storeMappingService.AuthorizeAsync(await _countryService.GetCountryByAddressAsync(a)))
                 .ToListAsync();

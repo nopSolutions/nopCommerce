@@ -219,7 +219,6 @@ namespace Nop.Services.Blogs
 
             var rez = await blogPosts
                 .Where(p => dateFrom.Date <= (p.StartDateUtc ?? p.CreatedOnUtc) && (p.StartDateUtc ?? p.CreatedOnUtc).Date <= dateTo)
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             return rez;
@@ -241,7 +240,6 @@ namespace Nop.Services.Blogs
             var tags = await blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(tag => tag.Trim())
                 .Where(tag => !string.IsNullOrEmpty(tag))
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             return tags;
@@ -353,7 +351,7 @@ namespace Nop.Services.Blogs
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopBlogsDefaults.BlogCommentsNumberCacheKey, blogPost, storeId, isApproved);
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.ToAsyncEnumerable().CountAsync());
+            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
         }
 
         /// <summary>

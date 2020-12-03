@@ -24,7 +24,7 @@
         }
         else
         {
-            var languages = await Model.AvailableLanguages.ToAsyncEnumerable().SelectAwait(async lang => new SelectListItem
+            var languages = await Model.AvailableLanguages.SelectAwait(async lang => new SelectListItem
             {
                 Text = lang.Name,
                 Value = Url.RouteUrl("ChangeLanguage", new { langid = lang.Id, returnUrl }, webHelper.GetCurrentRequestProtocol()),

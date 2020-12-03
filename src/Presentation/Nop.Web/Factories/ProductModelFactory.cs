@@ -586,7 +586,6 @@ namespace Nop.Web.Factories
 
             var model = await 
                 (await _productTagService.GetAllProductTagsByProductIdAsync(product.Id))
-                .ToAsyncEnumerable()
                     //filter by store
                     .WhereAwait(async x => await _productTagService.GetProductCountAsync(x.Id, (await _storeContext.GetCurrentStoreAsync()).Id) > 0)
                     .SelectAwait(async x => new ProductTagModel
@@ -992,8 +991,7 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             var model = await (await _productService.GetTierPricesAsync(product, await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id))
-                .ToAsyncEnumerable()
-                   .SelectAwait(async tierPrice =>
+                .SelectAwait(async tierPrice =>
                 {
                     var priceBase = (await _taxService.GetProductPriceAsync(product, (await _priceCalculationService.GetFinalPriceAsync(product,
                         await _workContext.GetCurrentCustomerAsync(), decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
@@ -1022,7 +1020,6 @@ namespace Nop.Web.Factories
                 throw new ArgumentNullException(nameof(product));
 
             var model = await (await _manufacturerService.GetProductManufacturersByProductIdAsync(product.Id))
-                .ToAsyncEnumerable()
                 .SelectAwait(async pm =>
                 {
                     var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(pm.ManufacturerId);

@@ -112,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new TopicListModel().PrepareToGridAsync(searchModel, pagedTopics, () =>
             {
-                return pagedTopics.ToAsyncEnumerable().SelectAwait(async topic =>
+                return pagedTopics.SelectAwait(async topic =>
                 {
                     //fill in model values from the entity
                     var topicModel = topic.ToModel<TopicModel>();

@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddressAttributeListModel().PrepareToGridAsync(searchModel, addressAttributes, () =>
             {
-                return addressAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
+                return addressAttributes.SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<AddressAttributeModel>();

@@ -586,7 +586,7 @@ namespace Nop.Web.Factories
             //prepare model
             var model = new CustomerRewardPointsModel
             {
-                RewardPoints = await rewardPoints.ToAsyncEnumerable().SelectAwait(async historyEntry =>
+                RewardPoints = await rewardPoints.SelectAwait(async historyEntry =>
                 {
                     var activatingDate = await _dateTimeHelper.ConvertToUserTimeAsync(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
                     return new CustomerRewardPointsModel.RewardPointsHistoryModel

@@ -47,7 +47,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Factories
                 pageSize: searchModel.PageSize);
             var model = await new StorePickupPointListModel().PrepareToGridAsync(searchModel, pickupPoints, () =>
             {
-                return pickupPoints.ToAsyncEnumerable().SelectAwait(async point =>
+                return pickupPoints.SelectAwait(async point =>
                 {
                     var store = await _storeService.GetStoreByIdAsync(point.StoreId);
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -98,7 +97,7 @@ namespace Nop.Services.Stores
                         sm.EntityName == entityName
                         select sm;
 
-            var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var storeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return storeMappings;
         }
@@ -182,7 +181,7 @@ namespace Nop.Services.Stores
                               sm.EntityName == entityName
                         select sm.StoreId;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToArrayAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToArrayAsync());
         }
 
         /// <summary>

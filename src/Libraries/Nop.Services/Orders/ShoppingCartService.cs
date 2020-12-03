@@ -273,7 +273,7 @@ namespace Nop.Services.Orders
         public virtual async Task DeleteShoppingCartItemAsync(int shoppingCartItemId, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
-            var shoppingCartItem = await _sciRepository.Table.ToAsyncEnumerable().FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
+            var shoppingCartItem = await _sciRepository.Table.FirstOrDefaultAsync(sci => sci.Id == shoppingCartItemId);
             if (shoppingCartItem != null)
                 await DeleteShoppingCartItemAsync(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
         }
@@ -289,7 +289,7 @@ namespace Nop.Services.Orders
                         where sci.UpdatedOnUtc < olderThanUtc
                         select sci;
 
-            var cartItems = await query.ToAsyncEnumerable().ToListAsync();
+            var cartItems = await query.ToListAsync();
             
             foreach (var cartItem in cartItems)
                 await DeleteShoppingCartItemAsync(cartItem);
@@ -354,7 +354,7 @@ namespace Nop.Services.Orders
             var productsRequiringProduct = GetProductsRequiringProduct(cart, product);
 
             //whether other cart items require the passed product
-            var passedProductRequiredQuantity = await cart.ToAsyncEnumerable().WhereAwait(async ci => await productsRequiringProduct.AnyAsync(p => p.Id == ci.ProductId))
+            var passedProductRequiredQuantity = await cart.WhereAwait(async ci => await productsRequiringProduct.AnyAsync(p => p.Id == ci.ProductId))
                 .SumAsync(item => item.Quantity * requiredProductQuantity);
 
             if (passedProductRequiredQuantity > quantity)
@@ -379,7 +379,7 @@ namespace Nop.Services.Orders
                 //get the required quantity of the required product
                 var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
 
-                    await cart.ToAsyncEnumerable().WhereAwait(async ci => await productsRequiringRequiredProduct.AnyAsync(p => p.Id == ci.ProductId))
+                    await cart.WhereAwait(async ci => await productsRequiringRequiredProduct.AnyAsync(p => p.Id == ci.ProductId))
                         .Where(item => item.Id != shoppingCartItemId)
                         .SumAsync(item => item.Quantity * requiredProductQuantity);
 
@@ -697,7 +697,7 @@ namespace Nop.Services.Orders
 
             var key = _staticCacheManager.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartItemsAllCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
-            return await _staticCacheManager.GetAsync(key, async () => await items.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await items.ToListAsync());
         }
 
         /// <summary>
@@ -755,7 +755,7 @@ namespace Nop.Services.Orders
             //validate conditional attributes only (if specified)
             if (!ignoreConditionMet)
             {
-                attributes2 = await attributes2.ToAsyncEnumerable().WhereAwait(async x =>
+                attributes2 = await attributes2.WhereAwait(async x =>
                 {
                     var conditionMet = await _productAttributeParser.IsConditionMetAsync(x, attributesXml);
                     return !conditionMet.HasValue || conditionMet.Value;
@@ -1119,7 +1119,7 @@ namespace Nop.Services.Orders
             var attributes2 = await _checkoutAttributeService.GetAllCheckoutAttributesAsync((await _storeContext.GetCurrentStoreAsync()).Id, excludeShippableAttributes);
 
             //validate conditional attributes only (if specified)
-            attributes2 = await attributes2.ToAsyncEnumerable().WhereAwait(async x =>
+            attributes2 = await attributes2.WhereAwait(async x =>
             {
                 var conditionMet = await _checkoutAttributeParser.IsConditionMetAsync(x, checkoutAttributesXml);
                 return !conditionMet.HasValue || conditionMet.Value;
@@ -1408,7 +1408,6 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(product));
 
             return await shoppingCart.Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAwaitAsync(async sci => await ShoppingCartItemIsEqualAsync(sci, product, attributesXml, customerEnteredPrice, rentalStartDate, rentalEndDate));
         }
 
@@ -1685,7 +1684,7 @@ namespace Nop.Services.Orders
         /// <returns>True if the shopping cart requires shipping; otherwise, false.</returns>
         public virtual async Task<bool> ShoppingCartRequiresShippingAsync(IList<ShoppingCartItem> shoppingCart)
         {
-            return await shoppingCart.ToAsyncEnumerable().AnyAwaitAsync(async shoppingCartItem => await _shippingService.IsShipEnabledAsync(shoppingCartItem));
+            return await shoppingCart.AnyAwaitAsync(async shoppingCartItem => await _shippingService.IsShipEnabledAsync(shoppingCartItem));
         }
 
         /// <summary>

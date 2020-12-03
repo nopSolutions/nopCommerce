@@ -86,7 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new CampaignListModel().PrepareToGridAsync(searchModel, campaigns, () =>
             {
-                return campaigns.ToAsyncEnumerable().SelectAwait(async campaign =>
+                return campaigns.SelectAwait(async campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel<CampaignModel>();

@@ -104,7 +104,7 @@ namespace Nop.Services.Common
                 where ga.EntityId == entityId &&
                       ga.KeyGroup == keyGroup
                 select ga;
-            var attributes = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var attributes = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return attributes;
         }

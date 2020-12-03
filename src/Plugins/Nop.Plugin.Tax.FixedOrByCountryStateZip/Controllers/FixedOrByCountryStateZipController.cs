@@ -122,7 +122,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 
             var gridModel = await new FixedTaxRateListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.ToAsyncEnumerable().SelectAwait(async taxCategory => new FixedTaxRateModel
+                return categories.SelectAwait(async taxCategory => new FixedTaxRateModel
                 {
                     TaxCategoryId = taxCategory.Id,
                     TaxCategoryName = taxCategory.Name,
@@ -160,7 +160,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 
             var gridModel = await new CountryStateZipListModel().PrepareToGridAsync(searchModel, records, () =>
             {
-                return records.ToAsyncEnumerable().SelectAwait(async record => new CountryStateZipModel
+                return records.SelectAwait(async record => new CountryStateZipModel
                 {
                     Id = record.Id,
                     StoreId = record.StoreId,

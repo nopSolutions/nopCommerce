@@ -69,7 +69,7 @@ namespace Nop.Services.Common
                         where a.CountryId == countryId
                         select a;
 
-            return await query.ToAsyncEnumerable().CountAsync();
+            return await query.CountAsync();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Nop.Services.Common
                         where a.StateProvinceId == stateProvinceId
                         select a;
 
-            return await query.ToAsyncEnumerable().CountAsync();
+            return await query.CountAsync();
         }
 
         /// <summary>

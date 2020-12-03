@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ShoppingCartListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.ToAsyncEnumerable().SelectAwait(async customer =>
+                return customers.SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var shoppingCartModel = new ShoppingCartModel
@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ShoppingCartItemListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.ToAsyncEnumerable().SelectAwait(async item =>
+                return items.SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();

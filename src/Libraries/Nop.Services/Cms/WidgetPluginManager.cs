@@ -46,7 +46,7 @@ namespace Nop.Services.Cms
 
             //filter by widget zone
             if (!string.IsNullOrEmpty(widgetZone))
-                widgets = await widgets.ToAsyncEnumerable().WhereAwait(async widget =>
+                widgets = await widgets.WhereAwait(async widget =>
                     (await widget.GetWidgetZonesAsync()).Contains(widgetZone, StringComparer.InvariantCultureIgnoreCase)).ToListAsync();
 
             return widgets;

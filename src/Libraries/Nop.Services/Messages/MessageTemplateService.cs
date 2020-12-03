@@ -107,12 +107,11 @@ namespace Nop.Services.Messages
                 var templates = await _messageTemplateRepository.Table
                     .Where(messageTemplate => messageTemplate.Name.Equals(messageTemplateName))
                     .OrderBy(messageTemplate => messageTemplate.Id)
-                    .ToAsyncEnumerable()
                     .ToListAsync();
 
                 //filter by the store
                 if (storeId.HasValue && storeId.Value > 0)
-                    templates = await templates.ToAsyncEnumerable().WhereAwait(async messageTemplate => await _storeMappingService.AuthorizeAsync(messageTemplate, storeId.Value)).ToListAsync();
+                    templates = await templates.WhereAwait(async messageTemplate => await _storeMappingService.AuthorizeAsync(messageTemplate, storeId.Value)).ToListAsync();
 
                 return templates;
             });

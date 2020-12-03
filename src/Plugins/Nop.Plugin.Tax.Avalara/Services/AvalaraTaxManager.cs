@@ -405,7 +405,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>Collection of item lines</returns>
         private async Task<List<LineItemModel>> CreateLinesForOrderItems(Order order, IList<OrderItem> orderItems)
         {
-            return await orderItems.ToAsyncEnumerable().SelectAwait(async orderItem =>
+            return await orderItems.SelectAwait(async orderItem =>
             {
                 var product = await _productService.GetProductByIdAsync(orderItem.ProductId);
 
@@ -611,7 +611,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
             else
             {
                 entityUseCode = await (await _customerService.GetCustomerRolesAsync(customer))
-                    .ToAsyncEnumerable()
                     .SelectAwait(async customerRole => await _genericAttributeService.GetAttributeAsync<string>(customerRole, AvalaraTaxDefaults.EntityUseCodeAttribute))
                     .FirstOrDefaultAsync(code => !string.IsNullOrEmpty(code));
                 model.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
@@ -750,7 +749,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
 
                 //prepare tax codes to export
-                var taxCodesToExport = await (await _taxCategoryService.GetAllTaxCategoriesAsync()).ToAsyncEnumerable().SelectAwait(async taxCategory => new TaxCodeModel
+                var taxCodesToExport = await (await _taxCategoryService.GetAllTaxCategoriesAsync()).SelectAwait(async taxCategory => new TaxCodeModel
                 {
                     createdDate = DateTime.UtcNow,
                     description = CommonHelper.EnsureMaximumLength(taxCategory.Name, 255),
@@ -807,7 +806,6 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 var categoriesIds = await _taxCategoryRepository.Table
                     .Where(taxCategory => systemTaxCodes.Contains(taxCategory.Name))
                     .Select(taxCategory => taxCategory.Id)
-                    .ToAsyncEnumerable()
                     .ToListAsync();
 
                 //delete tax categories
@@ -1075,7 +1073,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 order.OrderSubTotalDiscountExclTax = orderSubTotalDiscountExclTax;
 
                 //create dummy order items
-                var orderItems = await taxTotalRequest.ShoppingCart.ToAsyncEnumerable().SelectAwait(async cartItem => new OrderItem
+                var orderItems = await taxTotalRequest.ShoppingCart.SelectAwait(async cartItem => new OrderItem
                 {
                     AttributesXml = cartItem.AttributesXml,
                     ProductId = cartItem.ProductId,

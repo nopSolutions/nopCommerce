@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 
@@ -163,7 +164,7 @@ namespace Nop.Services.Orders
                 .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
 
             //return point balance of the first actual history entry
-            return (await query.ToAsyncEnumerable().FirstOrDefaultAsync())?.PointsBalance ?? 0;
+            return (await query.FirstOrDefaultAsync())?.PointsBalance ?? 0;
         }
 
         /// <summary>

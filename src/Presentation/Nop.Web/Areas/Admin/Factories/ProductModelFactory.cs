@@ -723,7 +723,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     //fill in model values from the entity
                     var productModel = product.ToModel<ProductModel>();
@@ -778,7 +778,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ProductAttributesExist = (await _productAttributeService.GetAllProductAttributesAsync()).Any();
 
                 model.CanCreateCombinations = await (await _productAttributeService
-                    .GetProductAttributeMappingsByProductIdAsync(product.Id)).ToAsyncEnumerable().AnyAwaitAsync(async pam => (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any());
+                    .GetProductAttributeMappingsByProductIdAsync(product.Id)).AnyAwaitAsync(async pam => (await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any());
 
                 if (!excludeProperties)
                 {
@@ -1003,7 +1003,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddRequiredProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 
@@ -1037,7 +1037,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new RelatedProductListModel().PrepareToGridAsync(searchModel, relatedProducts, () =>
             {
-                return relatedProducts.ToAsyncEnumerable().SelectAwait(async relatedProduct =>
+                return relatedProducts.SelectAwait(async relatedProduct =>
                 {
                     //fill in model values from the entity
                     var relatedProductModel = relatedProduct.ToModel<RelatedProductModel>();
@@ -1111,7 +1111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddRelatedProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 
@@ -1145,7 +1145,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new CrossSellProductListModel().PrepareToGridAsync(searchModel, crossSellProducts, () =>
             {
-                return crossSellProducts.ToAsyncEnumerable().SelectAwait(async crossSellProduct =>
+                return crossSellProducts.SelectAwait(async crossSellProduct =>
                 {
                     //fill in model values from the entity
                     var crossSellProductModel = new CrossSellProductModel
@@ -1224,7 +1224,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddCrossSellProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 
@@ -1331,7 +1331,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddAssociatedProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     //fill in model values from the entity
                     var productModel = product.ToModel<ProductModel>();
@@ -1373,7 +1373,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ProductPictureListModel().PrepareToGridAsync(searchModel, productPictures, () =>
             {
-                return productPictures.ToAsyncEnumerable().SelectAwait(async productPicture =>
+                return productPictures.SelectAwait(async productPicture =>
                 {
                     //fill in model values from the entity
                     var productPictureModel = productPicture.ToModel<ProductPictureModel>();
@@ -1416,7 +1416,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ProductSpecificationAttributeListModel().PrepareToGridAsync(searchModel, productSpecificationAttributes, () =>
             {
-                return productSpecificationAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
+                return productSpecificationAttributes.SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
@@ -1470,7 +1470,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 return new AddSpecificationAttributeModel
                 {
                     AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
-                        .ToAsyncEnumerable()
                         .SelectAwait(async attributeWithOption =>
                         {
                             var attributeName = await GetSpecificationAttributeNameAsync(attributeWithOption);
@@ -1503,7 +1502,6 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeName = specAttribute.Name;
 
             model.AvailableAttributes = await (await _specificationAttributeService.GetSpecificationAttributesWithOptionsAsync())
-                .ToAsyncEnumerable()
                 .SelectAwait(async attributeWithOption =>
                 {
                     var attributeName = await GetSpecificationAttributeNameAsync(attributeWithOption);
@@ -1587,14 +1585,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get product tags
             var productTags = (await (await _productTagService.GetAllProductTagsAsync(tagName: searchModel.SearchTagName))
-                .ToAsyncEnumerable()
                 .OrderByDescendingAwait(async tag => await _productTagService.GetProductCountAsync(tag.Id, storeId: 0, showHidden: true)).ToListAsync())
                 .ToPagedList(searchModel);
 
             //prepare list model
             var model = await new ProductTagListModel().PrepareToGridAsync(searchModel, productTags, () =>
             {
-                return productTags.ToAsyncEnumerable().SelectAwait(async tag =>
+                return productTags.SelectAwait(async tag =>
                 {
                     //fill in model values from the entity
                     var productTagModel = tag.ToModel<ProductTagModel>();
@@ -1665,7 +1662,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ProductOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
-                return orders.ToAsyncEnumerable().SelectAwait(async order =>
+                return orders.SelectAwait(async order =>
                 {
                     var billingAddress = await _addressService.GetAddressByIdAsync(order.BillingAddressId);
 
@@ -1715,7 +1712,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new TierPriceListModel().PrepareToGridAsync(searchModel, tierPrices, () =>
             {
-                return tierPrices.ToAsyncEnumerable().SelectAwait(async price =>
+                return tierPrices.SelectAwait(async price =>
                 {
                     //fill in model values from the entity
                     var tierPriceModel = price.ToModel<TierPriceModel>();
@@ -1788,7 +1785,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new StockQuantityHistoryListModel().PrepareToGridAsync(searchModel, stockQuantityHistory, () =>
             {
-                return stockQuantityHistory.ToAsyncEnumerable().SelectAwait(async historyEntry =>
+                return stockQuantityHistory.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var stockQuantityHistoryModel = historyEntry.ToModel<StockQuantityHistoryModel>();
@@ -1838,7 +1835,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ProductAttributeMappingListModel().PrepareToGridAsync(searchModel, productAttributeMappings, () =>
             {
-                return productAttributeMappings.ToAsyncEnumerable().SelectAwait(async attributeMapping =>
+                return productAttributeMappings.SelectAwait(async attributeMapping =>
                 {
                     //fill in model values from the entity
                     var productAttributeMappingModel = attributeMapping.ToModel<ProductAttributeMappingModel>();
@@ -1965,7 +1962,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ProductAttributeValueListModel().PrepareToGridAsync(searchModel, productAttributeValues, () =>
             {
-                return productAttributeValues.ToAsyncEnumerable().SelectAwait(async value =>
+                return productAttributeValues.SelectAwait(async value =>
                 {
                     //fill in model values from the entity
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
@@ -2066,7 +2063,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare picture models
             var productPictures = await _productService.GetProductPicturesByProductIdAsync(productAttributeMapping.ProductId);
-            model.ProductPictureModels = await productPictures.ToAsyncEnumerable().SelectAwait(async productPicture => new ProductPictureModel
+            model.ProductPictureModels = await productPictures.SelectAwait(async productPicture => new ProductPictureModel
             {
                 Id = productPicture.Id,
                 ProductId = productPicture.ProductId,
@@ -2141,7 +2138,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new AssociateProductToAttributeValueListModel().PrepareToGridAsync(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 
@@ -2177,7 +2174,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ProductAttributeCombinationListModel().PrepareToGridAsync(searchModel, productAttributeCombinations, () =>
             {
-                return productAttributeCombinations.ToAsyncEnumerable().SelectAwait(async combination =>
+                return productAttributeCombinations.SelectAwait(async combination =>
                 {
                     //fill in model values from the entity
                     var productAttributeCombinationModel = combination.ToModel<ProductAttributeCombinationModel>();
@@ -2250,7 +2247,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare picture models
             var productPictures = await _productService.GetProductPicturesByProductIdAsync(product.Id);
-            model.ProductPictureModels = await productPictures.ToAsyncEnumerable().SelectAwait(async productPicture => new ProductPictureModel
+            model.ProductPictureModels = await productPictures.SelectAwait(async productPicture => new ProductPictureModel
             {
                 Id = productPicture.Id,
                 ProductId = productPicture.ProductId,

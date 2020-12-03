@@ -109,7 +109,7 @@ namespace Nop.Services.Customers
                 where cav.CustomerAttributeId == customerAttributeId
                 select cav;
 
-            var customerAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var customerAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return customerAttributeValues;
         }

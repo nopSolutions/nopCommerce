@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new BlogPostListModel().PrepareToGridAsync(searchModel, blogPosts, () =>
             {
-                return blogPosts.ToAsyncEnumerable().SelectAwait(async blogPost =>
+                return blogPosts.SelectAwait(async blogPost =>
                 {
                     //fill in model values from the entity
                     var blogPostModel = blogPost.ToModel<BlogPostModel>();
@@ -277,7 +277,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new BlogCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
             {
-                return comments.ToAsyncEnumerable().SelectAwait(async blogComment =>
+                return comments.SelectAwait(async blogComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();

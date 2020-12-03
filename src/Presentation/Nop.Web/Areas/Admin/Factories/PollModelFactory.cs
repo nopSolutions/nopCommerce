@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new PollListModel().PrepareToGridAsync(searchModel, polls, () =>
             {
-                return polls.ToAsyncEnumerable().SelectAwait(async poll =>
+                return polls.SelectAwait(async poll =>
                 {
                     //fill in model values from the entity
                     var pollModel = poll.ToModel<PollModel>();

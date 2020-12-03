@@ -149,7 +149,7 @@ namespace Nop.Web.Factories
                 var pickupPointsResponse = await _shippingService.GetPickupPointsAsync((await _workContext.GetCurrentCustomerAsync()).BillingAddressId ?? 0,
                     await _workContext.GetCurrentCustomerAsync(), storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
                 if (pickupPointsResponse.Success)
-                    model.PickupPoints = await pickupPointsResponse.PickupPoints.ToAsyncEnumerable().SelectAwait(async point =>
+                    model.PickupPoints = await pickupPointsResponse.PickupPoints.SelectAwait(async point =>
                     {
                         var country = await _countryService.GetCountryByTwoLetterIsoCodeAsync(point.CountryCode);
                         var state = await _stateProvinceService.GetStateProvinceByAbbreviationAsync(point.StateAbbreviation, country?.Id);
@@ -237,7 +237,6 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
-                .ToAsyncEnumerable()
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
                     country.Published &&
@@ -298,7 +297,6 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = await (await _customerService.GetAddressesByCustomerIdAsync((await _workContext.GetCurrentCustomerAsync()).Id))
-                .ToAsyncEnumerable()
                 .WhereAwait(async a => !a.CountryId.HasValue || await _countryService.GetCountryByAddressAsync(a) is Country country &&
                     (//published
                     country.Published &&
@@ -460,7 +458,6 @@ namespace Nop.Web.Factories
             var paymentMethods = await (await _paymentPluginManager
                 .LoadActivePluginsAsyncAsync(await _workContext.GetCurrentCustomerAsync(), (await _storeContext.GetCurrentStoreAsync()).Id, filterByCountryId))
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
-                .ToAsyncEnumerable()
                 .WhereAwait(async pm => !await pm.HidePaymentMethodAsync(cart))
                 .ToListAsync();
             foreach (var pm in paymentMethods)

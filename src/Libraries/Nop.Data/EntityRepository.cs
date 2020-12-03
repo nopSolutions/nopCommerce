@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Events;
+using Nop.Data.Extensions;
 
 namespace Nop.Data
 {
@@ -284,7 +285,7 @@ namespace Nop.Data
         /// <returns>Copy of the passed entity</returns>
         public virtual async Task<TEntity> LoadOriginalCopyAsync(TEntity entity)
         {
-            return await (await _dataProvider.GetTableAsync<TEntity>()).ToAsyncEnumerable()
+            return await (await _dataProvider.GetTableAsync<TEntity>())
                 .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(entity.Id));
         }
 

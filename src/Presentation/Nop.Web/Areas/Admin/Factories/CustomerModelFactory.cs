@@ -639,7 +639,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.ToAsyncEnumerable().SelectAwait(async customer =>
+                return customers.SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<CustomerModel>();
@@ -747,7 +747,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (!string.IsNullOrEmpty(customer.Email))
                     {
                         model.SelectedNewsletterSubscriptionStoreIds = await (await _storeService.GetAllStoresAsync())
-                            .ToAsyncEnumerable()
                             .WhereAwait(async store => await _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreIdAsync(customer.Email, store.Id) != null)
                             .Select(store => store.Id).ToListAsync();
                     }
@@ -856,7 +855,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerRewardPointsListModel().PrepareToGridAsync(searchModel, rewardPoints, () =>
             {
-                return rewardPoints.ToAsyncEnumerable().SelectAwait(async historyEntry =>
+                return rewardPoints.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity        
                     var rewardPointsHistoryModel = historyEntry.ToModel<CustomerRewardPointsModel>();
@@ -904,7 +903,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerAddressListModel().PrepareToGridAsync(searchModel, addresses, () =>
             {
-                return addresses.ToAsyncEnumerable().SelectAwait(async address =>
+                return addresses.SelectAwait(async address =>
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
@@ -975,7 +974,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
-                return orders.ToAsyncEnumerable().SelectAwait(async order =>
+                return orders.SelectAwait(async order =>
                 {
                     //fill in model values from the entity
                     var orderModel = order.ToModel<CustomerOrderModel>();
@@ -1019,7 +1018,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerShoppingCartListModel().PrepareToGridAsync(searchModel, shoppingCart, () =>
             {
-                return shoppingCart.ToAsyncEnumerable().SelectAwait(async item =>
+                return shoppingCart.SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
@@ -1066,7 +1065,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerActivityLogListModel().PrepareToGridAsync(searchModel, activityLog, () =>
             {
-                return activityLog.ToAsyncEnumerable().SelectAwait(async logItem =>
+                return activityLog.SelectAwait(async logItem =>
                 {
                     //fill in model values from the entity
                     var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
@@ -1106,7 +1105,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CustomerBackInStockSubscriptionListModel().PrepareToGridAsync(searchModel, subscriptions, () =>
             {
-                return subscriptions.ToAsyncEnumerable().SelectAwait(async subscription =>
+                return subscriptions.SelectAwait(async subscription =>
                 {
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<CustomerBackInStockSubscriptionModel>();
@@ -1163,7 +1162,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new OnlineCustomerListModel().PrepareToGridAsync(searchModel, customers, () =>
             {
-                return customers.ToAsyncEnumerable().SelectAwait(async customer =>
+                return customers.SelectAwait(async customer =>
                 {
                     //fill in model values from the entity
                     var customerModel = customer.ToModel<OnlineCustomerModel>();
@@ -1242,7 +1241,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new GdprLogListModel().PrepareToGridAsync(searchModel, gdprLog, () =>
             {
-                return gdprLog.ToAsyncEnumerable().SelectAwait(async log =>
+                return gdprLog.SelectAwait(async log =>
                 {
                     //fill in model values from the entity
                     var customer = await _customerService.GetCustomerByIdAsync(log.CustomerId);

@@ -286,7 +286,6 @@ namespace Nop.Web.Factories
         {
             var availableCurrencies = await (await _currencyService
                 .GetAllCurrenciesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .ToAsyncEnumerable()
                 .SelectAwait(async x =>
                 {
                     //currency char
@@ -422,7 +421,6 @@ namespace Nop.Web.Factories
             //footer topics
             var topicModels = await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
                     .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
-                    .ToAsyncEnumerable()
                     .SelectAwait(async t => new FooterModel.FooterTopicModel
                     {
                         Id = t.Id,
@@ -617,7 +615,7 @@ namespace Nop.Web.Factories
                     var topics = (await _topicService.GetAllTopicsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
                         .Where(topic => topic.IncludeInSitemap);
 
-                    model.Items.AddRange(await topics.ToAsyncEnumerable().SelectAwait(async topic => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await topics.SelectAwait(async topic => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = commonGroupTitle,
                         Name = await _localizationService.GetLocalizedAsync(topic, x => x.Title),
@@ -632,7 +630,7 @@ namespace Nop.Web.Factories
                     var blogPosts = (await _blogService.GetAllBlogPostsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
                         .Where(p => p.IncludeInSitemap);
 
-                    model.Items.AddRange(await blogPosts.ToAsyncEnumerable().SelectAwait(async post => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await blogPosts.SelectAwait(async post => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = blogPostsGroupTitle,
                         Name = post.Title,
@@ -646,7 +644,7 @@ namespace Nop.Web.Factories
                 {
                     var newsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.News");
                     var news = await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
-                    model.Items.AddRange(await news.ToAsyncEnumerable().SelectAwait(async newsItem => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await news.SelectAwait(async newsItem => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = newsGroupTitle,
                         Name = newsItem.Title,
@@ -660,7 +658,7 @@ namespace Nop.Web.Factories
                 {
                     var categoriesGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Categories");
                     var categories = await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
-                    model.Items.AddRange(await categories.ToAsyncEnumerable().SelectAwait(async category => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await categories.SelectAwait(async category => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = categoriesGroupTitle,
                         Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
@@ -673,7 +671,7 @@ namespace Nop.Web.Factories
                 {
                     var manufacturersGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Manufacturers");
                     var manufacturers = await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id);
-                    model.Items.AddRange(await manufacturers.ToAsyncEnumerable().SelectAwait(async manufacturer => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await manufacturers.SelectAwait(async manufacturer => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = manufacturersGroupTitle,
                         Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
@@ -686,7 +684,7 @@ namespace Nop.Web.Factories
                 {
                     var productsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.Products");
                     var products = await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id, visibleIndividuallyOnly: true);
-                    model.Items.AddRange(await products.ToAsyncEnumerable().SelectAwait(async product => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await products.SelectAwait(async product => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productsGroupTitle,
                         Name = await _localizationService.GetLocalizedAsync(product, x => x.Name),
@@ -699,7 +697,7 @@ namespace Nop.Web.Factories
                 {
                     var productTagsGroupTitle = await _localizationService.GetResourceAsync("Sitemap.ProductTags");
                     var productTags = await _productTagService.GetAllProductTagsAsync();
-                    model.Items.AddRange(await productTags.ToAsyncEnumerable().SelectAwait(async productTag => new SitemapModel.SitemapItemModel
+                    model.Items.AddRange(await productTags.SelectAwait(async productTag => new SitemapModel.SitemapItemModel
                     {
                         GroupTitle = productTagsGroupTitle,
                         Name = await _localizationService.GetLocalizedAsync(productTag, x => x.Name),

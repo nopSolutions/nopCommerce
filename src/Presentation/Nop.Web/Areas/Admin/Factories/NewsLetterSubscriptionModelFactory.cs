@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new NewsletterSubscriptionListModel().PrepareToGridAsync(searchModel, newsletterSubscriptions, () =>
             {
-                return newsletterSubscriptions.ToAsyncEnumerable().SelectAwait(async subscription =>
+                return newsletterSubscriptions.SelectAwait(async subscription =>
                 {
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();

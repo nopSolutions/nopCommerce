@@ -133,7 +133,6 @@ namespace Nop.Web.Factories
 
             //return reasons
             model.AvailableReturnReasons = await (await _returnRequestService.GetAllReturnRequestReasonsAsync())
-                .ToAsyncEnumerable()
                 .SelectAwait(async rrr => new SubmitReturnRequestModel.ReturnRequestReasonModel
                 {
                     Id = rrr.Id,
@@ -142,7 +141,6 @@ namespace Nop.Web.Factories
 
             //return actions
             model.AvailableReturnActions = await (await _returnRequestService.GetAllReturnRequestActionsAsync())
-                .ToAsyncEnumerable()
                 .SelectAwait(async rra => new SubmitReturnRequestModel.ReturnRequestActionModel
                 {
                     Id = rra.Id,

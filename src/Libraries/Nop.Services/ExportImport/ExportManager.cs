@@ -509,7 +509,7 @@ namespace Nop.Services.ExportImport
 
         private async Task<int> ExportProductAttributesAsync(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
-            var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id)).ToAsyncEnumerable()
+            var attributes = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(item.Id))
                 .SelectManyAwait(async pam =>
                 {
                     var productAttribute = await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId);
@@ -588,7 +588,7 @@ namespace Nop.Services.ExportImport
         private async Task<int> ExportSpecificationAttributesAsync(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
             var attributes = await (await _specificationAttributeService
-                .GetProductSpecificationAttributesAsync(item.Id)).ToAsyncEnumerable().SelectAwait(
+                .GetProductSpecificationAttributesAsync(item.Id)).SelectAwait(
                 async psa => new ExportSpecificationAttribute
                 {
                     AttributeTypeId = psa.AttributeTypeId,

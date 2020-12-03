@@ -12,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Html;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Shipping;
 
@@ -93,7 +94,6 @@ namespace Nop.Services.Orders
                 return null;
 
             return await _orderRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(o => o.CustomOrderNumber == customOrderNumber);
         }
 
@@ -110,7 +110,7 @@ namespace Nop.Services.Orders
             return await (from o in _orderRepository.Table
                     join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
                     where oi.Id == orderItemId
-                    select o).ToAsyncEnumerable().FirstOrDefaultAsync();
+                    select o).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Nop.Services.Orders
             var query = from o in _orderRepository.Table
                         where o.OrderGuid == orderGuid
                         select o;
-            var order = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var order = await query.FirstOrDefaultAsync();
 
             return order;
         }
@@ -301,7 +301,7 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
 
             query = query.OrderByDescending(o => o.CreatedOnUtc);
-            var order = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var order = await query.FirstOrDefaultAsync();
 
             return order;
         }
@@ -446,7 +446,7 @@ namespace Nop.Services.Orders
             return await (from p in _productRepository.Table
                     join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
                     where oi.Id == orderItemId
-                    select p).ToAsyncEnumerable().SingleOrDefaultAsync();
+                    select p).SingleOrDefaultAsync();
         }
 
         /// <summary>
@@ -469,7 +469,7 @@ namespace Nop.Services.Orders
                     (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
                     (!isNotReturnable.HasValue || (p.NotReturnable == isNotReturnable)) &&
                     (vendorId <= 0 || (p.VendorId == vendorId))
-                    select oi).ToAsyncEnumerable().ToListAsync();
+                    select oi).ToListAsync();
         }
 
         /// <summary>
@@ -485,7 +485,7 @@ namespace Nop.Services.Orders
             var query = from orderItem in _orderItemRepository.Table
                         where orderItem.OrderItemGuid == orderItemGuid
                         select orderItem;
-            var item = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var item = await query.FirstOrDefaultAsync();
             return item;
         }
 
@@ -508,7 +508,7 @@ namespace Nop.Services.Orders
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;
 
-            var orderItems = await query.ToAsyncEnumerable().ToListAsync();
+            var orderItems = await query.ToListAsync();
             return orderItems;
         }
 
@@ -793,7 +793,7 @@ namespace Nop.Services.Orders
                 query = query.Where(on => on.DisplayToCustomer == displayToCustomer);
             }
 
-            return await query.ToAsyncEnumerable().ToListAsync();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -935,7 +935,6 @@ namespace Nop.Services.Orders
 
             return await _recurringPaymentHistoryRepository.Table
                 .Where(rph => rph.RecurringPaymentId == recurringPayment.Id)
-                .ToAsyncEnumerable()
                 .ToListAsync();
         }
 

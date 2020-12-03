@@ -350,7 +350,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
 
                 //set order items
                 var itemTotal = decimal.Zero;
-                purchaseUnit.Items = await shoppingCart.ToAsyncEnumerable().SelectAwait(async item =>
+                purchaseUnit.Items = await shoppingCart.SelectAwait(async item =>
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
 

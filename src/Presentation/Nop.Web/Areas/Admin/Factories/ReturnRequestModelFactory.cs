@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ReturnRequestListModel().PrepareToGridAsync(searchModel, returnRequests, () =>
             {
-                return returnRequests.ToAsyncEnumerable().SelectAwait(async returnRequest =>
+                return returnRequests.SelectAwait(async returnRequest =>
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();

@@ -4,7 +4,7 @@
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
-    var stores = await Model.Stores.ToAsyncEnumerable().SelectAwait(async store => new SelectListItem
+    var stores = await Model.Stores.SelectAwait(async store => new SelectListItem
     {
         Text = store.Name,
         Value = Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id, returnUrl }, webHelper.GetCurrentRequestProtocol()),

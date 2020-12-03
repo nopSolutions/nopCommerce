@@ -127,7 +127,7 @@ namespace Nop.Services.Shipping
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct);
 
             //whether to ship associated products
-            return await associatedAttributeValues.ToAsyncEnumerable().AnyAwaitAsync(async attributeValue =>
+            return await associatedAttributeValues.AnyAwaitAsync(async attributeValue =>
                 (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
         }
 
@@ -221,7 +221,6 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethod));
 
             var result = await _shippingMethodCountryMappingRepository.Table
-                .ToAsyncEnumerable()
                 .AnyAsync(smcm => smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
             
             return result;
@@ -239,7 +238,7 @@ namespace Nop.Services.Shipping
             var query = _shippingMethodCountryMappingRepository.Table.Where(smcm =>
                 smcm.ShippingMethodId == shippingMethodId && smcm.CountryId == countryId);
 
-            return await query.ToAsyncEnumerable().ToListAsync();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -485,7 +484,7 @@ namespace Nop.Services.Shipping
                     ? item.Product.Height : decimal.Zero);
 
                 //get total volume of the shipped items
-                var totalVolume = await packageItems.ToAsyncEnumerable().SumAwaitAsync(async packageItem =>
+                var totalVolume = await packageItems.SumAwaitAsync(async packageItem =>
                 {
                     //product volume
                     var productVolume = !packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
@@ -495,7 +494,7 @@ namespace Nop.Services.Shipping
                     if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
                     {
                         productVolume += await (await _productAttributeParser.ParseProductAttributeValuesAsync(packageItem.ShoppingCartItem.AttributesXml))
-                            .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).ToAsyncEnumerable().SumAwaitAsync(async attributeValue =>
+                            .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).SumAwaitAsync(async attributeValue =>
                             {
                                 var associatedProduct = await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId);
                                 if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
@@ -637,7 +636,6 @@ namespace Nop.Services.Shipping
                 {
                     var associatedProducts = await (await _productAttributeParser.ParseProductAttributeValuesAsync(sci.AttributesXml))
                         .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                        .ToAsyncEnumerable()
                         .SelectAwait(async attributeValue => await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId)).ToListAsync();
                     product = associatedProducts.FirstOrDefault(associatedProduct => associatedProduct != null && associatedProduct.IsShipEnabled);
                 }
@@ -921,7 +919,6 @@ namespace Nop.Services.Shipping
             //or whether associated products of the shopping cart item require shipping
             return await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .ToAsyncEnumerable()
                 .AnyAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsShipEnabled ?? false);
         }
 
@@ -946,7 +943,6 @@ namespace Nop.Services.Shipping
             //and whether associated products of the shopping cart item is free shipping
             return await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .ToAsyncEnumerable()
                 .AllAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.IsFreeShipping ?? true);
         }
 
@@ -970,7 +966,6 @@ namespace Nop.Services.Shipping
             //and sum with associated products additional shipping charges
             additionalShippingCharge += await (await _productAttributeParser.ParseProductAttributeValuesAsync(shoppingCartItem.AttributesXml))
                 .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .ToAsyncEnumerable()
                 .SumAwaitAsync(async attributeValue => (await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))?.AdditionalShippingCharge ?? decimal.Zero);
 
             return additionalShippingCharge;

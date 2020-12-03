@@ -54,7 +54,7 @@ namespace Nop.Services.Media
                         where o.DownloadGuid == downloadGuid
                         select o;
 
-            return await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>

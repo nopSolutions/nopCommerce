@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new NewsItemListModel().PrepareToGridAsync(searchModel, newsItems, () =>
             {
-                return newsItems.ToAsyncEnumerable().SelectAwait(async newsItem =>
+                return newsItems.SelectAwait(async newsItem =>
                 {
                     //fill in model values from the entity
                     var newsItemModel = newsItem.ToModel<NewsItemModel>();
@@ -262,7 +262,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new NewsCommentListModel().PrepareToGridAsync(searchModel, comments, () =>
             {
-                return comments.ToAsyncEnumerable().SelectAwait(async newsComment =>
+                return comments.SelectAwait(async newsComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = newsComment.ToModel<NewsCommentModel>();

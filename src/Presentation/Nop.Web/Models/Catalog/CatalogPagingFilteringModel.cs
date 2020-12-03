@@ -214,7 +214,7 @@ namespace Nop.Web.Models.Catalog
 
                     var selectedPriceRange = await GetSelectedPriceRangeAsync(webHelper, priceRangeStr);
 
-                    Items = await priceRangeList.ToAsyncEnumerable().SelectAwait(async x =>
+                    Items = await priceRangeList.SelectAwait(async x =>
                     {
                         //from&to
                         var item = new PriceRangeFilterItem();
@@ -389,7 +389,7 @@ namespace Nop.Web.Models.Catalog
                 var cacheKey = staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, await workContext.GetWorkingLanguageAsync());
 
                 var allOptions = await specificationAttributeService.GetSpecificationAttributeOptionsByIdsAsync(filterableSpecificationAttributeOptionIds);
-                var allFilters = await staticCacheManager.GetAsync(cacheKey, async () => await allOptions.ToAsyncEnumerable().SelectAwait(async sao =>
+                var allFilters = await staticCacheManager.GetAsync(cacheKey, async () => await allOptions.SelectAwait(async sao =>
                 {
                     var specAttribute = await specificationAttributeService.GetSpecificationAttributeByIdAsync(sao.SpecificationAttributeId);
 
@@ -430,7 +430,7 @@ namespace Nop.Web.Models.Catalog
                     }).ToList();
 
                 //get not filtered specification options
-                NotFilteredItems = await allFilters.Except(alreadyFilteredOptions).ToAsyncEnumerable().SelectAwait(async x =>
+                NotFilteredItems = await allFilters.Except(alreadyFilteredOptions).SelectAwait(async x =>
                 {
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<int> { x.SpecificationAttributeOptionId });

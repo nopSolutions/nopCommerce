@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Helpers;
 using Nop.Services.Stores;
 
@@ -213,7 +214,6 @@ namespace Nop.Services.Orders
                     TotalOrders = r.TotalOrders,
                     SumOrders = r.SumOrders
                 })
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             return report;
@@ -338,7 +338,6 @@ namespace Nop.Services.Orders
                     SumOrders = r.OrderTotalSum,
                     SumRefundedAmount = r.OrederRefundedAmountSum
                 })
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync();
 
             item ??= new OrderAverageReportLine
@@ -503,7 +502,7 @@ namespace Nop.Services.Orders
             int billingCountryId = 0,
             bool showHidden = false)
         {            
-            return await SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden).ToAsyncEnumerable()
+            return await SearchOrderItems(categoryId, manufacturerId, storeId, vendorId, createdFromUtc, createdToUtc, os, ps, ss, billingCountryId, showHidden: showHidden)
                 .SumAsync(bestseller => bestseller.Quantity * bestseller.PriceExclTax);
         }
 
@@ -551,7 +550,7 @@ namespace Nop.Services.Orders
             if (recordsToReturn > 0)
                 query3 = query3.Take(recordsToReturn);
 
-            var report = await query3.ToAsyncEnumerable().ToListAsync();
+            var report = await query3.ToListAsync();
 
             var ids = new List<int>();
             foreach (var reportLine in report)
@@ -708,7 +707,7 @@ namespace Nop.Services.Orders
                            oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
                 select orderItem;
 
-            var productCost = Convert.ToDecimal(await query.ToAsyncEnumerable().SumAsync(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
+            var productCost = Convert.ToDecimal(await query.SumAsync(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
             var reportSummary = await GetOrderAverageReportLineAsync(
                 storeId,

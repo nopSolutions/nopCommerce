@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ScheduleTaskListModel().PrepareToGridAsync(searchModel, scheduleTasks, () =>
             {
-                return scheduleTasks.ToAsyncEnumerable().SelectAwait(async scheduleTask =>
+                return scheduleTasks.SelectAwait(async scheduleTask =>
                 {
                     //fill in model values from the entity
                     var scheduleTaskModel = scheduleTask.ToModel<ScheduleTaskModel>();

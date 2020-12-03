@@ -201,7 +201,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new AffiliateListModel().PrepareToGridAsync(searchModel, affiliates, () =>
             {
                 //fill in model values from the entity
-                return affiliates.ToAsyncEnumerable().SelectAwait(async affiliate =>
+                return affiliates.SelectAwait(async affiliate =>
                 {
                     var address = await _addressService.GetAddressByIdAsync(affiliate.AddressId);
 
@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new AffiliatedOrderListModel().PrepareToGridAsync(searchModel, orders, () =>
             {
                 //fill in model values from the entity
-                return orders.ToAsyncEnumerable().SelectAwait(async order =>
+                return orders.SelectAwait(async order =>
                 {
                     var affiliatedOrderModel = order.ToModel<AffiliatedOrderModel>();
 

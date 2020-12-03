@@ -123,7 +123,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             var model = await new FacebookPixelListModel().PrepareToGridAsync(searchModel, configurations, () =>
             {
                 //fill in model values from the configuration
-                return configurations.ToAsyncEnumerable().SelectAwait(async configuration => new FacebookPixelModel
+                return configurations.SelectAwait(async configuration => new FacebookPixelModel
                 {
                     Id = configuration.Id,
                     PixelId = configuration.PixelId,

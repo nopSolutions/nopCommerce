@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Vendors
 {
@@ -61,7 +62,7 @@ namespace Nop.Services.Vendors
             return await (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where p.Id == productId
-                    select v).ToAsyncEnumerable().FirstOrDefaultAsync();
+                    select v).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace Nop.Services.Vendors
             return await (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
                     where productIds.Contains(p.Id) && !v.Deleted && v.Active
-                    select v).Distinct().ToAsyncEnumerable().ToListAsync();
+                    select v).Distinct().ToListAsync();
         }
 
         /// <summary>

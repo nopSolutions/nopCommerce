@@ -12,6 +12,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -289,7 +290,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             //get previously stored events and remove them from the session data
             var events = _httpContextAccessor.HttpContext.Session
                 .Get<IList<TrackedEvent>>(FacebookPixelDefaults.TrackedEventsSessionValue) ?? new List<TrackedEvent>();
-            var activeEvents = await events.ToAsyncEnumerable().WhereAwait(async trackedEvent =>
+            var activeEvents = await events.WhereAwait(async trackedEvent =>
                 trackedEvent.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id && trackedEvent.StoreId == (await _storeContext.GetCurrentStoreAsync()).Id)
                 .ToListAsync();
             _httpContextAccessor.HttpContext.Session.Set(FacebookPixelDefaults.TrackedEventsSessionValue, events.Except(activeEvents).ToList());
@@ -297,7 +298,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             if (!activeEvents.Any())
                 return string.Empty;
 
-            return await activeEvents.ToAsyncEnumerable().AggregateAwaitAsync(string.Empty, async (preparedScripts, trackedEvent) =>
+            return await activeEvents.AggregateAwaitAsync(string.Empty, async (preparedScripts, trackedEvent) =>
             {
                 //filter active configurations
                 var activeConfigurations = trackedEvent.EventName switch
@@ -314,12 +315,12 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 };
                 if (trackedEvent.IsCustomEvent)
                 {
-                    activeConfigurations = await configurations.ToAsyncEnumerable().WhereAwait(async configuration =>
+                    activeConfigurations = await configurations.WhereAwait(async configuration =>
                         (await GetCustomEventsAsync(configuration.Id)).Any(customEvent => customEvent.EventName == trackedEvent.EventName)).ToListAsync();
                 }
 
                 //prepare event scripts
-                return preparedScripts + await trackedEvent.EventObjects.ToAsyncEnumerable().AggregateAwaitAsync(string.Empty, async (preparedEventScripts, eventObject) =>
+                return preparedScripts + await trackedEvent.EventObjects.AggregateAwaitAsync(string.Empty, async (preparedEventScripts, eventObject) =>
                 {
                     return preparedEventScripts + await FormatScriptAsync(activeConfigurations, configuration =>
                     {
@@ -430,7 +431,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 return string.Empty;
 
             //format script
-            var formattedScript = await configurations.ToAsyncEnumerable().AggregateAwaitAsync(string.Empty, async (preparedScripts, configuration) =>
+            var formattedScript = await configurations.AggregateAwaitAsync(string.Empty, async (preparedScripts, configuration) =>
                 preparedScripts + Environment.NewLine + new string('\t', TABS_NUMBER) + await getScript(configuration));
             formattedScript += Environment.NewLine;
 
@@ -454,7 +455,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
             query = query.OrderBy(configuration => configuration.Id);
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
         }
 
         #endregion
@@ -472,7 +473,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             return await HandleFunctionAsync(async () =>
             {
                 //get the enabled configurations
-                var configurations = await (await GetConfigurationsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).ToAsyncEnumerable().WhereAwait(async configuration =>
+                var configurations = await (await GetConfigurationsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).WhereAwait(async configuration =>
                 {
                     if (!configuration.Enabled)
                         return false;
@@ -526,7 +527,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         {
             return await HandleFunctionAsync(async () =>
             {
-                var customEvents = await (await GetConfigurationsAsync()).ToAsyncEnumerable().SelectManyAwait(async configuration => (await GetCustomEventsAsync(configuration.Id, widgetZone)).ToAsyncEnumerable()).ToListAsync();
+                var customEvents = await (await GetConfigurationsAsync()).SelectManyAwait(async configuration => (await GetCustomEventsAsync(configuration.Id, widgetZone)).ToAsyncEnumerable()).ToListAsync();
                 foreach (var customEvent in customEvents) 
                     await PrepareTrackedEventScriptAsync(customEvent.EventName, string.Empty, isCustomEvent: true);
 
@@ -592,7 +593,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
                 //prepare event object
                 var currency = await _currencyService.GetCurrencyByIdAsync(_currencySettings.PrimaryStoreCurrencyId);
-                var contentsProperties = await (await _orderService.GetOrderItemsAsync(order.Id)).ToAsyncEnumerable().SelectAwait(async item =>
+                var contentsProperties = await (await _orderService.GetOrderItemsAsync(order.Id)).SelectAwait(async item =>
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
                     var sku = product != null ? await _productService.FormatSkuAsync(product, item.AttributesXml) : string.Empty;
@@ -661,7 +662,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 var priceValue = await _currencyService.ConvertFromPrimaryStoreCurrencyAsync(price ?? 0, await _workContext.GetWorkingCurrencyAsync());
                 var currency = (await _workContext.GetWorkingCurrencyAsync())?.CurrencyCode;
 
-                var contentsProperties = await cart.ToAsyncEnumerable().SelectAwait(async item =>
+                var contentsProperties = await cart.SelectAwait(async item =>
                 {
                     var product = await _productService.GetProductByIdAsync(item.ProductId);
                     var sku = product != null ? await _productService.FormatSkuAsync(product, item.AttributesXml) : string.Empty;
@@ -892,8 +893,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             {
                 //load custom events and their widget zones
                 var configurations = await GetConfigurationsAsync();
-                var customEvents = configurations.ToAsyncEnumerable().SelectManyAwait(async configuration => (await GetCustomEventsAsync(configuration.Id)).ToAsyncEnumerable());
-                var widgetZones = await customEvents.SelectMany(customEvent => customEvent.WidgetZones.ToAsyncEnumerable()).Distinct().ToListAsync();
+                var customEvents = await configurations.SelectManyAwait(async configuration => (await GetCustomEventsAsync(configuration.Id)).ToAsyncEnumerable()).ToListAsync();
+                var widgetZones = await customEvents.SelectMany(customEvent => customEvent.WidgetZones).Distinct().ToListAsync();
 
                 return widgetZones;
             });

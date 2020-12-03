@@ -240,7 +240,7 @@ namespace Nop.Services.News
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
-            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.ToAsyncEnumerable().CountAsync());
+            return await _staticCacheManager.GetAsync(cacheKey, async () => await query.CountAsync());
         }
 
         /// <summary>

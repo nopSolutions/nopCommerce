@@ -133,7 +133,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
             var stores = await _storeService.GetAllStoresAsync();
             var messageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
-            model.AddSms.AvailableMessages = await messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
+            model.AddSms.AvailableMessages = await messageTemplates.SelectAwait(async messageTemplate =>
             {
                 var name = messageTemplate.Name;
                 if (storeId == 0 && messageTemplate.LimitedToStores)
@@ -379,12 +379,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             //prepare list model
             var model = await new SendinBlueMessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
+                return messageTemplates.SelectAwait(async messageTemplate =>
                 {
                     //standard template of message is edited in the admin area, SendinBlue template is edited in the SendinBlue account
                     var templateId = await _genericAttributeService.GetAttributeAsync<int?>(messageTemplate, SendinBlueDefaults.TemplateIdAttribute);
                     var stores = (await (await _storeService.GetAllStoresAsync())
-                        .ToAsyncEnumerable()
                         .WhereAwait(async store => !messageTemplate.LimitedToStores
                             || (await _storeMappingService.GetStoresIdsWithAccessAsync(messageTemplate)).Contains(store.Id))
                         .AggregateAsync(string.Empty, (current, next) => $"{current}, {next.Name}"))
@@ -487,14 +486,14 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             //get message templates which are sending in SMS
             var allMessageTemplates = await _messageTemplateService.GetAllMessageTemplatesAsync(storeId);
             var messageTemplates = await allMessageTemplates
-                .ToAsyncEnumerable()
+                
                 .WhereAwait(async messageTemplate => await _genericAttributeService.GetAttributeAsync<bool>(messageTemplate, SendinBlueDefaults.UseSmsAttribute))
                 .ToPagedListAsync(searchModel);
 
             //prepare list model
             var model = await new SmsListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
+                return messageTemplates.SelectAwait(async messageTemplate =>
                 {
                     var phoneTypeID = await _genericAttributeService.GetAttributeAsync<int>(messageTemplate, SendinBlueDefaults.PhoneTypeAttribute);
 

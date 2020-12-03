@@ -99,7 +99,7 @@ namespace Nop.Services.Security
                         where ur.EntityId == entityId &&
                         ur.EntityName == entityName
                         select ur;
-            var aclRecords = await query.ToAsyncEnumerable().ToListAsync();
+            var aclRecords = await query.ToListAsync();
 
             return aclRecords;
         }
@@ -192,7 +192,7 @@ namespace Nop.Services.Security
                               ur.EntityName == entityName
                         select ur.CustomerRoleId;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToArrayAsync());
+            return await _staticCacheManager.GetAsync(key, async () => await query.ToArrayAsync());
         }
 
         /// <summary>

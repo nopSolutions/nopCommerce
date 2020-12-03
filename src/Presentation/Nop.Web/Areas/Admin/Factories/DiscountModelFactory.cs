@@ -225,7 +225,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new DiscountListModel().PrepareToGridAsync(searchModel, discounts, () =>
             {
-                return discounts.ToAsyncEnumerable().SelectAwait(async discount =>
+                return discounts.SelectAwait(async discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
@@ -326,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             var lastRequirement = requirements.LastOrDefault();
 
-            return await requirements.ToAsyncEnumerable().SelectAwait(async requirement =>
+            return await requirements.SelectAwait(async requirement =>
             {
                 //set common properties
                 var requirementModel = new DiscountRequirementRuleModel
@@ -387,7 +387,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new DiscountUsageHistoryListModel().PrepareToGridAsync(searchModel, history, () =>
             {
-                return history.ToAsyncEnumerable().SelectAwait(async historyEntry =>
+                return history.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
@@ -500,7 +500,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddProductToDiscountListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = await _urlRecordService.GetSeNameAsync(product, 0, true, false);
@@ -535,7 +535,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new DiscountCategoryListModel().PrepareToGridAsync(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                return discountCategories.ToAsyncEnumerable().SelectAwait(async category =>
+                return discountCategories.SelectAwait(async category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
@@ -583,7 +583,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddCategoryToDiscountListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.ToAsyncEnumerable().SelectAwait(async category =>
+                return categories.SelectAwait(async category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
@@ -670,7 +670,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddManufacturerToDiscountListModel().PrepareToGridAsync(searchModel, manufacturers, () =>
             {
-                return manufacturers.ToAsyncEnumerable().SelectAwait(async manufacturer =>
+                return manufacturers.SelectAwait(async manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
                     manufacturerModel.SeName = await _urlRecordService.GetSeNameAsync(manufacturer, 0, true, false);

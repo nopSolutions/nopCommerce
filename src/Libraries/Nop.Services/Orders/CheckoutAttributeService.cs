@@ -160,7 +160,7 @@ namespace Nop.Services.Orders
                 where cav.CheckoutAttributeId == checkoutAttributeId
                 select cav;
             
-            var checkoutAttributeValues = await _staticCacheManager.GetAsync(key, async ()=> await query.ToAsyncEnumerable().ToListAsync());
+            var checkoutAttributeValues = await _staticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
 
             return checkoutAttributeValues;
         }

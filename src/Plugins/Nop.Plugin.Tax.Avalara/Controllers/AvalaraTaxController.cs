@@ -122,7 +122,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             var model = await new Models.Tax.TaxCategoryListModel().PrepareToGridAsync(searchModel, taxCategories, () =>
             {
                 //fill in model values from the entity
-                return taxCategories.ToAsyncEnumerable().SelectAwait(async taxCategory =>
+                return taxCategories.SelectAwait(async taxCategory =>
                 {
                     //fill in model values from the entity
                     var taxCategoryModel = new Models.Tax.TaxCategoryModel
@@ -133,8 +133,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                     };
 
                     //try to get previously saved tax code type and description
-                    var taxCodeType = (await taxTypes?.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async type =>
-                        type.Id.Equals((await _genericAttributeService.GetAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute)) ?? string.Empty)).AsTask())
+                    var taxCodeType = (await taxTypes?.FirstOrDefaultAwaitAsync(async type =>
+                        type.Id.Equals((await _genericAttributeService.GetAttributeAsync<string>(taxCategory, AvalaraTaxDefaults.TaxCodeTypeAttribute)) ?? string.Empty)))
                         ?? defaultType;
                     taxCategoryModel.Type = taxCodeType?.Name ?? string.Empty;
                     taxCategoryModel.TypeId = taxCodeType?.Id ?? Guid.Empty.ToString();

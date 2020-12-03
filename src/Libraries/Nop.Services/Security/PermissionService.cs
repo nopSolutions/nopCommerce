@@ -65,7 +65,7 @@ namespace Nop.Services.Security
                 orderby pr.Id
                 select pr;
 
-            return await _staticCacheManager.GetAsync(key, async ()=> await query.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(key, async ()=> await query.ToListAsync());
         }
 
         #endregion
@@ -106,7 +106,7 @@ namespace Nop.Services.Security
                         orderby pr.Id
                         select pr;
 
-            var permissionRecord = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var permissionRecord = await query.FirstOrDefaultAsync();
             return permissionRecord;
         }
 
@@ -312,7 +312,7 @@ namespace Nop.Services.Security
 
             query = query.Where(x => x.PermissionRecordId == permissionId);
 
-            return await query.ToAsyncEnumerable().ToListAsync();
+            return await query.ToListAsync();
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ namespace Nop.Services.Localization
                               lp.LocaleKeyGroup == localeKeyGroup
                         select lp;
 
-            var props = await query.ToAsyncEnumerable().ToListAsync();
+            var props = await query.ToListAsync();
 
             return props;
         }

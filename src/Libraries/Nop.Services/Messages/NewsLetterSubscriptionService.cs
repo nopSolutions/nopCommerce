@@ -182,7 +182,7 @@ namespace Nop.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return await newsLetterSubscriptions.ToAsyncEnumerable().FirstOrDefaultAsync();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Nop.Services.Messages
                                           orderby nls.Id
                                           select nls;
 
-            return await newsLetterSubscriptions.ToAsyncEnumerable().FirstOrDefaultAsync();
+            return await newsLetterSubscriptions.FirstOrDefaultAsync();
         }
 
         /// <summary>

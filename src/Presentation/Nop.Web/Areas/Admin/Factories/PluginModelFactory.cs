@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new PluginListModel().PrepareToGridAsync(searchModel, plugins, () =>
             {
-                return plugins.ToAsyncEnumerable().SelectAwait(async pluginDescriptor =>
+                return plugins.SelectAwait(async pluginDescriptor =>
                 {
                     //fill in model values from the entity
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();

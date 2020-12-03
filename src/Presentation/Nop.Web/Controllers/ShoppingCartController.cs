@@ -572,7 +572,7 @@ namespace Nop.Web.Controllers
             }
 
             //creating XML for "read-only checkboxes" attributes
-            var attXml = await productAttributes.ToAsyncEnumerable().AggregateAwaitAsync(string.Empty, async (attributesXml, attribute) =>
+            var attXml = await productAttributes.AggregateAwaitAsync(string.Empty, async (attributesXml, attribute) =>
             {
                 var attributeValues = await _productAttributeService.GetProductAttributeValuesAsync(attribute.Id);
                 foreach (var selectedAttributeId in attributeValues
@@ -909,7 +909,6 @@ namespace Nop.Web.Controllers
             {
                 isFreeShipping = await (await _productAttributeParser.ParseProductAttributeValuesAsync(attributeXml))
                     .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                    .ToAsyncEnumerable()
                     .SelectAwait(async attributeValue => await _productService.GetProductByIdAsync(attributeValue.AssociatedProductId))
                     .AllAsync(associatedProduct => associatedProduct == null || !associatedProduct.IsShipEnabled || associatedProduct.IsFreeShipping);
             }
@@ -1178,7 +1177,6 @@ namespace Nop.Web.Controllers
             //order cart items
             //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
             var orderedCart = await itemsWithNewQuantity
-                .ToAsyncEnumerable()
                 .OrderByDescendingAwait(async cartItem =>
                     (cartItem.NewQuantity < cartItem.Item.Quantity &&
                      (cartItem.Product?.RequireOtherProducts ?? false)) ||
@@ -1187,7 +1185,7 @@ namespace Nop.Web.Controllers
                 .ToListAsync();
 
             //try to update cart items with new quantities and get warnings
-            var warnings = await orderedCart.ToAsyncEnumerable().SelectAwait(async cartItem => new
+            var warnings = await orderedCart.SelectAwait(async cartItem => new
             {
                 ItemId = cartItem.Item.Id,
                 Warnings = await _shoppingCartService.UpdateShoppingCartItemAsync(await _workContext.GetCurrentCustomerAsync(),
@@ -1293,7 +1291,7 @@ namespace Nop.Web.Controllers
                 if (discounts.Any())
                 {
                     var userErrors = new List<string>();
-                    var anyValidDiscount = await discounts.ToAsyncEnumerable().AnyAwaitAsync(async discount =>
+                    var anyValidDiscount = await discounts.AnyAwaitAsync(async discount =>
                     {
                         var validationResult = await _discountService.ValidateDiscountAsync(discount, await _workContext.GetCurrentCustomerAsync(), new[] { discountcouponcode });
                         userErrors.AddRange(validationResult.Errors);

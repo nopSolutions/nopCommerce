@@ -216,7 +216,7 @@ namespace Nop.Services.Plugins
             var pluginDescriptors = _pluginsInfo.PluginDescriptors;
 
             //filter plugins
-            pluginDescriptors = await pluginDescriptors.ToAsyncEnumerable().WhereAwait(async descriptor =>
+            pluginDescriptors = await pluginDescriptors.WhereAwait(async descriptor =>
                 FilterByLoadMode(descriptor, loadMode) &&
                 await FilterByCustomerAsync(descriptor, customer) &&
                 FilterByStore(descriptor, storeId) &&

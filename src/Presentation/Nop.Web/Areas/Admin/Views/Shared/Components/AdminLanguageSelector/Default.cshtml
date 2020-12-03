@@ -5,7 +5,7 @@
 @if (Model.AvailableLanguages.Count > 1)
 {
     var returnUrl = webHelper.GetRawUrl(Context.Request);
-    var languages = await Model.AvailableLanguages.ToAsyncEnumerable().SelectAwait(async lang => new SelectListItem
+    var languages = await Model.AvailableLanguages.SelectAwait(async lang => new SelectListItem
     {
         Text = lang.Name,
         Value = Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = AreaNames.Admin, returnUrl }, webHelper.GetCurrentRequestProtocol()),

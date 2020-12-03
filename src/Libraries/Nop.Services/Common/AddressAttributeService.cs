@@ -108,7 +108,7 @@ namespace Nop.Services.Common
                 orderby aav.DisplayOrder, aav.Id
                 where aav.AddressAttributeId == addressAttributeId
                 select aav;
-            var addressAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var addressAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return addressAttributeValues;
         }

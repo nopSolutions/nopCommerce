@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new MessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
+                return messageTemplates.SelectAwait(async messageTemplate =>
                 {
                     //fill in model values from the entity
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();

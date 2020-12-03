@@ -95,7 +95,7 @@ namespace Nop.Services.Directory
 
             //store mapping
             if (storeId > 0)
-                currencies = await currencies.ToAsyncEnumerable()
+                currencies = await currencies
                     .WhereAwait(async c => await _storeMappingService.AuthorizeAsync(c, storeId))
                     .ToListAsync();
 

@@ -42,7 +42,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             var preparePictureModel = productThumbPictureSize.HasValue;
-            var products = await (await _recentlyViewedProductsService.GetRecentlyViewedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber)).ToAsyncEnumerable()
+            var products = await (await _recentlyViewedProductsService.GetRecentlyViewedProductsAsync(_catalogSettings.RecentlyViewedProductsNumber))
             //ACL and store mapping
             .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates

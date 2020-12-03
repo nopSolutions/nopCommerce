@@ -164,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ShippingProviderListModel().PrepareToGridAsync(searchModel, shippingProviders, () =>
             {
-                return shippingProviders.ToAsyncEnumerable().SelectAwait(async provider =>
+                return shippingProviders.SelectAwait(async provider =>
                 {
                     //fill in model values from the entity
                     var shippingProviderModel = provider.ToPluginModel<ShippingProviderModel>();
@@ -214,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new PickupPointProviderListModel().PrepareToGridAsync(searchModel, pickupPointProviders, () =>
             {
-                return pickupPointProviders.ToAsyncEnumerable().SelectAwait(async provider =>
+                return pickupPointProviders.SelectAwait(async provider =>
                 {
                     //fill in model values from the entity
                     var pickupPointProviderModel = provider.ToPluginModel<PickupPointProviderModel>();
@@ -505,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(model));
 
             var countries = await _countryService.GetAllCountriesAsync(showHidden: true);
-            model.AvailableCountries = await countries.ToAsyncEnumerable().SelectAwait(async country =>
+            model.AvailableCountries = await countries.SelectAwait(async country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
                 countryModel.NumberOfStates = (await _stateProvinceService.GetStateProvincesByCountryIdAsync(country.Id))?.Count ?? 0;

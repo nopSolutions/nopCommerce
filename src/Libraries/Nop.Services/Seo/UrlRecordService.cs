@@ -1213,7 +1213,7 @@ namespace Nop.Services.Seo
                 orderby ur.IsActive descending, ur.Id
                 select ur;
 
-            var urlRecord = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync());
+            var urlRecord = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
 
             return urlRecord;
         }
@@ -1293,7 +1293,7 @@ namespace Nop.Services.Seo
                 orderby ur.Id descending
                 select ur.Slug;
 
-            var rezSlug = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().FirstOrDefaultAsync()) ?? string.Empty;
+            var rezSlug = await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync()) ?? string.Empty;
 
             return rezSlug;
         }
@@ -1319,7 +1319,7 @@ namespace Nop.Services.Seo
                               ur.LanguageId == languageId
                         orderby ur.Id descending
                         select ur;
-            var allUrlRecords = await query.ToAsyncEnumerable().ToListAsync();
+            var allUrlRecords = await query.ToListAsync();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
             UrlRecord nonActiveRecordWithSpecifiedSlug;
 

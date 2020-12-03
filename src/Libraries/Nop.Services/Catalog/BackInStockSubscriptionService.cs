@@ -131,7 +131,7 @@ namespace Nop.Services.Catalog
                               biss.StoreId == storeId
                         select biss;
 
-            var subscription = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var subscription = await query.FirstOrDefaultAsync();
 
             return subscription;
         }

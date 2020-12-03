@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
                 where pam.ProductReviewId == productReviewId
                 select pam;
 
-            var productReviewReviewTypeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var productReviewReviewTypeMappings = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productReviewReviewTypeMappings;
         }

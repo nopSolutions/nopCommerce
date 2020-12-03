@@ -71,7 +71,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             //prepare grid model
             var model = await new TaxTransactionLogListModel().PrepareToGridAsync(searchModel, taxtransactionLog, () =>
             {
-                return taxtransactionLog.ToAsyncEnumerable().SelectAwait(async logItem => new TaxTransactionLogModel
+                return taxtransactionLog.SelectAwait(async logItem => new TaxTransactionLogModel
                 {
                     Id = logItem.Id,
                     StatusCode = logItem.StatusCode,

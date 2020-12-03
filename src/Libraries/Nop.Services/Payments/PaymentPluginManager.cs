@@ -51,7 +51,7 @@ namespace Nop.Services.Payments
 
             //filter by country
             if (countryId > 0)
-                paymentMethods = await paymentMethods.ToAsyncEnumerable().WhereAwait(async method => !(await GetRestrictedCountryIdsAsync(method)).Contains(countryId)).ToListAsync();
+                paymentMethods = await paymentMethods.WhereAwait(async method => !(await GetRestrictedCountryIdsAsync(method)).Contains(countryId)).ToListAsync();
 
             return paymentMethods;
         }

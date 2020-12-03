@@ -51,7 +51,7 @@ namespace Nop.Services.Shipping.Tracking
         /// <returns>Tracker (IShipmentTracker)</returns>
         protected virtual async Task<IShipmentTracker> GetTrackerByTrackingNumberAsync(string trackingNumber)
         {
-            return await GetAllTrackers().ToAsyncEnumerable().FirstOrDefaultAwaitAsync(async c => await c.IsMatchAsync(trackingNumber));
+            return await GetAllTrackers().FirstOrDefaultAwaitAsync(async c => await c.IsMatchAsync(trackingNumber));
         }
 
         #endregion

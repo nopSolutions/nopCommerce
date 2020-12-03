@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinqToDB;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -530,7 +529,7 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         where p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
-                        Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
+                        LinqToDB.Sql.Between(DateTime.UtcNow, p.MarkAsNewStartDateTimeUtc ?? DateTime.MinValue, p.MarkAsNewEndDateTimeUtc ?? DateTime.MaxValue)
                         select p;
 
                 return query.Take(_catalogSettings.NewProductsNumber)
@@ -754,7 +753,7 @@ namespace Nop.Services.Catalog
                         )
                     ) &&
                     (productType == null || p.ProductTypeId == (int)productType) &&
-                    (showHidden == false || Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
+                    (showHidden == false || LinqToDB.Sql.Between(DateTime.UtcNow, p.AvailableStartDateTimeUtc ?? DateTime.MinValue, p.AvailableEndDateTimeUtc ?? DateTime.MaxValue)) &&
                     (priceMin == null || p.Price >= priceMin) &&
                     (priceMax == null || p.Price <= priceMax)
                 select p;
@@ -811,7 +810,7 @@ namespace Nop.Services.Catalog
 
                 productsQuery =
                     from p in productsQuery
-                    from pbk in productsByKeywords.InnerJoin(pbk => pbk == p.Id)
+                    from pbk in LinqToDB.LinqExtensions.InnerJoin(productsByKeywords, pbk => pbk == p.Id)
                     select p;
             }
 
@@ -919,15 +918,15 @@ namespace Nop.Services.Catalog
             query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.DisplayOrder).ThenBy(x => x.Id);
 
-            var products = await query.ToAsyncEnumerable().ToListAsync();
+            var products = await query.ToListAsync();
 
             //ACL mapping
             if (!showHidden)
-                products = await products.ToAsyncEnumerable().WhereAwait(async x => await _aclService.AuthorizeAsync(x)).ToListAsync();
+                products = await products.WhereAwait(async x => await _aclService.AuthorizeAsync(x)).ToListAsync();
 
             //Store mapping
             if (!showHidden && storeId > 0)
-                products = await products.ToAsyncEnumerable().WhereAwait(async x => await _storeMappingService.AuthorizeAsync(x, storeId)).ToListAsync();
+                products = await products.WhereAwait(async x => await _storeMappingService.AuthorizeAsync(x, storeId)).ToListAsync();
 
             return products;
         }
@@ -948,7 +947,6 @@ namespace Nop.Services.Catalog
 
             var reviews = await _productReviewRepository.Table
                 .Where(r => r.ProductId == product.Id)
-                .ToAsyncEnumerable()
                 .ToListAsync();
             foreach (var pr in reviews)
                 if (pr.IsApproved)
@@ -1060,7 +1058,7 @@ namespace Nop.Services.Catalog
                         where !p.Deleted &&
                         p.Sku == sku
                         select p;
-            var product = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var product = await query.FirstOrDefaultAsync();
 
             return product;
         }
@@ -1082,7 +1080,7 @@ namespace Nop.Services.Catalog
             if (vendorId != 0)
                 query = query.Where(p => p.VendorId == vendorId);
 
-            return await query.ToAsyncEnumerable().ToListAsync();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -1121,7 +1119,7 @@ namespace Nop.Services.Catalog
             if (vendorId == 0)
                 return 0;
 
-            return await _productRepository.Table.ToAsyncEnumerable().CountAsync(p => p.VendorId == vendorId && !p.Deleted);
+            return await _productRepository.Table.CountAsync(p => p.VendorId == vendorId && !p.Deleted);
         }
 
         /// <summary>
@@ -1224,9 +1222,9 @@ namespace Nop.Services.Catalog
             if (warehouseId > 0)
                 pwi = pwi.Where(x => x.WarehouseId == warehouseId);
 
-            var result = await pwi.ToAsyncEnumerable().SumAsync(x => x.StockQuantity);
+            var result = await pwi.SumAsync(x => x.StockQuantity);
             if (useReservedQuantity)
-                result -= await pwi.ToAsyncEnumerable().SumAsync(x => x.ReservedQuantity);
+                result -= await pwi.SumAsync(x => x.ReservedQuantity);
 
             return result;
         }
@@ -1424,7 +1422,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<bool> HasAnyDownloadableProductAsync(int[] productIds)
         {
             return await _productRepository.Table
-                .ToAsyncEnumerable()
                 .AnyAsync(p => productIds.Contains(p.Id) && p.IsDownload);
         }
 
@@ -1436,7 +1433,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<bool> HasAnyGiftCardProductAsync(int[] productIds)
         {
             return await _productRepository.Table
-                .ToAsyncEnumerable()
                 .AnyAsync(p => productIds.Contains(p.Id) && p.IsGiftCard);
         }
 
@@ -1448,7 +1444,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<bool> HasAnyRecurringProductAsync(int[] productIds)
         {
             return await _productRepository.Table
-                .ToAsyncEnumerable()
                 .AnyAsync(p => productIds.Contains(p.Id) && p.IsRecurring);
         }
 
@@ -1609,7 +1604,6 @@ namespace Nop.Services.Catalog
             var productInventory = await _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
                 .OrderByDescending(pwi => pwi.ReservedQuantity)
                 .ThenByDescending(pwi => pwi.StockQuantity)
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             if (!productInventory.Any())
@@ -1656,7 +1650,7 @@ namespace Nop.Services.Catalog
                 return;
 
             var pwi = await _productWarehouseInventoryRepository.Table
-                .ToAsyncEnumerable()
+                
                 .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
             if (pwi == null)
                 return;
@@ -1690,7 +1684,7 @@ namespace Nop.Services.Catalog
                 return 0;
 
             var pwi = await _productWarehouseInventoryRepository.Table
-                .ToAsyncEnumerable()
+                
                 .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
             if (pwi == null)
                 return 0;
@@ -1743,7 +1737,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.RelatedProductsCacheKey, productId, showHidden), async () => await query.ToAsyncEnumerable().ToListAsync());
+            var relatedProducts = await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.RelatedProductsCacheKey, productId, showHidden), async () => await query.ToListAsync());
 
             return relatedProducts;
         }
@@ -1833,7 +1827,7 @@ namespace Nop.Services.Catalog
                               (showHidden || p.Published)
                         orderby csp.Id
                         select csp;
-            var crossSellProducts = await query.ToAsyncEnumerable().ToListAsync();
+            var crossSellProducts = await query.ToListAsync();
 
             return crossSellProducts;
         }
@@ -1967,7 +1961,7 @@ namespace Nop.Services.Catalog
         {
             var query = _tierPriceRepository.Table.Where(tp => tp.ProductId == productId);
 
-            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId), async () => await query.ToAsyncEnumerable().ToListAsync());
+            return await _staticCacheManager.GetAsync(_staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.TierPricesByProductCacheKey, productId), async () => await query.ToListAsync());
         }
 
         /// <summary>
@@ -2055,7 +2049,7 @@ namespace Nop.Services.Catalog
                         orderby pp.DisplayOrder, pp.Id
                         select pp;
 
-            var productPictures = await query.ToAsyncEnumerable().ToListAsync();
+            var productPictures = await query.ToListAsync();
 
             return productPictures;
         }
@@ -2097,7 +2091,6 @@ namespace Nop.Services.Catalog
         {
             var productPictures = await _productPictureRepository.Table
                 .Where(p => productsIds.Contains(p.ProductId))
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             return productPictures.GroupBy(p => p.ProductId).ToDictionary(p => p.Key, p => p.Select(p1 => p1.PictureId).ToArray());
@@ -2264,7 +2257,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productReview));
 
             var prh = await _productReviewHelpfulnessRepository.Table
-                .ToAsyncEnumerable()
                 .SingleOrDefaultAwaitAsync(async h => h.ProductReviewId == productReview.Id && h.CustomerId == (await _workContext.GetCurrentCustomerAsync()).Id);
 
             if (prh is null)
@@ -2300,8 +2292,8 @@ namespace Nop.Services.Catalog
 
             var productReviewHelpfulness = _productReviewHelpfulnessRepository.Table.Where(prh => prh.ProductReviewId == productReview.Id);
 
-            return (await productReviewHelpfulness.ToAsyncEnumerable().CountAsync(prh => prh.WasHelpful),
-                await productReviewHelpfulness.ToAsyncEnumerable().CountAsync(prh => !prh.WasHelpful));
+            return (await productReviewHelpfulness.CountAsync(prh => prh.WasHelpful),
+                await productReviewHelpfulness.CountAsync(prh => !prh.WasHelpful));
         }
 
         /// <summary>
@@ -2375,7 +2367,7 @@ namespace Nop.Services.Catalog
             return await (from w in _warehouseRepository.Table
                           join pwi in _productWarehouseInventoryRepository.Table on w.Id equals pwi.WarehouseId
                           where pwi.ProductId == productId
-                          select w).ToAsyncEnumerable().ToListAsync();
+                          select w).ToListAsync();
         }
 
         /// <summary>
@@ -2497,7 +2489,7 @@ namespace Nop.Services.Catalog
                 where dcm.DiscountId == discount.Id
                 select new { product = p, dcm };
 
-            foreach (var pdcm in await mappingsWithProducts.ToAsyncEnumerable().ToListAsync())
+            foreach (var pdcm in await mappingsWithProducts.ToListAsync())
             {
                 await _discountProductMappingRepository.DeleteAsync(pdcm.dcm);
 
@@ -2524,7 +2516,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<DiscountProductMapping> GetDiscountAppliedToProductAsync(int productId, int discountId)
         {
             return await _discountProductMappingRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(dcm => dcm.EntityId == productId && dcm.DiscountId == discountId);
         }
 

@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new VendorAttributeListModel().PrepareToGridAsync(searchModel, vendorAttributes, () =>
             {
-                return vendorAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
+                return vendorAttributes.SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<VendorAttributeModel>();

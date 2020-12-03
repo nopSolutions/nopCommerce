@@ -5,6 +5,7 @@ using Google.Authenticator;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Domains;
 
 namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Services

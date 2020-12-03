@@ -146,7 +146,6 @@ namespace Nop.Services.Stores
             //filtering by name
             var filter = await query.Select(store => store.Name)
                 .Where(store => queryFilter.Contains(store))
-                .ToAsyncEnumerable()
                 .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 
@@ -157,7 +156,6 @@ namespace Nop.Services.Stores
             //filtering by IDs
             filter = await query.Select(store => store.Id.ToString())
                 .Where(store => queryFilter.Contains(store))
-                .ToAsyncEnumerable()
                 .ToListAsync();
             queryFilter = queryFilter.Except(filter).ToArray();
 

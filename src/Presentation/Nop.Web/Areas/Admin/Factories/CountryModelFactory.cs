@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new CountryListModel().PrepareToGridAsync(searchModel, countries, () =>
             {
                 //fill in model values from the entity
-                return countries.ToAsyncEnumerable().SelectAwait(async country =>
+                return countries.SelectAwait(async country =>
                 {
                     var countryModel = country.ToModel<CountryModel>();
 

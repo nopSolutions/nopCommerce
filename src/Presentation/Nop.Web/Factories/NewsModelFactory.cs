@@ -174,7 +174,7 @@ namespace Nop.Web.Factories
                 return new HomepageNewsItemsModel
                 {
                     WorkingLanguageId = language.Id,
-                    NewsItems = await newsItems.ToAsyncEnumerable().SelectAwait(async newsItem =>
+                    NewsItems = await newsItems.SelectAwait(async newsItem =>
                     {
                         var newsModel = new NewsItemModel();
                         await PrepareNewsItemModelAsync(newsModel, newsItem, false);
@@ -212,7 +212,7 @@ namespace Nop.Web.Factories
             var model = new NewsItemListModel
             {
                 WorkingLanguageId = language.Id,
-                NewsItems = await newsItems.ToAsyncEnumerable().SelectAwait(async newsItem =>
+                NewsItems = await newsItems.SelectAwait(async newsItem =>
                 {
                     var newsModel = new NewsItemModel();
                     await PrepareNewsItemModelAsync(newsModel, newsItem, false);

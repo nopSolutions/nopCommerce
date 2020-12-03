@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
@@ -258,7 +257,7 @@ namespace Nop.Services.Catalog
 
             var result = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                return await categories.ToAsyncEnumerable()
+                return await categories
                     .WhereAwait(async c => await _aclService.AuthorizeAsync(c) && await _storeMappingService.AuthorizeAsync(c))
                     .ToListAsync();
             });
@@ -287,15 +286,14 @@ namespace Nop.Services.Catalog
                 var ids = await _discountCategoryMappingRepository.Table
                     .Where(dmm => dmm.DiscountId == discount.Id).Select(dmm => dmm.EntityId)
                     .Distinct()
-                    .ToAsyncEnumerable()
                     .ToListAsync();
 
                 if (!discount.AppliedToSubCategories)
                     return ids;
 
-                ids.AddRange(await ids.ToAsyncEnumerable().SelectManyAwait(async categoryId =>
-                        (await GetChildCategoryIdsAsync(categoryId, (await _storeContext.GetCurrentStoreAsync()).Id))
-                        .ToAsyncEnumerable())
+                ids.AddRange(await ids.SelectManyAwait(async categoryId =>
+                        (await GetChildCategoryIdsAsync(categoryId, (await _storeContext.GetCurrentStoreAsync()).Id)).ToAsyncEnumerable()
+                        )
                     .ToListAsync());
 
                 return ids.Distinct().ToList();
@@ -330,7 +328,7 @@ namespace Nop.Services.Catalog
                     .Select(c => c.Id)
                     .ToList();
                 categoriesIds.AddRange(categories);
-                categoriesIds.AddRange(await categories.ToAsyncEnumerable().SelectManyAwait(async cId => (await GetChildCategoryIdsAsync(cId, storeId, showHidden)).ToAsyncEnumerable()).ToListAsync());
+                categoriesIds.AddRange(await categories.SelectManyAwait(async cId => (await GetChildCategoryIdsAsync(cId, storeId, showHidden)).ToAsyncEnumerable()).ToListAsync());
 
                 return categoriesIds;
             });
@@ -391,7 +389,6 @@ namespace Nop.Services.Catalog
         public virtual async Task<DiscountCategoryMapping> GetDiscountAppliedToCategoryAsync(int categoryId, int discountId)
         {
             return await _discountCategoryMappingRepository.Table
-                .ToAsyncEnumerable()
                 .FirstOrDefaultAsync(dcm => dcm.EntityId == categoryId && dcm.DiscountId == discountId);
         }
 
@@ -563,7 +560,6 @@ namespace Nop.Services.Catalog
             //filtering by name
             var filter = await query.Select(c => c.Name)
                 .Where(c => queryFilter.Contains(c))
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             //if some names not found
@@ -573,7 +569,6 @@ namespace Nop.Services.Catalog
             //filtering by IDs
             filter = await query.Select(c => c.Id.ToString())
                 .Where(c => queryFilter.Contains(c))
-                .ToAsyncEnumerable()
                 .ToListAsync();
 
             return queryFilter.Except(filter).ToArray();
@@ -590,7 +585,6 @@ namespace Nop.Services.Catalog
 
             return (await query.Where(p => productIds.Contains(p.ProductId))
                 .Select(p => new { p.ProductId, p.CategoryId })
-                .ToAsyncEnumerable()
                 .ToListAsync())
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());

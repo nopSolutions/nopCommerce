@@ -91,7 +91,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var availableConditionAttributes = (await _checkoutAttributeService.GetAllCheckoutAttributesAsync())
                 .Where(attribute => attribute.Id != checkoutAttribute.Id && attribute.CanBeUsedAsCondition());
 
-            model.ConditionAttributes = await availableConditionAttributes.ToAsyncEnumerable().SelectAwait(async attribute => new AttributeConditionModel
+            model.ConditionAttributes = await availableConditionAttributes.SelectAwait(async attribute => new AttributeConditionModel
             {
                 Id = attribute.Id,
                 Name = attribute.Name,
@@ -164,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CheckoutAttributeListModel().PrepareToGridAsync(searchModel, checkoutAttributes, () =>
             {
-                return checkoutAttributes.ToAsyncEnumerable().SelectAwait(async attribute =>
+                return checkoutAttributes.SelectAwait(async attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();

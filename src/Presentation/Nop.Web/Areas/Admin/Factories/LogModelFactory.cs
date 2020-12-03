@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new LogListModel().PrepareToGridAsync(searchModel, logItems, () =>
             {
                 //fill in model values from the entity
-                return logItems.ToAsyncEnumerable().SelectAwait(async logItem =>
+                return logItems.SelectAwait(async logItem =>
                 {
                     //fill in model values from the entity
                     var logModel = logItem.ToModel<LogModel>();

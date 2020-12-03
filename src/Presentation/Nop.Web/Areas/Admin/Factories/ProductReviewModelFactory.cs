@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new ProductReviewListModel().PrepareToGridAsync(searchModel, productReviews, () =>
             {
-                return productReviews.ToAsyncEnumerable().SelectAwait(async productReview =>
+                return productReviews.SelectAwait(async productReview =>
                 {
                     //fill in model values from the entity
                     var productReviewModel = productReview.ToModel<ProductReviewModel>();
@@ -253,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new ProductReviewReviewTypeMappingListModel().PrepareToGridAsync(searchModel, productReviewReviewTypeMappings, () =>
             {
-                return productReviewReviewTypeMappings.ToAsyncEnumerable().SelectAwait(async productReviewReviewTypeMapping =>
+                return productReviewReviewTypeMappings.SelectAwait(async productReviewReviewTypeMapping =>
                 {
                     //fill in model values from the entity
                     var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping

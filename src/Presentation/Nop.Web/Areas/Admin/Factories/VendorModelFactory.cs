@@ -288,7 +288,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new VendorListModel().PrepareToGridAsync(searchModel, vendors, () =>
             {
                 //fill in model values from the entity
-                return vendors.ToAsyncEnumerable().SelectAwait(async vendor =>
+                return vendors.SelectAwait(async vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
 
@@ -385,7 +385,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = await new VendorNoteListModel().PrepareToGridAsync(searchModel, vendorNotes, () =>
             {
                 //fill in model values from the entity
-                return vendorNotes.ToAsyncEnumerable().SelectAwait(async note =>
+                return vendorNotes.SelectAwait(async note =>
                 {
                     //fill in model values from the entity        
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();

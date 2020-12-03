@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new CustomerRoleListModel().PrepareToGridAsync(searchModel, customerRoles, () =>
             {
-                return customerRoles.ToAsyncEnumerable().SelectAwait(async role =>
+                return customerRoles.SelectAwait(async role =>
                 {
                     //fill in model values from the entity
                     var customerRoleModel = role.ToModel<CustomerRoleModel>();
@@ -183,7 +183,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new CustomerRoleProductListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 

@@ -152,7 +152,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new CategoryListModel().PrepareToGridAsync(searchModel, categories, () =>
             {
-                return categories.ToAsyncEnumerable().SelectAwait(async category =>
+                return categories.SelectAwait(async category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
@@ -259,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new CategoryProductListModel().PrepareToGridAsync(searchModel, productCategories, () =>
             {
-                return productCategories.ToAsyncEnumerable().SelectAwait(async productCategory =>
+                return productCategories.SelectAwait(async productCategory =>
                 {
                     //fill in model values from the entity
                     var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
@@ -328,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare grid model
             var model = await new AddProductToCategoryListModel().PrepareToGridAsync(searchModel, products, () =>
             {
-                return products.ToAsyncEnumerable().SelectAwait(async product =>
+                return products.SelectAwait(async product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
 

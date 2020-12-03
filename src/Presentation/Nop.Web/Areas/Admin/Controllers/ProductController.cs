@@ -1101,7 +1101,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 await _productService.DeleteProductsAsync(await (await _productService.GetProductsByIdsAsync(selectedIds.ToArray()))
-                    .ToAsyncEnumerable()
                     .WhereAwait(async p => await _workContext.GetCurrentVendorAsync() == null || p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync());
             }
 
@@ -2220,7 +2219,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                products = await products.ToAsyncEnumerable().WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
+                products = await products.WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
             }
 
             try
@@ -2305,7 +2304,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                products = await products.ToAsyncEnumerable().WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
+                products = await products.WhereAwait(async p => p.VendorId == (await _workContext.GetCurrentVendorAsync()).Id).ToListAsync();
             }
 
             try
@@ -3223,7 +3222,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var requiredAttributeNames = await (await _productAttributeService.GetProductAttributeMappingsByProductIdAsync(product.Id))
                 .Where(pam => pam.IsRequired)
                 .Where(pam => !pam.IsNonCombinable())
-                .ToAsyncEnumerable()
                 .WhereAwait(async pam => !(await _productAttributeService.GetProductAttributeValuesAsync(pam.Id)).Any(v => allowedAttributeIds.Any(id => id == v.Id)))
                 .SelectAwait(async pam => (await _productAttributeService.GetProductAttributeByIdAsync(pam.ProductAttributeId)).Name).ToListAsync();
 

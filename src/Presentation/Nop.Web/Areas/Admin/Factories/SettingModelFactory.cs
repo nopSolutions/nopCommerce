@@ -1136,7 +1136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new SortOptionListModel().PrepareToGridAsync(searchModel, sortOptions, () =>
             {
-                return sortOptions.ToAsyncEnumerable().SelectAwait(async option =>
+                return sortOptions.SelectAwait(async option =>
                 {
                     //fill in model values from the entity
                     var sortOptionModel = new SortOptionModel { Id = (int)option };
@@ -1411,7 +1411,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new GdprConsentListModel().PrepareToGridAsync(searchModel, consentList, () =>
             {
-                return consentList.ToAsyncEnumerable().SelectAwait(async consent =>
+                return consentList.SelectAwait(async consent =>
                 {
                     var gdprConsentModel = consent.ToModel<GdprConsentModel>();
 
@@ -1567,7 +1567,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new SettingListModel().PrepareToGridAsync(searchModel, pagedSettings, () =>
             {
-                return pagedSettings.ToAsyncEnumerable().SelectAwait(async setting =>
+                return pagedSettings.SelectAwait(async setting =>
                 {
                     //fill in model values from the entity
                     var settingModel = setting.ToModel<SettingModel>();

@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare low stock product models
             var lowStockProductModels = new List<LowStockProductModel>();
-            lowStockProductModels.AddRange(await products.ToAsyncEnumerable().SelectAwait(async product => new LowStockProductModel
+            lowStockProductModels.AddRange(await products.SelectAwait(async product => new LowStockProductModel
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -168,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }).ToListAsync());
 
-            lowStockProductModels.AddRange(await combinations.ToAsyncEnumerable().SelectAwait(async combination =>
+            lowStockProductModels.AddRange(await combinations.SelectAwait(async combination =>
             {
                 var product = await _productService.GetProductByIdAsync(combination.ProductId);
                 return new LowStockProductModel
@@ -253,7 +253,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new BestsellerListModel().PrepareToGridAsync(searchModel, bestsellers, () =>
             {
-                return bestsellers.ToAsyncEnumerable().SelectAwait(async bestseller =>
+                return bestsellers.SelectAwait(async bestseller =>
                 {
                     //fill in model values from the entity
                     var bestsellerModel = new BestsellerModel
@@ -439,7 +439,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new CountryReportListModel().PrepareToGridAsync(searchModel, items, () =>
             {
-                return items.ToAsyncEnumerable().SelectAwait(async item =>
+                return items.SelectAwait(async item =>
                 {
                     //fill in model values from the entity
                     var countryReportModel = new CountryReportModel
@@ -570,7 +570,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new BestCustomersReportListModel().PrepareToGridAsync(searchModel, reportItems, () =>
             {
-                return reportItems.ToAsyncEnumerable().SelectAwait(async item =>
+                return reportItems.SelectAwait(async item =>
                {
                    //fill in model values from the entity
                    var bestCustomersReportModel = new BestCustomersReportModel

@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new GiftCardListModel().PrepareToGridAsync(searchModel, giftCards, () =>
             {
-                return giftCards.ToAsyncEnumerable().SelectAwait(async giftCard =>
+                return giftCards.SelectAwait(async giftCard =>
                 {
                     //fill in model values from the entity
                     var giftCardModel = giftCard.ToModel<GiftCardModel>();
@@ -211,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare list model
             var model = await new GiftCardUsageHistoryListModel().PrepareToGridAsync(searchModel, usageHistory, () =>
             {
-                return usageHistory.ToAsyncEnumerable().SelectAwait(async historyEntry =>
+                return usageHistory.SelectAwait(async historyEntry =>
                 {
                     //fill in model values from the entity
                     var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();

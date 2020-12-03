@@ -246,7 +246,6 @@ namespace Nop.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetNewsItemUrlsAsync()
         {
             return await (await _newsService.GetAllNewsAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .ToAsyncEnumerable()
                 .SelectAwait(async news => await GetLocalizedSitemapUrlAsync("NewsItem",
                     async lang => new { SeName = await _urlRecordService.GetSeNameAsync(news, news.LanguageId, ensureTwoPublishedLanguages: false) },
                     news.CreatedOnUtc)).ToListAsync();
@@ -259,7 +258,6 @@ namespace Nop.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetCategoryUrlsAsync()
         {
             return await (await _categoryService.GetAllCategoriesAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .ToAsyncEnumerable()
                 .SelectAwait(async category => await GetLocalizedSitemapUrlAsync("Category", GetSeoRouteParamsAwait(category), category.UpdatedOnUtc)).ToListAsync();
         }
 
@@ -270,7 +268,6 @@ namespace Nop.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetManufacturerUrlsAsync()
         {
             return await (await _manufacturerService.GetAllManufacturersAsync(storeId: (await _storeContext.GetCurrentStoreAsync()).Id))
-                .ToAsyncEnumerable()
                 .SelectAwait(async manufacturer => await GetLocalizedSitemapUrlAsync("Manufacturer", GetSeoRouteParamsAwait(manufacturer), manufacturer.UpdatedOnUtc)).ToListAsync();
         }
 
@@ -282,8 +279,7 @@ namespace Nop.Services.Seo
         {
             return await (await _productService.SearchProductsAsync(0, storeId: (await _storeContext.GetCurrentStoreAsync()).Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn))
-                .ToAsyncEnumerable()
-                    .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
+                .SelectAwait(async product => await GetLocalizedSitemapUrlAsync("Product", GetSeoRouteParamsAwait(product), product.UpdatedOnUtc)).ToListAsync();
         }
 
         /// <summary>
@@ -293,7 +289,6 @@ namespace Nop.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetProductTagUrlsAsync()
         {
             return await (await _productTagService.GetAllProductTagsAsync())
-                .ToAsyncEnumerable()
                 .SelectAwait(async productTag => await GetLocalizedSitemapUrlAsync("ProductsByTag", GetSeoRouteParamsAwait(productTag))).ToListAsync();
         }
 
@@ -304,7 +299,6 @@ namespace Nop.Services.Seo
         protected virtual async Task<IEnumerable<SitemapUrl>> GetTopicUrlsAsync()
         {
             return await (await _topicService.GetAllTopicsAsync((await _storeContext.GetCurrentStoreAsync()).Id)).Where(t => t.IncludeInSitemap)
-                .ToAsyncEnumerable()
                 .SelectAwait(async topic => await GetLocalizedSitemapUrlAsync("Topic", GetSeoRouteParamsAwait(topic))).ToListAsync();
         }
 
@@ -316,7 +310,6 @@ namespace Nop.Services.Seo
         {
             return await (await _blogService.GetAllBlogPostsAsync((await _storeContext.GetCurrentStoreAsync()).Id))
                 .Where(p => p.IncludeInSitemap)
-                .ToAsyncEnumerable()
                 .SelectAwait(async post => await GetLocalizedSitemapUrlAsync("BlogPost",
                     async lang => new { SeName = await _urlRecordService.GetSeNameAsync(post, post.LanguageId, ensureTwoPublishedLanguages: false) },
                     post.CreatedOnUtc)).ToListAsync();
@@ -375,7 +368,7 @@ namespace Nop.Services.Seo
 
             var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
             //return list of localized urls
-            var localizedUrls = await languages.ToAsyncEnumerable()
+            var localizedUrls = await languages
                 .SelectAwait(async lang =>
                 {
                     var currentUrl = urlHelper.RouteUrl(routeName, getRouteParamsAwait?.Invoke(lang.Id), await GetHttpProtocolAsync());

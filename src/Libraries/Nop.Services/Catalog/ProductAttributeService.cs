@@ -141,7 +141,6 @@ namespace Nop.Services.Catalog
             var queryFilter = attributeId.Distinct().ToArray();
             var filter = await query.Select(a => a.Id)
                 .Where(m => queryFilter.Contains(m))
-                .ToAsyncEnumerable()
                 .ToListAsync();
             
             return queryFilter.Except(filter).ToArray();
@@ -174,7 +173,7 @@ namespace Nop.Services.Catalog
                 where pam.ProductId == productId
                 select pam;
 
-            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToAsyncEnumerable().ToListAsync()) ?? new List<ProductAttributeMapping>();
+            var attributes = await _staticCacheManager.GetAsync(allCacheKey, async () => await query.ToListAsync()) ?? new List<ProductAttributeMapping>();
 
             return attributes;
         }
@@ -233,7 +232,7 @@ namespace Nop.Services.Catalog
                 orderby pav.DisplayOrder, pav.Id
                 where pav.ProductAttributeMappingId == productAttributeMappingId
                 select pav;
-            var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var productAttributeValues = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return productAttributeValues;
         }
@@ -293,7 +292,7 @@ namespace Nop.Services.Catalog
                         where ppav.ProductAttributeId == productAttributeId
                         select ppav;
 
-            var values = await _staticCacheManager.GetAsync(key, async () => await query.ToAsyncEnumerable().ToListAsync());
+            var values = await _staticCacheManager.GetAsync(key, async () => await query.ToListAsync());
 
             return values;
         }
@@ -386,7 +385,7 @@ namespace Nop.Services.Catalog
                         orderby pac.Id
                         where pac.Sku == sku
                         select pac;
-            var combination = await query.ToAsyncEnumerable().FirstOrDefaultAsync();
+            var combination = await query.FirstOrDefaultAsync();
 
             return combination;
         }

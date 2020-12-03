@@ -645,7 +645,7 @@ namespace Nop.Web.Controllers
                 IncludeFullDescriptionInCompareProducts = _catalogSettings.IncludeFullDescriptionInCompareProducts,
             };
 
-            var products = await (await _compareProductsService.GetComparedProductsAsync()).ToAsyncEnumerable()
+            var products = await (await _compareProductsService.GetComparedProductsAsync())
             //ACL and store mapping
             .WhereAwait(async p => await _aclService.AuthorizeAsync(p) && await _storeMappingService.AuthorizeAsync(p))
             //availability dates

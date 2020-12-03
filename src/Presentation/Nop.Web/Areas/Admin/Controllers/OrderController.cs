@@ -337,7 +337,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids))
-                    .ToAsyncEnumerable().WhereAwait(HasAccessToOrderAsync).ToListAsync());
+                    .WhereAwait(HasAccessToOrderAsync).ToListAsync());
             }
 
             try
@@ -435,7 +435,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).ToAsyncEnumerable().WhereAwait(HasAccessToOrderAsync).ToListAsync());
+                orders.AddRange(await (await _orderService.GetOrdersByIdsAsync(ids)).WhereAwait(HasAccessToOrderAsync).ToListAsync());
             }
 
             try
@@ -1019,7 +1019,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorId = 0;
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                orders = await orders.ToAsyncEnumerable().WhereAwait(HasAccessToOrderAsync).ToListAsync();
+                orders = await orders.WhereAwait(HasAccessToOrderAsync).ToListAsync();
                 vendorId = (await _workContext.GetCurrentVendorAsync()).Id;
             }
 
@@ -1989,7 +1989,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                orderItems = await orderItems.ToAsyncEnumerable().WhereAwait(HasAccessToProductAsync).ToListAsync();
+                orderItems = await orderItems.WhereAwait(HasAccessToProductAsync).ToListAsync();
             }
 
             var shipment = new Shipment
@@ -2448,7 +2448,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                shipments = await shipments.ToAsyncEnumerable().WhereAwait(HasAccessToShipmentAsync).ToListAsync();
+                shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
             }
 
             try
@@ -2483,7 +2483,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                shipments = await shipments.ToAsyncEnumerable().WhereAwait(HasAccessToShipmentAsync).ToListAsync();
+                shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
             }
 
             foreach (var shipment in shipments)
@@ -2515,7 +2515,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (await _workContext.GetCurrentVendorAsync() != null)
             {
-                shipments = await shipments.ToAsyncEnumerable().WhereAwait(HasAccessToShipmentAsync).ToListAsync();
+                shipments = await shipments.WhereAwait(HasAccessToShipmentAsync).ToListAsync();
             }
 
             foreach (var shipment in shipments)
