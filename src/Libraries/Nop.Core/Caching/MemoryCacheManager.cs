@@ -71,10 +71,22 @@ namespace Nop.Core.Caching
             return options;
         }
 
+        /// <summary>
+        /// Remove the value with the specified key from the cache
+        /// </summary>
+        /// <param name="cacheKey">Cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        public void Remove(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
+            _memoryCache.Remove(cacheKey.Key);
+        }
+
         #endregion
 
         #region Methods
 
+        //TODO: may be deleted
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
@@ -96,7 +108,7 @@ namespace Nop.Core.Caching
 
             //do not cache null value
             if (result == null)
-                RemoveAsync(key);
+                Remove(key);
 
             return result;
         }
@@ -108,8 +120,7 @@ namespace Nop.Core.Caching
         /// <param name="cacheKeyParameters">Parameters to create cache key</param>
         public Task RemoveAsync(CacheKey cacheKey, params object[] cacheKeyParameters)
         {
-            cacheKey = PrepareKey(cacheKey, cacheKeyParameters);
-            _memoryCache.Remove(cacheKey.Key);
+            Remove(cacheKey, cacheKeyParameters);
 
             return Task.CompletedTask;
         }

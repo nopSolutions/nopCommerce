@@ -97,9 +97,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var stores = (await _storeService.GetAllStoresAsync()).Select(store => new { store.Id, store.Name }).ToList();
 
             //prepare list model
-            var model = new MessageTemplateListModel().PrepareToGrid(searchModel, messageTemplates, () =>
+            var model = await new MessageTemplateListModel().PrepareToGridAsync(searchModel, messageTemplates, () =>
             {
-                return messageTemplates.Select(messageTemplate =>
+                return messageTemplates.ToAsyncEnumerable().SelectAwait(async messageTemplate =>
                 {
                     //fill in model values from the entity
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var storeNames = stores.Select(store => store.Name);
                     if (messageTemplate.LimitedToStores)
                     {
-                        _storeMappingSupportedModelFactory.PrepareModelStoresAsync(messageTemplateModel, messageTemplate, false);
+                        await _storeMappingSupportedModelFactory.PrepareModelStoresAsync(messageTemplateModel, messageTemplate, false);
                         storeNames = stores
                             .Where(store => messageTemplateModel.SelectedStoreIds.Contains(store.Id)).Select(store => store.Name);
                     }
