@@ -22,6 +22,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string PostfixAttributeName = "asp-postfix";
         private const string ValueAttributeName = "asp-value";
         private const string PlaceholderAttributeName = "placeholder";
+        private const string AutocompleteAttributeName = "autocomplete";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -48,6 +49,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(PlaceholderAttributeName)]
         public string Placeholder { set; get; }
+
+        /// <summary>
+        /// Autocomplete mode for the field
+        /// </summary>
+        [HtmlAttributeName(AutocompleteAttributeName)]
+        public string Autocomplete { set; get; }
 
         /// <summary>
         /// Indicates whether the "form-control" class shold be added to the input
@@ -115,6 +122,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //set placeholder if exists
             if (!string.IsNullOrEmpty(Placeholder))
                 htmlAttributes.Add("placeholder", Placeholder);
+
+            //set autocomplete if exists
+            if (!string.IsNullOrEmpty(Autocomplete))
+                htmlAttributes.Add("autocomplete", Autocomplete);
 
             //set value if exists
             if (!string.IsNullOrEmpty(Value))
