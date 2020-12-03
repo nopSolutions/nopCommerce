@@ -140,6 +140,7 @@
         @Html.NopScripts(ResourceLocation.Head, false)
         @*Insert favicon and app icons head code*@
         @await Component.InvokeAsync("Favicon")
+        @Html.NopInlineScripts(ResourceLocation.Head)
     </head>
     <body class="hold-transition sidebar-mini layout-fixed control-sidebar-slide-open">
         <script type="text/javascript">
@@ -165,7 +166,7 @@
             });
         </script>
         <script>
-            kendo.culture("@(currentKendoCulture)");            
+            kendo.culture("@(currentKendoCulture)");
         </script>
         <div class="throbber">
             <div class="curtain">
@@ -235,11 +236,11 @@
                                             <span>@T("Admin.Header.RestartApplication")</span>
                                         </button>
                                         <script>
-                                    $(document).ready(function () {
-                                        $("#restart-application").click(function (e) {
-                                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
-                                        });
+                                $(document).ready(function () {
+                                    $("#restart-application").click(function (e) {
+                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
                                     });
+                                });
                                         </script>
                                     </form>
                                 </li>
@@ -285,26 +286,26 @@
         }
         <div class="content-wrapper">
             @await Html.PartialAsync("Notifications")
-                <nop-antiforgery-token />
-                @RenderBody()
+            <nop-antiforgery-token />
+            @RenderBody()
         </div>
         <div class="main-footer clearfix">
             @if (!storeInformationSettings.HidePoweredByNopCommerce)
             {
                 @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                    Please find more info at https://www.nopcommerce.com/nopcommerce-premium-support-services*@
+                Please find more info at https://www.nopcommerce.com/nopcommerce-premium-support-services*@
                 <div class="pull-left">
                     Powered by <a href="https://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
                 </div>
             }
             <div class="pull-right hidden-xs">
-                 <b>nopCommerce version @NopVersion.FULL_VERSION</b>
+                <b>nopCommerce version @NopVersion.FULL_VERSION</b>
             </div>
             <div class="text-center">
                 @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)
             </div>
         </div>
-    </div>
+        </div>
         <script>
             var AdminLTEOptions = {
                 boxWidgetOptions: {
@@ -334,8 +335,9 @@
                 $('#backTop').backTop();
 
                 //enable tooltips
-                $('[data-toggle="tooltip"]').tooltip({placement: 'bottom'});
+                $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
             });
         </script>
+        @Html.NopInlineScripts(ResourceLocation.Footer)
     </body>
 </html>
