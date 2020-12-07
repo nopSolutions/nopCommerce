@@ -73,10 +73,9 @@
                                                 <nop-textarea asp-for="@Model.Locales[item].Body"/>
                                                 <text>
                                                     <script>
-                                                            $(document).ready(function() {
-                                                                $('#@Html.IdFor(model => model.Locales[item].Body)')
-                                                                    .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
-                                                            });
+                                                        $(document).ready(function() {
+                                                            $('#@Html.IdFor(model => model.Locales[item].Body)').height('auto');
+                                                        });
                                                     </script>
                                                 </text>
                                             }
@@ -147,10 +146,9 @@
                                             <nop-textarea asp-for="Body" asp-required="true" />
                                             <text>
                                                 <script>
-                                                $(document).ready(function() {
-                                                    $('#@Html.IdFor(model => model.Body)')
-                                                    .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
-                                                });
+                                                    $(document).ready(function() {
+                                                        $('#@Html.IdFor(model => model.Body)').height('auto');
+                                                    });
                                                 </script>
                                             </text>
                                         }                                            
