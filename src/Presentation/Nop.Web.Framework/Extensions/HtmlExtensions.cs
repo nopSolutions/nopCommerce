@@ -98,7 +98,8 @@ namespace Nop.Web.Framework.Extensions
                     var localizedTabName = $"{name}-{language.Id}-tab";
                     tabStrip.AppendLine(string.Format("<li class=\"nav-item\">"));
                     var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
-                    tabStrip.AppendLine($"<a class=\"nav-link\" data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
+                    var active = localizedTabName == tabNameToSelect ? "active" : null;
+                    tabStrip.AppendLine($"<a class=\"nav-link {active}\" data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"pill\" role=\"tab\" aria-selected=\"false\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
                     tabStrip.AppendLine("</li>");
                 }
