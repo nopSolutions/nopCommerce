@@ -44,7 +44,7 @@ $(document).ready(function () {
 
 function toggleAvatar() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
-        $('#pnlDefaultAvatarEnabled').show();
+        $('#pnlDefaultAvatarEnabled').showField();
     } else {
         $('#pnlDefaultAvatarEnabled').hide();
     }
@@ -52,9 +52,9 @@ function toggleAvatar() {
 
 function toggleUsername() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
-        $('#pnlAllowUsersToChangeUsernames').show();
-        $('#pnlCheckUsernameAvailability').show();
-        $('#pnlUsernameValidationEnabled').show();
+        $('#pnlAllowUsersToChangeUsernames').showField();
+        $('#pnlCheckUsernameAvailability').showField();
+        $('#pnlUsernameValidationEnabled').showField();
     } else {
         $('#pnlAllowUsersToChangeUsernames').hide();
         $('#pnlCheckUsernameAvailability').hide();
@@ -64,8 +64,8 @@ function toggleUsername() {
 
 function toggleUsernameValidation() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)').is(':checked')) {
-        $('#pnlUsernameValidationRule').show();
-        $('#pnlUsernameValidationUseRegex').show();
+        $('#pnlUsernameValidationRule').showField();
+        $('#pnlUsernameValidationUseRegex').showField();
     } else {
         $('#pnlUsernameValidationRule').hide();
         $('#pnlUsernameValidationUseRegex').hide();
@@ -74,8 +74,8 @@ function toggleUsernameValidation() {
 	
 function togglePhoneNumberValidation() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneNumberValidationEnabled)').is(':checked')) {
-        $('#pnlPhoneNumberValidationRule').show();
-        $('#pnlPhoneNumberValidationUseRegex').show();
+        $('#pnlPhoneNumberValidationRule').showField();
+        $('#pnlPhoneNumberValidationUseRegex').showField();
     } else {
         $('#pnlPhoneNumberValidationRule').hide();
         $('#pnlPhoneNumberValidationUseRegex').hide();

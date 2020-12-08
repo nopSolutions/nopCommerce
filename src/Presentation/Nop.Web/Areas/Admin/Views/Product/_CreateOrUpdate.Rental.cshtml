@@ -9,8 +9,8 @@
 
     function toggleRental() {
         if ($('#@Html.IdFor(model => model.IsRental)').is(':checked')) {
-            $('#pnlRentalPriceLength').show();
-            $('#pnlRentalPricePeriod').show();
+            $('#pnlRentalPriceLength').showField();
+            $('#pnlRentalPricePeriod').showField();
         } else {
             $('#pnlRentalPriceLength').hide();
             $('#pnlRentalPricePeriod').hide();

@@ -1,3 +1,7 @@
+$.fn.showField = function () {
+  this.css('display', 'flex');
+}
+
 function setLocation(url) {
     window.location.href = url;
 }

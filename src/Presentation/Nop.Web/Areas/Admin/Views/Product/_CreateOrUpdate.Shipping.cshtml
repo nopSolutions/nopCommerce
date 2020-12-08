@@ -7,14 +7,14 @@
 
     function toggleShipping() {
         if ($('#@Html.IdFor(model => model.IsShipEnabled)').is(':checked')) {
-            $('#pnlFreeShipping').show();
-            $('#pnlShipSeparately').show();
-            $('#pnlAdditionalShippingCharge').show();
-            $('#pnlWeight').show();
-            $('#pnlLength').show();
-            $('#pnlWidth').show();
-            $('#pnlHeight').show();
-            $('#pnlDeliveryDate').show();
+            $('#pnlFreeShipping').showField();
+            $('#pnlShipSeparately').showField();
+            $('#pnlAdditionalShippingCharge').showField();
+            $('#pnlWeight').showField();
+            $('#pnlLength').showField();
+            $('#pnlWidth').showField();
+            $('#pnlHeight').showField();
+            $('#pnlDeliveryDate').showField();
         } else {
             $('#pnlFreeShipping').hide();
             $('#pnlShipSeparately').hide();

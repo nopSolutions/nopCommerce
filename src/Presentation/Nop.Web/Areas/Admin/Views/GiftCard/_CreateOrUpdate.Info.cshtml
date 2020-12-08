@@ -178,9 +178,9 @@
     function toggleGiftCardType() {
         var selectedGiftCardTypeId = $("#@Html.IdFor(model => model.GiftCardTypeId)").val();
         if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
-            $('#pnlRecipientEmail').show();
-            $('#pnlSenderEmail').show();
-            $('#pnlNotifyRecipient').show();
+            $('#pnlRecipientEmail').showField();
+            $('#pnlSenderEmail').showField();
+            $('#pnlNotifyRecipient').showField();
         } else {
             $('#pnlRecipientEmail').hide();
             $('#pnlSenderEmail').hide();

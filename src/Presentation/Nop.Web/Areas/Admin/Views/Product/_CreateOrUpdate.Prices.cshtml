@@ -20,7 +20,7 @@
 
     function togglePreOrder() {
         if ($('#@Html.IdFor(model => model.AvailableForPreOrder)').is(':checked')) {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').show();
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').showField();
         } else {
             $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
         }
@@ -29,8 +29,8 @@
 
     function toggleCustomerEntersPrice() {
         if ($('#@Html.IdFor(model => model.CustomerEntersPrice)').is(':checked')) {
-            $('#pnlMinimumCustomerEnteredPrice').show();
-            $('#pnlMaximumCustomerEnteredPrice').show();
+            $('#pnlMinimumCustomerEnteredPrice').showField();
+            $('#pnlMaximumCustomerEnteredPrice').showField();
         } else {
             $('#pnlMinimumCustomerEnteredPrice').hide();
             $('#pnlMaximumCustomerEnteredPrice').hide();
@@ -39,10 +39,10 @@
 
     function toggleBasepriceEnabled() {
         if ($('#@Html.IdFor(model => model.BasepriceEnabled)').is(':checked')) {
-            $('#pnlBasepriceAmount').show();
-            $('#pnlBasepriceUnit').show();
-            $('#pnlBasepriceBaseAmount').show();
-            $('#pnlBasepriceBaseUnit').show();
+            $('#pnlBasepriceAmount').showField();
+            $('#pnlBasepriceUnit').showField();
+            $('#pnlBasepriceBaseAmount').showField();
+            $('#pnlBasepriceBaseUnit').showField();
         } else {
             $('#pnlBasepriceAmount').hide();
             $('#pnlBasepriceUnit').hide();
@@ -55,7 +55,7 @@
         if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();
         } else {
-            $('#pnlTaxCategory').show();
+            $('#pnlTaxCategory').showField();
         }
     }
 </script>
