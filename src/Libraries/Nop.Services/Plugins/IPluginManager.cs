@@ -37,6 +37,7 @@ namespace Nop.Services.Plugins
         /// <returns>Plugin</returns>
         Task<TPlugin> LoadPrimaryPluginAsync(string systemName, Customer customer = null, int storeId = 0);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Load active plugins
         /// </summary>

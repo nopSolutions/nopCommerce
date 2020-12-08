@@ -690,7 +690,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             return await HandleFunctionAsync<int?>(async () =>
             {
                 //get Avalara pre-defined system tax codes (only active)
-                var systemTaxCodes = ServiceClient.ListTaxCodes("isActive eq true", null, null, null)
+                var systemTaxCodes = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 if (!systemTaxCodes.value?.Any() ?? true)
@@ -743,7 +743,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("Failed to retrieve company");
 
                 //get existing tax codes (only active)
-                var taxCodes = ServiceClient.ListTaxCodesByCompany(selectedCompany.id, "isActive eq true", null, null, null, null)
+                var taxCodes = await ServiceClient.ListTaxCodesByCompanyAsync(selectedCompany.id, "isActive eq true", null, null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 var existingTaxCodes = taxCodes.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
@@ -760,7 +760,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 }).Where(taxCode => !string.IsNullOrEmpty(taxCode.taxCode)).ToListAsync();
 
                 //add Avalara pre-defined system tax codes
-                var systemTaxCodesResult = ServiceClient.ListTaxCodes("isActive eq true", null, null, null)
+                var systemTaxCodesResult = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList() ?? new List<string>();
@@ -774,7 +774,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     return 0;
 
                 //create items and get the result
-                var createdTaxCodes = ServiceClient.CreateTaxCodes(selectedCompany.id, taxCodesToExport)
+                var createdTaxCodes = await ServiceClient.CreateTaxCodesAsync(selectedCompany.id, taxCodesToExport)
                     ?? throw new NopException("No response from the service");
 
                 //display results
@@ -795,7 +795,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             return await HandleFunctionAsync(async () =>
             {
                 //get Avalara pre-defined system tax codes (only active)
-                var systemTaxCodesResult = ServiceClient.ListTaxCodes("isActive eq true", null, null, null)
+                var systemTaxCodesResult = await ServiceClient.ListTaxCodesAsync("isActive eq true", null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 var systemTaxCodes = systemTaxCodesResult.value?.Select(taxCode => taxCode.taxCode).ToList();
@@ -848,7 +848,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     ?? throw new NopException("Failed to retrieve company");
 
                 //get existing items
-                var items = ServiceClient.ListItemsByCompany(selectedCompany.id, null, null, null, null, null)
+                var items = await ServiceClient.ListItemsByCompanyAsync(selectedCompany.id, null, null, null, null, null)
                     ?? throw new NopException("No response from the service");
 
                 //return the paginated and filtered list
@@ -902,7 +902,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                     return 0;
 
                 //create items and get the result
-                var createdItems = ServiceClient.CreateItems(selectedCompany.id, exportedItems)
+                var createdItems = await ServiceClient.CreateItemsAsync(selectedCompany.id, exportedItems)
                     ?? throw new NopException("No response from the service");
 
                 //display results

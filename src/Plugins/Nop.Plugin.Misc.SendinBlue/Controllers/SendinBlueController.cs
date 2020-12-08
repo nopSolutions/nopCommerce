@@ -658,7 +658,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             try
             {
                 using var streamReader = new StreamReader(Request.Body);
-                await _sendinBlueEmailManager.UnsubscribeWebhookAsync(streamReader.ReadToEnd());
+                await _sendinBlueEmailManager.UnsubscribeWebhookAsync(await streamReader.ReadToEndAsync());
             }
             catch (Exception ex)
             {

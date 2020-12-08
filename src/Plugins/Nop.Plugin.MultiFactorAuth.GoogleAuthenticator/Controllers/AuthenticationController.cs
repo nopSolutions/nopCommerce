@@ -61,11 +61,11 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
                 //try to find config with current customer and update
                 if (_googleAuthenticatorService.IsRegisteredCustomer(currentCustomer.Email))
                 {
-                    _googleAuthenticatorService.UpdateGoogleAuthenticatorAccount(currentCustomer.Email, model.SecretKey);
+                    await _googleAuthenticatorService.UpdateGoogleAuthenticatorAccountAsync(currentCustomer.Email, model.SecretKey);
                 }
                 else
                 {
-                    _googleAuthenticatorService.AddGoogleAuthenticatorAccount(currentCustomer.Email, model.SecretKey);
+                    await _googleAuthenticatorService.AddGoogleAuthenticatorAccountAsync(currentCustomer.Email, model.SecretKey);
                 }
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Plugins.MultiFactorAuth.GoogleAuthenticator.Token.Successful"));
             }

@@ -78,6 +78,7 @@ namespace Nop.Services.Gdpr
             string customerInfo = "", GdprRequestType? requestType = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Insert a GDPR log
         /// </summary>

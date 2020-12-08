@@ -154,7 +154,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = CreateMarketingAutomationClient();
 
                 //first, try to identify current customer
-                client.Identify(new Identify(customer.Email));
+                await client.IdentifyAsync(new Identify(customer.Email));
 
                 //get shopping cart GUID
                 var shoppingCartGuid = await _genericAttributeService
@@ -252,7 +252,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 }
 
                 //track event
-                client.TrackEvent(trackEvent);
+                await client.TrackEventAsync(trackEvent);
 
                 //update GUID for the current customer's shopping cart
                 await _genericAttributeService.SaveAttributeAsync(customer, SendinBlueDefaults.ShoppingCartGuidAttribute, shoppingCartGuid);
@@ -285,7 +285,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = CreateMarketingAutomationClient();
 
                 //first, try to identify current customer
-                client.Identify(new Identify(customer.Email));
+                await client.IdentifyAsync(new Identify(customer.Email));
 
                 //get URL helper
                 var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);

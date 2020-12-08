@@ -211,6 +211,7 @@ namespace Nop.Data
         /// <returns>Number of records, affected by command execution.</returns>
         Task<int> ExecuteNonQueryAsync(string sqlStatement, params DataParameter[] dataParameters);
 
+        //TODO: may be deleted
         /// <summary>
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
         /// single value
@@ -221,6 +222,7 @@ namespace Nop.Data
         /// <returns>Resulting value</returns>
         Task<T> ExecuteStoredProcedureAsync<T>(string procedureName, params DataParameter[] parameters);
 
+        //TODO: may be deleted
         /// <summary>
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
         /// number of affected records.

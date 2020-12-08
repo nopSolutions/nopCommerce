@@ -317,7 +317,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     }
 
                     //check whether there are contacts in the list
-                    var contacts = client.GetContactsFromList(listId);
+                    var contacts = await client.GetContactsFromListAsync(listId);
                     var template = new { contacts = new[] { new { email = string.Empty, emailBlacklisted = false } } };
                     var contactObjects = JsonConvert.DeserializeAnonymousType(contacts.ToJson(), template);
                     var blackListedEmails = contactObjects?.contacts?.Where(contact => contact.emailBlacklisted)
@@ -370,7 +370,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     var createAttribute = new CreateAttribute(attribute.Value, type: attribute.Type);
 
                     //create attribute
-                    client.CreateAttribute(attribute.Category.ToString().ToLowerInvariant(), attribute.Name, createAttribute);
+                    await client.CreateAttributeAsync(attribute.Category.ToString().ToLowerInvariant(), attribute.Name, createAttribute);
                 }
             }
             catch (Exception exception)
@@ -451,7 +451,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 }
 
                 //get all contacts of the list
-                var contacts = client.GetContactsFromList(listId);
+                var contacts = await client.GetContactsFromListAsync(listId);
 
                 //whether subscribed contact already in the list
                 var template = new { contacts = new[] { new { email = string.Empty } } };
@@ -560,7 +560,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         ListIds = new List<long?> { listId },
                         UpdateEnabled = true
                     };
-                    client.CreateContact(createContact);
+                    await client.CreateContactAsync(createContact);
                 }
                 else
                 {
@@ -570,7 +570,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         ListIds = new List<long?> { listId },
                         EmailBlacklisted = false
                     };
-                    client.UpdateContact(subscription.Email, updateContact);
+                    await client.UpdateContactAsync(subscription.Email, updateContact);
                 }
             }
             catch (Exception exception)
@@ -607,7 +607,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 {
                     UnlinkListIds = new List<long?> { listId }
                 };
-                client.UpdateContact(subscription.Email, updateContact);
+                await client.UpdateContactAsync(subscription.Email, updateContact);
             }
             catch (Exception exception)
             {
@@ -627,7 +627,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //whether plugin is configured
                 var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>();
                 if (string.IsNullOrEmpty(sendinBlueSettings.ApiKey))
-                    throw new NopException($"Plugin not configured");
+                    throw new NopException("Plugin not configured");
 
                 //parse string to JSON object
                 var unsubscriber = JsonConvert.DeserializeAnonymousType(unsubscribeContact,
@@ -671,7 +671,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var sendinBlueSettings = await _settingService.LoadSettingAsync<SendinBlueSettings>();
                 if (sendinBlueSettings.UnsubscribeWebhookId != 0)
                 {
-                    client.GetWebhook(sendinBlueSettings.UnsubscribeWebhookId);
+                    await client.GetWebhookAsync(sendinBlueSettings.UnsubscribeWebhookId);
                     return sendinBlueSettings.UnsubscribeWebhookId;
                 }
 
@@ -680,7 +680,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var notificationUrl = urlHelper.RouteUrl(SendinBlueDefaults.UnsubscribeContactRoute, null, _webHelper.GetCurrentRequestProtocol());
                 var webhook = new CreateWebhook(notificationUrl, "Unsubscribe event webhook",
                     new List<CreateWebhook.EventsEnum> { CreateWebhook.EventsEnum.Unsubscribed }, CreateWebhook.TypeEnum.Transactional);
-                var result = client.CreateWebhook(webhook);
+                var result = await client.CreateWebhookAsync(webhook);
 
                 return (int)result.Id;
             }
@@ -717,7 +717,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     [SendinBlueDefaults.OrderTotalServiceAttribute] = order.OrderTotal.ToString()
                 };
                 var updateContact = new UpdateContact { Attributes = attributes };
-                client.UpdateContact(customer.Email, updateContact);
+                await client.UpdateContactAsync(customer.Email, updateContact);
             }
             catch (Exception exception)
             {
@@ -742,7 +742,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new AccountApi(config));
 
                 //get account
-                var account = client.GetAccount();
+                var account = await client.GetAccountAsync();
 
                 //prepare info
                 var info = string.Format("First name: {1}{0}Last name: {2}{0}Email: {3}{0}Email credits: {4}{0}SMS credits: {5}{0}",
@@ -778,7 +778,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new AccountApi(config));
 
                 //set partner
-                client.SetPartner(new SetPartner(SendinBlueDefaults.PartnerName));
+                await client.SetPartnerAsync(new SetPartner(SendinBlueDefaults.PartnerName));
             }
             catch (Exception exception)
             {
@@ -804,7 +804,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new ContactsApi(config));
 
                 //get available lists
-                var lists = client.GetLists(SendinBlueDefaults.DefaultSynchronizationListsLimit);
+                var lists = await client.GetListsAsync(SendinBlueDefaults.DefaultSynchronizationListsLimit);
 
                 //prepare id-name pairs
                 var template = new { lists = new[] { new { id = string.Empty, name = string.Empty } } };
@@ -842,7 +842,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new SendersApi(config));
 
                 //get available senderes
-                var senders = client.GetSenders();
+                var senders = await client.GetSendersAsync();
 
                 //prepare id-name pairs
                 foreach (var sender in senders.Senders)
@@ -871,7 +871,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //create API client
                 var client = await CreateApiClientAsync(config => new AttributesApi(config));
 
-                var attributes = client.GetAttributes();
+                var attributes = await client.GetAttributesAsync();
                 var allAttribytes = attributes.Attributes.Select(s => s.Name).ToList();
 
                 var defaultNameAttributes = new List<string>
@@ -959,7 +959,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //create API client
                 var client = await CreateApiClientAsync(config => new AttributesApi(config));
 
-                var attributes = client.GetAttributes();
+                var attributes = await client.GetAttributesAsync();
                 var attributeNames = attributes.Attributes.Select(s => s.Name).ToList();
 
                 //prepare attributes to create
@@ -1021,7 +1021,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new AttributesApi(config));
 
                 //get already existing transactional attributes
-                var attributes = client.GetAttributes();
+                var attributes = await client.GetAttributesAsync();
                 var transactionalAttributes = attributes.Attributes
                     .Where(attribute => attribute.Category == CategoryEnum.Transactional).ToList();
 
@@ -1066,7 +1066,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new AccountApi(config));
 
                 //get account
-                var account = client.GetAccount();
+                var account = await client.GetAccountAsync();
                 return (account.Relay?.Enabled ?? false, null);
             }
             catch (Exception exception)
@@ -1092,7 +1092,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var accountClient = await CreateApiClientAsync(config => new AccountApi(config));
 
                 //get all available senders
-                var senders = sendersClient.GetSenders();
+                var senders = await sendersClient.GetSendersAsync();
                 if (!senders.Senders.Any())
                     return (0, "There are no senders");
 
@@ -1108,7 +1108,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
                 //or create new one
                 currentSender ??= senders.Senders.FirstOrDefault();
-                var relay = accountClient.GetAccount().Relay;
+                var relay = (await accountClient.GetAccountAsync()).Relay;
                 var newEmailAccount = new EmailAccount
                 {
                     Host = relay?.Data?.Relay,
@@ -1148,7 +1148,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //check whether email template already exists
                 if (templateId > 0)
                 {
-                    client.GetSmtpTemplate(templateId);
+                    await client.GetSmtpTemplateAsync(templateId);
                     return templateId;
                 }
 
@@ -1165,7 +1165,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 //create email template
                 var createSmtpTemplate = new CreateSmtpTemplate(sender: new CreateSmtpTemplateSender(emailAccount.DisplayName, emailAccount.Email),
                     templateName: message.Name, htmlContent: body, subject: subject, isActive: true);
-                var emailTemplate = client.CreateSmtpTemplate(createSmtpTemplate);
+                var emailTemplate = await client.CreateSmtpTemplateAsync(createSmtpTemplate);
 
                 return (int?)emailTemplate.Id;
             }
@@ -1193,7 +1193,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     throw new NopException("Message template is empty");
 
                 //get template
-                var template = client.GetSmtpTemplate(templateId);
+                var template = await client.GetSmtpTemplateAsync(templateId);
 
                 //bring attributes to tokens format
                 var subject = Regex.Replace(template.Subject, "({{\\s*params\\..*?\\s*}})", x => $"%{x.ToString().Replace("{", "").Replace("}", "").Replace("params.", "").Replace("_", ".").Trim()}%");
@@ -1248,7 +1248,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var transactionalSms = new SendTransacSms(sender: from, recipient: to, content: text, type: SendTransacSms.TypeEnum.Transactional);
 
                 //send SMS
-                var sms = client.SendTransacSms(transactionalSms);
+                var sms = await client.SendTransacSmsAsync(transactionalSms);
                 await _logger.InformationAsync($"SendinBlue SMS sent: {sms?.Reference ?? $"credits remaining {sms?.RemainingCredits?.ToString()}"}");
             }
             catch (Exception exception)
@@ -1276,11 +1276,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 var client = await CreateApiClientAsync(config => new SMSCampaignsApi(config));
 
                 //create SMS campaign
-                var campaign = client.CreateSmsCampaign(new CreateSmsCampaign(name: CommonHelper.EnsureMaximumLength(text, 20),
+                var campaign = await client.CreateSmsCampaignAsync(new CreateSmsCampaign(name: CommonHelper.EnsureMaximumLength(text, 20),
                     sender: from, content: text, recipients: new CreateSmsCampaignRecipients(new List<long?> { listId })));
 
                 //send campaign
-                client.SendSmsCampaignNow(campaign.Id);
+                await client.SendSmsCampaignNowAsync(campaign.Id);
             }
             catch (Exception exception)
             {

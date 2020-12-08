@@ -46,6 +46,7 @@ namespace Nop.Services.ExportImport
             await xmlWriter.WriteAttributeStringAsync(null, nodeName, null, nodeValue?.ToString() ?? defaulValue);
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Write attribute string with prefix async
         /// </summary>

@@ -132,7 +132,7 @@ namespace Nop.Plugin.MultiFactorAuth.GoogleAuthenticator.Controllers
             var configuration = await _googleAuthenticatorService.GetConfigurationByIdAsync(model.Id);
             if (configuration != null)
             {
-                _googleAuthenticatorService.DeleteConfiguration(configuration);
+                await _googleAuthenticatorService.DeleteConfigurationAsync(configuration);
             }
 
             return new NullJsonResult();

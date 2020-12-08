@@ -111,6 +111,7 @@ namespace Nop.Services.Catalog
         Task<string> FormatShippingPriceAsync(decimal price, bool showCurrency,
             Currency targetCurrency, int languageId, bool priceIncludesTax);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Formats the shipping price
         /// </summary>

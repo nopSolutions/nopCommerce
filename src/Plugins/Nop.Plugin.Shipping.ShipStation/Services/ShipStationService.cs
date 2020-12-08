@@ -101,7 +101,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
             var request = WebRequest.Create(apiUrl);
 
             request.Credentials = new NetworkCredential(_shipStationSettings.ApiKey, _shipStationSettings.ApiSecret);
-            var resp = request.GetResponse();
+            var resp = await request.GetResponseAsync();
 
             await using var rs = resp.GetResponseStream();
             if (rs == null) return string.Empty;
@@ -539,7 +539,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 await WriteOrderToXmlAsync(writer, order);
             }
 
-            writer.WriteEndElement();
+            await writer.WriteEndElementAsync();
 
             xml = Encoding.UTF8.GetString(stream.ToArray());
 

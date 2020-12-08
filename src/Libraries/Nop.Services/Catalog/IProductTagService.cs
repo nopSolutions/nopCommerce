@@ -72,6 +72,7 @@ namespace Nop.Services.Catalog
         /// <param name="tagMapping">Product-product tag mapping</param>
         Task InsertProductProductTagMappingAsync(ProductProductTagMapping tagMapping);
 
+        //TODO: may be deleted from interface
         /// <summary>
         /// Inserts a product tag
         /// </summary>

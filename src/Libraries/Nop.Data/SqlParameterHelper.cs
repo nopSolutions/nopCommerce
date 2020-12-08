@@ -64,6 +64,7 @@ namespace Nop.Data
             return GetParameter(DataType.NVarChar, parameterName, parameterValue);
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Get output string parameter
         /// </summary>
@@ -74,6 +75,7 @@ namespace Nop.Data
             return GetOutputParameter(DataType.NVarChar, parameterName);
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Get int parameter
         /// </summary>
@@ -85,6 +87,7 @@ namespace Nop.Data
             return GetParameter(DataType.Int32, parameterName, parameterValue);
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Get output int32 parameter
         /// </summary>
@@ -95,6 +98,7 @@ namespace Nop.Data
             return GetOutputParameter(DataType.Int32, parameterName);
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Get boolean parameter
         /// </summary>

@@ -1717,7 +1717,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             throw new Exception(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile"), NopCommonDefaults.HeadCodeFileName));
 
                         using (var sr = new StreamReader(headCodePath))
-                            commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
+                            commonSettings.FaviconAndAppIconsHeadCode = await sr.ReadToEndAsync();
 
                         break;
 

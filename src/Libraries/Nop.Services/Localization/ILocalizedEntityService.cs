@@ -11,6 +11,7 @@ namespace Nop.Services.Localization
     /// </summary>
     public partial interface ILocalizedEntityService
     {
+        //TODO: may be deleted from interface
         /// <summary>
         /// Deletes a localized property
         /// </summary>

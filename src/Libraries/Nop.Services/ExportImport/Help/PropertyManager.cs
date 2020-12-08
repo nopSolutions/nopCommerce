@@ -45,6 +45,7 @@ namespace Nop.Services.ExportImport.Help
             }
         }
 
+        //TODO: may be deleted
         /// <summary>
         /// Add new property
         /// </summary>
