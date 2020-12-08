@@ -380,7 +380,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 values.TryGetValue("payer_id", out var payerId);
                 values.TryGetValue("receiver_id", out var receiverId);
                 values.TryGetValue("invoice", out var invoice);
-                values.TryGetValue("payment_fee", out var paymentFee);
+                values.TryGetValue("mc_fee", out var mcFee);
 
                 var sb = new StringBuilder();
                 sb.AppendLine("PayPal PDT:");
@@ -394,7 +394,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 sb.AppendLine("payer_id: " + payerId);
                 sb.AppendLine("receiver_id: " + receiverId);
                 sb.AppendLine("invoice: " + invoice);
-                sb.AppendLine("payment_fee: " + paymentFee);
+                sb.AppendLine("mc_fee: " + mcFee);
 
                 var newPaymentStatus = PayPalHelper.GetPaymentStatus(paymentStatus, string.Empty);
                 sb.AppendLine("New payment status: " + newPaymentStatus);
