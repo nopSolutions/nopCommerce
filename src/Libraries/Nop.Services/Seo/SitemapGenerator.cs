@@ -37,6 +37,7 @@ namespace Nop.Services.Seo
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
@@ -50,7 +51,6 @@ namespace Nop.Services.Seo
         private readonly LocalizationSettings _localizationSettings;
         private readonly NewsSettings _newsSettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -61,6 +61,7 @@ namespace Nop.Services.Seo
             IActionContextAccessor actionContextAccessor,
             IBlogService blogService,
             ICategoryService categoryService,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
             IManufacturerService manufacturerService,
             INewsService newsService,
@@ -73,14 +74,14 @@ namespace Nop.Services.Seo
             IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             NewsSettings newsSettings,
-            SitemapXmlSettings sitemapSettings,
-            IEventPublisher eventPublisher)
+            SitemapXmlSettings sitemapSettings)
         {
             _blogSettings = blogSettings;
             _forumSettings = forumSettings;
             _actionContextAccessor = actionContextAccessor;
             _blogService = blogService;
             _categoryService = categoryService;
+            _eventPublisher = eventPublisher;
             _languageService = languageService;
             _manufacturerService = manufacturerService;
             _newsService = newsService;
@@ -94,65 +95,6 @@ namespace Nop.Services.Seo
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
             _sitemapXmlSettings = sitemapSettings;
-            _eventPublisher = eventPublisher;
-        }
-
-        #endregion
-
-        #region Nested class
-
-        /// <summary>
-        /// Represents sitemap URL entry
-        /// </summary>
-        protected class SitemapUrl
-        {
-            /// <summary>
-            /// Ctor
-            /// </summary>
-            /// <param name="location">URL of the page</param>
-            /// <param name="alternateLocations">List of the page urls</param>
-            /// <param name="frequency">Update frequency</param>
-            /// <param name="updatedOn">Updated on</param>
-            public SitemapUrl(string location, IList<string> alternateLocations, UpdateFrequency frequency, DateTime updatedOn)
-            {
-                Location = location;
-                AlternateLocations = alternateLocations;
-                UpdateFrequency = frequency;
-                UpdatedOn = updatedOn;
-            }
-
-            /// <summary>
-            /// Ctor
-            /// </summary>
-            /// <param name="location">URL of the page</param>
-            /// <param name="anotheUrl">The another site map url</param>
-            public SitemapUrl(string location, SitemapUrl anotheUrl)
-            {
-                Location = location;
-                AlternateLocations = anotheUrl.AlternateLocations;
-                UpdateFrequency = anotheUrl.UpdateFrequency;
-                UpdatedOn = anotheUrl.UpdatedOn;
-            }
-
-            /// <summary>
-            /// Gets or sets URL of the page
-            /// </summary>
-            public string Location { get; set; }
-
-            /// <summary>
-            /// Gets or sets localized URLs of the page
-            /// </summary>
-            public IList<string> AlternateLocations { get; set; }
-
-            /// <summary>
-            /// Gets or sets a value indicating how frequently the page is likely to change
-            /// </summary>
-            public UpdateFrequency UpdateFrequency { get; set; }
-
-            /// <summary>
-            /// Gets or sets the date of last modification of the file
-            /// </summary>
-            public DateTime UpdatedOn { get; set; }
         }
 
         #endregion
@@ -238,6 +180,9 @@ namespace Nop.Services.Seo
             //custom URLs
             if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
                 sitemapUrls.AddRange(GetCustomUrls());
+
+            //event notification
+            _eventPublisher.Publish(new SitemapCreatedEvent(sitemapUrls));
 
             return sitemapUrls;
         }
@@ -340,58 +285,6 @@ namespace Nop.Services.Seo
             where T : BaseEntity, ISlugSupported
         {
             return lang => new { SeName = _urlRecordService.GetSeName(model, lang) };
-        }
-
-        /// <summary>
-        /// Return localized urls
-        /// </summary>
-        /// <param name="routeName">Route name</param>
-        /// <param name="routeParams">Lambda for route params object</param>
-        /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
-        /// <param name="updateFreq">How often to update url</param>
-        protected virtual SitemapUrl GetLocalizedSitemapUrl(string routeName,
-            Func<int?, object> routeParams = null,
-            DateTime? dateTimeUpdatedOn = null,
-            UpdateFrequency updateFreq = UpdateFrequency.Weekly)
-        {
-            var urlHelper = GetUrlHelper();
-
-            //url for current language
-            var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), GetHttpProtocol());
-
-            var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
-            var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-                ? _languageService.GetAllLanguages()
-                : null;
-
-            if (languages == null)
-                return new SitemapUrl(url, new List<string>(), updateFreq, updatedOn);
-
-            var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
-            //return list of localized urls
-            var localizedUrls = languages
-                .Select(lang =>
-                {
-                    var currentUrl = urlHelper.RouteUrl(routeName, routeParams?.Invoke(lang.Id), GetHttpProtocol());
-
-                    if (string.IsNullOrEmpty(currentUrl))
-                        return null;
-
-                    //Extract server and path from url
-                    var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-                    var path = new Uri(currentUrl).PathAndQuery;
-
-                    //Replace seo code
-                    var localizedPath = path
-                        .RemoveLanguageSeoCodeFromUrl(pathBase, true)
-                        .AddLanguageSeoCodeToUrl(pathBase, true, lang);
-
-                    return new Uri(new Uri(scheme), localizedPath).ToString();
-                })
-                .Where(value => !string.IsNullOrEmpty(value))
-                .ToList();
-
-            return new SitemapUrl(url, localizedUrls, updateFreq, updatedOn);
         }
 
         /// <summary>
@@ -505,30 +398,13 @@ namespace Nop.Services.Seo
             writer.WriteEndElement();
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// This will build an XML sitemap for better index with search engines.
-        /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
-        /// </summary>
-        /// <param name="id">Sitemap identifier</param>
-        /// <returns>Sitemap.xml as string</returns>
-        public virtual string Generate(int? id)
-        {
-            using var stream = new MemoryStream();
-            Generate(stream, id);
-            return Encoding.UTF8.GetString(stream.ToArray());
-        }
-
         /// <summary>
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        public virtual void Generate(Stream stream, int? id)
+        protected virtual void Generate(Stream stream, int? id)
         {
             //generate all URLs for the sitemap
             var sitemapUrls = GenerateUrls();
@@ -567,8 +443,75 @@ namespace Nop.Services.Seo
                     WriteSitemap(stream, sitemaps.First());
                 }
             }
-            
-            _eventPublisher.Publish(new SitemapCreatedEvent());
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// This will build an XML sitemap for better index with search engines.
+        /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
+        /// </summary>
+        /// <param name="id">Sitemap identifier</param>
+        /// <returns>Sitemap.xml as string</returns>
+        public virtual string Generate(int? id)
+        {
+            using var stream = new MemoryStream();
+            Generate(stream, id);
+            return Encoding.UTF8.GetString(stream.ToArray());
+        }
+
+        /// <summary>
+        /// Get localized URLs
+        /// </summary>
+        /// <param name="routeName">Route name</param>
+        /// <param name="routeParams">Lambda for route params object</param>
+        /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
+        /// <param name="updateFreq">How often to update url</param>
+        public virtual SitemapUrl GetLocalizedSitemapUrl(string routeName,
+            Func<int?, object> routeParams = null,
+            DateTime? dateTimeUpdatedOn = null,
+            UpdateFrequency updateFreq = UpdateFrequency.Weekly)
+        {
+            var urlHelper = GetUrlHelper();
+
+            //url for current language
+            var url = urlHelper.RouteUrl(routeName, routeParams?.Invoke(null), GetHttpProtocol());
+
+            var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
+            var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
+                ? _languageService.GetAllLanguages()
+                : null;
+
+            if (languages == null)
+                return new SitemapUrl(url, new List<string>(), updateFreq, updatedOn);
+
+            var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+            //return list of localized urls
+            var localizedUrls = languages
+                .Select(lang =>
+                {
+                    var currentUrl = urlHelper.RouteUrl(routeName, routeParams?.Invoke(lang.Id), GetHttpProtocol());
+
+                    if (string.IsNullOrEmpty(currentUrl))
+                        return null;
+
+                    //Extract server and path from url
+                    var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                    var path = new Uri(currentUrl).PathAndQuery;
+
+                    //Replace seo code
+                    var localizedPath = path
+                        .RemoveLanguageSeoCodeFromUrl(pathBase, true)
+                        .AddLanguageSeoCodeToUrl(pathBase, true, lang);
+
+                    return new Uri(new Uri(scheme), localizedPath).ToString();
+                })
+                .Where(value => !string.IsNullOrEmpty(value))
+                .ToList();
+
+            return new SitemapUrl(url, localizedUrls, updateFreq, updatedOn);
         }
 
         #endregion
