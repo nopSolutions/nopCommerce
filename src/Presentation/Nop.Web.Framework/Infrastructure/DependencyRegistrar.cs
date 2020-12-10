@@ -221,7 +221,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerLifetimeScope();
             builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
             builder.RegisterType<UploadService>().As<IUploadService>().InstancePerLifetimeScope();
-            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();

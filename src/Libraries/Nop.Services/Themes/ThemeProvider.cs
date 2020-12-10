@@ -16,22 +16,69 @@ namespace Nop.Services.Themes
     {
         #region Fields
 
+        private static readonly object _locker = new object();
+
         private readonly INopFileProvider _fileProvider;
 
-        private IList<ThemeDescriptor> _themeDescriptors;
+        protected Dictionary<string, ThemeDescriptor> _themeDescriptors;
 
         #endregion
-
+        
         #region Ctor
 
         public ThemeProvider(INopFileProvider fileProvider)
         {
             _fileProvider = fileProvider;
+            Initialize();
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Initializes theme provider
+        /// </summary>
+        protected virtual void Initialize()
+        {
+            if (_themeDescriptors != null)
+                return;
+
+            //prevent multi loading data
+            lock (_locker)
+            {
+                //data can be loaded while we waited
+                if (_themeDescriptors != null)
+                    return;
+
+                //load all theme descriptors
+                _themeDescriptors =
+                    new Dictionary<string, ThemeDescriptor>(StringComparer.InvariantCultureIgnoreCase);
+
+                var themeDirectoryPath = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
+                foreach (var descriptionFile in _fileProvider.GetFiles(themeDirectoryPath,
+                    NopPluginDefaults.ThemeDescriptionFileName, false))
+                {
+                    var text = _fileProvider.ReadAllText(descriptionFile, Encoding.UTF8);
+                    if (string.IsNullOrEmpty(text))
+                        continue;
+
+                    //get theme descriptor
+                    var themeDescriptor = GetThemeDescriptorFromText(text);
+
+                    //some validation
+                    if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
+                        throw new Exception($"A theme descriptor '{descriptionFile}' has no system name");
+
+                    _themeDescriptors.TryAdd(themeDescriptor.SystemName, themeDescriptor);
+                }
+            }
         }
 
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Get theme descriptor from the description text
         /// </summary>
@@ -43,7 +90,7 @@ namespace Nop.Services.Themes
             var themeDescriptor = JsonConvert.DeserializeObject<ThemeDescriptor>(text);
 
             //some validation
-            if (_themeDescriptors?.Any(descriptor => descriptor.SystemName.Equals(themeDescriptor?.SystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false)
+            if (_themeDescriptors.ContainsKey(themeDescriptor.SystemName))
                 throw new Exception($"A theme with '{themeDescriptor.SystemName}' system name is already defined");
 
             return themeDescriptor;
@@ -53,32 +100,9 @@ namespace Nop.Services.Themes
         /// Get all themes
         /// </summary>
         /// <returns>List of the theme descriptor</returns>
-        public async Task<IList<ThemeDescriptor>> GetThemesAsync()
+        public Task<IList<ThemeDescriptor>> GetThemesAsync()
         {
-            if (_themeDescriptors != null)
-                return _themeDescriptors;
-
-            //load all theme descriptors
-            _themeDescriptors = new List<ThemeDescriptor>();
-
-            var themeDirectoryPath = _fileProvider.MapPath(NopPluginDefaults.ThemesPath);
-            foreach (var descriptionFile in _fileProvider.GetFiles(themeDirectoryPath, NopPluginDefaults.ThemeDescriptionFileName, false))
-            {
-                var text = await _fileProvider.ReadAllTextAsync(descriptionFile, Encoding.UTF8);
-                if (string.IsNullOrEmpty(text))
-                    continue;
-
-                //get theme descriptor
-                var themeDescriptor = GetThemeDescriptorFromText(text);
-
-                //some validation
-                if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
-                    throw new Exception($"A theme descriptor '{descriptionFile}' has no system name");
-
-                _themeDescriptors.Add(themeDescriptor);
-            }
-
-            return _themeDescriptors;
+            return Task.FromResult<IList<ThemeDescriptor>>(_themeDescriptors.Values.ToList());
         }
 
         /// <summary>
@@ -86,12 +110,14 @@ namespace Nop.Services.Themes
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>Theme descriptor</returns>
-        public async Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
+        public Task<ThemeDescriptor> GetThemeBySystemNameAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
-                return null;
+                return Task.FromResult<ThemeDescriptor>(null);
 
-            return (await GetThemesAsync()).SingleOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            _themeDescriptors.TryGetValue(systemName, out var descriptor);
+
+            return Task.FromResult(descriptor);
         }
 
         /// <summary>
@@ -99,12 +125,12 @@ namespace Nop.Services.Themes
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>True if the theme exists; otherwise false</returns>
-        public async Task<bool> ThemeExistsAsync(string systemName)
+        public Task<bool> ThemeExistsAsync(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
-                return false;
+                return Task.FromResult(false);
 
-            return (await GetThemesAsync()).Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return Task.FromResult(_themeDescriptors.ContainsKey(systemName));
         }
 
         #endregion
