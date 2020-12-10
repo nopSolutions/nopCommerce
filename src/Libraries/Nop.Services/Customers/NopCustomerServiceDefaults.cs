@@ -40,6 +40,14 @@ namespace Nop.Services.Customers
         /// </remarks>
         public static CacheKey CustomerBySystemNameCacheKey => new CacheKey("Nop.customer.bysystemname.{0}");
 
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer GUID
+        /// </remarks>
+        public static CacheKey CustomerByGuidCacheKey => new CacheKey("Nop.customer.byguid.{0}");
+
         #endregion
 
         #region Customer attributes

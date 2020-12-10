@@ -437,9 +437,10 @@ namespace Nop.Services.Customers
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
-            var customer = await query.FirstOrDefaultAsync();
-
-            return customer;
+           
+            var key = _staticCacheManager.PrepareKeyForShortTermCache(NopCustomerServicesDefaults.CustomerByGuidCacheKey, customerGuid);
+            
+            return await _staticCacheManager.GetAsync(key, async () => await query.FirstOrDefaultAsync());
         }
 
         /// <summary>

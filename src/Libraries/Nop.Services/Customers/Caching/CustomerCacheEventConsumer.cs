@@ -37,6 +37,7 @@ namespace Nop.Services.Customers.Caching
                 return;
 
             await RemoveAsync(NopCustomerServicesDefaults.CustomerBySystemNameCacheKey, entity.SystemName);
+            await RemoveAsync(NopCustomerServicesDefaults.CustomerByGuidCacheKey, entity.CustomerGuid);
         }
 
         #endregion
