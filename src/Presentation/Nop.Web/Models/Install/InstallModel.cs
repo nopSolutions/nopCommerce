@@ -12,6 +12,7 @@ namespace Nop.Web.Models.Install
         {
             AvailableLanguages = new List<SelectListItem>();
             AvailableDataProviders = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
         }
 
         [DataType(DataType.EmailAddress)]
@@ -31,6 +32,8 @@ namespace Nop.Web.Models.Install
         public bool InstallSampleData { get; set; }
         public bool ConnectionStringRaw { get; set; }
 
+        public bool InstallRegionalResources { get; set; }
+
         public string DatabaseName { get; set; }
         public string ServerName { get; set; }
 
@@ -43,7 +46,12 @@ namespace Nop.Web.Models.Install
         public string ConnectionString { get; set; }
 
         public List<SelectListItem> AvailableLanguages { get; set; }
+
+        public List<SelectListItem> AvailableCountries { get; set; }
+
         public DataProviderType DataProvider { get; set; }
+
+        public string Country { get; set; }
 
         public List<SelectListItem> AvailableDataProviders { get; set; }
         public IDictionary<string, string> RawDataSettings => new Dictionary<string, string>();

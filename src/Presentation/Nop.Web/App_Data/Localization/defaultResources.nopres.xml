@@ -4395,6 +4395,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Installation.DisabledPlugins.Hint">
     <Value>Specify a list of plugins (comma separated) ignored during installation.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.InstallRegionalResources">
+    <Value>Install regional resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.InstallRegionalResources.Hint">
+    <Value>Enable this setting to download and setup the regional language pack during installation.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin">
     <Value>Plugin configuration</Value>
   </LocaleResource>

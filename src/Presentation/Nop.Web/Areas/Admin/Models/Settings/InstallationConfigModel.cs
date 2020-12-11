@@ -16,6 +16,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.AppSettings.Installation.DisabledPlugins")]
         public string DisabledPlugins { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.AppSettings.Installation.InstallRegionalResources")]
+        public bool InstallRegionalResources { get; set; }
+
         #endregion
     }
 }
