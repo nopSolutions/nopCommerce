@@ -8148,7 +8148,7 @@ pre {
   }
 
   .newsletter-email .newsletter-subscribe-button {
-    width: 100px;
+    min-width: 100px;
     padding: 0 5px;
   }
 
