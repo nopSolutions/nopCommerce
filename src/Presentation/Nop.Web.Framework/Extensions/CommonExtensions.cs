@@ -50,5 +50,15 @@ namespace Nop.Web.Framework.Extensions
             }
             return TimeSpan.FromSeconds(delta).Humanize(precision: 1, culture: culture, maxUnit: TimeUnit.Year);
         }
+
+        /// <summary>
+        /// Convert boolean value to more user-friendly 'Yes' / 'No' string values
+        /// </summary>
+        /// <param name="source">A boolean value to be converted</param>
+        /// <returns>'Yes' / 'No' string</returns>
+        public static string ToYesNoString(this bool source)
+        {
+            return source ? "Yes" : "No";
+        }
     }
 }
