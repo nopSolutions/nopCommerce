@@ -12,6 +12,13 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
+<div class="content">
+    <div class="card card-default">
+        <div class="card-body">
+            Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list">here</a>.
+        </div>
+    </div>
+</div>
 <form asp-controller="Log" asp-action="List" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -33,7 +40,7 @@
     </div>
 
     <section class="content">
-       <div class="container-fluid">
+        <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">
                     <div class="card card-default card-search">
