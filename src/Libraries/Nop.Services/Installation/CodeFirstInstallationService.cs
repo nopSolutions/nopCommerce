@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
@@ -682,7 +683,9 @@ namespace Nop.Services.Installation
             var directoryPath = _fileProvider.MapPath(NopInstallationDefaults.LocalizationResourcesPath);
             var pattern = "*.txt";
 
-            var importManager = EngineContext.Current.Resolve<IImportManager>();
+            //we use different scope to prevent creating wrong settings in DI, because the settings data not exists yet
+            using var scope = EngineContext.Current.Resolve<IServiceProvider>().CreateScope();
+            var importManager = scope.ServiceProvider.GetRequiredService<IImportManager>();
             foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
                 using var stream = new FileStream(filePath, FileMode.Open);
