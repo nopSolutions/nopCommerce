@@ -59,7 +59,7 @@ namespace Nop.Web.Controllers
             };
             countries.AddRange(from country in ISO3166.GetCollection()
                                from localization in ISO3166.GetLocalizationInfo(country.Alpha2)
-                               let lang = ISO3166.GetLocalizationInfo(country.Alpha2).Count() > 1 ? $" [{localization.Language}]" : string.Empty
+                               let lang = ISO3166.GetLocalizationInfo(country.Alpha2).Count() > 1 ? $" [{localization.Language} language]" : string.Empty
                                let item = new SelectListItem
                                {
                                    Value = localization.Culture,
