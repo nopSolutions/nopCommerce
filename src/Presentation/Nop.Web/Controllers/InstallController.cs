@@ -62,7 +62,7 @@ namespace Nop.Web.Controllers
                                let lang = ISO3166.GetLocalizationInfo(country.Alpha2).Count() > 1 ? $" [{localization.Language} language]" : string.Empty
                                let item = new SelectListItem
                                {
-                                   Value = localization.Culture,
+                                   Value = $"{country.Alpha2}-{localization.Culture}",
                                    Text = $"{country.Name}{lang}",
                                    Selected = (localization.Culture == browserCulture) && browserCulture[^2..] == country.Alpha2
                                }
@@ -213,8 +213,8 @@ namespace Nop.Web.Controllers
                     //try to get CultureInfo and RegionInfo
                     try
                     {
-                        cultureInfo = new CultureInfo(model.Country);
-                        regionInfo = new RegionInfo(model.Country);
+                        cultureInfo = new CultureInfo(model.Country[3..]);
+                        regionInfo = new RegionInfo(model.Country[3..]);
                     }
                     catch { }
 
