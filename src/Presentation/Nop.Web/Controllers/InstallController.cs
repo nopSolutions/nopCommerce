@@ -46,7 +46,7 @@ namespace Nop.Web.Controllers
 
         #region Utilites
 
-        private InstallModel PrepareCountriesList(InstallModel model)
+        private InstallModel PrepareCountryList(InstallModel model)
         {
             if (!model.InstallRegionalResources)
                 return model;
@@ -72,7 +72,7 @@ namespace Nop.Web.Controllers
             return model;
         }
 
-        private InstallModel PrepareLanguagesList(InstallModel model)
+        private InstallModel PrepareLanguageList(InstallModel model)
         {
             foreach (var lang in _locService.GetAvailableLanguages())
             {
@@ -122,8 +122,8 @@ namespace Nop.Web.Controllers
             };
 
             PrepareAvailableDataProviders(model);
-            PrepareLanguagesList(model);
-            PrepareCountriesList(model);
+            PrepareLanguageList(model);
+            PrepareCountryList(model);
 
             return View(model);
         }
@@ -139,8 +139,8 @@ namespace Nop.Web.Controllers
             model.InstallRegionalResources = _appSettings.InstallationConfig.InstallRegionalResources;
 
             PrepareAvailableDataProviders(model);
-            PrepareLanguagesList(model);
-            PrepareCountriesList(model);
+            PrepareLanguageList(model);
+            PrepareCountryList(model);
 
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
