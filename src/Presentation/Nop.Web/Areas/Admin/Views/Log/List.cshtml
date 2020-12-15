@@ -5,6 +5,7 @@
     ViewBag.PageTitle = T("Admin.System.Log").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Log");
+    string supportLink = "https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list";
 }
 
 @{
@@ -15,7 +16,7 @@
 <div class="content">
     <div class="card card-default">
         <div class="card-body">
-            Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list">here</a>.
+            @T("Admin.System.Log.PremiumSupportLink", supportLink)
         </div>
     </div>
 </div>
