@@ -192,7 +192,7 @@ namespace Nop.Services.Security
                               ur.EntityName == entityName
                         select ur.CustomerRoleId;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToArrayAsync());
+            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>

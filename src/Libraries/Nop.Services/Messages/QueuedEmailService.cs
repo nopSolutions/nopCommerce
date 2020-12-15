@@ -156,7 +156,7 @@ namespace Nop.Services.Messages
             if (createdToUtc.HasValue)
                 query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
 
-            var emails = await query.ToArrayAsync();
+            var emails = query.ToArray();
 
             await DeleteQueuedEmailsAsync(emails);
 

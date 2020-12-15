@@ -181,7 +181,7 @@ namespace Nop.Services.Stores
                               sm.EntityName == entityName
                         select sm.StoreId;
 
-            return await _staticCacheManager.GetAsync(key, async () => await query.ToArrayAsync());
+            return await _staticCacheManager.GetAsync(key, () => query.ToArray());
         }
 
         /// <summary>

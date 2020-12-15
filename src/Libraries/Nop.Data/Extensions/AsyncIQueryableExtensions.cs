@@ -485,18 +485,7 @@ namespace System.Linq
         }
 
         #endregion
-
-        /// <summary>
-        /// Asynchronously loads data from query to an array
-        /// </summary>
-        /// <typeparam name="TSource">Query element type</typeparam>
-        /// <param name="source">Source query</param>
-        /// <returns>Array with query results</returns>
-        public static Task<TSource[]> ToArrayAsync<TSource>(this IQueryable<TSource> source)
-        {
-            return AsyncExtensions.ToArrayAsync(source);
-        }
-
+        
         /// <summary>
         /// Asynchronously loads data from query to a dictionary
         /// </summary>

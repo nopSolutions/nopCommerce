@@ -137,16 +137,13 @@ namespace Nop.Core.Caching
             if ((key?.CacheTime ?? 0) <= 0)
                 return await acquire();
 
-            var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
-             {
-                 entry.SetOptions(PrepareEntryOptions(key));
+            if (_memoryCache.TryGetValue(key.Key, out T result))
+                return result;
 
-                 return await acquire();
-             });
+            result = await acquire();
 
-            //do not cache null value
-            if (result == null)
-                await RemoveAsync(key);
+            if(result != null)
+                await SetAsync(key, result);
 
             return result;
         }

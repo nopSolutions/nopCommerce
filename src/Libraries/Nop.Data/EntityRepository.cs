@@ -422,7 +422,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IQueryable<TEntity> Table => GetEntitiesAsync().Result;
+        public virtual IQueryable<TEntity> Table => GetEntities();
 
         /// <summary>
         /// Gets an entity set
@@ -430,6 +430,14 @@ namespace Nop.Data
         protected virtual async Task<ITable<TEntity>> GetEntitiesAsync()
         {
             return _entities ??= await _dataProvider.GetTableAsync<TEntity>();
+        }
+
+        /// <summary>
+        /// Gets an entity set
+        /// </summary>
+        protected virtual  ITable<TEntity> GetEntities()
+        {
+            return _entities ??= _dataProvider.GetTable<TEntity>();
         }
 
         #endregion
