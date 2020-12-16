@@ -838,10 +838,11 @@ namespace Nop.Services.Orders
             if (details.RedeemedRewardPointsAmount <= decimal.Zero)
                 return order;
 
-            _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
+            order.RedeemedRewardPointsEntryId = _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
                 order, details.RedeemedRewardPointsAmount);
             _customerService.UpdateCustomer(details.Customer);
+            _orderService.UpdateOrder(order);
 
             return order;
         }
