@@ -1,11 +1,16 @@
 @model StoreModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Configuration.Stores.EditStoreDetails").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.Store;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Stores");
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 <form asp-controller="Store" asp-action="Edit" method="post">
     <div class="content-header clearfix">

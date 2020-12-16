@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -32,6 +35,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
         private readonly PaymentSettings _paymentSettings;
 
         #endregion
@@ -46,6 +51,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPaymentPluginManager paymentPluginManager,
             IPermissionService permissionService,
             ISettingService settingService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext,
             PaymentSettings paymentSettings)
         {
             _countryService = countryService;
@@ -56,6 +63,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _paymentPluginManager = paymentPluginManager;
             _permissionService = permissionService;
             _settingService = settingService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
             _paymentSettings = paymentSettings;
         }
 
@@ -68,13 +77,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Methods");
         }
 
-        public virtual async Task<IActionResult> Methods()
+        public virtual async Task<IActionResult> Methods(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             //prepare model
             var model = await _paymentModelFactory.PreparePaymentMethodsModelAsync(new PaymentMethodsModel());
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
+            }
 
             return View(model);
         }

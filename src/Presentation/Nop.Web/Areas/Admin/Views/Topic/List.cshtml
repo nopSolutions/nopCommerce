@@ -1,16 +1,27 @@
 @model TopicSearchModel
+@inject Nop.Services.Topics.ITopicService topicService
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.TopicList;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Topics");
-}
 
-@{
+    string editQueryString = string.Empty;
+    var showTour = ViewBag.ShowTour ?? false;
+    if (showTour)
+    {
+        editQueryString = "?showtour=true";
+    }
+
     const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
     var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -71,10 +82,11 @@
             </div>
 
             <div class="card card-default">
-                <div class="card-body">
+                <div class="card-body" id="topics-area">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "topics-grid",
+                        RowIdBasedOnField = nameof(TopicModel.TopicName),
                         UrlRead = new DataUrl("List", "Topic", null),
                         SearchButtonId = "search-topics",
                         Length = Model.PageSize,
@@ -122,7 +134,7 @@
                             {
                                 Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
                                 Width = "150",
-                                ClassName = NopColumnClassDefaults.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll + " column-footer-column1",
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
@@ -149,8 +161,8 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName = NopColumnClassDefaults.Button,
-                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                ClassName = NopColumnClassDefaults.Button + " column-edit",
+                                Render = new RenderCustom("renderColumnEdit")
                             }
                         }
                     })
@@ -160,3 +172,9 @@
     </div>
 </div>
 </section>
+
+<script>
+    function renderColumnEdit(data, type, row, meta) {
+        return '<a href="@Url.Content("~/Admin/Topic/Edit/")' + data + '@(editQueryString)" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit").Text</a>';
+    }
+</script>

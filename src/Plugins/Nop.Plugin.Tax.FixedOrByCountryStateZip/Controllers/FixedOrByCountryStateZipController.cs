@@ -2,9 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Security;
@@ -33,6 +36,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreService _storeService;
         private readonly ITaxCategoryService _taxCategoryService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IWorkContext _workContext;
+
 
         #endregion
 
@@ -45,7 +51,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             ISettingService settingService,
             IStateProvinceService stateProvinceService,
             IStoreService storeService,
-            ITaxCategoryService taxCategoryService)
+            ITaxCategoryService taxCategoryService,
+            IGenericAttributeService genericAttributeService,
+            IWorkContext workContext)
+
         {
             _countryStateZipSettings = countryStateZipSettings;
             _countryService = countryService;
@@ -55,13 +64,16 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             _stateProvinceService = stateProvinceService;
             _storeService = storeService;
             _taxCategoryService = taxCategoryService;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
+
         }
 
         #endregion
 
         #region Methods
 
-        public async Task<IActionResult> Configure()
+        public async Task<IActionResult> Configure(bool showtour = false)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -91,6 +103,17 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
                 var states = await _stateProvinceService.GetStateProvincesByCountryIdAsync(defaultCountry.Id);
                 foreach (var s in states)
                     model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+            }
+
+            //show configuration tour
+            if (showtour)
+            {
+                var hideCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.HideConfigurationStepsAttribute);
+
+                var closeCard = await _genericAttributeService.GetAttributeAsync<bool>(await _workContext.GetCurrentCustomerAsync(), NopCustomerDefaults.CloseConfigurationStepsAttribute);
+
+                if (!hideCard && !closeCard)
+                    ViewBag.ShowTour = true;
             }
 
             return View("~/Plugins/Tax.FixedOrByCountryStateZip/Views/Configure.cshtml", model);

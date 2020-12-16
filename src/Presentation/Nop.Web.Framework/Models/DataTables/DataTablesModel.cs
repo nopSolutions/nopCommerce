@@ -92,6 +92,11 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Info { get; set; }
 
         /// <summary>
+        /// If set, populate the row id based on the specified field
+        /// </summary>
+        public string RowIdBasedOnField { get; set; }
+
+        /// <summary>
         /// Enable or disable refresh button
         /// </summary>
         public bool RefreshButton { get; set; }

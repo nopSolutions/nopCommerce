@@ -60,7 +60,7 @@
     }
 </script>
 <div class="card-body">
-    <div class="form-group row">
+    <div class="form-group row" id="product-price-area">
         <div class="col-md-3">
             <nop-label asp-for="Price" />
         </div>
@@ -239,33 +239,35 @@
             </script>
         </div>
     </div>
-    <div class="form-group row">
-        <div class="col-md-3">
-            <nop-label asp-for="IsTaxExempt" />
+    <div id="product-tax-area">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="IsTaxExempt" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="IsTaxExempt" />
+                <span asp-validation-for="IsTaxExempt"></span>
+            </div>
         </div>
-        <div class="col-md-9">
-            <nop-editor asp-for="IsTaxExempt" />
-            <span asp-validation-for="IsTaxExempt"></span>
-        </div>
-    </div>
-    <div class="form-group row" id="pnlTaxCategory">
-        <div class="col-md-3">
-            <nop-label asp-for="TaxCategoryId" />
-        </div>
-        <div class="col-md-9">
-            <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
-            <span asp-validation-for="TaxCategoryId"></span>
+        <div class="form-group row" id="pnlTaxCategory">
+            <div class="col-md-3">
+                <nop-label asp-for="TaxCategoryId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+                <span asp-validation-for="TaxCategoryId"></span>
+            </div>
         </div>
     </div>
     <div class="form-group row @(Model.ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices ? null : "advanced-setting")" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
-                <div class="col-md-3">
-                    <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
-                    <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
-                </div>
-            </div>
+        <div class="col-md-3">
+            <nop-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
+            <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
+        </div>
+    </div>
     <div class="card card-default @(Model.ProductEditorSettingsModel.TierPrices ? null : "advanced-setting")">
         <div class="card-header">
             @T("Admin.Catalog.Products.TierPrices")

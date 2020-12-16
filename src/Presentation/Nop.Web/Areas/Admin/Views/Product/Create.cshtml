@@ -1,11 +1,16 @@
 @model ProductModel
+@using Nop.Web.Framework.Models.AdminAreaTour
 
 @{
     //page title
     ViewBag.PageTitle = T("Admin.Catalog.Products.AddNew").Text;
+    //tour step
+    ViewBag.TourStep = TourStep.Product;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Products");
 }
+
+@await Html.PartialAsync("_AdminTour")
 
 <form asp-controller="Product" asp-action="Create" method="post" id="product-form">
     <div class="content-header clearfix">

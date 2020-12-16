@@ -30,6 +30,7 @@
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "languages-grid",
+                            RowIdBasedOnField = nameof(LanguageModel.Name),
                             UrlRead = new DataUrl("List", "Language", null),
                             Length = Model.PageSize,
                             LengthMenu = Model.AvailablePageSizes,
