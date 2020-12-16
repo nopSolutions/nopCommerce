@@ -5,7 +5,6 @@
     ViewBag.PageTitle = T("Admin.System.Log").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Log");
-    string supportLink = "https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list";
 }
 
 @{
@@ -13,13 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<div class="content">
-    <div class="card card-default">
-        <div class="card-body">
-            @T("Admin.System.Log.PremiumSupportLink", supportLink)
-        </div>
-    </div>
-</div>
 <form asp-controller="Log" asp-action="List" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -44,6 +36,13 @@
         <div class="container-fluid">
             <div class="form-horizontal">
                 <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            <p>
+                                @T("Admin.System.Log.List.PremiumSupport")
+                            </p>
+                        </div>
+                    </div>
                     <div class="card card-default card-search">
                         <div class="card-body">
                             <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
