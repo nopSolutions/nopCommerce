@@ -148,6 +148,29 @@ namespace Nop.Services.Orders
         OrderItem GetOrderItemById(int orderItemId);
 
         /// <summary>
+        /// Finds a matching order item in the order
+        /// </summary>
+        /// <param name="order">order</param>
+        /// <param name="product">Product</param>
+        /// <param name="unitPriceInclTax">Unit price including tax</param>
+        /// <param name="unitPriceExclTax">Unit price excluding tax</param>
+        /// <param name="priceInclTax">Price including tax</param>
+        /// <param name="priceExclTax">Price excluding tax</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <returns>Found order item</returns>
+        OrderItem FindOrderItemInOrder(Order order,
+            Product product,
+            decimal unitPriceInclTax,
+            decimal unitPriceExclTax,
+            decimal priceInclTax,
+            decimal priceExclTax,
+            string attributesXml = "",
+            DateTime? rentalStartDate = null,
+            DateTime? rentalEndDate = null);
+        
+        /// <summary>
         /// Gets a product of specify order item
         /// </summary>
         /// <param name="orderItemId">Order item identifier</param>
