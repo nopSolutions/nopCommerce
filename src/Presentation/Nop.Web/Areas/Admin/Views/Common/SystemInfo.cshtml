@@ -85,7 +85,7 @@
                                 <nop-label asp-for="IsFullTrust" />
                             </div>
                             <div class="col-md-9">
-                                <div class="form-text-row">@Model.IsFullTrust</div>
+                                <div class="form-text-row">@T(Model.IsFullTrust ? "Admin.Common.Yes" : "Admin.Common.No")</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -200,7 +200,7 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="form-text-row">
-                                    @Model.RedisEnabled
+                                    @T(Model.RedisEnabled ? "Admin.Common.Yes" : "Admin.Common.No")
                                     @if (Model.RedisEnabled)
                                     {
                                         <a id="redisDetailsShowHide" href="javascript:toggleRedisDetails();">@T("Admin.Common.Show")</a>
@@ -213,7 +213,7 @@
                                                 <strong> @T("Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys")</strong>
                                             </div>
                                             <div style="white-space: nowrap; overflow: auto;">
-                                                @Model.UseRedisToStoreDataProtectionKeys
+                                                @T(Model.UseRedisToStoreDataProtectionKeys ? "Admin.Common.Yes" : "Admin.Common.No")
                                             </div>
                                         </li>
                                         <li>
@@ -221,7 +221,7 @@
                                                 <strong>@T("Admin.System.SystemInfo.UseRedisForCaching")</strong>
                                             </div>
                                             <div style="white-space: nowrap; overflow: auto;">
-                                                @Model.UseRedisForCaching
+                                                @T(Model.UseRedisForCaching ? "Admin.Common.Yes" : "Admin.Common.No")
                                             </div>
                                         </li>
                                         <li>
@@ -229,7 +229,7 @@
                                                 <strong>@T("Admin.System.SystemInfo.UseRedisToStorePluginsInfo")</strong>
                                             </div>
                                             <div style="white-space: nowrap; overflow: auto;">
-                                                @Model.UseRedisToStorePluginsInfo
+                                                @T(Model.UseRedisToStorePluginsInfo ? "Admin.Common.Yes" : "Admin.Common.No")
                                             </div>
                                         </li>
                                     </ul>
@@ -241,7 +241,7 @@
                                 <nop-label asp-for="AzureBlobStorageEnabled" />
                             </div>
                             <div class="col-md-9">
-                                <div class="form-text-row">@Model.AzureBlobStorageEnabled</div>
+                                <div class="form-text-row">@T(Model.AzureBlobStorageEnabled ? "Admin.Common.Yes" : "Admin.Common.No")</div>
                             </div>
                         </div>
                     </div>

@@ -17,7 +17,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public string AspNetInfo { get; set; }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.IsFullTrust")]
-        public string IsFullTrust { get; set; }
+        public bool IsFullTrust { get; set; }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
         public string NopVersion { get; set; }
