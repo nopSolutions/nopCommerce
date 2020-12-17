@@ -1,4 +1,4 @@
-﻿@model OrderModel
+@model OrderModel
 
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Orders;
@@ -175,11 +175,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <div class="row">
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                         {
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderSubtotalInclTax <strong>@T("Admin.Orders.Fields.OrderSubtotalInclTax")</strong>
                                 </div>
@@ -187,7 +187,7 @@
                         }
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                         {
-                            <div class="col-md-10">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderSubtotalExclTax <strong>@T("Admin.Orders.Fields.OrderSubtotalExclTax")</strong>
                                 </div>
@@ -208,11 +208,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-9">
                         <div class="row">
                             @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
                             {
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.OrderSubTotalDiscountInclTax <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountInclTax")</strong>
                                     </div>
@@ -220,7 +220,7 @@
                             }
                             @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
                             {
-                                <div class="col-md-10">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.OrderSubTotalDiscountExclTax <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountExclTax")</strong>
                                     </div>
@@ -239,11 +239,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <div class="row">
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                         {
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderShippingInclTax <strong>@T("Admin.Orders.Fields.OrderShippingInclTax")</strong>
                                 </div>
@@ -251,7 +251,7 @@
                         }
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                         {
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderShippingExclTax <strong>@T("Admin.Orders.Fields.OrderShippingExclTax")</strong>
                                 </div>
@@ -272,11 +272,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-9">
                         <div class="row">
                             @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                             {
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.PaymentMethodAdditionalFeeInclTax <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax")</strong>
                                     </div>
@@ -284,7 +284,7 @@
                             }
                             @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                             {
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.PaymentMethodAdditionalFeeExclTax <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax")</strong>
                                     </div>
