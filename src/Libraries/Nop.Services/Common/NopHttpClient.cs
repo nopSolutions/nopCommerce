@@ -107,8 +107,9 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="email">Admin email</param>
         /// <param name="languageCode">Language code</param>
-        /// <returns>The asynchronous task whose result determines that request is completed</returns>
-        public virtual async Task InstallationCompletedAsync(string email, string languageCode)
+        /// <param name="culture">Culture name</param>
+        /// <returns>The asynchronous task whose result contains the result string</returns>
+        public virtual async Task<string> InstallationCompletedAsync(string email, string languageCode, string culture)
         {
             //prepare URL to request
             var url = string.Format(NopCommonDefaults.NopInstallationCompletedPath,
@@ -116,10 +117,14 @@ namespace Nop.Services.Common
                 _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
                 WebUtility.UrlEncode(email),
                 _webHelper.GetStoreLocation(),
-                languageCode)
+                languageCode,
+                culture)
                 .ToLowerInvariant();
 
-            await _httpClient.GetStringAsync(url);
+            //this request takes some more time
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+
+            return await _httpClient.GetStringAsync(url);
         }
 
         /// <summary>

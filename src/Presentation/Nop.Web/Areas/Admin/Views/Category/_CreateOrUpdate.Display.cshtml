@@ -95,9 +95,9 @@
     function togglePageSize() {
         if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
             $('#pnlPageSize').hide();
-            $('#pnlPageSizeOptions').show();
+            $('#pnlPageSizeOptions').showField();
         } else {
-            $('#pnlPageSize').show();
+            $('#pnlPageSize').showField();
             $('#pnlPageSizeOptions').hide();
         }
     }

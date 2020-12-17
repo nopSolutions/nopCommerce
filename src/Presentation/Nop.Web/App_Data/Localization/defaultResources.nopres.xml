@@ -4395,6 +4395,12 @@
   <LocaleResource Name="Admin.Configuration.AppSettings.Installation.DisabledPlugins.Hint">
     <Value>Specify a list of plugins (comma separated) ignored during installation.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.InstallRegionalResources">
+    <Value>Install regional resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.AppSettings.Installation.InstallRegionalResources.Hint">
+    <Value>Enable this setting to download and setup the regional language pack during installation.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Plugin">
     <Value>Plugin configuration</Value>
   </LocaleResource>
@@ -13847,6 +13853,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Log.List.Message.Hint">
     <Value>Message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Log.List.PremiumSupport">
+    <Value><![CDATA[Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list" target="_blank">here</a>.]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Log.PremiumSupport">
+    <Value><![CDATA[Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href="https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-details" target="_blank">here</a>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Log.ViewLogDetails">
     <Value>View log entry details</Value>

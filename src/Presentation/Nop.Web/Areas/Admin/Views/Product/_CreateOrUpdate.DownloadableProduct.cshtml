@@ -13,27 +13,27 @@
 
     function toggleDownloadableProduct() {
         if ($('#@Html.IdFor(model => model.IsDownload)').is(':checked')) {
-            $('#pnlDownloadFile').show();
-            $('#pnlUnlimitedDownloads').show();
+            $('#pnlDownloadFile').showField();
+            $('#pnlUnlimitedDownloads').showField();
             if ($('#@Html.IdFor(model => model.UnlimitedDownloads)').is(':checked')) {
                 $('#pnlMaxNumberOfDownloads').hide();
             } else {
-                $('#pnlMaxNumberOfDownloads').show();
+                $('#pnlMaxNumberOfDownloads').showField();
             }
-            $('#pnlDownloadExpirationDays').show();
-            $('#pnlDownloadActivationType').show();
+            $('#pnlDownloadExpirationDays').showField();
+            $('#pnlDownloadActivationType').showField();
 
-            $('#pnlHasUserAgreement').show();
+            $('#pnlHasUserAgreement').showField();
             if ($('#@Html.IdFor(model => model.HasUserAgreement)').is(':checked')) {
-                $('#pnlUserAgreementText').show();
+                $('#pnlUserAgreementText').showField();
             } else {
                 $('#pnlUserAgreementText').hide();
             }
 
-            $('#pnlHasSampleDownload').show();
+            $('#pnlHasSampleDownload').showField();
 
             if ($('#@Html.IdFor(model => model.HasSampleDownload)').is(':checked')) {
-                $('#pnlSampleDownloadFile').show();
+                $('#pnlSampleDownloadFile').showField();
             } else {
                 $('#pnlSampleDownloadFile').hide();
             }

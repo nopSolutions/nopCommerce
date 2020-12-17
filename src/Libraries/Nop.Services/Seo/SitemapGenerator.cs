@@ -17,6 +17,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Events;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
@@ -37,6 +38,7 @@ namespace Nop.Services.Seo
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
@@ -60,6 +62,7 @@ namespace Nop.Services.Seo
             IActionContextAccessor actionContextAccessor,
             IBlogService blogService,
             ICategoryService categoryService,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
             IManufacturerService manufacturerService,
             INewsService newsService,
@@ -79,6 +82,7 @@ namespace Nop.Services.Seo
             _actionContextAccessor = actionContextAccessor;
             _blogService = blogService;
             _categoryService = categoryService;
+            _eventPublisher = eventPublisher;
             _languageService = languageService;
             _manufacturerService = manufacturerService;
             _newsService = newsService;
@@ -92,64 +96,6 @@ namespace Nop.Services.Seo
             _localizationSettings = localizationSettings;
             _newsSettings = newsSettings;
             _sitemapXmlSettings = sitemapSettings;
-        }
-
-        #endregion
-
-        #region Nested class
-
-        /// <summary>
-        /// Represents sitemap URL entry
-        /// </summary>
-        protected class SitemapUrl
-        {
-            /// <summary>
-            /// Ctor
-            /// </summary>
-            /// <param name="location">URL of the page</param>
-            /// <param name="alternateLocations">List of the page urls</param>
-            /// <param name="frequency">Update frequency</param>
-            /// <param name="updatedOn">Updated on</param>
-            public SitemapUrl(string location, IList<string> alternateLocations, UpdateFrequency frequency, DateTime updatedOn)
-            {
-                Location = location;
-                AlternateLocations = alternateLocations;
-                UpdateFrequency = frequency;
-                UpdatedOn = updatedOn;
-            }
-
-            /// <summary>
-            /// Ctor
-            /// </summary>
-            /// <param name="location">URL of the page</param>
-            /// <param name="anotheUrl">The another site map url</param>
-            public SitemapUrl(string location, SitemapUrl anotheUrl)
-            {
-                Location = location;
-                AlternateLocations = anotheUrl.AlternateLocations;
-                UpdateFrequency = anotheUrl.UpdateFrequency;
-                UpdatedOn = anotheUrl.UpdatedOn;
-            }
-
-            /// <summary>
-            /// Gets or sets URL of the page
-            /// </summary>
-            public string Location { get; set; }
-
-            /// <summary>
-            /// Gets or sets localized URLs of the page
-            /// </summary>
-            public IList<string> AlternateLocations { get; set; }
-
-            /// <summary>
-            /// Gets or sets a value indicating how frequently the page is likely to change
-            /// </summary>
-            public UpdateFrequency UpdateFrequency { get; set; }
-
-            /// <summary>
-            /// Gets or sets the date of last modification of the file
-            /// </summary>
-            public DateTime UpdatedOn { get; set; }
         }
 
         #endregion
@@ -235,6 +181,9 @@ namespace Nop.Services.Seo
             //custom URLs
             if (_sitemapXmlSettings.SitemapXmlIncludeCustomUrls)
                 sitemapUrls.AddRange(GetCustomUrls());
+
+            //event notification
+            await _eventPublisher.PublishAsync(new SitemapCreatedEvent(sitemapUrls));
 
             return sitemapUrls;
         }
@@ -337,60 +286,6 @@ namespace Nop.Services.Seo
             where T : BaseEntity, ISlugSupported
         {
             return async lang => new { SeName = await _urlRecordService.GetSeNameAsync(model, lang) };
-        }
-
-        /// <summary>
-        /// Return localized urls
-        /// </summary>
-        /// <param name="routeName">Route name</param>
-        /// <param name="getRouteParamsAwait">Lambda for route params object</param>
-        /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
-        /// <param name="updateFreq">How often to update url</param>
-        protected virtual async Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
-            Func<int?, Task<object>> getRouteParamsAwait = null,
-            DateTime? dateTimeUpdatedOn = null,
-            UpdateFrequency updateFreq = UpdateFrequency.Weekly)
-        {
-            var urlHelper = GetUrlHelper();
-
-            //url for current language
-            var url = urlHelper.RouteUrl(routeName, 
-                getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null, 
-                await GetHttpProtocolAsync());
-
-            var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
-            var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
-                ? await _languageService.GetAllLanguagesAsync()
-                : null;
-
-            if (languages == null)
-                return new SitemapUrl(url, new List<string>(), updateFreq, updatedOn);
-
-            var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
-            //return list of localized urls
-            var localizedUrls = await languages
-                .SelectAwait(async lang =>
-                {
-                    var currentUrl = urlHelper.RouteUrl(routeName, getRouteParamsAwait?.Invoke(lang.Id), await GetHttpProtocolAsync());
-
-                    if (string.IsNullOrEmpty(currentUrl))
-                        return null;
-
-                    //Extract server and path from url
-                    var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
-                    var path = new Uri(currentUrl).PathAndQuery;
-
-                    //Replace seo code
-                    var localizedPath = path
-                        .RemoveLanguageSeoCodeFromUrl(pathBase, true)
-                        .AddLanguageSeoCodeToUrl(pathBase, true, lang);
-
-                    return new Uri(new Uri(scheme), localizedPath).ToString();
-                })
-                .Where(value => !string.IsNullOrEmpty(value))
-                .ToListAsync();
-
-            return new SitemapUrl(url, localizedUrls, updateFreq, updatedOn);
         }
 
         /// <summary>
@@ -504,31 +399,13 @@ namespace Nop.Services.Seo
             writer.WriteEndElement();
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// This will build an XML sitemap for better index with search engines.
-        /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
-        /// </summary>
-        /// <param name="id">Sitemap identifier</param>
-        /// <returns>Sitemap.xml as string</returns>
-        public virtual async Task<string> GenerateAsync(int? id)
-        {
-            await using var stream = new MemoryStream();
-            await GenerateAsync(stream, id);
-
-            return Encoding.UTF8.GetString(stream.ToArray());
-        }
-
         /// <summary>
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        public virtual async Task GenerateAsync(Stream stream, int? id)
+        protected virtual async Task GenerateAsync(Stream stream, int? id)
         {
             //generate all URLs for the sitemap
             var sitemapUrls = await GenerateUrlsAsync();
@@ -567,6 +444,78 @@ namespace Nop.Services.Seo
                     await WriteSitemapAsync(stream, sitemaps.First());
                 }
             }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// This will build an XML sitemap for better index with search engines.
+        /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
+        /// </summary>
+        /// <param name="id">Sitemap identifier</param>
+        /// <returns>Sitemap.xml as string</returns>
+        public virtual async Task<string> GenerateAsync(int? id)
+        {
+            await using var stream = new MemoryStream();
+            await GenerateAsync(stream, id);
+
+            return Encoding.UTF8.GetString(stream.ToArray());
+        }
+
+        /// <summary>
+        /// Return localized urls
+        /// </summary>
+        /// <param name="routeName">Route name</param>
+        /// <param name="getRouteParamsAwait">Lambda for route params object</param>
+        /// <param name="dateTimeUpdatedOn">A time when URL was updated last time</param>
+        /// <param name="updateFreq">How often to update url</param>
+        public virtual async Task<SitemapUrl> GetLocalizedSitemapUrlAsync(string routeName,
+            Func<int?, Task<object>> getRouteParamsAwait = null,
+            DateTime? dateTimeUpdatedOn = null,
+            UpdateFrequency updateFreq = UpdateFrequency.Weekly)
+        {
+            var urlHelper = GetUrlHelper();
+
+            //url for current language
+            var url = urlHelper.RouteUrl(routeName,
+                getRouteParamsAwait != null ? await getRouteParamsAwait(null) : null,
+                await GetHttpProtocolAsync());
+
+            var updatedOn = dateTimeUpdatedOn ?? DateTime.UtcNow;
+            var languages = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled
+                ? await _languageService.GetAllLanguagesAsync()
+                : null;
+
+            if (languages == null)
+                return new SitemapUrl(url, new List<string>(), updateFreq, updatedOn);
+
+            var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
+            //return list of localized urls
+            var localizedUrls = await languages
+                .SelectAwait(async lang =>
+                {
+                    var currentUrl = urlHelper.RouteUrl(routeName, getRouteParamsAwait?.Invoke(lang.Id), await GetHttpProtocolAsync());
+
+                    if (string.IsNullOrEmpty(currentUrl))
+                        return null;
+
+                    //Extract server and path from url
+                    var scheme = new Uri(currentUrl).GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped);
+                    var path = new Uri(currentUrl).PathAndQuery;
+
+                    //Replace seo code
+                    var localizedPath = path
+                        .RemoveLanguageSeoCodeFromUrl(pathBase, true)
+                        .AddLanguageSeoCodeToUrl(pathBase, true, lang);
+
+                    return new Uri(new Uri(scheme), localizedPath).ToString();
+                })
+                .Where(value => !string.IsNullOrEmpty(value))
+                .ToListAsync();
+
+            return new SitemapUrl(url, localizedUrls, updateFreq, updatedOn);
         }
 
         #endregion

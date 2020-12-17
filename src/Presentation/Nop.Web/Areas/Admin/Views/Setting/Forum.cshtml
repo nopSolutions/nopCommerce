@@ -65,7 +65,7 @@
 
                 function toggleAllowVoting() {
                     if ($('#@Html.IdFor(model => model.AllowPostVoting)').is(':checked')) {
-                        $('#pnlMaxVotes').show();
+                        $('#pnlMaxVotes').showField();
                     }
                     else {
                         $('#pnlMaxVotes').hide();
@@ -74,8 +74,8 @@
 
                 function toggleAllowPrivateMessages() {
                     if ($('#@Html.IdFor(model => model.AllowPrivateMessages)').is(':checked')) {
-                        $('#pnlShowAlertForPM').show();
-                        $('#pnlNotifyAboutPrivateMessages').show();
+                        $('#pnlShowAlertForPM').showField();
+                        $('#pnlNotifyAboutPrivateMessages').showField();
                     }
                     else {
                         $('#pnlShowAlertForPM').hide();
@@ -85,7 +85,7 @@
 
                 function toggleForumFeedsEnabled() {
                     if ($('#@Html.IdFor(model => model.ForumFeedsEnabled)').is(':checked')) {
-                        $('#pnlForumFeedCount').show();
+                        $('#pnlForumFeedCount').showField();
                     }
                     else {
                         $('#pnlForumFeedCount').hide();
@@ -94,7 +94,7 @@
 
                 function toggleActiveDiscussionsFeedEnabled() {
                     if ($('#@Html.IdFor(model => model.ActiveDiscussionsFeedEnabled)').is(':checked')) {
-                        $('#pnlActiveDiscussionsFeedCount').show();
+                        $('#pnlActiveDiscussionsFeedCount').showField();
                     }
                     else {
                         $('#pnlActiveDiscussionsFeedCount').hide();

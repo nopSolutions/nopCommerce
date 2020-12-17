@@ -33,7 +33,7 @@ namespace Nop.Services.Tests.Catalog
             var languageService = GetService<ILanguageService>();
             var currencyService = GetService<ICurrencyService>();
 
-            _enLangId = languageService.GetAllLanguages().FirstOrDefault(p => p.Name == "English")?.Id ?? 0;
+            _enLangId = languageService.GetAllLanguages().FirstOrDefault(p => p.LanguageCulture == "en-US")?.Id ?? 0;
 
             _euro = currencyService.GetCurrencyByCode("EUR");
             _dollar = currencyService.GetCurrencyByCode("USD");

@@ -73,10 +73,9 @@
                                                 <nop-textarea asp-for="@Model.Locales[item].Body"/>
                                                 <text>
                                                     <script>
-                                                            $(document).ready(function() {
-                                                                $('#@Html.IdFor(model => model.Locales[item].Body)')
-                                                                    .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
-                                                            });
+                                                        $(document).ready(function() {
+                                                            $('#@Html.IdFor(model => model.Locales[item].Body)').height('auto');
+                                                        });
                                                     </script>
                                                 </text>
                                             }
@@ -147,10 +146,9 @@
                                             <nop-textarea asp-for="Body" asp-required="true" />
                                             <text>
                                                 <script>
-                                                $(document).ready(function() {
-                                                    $('#@Html.IdFor(model => model.Body)')
-                                                    .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
-                                                });
+                                                    $(document).ready(function() {
+                                                        $('#@Html.IdFor(model => model.Body)').height('auto');
+                                                    });
                                                 </script>
                                             </text>
                                         }                                            
@@ -297,7 +295,7 @@
 
                 function toggleHasAttachedDownload() {
                     if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
-                        $('#pnlAttachedDownload').show();
+                        $('#pnlAttachedDownload').showField();
                     } else {
                         $('#pnlAttachedDownload').hide();
                     }
@@ -307,7 +305,7 @@
                     if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
                         $('#pnl-send-after').hide();
                     else
-                        $('#pnl-send-after').show();
+                        $('#pnl-send-after').showField();
                 }
             </script>
         </div>

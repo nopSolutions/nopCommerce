@@ -119,6 +119,36 @@ namespace Nop.Web.Controllers
 
         #endregion
 
+        #region Utilities
+
+        protected virtual async Task ValidateProductReviewAvailabilityAsync(Product product)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            if (await _customerService.IsGuestAsync(customer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+
+            if (!_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+                return;
+
+            var hasCompletedOrders = product.ProductType == ProductType.SimpleProduct
+                ? await HasCompletedOrdersAsync(product)
+                : await (await _productService.GetAssociatedProductsAsync(product.Id)).AnyAwaitAsync(HasCompletedOrdersAsync);
+
+            if (!hasCompletedOrders)
+                ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+        }
+
+        protected virtual async ValueTask<bool> HasCompletedOrdersAsync(Product product)
+        {
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            return (await _orderService.SearchOrdersAsync(customerId: customer.Id,
+                productId: product.Id,
+                osIds: new List<int> { (int)OrderStatus.Complete },
+                pageSize: 1)).Any();
+        }
+
+        #endregion
+
         #region Product details page
 
         public virtual async Task<IActionResult> ProductDetails(int productId, int updatecartitemid = 0)
@@ -338,19 +368,8 @@ namespace Nop.Web.Controllers
 
             var model = new ProductReviewsModel();
             model = await _productModelFactory.PrepareProductReviewsModelAsync(model, product);
-            //only registered users can leave reviews
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
 
-            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
-            {
-                var hasCompletedOrders = (await _orderService.SearchOrdersAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
-                    productId: productId,
-                    osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1)).Any();
-                if (!hasCompletedOrders)
-                    ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
-            }
+            await ValidateProductReviewAvailabilityAsync(product);
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
@@ -384,20 +403,7 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", await _localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
             }
 
-            if (await _customerService.IsGuestAsync(await _workContext.GetCurrentCustomerAsync()) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
-            {
-                ModelState.AddModelError("", await _localizationService.GetResourceAsync("Reviews.OnlyRegisteredUsersCanWriteReviews"));
-            }
-
-            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
-            {
-                var hasCompletedOrders = (await _orderService.SearchOrdersAsync(customerId: (await _workContext.GetCurrentCustomerAsync()).Id,
-                    productId: productId,
-                    osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1)).Any();
-                if (!hasCompletedOrders)
-                    ModelState.AddModelError(string.Empty, await _localizationService.GetResourceAsync("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
-            }
+            await ValidateProductReviewAvailabilityAsync(product);
 
             if (ModelState.IsValid)
             {

@@ -1830,8 +1830,9 @@ namespace Nop.Services.ExportImport
         /// Import states from TXT file
         /// </summary>
         /// <param name="stream">Stream</param>
+        /// <param name="writeLog">Indicates whether to add logging</param>
         /// <returns>Number of imported states</returns>
-        public virtual async Task<int> ImportStatesFromTxtAsync(Stream stream)
+        public virtual async Task<int> ImportStatesFromTxtAsync(Stream stream, bool writeLog = true)
         {
             var count = 0;
             using (var reader = new StreamReader(stream))
@@ -1889,8 +1890,11 @@ namespace Nop.Services.ExportImport
             }
 
             //activity log
-            await _customerActivityService.InsertActivityAsync("ImportStates",
-                string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportStates"), count));
+            if (writeLog)
+            {
+                await _customerActivityService.InsertActivityAsync("ImportStates",
+                    string.Format(await _localizationService.GetResourceAsync("ActivityLog.ImportStates"), count));
+            }
 
             return count;
         }

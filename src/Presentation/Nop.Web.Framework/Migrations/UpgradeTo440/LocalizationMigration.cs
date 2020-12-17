@@ -276,6 +276,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Hint"] = "Force activation of multi-factor authentication for all users (at least one MFA provider must be active).",
                 ["Account.MultiFactorAuthentication.Warning.ForceActivation"] = "Enforce multi-factor authentication for all users is enabled.",
                 ["Admin.Configuration.Settings.CustomerUser.ForceMultifactorAuthentication.Warning"] = "There are currently no active authentication providers. To use this setting, you must activate one of the multi-factor authentication providers.",
+
+                //#1730
+                ["Admin.Configuration.AppSettings.Installation.InstallRegionalResources"] = "Install regional resources",
+                ["Admin.Configuration.AppSettings.Installation.InstallRegionalResources.Hint"] = "Enable this setting to download and setup the regional language pack during installation.",
+
+                //#5213
+                ["Admin.System.Log.List.PremiumSupport"] = "Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href=\"https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-list\" target=\"_blank\">here</a>.",
+                ["Admin.System.Log.PremiumSupport"] = "Have questions or need help? Get dedicated support from the nopCommerce team with a guaranteed response within 24 hours. Please find more about our premium support services <a href=\"https://www.nopcommerce.com/nopcommerce-premium-support-services?utm_source=admin-panel&utm_medium=menu&utm_campaign=premium_support&utm_content=log-details\" target=\"_blank\">here</a>.",
             }).Wait();
 
             // rename locales

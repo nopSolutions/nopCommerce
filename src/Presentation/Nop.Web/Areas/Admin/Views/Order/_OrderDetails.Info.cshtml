@@ -1,4 +1,4 @@
-﻿@model OrderModel
+@model OrderModel
 
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Orders;
@@ -15,23 +15,23 @@
 
         function toggleChangeOrderStatus(editmode) {
             if (editmode) {
-                $('#pnlChangeOrderStatus').show();
+                $('#pnlChangeOrderStatus').showField();
                 $('#btnChangeOrderStatus').hide();
             } else {
                 $('#pnlChangeOrderStatus').hide();
-                $('#btnChangeOrderStatus').show();
+                $('#btnChangeOrderStatus').showField();
             }
         }
 
         function toggleOrderTotals(editmode) {
             if (editmode) {
-                $('#trEditOrderTotals').show();
+                $('#trEditOrderTotals').showField();
                 $('#btnEditOrderTotals').hide();
-                $('#btnSaveOrderTotals').show();
-                $('#btnCancelOrderTotals').show();
+                $('#btnSaveOrderTotals').showField();
+                $('#btnCancelOrderTotals').showField();
             } else {
                 $('#trEditOrderTotals').hide();
-                $('#btnEditOrderTotals').show();
+                $('#btnEditOrderTotals').showField();
                 $('#btnSaveOrderTotals').hide();
                 $('#btnCancelOrderTotals').hide();
             }
@@ -40,34 +40,34 @@
         function toggleCC(editmode) {
             if (editmode) {
                 $('#lblCardType').hide();
-                $('#@Html.IdFor(model => model.CardType)').show();
+                $('#@Html.IdFor(model => model.CardType)').showField();
                 $('#lblCardName').hide();
-                $('#@Html.IdFor(model => model.CardName)').show();
+                $('#@Html.IdFor(model => model.CardName)').showField();
                 $('#lblCardNumber').hide();
-                $('#@Html.IdFor(model => model.CardNumber)').show();
+                $('#@Html.IdFor(model => model.CardNumber)').showField();
                 $('#lblCardCvv2').hide();
-                $('#@Html.IdFor(model => model.CardCvv2)').show();
+                $('#@Html.IdFor(model => model.CardCvv2)').showField();
                 $('#lblCardExpirationMonth').hide();
-                $('#@Html.IdFor(model => model.CardExpirationMonth)').show();
+                $('#@Html.IdFor(model => model.CardExpirationMonth)').showField();
                 $('#lblCardExpirationYear').hide();
-                $('#@Html.IdFor(model => model.CardExpirationYear)').show();
+                $('#@Html.IdFor(model => model.CardExpirationYear)').showField();
                 $('#btnEditCC').hide();
-                $('#btnSaveCC').show();
-                $('#btnCancelCC').show();
+                $('#btnSaveCC').showField();
+                $('#btnCancelCC').showField();
             } else {
-                $('#lblCardType').show();
+                $('#lblCardType').showField();
                 $('#@Html.IdFor(model => model.CardType)').hide();
-                $('#lblCardName').show();
+                $('#lblCardName').showField();
                 $('#@Html.IdFor(model => model.CardName)').hide();
-                $('#lblCardNumber').show();
+                $('#lblCardNumber').showField();
                 $('#@Html.IdFor(model => model.CardNumber)').hide();
-                $('#lblCardCvv2').show();
+                $('#lblCardCvv2').showField();
                 $('#@Html.IdFor(model => model.CardCvv2)').hide();
-                $('#lblCardExpirationMonth').show();
+                $('#lblCardExpirationMonth').showField();
                 $('#@Html.IdFor(model => model.CardExpirationMonth)').hide();
-                $('#lblCardExpirationYear').show();
+                $('#lblCardExpirationYear').showField();
                 $('#@Html.IdFor(model => model.CardExpirationYear)').hide();
-                $('#btnEditCC').show();
+                $('#btnEditCC').showField();
                 $('#btnSaveCC').hide();
                 $('#btnCancelCC').hide();
             }
@@ -173,11 +173,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <div class="row">
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                         {
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderSubtotalInclTax <strong>@T("Admin.Orders.Fields.OrderSubtotalInclTax")</strong>
                                 </div>
@@ -185,7 +185,7 @@
                         }
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                         {
-                            <div class="col-md-10">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderSubtotalExclTax <strong>@T("Admin.Orders.Fields.OrderSubtotalExclTax")</strong>
                                 </div>
@@ -206,11 +206,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-9">
                         <div class="row">
                             @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
                             {
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.OrderSubTotalDiscountInclTax <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountInclTax")</strong>
                                     </div>
@@ -218,7 +218,7 @@
                             }
                             @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
                             {
-                                <div class="col-md-10">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.OrderSubTotalDiscountExclTax <strong>@T("Admin.Orders.Fields.OrderSubTotalDiscountExclTax")</strong>
                                     </div>
@@ -237,11 +237,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <div class="row">
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                         {
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderShippingInclTax <strong>@T("Admin.Orders.Fields.OrderShippingInclTax")</strong>
                                 </div>
@@ -249,7 +249,7 @@
                         }
                         @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                         {
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-text-row">
                                     @Model.OrderShippingExclTax <strong>@T("Admin.Orders.Fields.OrderShippingExclTax")</strong>
                                 </div>
@@ -270,11 +270,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-9">
                         <div class="row">
                             @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
                             {
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.PaymentMethodAdditionalFeeInclTax <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeInclTax")</strong>
                                     </div>
@@ -282,7 +282,7 @@
                             }
                             @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
                             {
-                                <div class="col-md-2">
+                                <div class="col-md-6">
                                     <div class="form-text-row">
                                         @Model.PaymentMethodAdditionalFeeExclTax <strong>@T("Admin.Orders.Fields.PaymentMethodAdditionalFeeExclTax")</strong>
                                     </div>

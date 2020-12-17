@@ -36,13 +36,13 @@
             $('#group-associated-product').hide();
         $('#group-customer-enters-qty').hide();
         $('#group-quantity').hide();
-        $('#group-price-adjustment').show();
-        $('#group-price-adjustment-percentage').show();
-        $('#group-weight-adjustment').show();
-        $('#group-cost').show();
+        $('#group-price-adjustment').showField();
+        $('#group-price-adjustment-percentage').showField();
+        $('#group-weight-adjustment').showField();
+        $('#group-cost').showField();
     } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
-        $('#group-associated-product').show();
-        $('#group-customer-enters-qty').show();
+        $('#group-associated-product').showField();
+        $('#group-customer-enters-qty').showField();
         $('#group-price-adjustment').hide();
         $('#group-price-adjustment-percentage').hide();
         $('#group-weight-adjustment').hide();
@@ -56,7 +56,7 @@
             $('#group-quantity').hide();
         }
         else {
-            $('#group-quantity').show();
+            $('#group-quantity').showField();
         }
     }
 </script>

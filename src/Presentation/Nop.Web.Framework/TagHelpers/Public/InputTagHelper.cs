@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -55,7 +56,24 @@ namespace Nop.Web.Framework.TagHelpers.Public
             if (bool.TryParse(IsDisabled, out var disabled) && disabled)
                 output.Attributes.Add(new TagHelperAttribute("disabled", "disabled"));
 
-            await base.ProcessAsync(context, output);
+            try
+            {
+                await base.ProcessAsync(context, output);
+            }
+            catch
+            {
+                //If the passed values differ in data type according to the model, we should try to initialize the component with a default value. 
+                //If this is not possible, then we suppress the generation of html for this imput.
+                try
+                {
+                    ViewContext.ModelState[For.Name].RawValue = Activator.CreateInstance(For.ModelExplorer.ModelType);
+                    await base.ProcessAsync(context, output);
+                }
+                catch
+                {
+                    output.SuppressOutput();
+                }
+            }
         }
 
         #endregion

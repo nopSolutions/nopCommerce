@@ -236,7 +236,7 @@ namespace Nop.Services.Plugins
                         var fileName = entry.FullName[itemPath.Length..];
                         if (string.IsNullOrEmpty(fileName))
                             continue;
-                        
+
                         var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
                         //if it's a folder, we need to create it
@@ -395,9 +395,10 @@ namespace Nop.Services.Plugins
         }
 
         /// <summary>
-        /// Upload locale pattern for ccurrent culture
+        /// Upload locale pattern for current culture
         /// </summary>
-        public virtual void UploadLocalePattern()
+        /// <param name="cultureInfo">CultureInfo</param>
+        public virtual void UploadLocalePattern(CultureInfo cultureInfo = null)
         {
             string getPath(string dirPath, string dirName)
             {
@@ -408,7 +409,7 @@ namespace Nop.Services.Plugins
             {
                 return _fileProvider.DirectoryExists(getPath(dirPath, dirName));
             }
-            
+
             var tempFolder = "temp";
             try
             {
@@ -417,10 +418,10 @@ namespace Nop.Services.Plugins
                 if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
 
-                var currentCulture = CultureInfo.CurrentCulture;
+                var currentCulture = (cultureInfo is CultureInfo) ? cultureInfo : CultureInfo.CurrentCulture;
 
                 //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
-                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) || 
+                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) ||
                     checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.TwoLetterISOLanguageName)))
                 {
                     var cultureToUse = string.Empty;

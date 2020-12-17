@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
@@ -128,6 +129,10 @@ namespace Nop.Tests
 
             services.AddSingleton(urlHelperFactory.Object);
 
+            var httpClientFactory = new Mock<IHttpClientFactory>();
+            httpClientFactory.Setup(x => x.CreateClient("default")).Returns(new HttpClient());
+            services.AddSingleton(httpClientFactory.Object);
+
             var tempDataDictionaryFactory = new Mock<ITempDataDictionaryFactory>();
             var dataDictionary = new TempDataDictionary(httpContextAccessor.Object.HttpContext, new Mock<ITempDataProvider>().Object);
             tempDataDictionaryFactory.Setup(f => f.GetTempData(It.IsAny<HttpContext>())).Returns(dataDictionary);
@@ -254,7 +259,7 @@ namespace Nop.Tests
             services.AddTransient<ISitemapGenerator, SitemapGenerator>();
             services.AddTransient<IScheduleTaskService, ScheduleTaskService>();
             services.AddTransient<IExportManager, ExportManager>();
-            services.AddTransient<IImportManager, ImportManager>();
+            services.AddTransient<IImportManager, ImportManager>();            
             services.AddTransient<IPdfService, PdfService>();
             services.AddTransient<IUploadService, UploadService>();
             services.AddTransient<IThemeProvider, ThemeProvider>();
@@ -319,7 +324,7 @@ namespace Nop.Tests
             _serviceProvider.GetService<INopDataProvider>().CreateDatabase(null);
             _serviceProvider.GetService<INopDataProvider>().InitializeDatabase();
 
-            _serviceProvider.GetService<IInstallationService>().InstallRequiredData(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword);
+            _serviceProvider.GetService<IInstallationService>().InstallRequiredData(NopTestsDefaults.AdminEmail, NopTestsDefaults.AdminPassword, "", null, null);
             _serviceProvider.GetService<IInstallationService>().InstallSampleData(NopTestsDefaults.AdminEmail);
         }
 

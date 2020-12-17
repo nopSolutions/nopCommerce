@@ -444,14 +444,14 @@
                                 function toggleEditShippingMethod(editmode) {
                                     if (editmode) {
                                         $('#lblShippingMethod').hide();
-                                        $('#divShippingMethod').show();
+                                        $('#divShippingMethod').showField();
                                         $('#btnEditShippingMethod').hide();
-                                        $('#btnSaveShippingMethod').show();
-                                        $('#btnCancelShippingMethod').show();
+                                        $('#btnSaveShippingMethod').showField();
+                                        $('#btnCancelShippingMethod').showField();
                                     } else {
-                                        $('#lblShippingMethod').show();
+                                        $('#lblShippingMethod').showField();
                                         $('#divShippingMethod').hide();
-                                        $('#btnEditShippingMethod').show();
+                                        $('#btnEditShippingMethod').showField();
                                         $('#btnSaveShippingMethod').hide();
                                         $('#btnCancelShippingMethod').hide();
                                     }

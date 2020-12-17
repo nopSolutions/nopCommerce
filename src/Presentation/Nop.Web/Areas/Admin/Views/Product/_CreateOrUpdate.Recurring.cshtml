@@ -9,9 +9,9 @@
 
     function toggleRecurring() {
         if ($('#@Html.IdFor(model => model.IsRecurring)').is(':checked')) {
-            $('#pnlCycleLength').show();
-            $('#pnlCyclePeriod').show();
-            $('#pnlTotalCycles').show();
+            $('#pnlCycleLength').showField();
+            $('#pnlCyclePeriod').showField();
+            $('#pnlTotalCycles').showField();
         } else {
             $('#pnlCycleLength').hide();
             $('#pnlCyclePeriod').hide();

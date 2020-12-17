@@ -83,7 +83,7 @@
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
             selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
-            $('[data-card-name=address-values]').show();
+            $('[data-card-name=address-values]').showField();
         } else {
             $('[data-card-name=address-values]').hide();
         }

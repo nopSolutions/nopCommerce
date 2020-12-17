@@ -314,7 +314,7 @@ namespace Nop.Services.Catalog
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdsCacheKey,
                 parentCategoryId,
                 await _customerService.GetCustomerRoleIdsAsync(await _workContext.GetCurrentCustomerAsync()),
-                await _storeContext.GetCurrentStoreAsync(),
+                storeId,
                 showHidden);
 
             return await _staticCacheManager.GetAsync(cacheKey, async () =>
@@ -511,8 +511,11 @@ namespace Nop.Services.Catalog
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
                 }
 
-                return query.OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
-
+                return query
+                    .Where(pc => pc.ProductId == productId)
+                    .OrderBy(pc => pc.DisplayOrder)
+                    .ThenBy(pc => pc.Id);
+                
             }, cache => _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesByProductCacheKey,
                 productId, showHidden, customer, storeId));
         }
