@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Nop.Core;
@@ -193,16 +194,16 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
 
                 var userObject = FormatEventObject(new List<(string Name, object Value)>
                 {
-                    ("em", email?.ToLower()),
-                    ("fn", firstName?.ToLower()),
-                    ("ln", lastName?.ToLower()),
+                    ("em", JavaScriptEncoder.Default.Encode(email?.ToLower() ?? string.Empty)),
+                    ("fn", JavaScriptEncoder.Default.Encode(firstName?.ToLower() ?? string.Empty)),
+                    ("ln", JavaScriptEncoder.Default.Encode(lastName?.ToLower() ?? string.Empty)),
                     ("ph", new string(phone?.Where(c => char.IsDigit(c)).ToArray()) ?? string.Empty),
                     ("external_id", _workContext.CurrentCustomer.CustomerGuid.ToString().ToLower()),
                     ("ge", gender?.FirstOrDefault().ToString().ToLower()),
                     ("db", birthday?.ToString("yyyyMMdd")),
-                    ("ct", city?.ToLower()),
+                    ("ct", JavaScriptEncoder.Default.Encode(city?.ToLower() ?? string.Empty)),
                     ("st", stateName?.ToLower()),
-                    ("zp", zipcode?.ToLower()),
+                    ("zp", JavaScriptEncoder.Default.Encode(zipcode?.ToLower() ?? string.Empty)),
                     ("cn", countryName?.ToLower())
                 });
 
@@ -248,13 +249,13 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             var userObject = FormatEventObject(new List<(string Name, object Value)>
             {
                 ("$account_created_time", createdOn),
-                ("$city", city),
+                ("$city", JavaScriptEncoder.Default.Encode(city)),
                 ("$country", countryName),
                 ("$currency", currency),
                 ("$gender", gender?.FirstOrDefault().ToString()),
                 ("$language", language),
                 ("$state", stateName),
-                ("$zipcode", zipcode)
+                ("$zipcode", JavaScriptEncoder.Default.Encode(zipcode))
             });
 
             //prepare script
@@ -692,7 +693,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                 //prepare event object
                 var eventObject = FormatEventObject(new List<(string Name, object Value)>
                 {
-                    ("search_string", searchTerm)
+                    ("search_string", JavaScriptEncoder.Default.Encode(searchTerm))
                 });
 
                 //prepare event script
