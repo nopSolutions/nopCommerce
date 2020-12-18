@@ -378,10 +378,9 @@ namespace Nop.Services.Orders
                 
                 //get the required quantity of the required product
                 var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
-
-                    await cart.WhereAwait(async ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
+                    cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
                         .Where(item => item.Id != shoppingCartItemId)
-                        .SumAsync(item => item.Quantity * requiredProductQuantity);
+                        .Sum(item => item.Quantity * requiredProductQuantity);
 
                 //whether required product is already in the cart in the required quantity
                 var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
