@@ -1180,8 +1180,8 @@ namespace Nop.Web.Controllers
                 .OrderByDescendingAwait(async cartItem =>
                     (cartItem.NewQuantity < cartItem.Item.Quantity &&
                      (cartItem.Product?.RequireOtherProducts ?? false)) ||
-                    (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && await _shoppingCartService
-                         .GetProductsRequiringProduct(cart, cartItem.Product).AnyAsync()))
+                    (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && (await _shoppingCartService
+                         .GetProductsRequiringProductAsync(cart, cartItem.Product)).Any()))
                 .ToListAsync();
 
             //try to update cart items with new quantities and get warnings

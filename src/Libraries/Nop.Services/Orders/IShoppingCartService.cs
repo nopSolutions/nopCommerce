@@ -44,7 +44,7 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart </param>
         /// <param name="product">Product</param>
         /// <returns>Result</returns>
-        IAsyncEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product);
+        Task<IList<Product>> GetProductsRequiringProductAsync(IList<ShoppingCartItem> cart, Product product);
 
         //TODO: may be deleted from interface
         /// <summary>

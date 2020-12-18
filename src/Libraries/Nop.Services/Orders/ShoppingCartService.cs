@@ -303,7 +303,7 @@ namespace Nop.Services.Orders
         /// <param name="cart">Shopping cart </param>
         /// <param name="product">Product</param>
         /// <returns>Result</returns>
-        public virtual async IAsyncEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product)
+        public virtual async Task<IList<Product>> GetProductsRequiringProductAsync(IList<ShoppingCartItem> cart, Product product)
         {
             if (cart is null)
                 throw new ArgumentNullException(nameof(cart));
@@ -312,15 +312,15 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(product));
 
             if (cart.Count == 0)
-                yield break;
+                return new List<Product>();
 
             var productIds = cart.Select(ci => ci.ProductId).ToArray();
 
             var cartProducts = await _productService.GetProductsByIdsAsync(productIds);
 
-            foreach (var cartProduct in cartProducts)
-                if (!cartProduct.RequireOtherProducts && _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id))
-                    yield return cartProduct;
+            return cartProducts.Where(cartProduct =>
+                !cartProduct.RequireOtherProducts &&
+                _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id)).ToList();
         }
 
         /// <summary>
@@ -351,11 +351,11 @@ namespace Nop.Services.Orders
             //get customer shopping cart
             var cart = await GetShoppingCartAsync(customer, shoppingCartType, storeId);
 
-            var productsRequiringProduct = GetProductsRequiringProduct(cart, product);
+            var productsRequiringProduct = await GetProductsRequiringProductAsync(cart, product);
 
             //whether other cart items require the passed product
-            var passedProductRequiredQuantity = await cart.WhereAwait(async ci => await productsRequiringProduct.AnyAsync(p => p.Id == ci.ProductId))
-                .SumAsync(item => item.Quantity * requiredProductQuantity);
+            var passedProductRequiredQuantity = cart.Where(ci => productsRequiringProduct.Any(p => p.Id == ci.ProductId))
+                .Sum(item => item.Quantity * requiredProductQuantity);
 
             if (passedProductRequiredQuantity > quantity)
                 warnings.Add(string.Format(await _localizationService.GetResourceAsync("ShoppingCart.RequiredProductUpdateWarning"), passedProductRequiredQuantity));
@@ -374,12 +374,12 @@ namespace Nop.Services.Orders
             var warningLocale = await _localizationService.GetResourceAsync("ShoppingCart.RequiredProductWarning");
             foreach (var requiredProduct in requiredProducts)
             {
-                var productsRequiringRequiredProduct = GetProductsRequiringProduct(cart, requiredProduct);
+                var productsRequiringRequiredProduct = await GetProductsRequiringProductAsync(cart, requiredProduct);
                 
                 //get the required quantity of the required product
                 var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
 
-                    await cart.WhereAwait(async ci => await productsRequiringRequiredProduct.AnyAsync(p => p.Id == ci.ProductId))
+                    await cart.WhereAwait(async ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
                         .Where(item => item.Id != shoppingCartItemId)
                         .SumAsync(item => item.Quantity * requiredProductQuantity);
 

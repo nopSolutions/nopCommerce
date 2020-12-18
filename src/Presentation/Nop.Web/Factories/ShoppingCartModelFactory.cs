@@ -398,7 +398,7 @@ namespace Nop.Web.Factories
 
             //disable removal?
             //1. do other items require this one?
-            cartItemModel.DisableRemoval = await _shoppingCartService.GetProductsRequiringProduct(cart, product).AnyAsync();
+            cartItemModel.DisableRemoval = (await _shoppingCartService.GetProductsRequiringProductAsync(cart, product)).Any();
 
             //allowed quantities
             var allowedQuantities = _productService.ParseAllowedQuantities(product);
